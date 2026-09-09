@@ -41,42 +41,52 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setSubdivideDepth(value)
 
     fun setLeftToRight(leftToRight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLeftToRightBind, handle, leftToRight)
     }
 
     fun getLeftToRight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLeftToRightBind, handle)
     }
 
     fun setSize(size: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 
     fun setSubdivideWidth(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, segments)
     }
 
     fun getSubdivideWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
     }
 
     fun setSubdivideHeight(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, handle, segments)
     }
 
     fun getSubdivideHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, handle)
     }
 
     fun setSubdivideDepth(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, segments)
     }
 
     fun getSubdivideDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
     }
 

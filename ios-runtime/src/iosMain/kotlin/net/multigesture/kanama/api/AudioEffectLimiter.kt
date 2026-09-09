@@ -34,34 +34,42 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setSoftClipRatio(value)
 
     fun setCeilingDb(ceiling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
     }
 
     fun getCeilingDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
     }
 
     fun setThresholdDb(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setThresholdDbBind, handle, threshold)
     }
 
     fun getThresholdDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdDbBind, handle)
     }
 
     fun setSoftClipDb(softClip: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSoftClipDbBind, handle, softClip)
     }
 
     fun getSoftClipDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipDbBind, handle)
     }
 
     fun setSoftClipRatio(softClip: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSoftClipRatioBind, handle, softClip)
     }
 
     fun getSoftClipRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipRatioBind, handle)
     }
 

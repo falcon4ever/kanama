@@ -9,54 +9,67 @@ import net.multigesture.kanama.types.NodePath
  */
 class SceneReplicationConfig(handle: MemorySegment) : Resource(handle) {
     fun getProperties(): List<NodePath> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePathList(getPropertiesBind, handle)
     }
 
     fun addProperty(path: NodePath, index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathAndIntArg(addPropertyBind, handle, path, index)
     }
 
     fun hasProperty(path: NodePath): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetBool(hasPropertyBind, handle, path)
     }
 
     fun removeProperty(path: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(removePropertyBind, handle, path)
     }
 
     fun propertyGetIndex(path: NodePath): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetInt(propertyGetIndexBind, handle, path)
     }
 
     fun propertyGetSpawn(path: NodePath): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSpawnBind, handle, path)
     }
 
     fun propertySetSpawn(path: NodePath, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSpawnBind, handle, path, enabled)
     }
 
     fun propertyGetReplicationMode(path: NodePath): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetLong(propertyGetReplicationModeBind, handle, path)
     }
 
     fun propertySetReplicationMode(path: NodePath, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathAndLongArg(propertySetReplicationModeBind, handle, path, mode)
     }
 
     fun propertyGetSync(path: NodePath): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSyncBind, handle, path)
     }
 
     fun propertySetSync(path: NodePath, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSyncBind, handle, path, enabled)
     }
 
     fun propertyGetWatch(path: NodePath): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetWatchBind, handle, path)
     }
 
     fun propertySetWatch(path: NodePath, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetWatchBind, handle, path, enabled)
     }
 

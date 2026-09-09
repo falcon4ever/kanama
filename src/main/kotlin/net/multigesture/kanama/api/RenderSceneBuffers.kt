@@ -16,6 +16,7 @@ open class RenderSceneBuffers(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RenderSceneBuffers.configure
      */
     fun configure(config: RenderSceneBuffersConfiguration?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(configureBind, handle, listOf(config?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

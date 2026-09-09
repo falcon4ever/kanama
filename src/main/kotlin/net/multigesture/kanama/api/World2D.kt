@@ -33,6 +33,7 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World2D.get_canvas
      */
     fun getCanvas(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, handle)
     }
 
@@ -42,6 +43,7 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
@@ -52,6 +54,7 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World2D.get_space
      */
     fun getSpace(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
     }
 
@@ -63,6 +66,7 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World2D.get_direct_space_state
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState2D? {
+        checkOpen()
         return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
     }
 

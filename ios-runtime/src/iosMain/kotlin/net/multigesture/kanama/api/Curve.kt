@@ -47,130 +47,162 @@ class Curve(handle: MemorySegment) : Resource(handle) {
         set(value) = setPointCount(value)
 
     fun getPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
     fun setPointCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
     fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Long = 0L, rightMode: Long = 0L): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, handle, position, leftTangent, rightTangent, leftMode, rightMode)
     }
 
     fun removePoint(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, index)
     }
 
     fun clearPoints() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
     }
 
     fun getPointPosition(index: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, index)
     }
 
     fun setPointValue(index: Int, y: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointValueBind, handle, index, y)
     }
 
     fun setPointOffset(index: Int, offset: Double): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(setPointOffsetBind, handle, index, offset)
     }
 
     fun sample(offset: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBind, handle, offset)
     }
 
     fun sampleBaked(offset: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBakedBind, handle, offset)
     }
 
     fun getPointLeftTangent(index: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointLeftTangentBind, handle, index)
     }
 
     fun getPointRightTangent(index: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointRightTangentBind, handle, index)
     }
 
     fun getPointLeftMode(index: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, handle, index)
     }
 
     fun getPointRightMode(index: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, handle, index)
     }
 
     fun setPointLeftTangent(index: Int, tangent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointLeftTangentBind, handle, index, tangent)
     }
 
     fun setPointRightTangent(index: Int, tangent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointRightTangentBind, handle, index, tangent)
     }
 
     fun setPointLeftMode(index: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, handle, index, mode)
     }
 
     fun setPointRightMode(index: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, handle, index, mode)
     }
 
     fun getMinValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinValueBind, handle)
     }
 
     fun setMinValue(min: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinValueBind, handle, min)
     }
 
     fun getMaxValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxValueBind, handle)
     }
 
     fun setMaxValue(max: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxValueBind, handle, max)
     }
 
     fun getValueRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getValueRangeBind, handle)
     }
 
     fun getMinDomain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinDomainBind, handle)
     }
 
     fun setMinDomain(min: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinDomainBind, handle, min)
     }
 
     fun getMaxDomain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDomainBind, handle)
     }
 
     fun setMaxDomain(max: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxDomainBind, handle, max)
     }
 
     fun getDomainRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDomainRangeBind, handle)
     }
 
     fun cleanDupes() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(cleanDupesBind, handle)
     }
 
     fun bake() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(bakeBind, handle)
     }
 
     fun getBakeResolution(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBakeResolutionBind, handle)
     }
 
     fun setBakeResolution(resolution: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBakeResolutionBind, handle, resolution)
     }
 

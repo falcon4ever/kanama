@@ -36,6 +36,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.set_factor
      */
     fun setFactor(factor: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFactorBind, handle, factor)
     }
 
@@ -47,6 +48,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.get_factor
      */
     fun getFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, handle)
     }
 
@@ -56,6 +58,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.set_button_index
      */
     fun setButtonIndex(buttonIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, handle, buttonIndex)
     }
 
@@ -65,6 +68,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.get_button_index
      */
     fun getButtonIndex(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, handle)
     }
 
@@ -75,6 +79,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.set_pressed
      */
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
@@ -84,6 +89,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.set_canceled
      */
     fun setCanceled(canceled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCanceledBind, handle, canceled)
     }
 
@@ -93,6 +99,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.set_double_click
      */
     fun setDoubleClick(doubleClick: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDoubleClickBind, handle, doubleClick)
     }
 
@@ -102,6 +109,7 @@ class InputEventMouseButton(handle: MemorySegment) : InputEventMouse(handle) {
      * Generated from Godot docs: InputEventMouseButton.is_double_click
      */
     fun isDoubleClick(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDoubleClickBind, handle)
     }
 

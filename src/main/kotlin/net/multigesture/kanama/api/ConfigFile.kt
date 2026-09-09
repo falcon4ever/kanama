@@ -17,6 +17,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.set_value
      */
     fun setValue(section: String, key: String, value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringAndVariantArg(setValueBind, handle, section, key, value)
     }
 
@@ -28,6 +29,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.get_value
      */
     fun getValue(section: String, key: String, default: Any? = null): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getValueBind, handle, section, key, default)
     }
 
@@ -37,6 +39,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.has_section
      */
     fun hasSection(section: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, handle, section)
     }
 
@@ -46,6 +49,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.has_section_key
      */
     fun hasSectionKey(section: String, key: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetBool(hasSectionKeyBind, handle, section, key)
     }
 
@@ -55,6 +59,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.get_sections
      */
     fun getSections(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, handle)
     }
 
@@ -65,6 +70,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.get_section_keys
      */
     fun getSectionKeys(section: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getSectionKeysBind, handle, section)
     }
 
@@ -75,6 +81,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.erase_section
      */
     fun eraseSection(section: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(eraseSectionBind, handle, section)
     }
 
@@ -85,6 +92,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.erase_section_key
      */
     fun eraseSectionKey(section: String, key: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, handle, section, key)
     }
 
@@ -96,6 +104,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.load
      */
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
@@ -107,6 +116,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.parse
      */
     fun parse(data: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, handle, data)
     }
 
@@ -118,6 +128,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.save
      */
     fun save(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, handle, path)
     }
 
@@ -127,6 +138,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.encode_to_text
      */
     fun encodeToText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, handle)
     }
 
@@ -138,6 +150,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.load_encrypted
      */
     fun loadEncrypted(path: String, key: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, handle, path, key)
     }
 
@@ -150,6 +163,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.load_encrypted_pass
      */
     fun loadEncryptedPass(path: String, password: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, handle, path, password)
     }
 
@@ -161,6 +175,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.save_encrypted
      */
     fun saveEncrypted(path: String, key: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, handle, path, key)
     }
 
@@ -172,6 +187,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.save_encrypted_pass
      */
     fun saveEncryptedPass(path: String, password: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, handle, path, password)
     }
 
@@ -181,6 +197,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: ConfigFile.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

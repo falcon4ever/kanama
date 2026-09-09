@@ -16,10 +16,12 @@ class VisualShaderNodeTexture2DArray(handle: MemorySegment) : VisualShaderNodeSa
         set(value) = setTextureArray(value)
 
     fun setTextureArray(value: TextureLayered?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureArrayBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTextureArray(): TextureLayered? {
+        checkOpen()
         return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureArrayBind, handle))
     }
 

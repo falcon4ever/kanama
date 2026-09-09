@@ -14,10 +14,12 @@ class CompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
         get() = getLoadPath()
 
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
     fun getLoadPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }
 

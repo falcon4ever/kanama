@@ -71,6 +71,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_aperture
      */
     fun setAperture(aperture: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setApertureBind, handle, aperture)
     }
 
@@ -87,6 +88,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_aperture
      */
     fun getAperture(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getApertureBind, handle)
     }
 
@@ -99,6 +101,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_shutter_speed
      */
     fun setShutterSpeed(shutterSpeed: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setShutterSpeedBind, handle, shutterSpeed)
     }
 
@@ -111,6 +114,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_shutter_speed
      */
     fun getShutterSpeed(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getShutterSpeedBind, handle)
     }
 
@@ -125,6 +129,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_focal_length
      */
     fun setFocalLength(focalLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFocalLengthBind, handle, focalLength)
     }
 
@@ -139,6 +144,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_focal_length
      */
     fun getFocalLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFocalLengthBind, handle)
     }
 
@@ -149,6 +155,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_focus_distance
      */
     fun setFocusDistance(focusDistance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFocusDistanceBind, handle, focusDistance)
     }
 
@@ -159,6 +166,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_focus_distance
      */
     fun getFocusDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFocusDistanceBind, handle)
     }
 
@@ -170,6 +178,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_near
      */
     fun setNear(near: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setNearBind, handle, near)
     }
 
@@ -181,6 +190,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_near
      */
     fun getNear(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, handle)
     }
 
@@ -192,6 +202,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_far
      */
     fun setFar(far: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFarBind, handle, far)
     }
 
@@ -203,6 +214,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_far
      */
     fun getFar(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, handle)
     }
 
@@ -213,6 +225,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_fov
      */
     fun getFov(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, handle)
     }
 
@@ -225,6 +238,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_auto_exposure_max_exposure_value
      */
     fun setAutoExposureMaxExposureValue(exposureValueMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxExposureValueBind, handle, exposureValueMax)
     }
 
@@ -237,6 +251,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_auto_exposure_max_exposure_value
      */
     fun getAutoExposureMaxExposureValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxExposureValueBind, handle)
     }
 
@@ -249,6 +264,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.set_auto_exposure_min_exposure_value
      */
     fun setAutoExposureMinExposureValue(exposureValueMin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinExposureValueBind, handle, exposureValueMin)
     }
 
@@ -261,6 +277,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      * Generated from Godot docs: CameraAttributesPhysical.get_auto_exposure_min_exposure_value
      */
     fun getAutoExposureMinExposureValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinExposureValueBind, handle)
     }
 

@@ -19,6 +19,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_begin
      */
     fun surfaceBegin(primitive: Long, material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, handle, primitive, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -28,6 +29,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_set_color
      */
     fun surfaceSetColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(surfaceSetColorBind, handle, color)
     }
 
@@ -37,6 +39,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_set_normal
      */
     fun surfaceSetNormal(normal: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(surfaceSetNormalBind, handle, normal)
     }
 
@@ -49,6 +52,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_set_tangent
      */
     fun surfaceSetTangent(tangent: Plane) {
+        checkOpen()
         ObjectCalls.ptrcallWithPlaneArg(surfaceSetTangentBind, handle, tangent)
     }
 
@@ -58,6 +62,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_set_uv
      */
     fun surfaceSetUv(uv: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(surfaceSetUvBind, handle, uv)
     }
 
@@ -67,6 +72,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_set_uv2
      */
     fun surfaceSetUv2(uv2: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(surfaceSetUv2Bind, handle, uv2)
     }
 
@@ -76,6 +82,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_add_vertex
      */
     fun surfaceAddVertex(vertex: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(surfaceAddVertexBind, handle, vertex)
     }
 
@@ -85,6 +92,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_add_vertex_2d
      */
     fun surfaceAddVertex2d(vertex: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(surfaceAddVertex2dBind, handle, vertex)
     }
 
@@ -95,6 +103,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.surface_end
      */
     fun surfaceEnd() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(surfaceEndBind, handle)
     }
 
@@ -104,6 +113,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ImmediateMesh.clear_surfaces
      */
     fun clearSurfaces() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
     }
 

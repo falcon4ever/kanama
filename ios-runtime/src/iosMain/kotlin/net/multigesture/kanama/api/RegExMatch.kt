@@ -18,14 +18,17 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
         get() = getStrings()
 
     fun getSubject(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSubjectBind, handle)
     }
 
     fun getGroupCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, handle)
     }
 
     fun getStrings(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStringsBind, handle)
     }
 

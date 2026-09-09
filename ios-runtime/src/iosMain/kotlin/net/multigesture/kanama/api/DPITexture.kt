@@ -36,50 +36,62 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setSaturation(value)
 
     fun setSource(source: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setSourceBind, handle, source)
     }
 
     fun getSource(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSourceBind, handle)
     }
 
     fun setFixAlphaBorder(fixAlphaBorder: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFixAlphaBorderBind, handle, fixAlphaBorder)
     }
 
     fun getFixAlphaBorder(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFixAlphaBorderBind, handle)
     }
 
     fun setPremultAlpha(premultAlpha: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPremultAlphaBind, handle, premultAlpha)
     }
 
     fun getPremultAlpha(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPremultAlphaBind, handle)
     }
 
     fun setBaseScale(baseScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBaseScaleBind, handle, baseScale)
     }
 
     fun getBaseScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBaseScaleBind, handle)
     }
 
     fun setSaturation(saturation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSaturationBind, handle, saturation)
     }
 
     fun getSaturation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSaturationBind, handle)
     }
 
     fun setSizeOverride(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
     }
 
     fun getScaledRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getScaledRidBind, handle)
     }
 

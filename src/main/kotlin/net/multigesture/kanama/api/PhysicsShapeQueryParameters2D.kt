@@ -75,6 +75,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_shape
      */
     fun setShape(shape: Resource?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -86,6 +87,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_shape
      */
     fun getShape(): Resource? {
+        checkOpen()
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
     }
 
@@ -96,6 +98,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_shape_rid
      */
     fun setShapeRid(shape: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setShapeRidBind, handle, shape)
     }
 
@@ -106,6 +109,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_shape_rid
      */
     fun getShapeRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getShapeRidBind, handle)
     }
 
@@ -115,6 +119,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_transform
      */
     fun setTransform(transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
@@ -124,6 +129,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_transform
      */
     fun getTransform(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
@@ -133,6 +139,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_motion
      */
     fun setMotion(motion: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setMotionBind, handle, motion)
     }
 
@@ -142,6 +149,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_motion
      */
     fun getMotion(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getMotionBind, handle)
     }
 
@@ -151,6 +159,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_margin
      */
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
@@ -160,6 +169,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_margin
      */
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
@@ -172,6 +182,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_collision_mask
      */
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
@@ -184,6 +195,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_collision_mask
      */
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
@@ -196,6 +208,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_exclude
      */
     fun setExclude(exclude: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
@@ -208,6 +221,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_exclude
      */
     fun getExclude(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
@@ -217,6 +231,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_collide_with_bodies
      */
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
@@ -226,6 +241,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.is_collide_with_bodies_enabled
      */
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
@@ -235,6 +251,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_collide_with_areas
      */
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
@@ -244,6 +261,7 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.is_collide_with_areas_enabled
      */
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 

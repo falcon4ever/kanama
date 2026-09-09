@@ -15,10 +15,12 @@ class VisualShaderNodeIntOp(handle: MemorySegment) : VisualShaderNode(handle) {
         set(value) = setOperator(value)
 
     fun setOperator(op: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOperatorBind, handle, op)
     }
 
     fun getOperator(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, handle)
     }
 

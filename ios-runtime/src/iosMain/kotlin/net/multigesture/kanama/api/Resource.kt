@@ -35,78 +35,97 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setSceneUniqueId(value)
 
     fun setPath(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPathBind, handle, path)
     }
 
     fun takeOverPath(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(takeOverPathBind, handle, path)
     }
 
     fun getPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
     }
 
     fun setPathCache(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPathCacheBind, handle, path)
     }
 
     fun setName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setNameBind, handle, name)
     }
 
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
     }
 
     fun getRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
     fun setLocalToScene(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setLocalToSceneBind, handle, enable)
     }
 
     fun isLocalToScene(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isLocalToSceneBind, handle)
     }
 
     fun getLocalScene(): Node? {
+        checkOpen()
         return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalSceneBind, handle))
     }
 
     fun setupLocalToScene() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(setupLocalToSceneBind, handle)
     }
 
     fun resetState() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetStateBind, handle)
     }
 
     fun setIdForPath(path: String, id: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, handle, path, id)
     }
 
     fun getIdForPath(path: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, handle, path)
     }
 
     fun isBuiltIn(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, handle)
     }
 
     fun setSceneUniqueId(id: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, handle, id)
     }
 
     fun getSceneUniqueId(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, handle)
     }
 
     fun emitChanged() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(emitChangedBind, handle)
     }
 
     fun duplicate(deep: Boolean = false): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, handle, deep)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -116,6 +135,7 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
     }
 
     fun duplicateDeep(deepSubresourcesMode: Long = 1L): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, handle, deepSubresourcesMode)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -125,6 +145,7 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
     }
 
     fun copyFromResource(resource: Resource?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, handle, resource?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 

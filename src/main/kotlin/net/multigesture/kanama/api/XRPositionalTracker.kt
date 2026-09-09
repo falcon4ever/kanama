@@ -31,6 +31,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.get_tracker_profile
      */
     fun getTrackerProfile(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getTrackerProfileBind, handle)
     }
 
@@ -41,6 +42,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.set_tracker_profile
      */
     fun setTrackerProfile(profile: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setTrackerProfileBind, handle, profile)
     }
 
@@ -50,6 +52,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.get_tracker_hand
      */
     fun getTrackerHand(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, handle)
     }
 
@@ -59,6 +62,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.set_tracker_hand
      */
     fun setTrackerHand(hand: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTrackerHandBind, handle, hand)
     }
 
@@ -68,6 +72,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.has_pose
      */
     fun hasPose(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasPoseBind, handle, name)
     }
 
@@ -77,6 +82,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.get_pose
      */
     fun getPose(name: String): XRPose? {
+        checkOpen()
         return XRPose.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getPoseBind, handle, name))
     }
 
@@ -87,6 +93,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.invalidate_pose
      */
     fun invalidatePose(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(invalidatePoseBind, handle, name)
     }
 
@@ -97,6 +104,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.set_pose
      */
     fun setPose(name: String, transform: Transform3D, linearVelocity: Vector3, angularVelocity: Vector3, trackingConfidence: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameTransform3DTwoVector3LongArgs(setPoseBind, handle, name, transform, linearVelocity, angularVelocity, trackingConfidence)
     }
 
@@ -107,6 +115,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.get_input
      */
     fun getInput(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, handle, name)
     }
 
@@ -117,6 +126,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      * Generated from Godot docs: XRPositionalTracker.set_input
      */
     fun setInput(name: String, value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setInputBind, handle, name, value)
     }
 

@@ -29,66 +29,82 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
         set(value) = setTargetNode(value)
 
     fun setBone2dNode(bone2dNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setBone2dNodeBind, handle, bone2dNodepath)
     }
 
     fun getBone2dNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodeBind, handle)
     }
 
     fun setBoneIndex(boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBoneIndexBind, handle, boneIdx)
     }
 
     fun getBoneIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneIndexBind, handle)
     }
 
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
     fun setAdditionalRotation(rotation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdditionalRotationBind, handle, rotation)
     }
 
     fun getAdditionalRotation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdditionalRotationBind, handle)
     }
 
     fun setEnableConstraint(enableConstraint: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableConstraintBind, handle, enableConstraint)
     }
 
     fun getEnableConstraint(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableConstraintBind, handle)
     }
 
     fun setConstraintAngleMin(angleMin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMinBind, handle, angleMin)
     }
 
     fun getConstraintAngleMin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMinBind, handle)
     }
 
     fun setConstraintAngleMax(angleMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMaxBind, handle, angleMax)
     }
 
     fun getConstraintAngleMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMaxBind, handle)
     }
 
     fun setConstraintAngleInvert(invert: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setConstraintAngleInvertBind, handle, invert)
     }
 
     fun getConstraintAngleInvert(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getConstraintAngleInvertBind, handle)
     }
 

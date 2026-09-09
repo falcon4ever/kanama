@@ -17,6 +17,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_travel
      */
     fun getTravel(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, handle)
     }
 
@@ -26,6 +27,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_remainder
      */
     fun getRemainder(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, handle)
     }
 
@@ -35,6 +37,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_depth
      */
     fun getDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
@@ -44,6 +47,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_collision_count
      */
     fun getCollisionCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
     }
 
@@ -54,6 +58,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_position
      */
     fun getPosition(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getPositionBind, handle, collisionIndex)
     }
 
@@ -64,6 +69,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_normal
      */
     fun getNormal(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getNormalBind, handle, collisionIndex)
     }
 
@@ -74,6 +80,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_angle
      */
     fun getAngle(collisionIndex: Int = 0, upDirection: Vector3): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector3ArgsRetDouble(getAngleBind, handle, collisionIndex, upDirection)
     }
 
@@ -84,6 +91,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_local_shape
      */
     fun getLocalShape(collisionIndex: Int = 0): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLocalShapeBind, handle, collisionIndex))
     }
 
@@ -94,6 +102,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_collider
      */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, collisionIndex))
     }
 
@@ -104,6 +113,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_collider_id
      */
     fun getColliderId(collisionIndex: Int = 0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, handle, collisionIndex)
     }
 
@@ -114,6 +124,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_collider_rid
      */
     fun getColliderRid(collisionIndex: Int = 0): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, collisionIndex)
     }
 
@@ -123,6 +134,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_collider_shape
      */
     fun getColliderShape(collisionIndex: Int = 0): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderShapeBind, handle, collisionIndex))
     }
 
@@ -133,6 +145,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_collider_shape_index
      */
     fun getColliderShapeIndex(collisionIndex: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeIndexBind, handle, collisionIndex)
     }
 
@@ -143,6 +156,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision3D.get_collider_velocity
      */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, handle, collisionIndex)
     }
 

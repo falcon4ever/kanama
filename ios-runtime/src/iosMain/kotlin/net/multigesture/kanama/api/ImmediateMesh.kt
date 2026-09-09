@@ -12,38 +12,47 @@ import net.multigesture.kanama.types.Vector3
  */
 class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
     fun surfaceBegin(primitive: Long, material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, handle, primitive, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun surfaceSetColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(surfaceSetColorBind, handle, color)
     }
 
     fun surfaceSetNormal(normal: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(surfaceSetNormalBind, handle, normal)
     }
 
     fun surfaceSetUv(uv: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(surfaceSetUvBind, handle, uv)
     }
 
     fun surfaceSetUv2(uv2: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(surfaceSetUv2Bind, handle, uv2)
     }
 
     fun surfaceAddVertex(vertex: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(surfaceAddVertexBind, handle, vertex)
     }
 
     fun surfaceAddVertex2d(vertex: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(surfaceAddVertex2dBind, handle, vertex)
     }
 
     fun surfaceEnd() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(surfaceEndBind, handle)
     }
 
     fun clearSurfaces() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
     }
 

@@ -15,10 +15,12 @@ class VisualShaderNodeBooleanConstant(handle: MemorySegment) : VisualShaderNodeC
         set(value) = setConstant(value)
 
     fun setConstant(constant: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setConstantBind, handle, constant)
     }
 
     fun getConstant(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getConstantBind, handle)
     }
 

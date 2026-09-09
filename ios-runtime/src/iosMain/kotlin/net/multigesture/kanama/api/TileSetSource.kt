@@ -10,26 +10,32 @@ import net.multigesture.kanama.types.Vector2i
  */
 open class TileSetSource(handle: MemorySegment) : Resource(handle) {
     fun getTilesCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTilesCountBind, handle)
     }
 
     fun getTileId(index: Int): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2i(getTileIdBind, handle, index)
     }
 
     fun hasTile(atlasCoords: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(hasTileBind, handle, atlasCoords)
     }
 
     fun getAlternativeTilesCount(atlasCoords: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetInt(getAlternativeTilesCountBind, handle, atlasCoords)
     }
 
     fun getAlternativeTileId(atlasCoords: Vector2i, index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(getAlternativeTileIdBind, handle, atlasCoords, index)
     }
 
     fun hasAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(hasAlternativeTileBind, handle, atlasCoords, alternativeTile)
     }
 

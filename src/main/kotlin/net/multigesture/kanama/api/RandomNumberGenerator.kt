@@ -35,6 +35,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.set_seed
      */
     fun setSeed(seed: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSeedBind, handle, seed)
     }
 
@@ -51,6 +52,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.get_seed
      */
     fun getSeed(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSeedBind, handle)
     }
 
@@ -61,6 +63,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.set_state
      */
     fun setState(state: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStateBind, handle, state)
     }
 
@@ -71,6 +74,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.get_state
      */
     fun getState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, handle)
     }
 
@@ -80,6 +84,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.randi
      */
     fun randi(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(randiBind, handle)
     }
 
@@ -89,6 +94,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.randf
      */
     fun randf(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(randfBind, handle)
     }
 
@@ -101,6 +107,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.randfn
      */
     fun randfn(mean: Double = 0.0, deviation: Double = 1.0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfnBind, handle, mean, deviation)
     }
 
@@ -110,6 +117,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.randf_range
      */
     fun randfRange(from: Double, to: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfRangeBind, handle, from, to)
     }
 
@@ -119,6 +127,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.randi_range
      */
     fun randiRange(from: Int, to: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(randiRangeBind, handle, from, to)
     }
 
@@ -135,6 +144,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.rand_weighted
      */
     fun randWeighted(weights: List<Float>): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithPackedFloat32ListArgRetLong(randWeightedBind, handle, weights)
     }
 
@@ -146,6 +156,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RandomNumberGenerator.randomize
      */
     fun randomize() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(randomizeBind, handle)
     }
 

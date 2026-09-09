@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
     fun setStageCompileError(stage: Long, compileError: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, handle, stage, compileError)
     }
 

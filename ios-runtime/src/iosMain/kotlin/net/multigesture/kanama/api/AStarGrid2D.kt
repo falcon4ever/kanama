@@ -65,110 +65,137 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setDiagonalMode(value)
 
     fun getRegion(): Rect2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2i(getRegionBind, handle)
     }
 
     fun setSize(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
     fun setOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
     fun getOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
     fun setCellSize(cellSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setCellSizeBind, handle, cellSize)
     }
 
     fun getCellSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getCellSizeBind, handle)
     }
 
     fun setCellShape(cellShape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCellShapeBind, handle, cellShape)
     }
 
     fun getCellShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, handle)
     }
 
     fun isInBounds(x: Int, y: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isInBoundsBind, handle, x, y)
     }
 
     fun isInBoundsv(id: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(isInBoundsvBind, handle, id)
     }
 
     fun isDirty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDirtyBind, handle)
     }
 
     fun update() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(updateBind, handle)
     }
 
     fun setJumpingEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setJumpingEnabledBind, handle, enabled)
     }
 
     fun isJumpingEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isJumpingEnabledBind, handle)
     }
 
     fun setDiagonalMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, handle, mode)
     }
 
     fun getDiagonalMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, handle)
     }
 
     fun setDefaultComputeHeuristic(heuristic: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, handle, heuristic)
     }
 
     fun getDefaultComputeHeuristic(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, handle)
     }
 
     fun setDefaultEstimateHeuristic(heuristic: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, handle, heuristic)
     }
 
     fun getDefaultEstimateHeuristic(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, handle)
     }
 
     fun setPointSolid(id: Vector2i, solid: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(setPointSolidBind, handle, id, solid)
     }
 
     fun isPointSolid(id: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(isPointSolidBind, handle, id)
     }
 
     fun setPointWeightScale(id: Vector2i, weightScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(setPointWeightScaleBind, handle, id, weightScale)
     }
 
     fun getPointWeightScale(id: Vector2i): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetDouble(getPointWeightScaleBind, handle, id)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun getPointPosition(id: Vector2i): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2(getPointPositionBind, handle, id)
     }
 

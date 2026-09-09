@@ -15,6 +15,7 @@ class ColorPalette(handle: MemorySegment) : Resource(handle) {
         get() = getColors()
 
     fun getColors(): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
     }
 

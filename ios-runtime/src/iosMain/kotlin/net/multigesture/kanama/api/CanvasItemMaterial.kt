@@ -46,50 +46,62 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
         set(value) = setParticlesAnimLoop(value)
 
     fun setBlendMode(blendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
     }
 
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 
     fun setLightMode(lightMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLightModeBind, handle, lightMode)
     }
 
     fun getLightMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLightModeBind, handle)
     }
 
     fun setParticlesAnimation(particlesAnim: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setParticlesAnimationBind, handle, particlesAnim)
     }
 
     fun getParticlesAnimation(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimationBind, handle)
     }
 
     fun setParticlesAnimHFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, handle, frames)
     }
 
     fun getParticlesAnimHFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, handle)
     }
 
     fun setParticlesAnimVFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, handle, frames)
     }
 
     fun getParticlesAnimVFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, handle)
     }
 
     fun setParticlesAnimLoop(loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, handle, loop)
     }
 
     fun getParticlesAnimLoop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, handle)
     }
 

@@ -23,6 +23,7 @@ class AudioEffectRecord(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectRecord.set_recording_active
      */
     fun setRecordingActive(record: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRecordingActiveBind, handle, record)
     }
 
@@ -32,6 +33,7 @@ class AudioEffectRecord(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectRecord.is_recording_active
      */
     fun isRecordingActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRecordingActiveBind, handle)
     }
 
@@ -41,6 +43,7 @@ class AudioEffectRecord(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectRecord.set_format
      */
     fun setFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
@@ -50,6 +53,7 @@ class AudioEffectRecord(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectRecord.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -59,6 +63,7 @@ class AudioEffectRecord(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectRecord.get_recording
      */
     fun getRecording(): AudioStreamWAV? {
+        checkOpen()
         return AudioStreamWAV.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRecordingBind, handle))
     }
 

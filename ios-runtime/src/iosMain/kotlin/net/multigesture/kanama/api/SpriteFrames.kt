@@ -9,82 +9,102 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class SpriteFrames(handle: MemorySegment) : Resource(handle) {
     fun addAnimation(anim: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(addAnimationBind, handle, anim)
     }
 
     fun hasAnimation(anim: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, anim)
     }
 
     fun duplicateAnimation(animFrom: String, animTo: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(duplicateAnimationBind, handle, animFrom, animTo)
     }
 
     fun removeAnimation(anim: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, handle, anim)
     }
 
     fun renameAnimation(anim: String, newname: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, handle, anim, newname)
     }
 
     fun getAnimationNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationNamesBind, handle)
     }
 
     fun setAnimationSpeed(anim: String, fps: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(setAnimationSpeedBind, handle, anim, fps)
     }
 
     fun getAnimationSpeed(anim: String): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetDouble(getAnimationSpeedBind, handle, anim)
     }
 
     fun setAnimationLoop(anim: String, loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(setAnimationLoopBind, handle, anim, loop)
     }
 
     fun getAnimationLoop(anim: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(getAnimationLoopBind, handle, anim)
     }
 
     fun setAnimationLoopMode(anim: String, loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndLongArg(setAnimationLoopModeBind, handle, anim, loopMode)
     }
 
     fun getAnimationLoopMode(anim: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetLong(getAnimationLoopModeBind, handle, anim)
     }
 
     fun addFrame(anim: String, texture: Texture2D?, duration: Double = 1.0, atPosition: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(addFrameBind, handle, anim, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration, atPosition)
     }
 
     fun setFrame(anim: String, idx: Int, texture: Texture2D?, duration: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(setFrameBind, handle, anim, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration)
     }
 
     fun removeFrame(anim: String, idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndIntArg(removeFrameBind, handle, anim, idx)
     }
 
     fun getFrameCount(anim: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetInt(getFrameCountBind, handle, anim)
     }
 
     fun getFrameTexture(anim: String, idx: Int): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getFrameTextureBind, handle, anim, idx))
     }
 
     fun getFrameDuration(anim: String, idx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(getFrameDurationBind, handle, anim, idx)
     }
 
     fun clear(anim: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(clearBind, handle, anim)
     }
 
     fun clearAll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearAllBind, handle)
     }
 

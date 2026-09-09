@@ -22,6 +22,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ButtonGroup.get_pressed_button
      */
     fun getPressedButton(): BaseButton? {
+        checkOpen()
         return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPressedButtonBind, handle))
     }
 
@@ -32,6 +33,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ButtonGroup.get_buttons
      */
     fun getButtons(): List<BaseButton> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedBaseButtonList(getButtonsBind, handle)
     }
 
@@ -41,6 +43,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ButtonGroup.set_allow_unpress
      */
     fun setAllowUnpress(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowUnpressBind, handle, enabled)
     }
 
@@ -50,6 +53,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: ButtonGroup.is_allow_unpress
      */
     fun isAllowUnpress(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowUnpressBind, handle)
     }
 

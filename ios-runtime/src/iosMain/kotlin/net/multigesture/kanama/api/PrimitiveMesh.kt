@@ -41,50 +41,62 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
         set(value) = setUv2Padding(value)
 
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 
     fun getMeshArrays(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getMeshArraysBind, handle)
     }
 
     fun setCustomAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
     }
 
     fun getCustomAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
     }
 
     fun setFlipFaces(flipFaces: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, handle, flipFaces)
     }
 
     fun getFlipFaces(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, handle)
     }
 
     fun setAddUv2(addUv2: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAddUv2Bind, handle, addUv2)
     }
 
     fun getAddUv2(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAddUv2Bind, handle)
     }
 
     fun setUv2Padding(uv2Padding: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setUv2PaddingBind, handle, uv2Padding)
     }
 
     fun getUv2Padding(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getUv2PaddingBind, handle)
     }
 
     fun requestUpdate() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(requestUpdateBind, handle)
     }
 

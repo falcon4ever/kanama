@@ -16,34 +16,42 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setBufferLength(value)
 
     fun canGetBuffer(frames: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(canGetBufferBind, handle, frames)
     }
 
     fun clearBuffer() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBufferBind, handle)
     }
 
     fun setBufferLength(bufferLengthSeconds: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, bufferLengthSeconds)
     }
 
     fun getBufferLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
     }
 
     fun getFramesAvailable(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, handle)
     }
 
     fun getDiscardedFrames(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDiscardedFramesBind, handle)
     }
 
     fun getBufferLengthFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferLengthFramesBind, handle)
     }
 
     fun getPushedFrames(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPushedFramesBind, handle)
     }
 

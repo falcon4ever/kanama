@@ -17,10 +17,12 @@ class BoxOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
         set(value) = setSize(value)
 
     fun setSize(size: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
     }
 

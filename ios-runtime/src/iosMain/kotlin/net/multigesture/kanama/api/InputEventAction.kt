@@ -28,30 +28,37 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
         set(value) = setEventIndex(value)
 
     fun setAction(action: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setActionBind, handle, action)
     }
 
     fun getAction(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getActionBind, handle)
     }
 
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
     fun setStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
     }
 
     fun getStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
     }
 
     fun setEventIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setEventIndexBind, handle, index)
     }
 
     fun getEventIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEventIndexBind, handle)
     }
 

@@ -88,106 +88,132 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
         set(value) = setProjectHullVertices(value)
 
     fun setMaxConcavity(maxConcavity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxConcavityBind, handle, maxConcavity)
     }
 
     fun getMaxConcavity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxConcavityBind, handle)
     }
 
     fun setSymmetryPlanesClippingBias(symmetryPlanesClippingBias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSymmetryPlanesClippingBiasBind, handle, symmetryPlanesClippingBias)
     }
 
     fun getSymmetryPlanesClippingBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSymmetryPlanesClippingBiasBind, handle)
     }
 
     fun setRevolutionAxesClippingBias(revolutionAxesClippingBias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRevolutionAxesClippingBiasBind, handle, revolutionAxesClippingBias)
     }
 
     fun getRevolutionAxesClippingBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRevolutionAxesClippingBiasBind, handle)
     }
 
     fun setMinVolumePerConvexHull(minVolumePerConvexHull: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinVolumePerConvexHullBind, handle, minVolumePerConvexHull)
     }
 
     fun getMinVolumePerConvexHull(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinVolumePerConvexHullBind, handle)
     }
 
     fun setResolution(minVolumePerConvexHull: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setResolutionBind, handle, minVolumePerConvexHull)
     }
 
     fun getResolution(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getResolutionBind, handle)
     }
 
     fun setMaxNumVerticesPerConvexHull(maxNumVerticesPerConvexHull: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setMaxNumVerticesPerConvexHullBind, handle, maxNumVerticesPerConvexHull)
     }
 
     fun getMaxNumVerticesPerConvexHull(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxNumVerticesPerConvexHullBind, handle)
     }
 
     fun setPlaneDownsampling(planeDownsampling: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setPlaneDownsamplingBind, handle, planeDownsampling)
     }
 
     fun getPlaneDownsampling(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getPlaneDownsamplingBind, handle)
     }
 
     fun setConvexHullDownsampling(convexHullDownsampling: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setConvexHullDownsamplingBind, handle, convexHullDownsampling)
     }
 
     fun getConvexHullDownsampling(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getConvexHullDownsamplingBind, handle)
     }
 
     fun setNormalizeMesh(normalizeMesh: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNormalizeMeshBind, handle, normalizeMesh)
     }
 
     fun getNormalizeMesh(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNormalizeMeshBind, handle)
     }
 
     fun setMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
     fun getMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
     fun setConvexHullApproximation(convexHullApproximation: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setConvexHullApproximationBind, handle, convexHullApproximation)
     }
 
     fun getConvexHullApproximation(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getConvexHullApproximationBind, handle)
     }
 
     fun setMaxConvexHulls(maxConvexHulls: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setMaxConvexHullsBind, handle, maxConvexHulls)
     }
 
     fun getMaxConvexHulls(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxConvexHullsBind, handle)
     }
 
     fun setProjectHullVertices(projectHullVertices: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setProjectHullVerticesBind, handle, projectHullVertices)
     }
 
     fun getProjectHullVertices(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, handle)
     }
 

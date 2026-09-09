@@ -30,6 +30,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.set_has_tracking_data
      */
     fun setHasTrackingData(hasData: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
     }
 
@@ -39,6 +40,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.get_has_tracking_data
      */
     fun getHasTrackingData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
@@ -48,6 +50,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.set_hand_tracking_source
      */
     fun setHandTrackingSource(source: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, handle, source)
     }
 
@@ -57,6 +60,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.get_hand_tracking_source
      */
     fun getHandTrackingSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, handle)
     }
 
@@ -66,6 +70,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.set_hand_joint_flags
      */
     fun setHandJointFlags(joint: Long, flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, handle, joint, flags)
     }
 
@@ -75,6 +80,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.get_hand_joint_flags
      */
     fun getHandJointFlags(joint: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, handle, joint)
     }
 
@@ -84,6 +90,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.set_hand_joint_transform
      */
     fun setHandJointTransform(joint: Long, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, handle, joint, transform)
     }
 
@@ -93,6 +100,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.get_hand_joint_transform
      */
     fun getHandJointTransform(joint: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, handle, joint)
     }
 
@@ -102,6 +110,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.set_hand_joint_radius
      */
     fun setHandJointRadius(joint: Long, radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, handle, joint, radius)
     }
 
@@ -111,6 +120,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.get_hand_joint_radius
      */
     fun getHandJointRadius(joint: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, handle, joint)
     }
 
@@ -120,6 +130,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.set_hand_joint_linear_velocity
      */
     fun setHandJointLinearVelocity(joint: Long, linearVelocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, handle, joint, linearVelocity)
     }
 
@@ -129,6 +140,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.get_hand_joint_linear_velocity
      */
     fun getHandJointLinearVelocity(joint: Long): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, handle, joint)
     }
 
@@ -138,6 +150,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.set_hand_joint_angular_velocity
      */
     fun setHandJointAngularVelocity(joint: Long, angularVelocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, handle, joint, angularVelocity)
     }
 
@@ -147,6 +160,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRHandTracker.get_hand_joint_angular_velocity
      */
     fun getHandJointAngularVelocity(joint: Long): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, handle, joint)
     }
 

@@ -16,6 +16,7 @@ class EditorScript(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorScript.add_root_node
      */
     fun addRootNode(node: Node) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, handle, listOf(node.handle))
     }
 
@@ -26,6 +27,7 @@ class EditorScript(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorScript.get_scene
      */
     fun getScene(): Node? {
+        checkOpen()
         return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSceneBind, handle))
     }
 
@@ -35,6 +37,7 @@ class EditorScript(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorScript.get_editor_interface
      */
     fun getEditorInterface(): EditorInterface? {
+        checkOpen()
         return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorInterfaceBind, handle))
     }
 

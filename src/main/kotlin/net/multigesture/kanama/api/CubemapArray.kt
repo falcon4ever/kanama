@@ -15,6 +15,7 @@ class CubemapArray(handle: MemorySegment) : ImageTextureLayered(handle) {
      * Generated from Godot docs: CubemapArray.create_placeholder
      */
     fun createPlaceholder(): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

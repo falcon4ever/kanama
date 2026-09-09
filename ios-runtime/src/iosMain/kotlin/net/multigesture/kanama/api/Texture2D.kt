@@ -13,50 +13,62 @@ import net.multigesture.kanama.types.Vector2
  */
 open class Texture2D(handle: MemorySegment) : Texture(handle) {
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun getMipmapCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, handle)
     }
 
     fun getWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
     fun getHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
     fun hasAlpha(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasAlphaBind, handle)
     }
 
     fun hasMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
     fun draw(canvasItem: RID, position: Vector2, modulate: Color, transpose: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(drawBind, handle, canvasItem, position, modulate, transpose)
     }
 
     fun drawRect(canvasItem: RID, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(drawRectBind, handle, canvasItem, rect, tile, modulate, transpose)
     }
 
     fun drawRectRegion(canvasItem: RID, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(drawRectRegionBind, handle, canvasItem, rect, srcRect, modulate, transpose, clipUv)
     }
 
     fun getImage(): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, handle))
     }
 
     fun createPlaceholder(): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

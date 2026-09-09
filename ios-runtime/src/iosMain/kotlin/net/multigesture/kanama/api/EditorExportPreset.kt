@@ -9,90 +9,112 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
     fun has(property: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasBind, handle, property)
     }
 
     fun getFilesToExport(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesToExportBind, handle)
     }
 
     fun getCustomizedFilesCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCustomizedFilesCountBind, handle)
     }
 
     fun hasExportFile(path: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasExportFileBind, handle, path)
     }
 
     fun getFileExportMode(path: String, default: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, handle, path, default)
     }
 
     fun getProjectSetting(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getProjectSettingBind, handle, name)
     }
 
     fun getPresetName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPresetNameBind, handle)
     }
 
     fun isRunnable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRunnableBind, handle)
     }
 
     fun areAdvancedOptionsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(areAdvancedOptionsEnabledBind, handle)
     }
 
     fun isDedicatedServer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDedicatedServerBind, handle)
     }
 
     fun getExportFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, handle)
     }
 
     fun getIncludeFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getIncludeFilterBind, handle)
     }
 
     fun getExcludeFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getExcludeFilterBind, handle)
     }
 
     fun getCustomFeatures(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCustomFeaturesBind, handle)
     }
 
     fun getPatches(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPatchesBind, handle)
     }
 
     fun getExportPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getExportPathBind, handle)
     }
 
     fun getEncryptionInFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionInFilterBind, handle)
     }
 
     fun getEncryptionExFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionExFilterBind, handle)
     }
 
     fun getEncryptPck(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEncryptPckBind, handle)
     }
 
     fun getEncryptDirectory(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEncryptDirectoryBind, handle)
     }
 
     fun getEncryptionKey(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionKeyBind, handle)
     }
 
     fun getScriptExportMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, handle)
     }
 

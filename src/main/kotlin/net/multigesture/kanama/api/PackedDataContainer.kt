@@ -17,6 +17,7 @@ class PackedDataContainer(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PackedDataContainer.pack
      */
     fun pack(value: Any?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetLong(packBind, handle, value)
     }
 
@@ -26,6 +27,7 @@ class PackedDataContainer(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PackedDataContainer.size
      */
     fun size(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, handle)
     }
 

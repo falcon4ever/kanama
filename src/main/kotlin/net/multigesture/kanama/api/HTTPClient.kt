@@ -38,6 +38,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.connect_to_host
      */
     fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(connectToHostBind, handle, host, port, tlsOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -47,6 +48,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.set_connection
      */
     fun setConnection(connection: StreamPeer?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setConnectionBind, handle, listOf(connection?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -56,6 +58,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.get_connection
      */
     fun getConnection(): StreamPeer? {
+        checkOpen()
         return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, handle))
     }
 
@@ -70,6 +73,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.request_raw
      */
     fun requestRaw(method: Long, url: String, headers: List<String>, body: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(requestRawBind, handle, method, url, headers, body)
     }
 
@@ -84,10 +88,12 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.request
      */
     fun request(method: Long, url: String, headers: List<String>, body: String = ""): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(requestBind, handle, method, url, headers, body)
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
@@ -97,6 +103,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.has_response
      */
     fun hasResponse(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasResponseBind, handle)
     }
 
@@ -106,6 +113,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.is_response_chunked
      */
     fun isResponseChunked(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isResponseChunkedBind, handle)
     }
 
@@ -115,6 +123,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.get_response_code
      */
     fun getResponseCode(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getResponseCodeBind, handle)
     }
 
@@ -124,6 +133,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.get_response_headers
      */
     fun getResponseHeaders(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResponseHeadersBind, handle)
     }
 
@@ -135,6 +145,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.get_response_headers_as_dictionary
      */
     fun getResponseHeadersAsDictionary(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getResponseHeadersAsDictionaryBind, handle)
     }
 
@@ -147,6 +158,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.get_response_body_length
      */
     fun getResponseBodyLength(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getResponseBodyLengthBind, handle)
     }
 
@@ -156,6 +168,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.read_response_body_chunk
      */
     fun readResponseBodyChunk(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(readResponseBodyChunkBind, handle)
     }
 
@@ -166,6 +179,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.set_read_chunk_size
      */
     fun setReadChunkSize(bytes: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setReadChunkSizeBind, handle, bytes)
     }
 
@@ -176,6 +190,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.get_read_chunk_size
      */
     fun getReadChunkSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getReadChunkSizeBind, handle)
     }
 
@@ -185,6 +200,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.set_blocking_mode
      */
     fun setBlockingMode(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBlockingModeBind, handle, enabled)
     }
 
@@ -194,6 +210,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.is_blocking_mode_enabled
      */
     fun isBlockingModeEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBlockingModeEnabledBind, handle)
     }
 
@@ -203,6 +220,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.get_status
      */
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
@@ -212,6 +230,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.poll
      */
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
@@ -222,6 +241,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.set_http_proxy
      */
     fun setHttpProxy(host: String, port: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, handle, host, port)
     }
 
@@ -232,6 +252,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.set_https_proxy
      */
     fun setHttpsProxy(host: String, port: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, handle, host, port)
     }
 
@@ -242,6 +263,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HTTPClient.query_string_from_dict
      */
     fun queryStringFromDict(fields: Map<String, Any?>): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryArgRetString(queryStringFromDictBind, handle, fields)
     }
 

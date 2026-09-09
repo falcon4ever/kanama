@@ -22,6 +22,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.can_instantiate
      */
     fun canInstantiate(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, handle)
     }
 
@@ -34,6 +35,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.has_source_code
      */
     fun hasSourceCode(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasSourceCodeBind, handle)
     }
 
@@ -44,6 +46,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_source_code
      */
     fun getSourceCode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSourceCodeBind, handle)
     }
 
@@ -54,6 +57,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.set_source_code
      */
     fun setSourceCode(source: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setSourceCodeBind, handle, source)
     }
 
@@ -63,6 +67,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.reload
      */
     fun reload(keepState: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetLong(reloadBind, handle, keepState)
     }
 
@@ -72,6 +77,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_base_script
      */
     fun getBaseScript(): Script? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseScriptBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -86,6 +92,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_instance_base_type
      */
     fun getInstanceBaseType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getInstanceBaseTypeBind, handle)
     }
 
@@ -97,6 +104,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_global_name
      */
     fun getGlobalName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getGlobalNameBind, handle)
     }
 
@@ -106,6 +114,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.has_script_method
      */
     fun hasScriptMethod(methodName: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptMethodBind, handle, methodName)
     }
 
@@ -115,6 +124,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.has_script_signal
      */
     fun hasScriptSignal(signalName: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptSignalBind, handle, signalName)
     }
 
@@ -125,6 +135,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_script_property_list
      */
     fun getScriptPropertyList(): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptPropertyListBind, handle)
     }
 
@@ -135,6 +146,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_script_method_list
      */
     fun getScriptMethodList(): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptMethodListBind, handle)
     }
 
@@ -145,6 +157,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_script_signal_list
      */
     fun getScriptSignalList(): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptSignalListBind, handle)
     }
 
@@ -154,6 +167,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_script_constant_map
      */
     fun getScriptConstantMap(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getScriptConstantMapBind, handle)
     }
 
@@ -163,6 +177,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_property_default_value
      */
     fun getPropertyDefaultValue(property: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getPropertyDefaultValueBind, handle, property)
     }
 
@@ -172,6 +187,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.is_tool
      */
     fun isTool(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isToolBind, handle)
     }
 
@@ -182,6 +198,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.is_abstract
      */
     fun isAbstract(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAbstractBind, handle)
     }
 
@@ -191,6 +208,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.get_rpc_config
      */
     fun getRpcConfig(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRpcConfigBind, handle)
     }
 
@@ -200,6 +218,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Script.instance_has
      */
     fun instanceHas(baseObject: GodotObject): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(instanceHasBind, handle, baseObject.handle)
     }
 

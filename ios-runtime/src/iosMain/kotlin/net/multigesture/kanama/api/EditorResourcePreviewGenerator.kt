@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.RID
  */
 class EditorResourcePreviewGenerator(handle: MemorySegment) : RefCounted(handle) {
     fun requestDrawAndWait(viewport: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(requestDrawAndWaitBind, handle, viewport)
     }
 

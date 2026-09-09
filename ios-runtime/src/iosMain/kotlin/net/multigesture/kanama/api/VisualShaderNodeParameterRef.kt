@@ -16,10 +16,12 @@ class VisualShaderNodeParameterRef(handle: MemorySegment) : VisualShaderNode(han
         set(value) = setParameterName(value)
 
     fun setParameterName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setParameterNameBind, handle, name)
     }
 
     fun getParameterName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, handle)
     }
 

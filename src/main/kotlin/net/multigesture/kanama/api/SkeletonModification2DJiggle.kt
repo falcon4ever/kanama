@@ -61,6 +61,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_target_node
      */
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
@@ -71,6 +72,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_target_node
      */
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
@@ -80,6 +82,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_data_chain_length
      */
     fun setJiggleDataChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setJiggleDataChainLengthBind, handle, length)
     }
 
@@ -89,6 +92,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_data_chain_length
      */
     fun getJiggleDataChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getJiggleDataChainLengthBind, handle)
     }
 
@@ -99,6 +103,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_stiffness
      */
     fun setStiffness(stiffness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStiffnessBind, handle, stiffness)
     }
 
@@ -109,6 +114,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_stiffness
      */
     fun getStiffness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStiffnessBind, handle)
     }
 
@@ -119,6 +125,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_mass
      */
     fun setMass(mass: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
     }
 
@@ -129,6 +136,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_mass
      */
     fun getMass(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
     }
 
@@ -139,6 +147,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_damping
      */
     fun setDamping(damping: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, damping)
     }
 
@@ -149,6 +158,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_damping
      */
     fun getDamping(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
     }
 
@@ -159,6 +169,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_use_gravity
      */
     fun setUseGravity(useGravity: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseGravityBind, handle, useGravity)
     }
 
@@ -169,6 +180,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_use_gravity
      */
     fun getUseGravity(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseGravityBind, handle)
     }
 
@@ -178,6 +190,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_gravity
      */
     fun setGravity(gravity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setGravityBind, handle, gravity)
     }
 
@@ -187,6 +200,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_gravity
      */
     fun getGravity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, handle)
     }
 
@@ -197,6 +211,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_use_colliders
      */
     fun setUseColliders(useColliders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseCollidersBind, handle, useColliders)
     }
 
@@ -206,6 +221,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_use_colliders
      */
     fun getUseColliders(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseCollidersBind, handle)
     }
 
@@ -216,6 +232,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_collision_mask
      */
     fun setCollisionMask(collisionMask: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCollisionMaskBind, handle, collisionMask)
     }
 
@@ -225,6 +242,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_collision_mask
      */
     fun getCollisionMask(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCollisionMaskBind, handle)
     }
 
@@ -235,6 +253,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.reset
      */
     fun reset() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetBind, handle)
     }
 
@@ -244,6 +263,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_bone2d_node
      */
     fun setJiggleJointBone2dNode(jointIdx: Int, bone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setJiggleJointBone2dNodeBind, handle, jointIdx, bone2dNode)
     }
 
@@ -253,6 +273,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_bone2d_node
      */
     fun getJiggleJointBone2dNode(jointIdx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getJiggleJointBone2dNodeBind, handle, jointIdx)
     }
 
@@ -263,6 +284,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_bone_index
      */
     fun setJiggleJointBoneIndex(jointIdx: Int, boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setJiggleJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
@@ -272,6 +294,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_bone_index
      */
     fun getJiggleJointBoneIndex(jointIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getJiggleJointBoneIndexBind, handle, jointIdx)
     }
 
@@ -283,6 +306,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_override
      */
     fun setJiggleJointOverride(jointIdx: Int, override: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointOverrideBind, handle, jointIdx, override)
     }
 
@@ -293,6 +317,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_override
      */
     fun getJiggleJointOverride(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointOverrideBind, handle, jointIdx)
     }
 
@@ -302,6 +327,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_stiffness
      */
     fun setJiggleJointStiffness(jointIdx: Int, stiffness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointStiffnessBind, handle, jointIdx, stiffness)
     }
 
@@ -311,6 +337,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_stiffness
      */
     fun getJiggleJointStiffness(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointStiffnessBind, handle, jointIdx)
     }
 
@@ -320,6 +347,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_mass
      */
     fun setJiggleJointMass(jointIdx: Int, mass: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointMassBind, handle, jointIdx, mass)
     }
 
@@ -329,6 +357,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_mass
      */
     fun getJiggleJointMass(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointMassBind, handle, jointIdx)
     }
 
@@ -338,6 +367,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_damping
      */
     fun setJiggleJointDamping(jointIdx: Int, damping: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointDampingBind, handle, jointIdx, damping)
     }
 
@@ -347,6 +377,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_damping
      */
     fun getJiggleJointDamping(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointDampingBind, handle, jointIdx)
     }
 
@@ -356,6 +387,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_use_gravity
      */
     fun setJiggleJointUseGravity(jointIdx: Int, useGravity: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointUseGravityBind, handle, jointIdx, useGravity)
     }
 
@@ -365,6 +397,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_use_gravity
      */
     fun getJiggleJointUseGravity(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointUseGravityBind, handle, jointIdx)
     }
 
@@ -374,6 +407,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.set_jiggle_joint_gravity
      */
     fun setJiggleJointGravity(jointIdx: Int, gravity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setJiggleJointGravityBind, handle, jointIdx, gravity)
     }
 
@@ -384,6 +418,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_gravity
      */
     fun getJiggleJointGravity(jointIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getJiggleJointGravityBind, handle, jointIdx)
     }
 

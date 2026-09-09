@@ -15,6 +15,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.get_scene_tiles_count
      */
     fun getSceneTilesCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSceneTilesCountBind, handle)
     }
 
@@ -24,6 +25,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.get_scene_tile_id
      */
     fun getSceneTileId(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSceneTileIdBind, handle, index)
     }
 
@@ -33,6 +35,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.has_scene_tile_id
      */
     fun hasSceneTileId(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSceneTileIdBind, handle, id)
     }
 
@@ -42,6 +45,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.create_scene_tile
      */
     fun createSceneTile(packedScene: PackedScene?, idOverride: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(createSceneTileBind, handle, packedScene?.requireOpenHandle() ?: MemorySegment.NULL, idOverride)
     }
 
@@ -52,6 +56,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.set_scene_tile_id
      */
     fun setSceneTileId(id: Int, newId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setSceneTileIdBind, handle, id, newId)
     }
 
@@ -63,6 +68,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.set_scene_tile_scene
      */
     fun setSceneTileScene(id: Int, packedScene: PackedScene?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setSceneTileSceneBind, handle, id, packedScene?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -72,6 +78,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.get_scene_tile_scene
      */
     fun getSceneTileScene(id: Int): PackedScene? {
+        checkOpen()
         return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSceneTileSceneBind, handle, id))
     }
 
@@ -82,6 +89,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.set_scene_tile_display_placeholder
      */
     fun setSceneTileDisplayPlaceholder(id: Int, displayPlaceholder: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setSceneTileDisplayPlaceholderBind, handle, id, displayPlaceholder)
     }
 
@@ -91,6 +99,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.get_scene_tile_display_placeholder
      */
     fun getSceneTileDisplayPlaceholder(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getSceneTileDisplayPlaceholderBind, handle, id)
     }
 
@@ -100,6 +109,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.remove_scene_tile
      */
     fun removeSceneTile(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeSceneTileBind, handle, id)
     }
 
@@ -109,6 +119,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      * Generated from Godot docs: TileSetScenesCollectionSource.get_next_scene_tile_id
      */
     fun getNextSceneTileId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNextSceneTileIdBind, handle)
     }
 

@@ -124,6 +124,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.load_bitmap_font
      */
     fun loadBitmapFont(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, handle, path)
     }
 
@@ -136,6 +137,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.load_dynamic_font
      */
     fun loadDynamicFont(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, handle, path)
     }
 
@@ -145,6 +147,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_data
      */
     fun setData(data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
     }
 
@@ -154,6 +157,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_data
      */
     fun getData(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
     }
 
@@ -163,6 +167,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_font_name
      */
     fun setFontName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFontNameBind, handle, name)
     }
 
@@ -172,6 +177,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_font_style_name
      */
     fun setFontStyleName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFontStyleNameBind, handle, name)
     }
 
@@ -181,6 +187,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_font_style
      */
     fun setFontStyle(style: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFontStyleBind, handle, style)
     }
 
@@ -191,6 +198,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_font_weight
      */
     fun setFontWeight(weight: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
     }
 
@@ -200,6 +208,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_font_stretch
      */
     fun setFontStretch(stretch: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
     }
 
@@ -209,6 +218,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_antialiasing
      */
     fun setAntialiasing(antialiasing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
     }
 
@@ -218,6 +228,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_antialiasing
      */
     fun getAntialiasing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
     }
 
@@ -228,6 +239,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_disable_embedded_bitmaps
      */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
     }
 
@@ -238,6 +250,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_disable_embedded_bitmaps
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
     }
 
@@ -247,6 +260,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_generate_mipmaps
      */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
     }
 
@@ -256,6 +270,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_generate_mipmaps
      */
     fun getGenerateMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
     }
 
@@ -276,6 +291,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_multichannel_signed_distance_field
      */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
     }
 
@@ -296,6 +312,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.is_multichannel_signed_distance_field
      */
     fun isMultichannelSignedDistanceField(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
     }
 
@@ -308,6 +325,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_msdf_pixel_range
      */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
     }
 
@@ -320,6 +338,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_msdf_pixel_range
      */
     fun getMsdfPixelRange(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
     }
 
@@ -331,6 +350,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_msdf_size
      */
     fun setMsdfSize(msdfSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
     }
 
@@ -342,6 +362,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_msdf_size
      */
     fun getMsdfSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
     }
 
@@ -351,6 +372,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_fixed_size
      */
     fun setFixedSize(fixedSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFixedSizeBind, handle, fixedSize)
     }
 
@@ -360,6 +382,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_fixed_size
      */
     fun getFixedSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFixedSizeBind, handle)
     }
 
@@ -369,6 +392,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_fixed_size_scale_mode
      */
     fun setFixedSizeScaleMode(fixedSizeScaleMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, handle, fixedSizeScaleMode)
     }
 
@@ -378,6 +402,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_fixed_size_scale_mode
      */
     fun getFixedSizeScaleMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, handle)
     }
 
@@ -387,6 +412,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_allow_system_fallback
      */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
     }
 
@@ -396,6 +422,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.is_allow_system_fallback
      */
     fun isAllowSystemFallback(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
     }
 
@@ -406,6 +433,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_force_autohinter
      */
     fun setForceAutohinter(forceAutohinter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
     }
 
@@ -416,6 +444,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.is_force_autohinter
      */
     fun isForceAutohinter(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
     }
 
@@ -426,6 +455,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_modulate_color_glyphs
      */
     fun setModulateColorGlyphs(modulate: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
     }
 
@@ -436,6 +466,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.is_modulate_color_glyphs
      */
     fun isModulateColorGlyphs(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
     }
 
@@ -445,6 +476,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_hinting
      */
     fun setHinting(hinting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
     }
 
@@ -454,6 +486,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_hinting
      */
     fun getHinting(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
     }
 
@@ -466,6 +499,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_subpixel_positioning
      */
     fun setSubpixelPositioning(subpixelPositioning: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
     }
 
@@ -478,6 +512,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_subpixel_positioning
      */
     fun getSubpixelPositioning(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
     }
 
@@ -489,6 +524,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_keep_rounding_remainders
      */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
     }
 
@@ -500,6 +536,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_keep_rounding_remainders
      */
     fun getKeepRoundingRemainders(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
     }
 
@@ -511,6 +548,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_oversampling
      */
     fun setOversampling(oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
     }
 
@@ -522,6 +560,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_oversampling
      */
     fun getOversampling(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
     }
 
@@ -531,6 +570,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_cache_count
      */
     fun getCacheCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCacheCountBind, handle)
     }
 
@@ -540,6 +580,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.clear_cache
      */
     fun clearCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearCacheBind, handle)
     }
 
@@ -549,6 +590,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.remove_cache
      */
     fun removeCache(cacheIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeCacheBind, handle, cacheIndex)
     }
 
@@ -559,6 +601,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_size_cache_list
      */
     fun getSizeCacheList(cacheIndex: Int): List<Vector2i> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2iList(getSizeCacheListBind, handle, cacheIndex)
     }
 
@@ -568,6 +611,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.clear_size_cache
      */
     fun clearSizeCache(cacheIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(clearSizeCacheBind, handle, cacheIndex)
     }
 
@@ -577,6 +621,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.remove_size_cache
      */
     fun removeSizeCache(cacheIndex: Int, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(removeSizeCacheBind, handle, cacheIndex, size)
     }
 
@@ -587,6 +632,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_variation_coordinates
      */
     fun setVariationCoordinates(cacheIndex: Int, variationCoordinates: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDictionaryArg(setVariationCoordinatesBind, handle, cacheIndex, variationCoordinates)
     }
 
@@ -597,6 +643,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_variation_coordinates
      */
     fun getVariationCoordinates(cacheIndex: Int): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDictionary(getVariationCoordinatesBind, handle, cacheIndex)
     }
 
@@ -607,6 +654,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_embolden
      */
     fun setEmbolden(cacheIndex: Int, strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setEmboldenBind, handle, cacheIndex, strength)
     }
 
@@ -617,6 +665,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_embolden
      */
     fun getEmbolden(cacheIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getEmboldenBind, handle, cacheIndex)
     }
 
@@ -627,6 +676,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_transform
      */
     fun setTransform(cacheIndex: Int, transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform2DArg(setTransformBind, handle, cacheIndex, transform)
     }
 
@@ -637,6 +687,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_transform
      */
     fun getTransform(cacheIndex: Int): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform2D(getTransformBind, handle, cacheIndex)
     }
 
@@ -646,6 +697,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_extra_spacing
      */
     fun setExtraSpacing(cacheIndex: Int, spacing: Long, value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, handle, cacheIndex, spacing, value)
     }
 
@@ -655,6 +707,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_extra_spacing
      */
     fun getExtraSpacing(cacheIndex: Int, spacing: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, handle, cacheIndex, spacing)
     }
 
@@ -664,6 +717,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_extra_baseline_offset
      */
     fun setExtraBaselineOffset(cacheIndex: Int, baselineOffset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setExtraBaselineOffsetBind, handle, cacheIndex, baselineOffset)
     }
 
@@ -673,6 +727,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_extra_baseline_offset
      */
     fun getExtraBaselineOffset(cacheIndex: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getExtraBaselineOffsetBind, handle, cacheIndex)
     }
 
@@ -682,6 +737,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_face_index
      */
     fun setFaceIndex(cacheIndex: Int, faceIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setFaceIndexBind, handle, cacheIndex, faceIndex)
     }
 
@@ -691,6 +747,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_face_index
      */
     fun getFaceIndex(cacheIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getFaceIndexBind, handle, cacheIndex)
     }
 
@@ -700,6 +757,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_cache_ascent
      */
     fun setCacheAscent(cacheIndex: Int, size: Int, ascent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheAscentBind, handle, cacheIndex, size, ascent)
     }
 
@@ -709,6 +767,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_cache_ascent
      */
     fun getCacheAscent(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheAscentBind, handle, cacheIndex, size)
     }
 
@@ -718,6 +777,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_cache_descent
      */
     fun setCacheDescent(cacheIndex: Int, size: Int, descent: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheDescentBind, handle, cacheIndex, size, descent)
     }
 
@@ -727,6 +787,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_cache_descent
      */
     fun getCacheDescent(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheDescentBind, handle, cacheIndex, size)
     }
 
@@ -736,6 +797,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_cache_underline_position
      */
     fun setCacheUnderlinePosition(cacheIndex: Int, size: Int, underlinePosition: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlinePositionBind, handle, cacheIndex, size, underlinePosition)
     }
 
@@ -745,6 +807,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_cache_underline_position
      */
     fun getCacheUnderlinePosition(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlinePositionBind, handle, cacheIndex, size)
     }
 
@@ -754,6 +817,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_cache_underline_thickness
      */
     fun setCacheUnderlineThickness(cacheIndex: Int, size: Int, underlineThickness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlineThicknessBind, handle, cacheIndex, size, underlineThickness)
     }
 
@@ -763,6 +827,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_cache_underline_thickness
      */
     fun getCacheUnderlineThickness(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlineThicknessBind, handle, cacheIndex, size)
     }
 
@@ -772,6 +837,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_cache_scale
      */
     fun setCacheScale(cacheIndex: Int, size: Int, scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheScaleBind, handle, cacheIndex, size, scale)
     }
 
@@ -781,6 +847,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_cache_scale
      */
     fun getCacheScale(cacheIndex: Int, size: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheScaleBind, handle, cacheIndex, size)
     }
 
@@ -790,6 +857,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_texture_count
      */
     fun getTextureCount(cacheIndex: Int, size: Vector2i): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(getTextureCountBind, handle, cacheIndex, size)
     }
 
@@ -800,6 +868,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.clear_textures
      */
     fun clearTextures(cacheIndex: Int, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(clearTexturesBind, handle, cacheIndex, size)
     }
 
@@ -810,6 +879,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.remove_texture
      */
     fun removeTexture(cacheIndex: Int, size: Vector2i, textureIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeTextureBind, handle, cacheIndex, size, textureIndex)
     }
 
@@ -819,6 +889,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_texture_image
      */
     fun setTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int, image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, handle, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -828,6 +899,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_texture_image
      */
     fun getTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, handle, cacheIndex, size, textureIndex))
     }
 
@@ -837,6 +909,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_texture_offsets
      */
     fun setTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int, offset: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(setTextureOffsetsBind, handle, cacheIndex, size, textureIndex, offset)
     }
 
@@ -846,6 +919,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_texture_offsets
      */
     fun getTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(getTextureOffsetsBind, handle, cacheIndex, size, textureIndex)
     }
 
@@ -855,6 +929,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_glyph_list
      */
     fun getGlyphList(cacheIndex: Int, size: Vector2i): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(getGlyphListBind, handle, cacheIndex, size)
     }
 
@@ -865,6 +940,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.clear_glyphs
      */
     fun clearGlyphs(cacheIndex: Int, size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(clearGlyphsBind, handle, cacheIndex, size)
     }
 
@@ -875,6 +951,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.remove_glyph
      */
     fun removeGlyph(cacheIndex: Int, size: Vector2i, glyph: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeGlyphBind, handle, cacheIndex, size, glyph)
     }
 
@@ -885,6 +962,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_glyph_advance
      */
     fun setGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int, advance: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeIntAndVector2Arg(setGlyphAdvanceBind, handle, cacheIndex, size, glyph, advance)
     }
 
@@ -895,6 +973,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_glyph_advance
      */
     fun getGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(getGlyphAdvanceBind, handle, cacheIndex, size, glyph)
     }
 
@@ -904,6 +983,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_glyph_offset
      */
     fun setGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int, offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphOffsetBind, handle, cacheIndex, size, glyph, offset)
     }
 
@@ -913,6 +993,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_glyph_offset
      */
     fun getGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphOffsetBind, handle, cacheIndex, size, glyph)
     }
 
@@ -922,6 +1003,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_glyph_size
      */
     fun setGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int, glSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphSizeBind, handle, cacheIndex, size, glyph, glSize)
     }
 
@@ -931,6 +1013,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_glyph_size
      */
     fun getGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphSizeBind, handle, cacheIndex, size, glyph)
     }
 
@@ -940,6 +1023,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_glyph_uv_rect
      */
     fun setGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int, uvRect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iIntRect2Args(setGlyphUvRectBind, handle, cacheIndex, size, glyph, uvRect)
     }
 
@@ -949,6 +1033,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_glyph_uv_rect
      */
     fun getGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(getGlyphUvRectBind, handle, cacheIndex, size, glyph)
     }
 
@@ -958,6 +1043,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_glyph_texture_idx
      */
     fun setGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int, textureIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(setGlyphTextureIdxBind, handle, cacheIndex, size, glyph, textureIdx)
     }
 
@@ -967,6 +1053,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_glyph_texture_idx
      */
     fun getGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(getGlyphTextureIdxBind, handle, cacheIndex, size, glyph)
     }
 
@@ -976,6 +1063,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_kerning_list
      */
     fun getKerningList(cacheIndex: Int, size: Int): List<Vector2i> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(getKerningListBind, handle, cacheIndex, size)
     }
 
@@ -985,6 +1073,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.clear_kerning_map
      */
     fun clearKerningMap(cacheIndex: Int, size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(clearKerningMapBind, handle, cacheIndex, size)
     }
 
@@ -994,6 +1083,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.remove_kerning
      */
     fun removeKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndVector2iArg(removeKerningBind, handle, cacheIndex, size, glyphPair)
     }
 
@@ -1003,6 +1093,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_kerning
      */
     fun setKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i, kerning: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(setKerningBind, handle, cacheIndex, size, glyphPair, kerning)
     }
 
@@ -1012,6 +1103,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_kerning
      */
     fun getKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(getKerningBind, handle, cacheIndex, size, glyphPair)
     }
 
@@ -1021,6 +1113,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.render_range
      */
     fun renderRange(cacheIndex: Int, size: Vector2i, start: Int, end: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(renderRangeBind, handle, cacheIndex, size, start, end)
     }
 
@@ -1030,6 +1123,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.render_glyph
      */
     fun renderGlyph(cacheIndex: Int, size: Vector2i, index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntVector2iAndIntArg(renderGlyphBind, handle, cacheIndex, size, index)
     }
 
@@ -1039,6 +1133,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_language_support_override
      */
     fun setLanguageSupportOverride(language: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(setLanguageSupportOverrideBind, handle, language, supported)
     }
 
@@ -1048,6 +1143,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_language_support_override
      */
     fun getLanguageSupportOverride(language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(getLanguageSupportOverrideBind, handle, language)
     }
 
@@ -1057,6 +1153,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.remove_language_support_override
      */
     fun removeLanguageSupportOverride(language: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeLanguageSupportOverrideBind, handle, language)
     }
 
@@ -1066,6 +1163,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_language_support_overrides
      */
     fun getLanguageSupportOverrides(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLanguageSupportOverridesBind, handle)
     }
 
@@ -1075,6 +1173,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_script_support_override
      */
     fun setScriptSupportOverride(script: String, supported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(setScriptSupportOverrideBind, handle, script, supported)
     }
 
@@ -1084,6 +1183,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_script_support_override
      */
     fun getScriptSupportOverride(script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(getScriptSupportOverrideBind, handle, script)
     }
 
@@ -1093,6 +1193,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.remove_script_support_override
      */
     fun removeScriptSupportOverride(script: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeScriptSupportOverrideBind, handle, script)
     }
 
@@ -1102,6 +1203,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_script_support_overrides
      */
     fun getScriptSupportOverrides(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getScriptSupportOverridesBind, handle)
     }
 
@@ -1111,6 +1213,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.set_opentype_feature_overrides
      */
     fun setOpentypeFeatureOverrides(overrides: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeatureOverridesBind, handle, overrides)
     }
 
@@ -1120,6 +1223,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_opentype_feature_overrides
      */
     fun getOpentypeFeatureOverrides(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeatureOverridesBind, handle)
     }
 
@@ -1129,6 +1233,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_glyph_index
      */
     fun getGlyphIndex(size: Int, char: Int, variationSelector: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeIntArgsRetInt(getGlyphIndexBind, handle, size, char, variationSelector)
     }
 
@@ -1139,6 +1244,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: FontFile.get_char_from_glyph_index
      */
     fun getCharFromGlyphIndex(size: Int, glyphIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getCharFromGlyphIndexBind, handle, size, glyphIndex)
     }
 

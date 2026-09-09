@@ -59,6 +59,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.set_top_radius
      */
     fun setTopRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTopRadiusBind, handle, radius)
     }
 
@@ -69,6 +70,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.get_top_radius
      */
     fun getTopRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTopRadiusBind, handle)
     }
 
@@ -79,6 +81,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.set_bottom_radius
      */
     fun setBottomRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBottomRadiusBind, handle, radius)
     }
 
@@ -89,6 +92,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.get_bottom_radius
      */
     fun getBottomRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBottomRadiusBind, handle)
     }
 
@@ -98,6 +102,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.set_height
      */
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
@@ -107,6 +112,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.get_height
      */
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
@@ -117,6 +123,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.set_radial_segments
      */
     fun setRadialSegments(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, segments)
     }
 
@@ -127,6 +134,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.get_radial_segments
      */
     fun getRadialSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
@@ -140,6 +148,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.set_rings
      */
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
@@ -153,6 +162,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.get_rings
      */
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
@@ -164,6 +174,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.set_cap_top
      */
     fun setCapTop(capTop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapTopBind, handle, capTop)
     }
 
@@ -175,6 +186,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.is_cap_top
      */
     fun isCapTop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, handle)
     }
 
@@ -187,6 +199,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.set_cap_bottom
      */
     fun setCapBottom(capBottom: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, handle, capBottom)
     }
 
@@ -199,6 +212,7 @@ class CylinderMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CylinderMesh.is_cap_bottom
      */
     fun isCapBottom(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, handle)
     }
 

@@ -27,26 +27,32 @@ class VisualShaderNodeParticleMeshEmitter(handle: MemorySegment) : VisualShaderN
         set(value) = setSurfaceIndex(value)
 
     fun setMesh(mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMesh(): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
     fun setUseAllSurfaces(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseAllSurfacesBind, handle, enabled)
     }
 
     fun isUseAllSurfaces(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUseAllSurfacesBind, handle)
     }
 
     fun setSurfaceIndex(surfaceIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSurfaceIndexBind, handle, surfaceIndex)
     }
 
     fun getSurfaceIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceIndexBind, handle)
     }
 

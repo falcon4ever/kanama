@@ -15,10 +15,12 @@ class VisualShaderNodeTexture3D(handle: MemorySegment) : VisualShaderNodeSample3
         set(value) = setTexture(value)
 
     fun setTexture(value: Texture3D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): Texture3D? {
+        checkOpen()
         return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 

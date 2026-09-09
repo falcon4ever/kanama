@@ -45,50 +45,62 @@ class VisualShaderNodeFloatParameter(handle: MemorySegment) : VisualShaderNodePa
         set(value) = setDefaultValue(value)
 
     fun setHint(hint: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHintBind, handle, hint)
     }
 
     fun getHint(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, handle)
     }
 
     fun setMin(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinBind, handle, value)
     }
 
     fun getMin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, handle)
     }
 
     fun setMax(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxBind, handle, value)
     }
 
     fun getMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, handle)
     }
 
     fun setStep(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStepBind, handle, value)
     }
 
     fun getStep(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
     }
 
     fun setDefaultValueEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
     }
 
     fun setDefaultValue(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDefaultValueBind, handle, value)
     }
 
     fun getDefaultValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultValueBind, handle)
     }
 

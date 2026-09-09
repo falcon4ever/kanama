@@ -42,102 +42,127 @@ class WebSocketPeer(handle: MemorySegment) : PacketPeer(handle) {
         set(value) = setHeartbeatInterval(value)
 
     fun connectToUrl(url: String, tlsClientOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(connectToUrlBind, handle, url, tlsClientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun acceptStream(stream: StreamPeer?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(acceptStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun sendText(message: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(sendTextBind, handle, message)
     }
 
     fun wasStringPacket(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(wasStringPacketBind, handle)
     }
 
     fun poll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
     fun closeConnection(code: Int = 1000, reason: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(closeConnectionBind, handle, code, reason)
     }
 
     fun getConnectedHost(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getConnectedHostBind, handle)
     }
 
     fun getConnectedPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectedPortBind, handle)
     }
 
     fun getSelectedProtocol(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSelectedProtocolBind, handle)
     }
 
     fun getRequestedUrl(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getRequestedUrlBind, handle)
     }
 
     fun setNoDelay(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNoDelayBind, handle, enabled)
     }
 
     fun getCurrentOutboundBufferedAmount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentOutboundBufferedAmountBind, handle)
     }
 
     fun getReadyState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, handle)
     }
 
     fun getCloseCode(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCloseCodeBind, handle)
     }
 
     fun getCloseReason(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCloseReasonBind, handle)
     }
 
     fun getSupportedProtocols(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedProtocolsBind, handle)
     }
 
     fun getHandshakeHeaders(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getHandshakeHeadersBind, handle)
     }
 
     fun getInboundBufferSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInboundBufferSizeBind, handle)
     }
 
     fun setInboundBufferSize(bufferSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInboundBufferSizeBind, handle, bufferSize)
     }
 
     fun getOutboundBufferSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutboundBufferSizeBind, handle)
     }
 
     fun setOutboundBufferSize(bufferSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOutboundBufferSizeBind, handle, bufferSize)
     }
 
     fun setMaxQueuedPackets(bufferSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxQueuedPacketsBind, handle, bufferSize)
     }
 
     fun getMaxQueuedPackets(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxQueuedPacketsBind, handle)
     }
 
     fun setHeartbeatInterval(interval: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeartbeatIntervalBind, handle, interval)
     }
 
     fun getHeartbeatInterval(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeartbeatIntervalBind, handle)
     }
 

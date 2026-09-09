@@ -26,6 +26,7 @@ class ViewportTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ViewportTexture.set_viewport_path_in_scene
      */
     fun setViewportPathInScene(path: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setViewportPathInSceneBind, handle, path)
     }
 
@@ -38,6 +39,7 @@ class ViewportTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ViewportTexture.get_viewport_path_in_scene
      */
     fun getViewportPathInScene(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getViewportPathInSceneBind, handle)
     }
 

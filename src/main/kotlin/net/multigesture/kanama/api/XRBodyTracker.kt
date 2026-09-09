@@ -29,6 +29,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.set_has_tracking_data
      */
     fun setHasTrackingData(hasData: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
     }
 
@@ -38,6 +39,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.get_has_tracking_data
      */
     fun getHasTrackingData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
@@ -47,6 +49,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.set_body_flags
      */
     fun setBodyFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBodyFlagsBind, handle, flags)
     }
 
@@ -56,6 +59,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.get_body_flags
      */
     fun getBodyFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBodyFlagsBind, handle)
     }
 
@@ -65,6 +69,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.set_joint_flags
      */
     fun setJointFlags(joint: Long, flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(setJointFlagsBind, handle, joint, flags)
     }
 
@@ -74,6 +79,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.get_joint_flags
      */
     fun getJointFlags(joint: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getJointFlagsBind, handle, joint)
     }
 
@@ -83,6 +89,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.set_joint_transform
      */
     fun setJointTransform(joint: Long, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTransform3DArg(setJointTransformBind, handle, joint, transform)
     }
 
@@ -92,6 +99,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      * Generated from Godot docs: XRBodyTracker.get_joint_transform
      */
     fun getJointTransform(joint: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, handle, joint)
     }
 

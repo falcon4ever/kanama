@@ -37,6 +37,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPitchShift.set_pitch_scale
      */
     fun setPitchScale(rate: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, handle, rate)
     }
 
@@ -48,6 +49,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPitchShift.get_pitch_scale
      */
     fun getPitchScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, handle)
     }
 
@@ -58,6 +60,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPitchShift.set_oversampling
      */
     fun setOversampling(amount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOversamplingBind, handle, amount)
     }
 
@@ -68,6 +71,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPitchShift.get_oversampling
      */
     fun getOversampling(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOversamplingBind, handle)
     }
 
@@ -80,6 +84,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPitchShift.set_fft_size
      */
     fun setFftSize(size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
     }
 
@@ -92,6 +97,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPitchShift.get_fft_size
      */
     fun getFftSize(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
     }
 

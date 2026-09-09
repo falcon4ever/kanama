@@ -48,6 +48,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.set_range_min_hz
      */
     fun setRangeMinHz(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRangeMinHzBind, handle, hz)
     }
 
@@ -58,6 +59,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.get_range_min_hz
      */
     fun getRangeMinHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMinHzBind, handle)
     }
 
@@ -68,6 +70,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.set_range_max_hz
      */
     fun setRangeMaxHz(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRangeMaxHzBind, handle, hz)
     }
 
@@ -78,6 +81,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.get_range_max_hz
      */
     fun getRangeMaxHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMaxHzBind, handle)
     }
 
@@ -88,6 +92,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.set_rate_hz
      */
     fun setRateHz(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRateHzBind, handle, hz)
     }
 
@@ -98,6 +103,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.get_rate_hz
      */
     fun getRateHz(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRateHzBind, handle)
     }
 
@@ -109,6 +115,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.set_feedback
      */
     fun setFeedback(fbk: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFeedbackBind, handle, fbk)
     }
 
@@ -120,6 +127,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.get_feedback
      */
     fun getFeedback(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackBind, handle)
     }
 
@@ -129,6 +137,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.set_depth
      */
     fun setDepth(depth: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
     }
 
@@ -138,6 +147,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectPhaser.get_depth
      */
     fun getDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 

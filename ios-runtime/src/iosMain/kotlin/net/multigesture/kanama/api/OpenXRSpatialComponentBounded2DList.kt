@@ -11,10 +11,12 @@ import net.multigesture.kanama.types.Vector2
  */
 class OpenXRSpatialComponentBounded2DList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getCenterPose(index: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getCenterPoseBind, handle, index)
     }
 
     fun getSize(index: Long): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector2(getSizeBind, handle, index)
     }
 

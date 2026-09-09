@@ -36,6 +36,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveXYZTexture.set_width
      */
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
@@ -45,6 +46,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveXYZTexture.set_curve_x
      */
     fun setCurveX(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -54,6 +56,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveXYZTexture.get_curve_x
      */
     fun getCurveX(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, handle))
     }
 
@@ -63,6 +66,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveXYZTexture.set_curve_y
      */
     fun setCurveY(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -72,6 +76,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveXYZTexture.get_curve_y
      */
     fun getCurveY(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, handle))
     }
 
@@ -81,6 +86,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveXYZTexture.set_curve_z
      */
     fun setCurveZ(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -90,6 +96,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: CurveXYZTexture.get_curve_z
      */
     fun getCurveZ(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, handle))
     }
 

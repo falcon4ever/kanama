@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class SceneState(handle: MemorySegment) : RefCounted(handle) {
     fun getPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
     }
 
     fun getBaseSceneState(): SceneState? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseSceneStateBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -22,34 +24,42 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     }
 
     fun getNodeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNodeCountBind, handle)
     }
 
     fun isNodeInstancePlaceholder(idx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isNodeInstancePlaceholderBind, handle, idx)
     }
 
     fun getNodeInstance(idx: Int): PackedScene? {
+        checkOpen()
         return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, handle, idx))
     }
 
     fun getNodeIndex(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getNodeIndexBind, handle, idx)
     }
 
     fun getNodePropertyCount(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getNodePropertyCountBind, handle, idx)
     }
 
     fun getConnectionCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectionCountBind, handle)
     }
 
     fun getConnectionFlags(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionFlagsBind, handle, idx)
     }
 
     fun getConnectionUnbinds(idx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, handle, idx)
     }
 

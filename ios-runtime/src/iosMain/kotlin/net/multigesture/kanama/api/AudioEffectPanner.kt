@@ -16,10 +16,12 @@ class AudioEffectPanner(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setPan(value)
 
     fun setPan(cpanume: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPanBind, handle, cpanume)
     }
 
     fun getPan(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPanBind, handle)
     }
 

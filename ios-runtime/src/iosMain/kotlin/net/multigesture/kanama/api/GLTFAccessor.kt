@@ -88,106 +88,132 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         set(value) = setSparseValuesByteOffset(value)
 
     fun getBufferView(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferViewBind, handle)
     }
 
     fun setBufferView(bufferView: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBufferViewBind, handle, bufferView)
     }
 
     fun getByteOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, handle)
     }
 
     fun setByteOffset(byteOffset: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, handle, byteOffset)
     }
 
     fun getComponentType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, handle)
     }
 
     fun setComponentType(componentType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setComponentTypeBind, handle, componentType)
     }
 
     fun getNormalized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNormalizedBind, handle)
     }
 
     fun setNormalized(normalized: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNormalizedBind, handle, normalized)
     }
 
     fun getCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCountBind, handle)
     }
 
     fun setCount(count: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCountBind, handle, count)
     }
 
     fun getAccessorType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, handle)
     }
 
     fun setAccessorType(accessorType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAccessorTypeBind, handle, accessorType)
     }
 
     fun getType(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTypeBind, handle)
     }
 
     fun setType(type: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setTypeBind, handle, type)
     }
 
     fun getSparseCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSparseCountBind, handle)
     }
 
     fun setSparseCount(sparseCount: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSparseCountBind, handle, sparseCount)
     }
 
     fun getSparseIndicesBufferView(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSparseIndicesBufferViewBind, handle)
     }
 
     fun setSparseIndicesBufferView(sparseIndicesBufferView: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSparseIndicesBufferViewBind, handle, sparseIndicesBufferView)
     }
 
     fun getSparseIndicesByteOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesByteOffsetBind, handle)
     }
 
     fun setSparseIndicesByteOffset(sparseIndicesByteOffset: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSparseIndicesByteOffsetBind, handle, sparseIndicesByteOffset)
     }
 
     fun getSparseIndicesComponentType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesComponentTypeBind, handle)
     }
 
     fun setSparseIndicesComponentType(sparseIndicesComponentType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSparseIndicesComponentTypeBind, handle, sparseIndicesComponentType)
     }
 
     fun getSparseValuesBufferView(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSparseValuesBufferViewBind, handle)
     }
 
     fun setSparseValuesBufferView(sparseValuesBufferView: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSparseValuesBufferViewBind, handle, sparseValuesBufferView)
     }
 
     fun getSparseValuesByteOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSparseValuesByteOffsetBind, handle)
     }
 
     fun setSparseValuesByteOffset(sparseValuesByteOffset: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSparseValuesByteOffsetBind, handle, sparseValuesByteOffset)
     }
 

@@ -15,6 +15,7 @@ class EditorScenePostImport(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorScenePostImport.get_source_file
      */
     fun getSourceFile(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSourceFileBind, handle)
     }
 

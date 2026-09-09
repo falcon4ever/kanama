@@ -17,10 +17,12 @@ class ViewportTexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setViewportPathInScene(value)
 
     fun setViewportPathInScene(path: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setViewportPathInSceneBind, handle, path)
     }
 
     fun getViewportPathInScene(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getViewportPathInSceneBind, handle)
     }
 

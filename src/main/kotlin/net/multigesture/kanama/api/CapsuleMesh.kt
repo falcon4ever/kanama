@@ -42,6 +42,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.set_radius
      */
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
@@ -53,6 +54,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.get_radius
      */
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
@@ -64,6 +66,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.set_height
      */
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
@@ -75,6 +78,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.get_height
      */
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
@@ -84,6 +88,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.set_radial_segments
      */
     fun setRadialSegments(segments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, segments)
     }
 
@@ -93,6 +98,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.get_radial_segments
      */
     fun getRadialSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
@@ -102,6 +108,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.set_rings
      */
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
@@ -111,6 +118,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: CapsuleMesh.get_rings
      */
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 

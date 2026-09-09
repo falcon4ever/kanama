@@ -136,170 +136,212 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setBackOpReference(value)
 
     fun setEnableDepthTest(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthTestBind, handle, pMember)
     }
 
     fun getEnableDepthTest(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthTestBind, handle)
     }
 
     fun setEnableDepthWrite(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthWriteBind, handle, pMember)
     }
 
     fun getEnableDepthWrite(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthWriteBind, handle)
     }
 
     fun setDepthCompareOperator(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDepthCompareOperatorBind, handle, pMember)
     }
 
     fun getDepthCompareOperator(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDepthCompareOperatorBind, handle)
     }
 
     fun setEnableDepthRange(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthRangeBind, handle, pMember)
     }
 
     fun getEnableDepthRange(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthRangeBind, handle)
     }
 
     fun setDepthRangeMin(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMinBind, handle, pMember)
     }
 
     fun getDepthRangeMin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMinBind, handle)
     }
 
     fun setDepthRangeMax(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMaxBind, handle, pMember)
     }
 
     fun getDepthRangeMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMaxBind, handle)
     }
 
     fun setEnableStencil(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableStencilBind, handle, pMember)
     }
 
     fun getEnableStencil(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableStencilBind, handle)
     }
 
     fun setFrontOpFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpFailBind, handle, pMember)
     }
 
     fun getFrontOpFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpFailBind, handle)
     }
 
     fun setFrontOpPass(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpPassBind, handle, pMember)
     }
 
     fun getFrontOpPass(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpPassBind, handle)
     }
 
     fun setFrontOpDepthFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpDepthFailBind, handle, pMember)
     }
 
     fun getFrontOpDepthFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpDepthFailBind, handle)
     }
 
     fun setFrontOpCompare(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpCompareBind, handle, pMember)
     }
 
     fun getFrontOpCompare(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpCompareBind, handle)
     }
 
     fun setFrontOpCompareMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpCompareMaskBind, handle, pMember)
     }
 
     fun getFrontOpCompareMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpCompareMaskBind, handle)
     }
 
     fun setFrontOpWriteMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpWriteMaskBind, handle, pMember)
     }
 
     fun getFrontOpWriteMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpWriteMaskBind, handle)
     }
 
     fun setFrontOpReference(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpReferenceBind, handle, pMember)
     }
 
     fun getFrontOpReference(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpReferenceBind, handle)
     }
 
     fun setBackOpFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpFailBind, handle, pMember)
     }
 
     fun getBackOpFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpFailBind, handle)
     }
 
     fun setBackOpPass(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpPassBind, handle, pMember)
     }
 
     fun getBackOpPass(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpPassBind, handle)
     }
 
     fun setBackOpDepthFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpDepthFailBind, handle, pMember)
     }
 
     fun getBackOpDepthFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpDepthFailBind, handle)
     }
 
     fun setBackOpCompare(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpCompareBind, handle, pMember)
     }
 
     fun getBackOpCompare(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpCompareBind, handle)
     }
 
     fun setBackOpCompareMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpCompareMaskBind, handle, pMember)
     }
 
     fun getBackOpCompareMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpCompareMaskBind, handle)
     }
 
     fun setBackOpWriteMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpWriteMaskBind, handle, pMember)
     }
 
     fun getBackOpWriteMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpWriteMaskBind, handle)
     }
 
     fun setBackOpReference(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpReferenceBind, handle, pMember)
     }
 
     fun getBackOpReference(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpReferenceBind, handle)
     }
 

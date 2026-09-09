@@ -58,66 +58,82 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setCurve(value)
 
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
     fun setRadialSteps(radialSteps: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialStepsBind, handle, radialSteps)
     }
 
     fun getRadialSteps(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialStepsBind, handle)
     }
 
     fun setSections(sections: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
     }
 
     fun getSections(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
     }
 
     fun setSectionLength(sectionLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
     }
 
     fun getSectionLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
     }
 
     fun setSectionRings(sectionRings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionRingsBind, handle, sectionRings)
     }
 
     fun getSectionRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionRingsBind, handle)
     }
 
     fun setCapTop(capTop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapTopBind, handle, capTop)
     }
 
     fun isCapTop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, handle)
     }
 
     fun setCapBottom(capBottom: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, handle, capBottom)
     }
 
     fun isCapBottom(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, handle)
     }
 
     fun setCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 

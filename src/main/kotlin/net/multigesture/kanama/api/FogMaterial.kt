@@ -57,6 +57,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.set_density
      */
     fun setDensity(density: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDensityBind, handle, density)
     }
 
@@ -70,6 +71,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.get_density
      */
     fun getDensity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDensityBind, handle)
     }
 
@@ -81,6 +83,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.set_albedo
      */
     fun setAlbedo(albedo: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setAlbedoBind, handle, albedo)
     }
 
@@ -92,6 +95,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.get_albedo
      */
     fun getAlbedo(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, handle)
     }
 
@@ -103,6 +107,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.set_emission
      */
     fun setEmission(emission: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setEmissionBind, handle, emission)
     }
 
@@ -114,6 +119,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.get_emission
      */
     fun getEmission(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, handle)
     }
 
@@ -126,6 +132,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.set_height_falloff
      */
     fun setHeightFalloff(heightFalloff: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightFalloffBind, handle, heightFalloff)
     }
 
@@ -138,6 +145,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.get_height_falloff
      */
     fun getHeightFalloff(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightFalloffBind, handle)
     }
 
@@ -148,6 +156,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.set_edge_fade
      */
     fun setEdgeFade(edgeFade: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEdgeFadeBind, handle, edgeFade)
     }
 
@@ -158,6 +167,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.get_edge_fade
      */
     fun getEdgeFade(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeFadeBind, handle)
     }
 
@@ -170,6 +180,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.set_density_texture
      */
     fun setDensityTexture(densityTexture: Texture3D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setDensityTextureBind, handle, listOf(densityTexture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -182,6 +193,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: FogMaterial.get_density_texture
      */
     fun getDensityTexture(): Texture3D? {
+        checkOpen()
         return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDensityTextureBind, handle))
     }
 

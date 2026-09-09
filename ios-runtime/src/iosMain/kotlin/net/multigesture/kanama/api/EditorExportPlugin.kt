@@ -9,78 +9,97 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
     fun addAppleEmbeddedPlatformProjectStaticLib(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformProjectStaticLibBind, handle, path)
     }
 
     fun addAppleEmbeddedPlatformFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformFrameworkBind, handle, path)
     }
 
     fun addAppleEmbeddedPlatformEmbeddedFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformEmbeddedFrameworkBind, handle, path)
     }
 
     fun addAppleEmbeddedPlatformPlistContent(plistContent: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformPlistContentBind, handle, plistContent)
     }
 
     fun addAppleEmbeddedPlatformLinkerFlags(flags: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformLinkerFlagsBind, handle, flags)
     }
 
     fun addAppleEmbeddedPlatformBundleFile(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformBundleFileBind, handle, path)
     }
 
     fun addAppleEmbeddedPlatformCppCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformCppCodeBind, handle, code)
     }
 
     fun addIosProjectStaticLib(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosProjectStaticLibBind, handle, path)
     }
 
     fun addIosFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosFrameworkBind, handle, path)
     }
 
     fun addIosEmbeddedFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosEmbeddedFrameworkBind, handle, path)
     }
 
     fun addIosPlistContent(plistContent: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosPlistContentBind, handle, plistContent)
     }
 
     fun addIosLinkerFlags(flags: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosLinkerFlagsBind, handle, flags)
     }
 
     fun addIosBundleFile(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosBundleFileBind, handle, path)
     }
 
     fun addIosCppCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosCppCodeBind, handle, code)
     }
 
     fun addMacosPluginFile(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addMacosPluginFileBind, handle, path)
     }
 
     fun skip() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(skipBind, handle)
     }
 
     fun getOption(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionBind, handle, name)
     }
 
     fun getExportPreset(): EditorExportPreset? {
+        checkOpen()
         return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPresetBind, handle))
     }
 
     fun getExportPlatform(): EditorExportPlatform? {
+        checkOpen()
         return EditorExportPlatform.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPlatformBind, handle))
     }
 

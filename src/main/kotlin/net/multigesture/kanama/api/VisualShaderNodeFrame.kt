@@ -40,50 +40,62 @@ open class VisualShaderNodeFrame(handle: MemorySegment) : VisualShaderNodeResiza
         set(value) = setAttachedNodes(value)
 
     fun setTitle(title: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
     }
 
     fun getTitle(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
     }
 
     fun setTintColorEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setTintColorEnabledBind, handle, enable)
     }
 
     fun isTintColorEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isTintColorEnabledBind, handle)
     }
 
     fun setTintColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setTintColorBind, handle, color)
     }
 
     fun getTintColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, handle)
     }
 
     fun setAutoshrinkEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAutoshrinkEnabledBind, handle, enable)
     }
 
     fun isAutoshrinkEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoshrinkEnabledBind, handle)
     }
 
     fun addAttachedNode(node: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addAttachedNodeBind, handle, node)
     }
 
     fun removeAttachedNode(node: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeAttachedNodeBind, handle, node)
     }
 
     fun setAttachedNodes(attachedNodes: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setAttachedNodesBind, handle, attachedNodes)
     }
 
     fun getAttachedNodes(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAttachedNodesBind, handle)
     }
 

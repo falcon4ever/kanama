@@ -23,6 +23,7 @@ class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: ConvexPolygonShape3D.set_points
      */
     fun setPoints(points: List<Vector3>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(setPointsBind, handle, points)
     }
 
@@ -32,6 +33,7 @@ class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: ConvexPolygonShape3D.get_points
      */
     fun getPoints(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPointsBind, handle)
     }
 

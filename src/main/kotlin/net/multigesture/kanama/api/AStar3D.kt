@@ -24,6 +24,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_available_point_id
      */
     fun getAvailablePointId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAvailablePointIdBind, handle)
     }
 
@@ -37,6 +38,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.add_point
      */
     fun addPoint(id: Long, position: Vector3, weightScale: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongVector3AndDoubleArgs(addPointBind, handle, id, position, weightScale)
     }
 
@@ -46,6 +48,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_point_position
      */
     fun getPointPosition(id: Long): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector3(getPointPositionBind, handle, id)
     }
 
@@ -55,6 +58,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.set_point_position
      */
     fun setPointPosition(id: Long, position: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndVector3Arg(setPointPositionBind, handle, id, position)
     }
 
@@ -64,6 +68,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_point_weight_scale
      */
     fun getPointWeightScale(id: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getPointWeightScaleBind, handle, id)
     }
 
@@ -75,6 +80,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.set_point_weight_scale
      */
     fun setPointWeightScale(id: Long, weightScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setPointWeightScaleBind, handle, id, weightScale)
     }
 
@@ -84,6 +90,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.remove_point
      */
     fun removePoint(id: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(removePointBind, handle, id)
     }
 
@@ -93,6 +100,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.has_point
      */
     fun hasPoint(id: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(hasPointBind, handle, id)
     }
 
@@ -102,6 +110,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_point_connections
      */
     fun getPointConnections(id: Long): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetPackedInt64List(getPointConnectionsBind, handle, id)
     }
 
@@ -111,6 +120,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_point_ids
      */
     fun getPointIds(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPointIdsBind, handle)
     }
 
@@ -120,6 +130,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.set_point_disabled
      */
     fun setPointDisabled(id: Long, disabled: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setPointDisabledBind, handle, id, disabled)
     }
 
@@ -129,6 +140,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.is_point_disabled
      */
     fun isPointDisabled(id: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isPointDisabledBind, handle, id)
     }
 
@@ -138,6 +150,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.set_neighbor_filter_enabled
      */
     fun setNeighborFilterEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNeighborFilterEnabledBind, handle, enabled)
     }
 
@@ -147,6 +160,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.is_neighbor_filter_enabled
      */
     fun isNeighborFilterEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isNeighborFilterEnabledBind, handle)
     }
 
@@ -157,6 +171,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.connect_points
      */
     fun connectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongAndBoolArgs(connectPointsBind, handle, id, toId, bidirectional)
     }
 
@@ -167,6 +182,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.disconnect_points
      */
     fun disconnectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongAndBoolArgs(disconnectPointsBind, handle, id, toId, bidirectional)
     }
 
@@ -177,6 +193,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.are_points_connected
      */
     fun arePointsConnected(id: Long, toId: Long, bidirectional: Boolean = true): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(arePointsConnectedBind, handle, id, toId, bidirectional)
     }
 
@@ -186,6 +203,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_point_count
      */
     fun getPointCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPointCountBind, handle)
     }
 
@@ -196,6 +214,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_point_capacity
      */
     fun getPointCapacity(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPointCapacityBind, handle)
     }
 
@@ -206,6 +225,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.reserve_space
      */
     fun reserveSpace(numNodes: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(reserveSpaceBind, handle, numNodes)
     }
 
@@ -215,6 +235,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -227,6 +248,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_closest_point
      */
     fun getClosestPoint(toPosition: Vector3, includeDisabled: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector3AndBoolArgRetLong(getClosestPointBind, handle, toPosition, includeDisabled)
     }
 
@@ -237,6 +259,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_closest_position_in_segment
      */
     fun getClosestPositionInSegment(toPosition: Vector3): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector3ArgRetVector3(getClosestPositionInSegmentBind, handle, toPosition)
     }
 
@@ -254,6 +277,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_point_path
      */
     fun getPointPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector3List(getPointPathBind, handle, fromId, toId, allowPartialPath)
     }
 
@@ -269,6 +293,7 @@ class AStar3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: AStar3D.get_id_path
      */
     fun getIdPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(getIdPathBind, handle, fromId, toId, allowPartialPath)
     }
 

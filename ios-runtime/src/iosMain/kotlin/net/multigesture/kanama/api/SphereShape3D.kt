@@ -16,10 +16,12 @@ class SphereShape3D(handle: MemorySegment) : Shape3D(handle) {
         set(value) = setRadius(value)
 
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 

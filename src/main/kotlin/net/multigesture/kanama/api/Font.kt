@@ -28,6 +28,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.set_fallbacks
      */
     fun setFallbacks(fallbacks: List<Font>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setFallbacksBind, handle, fallbacks)
     }
 
@@ -39,6 +40,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_fallbacks
      */
     fun getFallbacks(): List<Font> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, handle, Font::fromHandle)
     }
 
@@ -48,6 +50,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.find_variation
      */
     fun findVariation(variationCoordinates: Map<String, Any?>, faceIndex: Int = 0, strength: Double = 0.0, transform: Transform2D, spacingTop: Int = 0, spacingBottom: Int = 0, spacingSpace: Int = 0, spacingGlyph: Int = 0, baselineOffset: Double = 0.0, paletteIndex: Long = 0L, customColors: List<Color>): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(findVariationBind, handle, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
     }
 
@@ -57,6 +60,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_rids
      */
     fun getRids(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getRidsBind, handle)
     }
 
@@ -68,6 +72,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_height
      */
     fun getHeight(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getHeightBind, handle, fontSize)
     }
 
@@ -80,6 +85,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_ascent
      */
     fun getAscent(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getAscentBind, handle, fontSize)
     }
 
@@ -92,6 +98,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_descent
      */
     fun getDescent(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getDescentBind, handle, fontSize)
     }
 
@@ -103,6 +110,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_underline_position
      */
     fun getUnderlinePosition(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlinePositionBind, handle, fontSize)
     }
 
@@ -114,6 +122,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_underline_thickness
      */
     fun getUnderlineThickness(fontSize: Int = 16): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlineThicknessBind, handle, fontSize)
     }
 
@@ -123,6 +132,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_font_name
      */
     fun getFontName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFontNameBind, handle)
     }
 
@@ -132,6 +142,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_font_style_name
      */
     fun getFontStyleName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFontStyleNameBind, handle)
     }
 
@@ -142,6 +153,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_ot_name_strings
      */
     fun getOtNameStrings(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getOtNameStringsBind, handle)
     }
 
@@ -151,6 +163,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_font_style
      */
     fun getFontStyle(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, handle)
     }
 
@@ -161,6 +174,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_font_weight
      */
     fun getFontWeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontWeightBind, handle)
     }
 
@@ -171,6 +185,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_font_stretch
      */
     fun getFontStretch(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontStretchBind, handle)
     }
 
@@ -180,6 +195,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_spacing
      */
     fun getSpacing(spacing: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, handle, spacing)
     }
 
@@ -190,6 +206,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_opentype_features
      */
     fun getOpentypeFeatures(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeaturesBind, handle)
     }
 
@@ -199,6 +216,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.set_cache_capacity
      */
     fun setCacheCapacity(singleLine: Int, multiLine: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setCacheCapacityBind, handle, singleLine, multiLine)
     }
 
@@ -210,6 +228,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_string_size
      */
     fun getStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(getStringSizeBind, handle, text, alignment, width, fontSize, justificationFlags, direction, orientation)
     }
 
@@ -220,6 +239,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_multiline_string_size
      */
     fun getMultilineStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(getMultilineStringSizeBind, handle, text, alignment, width, fontSize, maxLines, brkFlags, justificationFlags, direction, orientation)
     }
 
@@ -233,6 +253,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.draw_string
      */
     fun drawString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, handle, canvasItem, pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
@@ -247,6 +268,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.draw_multiline_string
      */
     fun drawMultilineString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, handle, canvasItem, pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
@@ -260,6 +282,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.draw_string_outline
      */
     fun drawStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, handle, canvasItem, pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
@@ -274,6 +297,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.draw_multiline_string_outline
      */
     fun drawMultilineStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, handle, canvasItem, pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
@@ -286,6 +310,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_char_size
      */
     fun getCharSize(char: Int, fontSize: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getCharSizeBind, handle, char, fontSize)
     }
 
@@ -299,6 +324,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.draw_char
      */
     fun drawChar(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, modulate: Color, oversampling: Double = 0.0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(drawCharBind, handle, canvasItem, pos, char, fontSize, modulate, oversampling)
     }
 
@@ -313,6 +339,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.draw_char_outline
      */
     fun drawCharOutline(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, size: Int = -1, modulate: Color, oversampling: Double = 0.0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(drawCharOutlineBind, handle, canvasItem, pos, char, fontSize, size, modulate, oversampling)
     }
 
@@ -322,6 +349,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.has_char
      */
     fun hasChar(char: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasCharBind, handle, char)
     }
 
@@ -332,6 +360,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_supported_chars
      */
     fun getSupportedChars(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSupportedCharsBind, handle)
     }
 
@@ -342,6 +371,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.is_language_supported
      */
     fun isLanguageSupported(language: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isLanguageSupportedBind, handle, language)
     }
 
@@ -352,6 +382,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.is_script_supported
      */
     fun isScriptSupported(script: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(isScriptSupportedBind, handle, script)
     }
 
@@ -361,6 +392,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_supported_feature_list
      */
     fun getSupportedFeatureList(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedFeatureListBind, handle)
     }
 
@@ -374,6 +406,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_supported_variation_list
      */
     fun getSupportedVariationList(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedVariationListBind, handle)
     }
 
@@ -383,6 +416,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Font.get_face_count
      */
     fun getFaceCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFaceCountBind, handle)
     }
 

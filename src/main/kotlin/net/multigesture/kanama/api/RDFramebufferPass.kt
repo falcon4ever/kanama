@@ -47,6 +47,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.set_color_attachments
      */
     fun setColorAttachments(pMember: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setColorAttachmentsBind, handle, pMember)
     }
 
@@ -57,6 +58,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.get_color_attachments
      */
     fun getColorAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getColorAttachmentsBind, handle)
     }
 
@@ -67,6 +69,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.set_input_attachments
      */
     fun setInputAttachments(pMember: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setInputAttachmentsBind, handle, pMember)
     }
 
@@ -77,6 +80,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.get_input_attachments
      */
     fun getInputAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getInputAttachmentsBind, handle)
     }
 
@@ -86,6 +90,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.set_resolve_attachments
      */
     fun setResolveAttachments(pMember: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setResolveAttachmentsBind, handle, pMember)
     }
 
@@ -95,6 +100,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.get_resolve_attachments
      */
     fun getResolveAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getResolveAttachmentsBind, handle)
     }
 
@@ -104,6 +110,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.set_preserve_attachments
      */
     fun setPreserveAttachments(pMember: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setPreserveAttachmentsBind, handle, pMember)
     }
 
@@ -113,6 +120,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.get_preserve_attachments
      */
     fun getPreserveAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPreserveAttachmentsBind, handle)
     }
 
@@ -122,6 +130,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.set_depth_attachment
      */
     fun setDepthAttachment(pMember: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDepthAttachmentBind, handle, pMember)
     }
 
@@ -131,6 +140,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDFramebufferPass.get_depth_attachment
      */
     fun getDepthAttachment(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDepthAttachmentBind, handle)
     }
 

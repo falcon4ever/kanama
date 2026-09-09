@@ -44,46 +44,57 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
         get() = getSampleMasks()
 
     fun setSampleCount(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSampleCountBind, handle, pMember)
     }
 
     fun getSampleCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, handle)
     }
 
     fun setEnableSampleShading(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableSampleShadingBind, handle, pMember)
     }
 
     fun getEnableSampleShading(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableSampleShadingBind, handle)
     }
 
     fun setMinSampleShading(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinSampleShadingBind, handle, pMember)
     }
 
     fun getMinSampleShading(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinSampleShadingBind, handle)
     }
 
     fun setEnableAlphaToCoverage(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToCoverageBind, handle, pMember)
     }
 
     fun getEnableAlphaToCoverage(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToCoverageBind, handle)
     }
 
     fun setEnableAlphaToOne(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToOneBind, handle, pMember)
     }
 
     fun getEnableAlphaToOne(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToOneBind, handle)
     }
 
     fun getSampleMasks(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLongList(getSampleMasksBind, handle)
     }
 

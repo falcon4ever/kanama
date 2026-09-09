@@ -9,22 +9,27 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Thread(handle: MemorySegment) : RefCounted(handle) {
     fun start(callable: GodotCallable, priority: Long = 1L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithCallableLongArgsRetLong(startBind, handle, callable.target.handle, callable.method, priority)
     }
 
     fun getId(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getIdBind, handle)
     }
 
     fun isStarted(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, handle)
     }
 
     fun isAlive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAliveBind, handle)
     }
 
     fun waitToFinish(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(waitToFinishBind, handle)
     }
 

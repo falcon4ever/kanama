@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Mutex(handle: MemorySegment) : RefCounted(handle) {
     fun lock() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(lockBind, handle)
     }
 
     fun tryLock(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(tryLockBind, handle)
     }
 
     fun unlock() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(unlockBind, handle)
     }
 

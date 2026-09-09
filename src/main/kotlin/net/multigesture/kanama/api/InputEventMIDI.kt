@@ -65,6 +65,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_channel
      */
     fun setChannel(channel: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setChannelBind, handle, channel)
     }
 
@@ -75,6 +76,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_channel
      */
     fun getChannel(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getChannelBind, handle)
     }
 
@@ -86,6 +88,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_message
      */
     fun setMessage(message: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMessageBind, handle, message)
     }
 
@@ -97,6 +100,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_message
      */
     fun getMessage(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMessageBind, handle)
     }
 
@@ -109,6 +113,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_pitch
      */
     fun setPitch(pitch: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPitchBind, handle, pitch)
     }
 
@@ -121,6 +126,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_pitch
      */
     fun getPitch(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPitchBind, handle)
     }
 
@@ -134,6 +140,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_velocity
      */
     fun setVelocity(velocity: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVelocityBind, handle, velocity)
     }
 
@@ -147,6 +154,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_velocity
      */
     fun getVelocity(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVelocityBind, handle)
     }
 
@@ -160,6 +168,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_instrument
      */
     fun setInstrument(instrument: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInstrumentBind, handle, instrument)
     }
 
@@ -173,6 +182,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_instrument
      */
     fun getInstrument(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInstrumentBind, handle)
     }
 
@@ -184,6 +194,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_pressure
      */
     fun setPressure(pressure: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPressureBind, handle, pressure)
     }
 
@@ -195,6 +206,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_pressure
      */
     fun getPressure(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPressureBind, handle)
     }
 
@@ -207,6 +219,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_controller_number
      */
     fun setControllerNumber(controllerNumber: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setControllerNumberBind, handle, controllerNumber)
     }
 
@@ -219,6 +232,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_controller_number
      */
     fun getControllerNumber(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getControllerNumberBind, handle)
     }
 
@@ -229,6 +243,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.set_controller_value
      */
     fun setControllerValue(controllerValue: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setControllerValueBind, handle, controllerValue)
     }
 
@@ -239,6 +254,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventMIDI.get_controller_value
      */
     fun getControllerValue(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getControllerValueBind, handle)
     }
 

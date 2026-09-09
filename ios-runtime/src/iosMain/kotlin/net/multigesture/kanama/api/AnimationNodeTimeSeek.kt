@@ -16,10 +16,12 @@ class AnimationNodeTimeSeek(handle: MemorySegment) : AnimationNode(handle) {
         set(value) = setExplicitElapse(value)
 
     fun setExplicitElapse(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setExplicitElapseBind, handle, enable)
     }
 
     fun isExplicitElapse(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isExplicitElapseBind, handle)
     }
 

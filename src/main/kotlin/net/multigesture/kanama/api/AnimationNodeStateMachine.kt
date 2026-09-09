@@ -35,6 +35,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.add_node
      */
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
     }
 
@@ -44,6 +45,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.replace_node
      */
     fun replaceNode(name: String, node: AnimationNode?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndObjectArg(replaceNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -53,6 +55,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_node
      */
     fun getNode(name: String): AnimationNode? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, handle, name)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -67,6 +70,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.remove_node
      */
     fun removeNode(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, handle, name)
     }
 
@@ -76,6 +80,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.rename_node
      */
     fun renameNode(name: String, newName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, handle, name, newName)
     }
 
@@ -85,6 +90,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.has_node
      */
     fun hasNode(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, handle, name)
     }
 
@@ -94,6 +100,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_node_name
      */
     fun getNodeName(node: AnimationNode?): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -103,6 +110,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_node_list
      */
     fun getNodeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, handle)
     }
 
@@ -112,6 +120,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.set_node_position
      */
     fun setNodePosition(name: String, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, handle, name, position)
     }
 
@@ -121,6 +130,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_node_position
      */
     fun getNodePosition(name: String): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, handle, name)
     }
 
@@ -130,6 +140,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.has_transition
      */
     fun hasTransition(from: String, to: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTransitionBind, handle, from, to)
     }
 
@@ -139,6 +150,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.add_transition
      */
     fun addTransition(from: String, to: String, transition: AnimationNodeStateMachineTransition?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(addTransitionBind, handle, from, to, transition?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -148,6 +160,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_transition
      */
     fun getTransition(idx: Int): AnimationNodeStateMachineTransition? {
+        checkOpen()
         return AnimationNodeStateMachineTransition.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, handle, idx))
     }
 
@@ -157,6 +170,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_transition_from
      */
     fun getTransitionFrom(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionFromBind, handle, idx)
     }
 
@@ -166,6 +180,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_transition_to
      */
     fun getTransitionTo(idx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionToBind, handle, idx)
     }
 
@@ -175,6 +190,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_transition_count
      */
     fun getTransitionCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTransitionCountBind, handle)
     }
 
@@ -184,6 +200,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.remove_transition_by_index
      */
     fun removeTransitionByIndex(idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeTransitionByIndexBind, handle, idx)
     }
 
@@ -193,6 +210,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.remove_transition
      */
     fun removeTransition(from: String, to: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(removeTransitionBind, handle, from, to)
     }
 
@@ -202,6 +220,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.set_graph_offset
      */
     fun setGraphOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, handle, offset)
     }
 
@@ -211,6 +230,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_graph_offset
      */
     fun getGraphOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, handle)
     }
 
@@ -221,6 +241,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.set_state_machine_type
      */
     fun setStateMachineType(stateMachineType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStateMachineTypeBind, handle, stateMachineType)
     }
 
@@ -231,6 +252,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.get_state_machine_type
      */
     fun getStateMachineType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStateMachineTypeBind, handle)
     }
 
@@ -242,6 +264,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.set_allow_transition_to_self
      */
     fun setAllowTransitionToSelf(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, handle, enable)
     }
 
@@ -253,6 +276,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.is_allow_transition_to_self
      */
     fun isAllowTransitionToSelf(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, handle)
     }
 
@@ -265,6 +289,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.set_reset_ends
      */
     fun setResetEnds(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setResetEndsBind, handle, enable)
     }
 
@@ -277,6 +302,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      * Generated from Godot docs: AnimationNodeStateMachine.are_ends_reset
      */
     fun areEndsReset(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(areEndsResetBind, handle)
     }
 

@@ -23,6 +23,7 @@ class RectangleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: RectangleShape2D.set_size
      */
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
@@ -32,6 +33,7 @@ class RectangleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: RectangleShape2D.get_size
      */
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 

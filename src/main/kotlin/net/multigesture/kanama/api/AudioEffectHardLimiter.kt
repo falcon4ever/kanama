@@ -37,6 +37,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectHardLimiter.set_ceiling_db
      */
     fun setCeilingDb(ceiling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
     }
 
@@ -48,6 +49,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectHardLimiter.get_ceiling_db
      */
     fun getCeilingDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
     }
 
@@ -57,6 +59,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectHardLimiter.set_pre_gain_db
      */
     fun setPreGainDb(preGain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPreGainDbBind, handle, preGain)
     }
 
@@ -66,6 +69,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectHardLimiter.get_pre_gain_db
      */
     fun getPreGainDb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainDbBind, handle)
     }
 
@@ -76,6 +80,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectHardLimiter.set_release
      */
     fun setRelease(release: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setReleaseBind, handle, release)
     }
 
@@ -86,6 +91,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectHardLimiter.get_release
      */
     fun getRelease(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseBind, handle)
     }
 

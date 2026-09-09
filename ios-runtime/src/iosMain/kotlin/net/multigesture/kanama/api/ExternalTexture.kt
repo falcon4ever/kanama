@@ -10,14 +10,17 @@ import net.multigesture.kanama.types.Vector2
  */
 class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
     fun getExternalTextureId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getExternalTextureIdBind, handle)
     }
 
     fun setExternalBufferId(externalBufferId: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setExternalBufferIdBind, handle, externalBufferId)
     }
 

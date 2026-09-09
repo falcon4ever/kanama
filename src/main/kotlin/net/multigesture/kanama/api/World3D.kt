@@ -52,6 +52,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.get_space
      */
     fun getSpace(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
     }
 
@@ -61,6 +62,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.get_navigation_map
      */
     fun getNavigationMap(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
@@ -70,6 +72,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.get_scenario
      */
     fun getScenario(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getScenarioBind, handle)
     }
 
@@ -79,6 +82,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.set_environment
      */
     fun setEnvironment(env: Environment?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -88,6 +92,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.get_environment
      */
     fun getEnvironment(): Environment? {
+        checkOpen()
         return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
     }
 
@@ -97,6 +102,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.set_fallback_environment
      */
     fun setFallbackEnvironment(env: Environment?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -106,6 +112,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.get_fallback_environment
      */
     fun getFallbackEnvironment(): Environment? {
+        checkOpen()
         return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, handle))
     }
 
@@ -115,6 +122,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.set_camera_attributes
      */
     fun setCameraAttributes(attributes: CameraAttributes?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(attributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -124,6 +132,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
+        checkOpen()
         return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
     }
 
@@ -135,6 +144,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: World3D.get_direct_space_state
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState3D? {
+        checkOpen()
         return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
     }
 

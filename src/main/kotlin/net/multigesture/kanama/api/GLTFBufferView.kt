@@ -45,58 +45,72 @@ class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
         set(value) = setVertexAttributes(value)
 
     fun loadBufferViewData(state: GLTFState?): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetByteArray(loadBufferViewDataBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun toDictionary(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
     }
 
     fun getBuffer(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferBind, handle)
     }
 
     fun setBuffer(buffer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBufferBind, handle, buffer)
     }
 
     fun getByteOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, handle)
     }
 
     fun setByteOffset(byteOffset: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, handle, byteOffset)
     }
 
     fun getByteLength(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getByteLengthBind, handle)
     }
 
     fun setByteLength(byteLength: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setByteLengthBind, handle, byteLength)
     }
 
     fun getByteStride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getByteStrideBind, handle)
     }
 
     fun setByteStride(byteStride: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setByteStrideBind, handle, byteStride)
     }
 
     fun getIndices(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIndicesBind, handle)
     }
 
     fun setIndices(indices: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIndicesBind, handle, indices)
     }
 
     fun getVertexAttributes(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getVertexAttributesBind, handle)
     }
 
     fun setVertexAttributes(isAttributes: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVertexAttributesBind, handle, isAttributes)
     }
 

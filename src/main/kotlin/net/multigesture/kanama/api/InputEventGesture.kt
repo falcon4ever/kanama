@@ -24,6 +24,7 @@ open class InputEventGesture(handle: MemorySegment) : InputEventWithModifiers(ha
      * Generated from Godot docs: InputEventGesture.set_position
      */
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
@@ -34,6 +35,7 @@ open class InputEventGesture(handle: MemorySegment) : InputEventWithModifiers(ha
      * Generated from Godot docs: InputEventGesture.get_position
      */
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 

@@ -30,50 +30,62 @@ class OpenXRIPBinding(handle: MemorySegment) : Resource(handle) {
         get() = getPaths()
 
     fun setAction(action: OpenXRAction?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setActionBind, handle, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getAction(): OpenXRAction? {
+        checkOpen()
         return OpenXRAction.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionBind, handle))
     }
 
     fun setBindingPath(bindingPath: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setBindingPathBind, handle, bindingPath)
     }
 
     fun getBindingPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getBindingPathBind, handle)
     }
 
     fun getBindingModifierCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, handle)
     }
 
     fun getBindingModifier(index: Int): OpenXRActionBindingModifier? {
+        checkOpen()
         return OpenXRActionBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, handle, index))
     }
 
     fun getBindingModifiers(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, handle)
     }
 
     fun getPaths(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPathsBind, handle)
     }
 
     fun getPathCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPathCountBind, handle)
     }
 
     fun hasPath(path: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasPathBind, handle, path)
     }
 
     fun addPath(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addPathBind, handle, path)
     }
 
     fun removePath(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removePathBind, handle, path)
     }
 

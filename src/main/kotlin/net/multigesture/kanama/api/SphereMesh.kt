@@ -46,6 +46,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.set_radius
      */
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
@@ -55,6 +56,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.get_radius
      */
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
@@ -64,6 +66,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.set_height
      */
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
@@ -73,6 +76,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.get_height
      */
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
@@ -82,6 +86,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.set_radial_segments
      */
     fun setRadialSegments(radialSegments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, radialSegments)
     }
 
@@ -91,6 +96,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.get_radial_segments
      */
     fun getRadialSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
     }
 
@@ -100,6 +106,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.set_rings
      */
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
@@ -109,6 +116,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.get_rings
      */
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
@@ -119,6 +127,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.set_is_hemisphere
      */
     fun setIsHemisphere(isHemisphere: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsHemisphereBind, handle, isHemisphere)
     }
 
@@ -129,6 +138,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: SphereMesh.get_is_hemisphere
      */
     fun getIsHemisphere(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsHemisphereBind, handle)
     }
 

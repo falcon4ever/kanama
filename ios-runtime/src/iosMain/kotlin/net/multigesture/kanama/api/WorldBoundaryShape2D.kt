@@ -23,18 +23,22 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
         set(value) = setDistance(value)
 
     fun setNormal(normal: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setNormalBind, handle, normal)
     }
 
     fun getNormal(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, handle)
     }
 
     fun setDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDistanceBind, handle, distance)
     }
 
     fun getDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceBind, handle)
     }
 

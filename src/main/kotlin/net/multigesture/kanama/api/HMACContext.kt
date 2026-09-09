@@ -16,6 +16,7 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HMACContext.start
      */
     fun start(hashType: Long, key: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(startBind, handle, hashType, key)
     }
 
@@ -26,6 +27,7 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HMACContext.update
      */
     fun update(data: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, handle, data)
     }
 
@@ -35,6 +37,7 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: HMACContext.finish
      */
     fun finish(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
     }
 

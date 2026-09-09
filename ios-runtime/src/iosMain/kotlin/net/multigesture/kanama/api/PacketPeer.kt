@@ -16,18 +16,22 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setEncodeBufferMaxSize(value)
 
     fun getPacketError(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, handle)
     }
 
     fun getAvailablePacketCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAvailablePacketCountBind, handle)
     }
 
     fun getEncodeBufferMaxSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEncodeBufferMaxSizeBind, handle)
     }
 
     fun setEncodeBufferMaxSize(maxSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setEncodeBufferMaxSizeBind, handle, maxSize)
     }
 

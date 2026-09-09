@@ -35,6 +35,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventAction.set_action
      */
     fun setAction(action: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setActionBind, handle, action)
     }
 
@@ -45,6 +46,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventAction.get_action
      */
     fun getAction(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getActionBind, handle)
     }
 
@@ -54,6 +56,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventAction.set_pressed
      */
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
@@ -65,6 +68,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventAction.set_strength
      */
     fun setStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
     }
 
@@ -76,6 +80,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventAction.get_strength
      */
     fun getStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
     }
 
@@ -87,6 +92,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventAction.set_event_index
      */
     fun setEventIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setEventIndexBind, handle, index)
     }
 
@@ -98,6 +104,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventAction.get_event_index
      */
     fun getEventIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEventIndexBind, handle)
     }
 

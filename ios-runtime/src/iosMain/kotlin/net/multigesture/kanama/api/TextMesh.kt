@@ -117,142 +117,177 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         get() = getStructuredTextBidiOverrideOptions()
 
     fun setHorizontalAlignment(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
     fun getHorizontalAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
     fun setVerticalAlignment(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
     }
 
     fun getVerticalAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
     }
 
     fun setText(text: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
     fun getText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
     fun setFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getFont(): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
     }
 
     fun setFontSize(fontSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, fontSize)
     }
 
     fun getFontSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
     }
 
     fun setLineSpacing(lineSpacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
     }
 
     fun getLineSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
     fun setAutowrapMode(autowrapMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
     }
 
     fun getAutowrapMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
     }
 
     fun setJustificationFlags(justificationFlags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
     }
 
     fun getJustificationFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
     fun setDepth(depth: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
     }
 
     fun getDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
     fun setWidth(width: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
     fun getWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
     fun setPixelSize(pixelSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, handle, pixelSize)
     }
 
     fun getPixelSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, handle)
     }
 
     fun setOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
     fun getOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
     fun setCurveStep(curveStep: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCurveStepBind, handle, curveStep)
     }
 
     fun getCurveStep(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurveStepBind, handle)
     }
 
     fun setTextDirection(direction: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
     fun getTextDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
     fun setLanguage(language: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
     fun getLanguage(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
     fun setStructuredTextBidiOverride(parser: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
     fun getStructuredTextBidiOverride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }
 
     fun setUppercase(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
     }
 
     fun isUppercase(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
     }
 

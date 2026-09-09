@@ -22,30 +22,37 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setInitialClip(value)
 
     fun setClipCount(clipCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setClipCountBind, handle, clipCount)
     }
 
     fun getClipCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getClipCountBind, handle)
     }
 
     fun setInitialClip(clipIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInitialClipBind, handle, clipIndex)
     }
 
     fun getInitialClip(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInitialClipBind, handle)
     }
 
     fun setClipName(clipIndex: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setClipNameBind, handle, clipIndex, name)
     }
 
     fun setClipStream(clipIndex: Int, stream: AudioStream?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setClipStreamBind, handle, clipIndex, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getClipStream(clipIndex: Int): AudioStream? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getClipStreamBind, handle, clipIndex)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -55,62 +62,77 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
     }
 
     fun setClipAutoAdvance(clipIndex: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setClipAutoAdvanceBind, handle, clipIndex, mode)
     }
 
     fun getClipAutoAdvance(clipIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getClipAutoAdvanceBind, handle, clipIndex)
     }
 
     fun setClipAutoAdvanceNextClip(clipIndex: Int, autoAdvanceNextClip: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setClipAutoAdvanceNextClipBind, handle, clipIndex, autoAdvanceNextClip)
     }
 
     fun getClipAutoAdvanceNextClip(clipIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getClipAutoAdvanceNextClipBind, handle, clipIndex)
     }
 
     fun addTransition(fromClip: Int, toClip: Int, fromTime: Long, toTime: Long, fadeMode: Long, fadeBeats: Double, useFillerClip: Boolean = false, fillerClip: Int = -1, holdPrevious: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(addTransitionBind, handle, fromClip, toClip, fromTime, toTime, fadeMode, fadeBeats, useFillerClip, fillerClip, holdPrevious)
     }
 
     fun hasTransition(fromClip: Int, toClip: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(hasTransitionBind, handle, fromClip, toClip)
     }
 
     fun eraseTransition(fromClip: Int, toClip: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(eraseTransitionBind, handle, fromClip, toClip)
     }
 
     fun getTransitionList(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getTransitionListBind, handle)
     }
 
     fun getTransitionFromTime(fromClip: Int, toClip: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFromTimeBind, handle, fromClip, toClip)
     }
 
     fun getTransitionToTime(fromClip: Int, toClip: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionToTimeBind, handle, fromClip, toClip)
     }
 
     fun getTransitionFadeMode(fromClip: Int, toClip: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFadeModeBind, handle, fromClip, toClip)
     }
 
     fun getTransitionFadeBeats(fromClip: Int, toClip: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getTransitionFadeBeatsBind, handle, fromClip, toClip)
     }
 
     fun isTransitionUsingFillerClip(fromClip: Int, toClip: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionUsingFillerClipBind, handle, fromClip, toClip)
     }
 
     fun getTransitionFillerClip(fromClip: Int, toClip: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getTransitionFillerClipBind, handle, fromClip, toClip)
     }
 
     fun isTransitionHoldingPrevious(fromClip: Int, toClip: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionHoldingPreviousBind, handle, fromClip, toClip)
     }
 

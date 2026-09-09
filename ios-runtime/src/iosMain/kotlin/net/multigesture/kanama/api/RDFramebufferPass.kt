@@ -32,26 +32,32 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setDepthAttachment(value)
 
     fun getColorAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getColorAttachmentsBind, handle)
     }
 
     fun getInputAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getInputAttachmentsBind, handle)
     }
 
     fun getResolveAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getResolveAttachmentsBind, handle)
     }
 
     fun getPreserveAttachments(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPreserveAttachmentsBind, handle)
     }
 
     fun setDepthAttachment(pMember: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDepthAttachmentBind, handle, pMember)
     }
 
     fun getDepthAttachment(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDepthAttachmentBind, handle)
     }
 

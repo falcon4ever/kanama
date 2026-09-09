@@ -66,6 +66,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_data
      */
     fun setData(data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
     }
 
@@ -77,6 +78,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.get_data
      */
     fun getData(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
     }
 
@@ -86,6 +88,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_format
      */
     fun setFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
@@ -95,6 +98,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -104,6 +108,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_loop_mode
      */
     fun setLoopMode(loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
     }
 
@@ -113,6 +118,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.get_loop_mode
      */
     fun getLoopMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
     }
 
@@ -122,6 +128,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_loop_begin
      */
     fun setLoopBegin(loopBegin: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setLoopBeginBind, handle, loopBegin)
     }
 
@@ -131,6 +138,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.get_loop_begin
      */
     fun getLoopBegin(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLoopBeginBind, handle)
     }
 
@@ -140,6 +148,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_loop_end
      */
     fun setLoopEnd(loopEnd: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setLoopEndBind, handle, loopEnd)
     }
 
@@ -149,6 +158,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.get_loop_end
      */
     fun getLoopEnd(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLoopEndBind, handle)
     }
 
@@ -164,6 +174,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_mix_rate
      */
     fun setMixRate(mixRate: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMixRateBind, handle, mixRate)
     }
 
@@ -179,6 +190,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.get_mix_rate
      */
     fun getMixRate(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMixRateBind, handle)
     }
 
@@ -188,6 +200,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_stereo
      */
     fun setStereo(stereo: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setStereoBind, handle, stereo)
     }
 
@@ -197,6 +210,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.is_stereo
      */
     fun isStereo(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isStereoBind, handle)
     }
 
@@ -210,6 +224,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.set_tags
      */
     fun setTags(tags: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, handle, tags)
     }
 
@@ -223,6 +238,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.get_tags
      */
     fun getTags(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, handle)
     }
 
@@ -234,6 +250,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * Generated from Godot docs: AudioStreamWAV.save_to_wav
      */
     fun saveToWav(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, handle, path)
     }
 

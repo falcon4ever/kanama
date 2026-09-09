@@ -16,6 +16,7 @@ class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ExternalTexture.set_size
      */
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
@@ -26,6 +27,7 @@ class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ExternalTexture.get_external_texture_id
      */
     fun getExternalTextureId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getExternalTextureIdBind, handle)
     }
 
@@ -36,6 +38,7 @@ class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ExternalTexture.set_external_buffer_id
      */
     fun setExternalBufferId(externalBufferId: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setExternalBufferIdBind, handle, externalBufferId)
     }
 

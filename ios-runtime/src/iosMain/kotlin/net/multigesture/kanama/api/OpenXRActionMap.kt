@@ -18,54 +18,67 @@ class OpenXRActionMap(handle: MemorySegment) : Resource(handle) {
         get() = getInteractionProfiles()
 
     fun getActionSets(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getActionSetsBind, handle)
     }
 
     fun getActionSetCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getActionSetCountBind, handle)
     }
 
     fun findActionSet(name: String): OpenXRActionSet? {
+        checkOpen()
         return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findActionSetBind, handle, name))
     }
 
     fun getActionSet(idx: Int): OpenXRActionSet? {
+        checkOpen()
         return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getActionSetBind, handle, idx))
     }
 
     fun addActionSet(actionSet: OpenXRActionSet?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addActionSetBind, handle, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeActionSet(actionSet: OpenXRActionSet?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeActionSetBind, handle, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getInteractionProfiles(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getInteractionProfilesBind, handle)
     }
 
     fun getInteractionProfileCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInteractionProfileCountBind, handle)
     }
 
     fun findInteractionProfile(name: String): OpenXRInteractionProfile? {
+        checkOpen()
         return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findInteractionProfileBind, handle, name))
     }
 
     fun getInteractionProfile(idx: Int): OpenXRInteractionProfile? {
+        checkOpen()
         return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInteractionProfileBind, handle, idx))
     }
 
     fun addInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addInteractionProfileBind, handle, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeInteractionProfileBind, handle, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun createDefaultActionSets() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(createDefaultActionSetsBind, handle)
     }
 

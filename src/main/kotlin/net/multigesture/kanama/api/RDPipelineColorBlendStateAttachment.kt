@@ -87,6 +87,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_as_mix
      */
     fun setAsMix() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(setAsMixBind, handle)
     }
 
@@ -99,6 +100,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_enable_blend
      */
     fun setEnableBlend(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableBlendBind, handle, pMember)
     }
 
@@ -111,6 +113,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_enable_blend
      */
     fun getEnableBlend(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableBlendBind, handle)
     }
 
@@ -121,6 +124,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_src_color_blend_factor
      */
     fun setSrcColorBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, handle, pMember)
     }
 
@@ -131,6 +135,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_src_color_blend_factor
      */
     fun getSrcColorBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, handle)
     }
 
@@ -141,6 +146,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_dst_color_blend_factor
      */
     fun setDstColorBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, handle, pMember)
     }
 
@@ -151,6 +157,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_dst_color_blend_factor
      */
     fun getDstColorBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, handle)
     }
 
@@ -160,6 +167,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_color_blend_op
      */
     fun setColorBlendOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, handle, pMember)
     }
 
@@ -169,6 +177,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_color_blend_op
      */
     fun getColorBlendOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, handle)
     }
 
@@ -179,6 +188,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_src_alpha_blend_factor
      */
     fun setSrcAlphaBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, handle, pMember)
     }
 
@@ -189,6 +199,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_src_alpha_blend_factor
      */
     fun getSrcAlphaBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, handle)
     }
 
@@ -199,6 +210,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_dst_alpha_blend_factor
      */
     fun setDstAlphaBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, handle, pMember)
     }
 
@@ -209,6 +221,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_dst_alpha_blend_factor
      */
     fun getDstAlphaBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, handle)
     }
 
@@ -218,6 +231,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_alpha_blend_op
      */
     fun setAlphaBlendOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, handle, pMember)
     }
 
@@ -227,6 +241,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_alpha_blend_op
      */
     fun getAlphaBlendOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, handle)
     }
 
@@ -236,6 +251,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_r
      */
     fun setWriteR(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteRBind, handle, pMember)
     }
 
@@ -245,6 +261,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_r
      */
     fun getWriteR(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteRBind, handle)
     }
 
@@ -254,6 +271,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_g
      */
     fun setWriteG(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteGBind, handle, pMember)
     }
 
@@ -263,6 +281,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_g
      */
     fun getWriteG(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteGBind, handle)
     }
 
@@ -272,6 +291,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_b
      */
     fun setWriteB(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteBBind, handle, pMember)
     }
 
@@ -281,6 +301,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_b
      */
     fun getWriteB(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteBBind, handle)
     }
 
@@ -290,6 +311,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_write_a
      */
     fun setWriteA(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteABind, handle, pMember)
     }
 
@@ -299,6 +321,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_write_a
      */
     fun getWriteA(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteABind, handle)
     }
 

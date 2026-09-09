@@ -28,6 +28,7 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: SeparationRayShape3D.set_length
      */
     fun setLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
     }
 
@@ -37,6 +38,7 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: SeparationRayShape3D.get_length
      */
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
@@ -48,6 +50,7 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: SeparationRayShape3D.set_slide_on_slope
      */
     fun setSlideOnSlope(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSlideOnSlopeBind, handle, active)
     }
 
@@ -59,6 +62,7 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: SeparationRayShape3D.get_slide_on_slope
      */
     fun getSlideOnSlope(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSlideOnSlopeBind, handle)
     }
 

@@ -15,6 +15,7 @@ class GDExtension(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: GDExtension.is_library_open
      */
     fun isLibraryOpen(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isLibraryOpenBind, handle)
     }
 
@@ -25,6 +26,7 @@ class GDExtension(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: GDExtension.get_minimum_library_initialization_level
      */
     fun getMinimumLibraryInitializationLevel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, handle)
     }
 

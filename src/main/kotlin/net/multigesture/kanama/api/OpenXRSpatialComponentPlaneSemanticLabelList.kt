@@ -8,6 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class OpenXRSpatialComponentPlaneSemanticLabelList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getPlaneSemanticLabel(index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getPlaneSemanticLabelBind, handle, index)
     }
 

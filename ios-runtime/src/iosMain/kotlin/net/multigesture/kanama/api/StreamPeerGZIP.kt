@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
     fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, handle, useDeflate, bufferSize)
     }
 
     fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, handle, useDeflate, bufferSize)
     }
 
     fun finish(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(finishBind, handle)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

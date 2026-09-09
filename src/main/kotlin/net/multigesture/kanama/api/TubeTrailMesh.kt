@@ -65,6 +65,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_radius
      */
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
@@ -75,6 +76,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.get_radius
      */
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
@@ -85,6 +87,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_radial_steps
      */
     fun setRadialSteps(radialSteps: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRadialStepsBind, handle, radialSteps)
     }
 
@@ -95,6 +98,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.get_radial_steps
      */
     fun getRadialSteps(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRadialStepsBind, handle)
     }
 
@@ -104,6 +108,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_sections
      */
     fun setSections(sections: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
     }
 
@@ -113,6 +118,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.get_sections
      */
     fun getSections(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
     }
 
@@ -122,6 +128,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_section_length
      */
     fun setSectionLength(sectionLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
     }
 
@@ -131,6 +138,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.get_section_length
      */
     fun getSectionLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
     }
 
@@ -141,6 +149,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_section_rings
      */
     fun setSectionRings(sectionRings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionRingsBind, handle, sectionRings)
     }
 
@@ -151,6 +160,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.get_section_rings
      */
     fun getSectionRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionRingsBind, handle)
     }
 
@@ -161,6 +171,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_cap_top
      */
     fun setCapTop(capTop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapTopBind, handle, capTop)
     }
 
@@ -171,6 +182,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.is_cap_top
      */
     fun isCapTop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, handle)
     }
 
@@ -181,6 +193,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_cap_bottom
      */
     fun setCapBottom(capBottom: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, handle, capBottom)
     }
 
@@ -191,6 +204,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.is_cap_bottom
      */
     fun isCapBottom(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, handle)
     }
 
@@ -202,6 +216,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.set_curve
      */
     fun setCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -213,6 +228,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TubeTrailMesh.get_curve
      */
     fun getCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 

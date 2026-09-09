@@ -23,6 +23,7 @@ class PlaceholderTexture3D(handle: MemorySegment) : Texture3D(handle) {
      * Generated from Godot docs: PlaceholderTexture3D.set_size
      */
     fun setSize(size: Vector3i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3iArg(setSizeBind, handle, size)
     }
 
@@ -32,6 +33,7 @@ class PlaceholderTexture3D(handle: MemorySegment) : Texture3D(handle) {
      * Generated from Godot docs: PlaceholderTexture3D.get_size
      */
     fun getSize(): Vector3i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3i(getSizeBind, handle)
     }
 

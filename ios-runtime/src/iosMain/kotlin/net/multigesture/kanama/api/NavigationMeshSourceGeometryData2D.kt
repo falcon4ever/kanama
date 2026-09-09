@@ -15,26 +15,32 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
         get() = getProjectedObstructions()
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun hasData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, handle)
     }
 
     fun merge(otherGeometry: NavigationMeshSourceGeometryData2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun clearProjectedObstructions() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, handle)
     }
 
     fun getProjectedObstructions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, handle)
     }
 
     fun getBounds(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, handle)
     }
 

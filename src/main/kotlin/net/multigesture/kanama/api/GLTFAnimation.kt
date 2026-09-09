@@ -21,26 +21,32 @@ class GLTFAnimation(handle: MemorySegment) : Resource(handle) {
         set(value) = setLoop(value)
 
     fun getOriginalName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, handle)
     }
 
     fun setOriginalName(originalName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, handle, originalName)
     }
 
     fun getLoop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getLoopBind, handle)
     }
 
     fun setLoop(loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
     }
 

@@ -40,50 +40,62 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setSpeedScale(value)
 
     fun setFrames(frames: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFramesBind, handle, frames)
     }
 
     fun getFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesBind, handle)
     }
 
     fun setCurrentFrame(frame: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCurrentFrameBind, handle, frame)
     }
 
     fun getCurrentFrame(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentFrameBind, handle)
     }
 
     fun setPause(pause: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPauseBind, handle, pause)
     }
 
     fun getPause(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPauseBind, handle)
     }
 
     fun setOneShot(oneShot: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, oneShot)
     }
 
     fun getOneShot(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
     }
 
     fun setSpeedScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
     }
 
     fun getSpeedScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
     }
 
     fun setFrameTexture(frame: Int, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setFrameTextureBind, handle, frame, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getFrameTexture(frame: Int): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getFrameTextureBind, handle, frame)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -93,10 +105,12 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
     }
 
     fun setFrameDuration(frame: Int, duration: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameDurationBind, handle, frame, duration)
     }
 
     fun getFrameDuration(frame: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getFrameDurationBind, handle, frame)
     }
 

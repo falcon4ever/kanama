@@ -16,10 +16,12 @@ class VisualShaderNodeCurveXYZTexture(handle: MemorySegment) : VisualShaderNodeR
         set(value) = setTexture(value)
 
     fun setTexture(texture: CurveXYZTexture?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): CurveXYZTexture? {
+        checkOpen()
         return CurveXYZTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 

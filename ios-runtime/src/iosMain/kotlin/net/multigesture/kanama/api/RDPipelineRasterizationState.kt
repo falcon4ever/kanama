@@ -76,90 +76,112 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setPatchControlPoints(value)
 
     fun setEnableDepthClamp(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthClampBind, handle, pMember)
     }
 
     fun getEnableDepthClamp(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthClampBind, handle)
     }
 
     fun setDiscardPrimitives(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDiscardPrimitivesBind, handle, pMember)
     }
 
     fun getDiscardPrimitives(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDiscardPrimitivesBind, handle)
     }
 
     fun setWireframe(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWireframeBind, handle, pMember)
     }
 
     fun getWireframe(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWireframeBind, handle)
     }
 
     fun setCullMode(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, pMember)
     }
 
     fun getCullMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
     fun setFrontFace(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, handle, pMember)
     }
 
     fun getFrontFace(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, handle)
     }
 
     fun setDepthBiasEnabled(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDepthBiasEnabledBind, handle, pMember)
     }
 
     fun getDepthBiasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDepthBiasEnabledBind, handle)
     }
 
     fun setDepthBiasConstantFactor(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasConstantFactorBind, handle, pMember)
     }
 
     fun getDepthBiasConstantFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasConstantFactorBind, handle)
     }
 
     fun setDepthBiasClamp(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasClampBind, handle, pMember)
     }
 
     fun getDepthBiasClamp(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasClampBind, handle)
     }
 
     fun setDepthBiasSlopeFactor(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasSlopeFactorBind, handle, pMember)
     }
 
     fun getDepthBiasSlopeFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasSlopeFactorBind, handle)
     }
 
     fun setLineWidth(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineWidthBind, handle, pMember)
     }
 
     fun getLineWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
     }
 
     fun setPatchControlPoints(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setPatchControlPointsBind, handle, pMember)
     }
 
     fun getPatchControlPoints(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getPatchControlPointsBind, handle)
     }
 

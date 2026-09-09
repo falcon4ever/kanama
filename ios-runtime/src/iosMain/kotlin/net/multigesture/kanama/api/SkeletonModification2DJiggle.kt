@@ -54,138 +54,172 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
         set(value) = setGravity(value)
 
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
     fun setJiggleDataChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setJiggleDataChainLengthBind, handle, length)
     }
 
     fun getJiggleDataChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getJiggleDataChainLengthBind, handle)
     }
 
     fun setStiffness(stiffness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStiffnessBind, handle, stiffness)
     }
 
     fun getStiffness(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStiffnessBind, handle)
     }
 
     fun setMass(mass: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
     }
 
     fun getMass(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
     }
 
     fun setDamping(damping: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, damping)
     }
 
     fun getDamping(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
     }
 
     fun setUseGravity(useGravity: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseGravityBind, handle, useGravity)
     }
 
     fun getUseGravity(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseGravityBind, handle)
     }
 
     fun setGravity(gravity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setGravityBind, handle, gravity)
     }
 
     fun getGravity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, handle)
     }
 
     fun setUseColliders(useColliders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseCollidersBind, handle, useColliders)
     }
 
     fun getUseColliders(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseCollidersBind, handle)
     }
 
     fun setCollisionMask(collisionMask: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCollisionMaskBind, handle, collisionMask)
     }
 
     fun getCollisionMask(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCollisionMaskBind, handle)
     }
 
     fun reset() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetBind, handle)
     }
 
     fun setJiggleJointBone2dNode(jointIdx: Int, bone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setJiggleJointBone2dNodeBind, handle, jointIdx, bone2dNode)
     }
 
     fun setJiggleJointBoneIndex(jointIdx: Int, boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setJiggleJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
     fun getJiggleJointBoneIndex(jointIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getJiggleJointBoneIndexBind, handle, jointIdx)
     }
 
     fun setJiggleJointOverride(jointIdx: Int, override: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointOverrideBind, handle, jointIdx, override)
     }
 
     fun getJiggleJointOverride(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointOverrideBind, handle, jointIdx)
     }
 
     fun setJiggleJointStiffness(jointIdx: Int, stiffness: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointStiffnessBind, handle, jointIdx, stiffness)
     }
 
     fun getJiggleJointStiffness(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointStiffnessBind, handle, jointIdx)
     }
 
     fun setJiggleJointMass(jointIdx: Int, mass: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointMassBind, handle, jointIdx, mass)
     }
 
     fun getJiggleJointMass(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointMassBind, handle, jointIdx)
     }
 
     fun setJiggleJointDamping(jointIdx: Int, damping: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointDampingBind, handle, jointIdx, damping)
     }
 
     fun getJiggleJointDamping(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointDampingBind, handle, jointIdx)
     }
 
     fun setJiggleJointUseGravity(jointIdx: Int, useGravity: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointUseGravityBind, handle, jointIdx, useGravity)
     }
 
     fun getJiggleJointUseGravity(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointUseGravityBind, handle, jointIdx)
     }
 
     fun setJiggleJointGravity(jointIdx: Int, gravity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setJiggleJointGravityBind, handle, jointIdx, gravity)
     }
 
     fun getJiggleJointGravity(jointIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getJiggleJointGravityBind, handle, jointIdx)
     }
 

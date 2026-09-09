@@ -35,6 +35,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_bone2d_node
      */
     fun setBone2dNode(bone2dNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setBone2dNodeBind, handle, bone2dNodepath)
     }
 
@@ -44,6 +45,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_bone2d_node
      */
     fun getBone2dNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodeBind, handle)
     }
 
@@ -53,6 +55,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_bone_index
      */
     fun setBoneIndex(boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBoneIndexBind, handle, boneIdx)
     }
 
@@ -62,6 +65,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_bone_index
      */
     fun getBoneIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneIndexBind, handle)
     }
 
@@ -72,6 +76,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_target_node
      */
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
@@ -82,6 +87,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_target_node
      */
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
@@ -92,6 +98,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_additional_rotation
      */
     fun setAdditionalRotation(rotation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAdditionalRotationBind, handle, rotation)
     }
 
@@ -102,6 +109,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_additional_rotation
      */
     fun getAdditionalRotation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAdditionalRotationBind, handle)
     }
 
@@ -112,6 +120,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_enable_constraint
      */
     fun setEnableConstraint(enableConstraint: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableConstraintBind, handle, enableConstraint)
     }
 
@@ -121,6 +130,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_enable_constraint
      */
     fun getEnableConstraint(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableConstraintBind, handle)
     }
 
@@ -130,6 +140,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_constraint_angle_min
      */
     fun setConstraintAngleMin(angleMin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMinBind, handle, angleMin)
     }
 
@@ -139,6 +150,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_constraint_angle_min
      */
     fun getConstraintAngleMin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMinBind, handle)
     }
 
@@ -148,6 +160,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_constraint_angle_max
      */
     fun setConstraintAngleMax(angleMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMaxBind, handle, angleMax)
     }
 
@@ -157,6 +170,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_constraint_angle_max
      */
     fun getConstraintAngleMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMaxBind, handle)
     }
 
@@ -169,6 +183,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.set_constraint_angle_invert
      */
     fun setConstraintAngleInvert(invert: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setConstraintAngleInvertBind, handle, invert)
     }
 
@@ -178,6 +193,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DLookAt.get_constraint_angle_invert
      */
     fun getConstraintAngleInvert(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getConstraintAngleInvertBind, handle)
     }
 

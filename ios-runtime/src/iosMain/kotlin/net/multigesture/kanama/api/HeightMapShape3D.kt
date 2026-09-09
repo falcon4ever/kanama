@@ -28,38 +28,47 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
         set(value) = setMapData(value)
 
     fun setMapWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMapWidthBind, handle, width)
     }
 
     fun getMapWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMapWidthBind, handle)
     }
 
     fun setMapDepth(height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMapDepthBind, handle, height)
     }
 
     fun getMapDepth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMapDepthBind, handle)
     }
 
     fun setMapData(data: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setMapDataBind, handle, data)
     }
 
     fun getMapData(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getMapDataBind, handle)
     }
 
     fun getMinHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinHeightBind, handle)
     }
 
     fun getMaxHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxHeightBind, handle)
     }
 
     fun updateMapDataFromImage(image: Image?, heightMin: Double, heightMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectTwoDoubleArgs(updateMapDataFromImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, heightMin, heightMax)
     }
 

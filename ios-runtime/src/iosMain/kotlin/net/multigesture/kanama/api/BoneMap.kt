@@ -16,22 +16,27 @@ class BoneMap(handle: MemorySegment) : Resource(handle) {
         set(value) = setProfile(value)
 
     fun getProfile(): SkeletonProfile? {
+        checkOpen()
         return SkeletonProfile.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, handle))
     }
 
     fun setProfile(profile: SkeletonProfile?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setProfileBind, handle, listOf(profile?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getSkeletonBoneName(profileBoneName: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(getSkeletonBoneNameBind, handle, profileBoneName)
     }
 
     fun setSkeletonBoneName(profileBoneName: String, skeletonBoneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(setSkeletonBoneNameBind, handle, profileBoneName, skeletonBoneName)
     }
 
     fun findProfileBoneName(skeletonBoneName: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(findProfileBoneNameBind, handle, skeletonBoneName)
     }
 

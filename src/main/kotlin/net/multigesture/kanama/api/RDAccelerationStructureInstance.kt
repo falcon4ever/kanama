@@ -54,6 +54,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.set_transform
      */
     fun setTransform(pMember: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, pMember)
     }
 
@@ -63,6 +64,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.get_transform
      */
     fun getTransform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
@@ -72,6 +74,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.set_id
      */
     fun setId(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setIdBind, handle, pMember)
     }
 
@@ -81,6 +84,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.get_id
      */
     fun getId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIdBind, handle)
     }
 
@@ -90,6 +94,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.set_mask
      */
     fun setMask(pMember: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaskBind, handle, pMember)
     }
 
@@ -99,6 +104,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.get_mask
      */
     fun getMask(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaskBind, handle)
     }
 
@@ -109,6 +115,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.set_hit_sbt_range
      */
     fun setHitSbtRange(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHitSbtRangeBind, handle, pMember)
     }
 
@@ -119,6 +126,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.get_hit_sbt_range
      */
     fun getHitSbtRange(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHitSbtRangeBind, handle)
     }
 
@@ -128,6 +136,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.set_flags
      */
     fun setFlags(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
     }
 
@@ -137,6 +146,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.get_flags
      */
     fun getFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
@@ -147,6 +157,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.set_blas
      */
     fun setBlas(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setBlasBind, handle, pMember)
     }
 
@@ -157,6 +168,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      * Generated from Godot docs: RDAccelerationStructureInstance.get_blas
      */
     fun getBlas(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getBlasBind, handle)
     }
 

@@ -76,94 +76,117 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
         set(value) = setWriteA(value)
 
     fun setAsMix() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(setAsMixBind, handle)
     }
 
     fun setEnableBlend(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableBlendBind, handle, pMember)
     }
 
     fun getEnableBlend(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableBlendBind, handle)
     }
 
     fun setSrcColorBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, handle, pMember)
     }
 
     fun getSrcColorBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, handle)
     }
 
     fun setDstColorBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, handle, pMember)
     }
 
     fun getDstColorBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, handle)
     }
 
     fun setColorBlendOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, handle, pMember)
     }
 
     fun getColorBlendOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, handle)
     }
 
     fun setSrcAlphaBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, handle, pMember)
     }
 
     fun getSrcAlphaBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, handle)
     }
 
     fun setDstAlphaBlendFactor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, handle, pMember)
     }
 
     fun getDstAlphaBlendFactor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, handle)
     }
 
     fun setAlphaBlendOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, handle, pMember)
     }
 
     fun getAlphaBlendOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, handle)
     }
 
     fun setWriteR(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteRBind, handle, pMember)
     }
 
     fun getWriteR(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteRBind, handle)
     }
 
     fun setWriteG(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteGBind, handle, pMember)
     }
 
     fun getWriteG(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteGBind, handle)
     }
 
     fun setWriteB(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteBBind, handle, pMember)
     }
 
     fun getWriteB(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteBBind, handle)
     }
 
     fun setWriteA(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWriteABind, handle, pMember)
     }
 
     fun getWriteA(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWriteABind, handle)
     }
 

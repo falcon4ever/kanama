@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class WebRTCMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
     fun addPeer(peer: WebRTCPeerConnection?, peerId: Int, unreliableLifetime: Int = 1): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, handle, peer?.requireOpenHandle() ?: MemorySegment.NULL, peerId, unreliableLifetime)
     }
 
     fun removePeer(peerId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePeerBind, handle, peerId)
     }
 
     fun hasPeer(peerId: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasPeerBind, handle, peerId)
     }
 

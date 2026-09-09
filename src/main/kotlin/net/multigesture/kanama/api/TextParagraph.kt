@@ -99,6 +99,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -108,6 +109,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.duplicate
      */
     fun duplicate(): TextParagraph? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -122,6 +124,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_direction
      */
     fun setDirection(direction: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDirectionBind, handle, direction)
     }
 
@@ -131,6 +134,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_direction
      */
     fun getDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, handle)
     }
 
@@ -140,6 +144,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_inferred_direction
      */
     fun getInferredDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, handle)
     }
 
@@ -150,6 +155,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_custom_punctuation
      */
     fun setCustomPunctuation(customPunctuation: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCustomPunctuationBind, handle, customPunctuation)
     }
 
@@ -160,6 +166,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_custom_punctuation
      */
     fun getCustomPunctuation(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCustomPunctuationBind, handle)
     }
 
@@ -169,6 +176,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_orientation
      */
     fun setOrientation(orientation: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
     }
 
@@ -178,6 +186,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_orientation
      */
     fun getOrientation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
     }
 
@@ -187,6 +196,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_preserve_invalid
      */
     fun setPreserveInvalid(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, handle, enabled)
     }
 
@@ -196,6 +206,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_preserve_invalid
      */
     fun getPreserveInvalid(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, handle)
     }
 
@@ -205,6 +216,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_preserve_control
      */
     fun setPreserveControl(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, handle, enabled)
     }
 
@@ -214,6 +226,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_preserve_control
      */
     fun getPreserveControl(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, handle)
     }
 
@@ -224,6 +237,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_bidi_override
      */
     fun setBidiOverride(override: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, handle, override)
     }
 
@@ -234,6 +248,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_dropcap
      */
     fun setDropcap(text: String, font: Font?, fontSize: Int, dropcapMargins: Rect2, language: String = ""): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(setDropcapBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, dropcapMargins, language)
     }
 
@@ -243,6 +258,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.clear_dropcap
      */
     fun clearDropcap() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearDropcapBind, handle)
     }
 
@@ -252,6 +268,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.add_string
      */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
     }
 
@@ -262,6 +279,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.add_object
      */
     fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, handle, key, size, inlineAlign, length, baseline)
     }
 
@@ -271,6 +289,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.resize_object
      */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, handle, key, size, inlineAlign, baseline)
     }
 
@@ -280,6 +299,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.has_object
      */
     fun hasObject(key: Any?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, handle, key)
     }
 
@@ -289,6 +309,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_alignment
      */
     fun setAlignment(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAlignmentBind, handle, alignment)
     }
 
@@ -298,6 +319,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_alignment
      */
     fun getAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, handle)
     }
 
@@ -307,6 +329,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.tab_align
      */
     fun tabAlign(tabStops: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, handle, tabStops)
     }
 
@@ -316,6 +339,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_break_flags
      */
     fun setBreakFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBreakFlagsBind, handle, flags)
     }
 
@@ -325,6 +349,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_break_flags
      */
     fun getBreakFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBreakFlagsBind, handle)
     }
 
@@ -334,6 +359,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_justification_flags
      */
     fun setJustificationFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, flags)
     }
 
@@ -343,6 +369,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_justification_flags
      */
     fun getJustificationFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
@@ -352,6 +379,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
     }
 
@@ -361,6 +389,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
     }
 
@@ -370,6 +399,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_ellipsis_char
      */
     fun setEllipsisChar(char: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
     }
 
@@ -379,6 +409,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_ellipsis_char
      */
     fun getEllipsisChar(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
     }
 
@@ -388,6 +419,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_width
      */
     fun setWidth(width: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
@@ -397,6 +429,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_width
      */
     fun getWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
@@ -406,6 +439,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_non_wrapped_size
      */
     fun getNonWrappedSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getNonWrappedSizeBind, handle)
     }
 
@@ -415,6 +449,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_size
      */
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
@@ -424,6 +459,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_rid
      */
     fun getRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
     }
 
@@ -433,6 +469,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_rid
      */
     fun getLineRid(line: Int): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetRID(getLineRidBind, handle, line)
     }
 
@@ -442,6 +479,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_dropcap_rid
      */
     fun getDropcapRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getDropcapRidBind, handle)
     }
 
@@ -451,6 +489,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_range
      */
     fun getRange(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, handle)
     }
 
@@ -460,6 +499,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_count
      */
     fun getLineCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
     }
 
@@ -469,6 +509,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_max_lines_visible
      */
     fun setMaxLinesVisible(maxLinesVisible: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxLinesVisibleBind, handle, maxLinesVisible)
     }
 
@@ -478,6 +519,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_max_lines_visible
      */
     fun getMaxLinesVisible(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxLinesVisibleBind, handle)
     }
 
@@ -488,6 +530,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.set_line_spacing
      */
     fun setLineSpacing(lineSpacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
     }
 
@@ -498,6 +541,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_spacing
      */
     fun getLineSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
@@ -507,6 +551,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_objects
      */
     fun getLineObjects(line: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(getLineObjectsBind, handle, line)
     }
 
@@ -516,6 +561,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_object_rect
      */
     fun getLineObjectRect(line: Int, key: Any?): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndVariantArgRetRect2(getLineObjectRectBind, handle, line, key)
     }
 
@@ -525,6 +571,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_size
      */
     fun getLineSize(line: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getLineSizeBind, handle, line)
     }
 
@@ -534,6 +581,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_range
      */
     fun getLineRange(line: Int): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, handle, line)
     }
 
@@ -544,6 +592,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_ascent
      */
     fun getLineAscent(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineAscentBind, handle, line)
     }
 
@@ -554,6 +603,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_descent
      */
     fun getLineDescent(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineDescentBind, handle, line)
     }
 
@@ -563,6 +613,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_width
      */
     fun getLineWidth(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineWidthBind, handle, line)
     }
 
@@ -572,6 +623,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_underline_position
      */
     fun getLineUnderlinePosition(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlinePositionBind, handle, line)
     }
 
@@ -581,6 +633,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_line_underline_thickness
      */
     fun getLineUnderlineThickness(line: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlineThicknessBind, handle, line)
     }
 
@@ -590,6 +643,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_dropcap_size
      */
     fun getDropcapSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getDropcapSizeBind, handle)
     }
 
@@ -599,6 +653,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.get_dropcap_lines
      */
     fun getDropcapLines(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDropcapLinesBind, handle)
     }
 
@@ -610,6 +665,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.draw
      */
     fun draw(canvas: RID, pos: Vector2, color: Color, dcColor: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2TwoColorDoubleArgs(drawBind, handle, canvas, pos, color, dcColor, oversampling)
     }
 
@@ -622,6 +678,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.draw_outline
      */
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, dcColor: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntTwoColorDoubleArgs(drawOutlineBind, handle, canvas, pos, outlineSize, color, dcColor, oversampling)
     }
 
@@ -633,6 +690,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.draw_line
      */
     fun drawLine(canvas: RID, pos: Vector2, line: Int, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawLineBind, handle, canvas, pos, line, color, oversampling)
     }
 
@@ -644,6 +702,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.draw_line_outline
      */
     fun drawLineOutline(canvas: RID, pos: Vector2, line: Int, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgs(drawLineOutlineBind, handle, canvas, pos, line, outlineSize, color, oversampling)
     }
 
@@ -655,6 +714,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.draw_dropcap
      */
     fun drawDropcap(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawDropcapBind, handle, canvas, pos, color, oversampling)
     }
 
@@ -666,6 +726,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.draw_dropcap_outline
      */
     fun drawDropcapOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawDropcapOutlineBind, handle, canvas, pos, outlineSize, color, oversampling)
     }
 
@@ -676,6 +737,7 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TextParagraph.hit_test
      */
     fun hitTest(coords: Vector2): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetInt(hitTestBind, handle, coords)
     }
 

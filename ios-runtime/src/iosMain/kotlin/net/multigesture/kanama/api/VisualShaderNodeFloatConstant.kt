@@ -16,10 +16,12 @@ class VisualShaderNodeFloatConstant(handle: MemorySegment) : VisualShaderNodeCon
         set(value) = setConstant(value)
 
     fun setConstant(constant: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setConstantBind, handle, constant)
     }
 
     fun getConstant(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getConstantBind, handle)
     }
 

@@ -17,82 +17,102 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
         set(value) = setGraphOffset(value)
 
     fun setMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
     }
 
     fun addNode(type: Long, node: VisualShaderNode?, position: Vector2, id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongObjectVector2IntArgs(addNodeBind, handle, type, node?.requireOpenHandle() ?: MemorySegment.NULL, position, id)
     }
 
     fun getNode(type: Long, id: Int): VisualShaderNode? {
+        checkOpen()
         return VisualShaderNode.wrap(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(getNodeBind, handle, type, id))
     }
 
     fun setNodePosition(type: Long, id: Int, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongIntVector2Args(setNodePositionBind, handle, type, id, position)
     }
 
     fun getNodePosition(type: Long, id: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(getNodePositionBind, handle, type, id)
     }
 
     fun getValidNodeId(type: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getValidNodeIdBind, handle, type)
     }
 
     fun removeNode(type: Long, id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(removeNodeBind, handle, type, id)
     }
 
     fun replaceNode(type: Long, id: Int, newClass: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongIntStringNameArgs(replaceNodeBind, handle, type, id, newClass)
     }
 
     fun isNodeConnection(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(isNodeConnectionBind, handle, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun canConnectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(canConnectNodesBind, handle, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun connectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(connectNodesBind, handle, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun disconnectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndFourIntArgs(disconnectNodesBind, handle, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun connectNodesForced(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndFourIntArgs(connectNodesForcedBind, handle, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun attachNodeToFrame(type: Long, id: Int, frame: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoIntArgs(attachNodeToFrameBind, handle, type, id, frame)
     }
 
     fun detachNodeFromFrame(type: Long, id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(detachNodeFromFrameBind, handle, type, id)
     }
 
     fun addVarying(name: String, mode: Long, type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringTwoLongArgs(addVaryingBind, handle, name, mode, type)
     }
 
     fun removeVarying(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(removeVaryingBind, handle, name)
     }
 
     fun hasVarying(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasVaryingBind, handle, name)
     }
 
     fun setGraphOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, handle, offset)
     }
 
     fun getGraphOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, handle)
     }
 

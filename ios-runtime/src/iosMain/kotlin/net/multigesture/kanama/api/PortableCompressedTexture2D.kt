@@ -23,30 +23,37 @@ class PortableCompressedTexture2D(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setKeepCompressedBuffer(value)
 
     fun createFromImage(image: Image?, compressionMode: Long, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, compressionMode, normalMap, lossyQuality)
     }
 
     fun getCompressionMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCompressionModeBind, handle)
     }
 
     fun setSizeOverride(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeOverrideBind, handle, size)
     }
 
     fun getSizeOverride(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeOverrideBind, handle)
     }
 
     fun setKeepCompressedBuffer(keep: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setKeepCompressedBufferBind, handle, keep)
     }
 
     fun isKeepingCompressedBuffer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isKeepingCompressedBufferBind, handle)
     }
 
     fun setBasisuCompressorParams(uastcLevel: Int, rdoQualityLoss: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBasisuCompressorParamsBind, handle, uastcLevel, rdoQualityLoss)
     }
 

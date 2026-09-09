@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class RenderSceneBuffers(handle: MemorySegment) : RefCounted(handle) {
     fun configure(config: RenderSceneBuffersConfiguration?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(configureBind, handle, listOf(config?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

@@ -35,66 +35,82 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
         set(value) = setFlipBendDirection(value)
 
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
     fun setTargetMinimumDistance(minimumDistance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTargetMinimumDistanceBind, handle, minimumDistance)
     }
 
     fun getTargetMinimumDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMinimumDistanceBind, handle)
     }
 
     fun setTargetMaximumDistance(maximumDistance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTargetMaximumDistanceBind, handle, maximumDistance)
     }
 
     fun getTargetMaximumDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMaximumDistanceBind, handle)
     }
 
     fun setFlipBendDirection(flipDirection: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFlipBendDirectionBind, handle, flipDirection)
     }
 
     fun getFlipBendDirection(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFlipBendDirectionBind, handle)
     }
 
     fun setJointOneBone2dNode(bone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setJointOneBone2dNodeBind, handle, bone2dNode)
     }
 
     fun getJointOneBone2dNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getJointOneBone2dNodeBind, handle)
     }
 
     fun setJointOneBoneIdx(boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setJointOneBoneIdxBind, handle, boneIdx)
     }
 
     fun getJointOneBoneIdx(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getJointOneBoneIdxBind, handle)
     }
 
     fun setJointTwoBone2dNode(bone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setJointTwoBone2dNodeBind, handle, bone2dNode)
     }
 
     fun getJointTwoBone2dNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getJointTwoBone2dNodeBind, handle)
     }
 
     fun setJointTwoBoneIdx(boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setJointTwoBoneIdxBind, handle, boneIdx)
     }
 
     fun getJointTwoBoneIdx(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getJointTwoBoneIdxBind, handle)
     }
 

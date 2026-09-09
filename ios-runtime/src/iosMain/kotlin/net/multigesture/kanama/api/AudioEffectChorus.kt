@@ -28,74 +28,92 @@ class AudioEffectChorus(handle: MemorySegment) : AudioEffect(handle) {
         set(value) = setWet(value)
 
     fun setVoiceCount(voices: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVoiceCountBind, handle, voices)
     }
 
     fun getVoiceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVoiceCountBind, handle)
     }
 
     fun setVoiceDelayMs(voiceIdx: Int, delayMs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceDelayMsBind, handle, voiceIdx, delayMs)
     }
 
     fun getVoiceDelayMs(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceDelayMsBind, handle, voiceIdx)
     }
 
     fun setVoiceRateHz(voiceIdx: Int, rateHz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceRateHzBind, handle, voiceIdx, rateHz)
     }
 
     fun getVoiceRateHz(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceRateHzBind, handle, voiceIdx)
     }
 
     fun setVoiceDepthMs(voiceIdx: Int, depthMs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceDepthMsBind, handle, voiceIdx, depthMs)
     }
 
     fun getVoiceDepthMs(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceDepthMsBind, handle, voiceIdx)
     }
 
     fun setVoiceLevelDb(voiceIdx: Int, levelDb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceLevelDbBind, handle, voiceIdx, levelDb)
     }
 
     fun getVoiceLevelDb(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceLevelDbBind, handle, voiceIdx)
     }
 
     fun setVoiceCutoffHz(voiceIdx: Int, cutoffHz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceCutoffHzBind, handle, voiceIdx, cutoffHz)
     }
 
     fun getVoiceCutoffHz(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceCutoffHzBind, handle, voiceIdx)
     }
 
     fun setVoicePan(voiceIdx: Int, pan: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setVoicePanBind, handle, voiceIdx, pan)
     }
 
     fun getVoicePan(voiceIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getVoicePanBind, handle, voiceIdx)
     }
 
     fun setWet(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWetBind, handle, amount)
     }
 
     fun getWet(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, handle)
     }
 
     fun setDry(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
     }
 
     fun getDry(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
     }
 

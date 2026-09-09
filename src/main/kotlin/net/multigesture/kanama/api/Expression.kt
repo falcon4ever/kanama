@@ -17,6 +17,7 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Expression.parse
      */
     fun parse(expression: String, inputNames: List<String>): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, handle, expression, inputNames)
     }
 
@@ -29,6 +30,7 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Expression.execute
      */
     fun execute(inputs: List<Any?> = emptyList(), baseInstance: GodotObject, showError: Boolean = true, constCallsOnly: Boolean = false): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(executeBind, handle, inputs, baseInstance.handle, showError, constCallsOnly)
     }
 
@@ -38,6 +40,7 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Expression.has_execute_failed
      */
     fun hasExecuteFailed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasExecuteFailedBind, handle)
     }
 
@@ -47,6 +50,7 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Expression.get_error_text
      */
     fun getErrorText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getErrorTextBind, handle)
     }
 

@@ -42,58 +42,72 @@ class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) 
         set(value) = setMaxQueuedPackets(value)
 
     fun createClient(url: String, tlsClientOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, handle, url, tlsClientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, handle, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getPeer(peerId: Int): WebSocketPeer? {
+        checkOpen()
         return WebSocketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, handle, peerId))
     }
 
     fun getPeerPort(id: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getPeerPortBind, handle, id)
     }
 
     fun getSupportedProtocols(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedProtocolsBind, handle)
     }
 
     fun getHandshakeHeaders(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getHandshakeHeadersBind, handle)
     }
 
     fun getInboundBufferSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInboundBufferSizeBind, handle)
     }
 
     fun setInboundBufferSize(bufferSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInboundBufferSizeBind, handle, bufferSize)
     }
 
     fun getOutboundBufferSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutboundBufferSizeBind, handle)
     }
 
     fun setOutboundBufferSize(bufferSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setOutboundBufferSizeBind, handle, bufferSize)
     }
 
     fun getHandshakeTimeout(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHandshakeTimeoutBind, handle)
     }
 
     fun setHandshakeTimeout(timeout: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHandshakeTimeoutBind, handle, timeout)
     }
 
     fun setMaxQueuedPackets(maxQueuedPackets: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxQueuedPacketsBind, handle, maxQueuedPackets)
     }
 
     fun getMaxQueuedPackets(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxQueuedPacketsBind, handle)
     }
 

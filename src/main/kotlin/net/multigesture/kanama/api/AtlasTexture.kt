@@ -42,6 +42,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.set_atlas
      */
     fun setAtlas(atlas: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setAtlasBind, handle, listOf(atlas?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -52,6 +53,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.get_atlas
      */
     fun getAtlas(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getAtlasBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -68,6 +70,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.set_region
      */
     fun setRegion(region: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(setRegionBind, handle, region)
     }
 
@@ -79,6 +82,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.get_region
      */
     fun getRegion(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getRegionBind, handle)
     }
 
@@ -90,6 +94,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.set_margin
      */
     fun setMargin(margin: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(setMarginBind, handle, margin)
     }
 
@@ -101,6 +106,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.get_margin
      */
     fun getMargin(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getMarginBind, handle)
     }
 
@@ -111,6 +117,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.set_filter_clip
      */
     fun setFilterClip(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterClipBind, handle, enable)
     }
 
@@ -121,6 +128,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: AtlasTexture.has_filter_clip
      */
     fun hasFilterClip(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasFilterClipBind, handle)
     }
 

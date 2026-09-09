@@ -48,6 +48,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.set_source
      */
     fun setSource(source: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setSourceBind, handle, source)
     }
 
@@ -57,6 +58,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.get_source
      */
     fun getSource(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSourceBind, handle)
     }
 
@@ -68,6 +70,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.set_fix_alpha_border
      */
     fun setFixAlphaBorder(fixAlphaBorder: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFixAlphaBorderBind, handle, fixAlphaBorder)
     }
 
@@ -79,6 +82,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.get_fix_alpha_border
      */
     fun getFixAlphaBorder(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFixAlphaBorderBind, handle)
     }
 
@@ -95,6 +99,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.set_premult_alpha
      */
     fun setPremultAlpha(premultAlpha: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPremultAlphaBind, handle, premultAlpha)
     }
 
@@ -111,6 +116,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.get_premult_alpha
      */
     fun getPremultAlpha(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPremultAlphaBind, handle)
     }
 
@@ -120,6 +126,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.set_base_scale
      */
     fun setBaseScale(baseScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBaseScaleBind, handle, baseScale)
     }
 
@@ -129,6 +136,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.get_base_scale
      */
     fun getBaseScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBaseScaleBind, handle)
     }
 
@@ -138,6 +146,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.set_saturation
      */
     fun setSaturation(saturation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSaturationBind, handle, saturation)
     }
 
@@ -147,6 +156,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.get_saturation
      */
     fun getSaturation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSaturationBind, handle)
     }
 
@@ -156,6 +166,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.set_color_map
      */
     fun setColorMap(colorMap: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setColorMapBind, handle, colorMap)
     }
 
@@ -165,6 +176,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.get_color_map
      */
     fun getColorMap(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getColorMapBind, handle)
     }
 
@@ -174,6 +186,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.set_size_override
      */
     fun setSizeOverride(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
     }
 
@@ -184,6 +197,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: DPITexture.get_scaled_rid
      */
     fun getScaledRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getScaledRidBind, handle)
     }
 

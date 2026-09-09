@@ -20,14 +20,17 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
         set(value) = setConstantId(value)
 
     fun getValue(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getValueBind, handle)
     }
 
     fun setConstantId(constantId: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setConstantIdBind, handle, constantId)
     }
 
     fun getConstantId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getConstantIdBind, handle)
     }
 

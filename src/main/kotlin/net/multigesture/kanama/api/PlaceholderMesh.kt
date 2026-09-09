@@ -16,6 +16,7 @@ class PlaceholderMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PlaceholderMesh.set_aabb
      */
     fun setAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, aabb)
     }
 

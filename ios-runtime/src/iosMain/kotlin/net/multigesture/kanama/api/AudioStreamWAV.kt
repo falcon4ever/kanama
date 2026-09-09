@@ -46,54 +46,67 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setStereo(value)
 
     fun setFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun setLoopMode(loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
     }
 
     fun getLoopMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
     }
 
     fun setLoopBegin(loopBegin: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setLoopBeginBind, handle, loopBegin)
     }
 
     fun getLoopBegin(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLoopBeginBind, handle)
     }
 
     fun setLoopEnd(loopEnd: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setLoopEndBind, handle, loopEnd)
     }
 
     fun getLoopEnd(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLoopEndBind, handle)
     }
 
     fun setMixRate(mixRate: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMixRateBind, handle, mixRate)
     }
 
     fun getMixRate(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMixRateBind, handle)
     }
 
     fun setStereo(stereo: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setStereoBind, handle, stereo)
     }
 
     fun isStereo(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isStereoBind, handle)
     }
 
     fun saveToWav(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, handle, path)
     }
 

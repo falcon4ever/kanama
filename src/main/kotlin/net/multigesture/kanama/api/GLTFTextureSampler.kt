@@ -33,34 +33,42 @@ class GLTFTextureSampler(handle: MemorySegment) : Resource(handle) {
         set(value) = setWrapT(value)
 
     fun getMagFilter(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMagFilterBind, handle)
     }
 
     fun setMagFilter(filterMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMagFilterBind, handle, filterMode)
     }
 
     fun getMinFilter(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMinFilterBind, handle)
     }
 
     fun setMinFilter(filterMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMinFilterBind, handle, filterMode)
     }
 
     fun getWrapS(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWrapSBind, handle)
     }
 
     fun setWrapS(wrapMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWrapSBind, handle, wrapMode)
     }
 
     fun getWrapT(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWrapTBind, handle)
     }
 
     fun setWrapT(wrapMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWrapTBind, handle, wrapMode)
     }
 

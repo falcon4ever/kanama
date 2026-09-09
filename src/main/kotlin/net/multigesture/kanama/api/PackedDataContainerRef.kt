@@ -15,6 +15,7 @@ class PackedDataContainerRef(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PackedDataContainerRef.size
      */
     fun size(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, handle)
     }
 

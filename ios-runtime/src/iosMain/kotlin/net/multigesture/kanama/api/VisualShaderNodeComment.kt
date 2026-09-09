@@ -16,10 +16,12 @@ class VisualShaderNodeComment(handle: MemorySegment) : VisualShaderNodeFrame(han
         set(value) = setDescription(value)
 
     fun setDescription(description: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setDescriptionBind, handle, description)
     }
 
     fun getDescription(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getDescriptionBind, handle)
     }
 

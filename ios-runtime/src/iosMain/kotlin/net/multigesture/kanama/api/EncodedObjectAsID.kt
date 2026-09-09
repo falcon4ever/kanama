@@ -16,10 +16,12 @@ class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setObjectId(value)
 
     fun setObjectId(id: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setObjectIdBind, handle, id)
     }
 
     fun getObjectId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getObjectIdBind, handle)
     }
 

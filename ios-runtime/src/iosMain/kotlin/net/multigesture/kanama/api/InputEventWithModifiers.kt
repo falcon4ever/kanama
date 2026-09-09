@@ -40,50 +40,62 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
         set(value) = setMetaPressed(value)
 
     fun setCommandOrControlAutoremap(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCommandOrControlAutoremapBind, handle, enable)
     }
 
     fun isCommandOrControlAutoremap(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlAutoremapBind, handle)
     }
 
     fun isCommandOrControlPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlPressedBind, handle)
     }
 
     fun setAltPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAltPressedBind, handle, pressed)
     }
 
     fun isAltPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAltPressedBind, handle)
     }
 
     fun setShiftPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setShiftPressedBind, handle, pressed)
     }
 
     fun isShiftPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isShiftPressedBind, handle)
     }
 
     fun setCtrlPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCtrlPressedBind, handle, pressed)
     }
 
     fun isCtrlPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCtrlPressedBind, handle)
     }
 
     fun setMetaPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setMetaPressedBind, handle, pressed)
     }
 
     fun isMetaPressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaPressedBind, handle)
     }
 
     fun getModifiersMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, handle)
     }
 

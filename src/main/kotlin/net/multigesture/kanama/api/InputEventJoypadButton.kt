@@ -28,6 +28,7 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventJoypadButton.set_button_index
      */
     fun setButtonIndex(buttonIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, handle, buttonIndex)
     }
 
@@ -37,14 +38,17 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventJoypadButton.get_button_index
      */
     fun getButtonIndex(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, handle)
     }
 
     fun setPressure(pressure: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
     }
 
     fun getPressure(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
     }
 
@@ -54,6 +58,7 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventJoypadButton.set_pressed
      */
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 

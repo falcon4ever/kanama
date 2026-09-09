@@ -29,26 +29,32 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
         set(value) = setGlobalPosition(value)
 
     fun setButtonMask(buttonMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, handle, buttonMask)
     }
 
     fun getButtonMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, handle)
     }
 
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
     fun setGlobalPosition(globalPosition: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, handle, globalPosition)
     }
 
     fun getGlobalPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, handle)
     }
 

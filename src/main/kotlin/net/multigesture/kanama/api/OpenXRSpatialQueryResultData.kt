@@ -8,14 +8,17 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class OpenXRSpatialQueryResultData(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getCapacity(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCapacityBind, handle)
     }
 
     fun getEntityId(index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getEntityIdBind, handle, index)
     }
 
     fun getEntityState(index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getEntityStateBind, handle, index)
     }
 

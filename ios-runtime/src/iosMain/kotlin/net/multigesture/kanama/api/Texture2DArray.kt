@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Texture2DArray(handle: MemorySegment) : ImageTextureLayered(handle) {
     fun createPlaceholder(): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

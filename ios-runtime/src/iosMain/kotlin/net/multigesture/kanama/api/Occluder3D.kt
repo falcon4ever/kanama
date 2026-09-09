@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class Occluder3D(handle: MemorySegment) : Resource(handle) {
     fun getIndices(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
     }
 

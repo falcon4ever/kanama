@@ -28,6 +28,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.set_locale
      */
     fun setLocale(locale: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLocaleBind, handle, locale)
     }
 
@@ -37,6 +38,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.get_locale
      */
     fun getLocale(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, handle)
     }
 
@@ -47,6 +49,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.add_message
      */
     fun addMessage(srcMessage: String, xlatedMessage: String, context: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(addMessageBind, handle, srcMessage, xlatedMessage, context)
     }
 
@@ -58,6 +61,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.add_plural_message
      */
     fun addPluralMessage(srcMessage: String, xlatedMessages: List<String>, context: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(addPluralMessageBind, handle, srcMessage, xlatedMessages, context)
     }
 
@@ -67,6 +71,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.get_message
      */
     fun getMessage(srcMessage: String, context: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(getMessageBind, handle, srcMessage, context)
     }
 
@@ -79,6 +84,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.get_plural_message
      */
     fun getPluralMessage(srcMessage: String, srcPluralMessage: String, n: Int, context: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(getPluralMessageBind, handle, srcMessage, srcPluralMessage, n, context)
     }
 
@@ -88,6 +94,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.erase_message
      */
     fun eraseMessage(srcMessage: String, context: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(eraseMessageBind, handle, srcMessage, context)
     }
 
@@ -100,6 +107,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.get_message_list
      */
     fun getMessageList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMessageListBind, handle)
     }
 
@@ -109,6 +117,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.get_translated_message_list
      */
     fun getTranslatedMessageList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTranslatedMessageListBind, handle)
     }
 
@@ -118,6 +127,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.get_message_count
      */
     fun getMessageCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, handle)
     }
 
@@ -130,6 +140,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.set_plural_rules_override
      */
     fun setPluralRulesOverride(rules: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPluralRulesOverrideBind, handle, rules)
     }
 
@@ -142,6 +153,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Translation.get_plural_rules_override
      */
     fun getPluralRulesOverride(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPluralRulesOverrideBind, handle)
     }
 

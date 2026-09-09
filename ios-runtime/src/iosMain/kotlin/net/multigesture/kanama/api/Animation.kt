@@ -37,202 +37,252 @@ class Animation(handle: MemorySegment) : Resource(handle) {
         get() = isCaptureIncluded()
 
     fun addTrack(type: Long, atPosition: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(addTrackBind, handle, type, atPosition)
     }
 
     fun removeTrack(trackIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeTrackBind, handle, trackIdx)
     }
 
     fun getTrackCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTrackCountBind, handle)
     }
 
     fun trackGetType(trackIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(trackGetTypeBind, handle, trackIdx)
     }
 
     fun trackSetPath(trackIdx: Int, path: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(trackSetPathBind, handle, trackIdx, path)
     }
 
     fun findTrack(path: NodePath, type: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(findTrackBind, handle, path, type)
     }
 
     fun trackMoveUp(trackIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(trackMoveUpBind, handle, trackIdx)
     }
 
     fun trackMoveDown(trackIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(trackMoveDownBind, handle, trackIdx)
     }
 
     fun trackMoveTo(trackIdx: Int, toIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(trackMoveToBind, handle, trackIdx, toIdx)
     }
 
     fun trackSwap(trackIdx: Int, withIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(trackSwapBind, handle, trackIdx, withIdx)
     }
 
     fun trackSetImported(trackIdx: Int, imported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetImportedBind, handle, trackIdx, imported)
     }
 
     fun trackIsImported(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackIsImportedBind, handle, trackIdx)
     }
 
     fun trackSetEnabled(trackIdx: Int, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetEnabledBind, handle, trackIdx, enabled)
     }
 
     fun trackIsEnabled(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackIsEnabledBind, handle, trackIdx)
     }
 
     fun positionTrackInsertKey(trackIdx: Int, time: Double, position: Vector3): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(positionTrackInsertKeyBind, handle, trackIdx, time, position)
     }
 
     fun rotationTrackInsertKey(trackIdx: Int, time: Double, rotation: Quaternion): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(rotationTrackInsertKeyBind, handle, trackIdx, time, rotation)
     }
 
     fun scaleTrackInsertKey(trackIdx: Int, time: Double, scale: Vector3): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(scaleTrackInsertKeyBind, handle, trackIdx, time, scale)
     }
 
     fun blendShapeTrackInsertKey(trackIdx: Int, time: Double, amount: Double): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(blendShapeTrackInsertKeyBind, handle, trackIdx, time, amount)
     }
 
     fun positionTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(positionTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
     fun rotationTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Quaternion {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(rotationTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
     fun scaleTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(scaleTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
     fun blendShapeTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(blendShapeTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
     fun trackRemoveKey(trackIdx: Int, keyIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(trackRemoveKeyBind, handle, trackIdx, keyIdx)
     }
 
     fun trackRemoveKeyAtTime(trackIdx: Int, time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(trackRemoveKeyAtTimeBind, handle, trackIdx, time)
     }
 
     fun trackSetKeyTransition(trackIdx: Int, keyIdx: Int, transition: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTransitionBind, handle, trackIdx, keyIdx, transition)
     }
 
     fun trackSetKeyTime(trackIdx: Int, keyIdx: Int, time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTimeBind, handle, trackIdx, keyIdx, time)
     }
 
     fun trackGetKeyTransition(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTransitionBind, handle, trackIdx, keyIdx)
     }
 
     fun trackGetKeyCount(trackIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(trackGetKeyCountBind, handle, trackIdx)
     }
 
     fun trackGetKeyTime(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTimeBind, handle, trackIdx, keyIdx)
     }
 
     fun trackFindKey(trackIdx: Int, time: Double, findMode: Long = 0L, limit: Boolean = false, backward: Boolean = false): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(trackFindKeyBind, handle, trackIdx, time, findMode, limit, backward)
     }
 
     fun trackSetInterpolationType(trackIdx: Int, interpolation: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(trackSetInterpolationTypeBind, handle, trackIdx, interpolation)
     }
 
     fun trackGetInterpolationType(trackIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(trackGetInterpolationTypeBind, handle, trackIdx)
     }
 
     fun trackSetInterpolationLoopWrap(trackIdx: Int, interpolation: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetInterpolationLoopWrapBind, handle, trackIdx, interpolation)
     }
 
     fun trackGetInterpolationLoopWrap(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackGetInterpolationLoopWrapBind, handle, trackIdx)
     }
 
     fun trackIsCompressed(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackIsCompressedBind, handle, trackIdx)
     }
 
     fun valueTrackSetUpdateMode(trackIdx: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(valueTrackSetUpdateModeBind, handle, trackIdx, mode)
     }
 
     fun valueTrackGetUpdateMode(trackIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, handle, trackIdx)
     }
 
     fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0f, 0f), outHandle: Vector2 = Vector2(0f, 0f)): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(bezierTrackInsertKeyBind, handle, trackIdx, time, value, inHandle, outHandle)
     }
 
     fun bezierTrackSetKeyValue(trackIdx: Int, keyIdx: Int, value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(bezierTrackSetKeyValueBind, handle, trackIdx, keyIdx, value)
     }
 
     fun bezierTrackSetKeyInHandle(trackIdx: Int, keyIdx: Int, inHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyInHandleBind, handle, trackIdx, keyIdx, inHandle, balancedValueTimeRatio)
     }
 
     fun bezierTrackSetKeyOutHandle(trackIdx: Int, keyIdx: Int, outHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyOutHandleBind, handle, trackIdx, keyIdx, outHandle, balancedValueTimeRatio)
     }
 
     fun bezierTrackGetKeyValue(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(bezierTrackGetKeyValueBind, handle, trackIdx, keyIdx)
     }
 
     fun bezierTrackGetKeyInHandle(trackIdx: Int, keyIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyInHandleBind, handle, trackIdx, keyIdx)
     }
 
     fun bezierTrackGetKeyOutHandle(trackIdx: Int, keyIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyOutHandleBind, handle, trackIdx, keyIdx)
     }
 
     fun bezierTrackInterpolate(trackIdx: Int, time: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(bezierTrackInterpolateBind, handle, trackIdx, time)
     }
 
     fun audioTrackInsertKey(trackIdx: Int, time: Double, stream: Resource?, startOffset: Double = 0.0, endOffset: Double = 0.0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(audioTrackInsertKeyBind, handle, trackIdx, time, stream?.requireOpenHandle() ?: MemorySegment.NULL, startOffset, endOffset)
     }
 
     fun audioTrackSetKeyStream(trackIdx: Int, keyIdx: Int, stream: Resource?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(audioTrackSetKeyStreamBind, handle, trackIdx, keyIdx, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun audioTrackSetKeyStartOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyStartOffsetBind, handle, trackIdx, keyIdx, offset)
     }
 
     fun audioTrackSetKeyEndOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyEndOffsetBind, handle, trackIdx, keyIdx, offset)
     }
 
     fun audioTrackGetKeyStream(trackIdx: Int, keyIdx: Int): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithTwoIntArgsRetObject(audioTrackGetKeyStreamBind, handle, trackIdx, keyIdx)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -242,98 +292,122 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     }
 
     fun audioTrackGetKeyStartOffset(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyStartOffsetBind, handle, trackIdx, keyIdx)
     }
 
     fun audioTrackGetKeyEndOffset(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyEndOffsetBind, handle, trackIdx, keyIdx)
     }
 
     fun audioTrackSetUseBlend(trackIdx: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(audioTrackSetUseBlendBind, handle, trackIdx, enable)
     }
 
     fun audioTrackIsUseBlend(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(audioTrackIsUseBlendBind, handle, trackIdx)
     }
 
     fun animationTrackInsertKey(trackIdx: Int, time: Double, animation: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(animationTrackInsertKeyBind, handle, trackIdx, time, animation)
     }
 
     fun animationTrackSetKeyAnimation(trackIdx: Int, keyIdx: Int, animation: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringNameArg(animationTrackSetKeyAnimationBind, handle, trackIdx, keyIdx, animation)
     }
 
     fun addMarker(name: String, time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(addMarkerBind, handle, name, time)
     }
 
     fun removeMarker(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeMarkerBind, handle, name)
     }
 
     fun hasMarker(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasMarkerBind, handle, name)
     }
 
     fun getMarkerTime(name: String): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetDouble(getMarkerTimeBind, handle, name)
     }
 
     fun getMarkerNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMarkerNamesBind, handle)
     }
 
     fun getMarkerColor(name: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetColor(getMarkerColorBind, handle, name)
     }
 
     fun setMarkerColor(name: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndColorArg(setMarkerColorBind, handle, name, color)
     }
 
     fun setLength(timeSec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, timeSec)
     }
 
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
     fun setLoopMode(loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
     }
 
     fun getLoopMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
     }
 
     fun setStep(sizeSec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStepBind, handle, sizeSec)
     }
 
     fun getStep(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun copyTrack(trackIdx: Int, toAnimation: Animation?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(copyTrackBind, handle, trackIdx, toAnimation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun optimize(allowedVelocityErr: Double = 0.01, allowedAngularErr: Double = 0.01, precision: Int = 3) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoDoubleAndIntArgs(optimizeBind, handle, allowedVelocityErr, allowedAngularErr, precision)
     }
 
     fun compress(pageSize: Long = 8192L, fps: Long = 120L, splitTolerance: Double = 4.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoUInt32AndDoubleArg(compressBind, handle, pageSize, fps, splitTolerance)
     }
 
     fun isCaptureIncluded(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCaptureIncludedBind, handle)
     }
 

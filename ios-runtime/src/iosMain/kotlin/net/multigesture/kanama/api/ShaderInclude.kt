@@ -16,10 +16,12 @@ class ShaderInclude(handle: MemorySegment) : Resource(handle) {
         set(value) = setCode(value)
 
     fun setCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
     }
 
     fun getCode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
     }
 

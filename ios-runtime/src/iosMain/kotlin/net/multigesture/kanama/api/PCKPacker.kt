@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
     fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, handle, pckPath, alignment, key, encryptDirectory)
     }
 
     fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, handle, targetPath, sourcePath, encrypt)
     }
 
     fun addFileRemoval(targetPath: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, handle, targetPath)
     }
 
     fun flush(verbose: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, handle, verbose)
     }
 

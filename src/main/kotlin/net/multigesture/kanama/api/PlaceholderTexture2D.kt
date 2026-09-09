@@ -16,6 +16,7 @@ class PlaceholderTexture2D(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: PlaceholderTexture2D.set_size
      */
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 

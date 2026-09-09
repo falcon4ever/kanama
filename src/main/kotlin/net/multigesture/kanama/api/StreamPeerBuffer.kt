@@ -22,6 +22,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.seek
      */
     fun seek(position: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(seekBind, handle, position)
     }
 
@@ -31,6 +32,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.get_size
      */
     fun getSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSizeBind, handle)
     }
 
@@ -40,6 +42,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.get_position
      */
     fun getPosition(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPositionBind, handle)
     }
 
@@ -49,6 +52,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.resize
      */
     fun resize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(resizeBind, handle, size)
     }
 
@@ -58,6 +62,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.set_data_array
      */
     fun setDataArray(data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(setDataArrayBind, handle, data)
     }
 
@@ -67,6 +72,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.get_data_array
      */
     fun getDataArray(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getDataArrayBind, handle)
     }
 
@@ -76,6 +82,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -85,6 +92,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerBuffer.duplicate
      */
     fun duplicate(): StreamPeerBuffer? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

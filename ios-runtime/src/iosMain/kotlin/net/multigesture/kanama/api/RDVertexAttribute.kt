@@ -46,50 +46,62 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setFrequency(value)
 
     fun setBinding(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBindingBind, handle, pMember)
     }
 
     fun getBinding(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBindingBind, handle)
     }
 
     fun setLocation(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setLocationBind, handle, pMember)
     }
 
     fun getLocation(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getLocationBind, handle)
     }
 
     fun setOffset(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setOffsetBind, handle, pMember)
     }
 
     fun getOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getOffsetBind, handle)
     }
 
     fun setFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun setStride(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setStrideBind, handle, pMember)
     }
 
     fun getStride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getStrideBind, handle)
     }
 
     fun setFrequency(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrequencyBind, handle, pMember)
     }
 
     fun getFrequency(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, handle)
     }
 

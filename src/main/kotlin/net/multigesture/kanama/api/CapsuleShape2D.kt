@@ -36,6 +36,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CapsuleShape2D.set_radius
      */
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
@@ -47,6 +48,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CapsuleShape2D.get_radius
      */
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
@@ -58,6 +60,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CapsuleShape2D.set_height
      */
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
@@ -69,6 +72,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CapsuleShape2D.get_height
      */
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
@@ -80,6 +84,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CapsuleShape2D.set_mid_height
      */
     fun setMidHeight(midHeight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, handle, midHeight)
     }
 
@@ -91,6 +96,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: CapsuleShape2D.get_mid_height
      */
     fun getMidHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, handle)
     }
 

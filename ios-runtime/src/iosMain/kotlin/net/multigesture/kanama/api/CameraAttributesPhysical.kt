@@ -58,70 +58,87 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
         set(value) = setAutoExposureMaxExposureValue(value)
 
     fun setAperture(aperture: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setApertureBind, handle, aperture)
     }
 
     fun getAperture(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getApertureBind, handle)
     }
 
     fun setShutterSpeed(shutterSpeed: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setShutterSpeedBind, handle, shutterSpeed)
     }
 
     fun getShutterSpeed(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getShutterSpeedBind, handle)
     }
 
     fun setFocalLength(focalLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFocalLengthBind, handle, focalLength)
     }
 
     fun getFocalLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFocalLengthBind, handle)
     }
 
     fun setFocusDistance(focusDistance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFocusDistanceBind, handle, focusDistance)
     }
 
     fun getFocusDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFocusDistanceBind, handle)
     }
 
     fun setNear(near: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setNearBind, handle, near)
     }
 
     fun getNear(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, handle)
     }
 
     fun setFar(far: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFarBind, handle, far)
     }
 
     fun getFar(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, handle)
     }
 
     fun getFov(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, handle)
     }
 
     fun setAutoExposureMaxExposureValue(exposureValueMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxExposureValueBind, handle, exposureValueMax)
     }
 
     fun getAutoExposureMaxExposureValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxExposureValueBind, handle)
     }
 
     fun setAutoExposureMinExposureValue(exposureValueMin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinExposureValueBind, handle, exposureValueMin)
     }
 
     fun getAutoExposureMinExposureValue(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinExposureValueBind, handle)
     }
 

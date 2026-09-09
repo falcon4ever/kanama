@@ -16,110 +16,137 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setBigEndian(value)
 
     fun getAvailableBytes(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAvailableBytesBind, handle)
     }
 
     fun setBigEndian(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, handle, enable)
     }
 
     fun isBigEndianEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBigEndianEnabledBind, handle)
     }
 
     fun put8(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(put8Bind, handle, value)
     }
 
     fun putU8(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(putU8Bind, handle, value)
     }
 
     fun put16(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(put16Bind, handle, value)
     }
 
     fun putU16(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(putU16Bind, handle, value)
     }
 
     fun put32(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(put32Bind, handle, value)
     }
 
     fun putU32(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(putU32Bind, handle, value)
     }
 
     fun put64(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(put64Bind, handle, value)
     }
 
     fun putU64(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(putU64Bind, handle, value)
     }
 
     fun putHalf(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(putHalfBind, handle, value)
     }
 
     fun putFloat(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(putFloatBind, handle, value)
     }
 
     fun putDouble(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(putDoubleBind, handle, value)
     }
 
     fun putString(value: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(putStringBind, handle, value)
     }
 
     fun putUtf8String(value: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(putUtf8StringBind, handle, value)
     }
 
     fun get8(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(get8Bind, handle)
     }
 
     fun getU8(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getU8Bind, handle)
     }
 
     fun get16(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(get16Bind, handle)
     }
 
     fun getU16(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getU16Bind, handle)
     }
 
     fun get32(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(get32Bind, handle)
     }
 
     fun getU32(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getU32Bind, handle)
     }
 
     fun get64(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(get64Bind, handle)
     }
 
     fun getU64(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getU64Bind, handle)
     }
 
     fun getHalf(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHalfBind, handle)
     }
 
     fun getFloat(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFloatBind, handle)
     }
 
     fun getDouble(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDoubleBind, handle)
     }
 

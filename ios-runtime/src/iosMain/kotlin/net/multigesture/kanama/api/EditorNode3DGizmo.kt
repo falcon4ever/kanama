@@ -11,42 +11,52 @@ import net.multigesture.kanama.types.Transform3D
  */
 class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
     fun addMesh(mesh: Mesh?, material: Material?, transform: Transform3D, skeleton: SkinReference?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(addMeshBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, material?.requireOpenHandle() ?: MemorySegment.NULL, transform, skeleton?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun addCollisionTriangles(triangles: TriangleMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addCollisionTrianglesBind, handle, listOf(triangles?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun addUnscaledBillboard(material: Material?, defaultScale: Double = 1.0, modulate: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectDoubleColorArgs(addUnscaledBillboardBind, handle, material?.requireOpenHandle() ?: MemorySegment.NULL, defaultScale, modulate)
     }
 
     fun setNode3d(node: Node) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNode3dBind, handle, listOf(node.handle))
     }
 
     fun getNode3d(): Node3D? {
+        checkOpen()
         return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNode3dBind, handle))
     }
 
     fun getPlugin(): EditorNode3DGizmoPlugin? {
+        checkOpen()
         return EditorNode3DGizmoPlugin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPluginBind, handle))
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun setHidden(hidden: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHiddenBind, handle, hidden)
     }
 
     fun isSubgizmoSelected(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isSubgizmoSelectedBind, handle, id)
     }
 
     fun getSubgizmoSelection(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSubgizmoSelectionBind, handle)
     }
 

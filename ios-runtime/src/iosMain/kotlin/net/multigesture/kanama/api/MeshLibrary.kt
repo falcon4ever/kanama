@@ -10,90 +10,112 @@ import net.multigesture.kanama.types.Transform3D
  */
 class MeshLibrary(handle: MemorySegment) : Resource(handle) {
     fun createItem(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(createItemBind, handle, id)
     }
 
     fun setItemName(id: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, handle, id, name)
     }
 
     fun setItemMesh(id: Int, mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, handle, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setItemMeshTransform(id: Int, meshTransform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, handle, id, meshTransform)
     }
 
     fun setItemMeshCastShadow(id: Int, shadowCastingSetting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, handle, id, shadowCastingSetting)
     }
 
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, handle, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setItemNavigationMeshTransform(id: Int, navigationMesh: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, handle, id, navigationMesh)
     }
 
     fun setItemNavigationLayers(id: Int, navigationLayers: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, handle, id, navigationLayers)
     }
 
     fun setItemPreview(id: Int, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, handle, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getItemMesh(id: Int): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, handle, id))
     }
 
     fun getItemMeshTransform(id: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, handle, id)
     }
 
     fun getItemMeshCastShadow(id: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, handle, id)
     }
 
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
+        checkOpen()
         return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, handle, id))
     }
 
     fun getItemNavigationMeshTransform(id: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, handle, id)
     }
 
     fun getItemNavigationLayers(id: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, handle, id)
     }
 
     fun getItemPreview(id: Int): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, handle, id))
     }
 
     fun removeItem(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, id)
     }
 
     fun findItemByName(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, handle, name)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun getItemList(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, handle)
     }
 
     fun getItemCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
     }
 
     fun getLastUnusedItemId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, handle)
     }
 

@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Crypto(handle: MemorySegment) : RefCounted(handle) {
     fun generateRsa(size: Int): CryptoKey? {
+        checkOpen()
         return CryptoKey.wrap(ObjectCalls.ptrcallWithIntArgRetObject(generateRsaBind, handle, size))
     }
 
     fun generateSelfSignedCertificate(key: CryptoKey?, issuerName: String = "CN=myserver,O=myorganisation,C=IT", notBefore: String = "20140101000000", notAfter: String = "20340101000000"): X509Certificate? {
+        checkOpen()
         return X509Certificate.wrap(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(generateSelfSignedCertificateBind, handle, key?.requireOpenHandle() ?: MemorySegment.NULL, issuerName, notBefore, notAfter))
     }
 

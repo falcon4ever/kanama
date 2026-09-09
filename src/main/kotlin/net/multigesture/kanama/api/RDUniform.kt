@@ -29,6 +29,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDUniform.set_uniform_type
      */
     fun setUniformType(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, handle, pMember)
     }
 
@@ -38,6 +39,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDUniform.get_uniform_type
      */
     fun getUniformType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, handle)
     }
 
@@ -47,6 +49,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDUniform.set_binding
      */
     fun setBinding(pMember: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBindingBind, handle, pMember)
     }
 
@@ -56,6 +59,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDUniform.get_binding
      */
     fun getBinding(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBindingBind, handle)
     }
 
@@ -66,6 +70,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDUniform.add_id
      */
     fun addId(id: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(addIdBind, handle, id)
     }
 
@@ -75,6 +80,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDUniform.clear_ids
      */
     fun clearIds() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearIdsBind, handle)
     }
 
@@ -84,6 +90,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDUniform.get_ids
      */
     fun getIds(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getIdsBind, handle)
     }
 

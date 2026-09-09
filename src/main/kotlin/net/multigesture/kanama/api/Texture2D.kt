@@ -19,6 +19,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -28,6 +29,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.get_mipmap_count
      */
     fun getMipmapCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, handle)
     }
 
@@ -37,6 +39,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.get_width
      */
     fun getWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
@@ -46,6 +49,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.get_height
      */
     fun getHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
@@ -55,6 +59,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.get_size
      */
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 
@@ -64,6 +69,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.has_alpha
      */
     fun hasAlpha(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasAlphaBind, handle)
     }
 
@@ -73,6 +79,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.has_mipmaps
      */
     fun hasMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
@@ -83,6 +90,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.draw
      */
     fun draw(canvasItem: RID, position: Vector2, modulate: Color, transpose: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(drawBind, handle, canvasItem, position, modulate, transpose)
     }
 
@@ -92,6 +100,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.draw_rect
      */
     fun drawRect(canvasItem: RID, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(drawRectBind, handle, canvasItem, rect, tile, modulate, transpose)
     }
 
@@ -101,6 +110,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.draw_rect_region
      */
     fun drawRectRegion(canvasItem: RID, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(drawRectRegionBind, handle, canvasItem, rect, srcRect, modulate, transpose, clipUv)
     }
 
@@ -114,6 +124,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.get_image
      */
     fun getImage(): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, handle))
     }
 
@@ -123,6 +134,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: Texture2D.create_placeholder
      */
     fun createPlaceholder(): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

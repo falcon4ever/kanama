@@ -28,70 +28,87 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
         set(value) = setTransferChannel(value)
 
     fun setTransferChannel(channel: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setTransferChannelBind, handle, channel)
     }
 
     fun getTransferChannel(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTransferChannelBind, handle)
     }
 
     fun setTransferMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTransferModeBind, handle, mode)
     }
 
     fun getTransferMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, handle)
     }
 
     fun setTargetPeer(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setTargetPeerBind, handle, id)
     }
 
     fun getPacketPeer(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketPeerBind, handle)
     }
 
     fun getPacketChannel(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketChannelBind, handle)
     }
 
     fun getPacketMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, handle)
     }
 
     fun poll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
     fun disconnectPeer(peer: Int, force: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(disconnectPeerBind, handle, peer, force)
     }
 
     fun getConnectionStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, handle)
     }
 
     fun getUniqueId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, handle)
     }
 
     fun generateUniqueId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(generateUniqueIdBind, handle)
     }
 
     fun setRefuseNewConnections(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, handle, enable)
     }
 
     fun isRefusingNewConnections(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, handle)
     }
 
     fun isServerRelaySupported(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerRelaySupportedBind, handle)
     }
 

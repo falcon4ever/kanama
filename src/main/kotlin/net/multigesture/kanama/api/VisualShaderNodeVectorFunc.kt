@@ -15,10 +15,12 @@ class VisualShaderNodeVectorFunc(handle: MemorySegment) : VisualShaderNodeVector
         set(value) = setFunction(value)
 
     fun setFunction(func: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
     }
 
     fun getFunction(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
     }
 

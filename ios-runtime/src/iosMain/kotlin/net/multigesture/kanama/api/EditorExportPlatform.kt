@@ -9,50 +9,62 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
     fun getOsName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOsNameBind, handle)
     }
 
     fun createPreset(): EditorExportPreset? {
+        checkOpen()
         return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, handle))
     }
 
     fun getCurrentPresets(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getCurrentPresetsBind, handle)
     }
 
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, saveCb.target.handle, saveCb.method, sharedCb.target.handle, sharedCb.method)
     }
 
     fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L, notify: Boolean = true): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags, notify)
     }
 
     fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
     }
 
     fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
     }
 
     fun clearMessages() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMessagesBind, handle)
     }
 
     fun addMessage(type: Long, category: String, message: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringArgs(addMessageBind, handle, type, category, message)
     }
 
     fun getMessageCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, handle)
     }
 
     fun getMessageType(index: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, handle, index)
     }
 
     fun getWorstMessageType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, handle)
     }
 

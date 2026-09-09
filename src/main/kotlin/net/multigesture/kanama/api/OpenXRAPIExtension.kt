@@ -12,202 +12,252 @@ import net.multigesture.kanama.types.Vector2i
  */
 class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
     fun getOpenxrVersion(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOpenxrVersionBind, handle)
     }
 
     fun getInstance(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInstanceBind, handle)
     }
 
     fun getSystemId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSystemIdBind, handle)
     }
 
     fun getSession(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSessionBind, handle)
     }
 
     fun transformFromPose(pose: MemorySegment): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(transformFromPoseBind, handle, pose)
     }
 
     fun xrResult(result: Long, format: String, args: List<Any?>): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(xrResultBind, handle, result, format, args)
     }
 
     fun getInstanceProcAddr(name: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(getInstanceProcAddrBind, handle, name)
     }
 
     fun getErrorString(result: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(getErrorStringBind, handle, result)
     }
 
     fun getSwapchainFormatName(swapchainFormat: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(getSwapchainFormatNameBind, handle, swapchainFormat)
     }
 
     fun setObjectName(objectType: Long, objectHandle: Long, objectName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongStringArgs(setObjectNameBind, handle, objectType, objectHandle, objectName)
     }
 
     fun beginDebugLabelRegion(labelName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(beginDebugLabelRegionBind, handle, labelName)
     }
 
     fun endDebugLabelRegion() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(endDebugLabelRegionBind, handle)
     }
 
     fun insertDebugLabel(labelName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(insertDebugLabelBind, handle, labelName)
     }
 
     fun getViewCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
     fun getViewConfiguration(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getViewConfigurationBind, handle)
     }
 
     fun isInitialized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, handle)
     }
 
     fun isRunning(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, handle)
     }
 
     fun setCustomPlaySpace(space: MemorySegment) {
+        checkOpen()
         ObjectCalls.ptrcallWithConstVoidPtrArg(setCustomPlaySpaceBind, handle, space)
     }
 
     fun getPlaySpace(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlaySpaceBind, handle)
     }
 
     fun getPredictedDisplayTime(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPredictedDisplayTimeBind, handle)
     }
 
     fun getNextFrameTime(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getNextFrameTimeBind, handle)
     }
 
     fun canRender(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(canRenderBind, handle)
     }
 
     fun findAction(name: String, actionSet: RID): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndRIDArgRetRID(findActionBind, handle, name, actionSet)
     }
 
     fun actionGetHandle(action: RID): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(actionGetHandleBind, handle, action)
     }
 
     fun getHandTracker(handIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getHandTrackerBind, handle, handIndex)
     }
 
     fun registerCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(registerCompositionLayerProviderBind, handle, listOf(extension.handle))
     }
 
     fun unregisterCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(unregisterCompositionLayerProviderBind, handle, listOf(extension.handle))
     }
 
     fun registerProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(registerProjectionViewsExtensionBind, handle, listOf(extension.handle))
     }
 
     fun unregisterProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionViewsExtensionBind, handle, listOf(extension.handle))
     }
 
     fun registerFrameInfoExtension(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(registerFrameInfoExtensionBind, handle, listOf(extension.handle))
     }
 
     fun unregisterFrameInfoExtension(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(unregisterFrameInfoExtensionBind, handle, listOf(extension.handle))
     }
 
     fun registerProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(registerProjectionLayerExtensionBind, handle, listOf(extension.handle))
     }
 
     fun unregisterProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionLayerExtensionBind, handle, listOf(extension.handle))
     }
 
     fun getRenderStateZNear(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZNearBind, handle)
     }
 
     fun getRenderStateZFar(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZFarBind, handle)
     }
 
     fun setVelocityTexture(renderTarget: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setVelocityTextureBind, handle, renderTarget)
     }
 
     fun setVelocityDepthTexture(renderTarget: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setVelocityDepthTextureBind, handle, renderTarget)
     }
 
     fun setVelocityTargetSize(targetSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setVelocityTargetSizeBind, handle, targetSize)
     }
 
     fun getSupportedSwapchainFormats(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getSupportedSwapchainFormatsBind, handle)
     }
 
     fun openxrSwapchainCreate(createFlags: Long, usageFlags: Long, swapchainFormat: Long, width: Long, height: Long, sampleCount: Long, arraySize: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(openxrSwapchainCreateBind, handle, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
     }
 
     fun openxrSwapchainFree(swapchain: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(openxrSwapchainFreeBind, handle, swapchain)
     }
 
     fun openxrSwapchainGetSwapchain(swapchain: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(openxrSwapchainGetSwapchainBind, handle, swapchain)
     }
 
     fun openxrSwapchainAcquire(swapchain: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(openxrSwapchainAcquireBind, handle, swapchain)
     }
 
     fun openxrSwapchainGetImage(swapchain: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetRID(openxrSwapchainGetImageBind, handle, swapchain)
     }
 
     fun openxrSwapchainRelease(swapchain: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(openxrSwapchainReleaseBind, handle, swapchain)
     }
 
     fun getProjectionLayer(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getProjectionLayerBind, handle)
     }
 
     fun setRenderRegion(renderRegion: Rect2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iArg(setRenderRegionBind, handle, renderRegion)
     }
 
     fun setEmulateEnvironmentBlendModeAlphaBlend(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEmulateEnvironmentBlendModeAlphaBlendBind, handle, enabled)
     }
 
     fun isEnvironmentBlendModeAlphaSupported(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(isEnvironmentBlendModeAlphaSupportedBind, handle)
     }
 
     fun updateMainSwapchainSize() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(updateMainSwapchainSizeBind, handle)
     }
 

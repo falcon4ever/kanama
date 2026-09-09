@@ -107,6 +107,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_antialiasing
      */
     fun setAntialiasing(antialiasing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
     }
 
@@ -116,6 +117,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_antialiasing
      */
     fun getAntialiasing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
     }
 
@@ -126,6 +128,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_disable_embedded_bitmaps
      */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
     }
 
@@ -136,6 +139,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_disable_embedded_bitmaps
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
     }
 
@@ -145,6 +149,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_generate_mipmaps
      */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
     }
 
@@ -154,6 +159,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_generate_mipmaps
      */
     fun getGenerateMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
     }
 
@@ -163,6 +169,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_allow_system_fallback
      */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
     }
 
@@ -172,6 +179,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.is_allow_system_fallback
      */
     fun isAllowSystemFallback(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
     }
 
@@ -181,6 +189,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_force_autohinter
      */
     fun setForceAutohinter(forceAutohinter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
     }
 
@@ -190,6 +199,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.is_force_autohinter
      */
     fun isForceAutohinter(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
     }
 
@@ -200,6 +210,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_modulate_color_glyphs
      */
     fun setModulateColorGlyphs(modulate: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
     }
 
@@ -210,6 +221,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.is_modulate_color_glyphs
      */
     fun isModulateColorGlyphs(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
     }
 
@@ -219,6 +231,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_hinting
      */
     fun setHinting(hinting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
     }
 
@@ -228,6 +241,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_hinting
      */
     fun getHinting(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
     }
 
@@ -239,6 +253,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_subpixel_positioning
      */
     fun setSubpixelPositioning(subpixelPositioning: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
     }
 
@@ -250,6 +265,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_subpixel_positioning
      */
     fun getSubpixelPositioning(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
     }
 
@@ -261,6 +277,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_keep_rounding_remainders
      */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
     }
 
@@ -272,6 +289,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_keep_rounding_remainders
      */
     fun getKeepRoundingRemainders(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
     }
 
@@ -282,6 +300,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_multichannel_signed_distance_field
      */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
     }
 
@@ -292,6 +311,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.is_multichannel_signed_distance_field
      */
     fun isMultichannelSignedDistanceField(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
     }
 
@@ -304,6 +324,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_msdf_pixel_range
      */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
     }
 
@@ -316,6 +337,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_msdf_pixel_range
      */
     fun getMsdfPixelRange(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
     }
 
@@ -327,6 +349,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_msdf_size
      */
     fun setMsdfSize(msdfSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
     }
 
@@ -338,6 +361,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_msdf_size
      */
     fun getMsdfSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
     }
 
@@ -349,6 +373,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_oversampling
      */
     fun setOversampling(oversampling: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
     }
 
@@ -360,6 +385,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_oversampling
      */
     fun getOversampling(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
     }
 
@@ -369,6 +395,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_font_names
      */
     fun getFontNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontNamesBind, handle)
     }
 
@@ -378,6 +405,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_font_names
      */
     fun setFontNames(names: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(setFontNamesBind, handle, names)
     }
 
@@ -387,6 +415,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.get_font_italic
      */
     fun getFontItalic(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFontItalicBind, handle)
     }
 
@@ -396,6 +425,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_font_italic
      */
     fun setFontItalic(italic: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFontItalicBind, handle, italic)
     }
 
@@ -406,6 +436,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_font_weight
      */
     fun setFontWeight(weight: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
     }
 
@@ -416,6 +447,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      * Generated from Godot docs: SystemFont.set_font_stretch
      */
     fun setFontStretch(stretch: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
     }
 

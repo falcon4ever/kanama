@@ -9,46 +9,57 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handle) {
     fun getSceneTilesCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSceneTilesCountBind, handle)
     }
 
     fun getSceneTileId(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSceneTileIdBind, handle, index)
     }
 
     fun hasSceneTileId(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSceneTileIdBind, handle, id)
     }
 
     fun createSceneTile(packedScene: PackedScene?, idOverride: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(createSceneTileBind, handle, packedScene?.requireOpenHandle() ?: MemorySegment.NULL, idOverride)
     }
 
     fun setSceneTileId(id: Int, newId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setSceneTileIdBind, handle, id, newId)
     }
 
     fun setSceneTileScene(id: Int, packedScene: PackedScene?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setSceneTileSceneBind, handle, id, packedScene?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getSceneTileScene(id: Int): PackedScene? {
+        checkOpen()
         return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSceneTileSceneBind, handle, id))
     }
 
     fun setSceneTileDisplayPlaceholder(id: Int, displayPlaceholder: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setSceneTileDisplayPlaceholderBind, handle, id, displayPlaceholder)
     }
 
     fun getSceneTileDisplayPlaceholder(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getSceneTileDisplayPlaceholderBind, handle, id)
     }
 
     fun removeSceneTile(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeSceneTileBind, handle, id)
     }
 
     fun getNextSceneTileId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getNextSceneTileIdBind, handle)
     }
 

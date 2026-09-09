@@ -15,6 +15,7 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerSocket.poll
      */
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
@@ -24,6 +25,7 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerSocket.get_status
      */
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
@@ -33,6 +35,7 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerSocket.disconnect_from_host
      */
     fun disconnectFromHost() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, handle)
     }
 

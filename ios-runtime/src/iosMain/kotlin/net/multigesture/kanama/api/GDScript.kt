@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class GDScript(handle: MemorySegment) : Script(handle) {
     fun new(vararg extraArgs: Any?): Any? {
+        checkOpen()
         return ObjectCalls.callWithVariantArgs(newBind, handle, listOf(*extraArgs))
     }
 

@@ -9,10 +9,12 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class GDExtension(handle: MemorySegment) : Resource(handle) {
     fun isLibraryOpen(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isLibraryOpenBind, handle)
     }
 
     fun getMinimumLibraryInitializationLevel(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, handle)
     }
 

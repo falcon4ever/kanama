@@ -51,58 +51,72 @@ class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodePara
         set(value) = setDefaultValue(value)
 
     fun setHint(hint: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHintBind, handle, hint)
     }
 
     fun getHint(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, handle)
     }
 
     fun setMin(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMinBind, handle, value)
     }
 
     fun getMin(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMinBind, handle)
     }
 
     fun setMax(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxBind, handle, value)
     }
 
     fun getMax(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxBind, handle)
     }
 
     fun setStep(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStepBind, handle, value)
     }
 
     fun getStep(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStepBind, handle)
     }
 
     fun setEnumNames(names: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(setEnumNamesBind, handle, names)
     }
 
     fun getEnumNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getEnumNamesBind, handle)
     }
 
     fun setDefaultValueEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
     }
 
     fun setDefaultValue(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDefaultValueBind, handle, value)
     }
 
     fun getDefaultValue(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDefaultValueBind, handle)
     }
 

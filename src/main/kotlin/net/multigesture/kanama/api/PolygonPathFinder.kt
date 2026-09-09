@@ -17,18 +17,22 @@ class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PolygonPathFinder.setup
      */
     fun setup(points: List<Vector2>, connections: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListAndPackedInt32ListArgs(setupBind, handle, points, connections)
     }
 
     fun findPath(from: Vector2, to: Vector2): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(findPathBind, handle, from, to)
     }
 
     fun getIntersections(from: Vector2, to: Vector2): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getIntersectionsBind, handle, from, to)
     }
 
     fun getClosestPoint(point: Vector2): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, point)
     }
 
@@ -38,18 +42,22 @@ class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: PolygonPathFinder.is_point_inside
      */
     fun isPointInside(point: Vector2): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetBool(isPointInsideBind, handle, point)
     }
 
     fun setPointPenalty(idx: Int, penalty: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointPenaltyBind, handle, idx, penalty)
     }
 
     fun getPointPenalty(idx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointPenaltyBind, handle, idx)
     }
 
     fun getBounds(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, handle)
     }
 

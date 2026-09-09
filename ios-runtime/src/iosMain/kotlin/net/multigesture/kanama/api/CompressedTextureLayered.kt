@@ -14,10 +14,12 @@ open class CompressedTextureLayered(handle: MemorySegment) : TextureLayered(hand
         get() = getLoadPath()
 
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
     fun getLoadPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
     }
 

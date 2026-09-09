@@ -32,6 +32,7 @@ open class Material(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Material.set_next_pass
      */
     fun setNextPass(nextPass: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNextPassBind, handle, listOf(nextPass?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -45,6 +46,7 @@ open class Material(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Material.get_next_pass
      */
     fun getNextPass(): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNextPassBind, handle))
     }
 
@@ -60,6 +62,7 @@ open class Material(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Material.set_render_priority
      */
     fun setRenderPriority(priority: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, handle, priority)
     }
 
@@ -75,6 +78,7 @@ open class Material(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Material.get_render_priority
      */
     fun getRenderPriority(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, handle)
     }
 
@@ -86,6 +90,7 @@ open class Material(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Material.inspect_native_shader_code
      */
     fun inspectNativeShaderCode() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
     }
 
@@ -95,6 +100,7 @@ open class Material(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Material.create_placeholder
      */
     fun createPlaceholder(): Resource? {
+        checkOpen()
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle))
     }
 

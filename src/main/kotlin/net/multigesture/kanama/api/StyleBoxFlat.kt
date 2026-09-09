@@ -156,6 +156,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_bg_color
      */
     fun setBgColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBgColorBind, handle, color)
     }
 
@@ -165,6 +166,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_bg_color
      */
     fun getBgColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, handle)
     }
 
@@ -174,6 +176,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_border_color
      */
     fun setBorderColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBorderColorBind, handle, color)
     }
 
@@ -183,6 +186,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_border_color
      */
     fun getBorderColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, handle)
     }
 
@@ -192,6 +196,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_border_width_all
      */
     fun setBorderWidthAll(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBorderWidthAllBind, handle, width)
     }
 
@@ -201,6 +206,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_border_width_min
      */
     fun getBorderWidthMin(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBorderWidthMinBind, handle)
     }
 
@@ -210,6 +216,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_border_width
      */
     fun setBorderWidth(margin: Long, width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(setBorderWidthBind, handle, margin, width)
     }
 
@@ -219,6 +226,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_border_width
      */
     fun getBorderWidth(margin: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getBorderWidthBind, handle, margin)
     }
 
@@ -228,6 +236,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_border_blend
      */
     fun setBorderBlend(blend: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBorderBlendBind, handle, blend)
     }
 
@@ -237,6 +246,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_border_blend
      */
     fun getBorderBlend(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getBorderBlendBind, handle)
     }
 
@@ -246,6 +256,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_corner_radius_all
      */
     fun setCornerRadiusAll(radius: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCornerRadiusAllBind, handle, radius)
     }
 
@@ -255,6 +266,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_corner_radius
      */
     fun setCornerRadius(corner: Long, radius: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(setCornerRadiusBind, handle, corner, radius)
     }
 
@@ -264,6 +276,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_corner_radius
      */
     fun getCornerRadius(corner: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getCornerRadiusBind, handle, corner)
     }
 
@@ -277,6 +290,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_expand_margin
      */
     fun setExpandMargin(margin: Long, size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, handle, margin, size)
     }
 
@@ -286,6 +300,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_expand_margin_all
      */
     fun setExpandMarginAll(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, handle, size)
     }
 
@@ -299,6 +314,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_expand_margin
      */
     fun getExpandMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, handle, margin)
     }
 
@@ -308,6 +324,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_draw_center
      */
     fun setDrawCenter(drawCenter: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, drawCenter)
     }
 
@@ -317,6 +334,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.is_draw_center_enabled
      */
     fun isDrawCenterEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
     }
 
@@ -333,6 +351,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_skew
      */
     fun setSkew(skew: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSkewBind, handle, skew)
     }
 
@@ -349,6 +368,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_skew
      */
     fun getSkew(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSkewBind, handle)
     }
 
@@ -358,6 +378,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_shadow_color
      */
     fun setShadowColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setShadowColorBind, handle, color)
     }
 
@@ -367,6 +388,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_shadow_color
      */
     fun getShadowColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, handle)
     }
 
@@ -376,6 +398,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_shadow_size
      */
     fun setShadowSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, handle, size)
     }
 
@@ -385,6 +408,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_shadow_size
      */
     fun getShadowSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, handle)
     }
 
@@ -394,6 +418,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_shadow_offset
      */
     fun setShadowOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, handle, offset)
     }
 
@@ -403,6 +428,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_shadow_offset
      */
     fun getShadowOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, handle)
     }
 
@@ -415,6 +441,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_anti_aliased
      */
     fun setAntiAliased(antiAliased: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAntiAliasedBind, handle, antiAliased)
     }
 
@@ -427,6 +454,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.is_anti_aliased
      */
     fun isAntiAliased(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAntiAliasedBind, handle)
     }
 
@@ -439,6 +467,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_aa_size
      */
     fun setAaSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAaSizeBind, handle, size)
     }
 
@@ -451,6 +480,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_aa_size
      */
     fun getAaSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAaSizeBind, handle)
     }
 
@@ -465,6 +495,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.set_corner_detail
      */
     fun setCornerDetail(detail: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCornerDetailBind, handle, detail)
     }
 
@@ -479,6 +510,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      * Generated from Godot docs: StyleBoxFlat.get_corner_detail
      */
     fun getCornerDetail(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCornerDetailBind, handle)
     }
 

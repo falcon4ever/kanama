@@ -35,6 +35,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: MeshTexture.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -44,6 +45,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: MeshTexture.get_mesh
      */
     fun getMesh(): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
@@ -53,6 +55,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: MeshTexture.set_image_size
      */
     fun setImageSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setImageSizeBind, handle, size)
     }
 
@@ -62,6 +65,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: MeshTexture.get_image_size
      */
     fun getImageSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getImageSizeBind, handle)
     }
 
@@ -71,6 +75,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: MeshTexture.set_base_texture
      */
     fun setBaseTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -80,6 +85,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: MeshTexture.get_base_texture
      */
     fun getBaseTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

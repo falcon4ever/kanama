@@ -23,6 +23,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderFile.set_bytecode
      */
     fun setBytecode(bytecode: RDShaderSPIRV?, version: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, handle, bytecode?.requireOpenHandle() ?: MemorySegment.NULL, version)
     }
 
@@ -32,6 +33,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderFile.get_spirv
      */
     fun getSpirv(version: String = ""): RDShaderSPIRV? {
+        checkOpen()
         return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, handle, version))
     }
 
@@ -41,6 +43,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderFile.get_version_list
      */
     fun getVersionList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getVersionListBind, handle)
     }
 
@@ -52,6 +55,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderFile.set_base_error
      */
     fun setBaseError(error: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setBaseErrorBind, handle, error)
     }
 
@@ -63,6 +67,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: RDShaderFile.get_base_error
      */
     fun getBaseError(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getBaseErrorBind, handle)
     }
 

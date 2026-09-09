@@ -14,114 +14,142 @@ import net.multigesture.kanama.types.Vector3
  */
 class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
     fun setSkinWeightCount(count: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, handle, count)
     }
 
     fun getSkinWeightCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, handle)
     }
 
     fun setCustomFormat(channelIndex: Int, format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, handle, channelIndex, format)
     }
 
     fun getCustomFormat(channelIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, handle, channelIndex)
     }
 
     fun begin(primitive: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(beginBind, handle, primitive)
     }
 
     fun addVertex(vertex: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(addVertexBind, handle, vertex)
     }
 
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
     fun setNormal(normal: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setNormalBind, handle, normal)
     }
 
     fun setUv(uv: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setUvBind, handle, uv)
     }
 
     fun setUv2(uv2: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setUv2Bind, handle, uv2)
     }
 
     fun setWeights(weights: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setWeightsBind, handle, weights)
     }
 
     fun setCustom(channelIndex: Int, customColor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setCustomBind, handle, channelIndex, customColor)
     }
 
     fun setSmoothGroup(index: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setSmoothGroupBind, handle, index)
     }
 
     fun addIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addIndexBind, handle, index)
     }
 
     fun index() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(indexBind, handle)
     }
 
     fun deindex() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(deindexBind, handle)
     }
 
     fun generateNormals(flip: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(generateNormalsBind, handle, flip)
     }
 
     fun generateTangents() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(generateTangentsBind, handle)
     }
 
     fun optimizeIndicesForCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(optimizeIndicesForCacheBind, handle)
     }
 
     fun getAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
     }
 
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getPrimitiveType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, handle)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun createFrom(existing: Mesh?, surface: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndIntArg(createFromBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
     fun createFromBlendShape(existing: Mesh?, surface: Int, blendShape: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectIntStringArgs(createFromBlendShapeBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, blendShape)
     }
 
     fun appendFrom(existing: Mesh?, surface: Int, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectIntTransform3DArgs(appendFromBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, transform)
     }
 
     fun commit(existing: ArrayMesh?, flags: Long = 0L): ArrayMesh? {
+        checkOpen()
         return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(commitBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, flags))
     }
 
     fun commitToArrays(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(commitToArraysBind, handle)
     }
 

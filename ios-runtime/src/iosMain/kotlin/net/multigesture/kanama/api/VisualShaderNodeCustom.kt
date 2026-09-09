@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class VisualShaderNodeCustom(handle: MemorySegment) : VisualShaderNode(handle) {
     fun getOptionIndex(option: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getOptionIndexBind, handle, option)
     }
 

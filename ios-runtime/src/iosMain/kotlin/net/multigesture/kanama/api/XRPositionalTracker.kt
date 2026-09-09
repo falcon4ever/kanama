@@ -24,38 +24,47 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
         set(value) = setTrackerHand(value)
 
     fun getTrackerProfile(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getTrackerProfileBind, handle)
     }
 
     fun setTrackerProfile(profile: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setTrackerProfileBind, handle, profile)
     }
 
     fun getTrackerHand(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, handle)
     }
 
     fun setTrackerHand(hand: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTrackerHandBind, handle, hand)
     }
 
     fun hasPose(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasPoseBind, handle, name)
     }
 
     fun getPose(name: String): XRPose? {
+        checkOpen()
         return XRPose.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getPoseBind, handle, name))
     }
 
     fun invalidatePose(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(invalidatePoseBind, handle, name)
     }
 
     fun setPose(name: String, transform: Transform3D, linearVelocity: Vector3, angularVelocity: Vector3, trackingConfidence: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameTransform3DTwoVector3LongArgs(setPoseBind, handle, name, transform, linearVelocity, angularVelocity, trackingConfidence)
     }
 
     fun getInput(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, handle, name)
     }
 

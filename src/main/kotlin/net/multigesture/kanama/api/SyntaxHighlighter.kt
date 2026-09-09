@@ -19,6 +19,7 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SyntaxHighlighter.get_line_syntax_highlighting
      */
     fun getLineSyntaxHighlighting(line: Int): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDictionary(getLineSyntaxHighlightingBind, handle, line)
     }
 
@@ -29,6 +30,7 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SyntaxHighlighter.update_cache
      */
     fun updateCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(updateCacheBind, handle)
     }
 
@@ -39,6 +41,7 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SyntaxHighlighter.clear_highlighting_cache
      */
     fun clearHighlightingCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearHighlightingCacheBind, handle)
     }
 
@@ -48,6 +51,7 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: SyntaxHighlighter.get_text_edit
      */
     fun getTextEdit(): TextEdit? {
+        checkOpen()
         return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextEditBind, handle))
     }
 

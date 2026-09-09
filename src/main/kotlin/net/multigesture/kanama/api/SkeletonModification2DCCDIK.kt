@@ -36,6 +36,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_target_node
      */
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
@@ -46,6 +47,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_target_node
      */
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
@@ -56,6 +58,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_tip_node
      */
     fun setTipNode(tipNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTipNodeBind, handle, tipNodepath)
     }
 
@@ -66,6 +69,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_tip_node
      */
     fun getTipNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTipNodeBind, handle)
     }
 
@@ -75,6 +79,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_data_chain_length
      */
     fun setCcdikDataChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCcdikDataChainLengthBind, handle, length)
     }
 
@@ -84,6 +89,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_data_chain_length
      */
     fun getCcdikDataChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCcdikDataChainLengthBind, handle)
     }
 
@@ -93,6 +99,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_bone2d_node
      */
     fun setCcdikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setCcdikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
     }
 
@@ -102,6 +109,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_bone2d_node
      */
     fun getCcdikJointBone2dNode(jointIdx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getCcdikJointBone2dNodeBind, handle, jointIdx)
     }
 
@@ -112,6 +120,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_bone_index
      */
     fun setCcdikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setCcdikJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
@@ -121,6 +130,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_bone_index
      */
     fun getCcdikJointBoneIndex(jointIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getCcdikJointBoneIndexBind, handle, jointIdx)
     }
 
@@ -131,6 +141,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_rotate_from_joint
      */
     fun setCcdikJointRotateFromJoint(jointIdx: Int, rotateFromJoint: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointRotateFromJointBind, handle, jointIdx, rotateFromJoint)
     }
 
@@ -141,6 +152,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_rotate_from_joint
      */
     fun getCcdikJointRotateFromJoint(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointRotateFromJointBind, handle, jointIdx)
     }
 
@@ -151,6 +163,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_enable_constraint
      */
     fun setCcdikJointEnableConstraint(jointIdx: Int, enableConstraint: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointEnableConstraintBind, handle, jointIdx, enableConstraint)
     }
 
@@ -160,6 +173,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_enable_constraint
      */
     fun getCcdikJointEnableConstraint(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointEnableConstraintBind, handle, jointIdx)
     }
 
@@ -169,6 +183,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_constraint_angle_min
      */
     fun setCcdikJointConstraintAngleMin(jointIdx: Int, angleMin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMinBind, handle, jointIdx, angleMin)
     }
 
@@ -178,6 +193,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_constraint_angle_min
      */
     fun getCcdikJointConstraintAngleMin(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMinBind, handle, jointIdx)
     }
 
@@ -187,6 +203,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_constraint_angle_max
      */
     fun setCcdikJointConstraintAngleMax(jointIdx: Int, angleMax: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMaxBind, handle, jointIdx, angleMax)
     }
 
@@ -196,6 +213,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_constraint_angle_max
      */
     fun getCcdikJointConstraintAngleMax(jointIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMaxBind, handle, jointIdx)
     }
 
@@ -208,6 +226,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.set_ccdik_joint_constraint_angle_invert
      */
     fun setCcdikJointConstraintAngleInvert(jointIdx: Int, invert: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointConstraintAngleInvertBind, handle, jointIdx, invert)
     }
 
@@ -218,6 +237,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_constraint_angle_invert
      */
     fun getCcdikJointConstraintAngleInvert(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointConstraintAngleInvertBind, handle, jointIdx)
     }
 

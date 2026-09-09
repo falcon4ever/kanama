@@ -82,6 +82,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_format
      */
     fun setFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
@@ -91,6 +92,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -100,6 +102,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_width
      */
     fun setWidth(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setWidthBind, handle, pMember)
     }
 
@@ -109,6 +112,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_width
      */
     fun getWidth(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getWidthBind, handle)
     }
 
@@ -118,6 +122,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_height
      */
     fun setHeight(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setHeightBind, handle, pMember)
     }
 
@@ -127,6 +132,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_height
      */
     fun getHeight(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getHeightBind, handle)
     }
 
@@ -136,6 +142,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_depth
      */
     fun setDepth(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setDepthBind, handle, pMember)
     }
 
@@ -145,6 +152,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_depth
      */
     fun getDepth(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getDepthBind, handle)
     }
 
@@ -154,6 +162,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_array_layers
      */
     fun setArrayLayers(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setArrayLayersBind, handle, pMember)
     }
 
@@ -163,6 +172,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_array_layers
      */
     fun getArrayLayers(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getArrayLayersBind, handle)
     }
 
@@ -172,6 +182,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_mipmaps
      */
     fun setMipmaps(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setMipmapsBind, handle, pMember)
     }
 
@@ -181,6 +192,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_mipmaps
      */
     fun getMipmaps(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMipmapsBind, handle)
     }
 
@@ -190,6 +202,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_texture_type
      */
     fun setTextureType(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, pMember)
     }
 
@@ -199,6 +212,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_texture_type
      */
     fun getTextureType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
     }
 
@@ -208,6 +222,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_samples
      */
     fun setSamples(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplesBind, handle, pMember)
     }
 
@@ -217,6 +232,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_samples
      */
     fun getSamples(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, handle)
     }
 
@@ -226,6 +242,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_usage_bits
      */
     fun setUsageBits(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setUsageBitsBind, handle, pMember)
     }
 
@@ -235,6 +252,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_usage_bits
      */
     fun getUsageBits(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getUsageBitsBind, handle)
     }
 
@@ -244,6 +262,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_is_resolve_buffer
      */
     fun setIsResolveBuffer(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsResolveBufferBind, handle, pMember)
     }
 
@@ -253,6 +272,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_is_resolve_buffer
      */
     fun getIsResolveBuffer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsResolveBufferBind, handle)
     }
 
@@ -265,6 +285,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.set_is_discardable
      */
     fun setIsDiscardable(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsDiscardableBind, handle, pMember)
     }
 
@@ -277,6 +298,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.get_is_discardable
      */
     fun getIsDiscardable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsDiscardableBind, handle)
     }
 
@@ -288,6 +310,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.add_shareable_format
      */
     fun addShareableFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(addShareableFormatBind, handle, format)
     }
 
@@ -298,6 +321,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureFormat.remove_shareable_format
      */
     fun removeShareableFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(removeShareableFormatBind, handle, format)
     }
 

@@ -21,14 +21,17 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
         get() = getSpecializationConstants()
 
     fun setShader(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setShaderBind, handle, pMember)
     }
 
     fun getShader(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getShaderBind, handle)
     }
 
     fun getSpecializationConstants(): List<RDPipelineSpecializationConstant> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, handle, RDPipelineSpecializationConstant::fromHandle)
     }
 

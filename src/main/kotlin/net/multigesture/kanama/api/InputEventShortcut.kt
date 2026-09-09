@@ -23,6 +23,7 @@ class InputEventShortcut(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventShortcut.set_shortcut
      */
     fun setShortcut(shortcut: Shortcut?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, handle, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -33,6 +34,7 @@ class InputEventShortcut(handle: MemorySegment) : InputEvent(handle) {
      * Generated from Godot docs: InputEventShortcut.get_shortcut
      */
     fun getShortcut(): Shortcut? {
+        checkOpen()
         return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, handle))
     }
 

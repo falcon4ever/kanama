@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.RID
  */
 class OpenXRSpatialComponentParentList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getParent(index: Long): RID {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetRID(getParentBind, handle, index)
     }
 

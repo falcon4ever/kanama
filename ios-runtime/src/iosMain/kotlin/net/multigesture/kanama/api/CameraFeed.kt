@@ -27,66 +27,82 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
         get() = getFormats()
 
     fun getId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, handle)
     }
 
     fun isActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
     }
 
     fun setActive(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setActiveBind, handle, active)
     }
 
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
     }
 
     fun setName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setNameBind, handle, name)
     }
 
     fun getPosition(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, handle)
     }
 
     fun setPosition(position: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPositionBind, handle, position)
     }
 
     fun getTransform(): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
     }
 
     fun setTransform(transform: Transform2D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
     }
 
     fun setRgbImage(rgbImage: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, handle, listOf(rgbImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setYcbcrImage(ycbcrImage: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, handle, listOf(ycbcrImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setYcbcrImages(yImage: Image?, cbcrImage: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, handle, yImage?.requireOpenHandle() ?: MemorySegment.NULL, cbcrImage?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setExternal(width: Int, height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setExternalBind, handle, width, height)
     }
 
     fun getTextureTexId(feedImageType: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, handle, feedImageType)
     }
 
     fun getDatatype(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, handle)
     }
 
     fun getFormats(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getFormatsBind, handle)
     }
 

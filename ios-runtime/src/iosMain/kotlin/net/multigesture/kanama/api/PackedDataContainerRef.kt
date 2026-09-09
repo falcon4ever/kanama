@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class PackedDataContainerRef(handle: MemorySegment) : RefCounted(handle) {
     fun size(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, handle)
     }
 

@@ -126,6 +126,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
     }
 
@@ -136,6 +137,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
     }
 
@@ -145,6 +147,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_vertical_alignment
      */
     fun setVerticalAlignment(alignment: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
     }
 
@@ -154,6 +157,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_vertical_alignment
      */
     fun getVerticalAlignment(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
     }
 
@@ -165,6 +169,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_text
      */
     fun setText(text: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
     }
 
@@ -176,6 +181,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_text
      */
     fun getText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
     }
 
@@ -185,6 +191,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_font
      */
     fun setFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -194,6 +201,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_font
      */
     fun getFont(): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
     }
 
@@ -208,6 +216,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_font_size
      */
     fun setFontSize(fontSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, fontSize)
     }
 
@@ -222,6 +231,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_font_size
      */
     fun getFontSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
     }
 
@@ -232,6 +242,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_line_spacing
      */
     fun setLineSpacing(lineSpacing: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
     }
 
@@ -242,6 +253,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_line_spacing
      */
     fun getLineSpacing(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
     }
 
@@ -253,6 +265,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
     }
 
@@ -264,6 +277,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_autowrap_mode
      */
     fun getAutowrapMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
     }
 
@@ -273,6 +287,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_justification_flags
      */
     fun setJustificationFlags(justificationFlags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
     }
 
@@ -282,6 +297,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_justification_flags
      */
     fun getJustificationFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
     }
 
@@ -292,6 +308,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_depth
      */
     fun setDepth(depth: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
     }
 
@@ -302,6 +319,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_depth
      */
     fun getDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
@@ -311,6 +329,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_width
      */
     fun setWidth(width: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
     }
 
@@ -320,6 +339,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_width
      */
     fun getWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
     }
 
@@ -332,6 +352,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_pixel_size
      */
     fun setPixelSize(pixelSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, handle, pixelSize)
     }
 
@@ -344,6 +365,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_pixel_size
      */
     fun getPixelSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, handle)
     }
 
@@ -355,6 +377,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_offset
      */
     fun setOffset(offset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
     }
 
@@ -366,6 +389,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_offset
      */
     fun getOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
@@ -378,6 +402,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_curve_step
      */
     fun setCurveStep(curveStep: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCurveStepBind, handle, curveStep)
     }
 
@@ -390,6 +415,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_curve_step
      */
     fun getCurveStep(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCurveStepBind, handle)
     }
 
@@ -399,6 +425,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_text_direction
      */
     fun setTextDirection(direction: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
     }
 
@@ -408,6 +435,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_text_direction
      */
     fun getTextDirection(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
     }
 
@@ -418,6 +446,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_language
      */
     fun setLanguage(language: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
     }
 
@@ -428,6 +457,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_language
      */
     fun getLanguage(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
     }
 
@@ -437,6 +467,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
     }
 
@@ -446,6 +477,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
     }
 
@@ -455,6 +487,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
@@ -464,6 +497,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
     }
 
@@ -473,6 +507,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.set_uppercase
      */
     fun setUppercase(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
     }
 
@@ -482,6 +517,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TextMesh.is_uppercase
      */
     fun isUppercase(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
     }
 

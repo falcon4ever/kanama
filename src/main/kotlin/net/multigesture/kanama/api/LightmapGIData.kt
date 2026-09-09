@@ -42,6 +42,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.set_lightmap_textures
      */
     fun setLightmapTextures(lightTextures: List<TextureLayered>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setLightmapTexturesBind, handle, lightTextures)
     }
 
@@ -51,6 +52,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.get_lightmap_textures
      */
     fun getLightmapTextures(): List<TextureLayered> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightmapTexturesBind, handle, TextureLayered::fromHandle)
     }
 
@@ -60,6 +62,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.set_shadowmask_textures
      */
     fun setShadowmaskTextures(shadowmaskTextures: List<TextureLayered>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setShadowmaskTexturesBind, handle, shadowmaskTextures)
     }
 
@@ -69,6 +72,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.get_shadowmask_textures
      */
     fun getShadowmaskTextures(): List<TextureLayered> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getShadowmaskTexturesBind, handle, TextureLayered::fromHandle)
     }
 
@@ -82,6 +86,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.set_uses_spherical_harmonics
      */
     fun setUsesSphericalHarmonics(usesSphericalHarmonics: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUsesSphericalHarmonicsBind, handle, usesSphericalHarmonics)
     }
 
@@ -91,6 +96,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.is_using_spherical_harmonics
      */
     fun isUsingSphericalHarmonics(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSphericalHarmonicsBind, handle)
     }
 
@@ -100,6 +106,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.add_user
      */
     fun addUser(path: NodePath, uvScale: Rect2, sliceIndex: Int, subInstance: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathRect2TwoIntArgs(addUserBind, handle, path, uvScale, sliceIndex, subInstance)
     }
 
@@ -109,6 +116,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.get_user_count
      */
     fun getUserCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getUserCountBind, handle)
     }
 
@@ -118,6 +126,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.get_user_path
      */
     fun getUserPath(userIdx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getUserPathBind, handle, userIdx)
     }
 
@@ -127,6 +136,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.clear_users
      */
     fun clearUsers() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearUsersBind, handle)
     }
 
@@ -136,6 +146,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.set_light_texture
      */
     fun setLightTexture(lightTexture: TextureLayered?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setLightTextureBind, handle, listOf(lightTexture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -145,6 +156,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: LightmapGIData.get_light_texture
      */
     fun getLightTexture(): TextureLayered? {
+        checkOpen()
         return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, handle))
     }
 

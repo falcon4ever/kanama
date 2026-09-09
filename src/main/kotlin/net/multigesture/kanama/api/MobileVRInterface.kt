@@ -70,82 +70,102 @@ class MobileVRInterface(handle: MemorySegment) : XRInterface(handle) {
         set(value) = setVrsStrength(value)
 
     fun setEyeHeight(eyeHeight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEyeHeightBind, handle, eyeHeight)
     }
 
     fun getEyeHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEyeHeightBind, handle)
     }
 
     fun setIod(iod: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setIodBind, handle, iod)
     }
 
     fun getIod(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getIodBind, handle)
     }
 
     fun setDisplayWidth(displayWidth: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDisplayWidthBind, handle, displayWidth)
     }
 
     fun getDisplayWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayWidthBind, handle)
     }
 
     fun setDisplayToLens(displayToLens: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDisplayToLensBind, handle, displayToLens)
     }
 
     fun getDisplayToLens(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayToLensBind, handle)
     }
 
     fun setOffsetRect(offsetRect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(setOffsetRectBind, handle, offsetRect)
     }
 
     fun getOffsetRect(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getOffsetRectBind, handle)
     }
 
     fun setOversample(oversample: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOversampleBind, handle, oversample)
     }
 
     fun getOversample(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversampleBind, handle)
     }
 
     fun setK1(k: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setK1Bind, handle, k)
     }
 
     fun getK1(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getK1Bind, handle)
     }
 
     fun setK2(k: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setK2Bind, handle, k)
     }
 
     fun getK2(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getK2Bind, handle)
     }
 
     fun getVrsMinRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, handle)
     }
 
     fun setVrsMinRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, handle, radius)
     }
 
     fun getVrsStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, handle)
     }
 
     fun setVrsStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, handle, strength)
     }
 

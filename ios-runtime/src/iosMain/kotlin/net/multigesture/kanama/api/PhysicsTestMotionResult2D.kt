@@ -11,54 +11,67 @@ import net.multigesture.kanama.types.Vector2
  */
 class PhysicsTestMotionResult2D(handle: MemorySegment) : RefCounted(handle) {
     fun getTravel(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getTravelBind, handle)
     }
 
     fun getRemainder(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRemainderBind, handle)
     }
 
     fun getCollisionPoint(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getCollisionPointBind, handle)
     }
 
     fun getCollisionNormal(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getCollisionNormalBind, handle)
     }
 
     fun getColliderVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getColliderVelocityBind, handle)
     }
 
     fun getColliderId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getColliderIdBind, handle)
     }
 
     fun getColliderRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, handle)
     }
 
     fun getCollider(): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, handle))
     }
 
     fun getColliderShape(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeBind, handle)
     }
 
     fun getCollisionLocalShape(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCollisionLocalShapeBind, handle)
     }
 
     fun getCollisionDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionDepthBind, handle)
     }
 
     fun getCollisionSafeFraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionSafeFractionBind, handle)
     }
 
     fun getCollisionUnsafeFraction(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionUnsafeFractionBind, handle)
     }
 

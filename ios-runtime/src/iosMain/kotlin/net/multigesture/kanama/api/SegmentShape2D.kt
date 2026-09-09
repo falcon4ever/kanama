@@ -23,18 +23,22 @@ class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
         set(value) = setB(value)
 
     fun setA(a: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setABind, handle, a)
     }
 
     fun getA(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getABind, handle)
     }
 
     fun setB(b: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setBBind, handle, b)
     }
 
     fun getB(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getBBind, handle)
     }
 

@@ -10,66 +10,82 @@ import net.multigesture.kanama.types.Vector2i
  */
 class ImporterMesh(handle: MemorySegment) : Resource(handle) {
     fun addBlendShape(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addBlendShapeBind, handle, name)
     }
 
     fun getBlendShapeCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
     }
 
     fun setBlendShapeMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, handle, mode)
     }
 
     fun getBlendShapeMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
     }
 
     fun getSurfaceCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, handle)
     }
 
     fun getSurfacePrimitiveType(surfaceIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, handle, surfaceIdx)
     }
 
     fun getSurfaceLodCount(surfaceIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getSurfaceLodCountBind, handle, surfaceIdx)
     }
 
     fun getSurfaceLodSize(surfaceIdx: Int, lodIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getSurfaceLodSizeBind, handle, surfaceIdx, lodIdx)
     }
 
     fun getSurfaceMaterial(surfaceIdx: Int): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceMaterialBind, handle, surfaceIdx))
     }
 
     fun getSurfaceFormat(surfaceIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getSurfaceFormatBind, handle, surfaceIdx)
     }
 
     fun setSurfaceName(surfaceIdx: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setSurfaceNameBind, handle, surfaceIdx, name)
     }
 
     fun setSurfaceMaterial(surfaceIdx: Int, material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceMaterialBind, handle, surfaceIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
+        checkOpen()
         return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, handle, baseMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun setLightmapSizeHint(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, handle, size)
     }
 
     fun getLightmapSizeHint(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, handle)
     }
 

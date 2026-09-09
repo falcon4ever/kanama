@@ -39,62 +39,77 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setVariantType(value)
 
     fun appendNodePath(nodePath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(appendNodePathBind, handle, nodePath)
     }
 
     fun appendPathToProperty(nodePath: NodePath, propName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathStringNameArgs(appendPathToPropertyBind, handle, nodePath, propName)
     }
 
     fun getAccessorType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, handle)
     }
 
     fun getGltfToGodotExpression(): Expression? {
+        checkOpen()
         return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGltfToGodotExpressionBind, handle))
     }
 
     fun setGltfToGodotExpression(gltfToGodotExpr: Expression?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGltfToGodotExpressionBind, handle, listOf(gltfToGodotExpr?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getGodotToGltfExpression(): Expression? {
+        checkOpen()
         return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotToGltfExpressionBind, handle))
     }
 
     fun setGodotToGltfExpression(godotToGltfExpr: Expression?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGodotToGltfExpressionBind, handle, listOf(godotToGltfExpr?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNodePaths(): List<NodePath> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePathList(getNodePathsBind, handle)
     }
 
     fun hasNodePaths(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasNodePathsBind, handle)
     }
 
     fun getObjectModelType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getObjectModelTypeBind, handle)
     }
 
     fun setObjectModelType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setObjectModelTypeBind, handle, type)
     }
 
     fun hasJsonPointers(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasJsonPointersBind, handle)
     }
 
     fun getVariantType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVariantTypeBind, handle)
     }
 
     fun setVariantType(variantType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVariantTypeBind, handle, variantType)
     }
 
     fun setTypes(variantType: Long, objModelType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(setTypesBind, handle, variantType, objModelType)
     }
 

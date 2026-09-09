@@ -14,6 +14,7 @@ class Compositor(handle: MemorySegment) : Resource(handle) {
         get() = getCompositorEffects()
 
     fun getCompositorEffects(): List<CompositorEffect> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, handle, CompositorEffect::fromHandle)
     }
 

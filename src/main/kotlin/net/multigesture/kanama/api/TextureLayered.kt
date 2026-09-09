@@ -16,6 +16,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: TextureLayered.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -26,6 +27,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: TextureLayered.get_layered_type
      */
     fun getLayeredType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, handle)
     }
 
@@ -35,6 +37,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: TextureLayered.get_width
      */
     fun getWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
@@ -44,6 +47,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: TextureLayered.get_height
      */
     fun getHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
@@ -53,6 +57,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: TextureLayered.get_layers
      */
     fun getLayers(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLayersBind, handle)
     }
 
@@ -62,6 +67,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: TextureLayered.has_mipmaps
      */
     fun hasMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
@@ -71,6 +77,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      * Generated from Godot docs: TextureLayered.get_layer_data
      */
     fun getLayerData(layer: Int): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, handle, layer))
     }
 

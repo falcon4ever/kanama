@@ -9,26 +9,32 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
     fun isServer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, handle)
     }
 
     fun isUnsafeClient(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUnsafeClientBind, handle)
     }
 
     fun getCommonNameOverride(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCommonNameOverrideBind, handle)
     }
 
     fun getTrustedCaChain(): X509Certificate? {
+        checkOpen()
         return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, handle))
     }
 
     fun getPrivateKey(): CryptoKey? {
+        checkOpen()
         return CryptoKey.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, handle))
     }
 
     fun getOwnCertificate(): X509Certificate? {
+        checkOpen()
         return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, handle))
     }
 

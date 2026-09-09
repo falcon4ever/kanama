@@ -24,86 +24,107 @@ class Curve2D(handle: MemorySegment) : Resource(handle) {
         set(value) = setPointCount(value)
 
     fun getPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
     fun setPointCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
     fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0f, 0f), out: Vector2 = Vector2(0f, 0f), index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeVector2AndIntArg(addPointBind, handle, position, inValue, out, index)
     }
 
     fun setPointPosition(idx: Int, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, handle, idx, position)
     }
 
     fun getPointPosition(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, idx)
     }
 
     fun setPointIn(idx: Int, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointInBind, handle, idx, position)
     }
 
     fun getPointIn(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointInBind, handle, idx)
     }
 
     fun setPointOut(idx: Int, position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setPointOutBind, handle, idx, position)
     }
 
     fun getPointOut(idx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getPointOutBind, handle, idx)
     }
 
     fun removePoint(idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, idx)
     }
 
     fun clearPoints() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
     }
 
     fun sample(idx: Int, t: Double): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector2(sampleBind, handle, idx, t)
     }
 
     fun samplef(fofs: Double): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleArgRetVector2(samplefBind, handle, fofs)
     }
 
     fun setBakeInterval(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, handle, distance)
     }
 
     fun getBakeInterval(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, handle)
     }
 
     fun getBakedLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, handle)
     }
 
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(sampleBakedBind, handle, offset, cubic)
     }
 
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false): Transform2D {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(sampleBakedWithRotationBind, handle, offset, cubic)
     }
 
     fun getBakedPoints(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getBakedPointsBind, handle)
     }
 
     fun getClosestPoint(toPoint: Vector2): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, toPoint)
     }
 
     fun getClosestOffset(toPoint: Vector2): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetDouble(getClosestOffsetBind, handle, toPoint)
     }
 

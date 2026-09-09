@@ -10,22 +10,27 @@ import net.multigesture.kanama.types.Color
  */
 class EditorNode3DGizmoPlugin(handle: MemorySegment) : Resource(handle) {
     fun createMaterial(name: String, color: Color, billboard: Boolean = false, onTop: Boolean = false, useVertexColor: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringColorThreeBoolArgs(createMaterialBind, handle, name, color, billboard, onTop, useVertexColor)
     }
 
     fun createIconMaterial(name: String, texture: Texture2D?, onTop: Boolean = false, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringObjectBoolColorArgs(createIconMaterialBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, onTop, color)
     }
 
     fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringBoolObjectArgs(createHandleMaterialBind, handle, name, billboard, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun addMaterial(name: String, material: StandardMaterial3D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndObjectArg(addMaterialBind, handle, name, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
+        checkOpen()
         return StandardMaterial3D.wrap(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, handle, name, gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

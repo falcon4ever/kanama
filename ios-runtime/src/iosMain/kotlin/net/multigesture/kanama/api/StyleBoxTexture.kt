@@ -96,74 +96,92 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
         set(value) = setDrawCenter(value)
 
     fun setTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
     fun setTextureMargin(margin: Long, size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, handle, margin, size)
     }
 
     fun setTextureMarginAll(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTextureMarginAllBind, handle, size)
     }
 
     fun getTextureMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, handle, margin)
     }
 
     fun setExpandMargin(margin: Long, size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, handle, margin, size)
     }
 
     fun setExpandMarginAll(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, handle, size)
     }
 
     fun getExpandMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, handle, margin)
     }
 
     fun setRegionRect(region: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, handle, region)
     }
 
     fun getRegionRect(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, handle)
     }
 
     fun setDrawCenter(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, enable)
     }
 
     fun isDrawCenterEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
     }
 
     fun setModulate(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, color)
     }
 
     fun getModulate(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
     }
 
     fun setHAxisStretchMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, handle, mode)
     }
 
     fun getHAxisStretchMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, handle)
     }
 
     fun setVAxisStretchMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, handle, mode)
     }
 
     fun getVAxisStretchMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, handle)
     }
 

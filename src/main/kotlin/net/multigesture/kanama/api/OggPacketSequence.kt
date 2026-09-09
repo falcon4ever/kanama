@@ -27,30 +27,37 @@ class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
         set(value) = setSamplingRate(value)
 
     fun setPacketData(packetData: List<List<Any?>>) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayListArg(setPacketDataBind, handle, packetData)
     }
 
     fun getPacketData(): List<List<Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArrayList(getPacketDataBind, handle)
     }
 
     fun setPacketGranulePositions(granulePositions: List<Long>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt64ListArg(setPacketGranulePositionsBind, handle, granulePositions)
     }
 
     fun getPacketGranulePositions(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPacketGranulePositionsBind, handle)
     }
 
     fun setSamplingRate(samplingRate: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSamplingRateBind, handle, samplingRate)
     }
 
     fun getSamplingRate(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSamplingRateBind, handle)
     }
 
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 

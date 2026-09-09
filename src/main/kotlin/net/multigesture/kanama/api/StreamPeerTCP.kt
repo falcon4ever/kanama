@@ -18,6 +18,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerTCP.bind
      */
     fun bind(port: Int, host: String = "*"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, handle, port, host)
     }
 
@@ -28,6 +29,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerTCP.connect_to_host
      */
     fun connectToHost(host: String, port: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, handle, host, port)
     }
 
@@ -37,6 +39,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerTCP.get_connected_host
      */
     fun getConnectedHost(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getConnectedHostBind, handle)
     }
 
@@ -46,6 +49,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerTCP.get_connected_port
      */
     fun getConnectedPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectedPortBind, handle)
     }
 
@@ -55,6 +59,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerTCP.get_local_port
      */
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
@@ -68,6 +73,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      * Generated from Godot docs: StreamPeerTCP.set_no_delay
      */
     fun setNoDelay(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNoDelayBind, handle, enabled)
     }
 

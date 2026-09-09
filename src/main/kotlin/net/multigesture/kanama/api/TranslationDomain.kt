@@ -77,6 +77,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.get_translation_object
      */
     fun getTranslationObject(locale: String): Translation? {
+        checkOpen()
         return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, handle, locale))
     }
 
@@ -86,6 +87,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.add_translation
      */
     fun addTranslation(translation: Translation?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -95,6 +97,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.remove_translation
      */
     fun removeTranslation(translation: Translation?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -104,6 +107,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -113,6 +117,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.get_translations
      */
     fun getTranslations(): List<Translation> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, handle, Translation::fromHandle)
     }
 
@@ -124,6 +129,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.has_translation_for_locale
      */
     fun hasTranslationForLocale(locale: String, exact: Boolean): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(hasTranslationForLocaleBind, handle, locale, exact)
     }
 
@@ -133,6 +139,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.has_translation
      */
     fun hasTranslation(translation: Translation?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, handle, translation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -144,6 +151,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.find_translations
      */
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, handle, locale, exact, Translation::fromHandle)
     }
 
@@ -153,6 +161,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.translate
      */
     fun translate(message: String, context: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, handle, message, context)
     }
 
@@ -164,6 +173,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.translate_plural
      */
     fun translatePlural(message: String, messagePlural: String, n: Int, context: String = ""): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, handle, message, messagePlural, n, context)
     }
 
@@ -174,6 +184,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.get_locale_override
      */
     fun getLocaleOverride(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLocaleOverrideBind, handle)
     }
 
@@ -186,6 +197,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_locale_override
      */
     fun setLocaleOverride(locale: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLocaleOverrideBind, handle, locale)
     }
 
@@ -196,6 +208,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.is_enabled
      */
     fun isEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
     }
 
@@ -206,6 +219,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
@@ -219,6 +233,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.is_pseudolocalization_enabled
      */
     fun isPseudolocalizationEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationEnabledBind, handle)
     }
 
@@ -232,6 +247,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_enabled
      */
     fun setPseudolocalizationEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationEnabledBind, handle, enabled)
     }
 
@@ -244,6 +260,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.is_pseudolocalization_accents_enabled
      */
     fun isPseudolocalizationAccentsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationAccentsEnabledBind, handle)
     }
 
@@ -256,6 +273,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_accents_enabled
      */
     fun setPseudolocalizationAccentsEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationAccentsEnabledBind, handle, enabled)
     }
 
@@ -268,6 +286,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.is_pseudolocalization_double_vowels_enabled
      */
     fun isPseudolocalizationDoubleVowelsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationDoubleVowelsEnabledBind, handle)
     }
 
@@ -280,6 +299,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_double_vowels_enabled
      */
     fun setPseudolocalizationDoubleVowelsEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationDoubleVowelsEnabledBind, handle, enabled)
     }
 
@@ -294,6 +314,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.is_pseudolocalization_fake_bidi_enabled
      */
     fun isPseudolocalizationFakeBidiEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationFakeBidiEnabledBind, handle)
     }
 
@@ -308,6 +329,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_fake_bidi_enabled
      */
     fun setPseudolocalizationFakeBidiEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationFakeBidiEnabledBind, handle, enabled)
     }
 
@@ -320,6 +342,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.is_pseudolocalization_override_enabled
      */
     fun isPseudolocalizationOverrideEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationOverrideEnabledBind, handle)
     }
 
@@ -332,6 +355,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_override_enabled
      */
     fun setPseudolocalizationOverrideEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationOverrideEnabledBind, handle, enabled)
     }
 
@@ -345,6 +369,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.is_pseudolocalization_skip_placeholders_enabled
      */
     fun isPseudolocalizationSkipPlaceholdersEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationSkipPlaceholdersEnabledBind, handle)
     }
 
@@ -358,6 +383,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_skip_placeholders_enabled
      */
     fun setPseudolocalizationSkipPlaceholdersEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationSkipPlaceholdersEnabledBind, handle, enabled)
     }
 
@@ -371,6 +397,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.get_pseudolocalization_expansion_ratio
      */
     fun getPseudolocalizationExpansionRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPseudolocalizationExpansionRatioBind, handle)
     }
 
@@ -384,6 +411,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_expansion_ratio
      */
     fun setPseudolocalizationExpansionRatio(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPseudolocalizationExpansionRatioBind, handle, ratio)
     }
 
@@ -396,6 +424,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.get_pseudolocalization_prefix
      */
     fun getPseudolocalizationPrefix(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationPrefixBind, handle)
     }
 
@@ -408,6 +437,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_prefix
      */
     fun setPseudolocalizationPrefix(prefix: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPseudolocalizationPrefixBind, handle, prefix)
     }
 
@@ -420,6 +450,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.get_pseudolocalization_suffix
      */
     fun getPseudolocalizationSuffix(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationSuffixBind, handle)
     }
 
@@ -432,6 +463,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.set_pseudolocalization_suffix
      */
     fun setPseudolocalizationSuffix(suffix: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPseudolocalizationSuffixBind, handle, suffix)
     }
 
@@ -441,6 +473,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TranslationDomain.pseudolocalize
      */
     fun pseudolocalize(message: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(pseudolocalizeBind, handle, message)
     }
 

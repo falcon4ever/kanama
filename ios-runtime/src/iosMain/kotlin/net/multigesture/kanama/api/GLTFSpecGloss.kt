@@ -41,42 +41,52 @@ class GLTFSpecGloss(handle: MemorySegment) : Resource(handle) {
         set(value) = setSpecGlossImg(value)
 
     fun getDiffuseImg(): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDiffuseImgBind, handle))
     }
 
     fun setDiffuseImg(diffuseImg: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setDiffuseImgBind, handle, listOf(diffuseImg?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getDiffuseFactor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getDiffuseFactorBind, handle)
     }
 
     fun setDiffuseFactor(diffuseFactor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setDiffuseFactorBind, handle, diffuseFactor)
     }
 
     fun getGlossFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGlossFactorBind, handle)
     }
 
     fun setGlossFactor(glossFactor: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGlossFactorBind, handle, glossFactor)
     }
 
     fun getSpecularFactor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSpecularFactorBind, handle)
     }
 
     fun setSpecularFactor(specularFactor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSpecularFactorBind, handle, specularFactor)
     }
 
     fun getSpecGlossImg(): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpecGlossImgBind, handle))
     }
 
     fun setSpecGlossImg(specGlossImg: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSpecGlossImgBind, handle, listOf(specGlossImg?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

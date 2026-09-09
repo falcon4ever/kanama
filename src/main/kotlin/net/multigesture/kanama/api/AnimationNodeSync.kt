@@ -23,6 +23,7 @@ open class AnimationNodeSync(handle: MemorySegment) : AnimationNode(handle) {
      * Generated from Godot docs: AnimationNodeSync.set_use_sync
      */
     fun setUseSync(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
     }
 
@@ -33,6 +34,7 @@ open class AnimationNodeSync(handle: MemorySegment) : AnimationNode(handle) {
      * Generated from Godot docs: AnimationNodeSync.is_using_sync
      */
     fun isUsingSync(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
     }
 

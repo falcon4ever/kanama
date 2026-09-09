@@ -53,10 +53,12 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setTextureRepeat(value)
 
     fun setDiffuseTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getDiffuseTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getDiffuseTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -66,10 +68,12 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
     }
 
     fun setNormalTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNormalTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getNormalTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -79,10 +83,12 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
     }
 
     fun setSpecularTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getSpecularTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getSpecularTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -92,34 +98,42 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
     }
 
     fun setSpecularColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSpecularColorBind, handle, color)
     }
 
     fun getSpecularColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSpecularColorBind, handle)
     }
 
     fun setSpecularShininess(shininess: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSpecularShininessBind, handle, shininess)
     }
 
     fun getSpecularShininess(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularShininessBind, handle)
     }
 
     fun setTextureFilter(filter: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, filter)
     }
 
     fun getTextureFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
     }
 
     fun setTextureRepeat(repeat: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, handle, repeat)
     }
 
     fun getTextureRepeat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, handle)
     }
 

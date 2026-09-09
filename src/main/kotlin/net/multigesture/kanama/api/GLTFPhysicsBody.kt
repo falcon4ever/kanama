@@ -60,74 +60,92 @@ class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
         set(value) = setInertiaTensor(value)
 
     fun toNode(): CollisionObject3D? {
+        checkOpen()
         return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
     }
 
     fun toDictionary(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
     }
 
     fun getBodyType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getBodyTypeBind, handle)
     }
 
     fun setBodyType(bodyType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setBodyTypeBind, handle, bodyType)
     }
 
     fun getMass(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
     }
 
     fun setMass(mass: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
     }
 
     fun getLinearVelocity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
     }
 
     fun setLinearVelocity(linearVelocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, linearVelocity)
     }
 
     fun getAngularVelocity(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
     }
 
     fun setAngularVelocity(angularVelocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, angularVelocity)
     }
 
     fun getCenterOfMass(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, handle)
     }
 
     fun setCenterOfMass(centerOfMass: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setCenterOfMassBind, handle, centerOfMass)
     }
 
     fun getInertiaDiagonal(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getInertiaDiagonalBind, handle)
     }
 
     fun setInertiaDiagonal(inertiaDiagonal: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setInertiaDiagonalBind, handle, inertiaDiagonal)
     }
 
     fun getInertiaOrientation(): Quaternion {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetQuaternion(getInertiaOrientationBind, handle)
     }
 
     fun setInertiaOrientation(inertiaOrientation: Quaternion) {
+        checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(setInertiaOrientationBind, handle, inertiaOrientation)
     }
 
     fun getInertiaTensor(): Basis {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBasis(getInertiaTensorBind, handle)
     }
 
     fun setInertiaTensor(inertiaTensor: Basis) {
+        checkOpen()
         ObjectCalls.ptrcallWithBasisArg(setInertiaTensorBind, handle, inertiaTensor)
     }
 

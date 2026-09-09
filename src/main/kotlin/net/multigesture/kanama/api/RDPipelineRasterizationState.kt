@@ -83,6 +83,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_enable_depth_clamp
      */
     fun setEnableDepthClamp(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthClampBind, handle, pMember)
     }
 
@@ -93,6 +94,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_enable_depth_clamp
      */
     fun getEnableDepthClamp(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthClampBind, handle)
     }
 
@@ -102,6 +104,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_discard_primitives
      */
     fun setDiscardPrimitives(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDiscardPrimitivesBind, handle, pMember)
     }
 
@@ -111,6 +114,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_discard_primitives
      */
     fun getDiscardPrimitives(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDiscardPrimitivesBind, handle)
     }
 
@@ -120,6 +124,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_wireframe
      */
     fun setWireframe(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setWireframeBind, handle, pMember)
     }
 
@@ -129,6 +134,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_wireframe
      */
     fun getWireframe(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getWireframeBind, handle)
     }
 
@@ -139,6 +145,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_cull_mode
      */
     fun setCullMode(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, pMember)
     }
 
@@ -149,6 +156,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_cull_mode
      */
     fun getCullMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
@@ -158,6 +166,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_front_face
      */
     fun setFrontFace(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, handle, pMember)
     }
 
@@ -167,6 +176,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_front_face
      */
     fun getFrontFace(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, handle)
     }
 
@@ -178,6 +188,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_enabled
      */
     fun setDepthBiasEnabled(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDepthBiasEnabledBind, handle, pMember)
     }
 
@@ -189,6 +200,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_enabled
      */
     fun getDepthBiasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getDepthBiasEnabledBind, handle)
     }
 
@@ -198,6 +210,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_constant_factor
      */
     fun setDepthBiasConstantFactor(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasConstantFactorBind, handle, pMember)
     }
 
@@ -207,6 +220,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_constant_factor
      */
     fun getDepthBiasConstantFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasConstantFactorBind, handle)
     }
 
@@ -217,6 +231,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_clamp
      */
     fun setDepthBiasClamp(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasClampBind, handle, pMember)
     }
 
@@ -227,6 +242,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_clamp
      */
     fun getDepthBiasClamp(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasClampBind, handle)
     }
 
@@ -237,6 +253,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_slope_factor
      */
     fun setDepthBiasSlopeFactor(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthBiasSlopeFactorBind, handle, pMember)
     }
 
@@ -247,6 +264,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_slope_factor
      */
     fun getDepthBiasSlopeFactor(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasSlopeFactorBind, handle)
     }
 
@@ -257,6 +275,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_line_width
      */
     fun setLineWidth(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLineWidthBind, handle, pMember)
     }
 
@@ -267,6 +286,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_line_width
      */
     fun getLineWidth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
     }
 
@@ -277,6 +297,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.set_patch_control_points
      */
     fun setPatchControlPoints(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setPatchControlPointsBind, handle, pMember)
     }
 
@@ -287,6 +308,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineRasterizationState.get_patch_control_points
      */
     fun getPatchControlPoints(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getPatchControlPointsBind, handle)
     }
 

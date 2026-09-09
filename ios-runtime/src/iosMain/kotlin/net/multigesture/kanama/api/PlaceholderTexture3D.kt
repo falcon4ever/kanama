@@ -17,10 +17,12 @@ class PlaceholderTexture3D(handle: MemorySegment) : Texture3D(handle) {
         set(value) = setSize(value)
 
     fun setSize(size: Vector3i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3iArg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector3i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3i(getSizeBind, handle)
     }
 

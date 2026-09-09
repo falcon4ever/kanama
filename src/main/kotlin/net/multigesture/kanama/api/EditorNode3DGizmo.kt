@@ -19,6 +19,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.add_lines
      */
     fun addLines(lines: List<Vector3>, material: Material?, billboard: Boolean = false, modulate: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListObjectBoolColorArgs(addLinesBind, handle, lines, material?.requireOpenHandle() ?: MemorySegment.NULL, billboard, modulate)
     }
 
@@ -29,6 +30,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.add_mesh
      */
     fun addMesh(mesh: Mesh?, material: Material?, transform: Transform3D, skeleton: SkinReference?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(addMeshBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, material?.requireOpenHandle() ?: MemorySegment.NULL, transform, skeleton?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -39,6 +41,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.add_collision_segments
      */
     fun addCollisionSegments(segments: List<Vector3>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(addCollisionSegmentsBind, handle, segments)
     }
 
@@ -49,6 +52,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.add_collision_triangles
      */
     fun addCollisionTriangles(triangles: TriangleMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addCollisionTrianglesBind, handle, listOf(triangles?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -58,6 +62,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.add_unscaled_billboard
      */
     fun addUnscaledBillboard(material: Material?, defaultScale: Double = 1.0, modulate: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectDoubleColorArgs(addUnscaledBillboardBind, handle, material?.requireOpenHandle() ?: MemorySegment.NULL, defaultScale, modulate)
     }
 
@@ -75,6 +80,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.add_handles
      */
     fun addHandles(handles: List<Vector3>, material: Material?, ids: List<Int>, billboard: Boolean = false, secondary: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(addHandlesBind, handle, handles, material?.requireOpenHandle() ?: MemorySegment.NULL, ids, billboard, secondary)
     }
 
@@ -84,6 +90,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.set_node_3d
      */
     fun setNode3d(node: Node) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNode3dBind, handle, listOf(node.handle))
     }
 
@@ -93,6 +100,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.get_node_3d
      */
     fun getNode3d(): Node3D? {
+        checkOpen()
         return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNode3dBind, handle))
     }
 
@@ -103,6 +111,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.get_plugin
      */
     fun getPlugin(): EditorNode3DGizmoPlugin? {
+        checkOpen()
         return EditorNode3DGizmoPlugin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPluginBind, handle))
     }
 
@@ -112,6 +121,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -122,6 +132,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.set_hidden
      */
     fun setHidden(hidden: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHiddenBind, handle, hidden)
     }
 
@@ -132,6 +143,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.is_subgizmo_selected
      */
     fun isSubgizmoSelected(id: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isSubgizmoSelectedBind, handle, id)
     }
 
@@ -142,6 +154,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      * Generated from Godot docs: EditorNode3DGizmo.get_subgizmo_selection
      */
     fun getSubgizmoSelection(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSubgizmoSelectionBind, handle)
     }
 

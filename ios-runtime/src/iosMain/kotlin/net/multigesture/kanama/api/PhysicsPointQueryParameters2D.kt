@@ -41,42 +41,52 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
         set(value) = setCollideWithAreas(value)
 
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
     fun setCanvasInstanceId(canvasInstanceId: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCanvasInstanceIdBind, handle, canvasInstanceId)
     }
 
     fun getCanvasInstanceId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCanvasInstanceIdBind, handle)
     }
 
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 

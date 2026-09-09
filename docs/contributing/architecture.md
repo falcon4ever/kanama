@@ -204,7 +204,12 @@ flowchart LR
   produces a function pointer that, when called from C, lands inside a JVM
   method. Used for: lifecycle callbacks (`initialize`, `deinitialize`),
   per-instance virtual dispatch (`_ready`, `_process`), and class create/free
-  hooks.
+  hooks. Every stub goes through `Upcalls.stub`, which wraps the target in
+  `MethodHandles.catchException`: a Throwable that escapes a callback is logged
+  (`[kanama] upcall <site> threw: …`) and replaced by the zero of the return
+  type instead of unwinding through native frames and aborting the process
+  (task 98). Handlers whose return value carries meaning (`siCall`'s call error,
+  the property accessors' "owned, write rejected") keep their own catch on top.
 
 Hot runtime paths keep the same ABI but avoid unnecessary JVM-side work:
 
@@ -306,12 +311,25 @@ Godot frees the instance
 ```
 
 Wrappers around engine-owned objects (`Node`, `GodotObject`, …) are non-owning
-views over a raw pointer: a wrapper kept past its object's death is a dangling
-pointer, and `GD.isInstanceValid` is the check for it. `RefCounted` wrappers
-are the exception — they own the `+1` reference their factory or getter
-transferred, `close()` releases it, and a wrapper that has already been closed
-refuses further use (`requireOpenHandle()`), so a double-close or
-use-after-close surfaces as a Kotlin exception rather than a native fault. The
+views over a raw pointer plus the instance id captured at construction
+(`GodotObject.instanceId`, one `object_get_instance_id` downcall per mint).
+A wrapper kept past its object's death is a dangling pointer for every member
+except that id: `GD.isInstanceValid` asks `is_instance_id_valid` about the
+captured id and never touches the pointer, so it is the one safe question left
+(task 98; before that it built an OBJECT Variant from the pointer and read the
+freed header). Nothing invalidates such a wrapper for you — see the script
+model below.
+
+`RefCounted` wrappers are the exception — they own the `+1` reference their
+factory or getter transferred and `close()` releases it. Every RefCounted-derived
+wrapper, generated or hand-shaped, refuses further use of a handle whose
+`close()` destroyed the object: each method opens with `checkOpen()` and each
+argument position goes through `requireOpenHandle()`, so a use-after-close
+surfaces as `IllegalStateException("RefCounted handle is closed")` rather than a
+native fault. The generator emits the guard and `check_wrapper_generator.py`
+locks it on both emission modes. The flag is per wrapper: a second wrapper
+minted over the same handle has its own, and a `close()` that only dropped one
+of several references leaves the object alive and the wrapper usable. The
 ownership rules are in
 [RefCounted Return Ownership](wrapper-maintenance.md#refcounted-return-ownership).
 
@@ -324,8 +342,11 @@ Secondary compatible views can be cached with `selfAs(::Node3D)` or another
 wrapper constructor.
 
 This is intentional for the current architecture. Godot owns the native node;
-Kanama owns the JVM script instance and invalidates native handles through the
-object-lifetime machinery above. Making `class Player : CharacterBody3D` would
+Kanama owns the JVM script instance. When Godot frees the node, the
+`free_instance` upcall (`siFree`) unregisters the script's registry token — it
+does **not** invalidate the `self` wrapper or any other wrapper over that node,
+which become dangling pointers answerable only by `GD.isInstanceValid`. Making
+`class Player : CharacterBody3D` would
 blur those two lifetimes and make hot reload harder, because the JVM object
 would appear to be the native wrapper while still being a reloadable script
 instance.

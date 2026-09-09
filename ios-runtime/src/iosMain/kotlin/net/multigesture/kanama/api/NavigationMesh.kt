@@ -156,218 +156,272 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
         set(value) = setFilterBakingAabbOffset(value)
 
     fun setSamplePartitionType(samplePartitionType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
     }
 
     fun getSamplePartitionType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
     }
 
     fun setParsedGeometryType(geometryType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
     }
 
     fun getParsedGeometryType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
     }
 
     fun setCollisionMask(mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
     }
 
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
     }
 
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
     }
 
     fun setSourceGeometryMode(mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, mask)
     }
 
     fun getSourceGeometryMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
     }
 
     fun setSourceGroupName(mask: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setSourceGroupNameBind, handle, mask)
     }
 
     fun getSourceGroupName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGroupNameBind, handle)
     }
 
     fun setCellSize(cellSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
     }
 
     fun getCellSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
     }
 
     fun setCellHeight(cellHeight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCellHeightBind, handle, cellHeight)
     }
 
     fun getCellHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellHeightBind, handle)
     }
 
     fun setBorderSize(borderSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
     }
 
     fun getBorderSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
     }
 
     fun setAgentHeight(agentHeight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentHeightBind, handle, agentHeight)
     }
 
     fun getAgentHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentHeightBind, handle)
     }
 
     fun setAgentRadius(agentRadius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
     }
 
     fun getAgentRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
     }
 
     fun setAgentMaxClimb(agentMaxClimb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentMaxClimbBind, handle, agentMaxClimb)
     }
 
     fun getAgentMaxClimb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxClimbBind, handle)
     }
 
     fun setAgentMaxSlope(agentMaxSlope: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentMaxSlopeBind, handle, agentMaxSlope)
     }
 
     fun getAgentMaxSlope(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxSlopeBind, handle)
     }
 
     fun setRegionMinSize(regionMinSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRegionMinSizeBind, handle, regionMinSize)
     }
 
     fun getRegionMinSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMinSizeBind, handle)
     }
 
     fun setRegionMergeSize(regionMergeSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRegionMergeSizeBind, handle, regionMergeSize)
     }
 
     fun getRegionMergeSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMergeSizeBind, handle)
     }
 
     fun setEdgeMaxLength(edgeMaxLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxLengthBind, handle, edgeMaxLength)
     }
 
     fun getEdgeMaxLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxLengthBind, handle)
     }
 
     fun setEdgeMaxError(edgeMaxError: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxErrorBind, handle, edgeMaxError)
     }
 
     fun getEdgeMaxError(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxErrorBind, handle)
     }
 
     fun setVerticesPerPolygon(verticesPerPolygon: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVerticesPerPolygonBind, handle, verticesPerPolygon)
     }
 
     fun getVerticesPerPolygon(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVerticesPerPolygonBind, handle)
     }
 
     fun setDetailSampleDistance(detailSampleDist: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDetailSampleDistanceBind, handle, detailSampleDist)
     }
 
     fun getDetailSampleDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleDistanceBind, handle)
     }
 
     fun setDetailSampleMaxError(detailSampleMaxError: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDetailSampleMaxErrorBind, handle, detailSampleMaxError)
     }
 
     fun getDetailSampleMaxError(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleMaxErrorBind, handle)
     }
 
     fun setFilterLowHangingObstacles(filterLowHangingObstacles: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterLowHangingObstaclesBind, handle, filterLowHangingObstacles)
     }
 
     fun getFilterLowHangingObstacles(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterLowHangingObstaclesBind, handle)
     }
 
     fun setFilterLedgeSpans(filterLedgeSpans: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterLedgeSpansBind, handle, filterLedgeSpans)
     }
 
     fun getFilterLedgeSpans(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterLedgeSpansBind, handle)
     }
 
     fun setFilterWalkableLowHeightSpans(filterWalkableLowHeightSpans: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterWalkableLowHeightSpansBind, handle, filterWalkableLowHeightSpans)
     }
 
     fun getFilterWalkableLowHeightSpans(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterWalkableLowHeightSpansBind, handle)
     }
 
     fun setFilterBakingAabb(bakingAabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setFilterBakingAabbBind, handle, bakingAabb)
     }
 
     fun getFilterBakingAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getFilterBakingAabbBind, handle)
     }
 
     fun setFilterBakingAabbOffset(bakingAabbOffset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setFilterBakingAabbOffsetBind, handle, bakingAabbOffset)
     }
 
     fun getFilterBakingAabbOffset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getFilterBakingAabbOffsetBind, handle)
     }
 
     fun getPolygonCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
     }
 
     fun clearPolygons() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
     }
 
     fun createFromMesh(mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

@@ -61,66 +61,82 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
         set(value) = setCollideWithAreas(value)
 
     fun setShape(shape: Resource?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getShape(): Resource? {
+        checkOpen()
         return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
     }
 
     fun setShapeRid(shape: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setShapeRidBind, handle, shape)
     }
 
     fun getShapeRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getShapeRidBind, handle)
     }
 
     fun setTransform(transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
     }
 
     fun getTransform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
     }
 
     fun setMotion(motion: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setMotionBind, handle, motion)
     }
 
     fun getMotion(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, handle)
     }
 
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 

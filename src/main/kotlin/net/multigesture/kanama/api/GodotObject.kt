@@ -11,6 +11,11 @@ import java.lang.foreign.MemorySegment
  *
  * This wrapper does not free or retain the object. Use it for objects whose
  * lifetime is owned by Godot, such as the object passed into a script instance.
+ *
+ * The object must be alive when the wrapper is constructed: construction reads its
+ * instance id once (see [instanceId]). After the object is freed the wrapper is a
+ * dangling pointer for every member except [instanceId], and `GD.isInstanceValid`
+ * is the only safe question left to ask it.
  */
 open class GodotObject(val handle: MemorySegment) {
 
@@ -20,6 +25,18 @@ open class GodotObject(val handle: MemorySegment) {
     init {
         require(handle.address() != 0L) { "GodotObject handle must not be NULL" }
     }
+
+    /**
+     * The engine instance id, captured once at construction (`object_get_instance_id`, a
+     * direct interface downcall). Unlike [getInstanceId] this never dereferences [handle]
+     * again, so it stays valid to read after the object has been freed; `GD.isInstanceValid`
+     * routes through it (task 98).
+     *
+     * The JVM getter is renamed because the ptrcall [getInstanceId] already owns the
+     * `getInstanceId()J` signature; Kotlin callers read `instanceId` as usual.
+     */
+    @get:JvmName("capturedInstanceId")
+    val instanceId: Long = ObjectCalls.objectGetInstanceId(handle)
 
     fun getClassName(): String =
         ObjectCalls.ptrcallNoArgsRetString(getClassBind, handle)

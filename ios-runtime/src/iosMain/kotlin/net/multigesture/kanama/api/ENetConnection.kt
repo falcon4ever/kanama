@@ -9,62 +9,77 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
     fun createHostBound(bindAddress: String, bindPort: Int, maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createHostBoundBind, handle, bindAddress, bindPort, maxPeers, maxChannels, inBandwidth, outBandwidth)
     }
 
     fun createHost(maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithFourIntArgsRetLong(createHostBind, handle, maxPeers, maxChannels, inBandwidth, outBandwidth)
     }
 
     fun destroy() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(destroyBind, handle)
     }
 
     fun connectToHost(address: String, port: Int, channels: Int = 0, data: Int = 0): ENetPacketPeer? {
+        checkOpen()
         return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(connectToHostBind, handle, address, port, channels, data))
     }
 
     fun flush() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(flushBind, handle)
     }
 
     fun bandwidthLimit(inBandwidth: Int = 0, outBandwidth: Int = 0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(bandwidthLimitBind, handle, inBandwidth, outBandwidth)
     }
 
     fun channelLimit(limit: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(channelLimitBind, handle, limit)
     }
 
     fun compress(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(compressBind, handle, mode)
     }
 
     fun dtlsServerSetup(serverOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(dtlsServerSetupBind, handle, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(dtlsClientSetupBind, handle, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun refuseNewConnections(refuse: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(refuseNewConnectionsBind, handle, refuse)
     }
 
     fun popStatistic(statistic: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(popStatisticBind, handle, statistic)
     }
 
     fun getMaxChannels(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxChannelsBind, handle)
     }
 
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
     fun getPeers(): List<ENetPacketPeer> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getPeersBind, handle, ENetPacketPeer::fromHandle)
     }
 

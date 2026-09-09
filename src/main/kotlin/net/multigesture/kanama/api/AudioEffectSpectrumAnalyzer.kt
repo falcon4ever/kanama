@@ -30,6 +30,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectSpectrumAnalyzer.set_buffer_length
      */
     fun setBufferLength(seconds: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, seconds)
     }
 
@@ -40,6 +41,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectSpectrumAnalyzer.get_buffer_length
      */
     fun getBufferLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
     }
 
@@ -51,6 +53,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectSpectrumAnalyzer.set_fft_size
      */
     fun setFftSize(size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
     }
 
@@ -62,6 +65,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectSpectrumAnalyzer.get_fft_size
      */
     fun getFftSize(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
     }
 

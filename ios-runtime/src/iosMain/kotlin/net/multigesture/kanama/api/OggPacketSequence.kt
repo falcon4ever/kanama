@@ -16,14 +16,17 @@ class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
         set(value) = setSamplingRate(value)
 
     fun setSamplingRate(samplingRate: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSamplingRateBind, handle, samplingRate)
     }
 
     fun getSamplingRate(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSamplingRateBind, handle)
     }
 
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 

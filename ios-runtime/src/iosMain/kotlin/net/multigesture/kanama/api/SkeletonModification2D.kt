@@ -22,42 +22,52 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
         set(value) = setExecutionMode(value)
 
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
     fun getEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
     fun getModificationStack(): SkeletonModificationStack2D? {
+        checkOpen()
         return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, handle))
     }
 
     fun setIsSetup(isSetup: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsSetupBind, handle, isSetup)
     }
 
     fun getIsSetup(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
     }
 
     fun setExecutionMode(executionMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setExecutionModeBind, handle, executionMode)
     }
 
     fun getExecutionMode(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getExecutionModeBind, handle)
     }
 
     fun clampAngle(angle: Double, min: Double, max: Double, invert: Boolean): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(clampAngleBind, handle, angle, min, max, invert)
     }
 
     fun setEditorDrawGizmo(drawGizmo: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEditorDrawGizmoBind, handle, drawGizmo)
     }
 
     fun getEditorDrawGizmo(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEditorDrawGizmoBind, handle)
     }
 

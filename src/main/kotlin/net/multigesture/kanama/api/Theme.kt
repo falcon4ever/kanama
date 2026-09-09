@@ -36,6 +36,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_icon
      */
     fun setIcon(name: String, themeType: String, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setIconBind, handle, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -47,6 +48,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_icon
      */
     fun getIcon(name: String, themeType: String): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getIconBind, handle, name, themeType))
     }
 
@@ -57,6 +59,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_icon
      */
     fun hasIcon(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasIconBind, handle, name, themeType)
     }
 
@@ -68,6 +71,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_icon
      */
     fun renameIcon(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameIconBind, handle, oldName, name, themeType)
     }
 
@@ -78,6 +82,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_icon
      */
     fun clearIcon(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearIconBind, handle, name, themeType)
     }
 
@@ -88,6 +93,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_icon_list
      */
     fun getIconList(themeType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getIconListBind, handle, themeType)
     }
 
@@ -98,6 +104,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_icon_type_list
      */
     fun getIconTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getIconTypeListBind, handle)
     }
 
@@ -108,6 +115,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_stylebox
      */
     fun setStylebox(name: String, themeType: String, texture: StyleBox?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setStyleboxBind, handle, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -119,6 +127,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_stylebox
      */
     fun getStylebox(name: String, themeType: String): StyleBox? {
+        checkOpen()
         return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getStyleboxBind, handle, name, themeType))
     }
 
@@ -129,6 +138,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_stylebox
      */
     fun hasStylebox(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasStyleboxBind, handle, name, themeType)
     }
 
@@ -140,6 +150,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_stylebox
      */
     fun renameStylebox(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameStyleboxBind, handle, oldName, name, themeType)
     }
 
@@ -150,6 +161,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_stylebox
      */
     fun clearStylebox(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearStyleboxBind, handle, name, themeType)
     }
 
@@ -160,6 +172,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_stylebox_list
      */
     fun getStyleboxList(themeType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getStyleboxListBind, handle, themeType)
     }
 
@@ -170,6 +183,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_stylebox_type_list
      */
     fun getStyleboxTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStyleboxTypeListBind, handle)
     }
 
@@ -180,6 +194,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_font
      */
     fun setFont(name: String, themeType: String, font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setFontBind, handle, name, themeType, font?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -193,6 +208,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_font
      */
     fun getFont(name: String, themeType: String): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getFontBind, handle, name, themeType))
     }
 
@@ -204,6 +220,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_font
      */
     fun hasFont(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontBind, handle, name, themeType)
     }
 
@@ -215,6 +232,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_font
      */
     fun renameFont(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontBind, handle, oldName, name, themeType)
     }
 
@@ -225,6 +243,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_font
      */
     fun clearFont(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontBind, handle, name, themeType)
     }
 
@@ -235,6 +254,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_font_list
      */
     fun getFontList(themeType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontListBind, handle, themeType)
     }
 
@@ -245,6 +265,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_font_type_list
      */
     fun getFontTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontTypeListBind, handle)
     }
 
@@ -255,6 +276,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_font_size
      */
     fun setFontSize(name: String, themeType: String, fontSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setFontSizeBind, handle, name, themeType, fontSize)
     }
 
@@ -268,6 +290,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_font_size
      */
     fun getFontSize(name: String, themeType: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getFontSizeBind, handle, name, themeType)
     }
 
@@ -279,6 +302,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_font_size
      */
     fun hasFontSize(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontSizeBind, handle, name, themeType)
     }
 
@@ -290,6 +314,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_font_size
      */
     fun renameFontSize(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontSizeBind, handle, oldName, name, themeType)
     }
 
@@ -300,6 +325,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_font_size
      */
     fun clearFontSize(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontSizeBind, handle, name, themeType)
     }
 
@@ -310,6 +336,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_font_size_list
      */
     fun getFontSizeList(themeType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontSizeListBind, handle, themeType)
     }
 
@@ -320,6 +347,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_font_size_type_list
      */
     fun getFontSizeTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontSizeTypeListBind, handle)
     }
 
@@ -330,6 +358,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_color
      */
     fun setColor(name: String, themeType: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndColorArg(setColorBind, handle, name, themeType, color)
     }
 
@@ -340,6 +369,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_color
      */
     fun getColor(name: String, themeType: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getColorBind, handle, name, themeType)
     }
 
@@ -350,6 +380,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_color
      */
     fun hasColor(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasColorBind, handle, name, themeType)
     }
 
@@ -361,6 +392,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_color
      */
     fun renameColor(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameColorBind, handle, oldName, name, themeType)
     }
 
@@ -371,6 +403,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_color
      */
     fun clearColor(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearColorBind, handle, name, themeType)
     }
 
@@ -381,6 +414,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_color_list
      */
     fun getColorList(themeType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getColorListBind, handle, themeType)
     }
 
@@ -391,6 +425,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_color_type_list
      */
     fun getColorTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getColorTypeListBind, handle)
     }
 
@@ -401,6 +436,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_constant
      */
     fun setConstant(name: String, themeType: String, constant: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setConstantBind, handle, name, themeType, constant)
     }
 
@@ -411,6 +447,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_constant
      */
     fun getConstant(name: String, themeType: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getConstantBind, handle, name, themeType)
     }
 
@@ -421,6 +458,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_constant
      */
     fun hasConstant(name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasConstantBind, handle, name, themeType)
     }
 
@@ -432,6 +470,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_constant
      */
     fun renameConstant(oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(renameConstantBind, handle, oldName, name, themeType)
     }
 
@@ -442,6 +481,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_constant
      */
     fun clearConstant(name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearConstantBind, handle, name, themeType)
     }
 
@@ -452,6 +492,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_constant_list
      */
     fun getConstantList(themeType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getConstantListBind, handle, themeType)
     }
 
@@ -462,6 +503,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_constant_type_list
      */
     fun getConstantTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getConstantTypeListBind, handle)
     }
 
@@ -474,6 +516,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_default_base_scale
      */
     fun setDefaultBaseScale(baseScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDefaultBaseScaleBind, handle, baseScale)
     }
 
@@ -486,6 +529,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_default_base_scale
      */
     fun getDefaultBaseScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBaseScaleBind, handle)
     }
 
@@ -496,6 +540,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_default_base_scale
      */
     fun hasDefaultBaseScale(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultBaseScaleBind, handle)
     }
 
@@ -508,6 +553,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_default_font
      */
     fun setDefaultFont(font: Font?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setDefaultFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -520,6 +566,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_default_font
      */
     fun getDefaultFont(): Font? {
+        checkOpen()
         return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDefaultFontBind, handle))
     }
 
@@ -529,6 +576,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_default_font
      */
     fun hasDefaultFont(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontBind, handle)
     }
 
@@ -542,6 +590,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_default_font_size
      */
     fun setDefaultFontSize(fontSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDefaultFontSizeBind, handle, fontSize)
     }
 
@@ -555,6 +604,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_default_font_size
      */
     fun getDefaultFontSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getDefaultFontSizeBind, handle)
     }
 
@@ -565,6 +615,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_default_font_size
      */
     fun hasDefaultFontSize(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontSizeBind, handle)
     }
 
@@ -577,6 +628,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_theme_item
      */
     fun setThemeItem(dataType: Long, name: String, themeType: String, value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(setThemeItemBind, handle, dataType, name, themeType, value)
     }
 
@@ -589,6 +641,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_theme_item
      */
     fun getThemeItem(dataType: Long, name: String, themeType: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, handle, dataType, name, themeType)
     }
 
@@ -601,6 +654,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.has_theme_item
      */
     fun hasThemeItem(dataType: Long, name: String, themeType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(hasThemeItemBind, handle, dataType, name, themeType)
     }
 
@@ -614,6 +668,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_theme_item
      */
     fun renameThemeItem(dataType: Long, oldName: String, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(renameThemeItemBind, handle, dataType, oldName, name, themeType)
     }
 
@@ -626,6 +681,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_theme_item
      */
     fun clearThemeItem(dataType: Long, name: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(clearThemeItemBind, handle, dataType, name, themeType)
     }
 
@@ -638,6 +694,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_theme_item_list
      */
     fun getThemeItemList(dataType: Long, themeType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(getThemeItemListBind, handle, dataType, themeType)
     }
 
@@ -649,6 +706,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_theme_item_type_list
      */
     fun getThemeItemTypeList(dataType: Long): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetPackedStringList(getThemeItemTypeListBind, handle, dataType)
     }
 
@@ -663,6 +721,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.set_type_variation
      */
     fun setTypeVariation(themeType: String, baseType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(setTypeVariationBind, handle, themeType, baseType)
     }
 
@@ -672,6 +731,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.is_type_variation
      */
     fun isTypeVariation(themeType: String, baseType: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isTypeVariationBind, handle, themeType, baseType)
     }
 
@@ -681,6 +741,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear_type_variation
      */
     fun clearTypeVariation(themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(clearTypeVariationBind, handle, themeType)
     }
 
@@ -691,6 +752,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_type_variation_base
      */
     fun getTypeVariationBase(themeType: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(getTypeVariationBaseBind, handle, themeType)
     }
 
@@ -700,6 +762,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_type_variation_list
      */
     fun getTypeVariationList(baseType: String): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(getTypeVariationListBind, handle, baseType)
     }
 
@@ -711,6 +774,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.add_type
      */
     fun addType(themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(addTypeBind, handle, themeType)
     }
 
@@ -722,6 +786,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.remove_type
      */
     fun removeType(themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeTypeBind, handle, themeType)
     }
 
@@ -734,6 +799,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.rename_type
      */
     fun renameType(oldThemeType: String, themeType: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameTypeBind, handle, oldThemeType, themeType)
     }
 
@@ -744,6 +810,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.get_type_list
      */
     fun getTypeList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTypeListBind, handle)
     }
 
@@ -756,6 +823,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.merge_with
      */
     fun mergeWith(other: Theme?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(mergeWithBind, handle, listOf(other?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -765,6 +833,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Theme.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

@@ -17,18 +17,22 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
         set(value) = setPhysicalBoneChainLength(value)
 
     fun setPhysicalBoneChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPhysicalBoneChainLengthBind, handle, length)
     }
 
     fun getPhysicalBoneChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPhysicalBoneChainLengthBind, handle)
     }
 
     fun setPhysicalBoneNode(jointIdx: Int, physicalbone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setPhysicalBoneNodeBind, handle, jointIdx, physicalbone2dNode)
     }
 
     fun fetchPhysicalBones() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(fetchPhysicalBonesBind, handle)
     }
 

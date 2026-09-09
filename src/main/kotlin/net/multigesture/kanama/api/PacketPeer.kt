@@ -25,6 +25,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.get_var
      */
     fun getVar(allowObjects: Boolean = false): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
     }
 
@@ -36,6 +37,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.put_var
      */
     fun putVar(varValue: Any?, fullObjects: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(putVarBind, handle, varValue, fullObjects)
     }
 
@@ -45,6 +47,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.get_packet
      */
     fun getPacket(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getPacketBind, handle)
     }
 
@@ -54,6 +57,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.put_packet
      */
     fun putPacket(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(putPacketBind, handle, buffer)
     }
 
@@ -63,6 +67,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.get_packet_error
      */
     fun getPacketError(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, handle)
     }
 
@@ -72,6 +77,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.get_available_packet_count
      */
     fun getAvailablePacketCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAvailablePacketCountBind, handle)
     }
 
@@ -84,6 +90,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.get_encode_buffer_max_size
      */
     fun getEncodeBufferMaxSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getEncodeBufferMaxSizeBind, handle)
     }
 
@@ -96,6 +103,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PacketPeer.set_encode_buffer_max_size
      */
     fun setEncodeBufferMaxSize(maxSize: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setEncodeBufferMaxSizeBind, handle, maxSize)
     }
 

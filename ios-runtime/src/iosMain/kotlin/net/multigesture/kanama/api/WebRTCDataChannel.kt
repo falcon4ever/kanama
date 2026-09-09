@@ -16,58 +16,72 @@ open class WebRTCDataChannel(handle: MemorySegment) : PacketPeer(handle) {
         set(value) = setWriteMode(value)
 
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
     fun wasStringPacket(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(wasStringPacketBind, handle)
     }
 
     fun setWriteMode(writeMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setWriteModeBind, handle, writeMode)
     }
 
     fun getWriteMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWriteModeBind, handle)
     }
 
     fun getReadyState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, handle)
     }
 
     fun getLabel(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, handle)
     }
 
     fun isOrdered(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isOrderedBind, handle)
     }
 
     fun getId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, handle)
     }
 
     fun getMaxPacketLifeTime(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxPacketLifeTimeBind, handle)
     }
 
     fun getMaxRetransmits(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxRetransmitsBind, handle)
     }
 
     fun getProtocol(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getProtocolBind, handle)
     }
 
     fun isNegotiated(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isNegotiatedBind, handle)
     }
 
     fun getBufferedAmount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferedAmountBind, handle)
     }
 

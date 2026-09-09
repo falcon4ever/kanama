@@ -65,74 +65,92 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
         set(value) = setIndexCount(value)
 
     fun setFlags(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
     }
 
     fun getFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
     }
 
     fun setVertexBuffer(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setVertexBufferBind, handle, pMember)
     }
 
     fun getVertexBuffer(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getVertexBufferBind, handle)
     }
 
     fun setVertexOffset(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setVertexOffsetBind, handle, pMember)
     }
 
     fun getVertexOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexOffsetBind, handle)
     }
 
     fun setVertexStride(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setVertexStrideBind, handle, pMember)
     }
 
     fun getVertexStride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexStrideBind, handle)
     }
 
     fun setVertexCount(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setVertexCountBind, handle, pMember)
     }
 
     fun getVertexCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexCountBind, handle)
     }
 
     fun setVertexFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, handle, pMember)
     }
 
     fun getVertexFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, handle)
     }
 
     fun setIndexBuffer(pMember: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setIndexBufferBind, handle, pMember)
     }
 
     fun getIndexBuffer(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getIndexBufferBind, handle)
     }
 
     fun setIndexOffset(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setIndexOffsetBind, handle, pMember)
     }
 
     fun getIndexOffset(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexOffsetBind, handle)
     }
 
     fun setIndexCount(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setIndexCountBind, handle, pMember)
     }
 
     fun getIndexCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexCountBind, handle)
     }
 

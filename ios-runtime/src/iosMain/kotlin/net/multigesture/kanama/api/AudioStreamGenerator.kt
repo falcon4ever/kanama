@@ -28,26 +28,32 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setBufferLength(value)
 
     fun setMixRate(hz: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMixRateBind, handle, hz)
     }
 
     fun getMixRate(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMixRateBind, handle)
     }
 
     fun setMixRateMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMixRateModeBind, handle, mode)
     }
 
     fun getMixRateMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMixRateModeBind, handle)
     }
 
     fun setBufferLength(seconds: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, seconds)
     }
 
     fun getBufferLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
     }
 

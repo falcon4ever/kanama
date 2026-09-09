@@ -23,6 +23,7 @@ class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EncodedObjectAsID.set_object_id
      */
     fun setObjectId(id: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setObjectIdBind, handle, id)
     }
 
@@ -33,6 +34,7 @@ class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EncodedObjectAsID.get_object_id
      */
     fun getObjectId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getObjectIdBind, handle)
     }
 

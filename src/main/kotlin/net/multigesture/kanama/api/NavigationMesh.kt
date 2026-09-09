@@ -168,6 +168,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_sample_partition_type
      */
     fun setSamplePartitionType(samplePartitionType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
     }
 
@@ -177,6 +178,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_sample_partition_type
      */
     fun getSamplePartitionType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
     }
 
@@ -186,6 +188,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_parsed_geometry_type
      */
     fun setParsedGeometryType(geometryType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
     }
 
@@ -195,6 +198,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_parsed_geometry_type
      */
     fun getParsedGeometryType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
     }
 
@@ -205,6 +209,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
     }
 
@@ -215,6 +220,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_collision_mask
      */
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
@@ -225,6 +231,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
     }
 
@@ -235,6 +242,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
     }
 
@@ -244,6 +252,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_source_geometry_mode
      */
     fun setSourceGeometryMode(mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, mask)
     }
 
@@ -253,6 +262,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_source_geometry_mode
      */
     fun getSourceGeometryMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
     }
 
@@ -263,6 +273,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_source_group_name
      */
     fun setSourceGroupName(mask: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setSourceGroupNameBind, handle, mask)
     }
 
@@ -273,6 +284,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_source_group_name
      */
     fun getSourceGroupName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGroupNameBind, handle)
     }
 
@@ -283,6 +295,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_cell_size
      */
     fun setCellSize(cellSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
     }
 
@@ -293,6 +306,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_cell_size
      */
     fun getCellSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
     }
 
@@ -303,6 +317,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_cell_height
      */
     fun setCellHeight(cellHeight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCellHeightBind, handle, cellHeight)
     }
 
@@ -313,6 +328,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_cell_height
      */
     fun getCellHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellHeightBind, handle)
     }
 
@@ -326,6 +342,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_border_size
      */
     fun setBorderSize(borderSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
     }
 
@@ -339,6 +356,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_border_size
      */
     fun getBorderSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
     }
 
@@ -350,6 +368,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_agent_height
      */
     fun setAgentHeight(agentHeight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentHeightBind, handle, agentHeight)
     }
 
@@ -361,6 +380,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_agent_height
      */
     fun getAgentHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentHeightBind, handle)
     }
 
@@ -375,6 +395,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_agent_radius
      */
     fun setAgentRadius(agentRadius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
     }
 
@@ -389,6 +410,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_agent_radius
      */
     fun getAgentRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
     }
 
@@ -399,6 +421,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_agent_max_climb
      */
     fun setAgentMaxClimb(agentMaxClimb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentMaxClimbBind, handle, agentMaxClimb)
     }
 
@@ -409,6 +432,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_agent_max_climb
      */
     fun getAgentMaxClimb(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxClimbBind, handle)
     }
 
@@ -418,6 +442,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_agent_max_slope
      */
     fun setAgentMaxSlope(agentMaxSlope: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentMaxSlopeBind, handle, agentMaxSlope)
     }
 
@@ -427,6 +452,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_agent_max_slope
      */
     fun getAgentMaxSlope(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxSlopeBind, handle)
     }
 
@@ -438,6 +464,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_region_min_size
      */
     fun setRegionMinSize(regionMinSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRegionMinSizeBind, handle, regionMinSize)
     }
 
@@ -449,6 +476,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_region_min_size
      */
     fun getRegionMinSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMinSizeBind, handle)
     }
 
@@ -460,6 +488,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_region_merge_size
      */
     fun setRegionMergeSize(regionMergeSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRegionMergeSizeBind, handle, regionMergeSize)
     }
 
@@ -471,6 +500,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_region_merge_size
      */
     fun getRegionMergeSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMergeSizeBind, handle)
     }
 
@@ -482,6 +512,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_edge_max_length
      */
     fun setEdgeMaxLength(edgeMaxLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxLengthBind, handle, edgeMaxLength)
     }
 
@@ -493,6 +524,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_edge_max_length
      */
     fun getEdgeMaxLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxLengthBind, handle)
     }
 
@@ -503,6 +535,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_edge_max_error
      */
     fun setEdgeMaxError(edgeMaxError: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxErrorBind, handle, edgeMaxError)
     }
 
@@ -513,6 +546,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_edge_max_error
      */
     fun getEdgeMaxError(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxErrorBind, handle)
     }
 
@@ -523,6 +557,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_vertices_per_polygon
      */
     fun setVerticesPerPolygon(verticesPerPolygon: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setVerticesPerPolygonBind, handle, verticesPerPolygon)
     }
 
@@ -533,6 +568,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_vertices_per_polygon
      */
     fun getVerticesPerPolygon(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getVerticesPerPolygonBind, handle)
     }
 
@@ -542,6 +578,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_detail_sample_distance
      */
     fun setDetailSampleDistance(detailSampleDist: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDetailSampleDistanceBind, handle, detailSampleDist)
     }
 
@@ -551,6 +588,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_detail_sample_distance
      */
     fun getDetailSampleDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleDistanceBind, handle)
     }
 
@@ -560,6 +598,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_detail_sample_max_error
      */
     fun setDetailSampleMaxError(detailSampleMaxError: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDetailSampleMaxErrorBind, handle, detailSampleMaxError)
     }
 
@@ -569,6 +608,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_detail_sample_max_error
      */
     fun getDetailSampleMaxError(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleMaxErrorBind, handle)
     }
 
@@ -579,6 +619,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_filter_low_hanging_obstacles
      */
     fun setFilterLowHangingObstacles(filterLowHangingObstacles: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterLowHangingObstaclesBind, handle, filterLowHangingObstacles)
     }
 
@@ -589,6 +630,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_filter_low_hanging_obstacles
      */
     fun getFilterLowHangingObstacles(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterLowHangingObstaclesBind, handle)
     }
 
@@ -598,6 +640,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_filter_ledge_spans
      */
     fun setFilterLedgeSpans(filterLedgeSpans: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterLedgeSpansBind, handle, filterLedgeSpans)
     }
 
@@ -607,6 +650,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_filter_ledge_spans
      */
     fun getFilterLedgeSpans(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterLedgeSpansBind, handle)
     }
 
@@ -617,6 +661,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_filter_walkable_low_height_spans
      */
     fun setFilterWalkableLowHeightSpans(filterWalkableLowHeightSpans: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFilterWalkableLowHeightSpansBind, handle, filterWalkableLowHeightSpans)
     }
 
@@ -627,6 +672,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_filter_walkable_low_height_spans
      */
     fun getFilterWalkableLowHeightSpans(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFilterWalkableLowHeightSpansBind, handle)
     }
 
@@ -637,6 +683,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_filter_baking_aabb
      */
     fun setFilterBakingAabb(bakingAabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setFilterBakingAabbBind, handle, bakingAabb)
     }
 
@@ -647,6 +694,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_filter_baking_aabb
      */
     fun getFilterBakingAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getFilterBakingAabbBind, handle)
     }
 
@@ -656,6 +704,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_filter_baking_aabb_offset
      */
     fun setFilterBakingAabbOffset(bakingAabbOffset: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setFilterBakingAabbOffsetBind, handle, bakingAabbOffset)
     }
 
@@ -665,6 +714,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_filter_baking_aabb_offset
      */
     fun getFilterBakingAabbOffset(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getFilterBakingAabbOffsetBind, handle)
     }
 
@@ -674,6 +724,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.set_vertices
      */
     fun setVertices(vertices: List<Vector3>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
     }
 
@@ -683,6 +734,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_vertices
      */
     fun getVertices(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
     }
 
@@ -692,6 +744,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.add_polygon
      */
     fun addPolygon(polygon: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
     }
 
@@ -701,6 +754,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_polygon_count
      */
     fun getPolygonCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
     }
 
@@ -710,6 +764,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.get_polygon
      */
     fun getPolygon(idx: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
     }
 
@@ -719,6 +774,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.clear_polygons
      */
     fun clearPolygons() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
     }
 
@@ -729,6 +785,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.create_from_mesh
      */
     fun createFromMesh(mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -738,6 +795,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationMesh.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

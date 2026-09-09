@@ -16,10 +16,12 @@ class JointLimitationCone3D(handle: MemorySegment) : JointLimitation3D(handle) {
         set(value) = setAngle(value)
 
     fun setAngle(angle: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAngleBind, handle, angle)
     }
 
     fun getAngle(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAngleBind, handle)
     }
 

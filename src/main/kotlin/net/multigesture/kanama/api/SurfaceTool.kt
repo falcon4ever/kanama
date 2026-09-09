@@ -23,6 +23,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_skin_weight_count
      */
     fun setSkinWeightCount(count: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, handle, count)
     }
 
@@ -34,6 +35,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.get_skin_weight_count
      */
     fun getSkinWeightCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, handle)
     }
 
@@ -44,6 +46,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_custom_format
      */
     fun setCustomFormat(channelIndex: Int, format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, handle, channelIndex, format)
     }
 
@@ -54,6 +57,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.get_custom_format
      */
     fun getCustomFormat(channelIndex: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, handle, channelIndex)
     }
 
@@ -64,6 +68,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.begin
      */
     fun begin(primitive: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(beginBind, handle, primitive)
     }
 
@@ -74,6 +79,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.add_vertex
      */
     fun addVertex(vertex: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(addVertexBind, handle, vertex)
     }
 
@@ -86,6 +92,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_color
      */
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
@@ -96,6 +103,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_normal
      */
     fun setNormal(normal: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setNormalBind, handle, normal)
     }
 
@@ -109,6 +117,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_tangent
      */
     fun setTangent(tangent: Plane) {
+        checkOpen()
         ObjectCalls.ptrcallWithPlaneArg(setTangentBind, handle, tangent)
     }
 
@@ -120,6 +129,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_uv
      */
     fun setUv(uv: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setUvBind, handle, uv)
     }
 
@@ -131,6 +141,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_uv2
      */
     fun setUv2(uv2: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setUv2Bind, handle, uv2)
     }
 
@@ -140,6 +151,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_bones
      */
     fun setBones(bones: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setBonesBind, handle, bones)
     }
 
@@ -151,6 +163,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_weights
      */
     fun setWeights(weights: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setWeightsBind, handle, weights)
     }
 
@@ -161,6 +174,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_custom
      */
     fun setCustom(channelIndex: Int, customColor: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setCustomBind, handle, channelIndex, customColor)
     }
 
@@ -174,6 +188,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_smooth_group
      */
     fun setSmoothGroup(index: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setSmoothGroupBind, handle, index)
     }
 
@@ -184,6 +199,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.add_triangle_fan
      */
     fun addTriangleFan(vertices: List<Vector3>, uvs: List<Vector2>, colors: List<Color>, uv2s: List<Vector2>, normals: List<Vector3>, tangents: List<Plane>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(addTriangleFanBind, handle, vertices, uvs, colors, uv2s, normals, tangents)
     }
 
@@ -194,6 +210,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.add_index
      */
     fun addIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(addIndexBind, handle, index)
     }
 
@@ -204,6 +221,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.index
      */
     fun index() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(indexBind, handle)
     }
 
@@ -213,6 +231,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.deindex
      */
     fun deindex() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(deindexBind, handle)
     }
 
@@ -230,6 +249,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.generate_normals
      */
     fun generateNormals(flip: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(generateNormalsBind, handle, flip)
     }
 
@@ -240,6 +260,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.generate_tangents
      */
     fun generateTangents() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(generateTangentsBind, handle)
     }
 
@@ -250,6 +271,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.optimize_indices_for_cache
      */
     fun optimizeIndicesForCache() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(optimizeIndicesForCacheBind, handle)
     }
 
@@ -259,6 +281,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.get_aabb
      */
     fun getAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
     }
 
@@ -269,6 +292,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.generate_lod
      */
     fun generateLod(ndThreshold: Double, targetIndexCount: Int = 3): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedInt32List(generateLodBind, handle, ndThreshold, targetIndexCount)
     }
 
@@ -278,6 +302,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.set_material
      */
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -287,6 +312,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.get_primitive_type
      */
     fun getPrimitiveType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, handle)
     }
 
@@ -296,6 +322,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -305,6 +332,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.create_from
      */
     fun createFrom(existing: Mesh?, surface: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndIntArg(createFromBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
@@ -317,6 +345,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.create_from_arrays
      */
     fun createFromArrays(arrays: List<Any?>, primitiveType: Long = 3L) {
+        checkOpen()
         ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, handle, arrays, primitiveType)
     }
 
@@ -327,6 +356,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.create_from_blend_shape
      */
     fun createFromBlendShape(existing: Mesh?, surface: Int, blendShape: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectIntStringArgs(createFromBlendShapeBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, blendShape)
     }
 
@@ -337,6 +367,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.append_from
      */
     fun appendFrom(existing: Mesh?, surface: Int, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectIntTransform3DArgs(appendFromBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, transform)
     }
 
@@ -349,6 +380,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.commit
      */
     fun commit(existing: ArrayMesh? = null, flags: Long = 0L): ArrayMesh? {
+        checkOpen()
         return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(commitBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, flags))
     }
 
@@ -360,6 +392,7 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: SurfaceTool.commit_to_arrays
      */
     fun commitToArrays(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(commitToArraysBind, handle)
     }
 

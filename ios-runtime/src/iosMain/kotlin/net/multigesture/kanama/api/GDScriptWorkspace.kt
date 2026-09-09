@@ -9,22 +9,27 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
     fun getFilePath(uri: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getFilePathBind, handle, uri)
     }
 
     fun getFileUri(path: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getFileUriBind, handle, path)
     }
 
     fun parseScript(path: String, content: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, handle, path, content)
     }
 
     fun parseLocalScript(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(parseLocalScriptBind, handle, path)
     }
 
     fun publishDiagnostics(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(publishDiagnosticsBind, handle, path)
     }
 

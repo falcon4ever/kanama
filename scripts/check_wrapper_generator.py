@@ -488,6 +488,20 @@ def check_ios_policies(output_dir: Path) -> int:
         print("[wrapper_generator] FAIL iOS self-return collapse pattern not emitted "
               "(Resource.duplicate should carry the desktop collapse policy)", file=sys.stderr)
         return 1
+    # Receiver-side use-after-close guard (task 98): the iOS RefCounted must carry checkOpen()
+    # and every RefCounted-derived method body must open with it, on both platforms.
+    if "internal fun checkOpen()" not in rc or "override fun requireOpenHandle()" not in rc:
+        print("[wrapper_generator] FAIL iOS RefCounted lost its checkOpen()/requireOpenHandle() "
+              "custom section (use-after-close would be a native fault again)", file=sys.stderr)
+        return 1
+    if "        checkOpen()\n" not in ios_resource:
+        print("[wrapper_generator] FAIL iOS RefCounted-derived methods no longer emit checkOpen() "
+              "(receiver-side use-after-close guard regressed)", file=sys.stderr)
+        return 1
+    if "        checkOpen()\n" not in resource:
+        print("[wrapper_generator] FAIL desktop RefCounted-derived methods no longer emit checkOpen() "
+              "(receiver-side use-after-close guard regressed)", file=sys.stderr)
+        return 1
 
     collision = _gen_ios(policy_dir, "SceneTree")
     if (policy_dir / "SceneTree.kt").exists():

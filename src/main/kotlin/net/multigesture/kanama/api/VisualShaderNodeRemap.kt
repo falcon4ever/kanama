@@ -15,10 +15,12 @@ class VisualShaderNodeRemap(handle: MemorySegment) : VisualShaderNode(handle) {
         set(value) = setOpType(value)
 
     fun setOpType(opType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, opType)
     }
 
     fun getOpType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
     }
 

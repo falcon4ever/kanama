@@ -63,6 +63,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.allocate
      */
     fun allocate(toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(allocateBind, handle, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
     }
 
@@ -75,6 +76,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_bounds
      */
     fun getBounds(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, handle)
     }
 
@@ -87,6 +89,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_octree_size
      */
     fun getOctreeSize(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getOctreeSizeBind, handle)
     }
 
@@ -96,6 +99,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_to_cell_xform
      */
     fun getToCellXform(): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(getToCellXformBind, handle)
     }
 
@@ -105,6 +109,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_octree_cells
      */
     fun getOctreeCells(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getOctreeCellsBind, handle)
     }
 
@@ -114,6 +119,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_data_cells
      */
     fun getDataCells(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getDataCellsBind, handle)
     }
 
@@ -123,6 +129,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_level_counts
      */
     fun getLevelCounts(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getLevelCountsBind, handle)
     }
 
@@ -135,6 +142,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.set_dynamic_range
      */
     fun setDynamicRange(dynamicRange: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDynamicRangeBind, handle, dynamicRange)
     }
 
@@ -147,6 +155,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_dynamic_range
      */
     fun getDynamicRange(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDynamicRangeBind, handle)
     }
 
@@ -159,6 +168,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.set_energy
      */
     fun setEnergy(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, handle, energy)
     }
 
@@ -171,6 +181,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_energy
      */
     fun getEnergy(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, handle)
     }
 
@@ -183,6 +194,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.set_bias
      */
     fun setBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBiasBind, handle, bias)
     }
 
@@ -195,6 +207,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_bias
      */
     fun getBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, handle)
     }
 
@@ -207,6 +220,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.set_normal_bias
      */
     fun setNormalBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setNormalBiasBind, handle, bias)
     }
 
@@ -219,6 +233,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_normal_bias
      */
     fun getNormalBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getNormalBiasBind, handle)
     }
 
@@ -231,6 +246,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.set_propagation
      */
     fun setPropagation(propagation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPropagationBind, handle, propagation)
     }
 
@@ -243,6 +259,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.get_propagation
      */
     fun getPropagation(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPropagationBind, handle)
     }
 
@@ -254,6 +271,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.set_interior
      */
     fun setInterior(interior: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setInteriorBind, handle, interior)
     }
 
@@ -265,6 +283,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.is_interior
      */
     fun isInterior(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, handle)
     }
 
@@ -277,6 +296,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.set_use_two_bounces
      */
     fun setUseTwoBounces(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseTwoBouncesBind, handle, enable)
     }
 
@@ -289,6 +309,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VoxelGIData.is_using_two_bounces
      */
     fun isUsingTwoBounces(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingTwoBouncesBind, handle)
     }
 

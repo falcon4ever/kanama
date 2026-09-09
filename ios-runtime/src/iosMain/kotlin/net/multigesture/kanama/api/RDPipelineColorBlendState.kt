@@ -33,30 +33,37 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
         get() = getAttachments()
 
     fun setEnableLogicOp(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableLogicOpBind, handle, pMember)
     }
 
     fun getEnableLogicOp(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableLogicOpBind, handle)
     }
 
     fun setLogicOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLogicOpBind, handle, pMember)
     }
 
     fun getLogicOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, handle)
     }
 
     fun setBlendConstant(pMember: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setBlendConstantBind, handle, pMember)
     }
 
     fun getBlendConstant(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getBlendConstantBind, handle)
     }
 
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, handle, RDPipelineColorBlendStateAttachment::fromHandle)
     }
 

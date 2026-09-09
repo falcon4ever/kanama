@@ -48,6 +48,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.set_format_override
      */
     fun setFormatOverride(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, handle, pMember)
     }
 
@@ -59,6 +60,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.get_format_override
      */
     fun getFormatOverride(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, handle)
     }
 
@@ -68,6 +70,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.set_swizzle_r
      */
     fun setSwizzleR(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, handle, pMember)
     }
 
@@ -77,6 +80,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.get_swizzle_r
      */
     fun getSwizzleR(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, handle)
     }
 
@@ -86,6 +90,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.set_swizzle_g
      */
     fun setSwizzleG(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, handle, pMember)
     }
 
@@ -95,6 +100,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.get_swizzle_g
      */
     fun getSwizzleG(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, handle)
     }
 
@@ -104,6 +110,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.set_swizzle_b
      */
     fun setSwizzleB(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, handle, pMember)
     }
 
@@ -113,6 +120,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.get_swizzle_b
      */
     fun getSwizzleB(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, handle)
     }
 
@@ -122,6 +130,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.set_swizzle_a
      */
     fun setSwizzleA(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSwizzleABind, handle, pMember)
     }
 
@@ -131,6 +140,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDTextureView.get_swizzle_a
      */
     fun getSwizzleA(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, handle)
     }
 

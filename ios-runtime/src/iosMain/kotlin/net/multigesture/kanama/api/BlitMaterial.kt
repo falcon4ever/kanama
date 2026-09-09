@@ -16,10 +16,12 @@ class BlitMaterial(handle: MemorySegment) : Material(handle) {
         set(value) = setBlendMode(value)
 
     fun setBlendMode(blendMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
     }
 
     fun getBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
     }
 

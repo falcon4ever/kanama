@@ -28,26 +28,32 @@ open class VisualShaderNodeParameter(handle: MemorySegment) : VisualShaderNode(h
         set(value) = setInstanceIndex(value)
 
     fun setParameterName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setParameterNameBind, handle, name)
     }
 
     fun getParameterName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, handle)
     }
 
     fun setQualifier(qualifier: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setQualifierBind, handle, qualifier)
     }
 
     fun getQualifier(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getQualifierBind, handle)
     }
 
     fun setInstanceIndex(instanceIndex: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInstanceIndexBind, handle, instanceIndex)
     }
 
     fun getInstanceIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInstanceIndexBind, handle)
     }
 

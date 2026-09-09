@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.Transform3D
  */
 class OpenXRSpatialComponentAnchorList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getEntityPose(index: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getEntityPoseBind, handle, index)
     }
 

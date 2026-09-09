@@ -8,10 +8,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class OpenXRSpatialComponentPersistenceList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
     fun getPersistentUuid(index: Long): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(getPersistentUuidBind, handle, index)
     }
 
     fun getPersistentState(index: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getPersistentStateBind, handle, index)
     }
 

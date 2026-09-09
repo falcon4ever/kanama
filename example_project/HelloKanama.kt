@@ -56,6 +56,14 @@ class HelloKanama(val godotObject: MemorySegment) {
     return pingCount
   }
 
+  // task 98 smoke probe: a @RegisterFunction on a @RegisterClass dispatches through the generated
+  // call_/ptrcall_ upcall stubs, which have no bespoke catch. Before structural containment in
+  // Upcalls.stub this exception escaped the FFM upcall and aborted the JVM (and Godot with it).
+  @RegisterFunction
+  fun smokeThrow(): Long {
+    throw IllegalStateException("kanama smoke: deliberate upcall failure")
+  }
+
   @OnReady
   fun ready() {
     System.err.println(

@@ -8,7 +8,6 @@ import java.lang.foreign.ValueLayout.JAVA_BYTE
 import java.lang.foreign.ValueLayout.JAVA_DOUBLE
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
-import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.util.concurrent.ConcurrentHashMap
 import net.multigesture.kanama.api.KanamaCoroutineOwner
@@ -16,6 +15,8 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.GodotStructs
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
+import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.binding.runtime.VariantConverters
 import net.multigesture.kanama.binding.runtime.VariantType
 import net.multigesture.kanama.ffi.GodotFFI
@@ -116,14 +117,11 @@ object ScriptBridge {
 
   private fun buildInfo3(): MemorySegment {
     val struct = GodotFFI.arena.allocate(GodotStructs.scriptInstanceInfo3)
-    val lookup = MethodHandles.lookup()
 
+    // Through Upcalls.stub so every vtable entry gets the structural exception containment
+    // (task 98); the label stays "ScriptBridge.<name>".
     fun stub(name: String, type: MethodType, desc: FunctionDescriptor): MemorySegment =
-      GodotFFI.upcallStub(
-        lookup.findStatic(ScriptBridge::class.java, name, type),
-        desc,
-        "ScriptBridge.$name",
-      )
+      Upcalls.stub(ScriptBridge::class.java, name, type, desc)
 
     // Shared MethodType / FunctionDescriptor constants.
     val voidData = MethodType.methodType(Void.TYPE, MemorySegment::class.java)
@@ -476,6 +474,7 @@ object ScriptBridge {
     rRet: MemorySegment,
     rError: MemorySegment,
   ) {
+    ThreadDiagnostics.noteCallback("ScriptBridge.siCall")
     val methodLong = method.reinterpret(8).get(JAVA_LONG, 0)
     val instance = si(data)
     val handled =

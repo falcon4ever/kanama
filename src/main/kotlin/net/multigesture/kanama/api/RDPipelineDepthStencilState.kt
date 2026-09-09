@@ -145,6 +145,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_depth_test
      */
     fun setEnableDepthTest(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthTestBind, handle, pMember)
     }
 
@@ -157,6 +158,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_depth_test
      */
     fun getEnableDepthTest(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthTestBind, handle)
     }
 
@@ -167,6 +169,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_depth_write
      */
     fun setEnableDepthWrite(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthWriteBind, handle, pMember)
     }
 
@@ -177,6 +180,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_depth_write
      */
     fun getEnableDepthWrite(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthWriteBind, handle)
     }
 
@@ -186,6 +190,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_depth_compare_operator
      */
     fun setDepthCompareOperator(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setDepthCompareOperatorBind, handle, pMember)
     }
 
@@ -195,6 +200,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_depth_compare_operator
      */
     fun getDepthCompareOperator(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDepthCompareOperatorBind, handle)
     }
 
@@ -205,6 +211,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_depth_range
      */
     fun setEnableDepthRange(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableDepthRangeBind, handle, pMember)
     }
 
@@ -215,6 +222,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_depth_range
      */
     fun getEnableDepthRange(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthRangeBind, handle)
     }
 
@@ -224,6 +232,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_depth_range_min
      */
     fun setDepthRangeMin(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMinBind, handle, pMember)
     }
 
@@ -233,6 +242,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_depth_range_min
      */
     fun getDepthRangeMin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMinBind, handle)
     }
 
@@ -242,6 +252,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_depth_range_max
      */
     fun setDepthRangeMax(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMaxBind, handle, pMember)
     }
 
@@ -251,6 +262,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_depth_range_max
      */
     fun getDepthRangeMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMaxBind, handle)
     }
 
@@ -262,6 +274,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_enable_stencil
      */
     fun setEnableStencil(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableStencilBind, handle, pMember)
     }
 
@@ -273,6 +286,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_enable_stencil
      */
     fun getEnableStencil(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableStencilBind, handle)
     }
 
@@ -282,6 +296,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_fail
      */
     fun setFrontOpFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpFailBind, handle, pMember)
     }
 
@@ -291,6 +306,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_fail
      */
     fun getFrontOpFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpFailBind, handle)
     }
 
@@ -300,6 +316,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_pass
      */
     fun setFrontOpPass(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpPassBind, handle, pMember)
     }
 
@@ -309,6 +326,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_pass
      */
     fun getFrontOpPass(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpPassBind, handle)
     }
 
@@ -319,6 +337,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_depth_fail
      */
     fun setFrontOpDepthFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpDepthFailBind, handle, pMember)
     }
 
@@ -329,6 +348,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_depth_fail
      */
     fun getFrontOpDepthFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpDepthFailBind, handle)
     }
 
@@ -338,6 +358,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_compare
      */
     fun setFrontOpCompare(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFrontOpCompareBind, handle, pMember)
     }
 
@@ -347,6 +368,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_compare
      */
     fun getFrontOpCompare(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpCompareBind, handle)
     }
 
@@ -356,6 +378,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_compare_mask
      */
     fun setFrontOpCompareMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpCompareMaskBind, handle, pMember)
     }
 
@@ -365,6 +388,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_compare_mask
      */
     fun getFrontOpCompareMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpCompareMaskBind, handle)
     }
 
@@ -374,6 +398,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_write_mask
      */
     fun setFrontOpWriteMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpWriteMaskBind, handle, pMember)
     }
 
@@ -383,6 +408,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_write_mask
      */
     fun getFrontOpWriteMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpWriteMaskBind, handle)
     }
 
@@ -392,6 +418,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_reference
      */
     fun setFrontOpReference(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setFrontOpReferenceBind, handle, pMember)
     }
 
@@ -401,6 +428,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_reference
      */
     fun getFrontOpReference(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpReferenceBind, handle)
     }
 
@@ -410,6 +438,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_fail
      */
     fun setBackOpFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpFailBind, handle, pMember)
     }
 
@@ -419,6 +448,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_fail
      */
     fun getBackOpFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpFailBind, handle)
     }
 
@@ -428,6 +458,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_pass
      */
     fun setBackOpPass(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpPassBind, handle, pMember)
     }
 
@@ -437,6 +468,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_pass
      */
     fun getBackOpPass(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpPassBind, handle)
     }
 
@@ -447,6 +479,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_depth_fail
      */
     fun setBackOpDepthFail(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpDepthFailBind, handle, pMember)
     }
 
@@ -457,6 +490,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_depth_fail
      */
     fun getBackOpDepthFail(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpDepthFailBind, handle)
     }
 
@@ -466,6 +500,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_compare
      */
     fun setBackOpCompare(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBackOpCompareBind, handle, pMember)
     }
 
@@ -475,6 +510,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_compare
      */
     fun getBackOpCompare(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBackOpCompareBind, handle)
     }
 
@@ -484,6 +520,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_compare_mask
      */
     fun setBackOpCompareMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpCompareMaskBind, handle, pMember)
     }
 
@@ -493,6 +530,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_compare_mask
      */
     fun getBackOpCompareMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpCompareMaskBind, handle)
     }
 
@@ -502,6 +540,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_write_mask
      */
     fun setBackOpWriteMask(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpWriteMaskBind, handle, pMember)
     }
 
@@ -511,6 +550,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_write_mask
      */
     fun getBackOpWriteMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpWriteMaskBind, handle)
     }
 
@@ -520,6 +560,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_reference
      */
     fun setBackOpReference(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setBackOpReferenceBind, handle, pMember)
     }
 
@@ -529,6 +570,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_reference
      */
     fun getBackOpReference(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpReferenceBind, handle)
     }
 

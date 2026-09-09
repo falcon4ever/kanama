@@ -33,46 +33,57 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         set(value) = setGodotBoneNode(value)
 
     fun getJoints(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
     }
 
     fun setJoints(joints: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, handle, joints)
     }
 
     fun getRoots(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
     }
 
     fun setRoots(roots: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, handle, roots)
     }
 
     fun getGodotSkeleton(): Skeleton3D? {
+        checkOpen()
         return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkeletonBind, handle))
     }
 
     fun getUniqueNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
     }
 
     fun setUniqueNames(uniqueNames: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, handle, uniqueNames)
     }
 
     fun getGodotBoneNode(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getGodotBoneNodeBind, handle)
     }
 
     fun setGodotBoneNode(godotBoneNode: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setGodotBoneNodeBind, handle, godotBoneNode)
     }
 
     fun getBoneAttachmentCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBoneAttachmentCountBind, handle)
     }
 
     fun getBoneAttachment(idx: Int): BoneAttachment3D? {
+        checkOpen()
         return BoneAttachment3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBoneAttachmentBind, handle, idx))
     }
 

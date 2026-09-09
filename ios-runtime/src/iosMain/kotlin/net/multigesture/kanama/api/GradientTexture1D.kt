@@ -22,22 +22,27 @@ class GradientTexture1D(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setUseHdr(value)
 
     fun setGradient(gradient: Gradient?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getGradient(): Gradient? {
+        checkOpen()
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
     }
 
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
     fun setUseHdr(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, handle, enabled)
     }
 
     fun isUsingHdr(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, handle)
     }
 

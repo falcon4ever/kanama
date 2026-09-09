@@ -9,22 +9,27 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback(handle) {
     fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: Long = 0L, bus: String = "Master"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, fromOffset, volumeDb, pitchScale, playbackType, bus)
     }
 
     fun setStreamVolume(stream: Long, volumeDb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamVolumeBind, handle, stream, volumeDb)
     }
 
     fun setStreamPitchScale(stream: Long, pitchScale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamPitchScaleBind, handle, stream, pitchScale)
     }
 
     fun isStreamPlaying(stream: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isStreamPlayingBind, handle, stream)
     }
 
     fun stopStream(stream: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(stopStreamBind, handle, stream)
     }
 

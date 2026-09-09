@@ -17,6 +17,7 @@ open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectEQ.set_band_gain_db
      */
     fun setBandGainDb(bandIdx: Int, volumeDb: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBandGainDbBind, handle, bandIdx, volumeDb)
     }
 
@@ -26,6 +27,7 @@ open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectEQ.get_band_gain_db
      */
     fun getBandGainDb(bandIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getBandGainDbBind, handle, bandIdx)
     }
 
@@ -35,6 +37,7 @@ open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectEQ.get_band_count
      */
     fun getBandCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBandCountBind, handle)
     }
 

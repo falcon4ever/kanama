@@ -17,6 +17,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_position
      */
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
@@ -26,6 +27,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_normal
      */
     fun getNormal(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, handle)
     }
 
@@ -35,6 +37,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_travel
      */
     fun getTravel(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getTravelBind, handle)
     }
 
@@ -44,6 +47,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_remainder
      */
     fun getRemainder(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRemainderBind, handle)
     }
 
@@ -54,6 +58,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_angle
      */
     fun getAngle(upDirection: Vector2): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetDouble(getAngleBind, handle, upDirection)
     }
 
@@ -63,6 +68,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_depth
      */
     fun getDepth(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
     }
 
@@ -72,6 +78,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_local_shape
      */
     fun getLocalShape(): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalShapeBind, handle))
     }
 
@@ -81,6 +88,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_collider
      */
     fun getCollider(): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, handle))
     }
 
@@ -91,6 +99,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_collider_id
      */
     fun getColliderId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getColliderIdBind, handle)
     }
 
@@ -100,6 +109,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_collider_rid
      */
     fun getColliderRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, handle)
     }
 
@@ -109,6 +119,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_collider_shape
      */
     fun getColliderShape(): GodotObject? {
+        checkOpen()
         return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderShapeBind, handle))
     }
 
@@ -118,6 +129,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_collider_shape_index
      */
     fun getColliderShapeIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeIndexBind, handle)
     }
 
@@ -127,6 +139,7 @@ class KinematicCollision2D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: KinematicCollision2D.get_collider_velocity
      */
     fun getColliderVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getColliderVelocityBind, handle)
     }
 

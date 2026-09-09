@@ -40,46 +40,57 @@ class GLTFCamera(handle: MemorySegment) : Resource(handle) {
         set(value) = setDepthNear(value)
 
     fun toNode(): Camera3D? {
+        checkOpen()
         return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
     }
 
     fun getPerspective(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPerspectiveBind, handle)
     }
 
     fun setPerspective(perspective: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPerspectiveBind, handle, perspective)
     }
 
     fun getFov(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, handle)
     }
 
     fun setFov(fov: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFovBind, handle, fov)
     }
 
     fun getSizeMag(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSizeMagBind, handle)
     }
 
     fun setSizeMag(sizeMag: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSizeMagBind, handle, sizeMag)
     }
 
     fun getDepthFar(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthFarBind, handle)
     }
 
     fun setDepthFar(zdepthFar: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthFarBind, handle, zdepthFar)
     }
 
     fun getDepthNear(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDepthNearBind, handle)
     }
 
     fun setDepthNear(zdepthNear: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDepthNearBind, handle, zdepthNear)
     }
 

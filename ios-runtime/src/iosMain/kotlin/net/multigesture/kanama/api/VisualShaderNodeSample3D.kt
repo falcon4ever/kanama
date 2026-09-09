@@ -16,10 +16,12 @@ open class VisualShaderNodeSample3D(handle: MemorySegment) : VisualShaderNode(ha
         set(value) = setSource(value)
 
     fun setSource(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSourceBind, handle, value)
     }
 
     fun getSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, handle)
     }
 

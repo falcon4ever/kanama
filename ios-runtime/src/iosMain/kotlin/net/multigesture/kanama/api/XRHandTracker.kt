@@ -24,58 +24,72 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
         set(value) = setHandTrackingSource(value)
 
     fun setHasTrackingData(hasData: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
     }
 
     fun getHasTrackingData(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
     }
 
     fun setHandTrackingSource(source: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, handle, source)
     }
 
     fun getHandTrackingSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, handle)
     }
 
     fun setHandJointFlags(joint: Long, flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, handle, joint, flags)
     }
 
     fun getHandJointFlags(joint: Long): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, handle, joint)
     }
 
     fun setHandJointTransform(joint: Long, transform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, handle, joint, transform)
     }
 
     fun getHandJointTransform(joint: Long): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, handle, joint)
     }
 
     fun setHandJointRadius(joint: Long, radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, handle, joint, radius)
     }
 
     fun getHandJointRadius(joint: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, handle, joint)
     }
 
     fun setHandJointLinearVelocity(joint: Long, linearVelocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, handle, joint, linearVelocity)
     }
 
     fun getHandJointLinearVelocity(joint: Long): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, handle, joint)
     }
 
     fun setHandJointAngularVelocity(joint: Long, angularVelocity: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, handle, joint, angularVelocity)
     }
 
     fun getHandJointAngularVelocity(joint: Long): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, handle, joint)
     }
 

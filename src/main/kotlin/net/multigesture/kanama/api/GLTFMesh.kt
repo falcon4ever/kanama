@@ -33,42 +33,52 @@ class GLTFMesh(handle: MemorySegment) : Resource(handle) {
         set(value) = setInstanceMaterials(value)
 
     fun getOriginalName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, handle)
     }
 
     fun setOriginalName(originalName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, handle, originalName)
     }
 
     fun getMesh(): ImporterMesh? {
+        checkOpen()
         return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
     fun setMesh(mesh: ImporterMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getBlendWeights(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendWeightsBind, handle)
     }
 
     fun setBlendWeights(blendWeights: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendWeightsBind, handle, blendWeights)
     }
 
     fun getInstanceMaterials(): List<Material> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedMaterialList(getInstanceMaterialsBind, handle)
     }
 
     fun setInstanceMaterials(instanceMaterials: List<Material>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedMaterialListArg(setInstanceMaterialsBind, handle, instanceMaterials)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
     }
 

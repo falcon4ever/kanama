@@ -16,26 +16,32 @@ open class Script(handle: MemorySegment) : Resource(handle) {
         set(value) = setSourceCode(value)
 
     fun canInstantiate(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, handle)
     }
 
     fun hasSourceCode(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasSourceCodeBind, handle)
     }
 
     fun getSourceCode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSourceCodeBind, handle)
     }
 
     fun setSourceCode(source: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setSourceCodeBind, handle, source)
     }
 
     fun reload(keepState: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetLong(reloadBind, handle, keepState)
     }
 
     fun getBaseScript(): Script? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseScriptBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -45,38 +51,47 @@ open class Script(handle: MemorySegment) : Resource(handle) {
     }
 
     fun getInstanceBaseType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getInstanceBaseTypeBind, handle)
     }
 
     fun getGlobalName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getGlobalNameBind, handle)
     }
 
     fun hasScriptMethod(methodName: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptMethodBind, handle, methodName)
     }
 
     fun hasScriptSignal(signalName: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptSignalBind, handle, signalName)
     }
 
     fun getPropertyDefaultValue(property: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getPropertyDefaultValueBind, handle, property)
     }
 
     fun isTool(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isToolBind, handle)
     }
 
     fun isAbstract(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAbstractBind, handle)
     }
 
     fun getRpcConfig(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRpcConfigBind, handle)
     }
 
     fun instanceHas(baseObject: GodotObject): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetBool(instanceHasBind, handle, baseObject.handle)
     }
 

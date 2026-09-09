@@ -28,26 +28,32 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
         set(value) = setMidHeight(value)
 
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 
     fun setMidHeight(midHeight: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, handle, midHeight)
     }
 
     fun getMidHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, handle)
     }
 

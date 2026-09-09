@@ -107,6 +107,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_mag_filter
      */
     fun setMagFilter(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMagFilterBind, handle, pMember)
     }
 
@@ -117,6 +118,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_mag_filter
      */
     fun getMagFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, handle)
     }
 
@@ -127,6 +129,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_min_filter
      */
     fun setMinFilter(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMinFilterBind, handle, pMember)
     }
 
@@ -137,6 +140,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_min_filter
      */
     fun getMinFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, handle)
     }
 
@@ -146,6 +150,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_mip_filter
      */
     fun setMipFilter(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMipFilterBind, handle, pMember)
     }
 
@@ -155,6 +160,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_mip_filter
      */
     fun getMipFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, handle)
     }
 
@@ -165,6 +171,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_repeat_u
      */
     fun setRepeatU(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatUBind, handle, pMember)
     }
 
@@ -175,6 +182,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_repeat_u
      */
     fun getRepeatU(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, handle)
     }
 
@@ -185,6 +193,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_repeat_v
      */
     fun setRepeatV(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatVBind, handle, pMember)
     }
 
@@ -195,6 +204,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_repeat_v
      */
     fun getRepeatV(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, handle)
     }
 
@@ -205,6 +215,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_repeat_w
      */
     fun setRepeatW(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatWBind, handle, pMember)
     }
 
@@ -215,6 +226,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_repeat_w
      */
     fun getRepeatW(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, handle)
     }
 
@@ -227,6 +239,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_lod_bias
      */
     fun setLodBias(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, handle, pMember)
     }
 
@@ -239,6 +252,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_lod_bias
      */
     fun getLodBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, handle)
     }
 
@@ -248,6 +262,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_use_anisotropy
      */
     fun setUseAnisotropy(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseAnisotropyBind, handle, pMember)
     }
 
@@ -257,6 +272,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_use_anisotropy
      */
     fun getUseAnisotropy(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseAnisotropyBind, handle)
     }
 
@@ -270,6 +286,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_anisotropy_max
      */
     fun setAnisotropyMax(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAnisotropyMaxBind, handle, pMember)
     }
 
@@ -283,6 +300,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_anisotropy_max
      */
     fun getAnisotropyMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyMaxBind, handle)
     }
 
@@ -295,6 +313,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_enable_compare
      */
     fun setEnableCompare(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnableCompareBind, handle, pMember)
     }
 
@@ -307,6 +326,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_enable_compare
      */
     fun getEnableCompare(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnableCompareBind, handle)
     }
 
@@ -316,6 +336,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_compare_op
      */
     fun setCompareOp(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCompareOpBind, handle, pMember)
     }
 
@@ -325,6 +346,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_compare_op
      */
     fun getCompareOp(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, handle)
     }
 
@@ -335,6 +357,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_min_lod
      */
     fun setMinLod(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMinLodBind, handle, pMember)
     }
 
@@ -345,6 +368,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_min_lod
      */
     fun getMinLod(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMinLodBind, handle)
     }
 
@@ -355,6 +379,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_max_lod
      */
     fun setMaxLod(pMember: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMaxLodBind, handle, pMember)
     }
 
@@ -365,6 +390,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_max_lod
      */
     fun getMaxLod(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMaxLodBind, handle)
     }
 
@@ -375,6 +401,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_border_color
      */
     fun setBorderColor(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setBorderColorBind, handle, pMember)
     }
 
@@ -385,6 +412,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_border_color
      */
     fun getBorderColor(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, handle)
     }
 
@@ -395,6 +423,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.set_unnormalized_uvw
      */
     fun setUnnormalizedUvw(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUnnormalizedUvwBind, handle, pMember)
     }
 
@@ -405,6 +434,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: RDSamplerState.get_unnormalized_uvw
      */
     fun getUnnormalizedUvw(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUnnormalizedUvwBind, handle)
     }
 

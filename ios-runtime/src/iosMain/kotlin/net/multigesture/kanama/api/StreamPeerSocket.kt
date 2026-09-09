@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
     fun disconnectFromHost() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, handle)
     }
 

@@ -266,6 +266,46 @@ To reference another Kanama script type (e.g. `var target: Vehicle?`), both
 classes must be in the same project and the referenced class must be
 `@GlobalClass`. See [Calling Godot APIs — Global Classes](godot-api.md#global-classes).
 
+## Threads
+
+Godot calls into Kanama on whichever thread made the call, and Kanama runs it
+there. For the scene tree that is the engine's main thread: every callback a
+script receives — `@OnReady`, `@OnProcess`, `@OnPhysicsProcess`,
+`@RegisterFunction` calls from GDScript, signal callbacks, `@OverrideVirtual` —
+arrives on the main thread, `initialize` ran there, and `MainThread.post` /
+`KanamaScope` (`KanamaDispatchers.Main`) drain their queues there once per frame.
+That is also the rule for your own threads: **hand results back to the main
+thread** with `MainThread.post` or a `kanamaScope` coroutine before touching a
+node (see [Kotlin Style → Coroutines](style-guide.md#coroutines)).
+
+Kanama performs **no thread-affinity checks**. A wrapper method called from a
+`Dispatchers.Default` coroutine or a `Thread` you started ptrcalls the engine
+from that thread, exactly as a GDScript `Thread` would; whether that is safe is
+Godot's rule for the API in question (the servers and `ResourceLoader` are
+thread-safe, the scene tree is not), and nothing in Kanama will stop you.
+
+`ResourceLoader.load_threaded_request("res://Thing.kt")` is the case where the
+engine itself leaves the main thread: it runs Kanama's `.kt` loader on a worker
+thread. The loader is written for that — its per-thread state is `ThreadLocal`,
+its script catalog is synchronized, and its create-and-attach path only assumes
+that creation and attach happen on the *same* thread, which Godot guarantees
+because `_instance_create` is synchronous. The consequence for **your** code is
+that a `@ScriptClass` constructor or `init` block reached through such a load
+runs on that worker too. Keep constructors free of scene-tree access and do that
+work in `@OnReady`, which is always dispatched on the main thread.
+
+To see whether a callback is arriving off the initialize thread, run with
+`KANAMA_THREAD_DIAGNOSTICS=1`. Kanama then logs, **once per site**, when
+`ScriptBridge.siCall` (script method dispatch) or the `.kt` loader's `_load` runs
+on a thread other than the one that ran `initialize`:
+
+```
+[kanama:thread] KanamaResourceFormatLoader.callLoad ran on thread id=41 name=..., not the initialize thread (...)
+```
+
+It is a diagnostic, not an assertion — nothing is refused — and with the
+variable unset it costs one boolean read per call.
+
 ## Known Gotchas
 
 - **Registered methods have no default arguments from Godot's side.** If a

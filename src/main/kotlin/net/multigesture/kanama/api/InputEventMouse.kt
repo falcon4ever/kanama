@@ -36,6 +36,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      * Generated from Godot docs: InputEventMouse.set_button_mask
      */
     fun setButtonMask(buttonMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, handle, buttonMask)
     }
 
@@ -46,6 +47,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      * Generated from Godot docs: InputEventMouse.get_button_mask
      */
     fun getButtonMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, handle)
     }
 
@@ -58,6 +60,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      * Generated from Godot docs: InputEventMouse.set_position
      */
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
@@ -70,6 +73,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      * Generated from Godot docs: InputEventMouse.get_position
      */
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
@@ -82,6 +86,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      * Generated from Godot docs: InputEventMouse.set_global_position
      */
     fun setGlobalPosition(globalPosition: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, handle, globalPosition)
     }
 
@@ -94,6 +99,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      * Generated from Godot docs: InputEventMouse.get_global_position
      */
     fun getGlobalPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, handle)
     }
 

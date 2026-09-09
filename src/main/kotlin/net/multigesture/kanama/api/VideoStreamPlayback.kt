@@ -17,6 +17,7 @@ class VideoStreamPlayback(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: VideoStreamPlayback.mix_audio
      */
     fun mixAudio(numFrames: Int, buffer: List<Float>, offset: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(mixAudioBind, handle, numFrames, buffer, offset)
     }
 

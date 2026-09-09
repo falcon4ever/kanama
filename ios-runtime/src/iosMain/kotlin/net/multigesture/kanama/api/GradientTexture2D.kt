@@ -47,58 +47,72 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setRepeat(value)
 
     fun setGradient(gradient: Gradient?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getGradient(): Gradient? {
+        checkOpen()
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
     }
 
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
     fun setHeight(height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
     }
 
     fun setUseHdr(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, handle, enabled)
     }
 
     fun isUsingHdr(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, handle)
     }
 
     fun setFill(fill: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFillBind, handle, fill)
     }
 
     fun getFill(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFillBind, handle)
     }
 
     fun setFillFrom(fillFrom: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setFillFromBind, handle, fillFrom)
     }
 
     fun getFillFrom(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getFillFromBind, handle)
     }
 
     fun setFillTo(fillTo: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setFillToBind, handle, fillTo)
     }
 
     fun getFillTo(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getFillToBind, handle)
     }
 
     fun setRepeat(repeat: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRepeatBind, handle, repeat)
     }
 
     fun getRepeat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, handle)
     }
 

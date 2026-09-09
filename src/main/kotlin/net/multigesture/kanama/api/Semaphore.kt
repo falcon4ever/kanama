@@ -10,6 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class Semaphore(handle: MemorySegment) : RefCounted(handle) {
     fun waitBlocking() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(waitBlockingBind, handle)
     }
 
@@ -20,6 +21,7 @@ class Semaphore(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Semaphore.try_wait
      */
     fun tryWait(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(tryWaitBind, handle)
     }
 
@@ -29,6 +31,7 @@ class Semaphore(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Semaphore.post
      */
     fun post(count: Int = 1) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(postBind, handle, count)
     }
 

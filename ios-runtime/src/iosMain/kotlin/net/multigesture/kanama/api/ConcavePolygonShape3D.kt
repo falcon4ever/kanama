@@ -16,10 +16,12 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
         set(value) = setBackfaceCollisionEnabled(value)
 
     fun setBackfaceCollisionEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBackfaceCollisionEnabledBind, handle, enabled)
     }
 
     fun isBackfaceCollisionEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBackfaceCollisionEnabledBind, handle)
     }
 

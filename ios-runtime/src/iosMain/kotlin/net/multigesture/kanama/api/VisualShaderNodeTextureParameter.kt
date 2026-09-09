@@ -40,42 +40,52 @@ open class VisualShaderNodeTextureParameter(handle: MemorySegment) : VisualShade
         set(value) = setTextureSource(value)
 
     fun setTextureType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, type)
     }
 
     fun getTextureType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
     }
 
     fun setColorDefault(color: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setColorDefaultBind, handle, color)
     }
 
     fun getColorDefault(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getColorDefaultBind, handle)
     }
 
     fun setTextureFilter(filter: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, filter)
     }
 
     fun getTextureFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
     }
 
     fun setTextureRepeat(repeat: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, handle, repeat)
     }
 
     fun getTextureRepeat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, handle)
     }
 
     fun setTextureSource(source: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureSourceBind, handle, source)
     }
 
     fun getTextureSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureSourceBind, handle)
     }
 

@@ -10,42 +10,52 @@ import net.multigesture.kanama.types.Vector2i
  */
 class BitMap(handle: MemorySegment) : Resource(handle) {
     fun create(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(createBind, handle, size)
     }
 
     fun createFromImageAlpha(image: Image?, threshold: Double = 0.1) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, threshold)
     }
 
     fun setBitv(position: Vector2i, bit: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndBoolArg(setBitvBind, handle, position, bit)
     }
 
     fun setBit(x: Int, y: Int, bit: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setBitBind, handle, x, y, bit)
     }
 
     fun getBitv(position: Vector2i): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetBool(getBitvBind, handle, position)
     }
 
     fun getBit(x: Int, y: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getBitBind, handle, x, y)
     }
 
     fun getTrueBitCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTrueBitCountBind, handle)
     }
 
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
     fun resize(newSize: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(resizeBind, handle, newSize)
     }
 
     fun convertToImage(): Image? {
+        checkOpen()
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, handle))
     }
 

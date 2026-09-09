@@ -34,6 +34,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.set_input_count
      */
     fun setInputCount(inputCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInputCountBind, handle, inputCount)
     }
 
@@ -45,6 +46,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.set_input_as_auto_advance
      */
     fun setInputAsAutoAdvance(input: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputAsAutoAdvanceBind, handle, input, enable)
     }
 
@@ -54,6 +56,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.is_input_set_as_auto_advance
      */
     fun isInputSetAsAutoAdvance(input: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputSetAsAutoAdvanceBind, handle, input)
     }
 
@@ -64,6 +67,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.set_input_break_loop_at_end
      */
     fun setInputBreakLoopAtEnd(input: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputBreakLoopAtEndBind, handle, input, enable)
     }
 
@@ -73,6 +77,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.is_input_loop_broken_at_end
      */
     fun isInputLoopBrokenAtEnd(input: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputLoopBrokenAtEndBind, handle, input)
     }
 
@@ -82,6 +87,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.set_input_reset
      */
     fun setInputReset(input: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setInputResetBind, handle, input, enable)
     }
 
@@ -91,6 +97,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.is_input_reset
      */
     fun isInputReset(input: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isInputResetBind, handle, input)
     }
 
@@ -104,6 +111,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.set_xfade_time
      */
     fun setXfadeTime(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, time)
     }
 
@@ -117,6 +125,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.get_xfade_time
      */
     fun getXfadeTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
     }
 
@@ -127,6 +136,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.set_xfade_curve
      */
     fun setXfadeCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -137,6 +147,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.get_xfade_curve
      */
     fun getXfadeCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
     }
 
@@ -147,6 +158,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.set_allow_transition_to_self
      */
     fun setAllowTransitionToSelf(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, handle, enable)
     }
 
@@ -157,6 +169,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      * Generated from Godot docs: AnimationNodeTransition.is_allow_transition_to_self
      */
     fun isAllowTransitionToSelf(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, handle)
     }
 

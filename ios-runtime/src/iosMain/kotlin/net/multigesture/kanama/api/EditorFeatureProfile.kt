@@ -9,42 +9,52 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
     fun setDisableClass(className: String, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassBind, handle, className, disable)
     }
 
     fun isClassDisabled(className: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassDisabledBind, handle, className)
     }
 
     fun setDisableClassEditor(className: String, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassEditorBind, handle, className, disable)
     }
 
     fun isClassEditorDisabled(className: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassEditorDisabledBind, handle, className)
     }
 
     fun setDisableClassProperty(className: String, property: String, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameAndBoolArgs(setDisableClassPropertyBind, handle, className, property, disable)
     }
 
     fun isClassPropertyDisabled(className: String, property: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isClassPropertyDisabledBind, handle, className, property)
     }
 
     fun setDisableFeature(feature: Long, disable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndBoolArgs(setDisableFeatureBind, handle, feature, disable)
     }
 
     fun isFeatureDisabled(feature: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isFeatureDisabledBind, handle, feature)
     }
 
     fun saveToFile(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveToFileBind, handle, path)
     }
 
     fun loadFromFile(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, handle, path)
     }
 

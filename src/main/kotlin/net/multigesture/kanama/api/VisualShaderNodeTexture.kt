@@ -27,26 +27,32 @@ class VisualShaderNodeTexture(handle: MemorySegment) : VisualShaderNode(handle) 
         set(value) = setTextureType(value)
 
     fun setSource(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSourceBind, handle, value)
     }
 
     fun getSource(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, handle)
     }
 
     fun setTexture(value: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
     }
 
     fun setTextureType(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, value)
     }
 
     fun getTextureType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
     }
 

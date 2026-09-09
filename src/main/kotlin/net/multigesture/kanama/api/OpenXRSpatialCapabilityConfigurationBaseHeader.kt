@@ -8,10 +8,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: MemorySegment) : RefCounted(handle) {
     fun hasValidConfiguration(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasValidConfigurationBind, handle)
     }
 
     fun getConfiguration(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getConfigurationBind, handle)
     }
 

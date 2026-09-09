@@ -15,6 +15,7 @@ class JavaObject(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: JavaObject.get_java_class
      */
     fun getJavaClass(): JavaClass? {
+        checkOpen()
         return JavaClass.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, handle))
     }
 
@@ -24,6 +25,7 @@ class JavaObject(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: JavaObject.has_java_method
      */
     fun hasJavaMethod(method: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
     }
 

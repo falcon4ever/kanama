@@ -53,64 +53,79 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setHitBackFaces(value)
 
     fun setFrom(from: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setFromBind, handle, from)
     }
 
     fun getFrom(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getFromBind, handle)
     }
 
     fun setTo(to: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setToBind, handle, to)
     }
 
     fun getTo(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getToBind, handle)
     }
 
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 
     fun setHitFromInside(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
     }
 
     fun isHitFromInsideEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
     }
 
     fun setHitBackFaces(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, handle, enable)
     }
 
     fun isHitBackFacesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, handle)
     }
 
     // The RID list excluded from collisions (e.g. the caster's own body). Marshalled to a Godot
     // Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
     fun setExclude(exclude: List<net.multigesture.kanama.types.RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 

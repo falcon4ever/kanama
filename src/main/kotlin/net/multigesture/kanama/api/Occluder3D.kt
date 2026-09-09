@@ -16,6 +16,7 @@ open class Occluder3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Occluder3D.get_vertices
      */
     fun getVertices(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
     }
 
@@ -25,6 +26,7 @@ open class Occluder3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Occluder3D.get_indices
      */
     fun getIndices(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
     }
 

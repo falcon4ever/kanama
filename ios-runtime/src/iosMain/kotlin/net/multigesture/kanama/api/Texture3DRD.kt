@@ -17,10 +17,12 @@ class Texture3DRD(handle: MemorySegment) : Texture3D(handle) {
         set(value) = setTextureRdRid(value)
 
     fun setTextureRdRid(textureRdRid: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setTextureRdRidBind, handle, textureRdRid)
     }
 
     fun getTextureRdRid(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getTextureRdRidBind, handle)
     }
 

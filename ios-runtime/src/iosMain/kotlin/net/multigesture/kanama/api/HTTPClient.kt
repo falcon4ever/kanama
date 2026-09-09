@@ -28,70 +28,87 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setReadChunkSize(value)
 
     fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(connectToHostBind, handle, host, port, tlsOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setConnection(connection: StreamPeer?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setConnectionBind, handle, listOf(connection?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getConnection(): StreamPeer? {
+        checkOpen()
         return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, handle))
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
     fun hasResponse(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasResponseBind, handle)
     }
 
     fun isResponseChunked(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isResponseChunkedBind, handle)
     }
 
     fun getResponseCode(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getResponseCodeBind, handle)
     }
 
     fun getResponseHeaders(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResponseHeadersBind, handle)
     }
 
     fun getResponseBodyLength(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getResponseBodyLengthBind, handle)
     }
 
     fun setReadChunkSize(bytes: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setReadChunkSizeBind, handle, bytes)
     }
 
     fun getReadChunkSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getReadChunkSizeBind, handle)
     }
 
     fun setBlockingMode(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBlockingModeBind, handle, enabled)
     }
 
     fun isBlockingModeEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBlockingModeEnabledBind, handle)
     }
 
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
     fun poll(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
     }
 
     fun setHttpProxy(host: String, port: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, handle, host, port)
     }
 
     fun setHttpsProxy(host: String, port: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, handle, host, port)
     }
 

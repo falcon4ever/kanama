@@ -16,10 +16,12 @@ class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setTimeLeft(value)
 
     fun setTimeLeft(time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, handle, time)
     }
 
     fun getTimeLeft(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, handle)
     }
 

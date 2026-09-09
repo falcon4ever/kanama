@@ -17,6 +17,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.create_item
      */
     fun createItem(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(createItemBind, handle, id)
     }
 
@@ -27,6 +28,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_name
      */
     fun setItemName(id: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, handle, id, name)
     }
 
@@ -36,6 +38,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_mesh
      */
     fun setItemMesh(id: Int, mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, handle, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -45,6 +48,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_mesh_transform
      */
     fun setItemMeshTransform(id: Int, meshTransform: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, handle, id, meshTransform)
     }
 
@@ -54,6 +58,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_mesh_cast_shadow
      */
     fun setItemMeshCastShadow(id: Int, shadowCastingSetting: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, handle, id, shadowCastingSetting)
     }
 
@@ -63,6 +68,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_navigation_mesh
      */
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, handle, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -72,6 +78,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_navigation_mesh_transform
      */
     fun setItemNavigationMeshTransform(id: Int, navigationMesh: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, handle, id, navigationMesh)
     }
 
@@ -81,6 +88,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_navigation_layers
      */
     fun setItemNavigationLayers(id: Int, navigationLayers: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, handle, id, navigationLayers)
     }
 
@@ -92,6 +100,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_shapes
      */
     fun setItemShapes(id: Int, shapes: List<Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, handle, id, shapes)
     }
 
@@ -101,6 +110,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.set_item_preview
      */
     fun setItemPreview(id: Int, texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, handle, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -110,6 +120,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_name
      */
     fun getItemName(id: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, handle, id)
     }
 
@@ -119,6 +130,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_mesh
      */
     fun getItemMesh(id: Int): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, handle, id))
     }
 
@@ -128,6 +140,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_mesh_transform
      */
     fun getItemMeshTransform(id: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, handle, id)
     }
 
@@ -137,6 +150,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_mesh_cast_shadow
      */
     fun getItemMeshCastShadow(id: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, handle, id)
     }
 
@@ -146,6 +160,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_navigation_mesh
      */
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
+        checkOpen()
         return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, handle, id))
     }
 
@@ -155,6 +170,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_navigation_mesh_transform
      */
     fun getItemNavigationMeshTransform(id: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, handle, id)
     }
 
@@ -164,6 +180,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_navigation_layers
      */
     fun getItemNavigationLayers(id: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, handle, id)
     }
 
@@ -174,6 +191,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_shapes
      */
     fun getItemShapes(id: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, handle, id)
     }
 
@@ -186,6 +204,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_preview
      */
     fun getItemPreview(id: Int): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, handle, id))
     }
 
@@ -195,6 +214,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.remove_item
      */
     fun removeItem(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, id)
     }
 
@@ -204,6 +224,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.find_item_by_name
      */
     fun findItemByName(name: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, handle, name)
     }
 
@@ -213,6 +234,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -222,6 +244,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_item_list
      */
     fun getItemList(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, handle)
     }
 
@@ -231,6 +254,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: MeshLibrary.get_last_unused_item_id
      */
     fun getLastUnusedItemId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, handle)
     }
 

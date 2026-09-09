@@ -18,6 +18,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_shared_object
      */
     fun addSharedObject(path: String, tags: List<String>, target: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringPackedStringListAndStringArgs(addSharedObjectBind, handle, path, tags, target)
     }
 
@@ -31,6 +32,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_file
      */
     fun addFile(path: String, file: ByteArray, remap: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringByteArrayBoolArgs(addFileBind, handle, path, file, remap)
     }
 
@@ -40,6 +42,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_project_static_lib
      */
     fun addAppleEmbeddedPlatformProjectStaticLib(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformProjectStaticLibBind, handle, path)
     }
 
@@ -50,6 +53,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_framework
      */
     fun addAppleEmbeddedPlatformFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformFrameworkBind, handle, path)
     }
 
@@ -62,6 +66,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_embedded_framework
      */
     fun addAppleEmbeddedPlatformEmbeddedFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformEmbeddedFrameworkBind, handle, path)
     }
 
@@ -71,6 +76,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_plist_content
      */
     fun addAppleEmbeddedPlatformPlistContent(plistContent: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformPlistContentBind, handle, plistContent)
     }
 
@@ -80,6 +86,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_linker_flags
      */
     fun addAppleEmbeddedPlatformLinkerFlags(flags: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformLinkerFlagsBind, handle, flags)
     }
 
@@ -89,6 +96,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_bundle_file
      */
     fun addAppleEmbeddedPlatformBundleFile(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformBundleFileBind, handle, path)
     }
 
@@ -99,6 +107,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_cpp_code
      */
     fun addAppleEmbeddedPlatformCppCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformCppCodeBind, handle, code)
     }
 
@@ -108,6 +117,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_ios_project_static_lib
      */
     fun addIosProjectStaticLib(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosProjectStaticLibBind, handle, path)
     }
 
@@ -118,6 +128,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_ios_framework
      */
     fun addIosFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosFrameworkBind, handle, path)
     }
 
@@ -130,6 +141,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_ios_embedded_framework
      */
     fun addIosEmbeddedFramework(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosEmbeddedFrameworkBind, handle, path)
     }
 
@@ -139,6 +151,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_ios_plist_content
      */
     fun addIosPlistContent(plistContent: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosPlistContentBind, handle, plistContent)
     }
 
@@ -148,6 +161,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_ios_linker_flags
      */
     fun addIosLinkerFlags(flags: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosLinkerFlagsBind, handle, flags)
     }
 
@@ -157,6 +171,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_ios_bundle_file
      */
     fun addIosBundleFile(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosBundleFileBind, handle, path)
     }
 
@@ -167,6 +182,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_ios_cpp_code
      */
     fun addIosCppCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addIosCppCodeBind, handle, code)
     }
 
@@ -177,6 +193,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.add_macos_plugin_file
      */
     fun addMacosPluginFile(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(addMacosPluginFileBind, handle, path)
     }
 
@@ -186,6 +203,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.skip
      */
     fun skip() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(skipBind, handle)
     }
 
@@ -195,6 +213,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.get_option
      */
     fun getOption(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionBind, handle, name)
     }
 
@@ -204,6 +223,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.get_export_preset
      */
     fun getExportPreset(): EditorExportPreset? {
+        checkOpen()
         return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPresetBind, handle))
     }
 
@@ -213,6 +233,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlugin.get_export_platform
      */
     fun getExportPlatform(): EditorExportPlatform? {
+        checkOpen()
         return EditorExportPlatform.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPlatformBind, handle))
     }
 

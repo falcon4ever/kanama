@@ -22,6 +22,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shader.get_mode
      */
     fun getMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
@@ -32,6 +33,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shader.set_code
      */
     fun setCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
     }
 
@@ -42,6 +44,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shader.get_code
      */
     fun getCode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
     }
 
@@ -53,6 +56,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shader.set_default_texture_parameter
      */
     fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
@@ -64,6 +68,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shader.get_default_texture_parameter
      */
     fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
+        checkOpen()
         return Texture.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, handle, name, index))
     }
 
@@ -77,6 +82,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shader.get_shader_uniform_list
      */
     fun getShaderUniformList(getGroups: Boolean = false): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetArray(getShaderUniformListBind, handle, getGroups)
     }
 
@@ -88,6 +94,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shader.inspect_native_shader_code
      */
     fun inspectNativeShaderCode() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
     }
 

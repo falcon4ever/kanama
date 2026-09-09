@@ -17,10 +17,12 @@ class VisualShaderNodeVec4Constant(handle: MemorySegment) : VisualShaderNodeCons
         set(value) = setConstant(value)
 
     fun setConstant(constant: Quaternion) {
+        checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(setConstantBind, handle, constant)
     }
 
     fun getConstant(): Quaternion {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetQuaternion(getConstantBind, handle)
     }
 

@@ -28,6 +28,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: JSON.parse
      */
     fun parse(jsonText: String, keepText: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, handle, jsonText, keepText)
     }
 
@@ -37,6 +38,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: JSON.get_data
      */
     fun getData(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getDataBind, handle)
     }
 
@@ -46,6 +48,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: JSON.set_data
      */
     fun setData(data: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(setDataBind, handle, data)
     }
 
@@ -55,6 +58,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: JSON.get_parsed_text
      */
     fun getParsedText(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, handle)
     }
 
@@ -65,6 +69,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: JSON.get_error_line
      */
     fun getErrorLine(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getErrorLineBind, handle)
     }
 
@@ -75,6 +80,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: JSON.get_error_message
      */
     fun getErrorMessage(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getErrorMessageBind, handle)
     }
 

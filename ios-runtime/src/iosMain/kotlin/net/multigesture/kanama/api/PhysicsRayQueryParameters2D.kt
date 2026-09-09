@@ -47,50 +47,62 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setHitFromInside(value)
 
     fun setFrom(from: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setFromBind, handle, from)
     }
 
     fun getFrom(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getFromBind, handle)
     }
 
     fun setTo(to: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setToBind, handle, to)
     }
 
     fun getTo(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getToBind, handle)
     }
 
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 
     fun setHitFromInside(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
     }
 
     fun isHitFromInsideEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
     }
 

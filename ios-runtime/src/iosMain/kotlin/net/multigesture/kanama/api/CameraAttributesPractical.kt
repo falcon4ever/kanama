@@ -64,74 +64,92 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
         set(value) = setAutoExposureMaxSensitivity(value)
 
     fun setDofBlurFarEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDofBlurFarEnabledBind, handle, enabled)
     }
 
     fun isDofBlurFarEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurFarEnabledBind, handle)
     }
 
     fun setDofBlurFarDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarDistanceBind, handle, distance)
     }
 
     fun getDofBlurFarDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarDistanceBind, handle)
     }
 
     fun setDofBlurFarTransition(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarTransitionBind, handle, distance)
     }
 
     fun getDofBlurFarTransition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarTransitionBind, handle)
     }
 
     fun setDofBlurNearEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDofBlurNearEnabledBind, handle, enabled)
     }
 
     fun isDofBlurNearEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurNearEnabledBind, handle)
     }
 
     fun setDofBlurNearDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearDistanceBind, handle, distance)
     }
 
     fun getDofBlurNearDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearDistanceBind, handle)
     }
 
     fun setDofBlurNearTransition(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearTransitionBind, handle, distance)
     }
 
     fun getDofBlurNearTransition(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearTransitionBind, handle)
     }
 
     fun setDofBlurAmount(amount: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setDofBlurAmountBind, handle, amount)
     }
 
     fun getDofBlurAmount(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurAmountBind, handle)
     }
 
     fun setAutoExposureMaxSensitivity(maxSensitivity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxSensitivityBind, handle, maxSensitivity)
     }
 
     fun getAutoExposureMaxSensitivity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxSensitivityBind, handle)
     }
 
     fun setAutoExposureMinSensitivity(minSensitivity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinSensitivityBind, handle, minSensitivity)
     }
 
     fun getAutoExposureMinSensitivity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinSensitivityBind, handle)
     }
 

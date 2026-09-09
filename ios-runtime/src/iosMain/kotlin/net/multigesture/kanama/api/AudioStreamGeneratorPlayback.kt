@@ -10,22 +10,27 @@ import net.multigesture.kanama.types.Vector2
  */
 class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackResampled(handle) {
     fun pushFrame(frame: Vector2): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetBool(pushFrameBind, handle, frame)
     }
 
     fun canPushBuffer(amount: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(canPushBufferBind, handle, amount)
     }
 
     fun getFramesAvailable(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, handle)
     }
 
     fun getSkips(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkipsBind, handle)
     }
 
     fun clearBuffer() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBufferBind, handle)
     }
 

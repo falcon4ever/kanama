@@ -195,286 +195,357 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         set(value) = setHandleBinaryImage(value)
 
     fun addUsedExtension(extensionName: String, required: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(addUsedExtensionBind, handle, extensionName, required)
     }
 
     fun appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(appendDataToBuffersBind, handle, data, deduplication)
     }
 
     fun appendGltfNode(gltfNode: GLTFNode?, godotSceneNode: Node, parentNodeIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(appendGltfNodeBind, handle, gltfNode?.requireOpenHandle() ?: MemorySegment.NULL, godotSceneNode.handle, parentNodeIndex)
     }
 
     fun getJson(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getJsonBind, handle)
     }
 
     fun setJson(json: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setJsonBind, handle, json)
     }
 
     fun getMajorVersion(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMajorVersionBind, handle)
     }
 
     fun setMajorVersion(majorVersion: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMajorVersionBind, handle, majorVersion)
     }
 
     fun getMinorVersion(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMinorVersionBind, handle)
     }
 
     fun setMinorVersion(minorVersion: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMinorVersionBind, handle, minorVersion)
     }
 
     fun getCopyright(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCopyrightBind, handle)
     }
 
     fun setCopyright(copyright: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCopyrightBind, handle, copyright)
     }
 
     fun getGlbData(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getGlbDataBind, handle)
     }
 
     fun setGlbData(glbData: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(setGlbDataBind, handle, glbData)
     }
 
     fun getUseNamedSkinBinds(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseNamedSkinBindsBind, handle)
     }
 
     fun setUseNamedSkinBinds(useNamedSkinBinds: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseNamedSkinBindsBind, handle, useNamedSkinBinds)
     }
 
     fun getNodes(): List<GLTFNode> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getNodesBind, handle, GLTFNode::fromHandle)
     }
 
     fun setNodes(nodes: List<GLTFNode>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setNodesBind, handle, nodes)
     }
 
     fun getBuffers(): List<ByteArray> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArrayList(getBuffersBind, handle)
     }
 
     fun setBuffers(buffers: List<ByteArray>) {
+        checkOpen()
         ObjectCalls.ptrcallWithByteArrayListArg(setBuffersBind, handle, buffers)
     }
 
     fun getBufferViews(): List<GLTFBufferView> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getBufferViewsBind, handle, GLTFBufferView::fromHandle)
     }
 
     fun setBufferViews(bufferViews: List<GLTFBufferView>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setBufferViewsBind, handle, bufferViews)
     }
 
     fun getAccessors(): List<GLTFAccessor> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAccessorsBind, handle, GLTFAccessor::fromHandle)
     }
 
     fun setAccessors(accessors: List<GLTFAccessor>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setAccessorsBind, handle, accessors)
     }
 
     fun getMeshes(): List<GLTFMesh> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMeshesBind, handle, GLTFMesh::fromHandle)
     }
 
     fun setMeshes(meshes: List<GLTFMesh>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setMeshesBind, handle, meshes)
     }
 
     fun getAnimationPlayersCount(animPlayerIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getAnimationPlayersCountBind, handle, animPlayerIndex)
     }
 
     fun getAnimationPlayer(animPlayerIndex: Int): AnimationPlayer? {
+        checkOpen()
         return AnimationPlayer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getAnimationPlayerBind, handle, animPlayerIndex))
     }
 
     fun getMaterials(): List<Material> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedMaterialList(getMaterialsBind, handle)
     }
 
     fun setMaterials(materials: List<Material>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedMaterialListArg(setMaterialsBind, handle, materials)
     }
 
     fun getSceneName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getSceneNameBind, handle)
     }
 
     fun setSceneName(sceneName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setSceneNameBind, handle, sceneName)
     }
 
     fun getBasePath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getBasePathBind, handle)
     }
 
     fun setBasePath(basePath: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setBasePathBind, handle, basePath)
     }
 
     fun getFilename(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getFilenameBind, handle)
     }
 
     fun setFilename(filename: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setFilenameBind, handle, filename)
     }
 
     fun getRootNodes(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootNodesBind, handle)
     }
 
     fun setRootNodes(rootNodes: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setRootNodesBind, handle, rootNodes)
     }
 
     fun getTextures(): List<GLTFTexture> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTexturesBind, handle, GLTFTexture::fromHandle)
     }
 
     fun setTextures(textures: List<GLTFTexture>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setTexturesBind, handle, textures)
     }
 
     fun getTextureSamplers(): List<GLTFTextureSampler> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTextureSamplersBind, handle, GLTFTextureSampler::fromHandle)
     }
 
     fun setTextureSamplers(textureSamplers: List<GLTFTextureSampler>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setTextureSamplersBind, handle, textureSamplers)
     }
 
     fun getImages(): List<Texture2D> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getImagesBind, handle, Texture2D::fromHandle)
     }
 
     fun setImages(images: List<Texture2D>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setImagesBind, handle, images)
     }
 
     fun getSkins(): List<GLTFSkin> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkinsBind, handle, GLTFSkin::fromHandle)
     }
 
     fun setSkins(skins: List<GLTFSkin>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setSkinsBind, handle, skins)
     }
 
     fun getCameras(): List<GLTFCamera> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCamerasBind, handle, GLTFCamera::fromHandle)
     }
 
     fun setCameras(cameras: List<GLTFCamera>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setCamerasBind, handle, cameras)
     }
 
     fun getLights(): List<GLTFLight> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightsBind, handle, GLTFLight::fromHandle)
     }
 
     fun setLights(lights: List<GLTFLight>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setLightsBind, handle, lights)
     }
 
     fun getUniqueNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
     }
 
     fun setUniqueNames(uniqueNames: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, handle, uniqueNames)
     }
 
     fun getUniqueAnimationNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueAnimationNamesBind, handle)
     }
 
     fun setUniqueAnimationNames(uniqueAnimationNames: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(setUniqueAnimationNamesBind, handle, uniqueAnimationNames)
     }
 
     fun getSkeletons(): List<GLTFSkeleton> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkeletonsBind, handle, GLTFSkeleton::fromHandle)
     }
 
     fun setSkeletons(skeletons: List<GLTFSkeleton>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setSkeletonsBind, handle, skeletons)
     }
 
     fun getCreateAnimations(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getCreateAnimationsBind, handle)
     }
 
     fun setCreateAnimations(createAnimations: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCreateAnimationsBind, handle, createAnimations)
     }
 
     fun getImportAsSkeletonBones(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getImportAsSkeletonBonesBind, handle)
     }
 
     fun setImportAsSkeletonBones(importAsSkeletonBones: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setImportAsSkeletonBonesBind, handle, importAsSkeletonBones)
     }
 
     fun getAnimations(): List<GLTFAnimation> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAnimationsBind, handle, GLTFAnimation::fromHandle)
     }
 
     fun setAnimations(animations: List<GLTFAnimation>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(setAnimationsBind, handle, animations)
     }
 
     fun getSceneNode(gltfNodeIndex: Int): Node? {
+        checkOpen()
         return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSceneNodeBind, handle, gltfNodeIndex))
     }
 
     fun getNodeIndex(sceneNode: Node): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetInt(getNodeIndexBind, handle, sceneNode.handle)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
     }
 
     fun getHandleBinaryImageMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHandleBinaryImageModeBind, handle)
     }
 
     fun setHandleBinaryImageMode(method: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setHandleBinaryImageModeBind, handle, method)
     }
 
     fun setBakeFps(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBakeFpsBind, handle, value)
     }
 
     fun getBakeFps(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakeFpsBind, handle)
     }
 
     fun getHandleBinaryImage(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHandleBinaryImageBind, handle)
     }
 
     fun setHandleBinaryImage(method: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHandleBinaryImageBind, handle, method)
     }
 

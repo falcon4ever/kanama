@@ -18,6 +18,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_os_name
      */
     fun getOsName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getOsNameBind, handle)
     }
 
@@ -27,6 +28,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.create_preset
      */
     fun createPreset(): EditorExportPreset? {
+        checkOpen()
         return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, handle))
     }
 
@@ -39,6 +41,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.find_export_template
      */
     fun findExportTemplate(templateFileName: String): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetDictionary(findExportTemplateBind, handle, templateFileName)
     }
 
@@ -48,6 +51,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_current_presets
      */
     fun getCurrentPresets(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getCurrentPresetsBind, handle)
     }
 
@@ -62,6 +66,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.save_pack
      */
     fun savePack(preset: EditorExportPreset?, debug: Boolean, path: String, embed: Boolean = false): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(savePackBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, embed)
     }
 
@@ -73,6 +78,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.save_zip
      */
     fun saveZip(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
@@ -84,6 +90,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.save_pack_patch
      */
     fun savePackPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(savePackPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
@@ -95,6 +102,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.save_zip_patch
      */
     fun saveZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
@@ -105,6 +113,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.gen_export_flags
      */
     fun genExportFlags(flags: Long): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetPackedStringList(genExportFlagsBind, handle, flags)
     }
 
@@ -122,6 +131,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.export_project_files
      */
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, saveCb.target.handle, saveCb.method, sharedCb.target.handle, sharedCb.method)
     }
 
@@ -132,6 +142,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.export_project
      */
     fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L, notify: Boolean = true): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags, notify)
     }
 
@@ -141,6 +152,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.export_pack
      */
     fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
     }
 
@@ -150,6 +162,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.export_zip
      */
     fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
     }
 
@@ -162,6 +175,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.export_pack_patch
      */
     fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
     }
 
@@ -174,6 +188,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.export_zip_patch
      */
     fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
     }
 
@@ -183,6 +198,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.clear_messages
      */
     fun clearMessages() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMessagesBind, handle)
     }
 
@@ -192,6 +208,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.add_message
      */
     fun addMessage(type: Long, category: String, message: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoStringArgs(addMessageBind, handle, type, category, message)
     }
 
@@ -201,6 +218,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_message_count
      */
     fun getMessageCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, handle)
     }
 
@@ -210,6 +228,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_message_type
      */
     fun getMessageType(index: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, handle, index)
     }
 
@@ -219,6 +238,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_message_category
      */
     fun getMessageCategory(index: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getMessageCategoryBind, handle, index)
     }
 
@@ -228,6 +248,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_message_text
      */
     fun getMessageText(index: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getMessageTextBind, handle, index)
     }
 
@@ -237,6 +258,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_worst_message_type
      */
     fun getWorstMessageType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, handle)
     }
 
@@ -257,6 +279,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.ssh_run_on_remote_no_wait
      */
     fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = -1): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(sshRunOnRemoteNoWaitBind, handle, host, port, sshArgs, cmdArgs, portFwd)
     }
 
@@ -266,6 +289,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.ssh_push_to_remote
      */
     fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, handle, host, port, scpArgs, srcFile, dstFile)
     }
 
@@ -277,6 +301,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.get_internal_export_files
      */
     fun getInternalExportFiles(preset: EditorExportPreset?, debug: Boolean): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug)
     }
 

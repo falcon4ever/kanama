@@ -15,6 +15,7 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
         get() = getPoints()
 
     fun getPoints(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, handle)
     }
 

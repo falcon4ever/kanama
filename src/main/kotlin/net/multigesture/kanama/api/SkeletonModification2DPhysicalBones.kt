@@ -23,6 +23,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      * Generated from Godot docs: SkeletonModification2DPhysicalBones.set_physical_bone_chain_length
      */
     fun setPhysicalBoneChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPhysicalBoneChainLengthBind, handle, length)
     }
 
@@ -32,6 +33,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      * Generated from Godot docs: SkeletonModification2DPhysicalBones.get_physical_bone_chain_length
      */
     fun getPhysicalBoneChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPhysicalBoneChainLengthBind, handle)
     }
 
@@ -42,6 +44,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      * Generated from Godot docs: SkeletonModification2DPhysicalBones.set_physical_bone_node
      */
     fun setPhysicalBoneNode(jointIdx: Int, physicalbone2dNode: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setPhysicalBoneNodeBind, handle, jointIdx, physicalbone2dNode)
     }
 
@@ -51,6 +54,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      * Generated from Godot docs: SkeletonModification2DPhysicalBones.get_physical_bone_node
      */
     fun getPhysicalBoneNode(jointIdx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getPhysicalBoneNodeBind, handle, jointIdx)
     }
 
@@ -61,6 +65,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      * Generated from Godot docs: SkeletonModification2DPhysicalBones.fetch_physical_bones
      */
     fun fetchPhysicalBones() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(fetchPhysicalBonesBind, handle)
     }
 
@@ -72,6 +77,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      * Generated from Godot docs: SkeletonModification2DPhysicalBones.start_simulation
      */
     fun startSimulation(bones: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameListArg(startSimulationBind, handle, bones)
     }
 
@@ -83,6 +89,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      * Generated from Godot docs: SkeletonModification2DPhysicalBones.stop_simulation
      */
     fun stopSimulation(bones: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameListArg(stopSimulationBind, handle, bones)
     }
 

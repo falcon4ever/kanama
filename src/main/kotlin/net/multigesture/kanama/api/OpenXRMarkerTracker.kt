@@ -28,34 +28,42 @@ class OpenXRMarkerTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
         set(value) = setMarkerId(value)
 
     fun setBoundsSize(boundsSize: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setBoundsSizeBind, handle, boundsSize)
     }
 
     fun getBoundsSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, handle)
     }
 
     fun setMarkerType(markerType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMarkerTypeBind, handle, markerType)
     }
 
     fun getMarkerType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMarkerTypeBind, handle)
     }
 
     fun setMarkerId(markerId: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setMarkerIdBind, handle, markerId)
     }
 
     fun getMarkerId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMarkerIdBind, handle)
     }
 
     fun setMarkerData(markerData: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantArg(setMarkerDataBind, handle, markerData)
     }
 
     fun getMarkerData(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getMarkerDataBind, handle)
     }
 

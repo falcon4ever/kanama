@@ -16,10 +16,12 @@ open class VisualShaderNodeParticleEmitter(handle: MemorySegment) : VisualShader
         set(value) = setMode2d(value)
 
     fun setMode2d(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setMode2dBind, handle, enabled)
     }
 
     fun isMode2d(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMode2dBind, handle)
     }
 

@@ -18,6 +18,7 @@ class AudioEffectSpectrumAnalyzerInstance(handle: MemorySegment) : AudioEffectIn
      * Generated from Godot docs: AudioEffectSpectrumAnalyzerInstance.get_magnitude_for_frequency_range
      */
     fun getMagnitudeForFrequencyRange(fromHz: Double, toHz: Double, mode: Long = 1L): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(getMagnitudeForFrequencyRangeBind, handle, fromHz, toHz, mode)
     }
 

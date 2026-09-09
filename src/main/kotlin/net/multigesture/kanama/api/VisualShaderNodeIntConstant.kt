@@ -15,10 +15,12 @@ class VisualShaderNodeIntConstant(handle: MemorySegment) : VisualShaderNodeConst
         set(value) = setConstant(value)
 
     fun setConstant(constant: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setConstantBind, handle, constant)
     }
 
     fun getConstant(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getConstantBind, handle)
     }
 

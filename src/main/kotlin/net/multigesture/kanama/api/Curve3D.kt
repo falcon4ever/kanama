@@ -42,6 +42,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_point_count
      */
     fun getPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
@@ -51,6 +52,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.set_point_count
      */
     fun setPointCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
     }
 
@@ -65,6 +67,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.add_point
      */
     fun addPoint(position: Vector3, inValue: Vector3, out: Vector3, index: Int = -1) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeVector3AndIntArg(addPointBind, handle, position, inValue, out, index)
     }
 
@@ -75,6 +78,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.set_point_position
      */
     fun setPointPosition(idx: Int, position: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(setPointPositionBind, handle, idx, position)
     }
 
@@ -85,6 +89,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_point_position
      */
     fun getPointPosition(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getPointPositionBind, handle, idx)
     }
 
@@ -97,6 +102,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.set_point_tilt
      */
     fun setPointTilt(idx: Int, tilt: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setPointTiltBind, handle, idx, tilt)
     }
 
@@ -107,6 +113,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_point_tilt
      */
     fun getPointTilt(idx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getPointTiltBind, handle, idx)
     }
 
@@ -117,6 +124,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.set_point_in
      */
     fun setPointIn(idx: Int, position: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(setPointInBind, handle, idx, position)
     }
 
@@ -128,6 +136,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_point_in
      */
     fun getPointIn(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getPointInBind, handle, idx)
     }
 
@@ -138,6 +147,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.set_point_out
      */
     fun setPointOut(idx: Int, position: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector3Arg(setPointOutBind, handle, idx, position)
     }
 
@@ -149,6 +159,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_point_out
      */
     fun getPointOut(idx: Int): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getPointOutBind, handle, idx)
     }
 
@@ -158,6 +169,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.remove_point
      */
     fun removePoint(idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, idx)
     }
 
@@ -167,6 +179,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.clear_points
      */
     fun clearPoints() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
     }
 
@@ -180,6 +193,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.sample
      */
     fun sample(idx: Int, t: Double): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector3(sampleBind, handle, idx, t)
     }
 
@@ -190,10 +204,12 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.samplef
      */
     fun samplef(fofs: Double): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleArgRetVector3(samplefBind, handle, fofs)
     }
 
     fun setCurveClosed(closed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCurveClosedBind, handle, closed)
     }
 
@@ -204,6 +220,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.is_closed
      */
     fun isClosed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isClosedBind, handle)
     }
 
@@ -216,6 +233,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.set_bake_interval
      */
     fun setBakeInterval(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, handle, distance)
     }
 
@@ -228,6 +246,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_bake_interval
      */
     fun getBakeInterval(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, handle)
     }
 
@@ -239,6 +258,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.set_up_vector_enabled
      */
     fun setUpVectorEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUpVectorEnabledBind, handle, enable)
     }
 
@@ -250,6 +270,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.is_up_vector_enabled
      */
     fun isUpVectorEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUpVectorEnabledBind, handle)
     }
 
@@ -260,6 +281,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_baked_length
      */
     fun getBakedLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, handle)
     }
 
@@ -273,6 +295,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.sample_baked
      */
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(sampleBakedBind, handle, offset, cubic)
     }
 
@@ -285,6 +308,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.sample_baked_with_rotation
      */
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false, applyTilt: Boolean = false): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(sampleBakedWithRotationBind, handle, offset, cubic, applyTilt)
     }
 
@@ -298,6 +322,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.sample_baked_up_vector
      */
     fun sampleBakedUpVector(offset: Double, applyTilt: Boolean = false): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(sampleBakedUpVectorBind, handle, offset, applyTilt)
     }
 
@@ -307,6 +332,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_baked_points
      */
     fun getBakedPoints(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedPointsBind, handle)
     }
 
@@ -316,6 +342,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_baked_tilts
      */
     fun getBakedTilts(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBakedTiltsBind, handle)
     }
 
@@ -326,6 +353,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_baked_up_vectors
      */
     fun getBakedUpVectors(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedUpVectorsBind, handle)
     }
 
@@ -336,6 +364,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_closest_point
      */
     fun getClosestPoint(toPoint: Vector3): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector3ArgRetVector3(getClosestPointBind, handle, toPoint)
     }
 
@@ -346,6 +375,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.get_closest_offset
      */
     fun getClosestOffset(toPoint: Vector3): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector3ArgRetDouble(getClosestOffsetBind, handle, toPoint)
     }
 
@@ -362,6 +392,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.tessellate
      */
     fun tessellate(maxStages: Int = 5, toleranceDegrees: Double = 4.0): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateBind, handle, maxStages, toleranceDegrees)
     }
 
@@ -375,6 +406,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Curve3D.tessellate_even_length
      */
     fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 0.2): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateEvenLengthBind, handle, maxStages, toleranceLength)
     }
 

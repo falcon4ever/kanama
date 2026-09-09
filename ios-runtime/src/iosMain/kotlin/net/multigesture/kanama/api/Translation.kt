@@ -22,38 +22,47 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
         set(value) = setPluralRulesOverride(value)
 
     fun setLocale(locale: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setLocaleBind, handle, locale)
     }
 
     fun getLocale(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, handle)
     }
 
     fun addMessage(srcMessage: String, xlatedMessage: String, context: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeStringNameArgs(addMessageBind, handle, srcMessage, xlatedMessage, context)
     }
 
     fun eraseMessage(srcMessage: String, context: String = "") {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(eraseMessageBind, handle, srcMessage, context)
     }
 
     fun getMessageList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMessageListBind, handle)
     }
 
     fun getTranslatedMessageList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTranslatedMessageListBind, handle)
     }
 
     fun getMessageCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, handle)
     }
 
     fun setPluralRulesOverride(rules: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setPluralRulesOverrideBind, handle, rules)
     }
 
     fun getPluralRulesOverride(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPluralRulesOverrideBind, handle)
     }
 

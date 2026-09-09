@@ -89,106 +89,132 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
         set(value) = setEnergyMultiplier(value)
 
     fun setSkyTopColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, handle, color)
     }
 
     fun getSkyTopColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, handle)
     }
 
     fun setSkyHorizonColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, handle, color)
     }
 
     fun getSkyHorizonColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, handle)
     }
 
     fun setSkyCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, handle, curve)
     }
 
     fun getSkyCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, handle)
     }
 
     fun setSkyEnergyMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, handle, multiplier)
     }
 
     fun getSkyEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, handle)
     }
 
     fun setSkyCoverModulate(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, handle, color)
     }
 
     fun getSkyCoverModulate(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, handle)
     }
 
     fun setGroundBottomColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, handle, color)
     }
 
     fun getGroundBottomColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, handle)
     }
 
     fun setGroundHorizonColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, handle, color)
     }
 
     fun getGroundHorizonColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, handle)
     }
 
     fun setGroundCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, handle, curve)
     }
 
     fun getGroundCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, handle)
     }
 
     fun setGroundEnergyMultiplier(energy: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, handle, energy)
     }
 
     fun getGroundEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, handle)
     }
 
     fun setSunAngleMax(degrees: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, handle, degrees)
     }
 
     fun getSunAngleMax(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, handle)
     }
 
     fun setSunCurve(curve: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, handle, curve)
     }
 
     fun getSunCurve(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, handle)
     }
 
     fun setUseDebanding(useDebanding: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
     }
 
     fun getUseDebanding(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
     }
 
     fun setEnergyMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
     fun getEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 

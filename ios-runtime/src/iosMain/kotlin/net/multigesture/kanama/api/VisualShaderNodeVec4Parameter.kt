@@ -16,10 +16,12 @@ class VisualShaderNodeVec4Parameter(handle: MemorySegment) : VisualShaderNodePar
         set(value) = setDefaultValueEnabled(value)
 
     fun setDefaultValueEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
     }
 

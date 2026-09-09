@@ -71,6 +71,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_index
      */
     fun setIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setIndexBind, handle, index)
     }
 
@@ -80,6 +81,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_index
      */
     fun getIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, handle)
     }
 
@@ -91,6 +93,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_tilt
      */
     fun setTilt(tilt: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setTiltBind, handle, tilt)
     }
 
@@ -102,6 +105,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_tilt
      */
     fun getTilt(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, handle)
     }
 
@@ -111,6 +115,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_pressure
      */
     fun setPressure(pressure: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
     }
 
@@ -120,6 +125,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_pressure
      */
     fun getPressure(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
     }
 
@@ -129,6 +135,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_pen_inverted
      */
     fun setPenInverted(penInverted: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, handle, penInverted)
     }
 
@@ -138,6 +145,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_pen_inverted
      */
     fun getPenInverted(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, handle)
     }
 
@@ -147,6 +155,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_position
      */
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
@@ -156,6 +165,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_position
      */
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
@@ -169,6 +179,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_relative
      */
     fun setRelative(relative: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, handle, relative)
     }
 
@@ -182,6 +193,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_relative
      */
     fun getRelative(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, handle)
     }
 
@@ -194,6 +206,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_screen_relative
      */
     fun setScreenRelative(relative: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, handle, relative)
     }
 
@@ -206,6 +219,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_screen_relative
      */
     fun getScreenRelative(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, handle)
     }
 
@@ -218,6 +232,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_velocity
      */
     fun setVelocity(velocity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
     }
 
@@ -230,6 +245,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_velocity
      */
     fun getVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
     }
 
@@ -241,6 +257,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.set_screen_velocity
      */
     fun setScreenVelocity(velocity: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, handle, velocity)
     }
 
@@ -252,6 +269,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      * Generated from Godot docs: InputEventScreenDrag.get_screen_velocity
      */
     fun getScreenVelocity(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, handle)
     }
 

@@ -17,10 +17,12 @@ open class VisualShaderNodeResizableBase(handle: MemorySegment) : VisualShaderNo
         set(value) = setSize(value)
 
     fun setSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
     }
 
     fun getSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
     }
 

@@ -23,6 +23,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.can_get_buffer
      */
     fun canGetBuffer(frames: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(canGetBufferBind, handle, frames)
     }
 
@@ -36,6 +37,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.get_buffer
      */
     fun getBuffer(frames: Int): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getBufferBind, handle, frames)
     }
 
@@ -46,6 +48,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.clear_buffer
      */
     fun clearBuffer() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBufferBind, handle)
     }
 
@@ -57,6 +60,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.set_buffer_length
      */
     fun setBufferLength(bufferLengthSeconds: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, bufferLengthSeconds)
     }
 
@@ -68,6 +72,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.get_buffer_length
      */
     fun getBufferLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
     }
 
@@ -77,6 +82,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.get_frames_available
      */
     fun getFramesAvailable(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, handle)
     }
 
@@ -86,6 +92,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.get_discarded_frames
      */
     fun getDiscardedFrames(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDiscardedFramesBind, handle)
     }
 
@@ -95,6 +102,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.get_buffer_length_frames
      */
     fun getBufferLengthFrames(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferLengthFramesBind, handle)
     }
 
@@ -104,6 +112,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCapture.get_pushed_frames
      */
     fun getPushedFrames(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPushedFramesBind, handle)
     }
 

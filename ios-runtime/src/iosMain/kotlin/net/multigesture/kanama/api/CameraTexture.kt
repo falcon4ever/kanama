@@ -28,26 +28,32 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setCameraActive(value)
 
     fun setCameraFeedId(feedId: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, handle, feedId)
     }
 
     fun getCameraFeedId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
     fun setWhichFeed(whichFeed: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, handle, whichFeed)
     }
 
     fun getWhichFeed(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, handle)
     }
 
     fun setCameraActive(active: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCameraActiveBind, handle, active)
     }
 
     fun getCameraActive(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getCameraActiveBind, handle)
     }
 

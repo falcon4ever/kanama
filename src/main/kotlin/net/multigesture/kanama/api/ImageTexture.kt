@@ -18,6 +18,7 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ImageTexture.set_image
      */
     fun setImage(image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setImageBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -31,6 +32,7 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ImageTexture.update
      */
     fun update(image: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(updateBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -40,6 +42,7 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
      * Generated from Godot docs: ImageTexture.set_size_override
      */
     fun setSizeOverride(size: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
     }
 

@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class WeakRef(handle: MemorySegment) : RefCounted(handle) {
     fun getRef(): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRefBind, handle)
     }
 

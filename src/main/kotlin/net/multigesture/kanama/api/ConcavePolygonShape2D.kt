@@ -25,6 +25,7 @@ class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: ConcavePolygonShape2D.set_segments
      */
     fun setSegments(segments: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(setSegmentsBind, handle, segments)
     }
 
@@ -36,6 +37,7 @@ class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      * Generated from Godot docs: ConcavePolygonShape2D.get_segments
      */
     fun getSegments(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getSegmentsBind, handle)
     }
 

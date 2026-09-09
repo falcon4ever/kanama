@@ -40,42 +40,52 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
         set(value) = setAutoExposureSpeed(value)
 
     fun setExposureMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExposureMultiplierBind, handle, multiplier)
     }
 
     fun getExposureMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getExposureMultiplierBind, handle)
     }
 
     fun setExposureSensitivity(sensitivity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setExposureSensitivityBind, handle, sensitivity)
     }
 
     fun getExposureSensitivity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getExposureSensitivityBind, handle)
     }
 
     fun setAutoExposureEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAutoExposureEnabledBind, handle, enabled)
     }
 
     fun isAutoExposureEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoExposureEnabledBind, handle)
     }
 
     fun setAutoExposureSpeed(exposureSpeed: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureSpeedBind, handle, exposureSpeed)
     }
 
     fun getAutoExposureSpeed(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureSpeedBind, handle)
     }
 
     fun setAutoExposureScale(exposureGrey: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAutoExposureScaleBind, handle, exposureGrey)
     }
 
     fun getAutoExposureScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureScaleBind, handle)
     }
 

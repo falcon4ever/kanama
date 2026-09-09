@@ -84,6 +84,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_vertices
      */
     fun setVertices(vertices: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, handle, vertices)
     }
 
@@ -93,6 +94,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_vertices
      */
     fun getVertices(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, handle)
     }
 
@@ -102,6 +104,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.add_polygon
      */
     fun addPolygon(polygon: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
     }
 
@@ -111,6 +114,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_polygon_count
      */
     fun getPolygonCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
     }
 
@@ -120,6 +124,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_polygon
      */
     fun getPolygon(idx: Int): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
     }
 
@@ -129,6 +134,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.clear_polygons
      */
     fun clearPolygons() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
     }
 
@@ -140,6 +146,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_navigation_mesh
      */
     fun getNavigationMesh(): NavigationMesh? {
+        checkOpen()
         return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, handle))
     }
 
@@ -150,6 +157,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.add_outline
      */
     fun addOutline(outline: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListArg(addOutlineBind, handle, outline)
     }
 
@@ -160,6 +168,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.add_outline_at_index
      */
     fun addOutlineAtIndex(outline: List<Vector2>, index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(addOutlineAtIndexBind, handle, outline, index)
     }
 
@@ -169,6 +178,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_outline_count
      */
     fun getOutlineCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, handle)
     }
 
@@ -179,6 +189,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_outline
      */
     fun setOutline(idx: Int, outline: List<Vector2>) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(setOutlineBind, handle, idx, outline)
     }
 
@@ -189,6 +200,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_outline
      */
     fun getOutline(idx: Int): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getOutlineBind, handle, idx)
     }
 
@@ -199,6 +211,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.remove_outline
      */
     fun removeOutline(idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeOutlineBind, handle, idx)
     }
 
@@ -209,6 +222,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.clear_outlines
      */
     fun clearOutlines() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearOutlinesBind, handle)
     }
 
@@ -218,6 +232,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.make_polygons_from_outlines
      */
     fun makePolygonsFromOutlines() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(makePolygonsFromOutlinesBind, handle)
     }
 
@@ -228,6 +243,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_cell_size
      */
     fun setCellSize(cellSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
     }
 
@@ -238,6 +254,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_cell_size
      */
     fun getCellSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
     }
 
@@ -249,6 +266,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_border_size
      */
     fun setBorderSize(borderSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
     }
 
@@ -260,6 +278,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_border_size
      */
     fun getBorderSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
     }
 
@@ -269,6 +288,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_sample_partition_type
      */
     fun setSamplePartitionType(samplePartitionType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
     }
 
@@ -278,6 +298,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_sample_partition_type
      */
     fun getSamplePartitionType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
     }
 
@@ -287,6 +308,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_parsed_geometry_type
      */
     fun setParsedGeometryType(geometryType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
     }
 
@@ -296,6 +318,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_parsed_geometry_type
      */
     fun getParsedGeometryType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
     }
 
@@ -306,6 +329,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_parsed_collision_mask
      */
     fun setParsedCollisionMask(mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setParsedCollisionMaskBind, handle, mask)
     }
 
@@ -316,6 +340,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_parsed_collision_mask
      */
     fun getParsedCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getParsedCollisionMaskBind, handle)
     }
 
@@ -326,6 +351,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_parsed_collision_mask_value
      */
     fun setParsedCollisionMaskValue(layerNumber: Int, value: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setParsedCollisionMaskValueBind, handle, layerNumber, value)
     }
 
@@ -336,6 +362,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_parsed_collision_mask_value
      */
     fun getParsedCollisionMaskValue(layerNumber: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getParsedCollisionMaskValueBind, handle, layerNumber)
     }
 
@@ -345,6 +372,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_source_geometry_mode
      */
     fun setSourceGeometryMode(geometryMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, geometryMode)
     }
 
@@ -354,6 +382,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_source_geometry_mode
      */
     fun getSourceGeometryMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
     }
 
@@ -365,6 +394,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_source_geometry_group_name
      */
     fun setSourceGeometryGroupName(groupName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setSourceGeometryGroupNameBind, handle, groupName)
     }
 
@@ -376,6 +406,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_source_geometry_group_name
      */
     fun getSourceGeometryGroupName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGeometryGroupNameBind, handle)
     }
 
@@ -389,6 +420,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_agent_radius
      */
     fun setAgentRadius(agentRadius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
     }
 
@@ -402,6 +434,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_agent_radius
      */
     fun getAgentRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
     }
 
@@ -412,6 +445,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_baking_rect
      */
     fun setBakingRect(rect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(setBakingRectBind, handle, rect)
     }
 
@@ -422,6 +456,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_baking_rect
      */
     fun getBakingRect(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getBakingRectBind, handle)
     }
 
@@ -431,6 +466,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.set_baking_rect_offset
      */
     fun setBakingRectOffset(rectOffset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setBakingRectOffsetBind, handle, rectOffset)
     }
 
@@ -440,6 +476,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.get_baking_rect_offset
      */
     fun getBakingRectOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getBakingRectOffsetBind, handle)
     }
 
@@ -449,6 +486,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: NavigationPolygon.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

@@ -347,6 +347,13 @@ int64_t kanama_ios_godot_node_get_child_count(int64_t node);
 
 int64_t kanama_ios_godot_node_get_child(int64_t node, int32_t index);
 
+// Instance id of a live object (0 for a NULL handle), and the ObjectDB validity check for a
+// previously captured id. Together they back GD.isInstanceValid without dereferencing a
+// possibly-freed pointer (task 98).
+int64_t kanama_ios_godot_object_get_instance_id(int64_t object);
+
+int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id);
+
 int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name);
 
 int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name);

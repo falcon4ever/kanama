@@ -17,6 +17,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AudioStream.get_length
      */
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
@@ -27,6 +28,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AudioStream.is_monophonic
      */
     fun isMonophonic(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMonophonicBind, handle)
     }
 
@@ -39,6 +41,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AudioStream.instantiate_playback
      */
     fun instantiatePlayback(): AudioStreamPlayback? {
+        checkOpen()
         return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, handle))
     }
 
@@ -49,6 +52,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AudioStream.can_be_sampled
      */
     fun canBeSampled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(canBeSampledBind, handle)
     }
 
@@ -58,6 +62,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AudioStream.generate_sample
      */
     fun generateSample(): AudioSample? {
+        checkOpen()
         return AudioSample.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, handle))
     }
 
@@ -67,6 +72,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AudioStream.is_meta_stream
      */
     fun isMetaStream(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaStreamBind, handle)
     }
 

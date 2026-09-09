@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class ImageTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
     fun updateLayer(image: Image?, layer: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectAndIntArg(updateLayerBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, layer)
     }
 

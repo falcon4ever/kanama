@@ -16,14 +16,17 @@ class OpenXRAnchorTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
         set(value) = setUuid(value)
 
     fun hasUuid(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasUuidBind, handle)
     }
 
     fun setUuid(uuid: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setUuidBind, handle, uuid)
     }
 
     fun getUuid(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getUuidBind, handle)
     }
 

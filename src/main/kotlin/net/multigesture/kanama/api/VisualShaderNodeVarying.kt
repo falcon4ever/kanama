@@ -21,18 +21,22 @@ open class VisualShaderNodeVarying(handle: MemorySegment) : VisualShaderNode(han
         set(value) = setVaryingType(value)
 
     fun setVaryingName(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setVaryingNameBind, handle, name)
     }
 
     fun getVaryingName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getVaryingNameBind, handle)
     }
 
     fun setVaryingType(type: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setVaryingTypeBind, handle, type)
     }
 
     fun getVaryingType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getVaryingTypeBind, handle)
     }
 

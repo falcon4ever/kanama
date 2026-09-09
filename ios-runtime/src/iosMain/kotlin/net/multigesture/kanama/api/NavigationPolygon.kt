@@ -76,126 +76,157 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
         set(value) = setBakingRectOffset(value)
 
     fun getVertices(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, handle)
     }
 
     fun getPolygonCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
     }
 
     fun clearPolygons() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
     }
 
     fun getNavigationMesh(): NavigationMesh? {
+        checkOpen()
         return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, handle))
     }
 
     fun getOutlineCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, handle)
     }
 
     fun removeOutline(idx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeOutlineBind, handle, idx)
     }
 
     fun clearOutlines() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearOutlinesBind, handle)
     }
 
     fun makePolygonsFromOutlines() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(makePolygonsFromOutlinesBind, handle)
     }
 
     fun setCellSize(cellSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
     }
 
     fun getCellSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
     }
 
     fun setBorderSize(borderSize: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
     }
 
     fun getBorderSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
     }
 
     fun setSamplePartitionType(samplePartitionType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
     }
 
     fun getSamplePartitionType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
     }
 
     fun setParsedGeometryType(geometryType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
     }
 
     fun getParsedGeometryType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
     }
 
     fun setParsedCollisionMask(mask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setParsedCollisionMaskBind, handle, mask)
     }
 
     fun getParsedCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getParsedCollisionMaskBind, handle)
     }
 
     fun setParsedCollisionMaskValue(layerNumber: Int, value: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setParsedCollisionMaskValueBind, handle, layerNumber, value)
     }
 
     fun getParsedCollisionMaskValue(layerNumber: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getParsedCollisionMaskValueBind, handle, layerNumber)
     }
 
     fun setSourceGeometryMode(geometryMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, geometryMode)
     }
 
     fun getSourceGeometryMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
     }
 
     fun setSourceGeometryGroupName(groupName: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setSourceGeometryGroupNameBind, handle, groupName)
     }
 
     fun getSourceGeometryGroupName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGeometryGroupNameBind, handle)
     }
 
     fun setAgentRadius(agentRadius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
     }
 
     fun getAgentRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
     }
 
     fun setBakingRect(rect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(setBakingRectBind, handle, rect)
     }
 
     fun getBakingRect(): Rect2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(getBakingRectBind, handle)
     }
 
     fun setBakingRectOffset(rectOffset: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setBakingRectOffsetBind, handle, rectOffset)
     }
 
     fun getBakingRectOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getBakingRectOffsetBind, handle)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 

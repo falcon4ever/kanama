@@ -54,6 +54,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.set_position
      */
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
@@ -63,6 +64,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.get_position
      */
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
@@ -74,6 +76,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.set_canvas_instance_id
      */
     fun setCanvasInstanceId(canvasInstanceId: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCanvasInstanceIdBind, handle, canvasInstanceId)
     }
 
@@ -85,6 +88,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.get_canvas_instance_id
      */
     fun getCanvasInstanceId(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCanvasInstanceIdBind, handle)
     }
 
@@ -97,6 +101,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.set_collision_mask
      */
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
@@ -109,6 +114,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.get_collision_mask
      */
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
@@ -121,6 +127,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.set_exclude
      */
     fun setExclude(exclude: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
@@ -133,6 +140,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.get_exclude
      */
     fun getExclude(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
@@ -142,6 +150,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.set_collide_with_bodies
      */
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
@@ -151,6 +160,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.is_collide_with_bodies_enabled
      */
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
@@ -160,6 +170,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.set_collide_with_areas
      */
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
@@ -169,6 +180,7 @@ class PhysicsPointQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
      * Generated from Godot docs: PhysicsPointQueryParameters2D.is_collide_with_areas_enabled
      */
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 

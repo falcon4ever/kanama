@@ -31,6 +31,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape3D.set_custom_solver_bias
      */
     fun setCustomSolverBias(bias: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, handle, bias)
     }
 
@@ -43,6 +44,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape3D.get_custom_solver_bias
      */
     fun getCustomSolverBias(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, handle)
     }
 
@@ -56,6 +58,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape3D.set_margin
      */
     fun setMargin(margin: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
     }
 
@@ -69,6 +72,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape3D.get_margin
      */
     fun getMargin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
     }
 
@@ -78,6 +82,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Shape3D.get_debug_mesh
      */
     fun getDebugMesh(): ArrayMesh? {
+        checkOpen()
         return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDebugMeshBind, handle))
     }
 

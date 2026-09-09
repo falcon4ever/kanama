@@ -23,18 +23,22 @@ class VisualShaderNodeColorParameter(handle: MemorySegment) : VisualShaderNodePa
         set(value) = setDefaultValue(value)
 
     fun setDefaultValueEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
     }
 
     fun setDefaultValue(value: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setDefaultValueBind, handle, value)
     }
 
     fun getDefaultValue(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getDefaultValueBind, handle)
     }
 

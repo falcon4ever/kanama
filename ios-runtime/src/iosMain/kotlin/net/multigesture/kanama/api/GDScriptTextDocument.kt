@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class GDScriptTextDocument(handle: MemorySegment) : RefCounted(handle) {
     fun showNativeSymbolInEditor(symbolId: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(showNativeSymbolInEditorBind, handle, symbolId)
     }
 

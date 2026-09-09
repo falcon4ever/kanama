@@ -31,6 +31,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.set_target_node
      */
     fun setTargetNode(targetNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
     }
 
@@ -41,6 +42,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.get_target_node
      */
     fun getTargetNode(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
     }
 
@@ -50,6 +52,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_data_chain_length
      */
     fun setFabrikDataChainLength(length: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setFabrikDataChainLengthBind, handle, length)
     }
 
@@ -59,6 +62,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_data_chain_length
      */
     fun getFabrikDataChainLength(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFabrikDataChainLengthBind, handle)
     }
 
@@ -68,6 +72,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_bone2d_node
      */
     fun setFabrikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(setFabrikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
     }
 
@@ -77,6 +82,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_bone2d_node
      */
     fun getFabrikJointBone2dNode(jointIdx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(getFabrikJointBone2dNodeBind, handle, jointIdx)
     }
 
@@ -87,6 +93,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_bone_index
      */
     fun setFabrikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setFabrikJointBoneIndexBind, handle, jointIdx, boneIdx)
     }
 
@@ -96,6 +103,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_bone_index
      */
     fun getFabrikJointBoneIndex(jointIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getFabrikJointBoneIndexBind, handle, jointIdx)
     }
 
@@ -105,6 +113,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_magnet_position
      */
     fun setFabrikJointMagnetPosition(jointIdx: Int, magnetPosition: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setFabrikJointMagnetPositionBind, handle, jointIdx, magnetPosition)
     }
 
@@ -114,6 +123,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_magnet_position
      */
     fun getFabrikJointMagnetPosition(jointIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector2(getFabrikJointMagnetPositionBind, handle, jointIdx)
     }
 
@@ -125,6 +135,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.set_fabrik_joint_use_target_rotation
      */
     fun setFabrikJointUseTargetRotation(jointIdx: Int, useTargetRotation: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(setFabrikJointUseTargetRotationBind, handle, jointIdx, useTargetRotation)
     }
 
@@ -135,6 +146,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_use_target_rotation
      */
     fun getFabrikJointUseTargetRotation(jointIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(getFabrikJointUseTargetRotationBind, handle, jointIdx)
     }
 

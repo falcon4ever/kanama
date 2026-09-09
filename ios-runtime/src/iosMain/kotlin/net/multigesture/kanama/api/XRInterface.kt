@@ -33,106 +33,132 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setAnchorDetectionIsEnabled(value)
 
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
     }
 
     fun getCapabilities(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCapabilitiesBind, handle)
     }
 
     fun isPrimary(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPrimaryBind, handle)
     }
 
     fun setPrimary(primary: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPrimaryBind, handle, primary)
     }
 
     fun isInitialized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, handle)
     }
 
     fun initialize(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(initializeBind, handle)
     }
 
     fun uninitialize() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(uninitializeBind, handle)
     }
 
     fun getTrackingStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, handle)
     }
 
     fun getRenderTargetSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRenderTargetSizeBind, handle)
     }
 
     fun getViewCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
     fun triggerHapticPulse(actionName: String, trackerName: String, frequency: Double, amplitude: Double, durationSec: Double, delaySec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringStringNameFourDoubleArgs(triggerHapticPulseBind, handle, actionName, trackerName, frequency, amplitude, durationSec, delaySec)
     }
 
     fun supportsPlayAreaMode(mode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, handle, mode)
     }
 
     fun getPlayAreaMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, handle)
     }
 
     fun setPlayAreaMode(mode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, handle, mode)
     }
 
     fun getAnchorDetectionIsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAnchorDetectionIsEnabledBind, handle)
     }
 
     fun setAnchorDetectionIsEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAnchorDetectionIsEnabledBind, handle, enable)
     }
 
     fun getCameraFeedId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
     fun isPassthroughSupported(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughSupportedBind, handle)
     }
 
     fun isPassthroughEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughEnabledBind, handle)
     }
 
     fun startPassthrough(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(startPassthroughBind, handle)
     }
 
     fun stopPassthrough() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopPassthroughBind, handle)
     }
 
     fun getTransformForView(view: Long, camTransform: Transform3D): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithUInt32Transform3DArgsRetTransform3D(getTransformForViewBind, handle, view, camTransform)
     }
 
     fun getProjectionForView(view: Long, aspect: Double, near: Double, far: Double): Projection {
+        checkOpen()
         return ObjectCalls.ptrcallWithUInt32ThreeDoubleArgsRetProjection(getProjectionForViewBind, handle, view, aspect, near, far)
     }
 
     fun getSupportedEnvironmentBlendModes(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getSupportedEnvironmentBlendModesBind, handle)
     }
 
     fun setEnvironmentBlendMode(mode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, handle, mode)
     }
 
     fun getEnvironmentBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, handle)
     }
 

@@ -52,58 +52,72 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
         set(value) = setNeedsSeparateSpecular(value)
 
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
     fun getEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
     fun setEffectCallbackType(effectCallbackType: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, handle, effectCallbackType)
     }
 
     fun getEffectCallbackType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, handle)
     }
 
     fun setAccessResolvedColor(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAccessResolvedColorBind, handle, enable)
     }
 
     fun getAccessResolvedColor(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedColorBind, handle)
     }
 
     fun setAccessResolvedDepth(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAccessResolvedDepthBind, handle, enable)
     }
 
     fun getAccessResolvedDepth(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedDepthBind, handle)
     }
 
     fun setNeedsMotionVectors(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNeedsMotionVectorsBind, handle, enable)
     }
 
     fun getNeedsMotionVectors(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsMotionVectorsBind, handle)
     }
 
     fun setNeedsNormalRoughness(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNeedsNormalRoughnessBind, handle, enable)
     }
 
     fun getNeedsNormalRoughness(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsNormalRoughnessBind, handle)
     }
 
     fun setNeedsSeparateSpecular(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNeedsSeparateSpecularBind, handle, enable)
     }
 
     fun getNeedsSeparateSpecular(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, handle)
     }
 

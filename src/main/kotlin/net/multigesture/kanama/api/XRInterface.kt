@@ -40,6 +40,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_name
      */
     fun getName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
     }
 
@@ -50,6 +51,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_capabilities
      */
     fun getCapabilities(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCapabilitiesBind, handle)
     }
 
@@ -59,6 +61,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.is_primary
      */
     fun isPrimary(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPrimaryBind, handle)
     }
 
@@ -68,6 +71,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.set_primary
      */
     fun setPrimary(primary: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPrimaryBind, handle, primary)
     }
 
@@ -77,6 +81,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.is_initialized
      */
     fun isInitialized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, handle)
     }
 
@@ -97,6 +102,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.initialize
      */
     fun initialize(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(initializeBind, handle)
     }
 
@@ -106,6 +112,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.uninitialize
      */
     fun uninitialize() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(uninitializeBind, handle)
     }
 
@@ -118,6 +125,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_system_info
      */
     fun getSystemInfo(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getSystemInfoBind, handle)
     }
 
@@ -128,6 +136,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_tracking_status
      */
     fun getTrackingStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, handle)
     }
 
@@ -138,6 +147,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_render_target_size
      */
     fun getRenderTargetSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getRenderTargetSizeBind, handle)
     }
 
@@ -148,6 +158,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_view_count
      */
     fun getViewCount(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
     }
 
@@ -162,6 +173,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.trigger_haptic_pulse
      */
     fun triggerHapticPulse(actionName: String, trackerName: String, frequency: Double, amplitude: Double, durationSec: Double, delaySec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringStringNameFourDoubleArgs(triggerHapticPulseBind, handle, actionName, trackerName, frequency, amplitude, durationSec, delaySec)
     }
 
@@ -171,6 +183,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.supports_play_area_mode
      */
     fun supportsPlayAreaMode(mode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, handle, mode)
     }
 
@@ -180,6 +193,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_play_area_mode
      */
     fun getPlayAreaMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, handle)
     }
 
@@ -189,6 +203,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.set_play_area_mode
      */
     fun setPlayAreaMode(mode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, handle, mode)
     }
 
@@ -201,6 +216,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_play_area
      */
     fun getPlayArea(): List<Vector3> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPlayAreaBind, handle)
     }
 
@@ -210,6 +226,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_anchor_detection_is_enabled
      */
     fun getAnchorDetectionIsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAnchorDetectionIsEnabledBind, handle)
     }
 
@@ -219,6 +236,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.set_anchor_detection_is_enabled
      */
     fun setAnchorDetectionIsEnabled(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAnchorDetectionIsEnabledBind, handle, enable)
     }
 
@@ -229,6 +247,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_camera_feed_id
      */
     fun getCameraFeedId(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
     }
 
@@ -238,6 +257,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.is_passthrough_supported
      */
     fun isPassthroughSupported(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughSupportedBind, handle)
     }
 
@@ -247,6 +267,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.is_passthrough_enabled
      */
     fun isPassthroughEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughEnabledBind, handle)
     }
 
@@ -257,6 +278,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.start_passthrough
      */
     fun startPassthrough(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(startPassthroughBind, handle)
     }
 
@@ -266,6 +288,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.stop_passthrough
      */
     fun stopPassthrough() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(stopPassthroughBind, handle)
     }
 
@@ -277,6 +300,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_transform_for_view
      */
     fun getTransformForView(view: Long, camTransform: Transform3D): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithUInt32Transform3DArgsRetTransform3D(getTransformForViewBind, handle, view, camTransform)
     }
 
@@ -286,6 +310,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_projection_for_view
      */
     fun getProjectionForView(view: Long, aspect: Double, near: Double, far: Double): Projection {
+        checkOpen()
         return ObjectCalls.ptrcallWithUInt32ThreeDoubleArgsRetProjection(getProjectionForViewBind, handle, view, aspect, near, far)
     }
 
@@ -296,6 +321,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_supported_environment_blend_modes
      */
     fun getSupportedEnvironmentBlendModes(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getSupportedEnvironmentBlendModesBind, handle)
     }
 
@@ -306,6 +332,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.set_environment_blend_mode
      */
     fun setEnvironmentBlendMode(mode: Long): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, handle, mode)
     }
 
@@ -316,6 +343,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: XRInterface.get_environment_blend_mode
      */
     fun getEnvironmentBlendMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, handle)
     }
 

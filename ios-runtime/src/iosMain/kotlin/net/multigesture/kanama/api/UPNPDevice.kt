@@ -46,66 +46,82 @@ class UPNPDevice(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setIgdStatus(value)
 
     fun isValidGateway(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isValidGatewayBind, handle)
     }
 
     fun queryExternalAddress(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, handle)
     }
 
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, handle, port, portInternal, desc, proto, duration)
     }
 
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, handle, port, proto)
     }
 
     fun setDescriptionUrl(url: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setDescriptionUrlBind, handle, url)
     }
 
     fun getDescriptionUrl(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getDescriptionUrlBind, handle)
     }
 
     fun setServiceType(type: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setServiceTypeBind, handle, type)
     }
 
     fun getServiceType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getServiceTypeBind, handle)
     }
 
     fun setIgdControlUrl(url: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setIgdControlUrlBind, handle, url)
     }
 
     fun getIgdControlUrl(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getIgdControlUrlBind, handle)
     }
 
     fun setIgdServiceType(type: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setIgdServiceTypeBind, handle, type)
     }
 
     fun getIgdServiceType(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getIgdServiceTypeBind, handle)
     }
 
     fun setIgdOurAddr(addr: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setIgdOurAddrBind, handle, addr)
     }
 
     fun getIgdOurAddr(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getIgdOurAddrBind, handle)
     }
 
     fun setIgdStatus(status: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setIgdStatusBind, handle, status)
     }
 
     fun getIgdStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getIgdStatusBind, handle)
     }
 

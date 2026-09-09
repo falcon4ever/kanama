@@ -25,22 +25,27 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setPathLength(value)
 
     fun getPath(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPathBind, handle)
     }
 
     fun getPathTypes(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
     }
 
     fun setPathLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathLengthBind, handle, length)
     }
 
     fun getPathLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, handle)
     }
 
     fun reset() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(resetBind, handle)
     }
 

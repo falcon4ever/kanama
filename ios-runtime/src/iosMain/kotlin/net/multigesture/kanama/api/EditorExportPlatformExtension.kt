@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatform(handle) {
     fun setConfigError(errorText: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setConfigErrorBind, handle, errorText)
     }
 
     fun getConfigError(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getConfigErrorBind, handle)
     }
 
     fun setConfigMissingTemplates(missingTemplates: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setConfigMissingTemplatesBind, handle, missingTemplates)
     }
 
     fun getConfigMissingTemplates(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getConfigMissingTemplatesBind, handle)
     }
 

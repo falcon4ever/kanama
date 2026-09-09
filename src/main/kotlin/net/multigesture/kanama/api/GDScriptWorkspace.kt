@@ -8,34 +8,42 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
     fun applyNewSignal(obj: GodotObject, function: String, args: List<String>) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectStringAndPackedStringListArgs(applyNewSignalBind, handle, obj.handle, function, args)
     }
 
     fun getFilePath(uri: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getFilePathBind, handle, uri)
     }
 
     fun getFileUri(path: String): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getFileUriBind, handle, path)
     }
 
     fun generateScriptApi(path: String): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetDictionary(generateScriptApiBind, handle, path)
     }
 
     fun didDeleteFiles(params: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(didDeleteFilesBind, handle, params)
     }
 
     fun parseScript(path: String, content: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, handle, path, content)
     }
 
     fun parseLocalScript(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(parseLocalScriptBind, handle, path)
     }
 
     fun publishDiagnostics(path: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(publishDiagnosticsBind, handle, path)
     }
 

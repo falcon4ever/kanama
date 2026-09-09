@@ -23,6 +23,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_data
      */
     fun putData(data: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, handle, data)
     }
 
@@ -34,6 +35,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_partial_data
      */
     fun putPartialData(data: ByteArray): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetArray(putPartialDataBind, handle, data)
     }
 
@@ -45,6 +47,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_data
      */
     fun getData(bytes: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, handle, bytes)
     }
 
@@ -56,6 +59,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_partial_data
      */
     fun getPartialData(bytes: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, handle, bytes)
     }
 
@@ -65,6 +69,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_available_bytes
      */
     fun getAvailableBytes(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAvailableBytesBind, handle)
     }
 
@@ -74,6 +79,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.set_big_endian
      */
     fun setBigEndian(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, handle, enable)
     }
 
@@ -83,6 +89,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.is_big_endian_enabled
      */
     fun isBigEndianEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBigEndianEnabledBind, handle)
     }
 
@@ -92,6 +99,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_8
      */
     fun put8(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(put8Bind, handle, value)
     }
 
@@ -101,6 +109,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_u8
      */
     fun putU8(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(putU8Bind, handle, value)
     }
 
@@ -110,6 +119,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_16
      */
     fun put16(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(put16Bind, handle, value)
     }
 
@@ -119,6 +129,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_u16
      */
     fun putU16(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(putU16Bind, handle, value)
     }
 
@@ -128,6 +139,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_32
      */
     fun put32(value: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(put32Bind, handle, value)
     }
 
@@ -137,6 +149,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_u32
      */
     fun putU32(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(putU32Bind, handle, value)
     }
 
@@ -146,6 +159,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_64
      */
     fun put64(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(put64Bind, handle, value)
     }
 
@@ -155,6 +169,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_u64
      */
     fun putU64(value: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(putU64Bind, handle, value)
     }
 
@@ -164,6 +179,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_half
      */
     fun putHalf(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(putHalfBind, handle, value)
     }
 
@@ -173,6 +189,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_float
      */
     fun putFloat(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(putFloatBind, handle, value)
     }
 
@@ -182,6 +199,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_double
      */
     fun putDouble(value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(putDoubleBind, handle, value)
     }
 
@@ -193,6 +211,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_string
      */
     fun putString(value: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(putStringBind, handle, value)
     }
 
@@ -204,6 +223,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_utf8_string
      */
     fun putUtf8String(value: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(putUtf8StringBind, handle, value)
     }
 
@@ -215,6 +235,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.put_var
      */
     fun putVar(value: Any?, fullObjects: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithVariantAndBoolArg(putVarBind, handle, value, fullObjects)
     }
 
@@ -224,6 +245,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_8
      */
     fun get8(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(get8Bind, handle)
     }
 
@@ -233,6 +255,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_u8
      */
     fun getU8(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getU8Bind, handle)
     }
 
@@ -242,6 +265,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_16
      */
     fun get16(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(get16Bind, handle)
     }
 
@@ -251,6 +275,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_u16
      */
     fun getU16(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getU16Bind, handle)
     }
 
@@ -260,6 +285,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_32
      */
     fun get32(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(get32Bind, handle)
     }
 
@@ -269,6 +295,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_u32
      */
     fun getU32(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getU32Bind, handle)
     }
 
@@ -278,6 +305,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_64
      */
     fun get64(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(get64Bind, handle)
     }
 
@@ -287,6 +315,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_u64
      */
     fun getU64(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getU64Bind, handle)
     }
 
@@ -296,6 +325,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_half
      */
     fun getHalf(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHalfBind, handle)
     }
 
@@ -305,6 +335,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_float
      */
     fun getFloat(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFloatBind, handle)
     }
 
@@ -314,6 +345,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_double
      */
     fun getDouble(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getDoubleBind, handle)
     }
 
@@ -324,6 +356,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_string
      */
     fun getString(bytes: Int = -1): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getStringBind, handle, bytes)
     }
 
@@ -335,6 +368,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_utf8_string
      */
     fun getUtf8String(bytes: Int = -1): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getUtf8StringBind, handle, bytes)
     }
 
@@ -348,6 +382,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: StreamPeer.get_var
      */
     fun getVar(allowObjects: Boolean = false): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
     }
 

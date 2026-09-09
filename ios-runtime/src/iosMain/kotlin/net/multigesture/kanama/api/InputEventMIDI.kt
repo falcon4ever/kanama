@@ -58,66 +58,82 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
         set(value) = setControllerValue(value)
 
     fun setChannel(channel: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setChannelBind, handle, channel)
     }
 
     fun getChannel(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getChannelBind, handle)
     }
 
     fun setMessage(message: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMessageBind, handle, message)
     }
 
     fun getMessage(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMessageBind, handle)
     }
 
     fun setPitch(pitch: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPitchBind, handle, pitch)
     }
 
     fun getPitch(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPitchBind, handle)
     }
 
     fun setVelocity(velocity: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setVelocityBind, handle, velocity)
     }
 
     fun getVelocity(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getVelocityBind, handle)
     }
 
     fun setInstrument(instrument: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setInstrumentBind, handle, instrument)
     }
 
     fun getInstrument(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getInstrumentBind, handle)
     }
 
     fun setPressure(pressure: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPressureBind, handle, pressure)
     }
 
     fun getPressure(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPressureBind, handle)
     }
 
     fun setControllerNumber(controllerNumber: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setControllerNumberBind, handle, controllerNumber)
     }
 
     fun getControllerNumber(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getControllerNumberBind, handle)
     }
 
     fun setControllerValue(controllerValue: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setControllerValueBind, handle, controllerValue)
     }
 
     fun getControllerValue(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getControllerValueBind, handle)
     }
 

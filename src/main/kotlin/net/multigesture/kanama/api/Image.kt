@@ -18,6 +18,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_width
      */
     fun getWidth(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
     }
 
@@ -27,6 +28,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_height
      */
     fun getHeight(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
     }
 
@@ -36,6 +38,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_size
      */
     fun getSize(): Vector2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
     }
 
@@ -45,6 +48,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.has_mipmaps
      */
     fun hasMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
     }
 
@@ -54,6 +58,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_format
      */
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
@@ -63,6 +68,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_data
      */
     fun getData(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
     }
 
@@ -72,6 +78,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_data_size
      */
     fun getDataSize(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getDataSizeBind, handle)
     }
 
@@ -81,6 +88,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.convert
      */
     fun convert(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(convertBind, handle, format)
     }
 
@@ -92,6 +100,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_mipmap_count
      */
     fun getMipmapCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, handle)
     }
 
@@ -102,6 +111,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_mipmap_offset
      */
     fun getMipmapOffset(mipmap: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getMipmapOffsetBind, handle, mipmap)
     }
 
@@ -113,6 +123,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.resize_to_po2
      */
     fun resizeToPo2(square: Boolean = false, interpolation: Long = 1L) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, handle, square, interpolation)
     }
 
@@ -125,6 +136,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.resize
      */
     fun resize(width: Int, height: Int, interpolation: Long = 1L) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, handle, width, height, interpolation)
     }
 
@@ -134,6 +146,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.shrink_x2
      */
     fun shrinkX2() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(shrinkX2Bind, handle)
     }
 
@@ -144,6 +157,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.crop
      */
     fun crop(width: Int, height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(cropBind, handle, width, height)
     }
 
@@ -153,6 +167,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.flip_x
      */
     fun flipX() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(flipXBind, handle)
     }
 
@@ -162,6 +177,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.flip_y
      */
     fun flipY() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(flipYBind, handle)
     }
 
@@ -178,6 +194,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.generate_mipmaps
      */
     fun generateMipmaps(renormalize: Boolean = false): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, handle, renormalize)
     }
 
@@ -187,6 +204,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.clear_mipmaps
      */
     fun clearMipmaps() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMipmapsBind, handle)
     }
 
@@ -196,6 +214,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.set_data
      */
     fun setData(width: Int, height: Int, useMipmaps: Boolean, format: Long, data: ByteArray) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(setDataBind, handle, width, height, useMipmaps, format, data)
     }
 
@@ -205,6 +224,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.is_empty
      */
     fun isEmpty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 
@@ -219,6 +239,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load
      */
     fun load(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
     }
 
@@ -228,6 +249,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_png
      */
     fun savePng(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, handle, path)
     }
 
@@ -237,6 +259,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_png_to_buffer
      */
     fun savePngToBuffer(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(savePngToBufferBind, handle)
     }
 
@@ -251,6 +274,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_jpg
      */
     fun saveJpg(path: String, quality: Double = 0.75): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, handle, path, quality)
     }
 
@@ -265,6 +289,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_jpg_to_buffer
      */
     fun saveJpgToBuffer(quality: Double = 0.75): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleArgRetByteArray(saveJpgToBufferBind, handle, quality)
     }
 
@@ -282,6 +307,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_exr
      */
     fun saveExr(path: String, grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, handle, path, grayscale, colorImage, maxLinearValue)
     }
 
@@ -299,6 +325,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_exr_to_buffer
      */
     fun saveExrToBuffer(grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoBoolAndDoubleArgRetByteArray(saveExrToBufferBind, handle, grayscale, colorImage, maxLinearValue)
     }
 
@@ -312,6 +339,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_dds
      */
     fun saveDds(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, handle, path)
     }
 
@@ -325,6 +353,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_dds_to_buffer
      */
     fun saveDdsToBuffer(): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(saveDdsToBufferBind, handle)
     }
 
@@ -338,6 +367,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_webp
      */
     fun saveWebp(path: String, lossy: Boolean = false, quality: Double = 0.75): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, handle, path, lossy, quality)
     }
 
@@ -350,6 +380,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.save_webp_to_buffer
      */
     fun saveWebpToBuffer(lossy: Boolean = false, quality: Double = 0.75): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithBoolAndDoubleArgRetByteArray(saveWebpToBufferBind, handle, lossy, quality)
     }
 
@@ -361,6 +392,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.detect_alpha
      */
     fun detectAlpha(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, handle)
     }
 
@@ -371,6 +403,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.is_invisible
      */
     fun isInvisible(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isInvisibleBind, handle)
     }
 
@@ -381,6 +414,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.detect_used_channels
      */
     fun detectUsedChannels(source: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, handle, source)
     }
 
@@ -396,6 +430,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.compress
      */
     fun compress(mode: Long, source: Long = 0L, astcFormat: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, handle, mode, source, astcFormat)
     }
 
@@ -412,6 +447,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.compress_from_channels
      */
     fun compressFromChannels(mode: Long, channels: Long, astcFormat: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, handle, mode, channels, astcFormat)
     }
 
@@ -424,6 +460,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.decompress
      */
     fun decompress(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(decompressBind, handle)
     }
 
@@ -433,6 +470,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.is_compressed
      */
     fun isCompressed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCompressedBind, handle)
     }
 
@@ -444,6 +482,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.rotate_90
      */
     fun rotate90(direction: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(rotate90Bind, handle, direction)
     }
 
@@ -453,6 +492,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.rotate_180
      */
     fun rotate180() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(rotate180Bind, handle)
     }
 
@@ -462,6 +502,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.fix_alpha_edges
      */
     fun fixAlphaEdges() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(fixAlphaEdgesBind, handle)
     }
 
@@ -472,6 +513,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.premultiply_alpha
      */
     fun premultiplyAlpha() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(premultiplyAlphaBind, handle)
     }
 
@@ -485,6 +527,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.srgb_to_linear
      */
     fun srgbToLinear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(srgbToLinearBind, handle)
     }
 
@@ -495,6 +538,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.linear_to_srgb
      */
     fun linearToSrgb() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(linearToSrgbBind, handle)
     }
 
@@ -506,6 +550,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.normal_map_to_xy
      */
     fun normalMapToXy() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(normalMapToXyBind, handle)
     }
 
@@ -516,6 +561,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.rgbe_to_srgb
      */
     fun rgbeToSrgb(): Image? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(rgbeToSrgbBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -531,6 +577,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.bump_map_to_normal_map
      */
     fun bumpMapToNormalMap(bumpScale: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(bumpMapToNormalMapBind, handle, bumpScale)
     }
 
@@ -542,6 +589,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.compute_image_metrics
      */
     fun computeImageMetrics(comparedImage: Image?, useLuma: Boolean): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(computeImageMetricsBind, handle, comparedImage?.requireOpenHandle() ?: MemorySegment.NULL, useLuma)
     }
 
@@ -555,6 +603,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.blit_rect
      */
     fun blitRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blitRectBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
@@ -568,6 +617,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.blit_rect_mask
      */
     fun blitRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blitRectMaskBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
@@ -579,6 +629,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.blend_rect
      */
     fun blendRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blendRectBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
@@ -593,6 +644,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.blend_rect_mask
      */
     fun blendRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blendRectMaskBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
@@ -602,6 +654,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.fill
      */
     fun fill(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(fillBind, handle, color)
     }
 
@@ -611,6 +664,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.fill_rect
      */
     fun fillRect(rect: Rect2i, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithRect2iAndColorArg(fillRectBind, handle, rect, color)
     }
 
@@ -621,6 +675,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_used_rect
      */
     fun getUsedRect(): Rect2i {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, handle)
     }
 
@@ -630,6 +685,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_region
      */
     fun getRegion(region: Rect2i): Image? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithRect2iArgRetObject(getRegionBind, handle, region)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -644,6 +700,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.copy_from
      */
     fun copyFrom(src: Image?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(copyFromBind, handle, listOf(src?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -654,6 +711,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_pixelv
      */
     fun getPixelv(point: Vector2i): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetColor(getPixelvBind, handle, point)
     }
 
@@ -664,6 +722,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.get_pixel
      */
     fun getPixel(x: Int, y: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getPixelBind, handle, x, y)
     }
 
@@ -673,6 +732,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.set_pixelv
      */
     fun setPixelv(point: Vector2i, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2iAndColorArg(setPixelvBind, handle, point, color)
     }
 
@@ -682,6 +742,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.set_pixel
      */
     fun setPixel(x: Int, y: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndColorArg(setPixelBind, handle, x, y, color)
     }
 
@@ -692,6 +753,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.adjust_bcs
      */
     fun adjustBcs(brightness: Double, contrast: Double, saturation: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithThreeDoubleArgs(adjustBcsBind, handle, brightness, contrast, saturation)
     }
 
@@ -701,6 +763,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_png_from_buffer
      */
     fun loadPngFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, handle, buffer)
     }
 
@@ -710,6 +773,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_jpg_from_buffer
      */
     fun loadJpgFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadJpgFromBufferBind, handle, buffer)
     }
 
@@ -719,6 +783,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_webp_from_buffer
      */
     fun loadWebpFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadWebpFromBufferBind, handle, buffer)
     }
 
@@ -730,6 +795,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_tga_from_buffer
      */
     fun loadTgaFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadTgaFromBufferBind, handle, buffer)
     }
 
@@ -743,6 +809,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_bmp_from_buffer
      */
     fun loadBmpFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadBmpFromBufferBind, handle, buffer)
     }
 
@@ -757,6 +824,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_ktx_from_buffer
      */
     fun loadKtxFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadKtxFromBufferBind, handle, buffer)
     }
 
@@ -768,6 +836,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_dds_from_buffer
      */
     fun loadDdsFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadDdsFromBufferBind, handle, buffer)
     }
 
@@ -777,6 +846,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_exr_from_buffer
      */
     fun loadExrFromBuffer(buffer: ByteArray): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadExrFromBufferBind, handle, buffer)
     }
 
@@ -790,6 +860,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_svg_from_buffer
      */
     fun loadSvgFromBuffer(buffer: ByteArray, scale: Double = 1.0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(loadSvgFromBufferBind, handle, buffer, scale)
     }
 
@@ -801,6 +872,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Image.load_svg_from_string
      */
     fun loadSvgFromString(svgStr: String, scale: Double = 1.0): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, handle, svgStr, scale)
     }
 

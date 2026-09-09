@@ -20,6 +20,7 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
      * Generated from Godot docs: TCPServer.listen
      */
     fun listen(port: Int, bindAddress: String = "*"): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
     }
 
@@ -29,6 +30,7 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
      * Generated from Godot docs: TCPServer.get_local_port
      */
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
@@ -38,6 +40,7 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
      * Generated from Godot docs: TCPServer.take_connection
      */
     fun takeConnection(): StreamPeerTCP? {
+        checkOpen()
         return StreamPeerTCP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
     }
 

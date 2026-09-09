@@ -70,82 +70,102 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         set(value) = setGodotSkin(value)
 
     fun getSkinRoot(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkinRootBind, handle)
     }
 
     fun setSkinRoot(skinRoot: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSkinRootBind, handle, skinRoot)
     }
 
     fun getJointsOriginal(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsOriginalBind, handle)
     }
 
     fun setJointsOriginal(jointsOriginal: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsOriginalBind, handle, jointsOriginal)
     }
 
     fun getInverseBinds(): List<Transform3D> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3DList(getInverseBindsBind, handle)
     }
 
     fun setInverseBinds(inverseBinds: List<Transform3D>) {
+        checkOpen()
         ObjectCalls.ptrcallWithTransform3DListArg(setInverseBindsBind, handle, inverseBinds)
     }
 
     fun getJoints(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
     }
 
     fun setJoints(joints: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, handle, joints)
     }
 
     fun getNonJoints(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getNonJointsBind, handle)
     }
 
     fun setNonJoints(nonJoints: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setNonJointsBind, handle, nonJoints)
     }
 
     fun getRoots(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
     }
 
     fun setRoots(roots: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, handle, roots)
     }
 
     fun getSkeleton(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, handle)
     }
 
     fun setSkeleton(skeleton: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSkeletonBind, handle, skeleton)
     }
 
     fun getJointIToBoneI(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToBoneIBind, handle)
     }
 
     fun setJointIToBoneI(jointIToBoneI: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setJointIToBoneIBind, handle, jointIToBoneI)
     }
 
     fun getJointIToName(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToNameBind, handle)
     }
 
     fun setJointIToName(jointIToName: Map<String, Any?>) {
+        checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(setJointIToNameBind, handle, jointIToName)
     }
 
     fun getGodotSkin(): Skin? {
+        checkOpen()
         return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkinBind, handle))
     }
 
     fun setGodotSkin(godotSkin: Skin?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setGodotSkinBind, handle, listOf(godotSkin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 

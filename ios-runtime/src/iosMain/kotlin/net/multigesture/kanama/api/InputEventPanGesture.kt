@@ -17,10 +17,12 @@ class InputEventPanGesture(handle: MemorySegment) : InputEventGesture(handle) {
         set(value) = setDelta(value)
 
     fun setDelta(delta: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setDeltaBind, handle, delta)
     }
 
     fun getDelta(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getDeltaBind, handle)
     }
 

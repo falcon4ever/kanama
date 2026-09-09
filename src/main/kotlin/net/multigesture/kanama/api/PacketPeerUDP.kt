@@ -21,14 +21,17 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.bind
      */
     fun bind(port: Int, bindAddress: String = "*", recvBufSize: Int = 65536): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(bindBind, handle, port, bindAddress, recvBufSize)
     }
 
     fun closeConnection() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
     }
 
     fun waitBlocking(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(waitBlockingBind, handle)
     }
 
@@ -38,6 +41,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.is_bound
      */
     fun isBound(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isBoundBind, handle)
     }
 
@@ -54,6 +58,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.connect_to_host
      */
     fun connectToHost(host: String, port: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, handle, host, port)
     }
 
@@ -64,6 +69,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.is_socket_connected
      */
     fun isSocketConnected(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isSocketConnectedBind, handle)
     }
 
@@ -74,6 +80,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.get_packet_ip
      */
     fun getPacketIp(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPacketIpBind, handle)
     }
 
@@ -84,6 +91,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.get_packet_port
      */
     fun getPacketPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPacketPortBind, handle)
     }
 
@@ -93,6 +101,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.get_local_port
      */
     fun getLocalPort(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
     }
 
@@ -104,6 +113,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.set_dest_address
      */
     fun setDestAddress(host: String, port: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndIntArgRetLong(setDestAddressBind, handle, host, port)
     }
 
@@ -116,6 +126,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.set_broadcast_enabled
      */
     fun setBroadcastEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setBroadcastEnabledBind, handle, enabled)
     }
 
@@ -128,6 +139,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.join_multicast_group
      */
     fun joinMulticastGroup(multicastAddress: String, interfaceName: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(joinMulticastGroupBind, handle, multicastAddress, interfaceName)
     }
 
@@ -138,6 +150,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      * Generated from Godot docs: PacketPeerUDP.leave_multicast_group
      */
     fun leaveMulticastGroup(multicastAddress: String, interfaceName: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(leaveMulticastGroupBind, handle, multicastAddress, interfaceName)
     }
 

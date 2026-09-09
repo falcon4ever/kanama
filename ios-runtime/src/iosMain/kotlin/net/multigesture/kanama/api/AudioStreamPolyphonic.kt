@@ -16,10 +16,12 @@ class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setPolyphony(value)
 
     fun setPolyphony(voices: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPolyphonyBind, handle, voices)
     }
 
     fun getPolyphony(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPolyphonyBind, handle)
     }
 

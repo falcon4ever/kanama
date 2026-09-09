@@ -27,18 +27,22 @@ class World2D(handle: MemorySegment) : Resource(handle) {
         get() = getDirectSpaceState()
 
     fun getCanvas(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, handle)
     }
 
     fun getNavigationMap(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
     }
 
     fun getSpace(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
     }
 
     fun getDirectSpaceState(): PhysicsDirectSpaceState2D? {
+        checkOpen()
         return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
     }
 

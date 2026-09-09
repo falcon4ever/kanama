@@ -16,26 +16,32 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
         set(value) = setCode(value)
 
     fun getMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
     }
 
     fun setCode(code: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
     }
 
     fun getCode(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
     }
 
     fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
     fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
+        checkOpen()
         return Texture.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, handle, name, index))
     }
 
     fun inspectNativeShaderCode() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
     }
 

@@ -85,6 +85,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_rayleigh_coefficient
      */
     fun setRayleighCoefficient(rayleigh: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRayleighCoefficientBind, handle, rayleigh)
     }
 
@@ -96,6 +97,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_rayleigh_coefficient
      */
     fun getRayleighCoefficient(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRayleighCoefficientBind, handle)
     }
 
@@ -108,6 +110,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_rayleigh_color
      */
     fun setRayleighColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setRayleighColorBind, handle, color)
     }
 
@@ -120,6 +123,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_rayleigh_color
      */
     fun getRayleighColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getRayleighColorBind, handle)
     }
 
@@ -131,6 +135,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_mie_coefficient
      */
     fun setMieCoefficient(mie: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMieCoefficientBind, handle, mie)
     }
 
@@ -142,6 +147,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_mie_coefficient
      */
     fun getMieCoefficient(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMieCoefficientBind, handle)
     }
 
@@ -153,6 +159,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_mie_eccentricity
      */
     fun setMieEccentricity(eccentricity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMieEccentricityBind, handle, eccentricity)
     }
 
@@ -164,6 +171,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_mie_eccentricity
      */
     fun getMieEccentricity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMieEccentricityBind, handle)
     }
 
@@ -174,6 +182,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_mie_color
      */
     fun setMieColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setMieColorBind, handle, color)
     }
 
@@ -184,6 +193,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_mie_color
      */
     fun getMieColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getMieColorBind, handle)
     }
 
@@ -194,6 +204,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_turbidity
      */
     fun setTurbidity(turbidity: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setTurbidityBind, handle, turbidity)
     }
 
@@ -204,6 +215,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_turbidity
      */
     fun getTurbidity(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getTurbidityBind, handle)
     }
 
@@ -213,6 +225,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_sun_disk_scale
      */
     fun setSunDiskScale(scale: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSunDiskScaleBind, handle, scale)
     }
 
@@ -222,6 +235,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_sun_disk_scale
      */
     fun getSunDiskScale(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSunDiskScaleBind, handle)
     }
 
@@ -231,6 +245,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_ground_color
      */
     fun setGroundColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setGroundColorBind, handle, color)
     }
 
@@ -240,6 +255,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_ground_color
      */
     fun getGroundColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getGroundColorBind, handle)
     }
 
@@ -249,6 +265,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_energy_multiplier
      */
     fun setEnergyMultiplier(multiplier: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
     }
 
@@ -258,6 +275,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_energy_multiplier
      */
     fun getEnergyMultiplier(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
     }
 
@@ -268,6 +286,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_use_debanding
      */
     fun setUseDebanding(useDebanding: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
     }
 
@@ -278,6 +297,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_use_debanding
      */
     fun getUseDebanding(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
     }
 
@@ -288,6 +308,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.set_night_sky
      */
     fun setNightSky(nightSky: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNightSkyBind, handle, listOf(nightSky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -298,6 +319,7 @@ class PhysicalSkyMaterial(handle: MemorySegment) : Material(handle) {
      * Generated from Godot docs: PhysicalSkyMaterial.get_night_sky
      */
     fun getNightSky(): Texture2D? {
+        checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNightSkyBind, handle))
     }
 

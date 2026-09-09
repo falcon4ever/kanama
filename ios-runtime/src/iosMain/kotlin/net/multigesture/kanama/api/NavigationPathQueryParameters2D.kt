@@ -90,106 +90,132 @@ class NavigationPathQueryParameters2D(handle: MemorySegment) : RefCounted(handle
         set(value) = setPathSearchMaxDistance(value)
 
     fun setPathfindingAlgorithm(pathfindingAlgorithm: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, handle, pathfindingAlgorithm)
     }
 
     fun getPathfindingAlgorithm(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, handle)
     }
 
     fun setPathPostprocessing(pathPostprocessing: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, handle, pathPostprocessing)
     }
 
     fun getPathPostprocessing(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, handle)
     }
 
     fun setMap(map: RID) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDArg(setMapBind, handle, map)
     }
 
     fun getMap(): RID {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getMapBind, handle)
     }
 
     fun setStartPosition(startPosition: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setStartPositionBind, handle, startPosition)
     }
 
     fun getStartPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getStartPositionBind, handle)
     }
 
     fun setTargetPosition(targetPosition: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, handle, targetPosition)
     }
 
     fun getTargetPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, handle)
     }
 
     fun setNavigationLayers(navigationLayers: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, handle, navigationLayers)
     }
 
     fun getNavigationLayers(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, handle)
     }
 
     fun setMetadataFlags(flags: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setMetadataFlagsBind, handle, flags)
     }
 
     fun getMetadataFlags(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getMetadataFlagsBind, handle)
     }
 
     fun setSimplifyPath(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, handle, enabled)
     }
 
     fun getSimplifyPath(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, handle)
     }
 
     fun setSimplifyEpsilon(epsilon: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, handle, epsilon)
     }
 
     fun getSimplifyEpsilon(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, handle)
     }
 
     fun setPathReturnMaxLength(length: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, handle, length)
     }
 
     fun getPathReturnMaxLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, handle)
     }
 
     fun setPathReturnMaxRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, handle, radius)
     }
 
     fun getPathReturnMaxRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, handle)
     }
 
     fun setPathSearchMaxPolygons(maxPolygons: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, handle, maxPolygons)
     }
 
     fun getPathSearchMaxPolygons(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, handle)
     }
 
     fun setPathSearchMaxDistance(distance: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, handle, distance)
     }
 
     fun getPathSearchMaxDistance(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, handle)
     }
 

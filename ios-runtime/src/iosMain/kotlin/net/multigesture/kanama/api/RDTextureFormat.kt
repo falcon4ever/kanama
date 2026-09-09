@@ -76,98 +76,122 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setIsDiscardable(value)
 
     fun setFormat(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
     }
 
     fun getFormat(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
     }
 
     fun setWidth(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setWidthBind, handle, pMember)
     }
 
     fun getWidth(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getWidthBind, handle)
     }
 
     fun setHeight(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setHeightBind, handle, pMember)
     }
 
     fun getHeight(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getHeightBind, handle)
     }
 
     fun setDepth(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setDepthBind, handle, pMember)
     }
 
     fun getDepth(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getDepthBind, handle)
     }
 
     fun setArrayLayers(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setArrayLayersBind, handle, pMember)
     }
 
     fun getArrayLayers(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getArrayLayersBind, handle)
     }
 
     fun setMipmaps(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setMipmapsBind, handle, pMember)
     }
 
     fun getMipmaps(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMipmapsBind, handle)
     }
 
     fun setTextureType(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, pMember)
     }
 
     fun getTextureType(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
     }
 
     fun setSamples(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSamplesBind, handle, pMember)
     }
 
     fun getSamples(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, handle)
     }
 
     fun setUsageBits(pMember: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setUsageBitsBind, handle, pMember)
     }
 
     fun getUsageBits(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getUsageBitsBind, handle)
     }
 
     fun setIsResolveBuffer(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsResolveBufferBind, handle, pMember)
     }
 
     fun getIsResolveBuffer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsResolveBufferBind, handle)
     }
 
     fun setIsDiscardable(pMember: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIsDiscardableBind, handle, pMember)
     }
 
     fun getIsDiscardable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsDiscardableBind, handle)
     }
 
     fun addShareableFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(addShareableFormatBind, handle, format)
     }
 
     fun removeShareableFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(removeShareableFormatBind, handle, format)
     }
 

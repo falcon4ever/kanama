@@ -15,6 +15,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.has
      */
     fun has(property: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasBind, handle, property)
     }
 
@@ -24,6 +25,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_files_to_export
      */
     fun getFilesToExport(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesToExportBind, handle)
     }
 
@@ -35,6 +37,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_customized_files
      */
     fun getCustomizedFiles(): Map<String, Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getCustomizedFilesBind, handle)
     }
 
@@ -44,6 +47,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_customized_files_count
      */
     fun getCustomizedFilesCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getCustomizedFilesCountBind, handle)
     }
 
@@ -53,6 +57,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.has_export_file
      */
     fun hasExportFile(path: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasExportFileBind, handle, path)
     }
 
@@ -62,6 +67,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_file_export_mode
      */
     fun getFileExportMode(path: String, default: Long = 0L): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, handle, path, default)
     }
 
@@ -72,6 +78,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_project_setting
      */
     fun getProjectSetting(name: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getProjectSettingBind, handle, name)
     }
 
@@ -81,6 +88,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_preset_name
      */
     fun getPresetName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getPresetNameBind, handle)
     }
 
@@ -90,6 +98,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.is_runnable
      */
     fun isRunnable(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRunnableBind, handle)
     }
 
@@ -99,6 +108,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.are_advanced_options_enabled
      */
     fun areAdvancedOptionsEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(areAdvancedOptionsEnabledBind, handle)
     }
 
@@ -108,6 +118,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.is_dedicated_server
      */
     fun isDedicatedServer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDedicatedServerBind, handle)
     }
 
@@ -117,6 +128,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_export_filter
      */
     fun getExportFilter(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, handle)
     }
 
@@ -126,6 +138,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_include_filter
      */
     fun getIncludeFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getIncludeFilterBind, handle)
     }
 
@@ -135,6 +148,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_exclude_filter
      */
     fun getExcludeFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getExcludeFilterBind, handle)
     }
 
@@ -145,6 +159,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_custom_features
      */
     fun getCustomFeatures(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCustomFeaturesBind, handle)
     }
 
@@ -154,6 +169,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_patches
      */
     fun getPatches(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPatchesBind, handle)
     }
 
@@ -163,6 +179,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_export_path
      */
     fun getExportPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getExportPathBind, handle)
     }
 
@@ -172,6 +189,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_encryption_in_filter
      */
     fun getEncryptionInFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionInFilterBind, handle)
     }
 
@@ -181,6 +199,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_encryption_ex_filter
      */
     fun getEncryptionExFilter(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionExFilterBind, handle)
     }
 
@@ -190,6 +209,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_encrypt_pck
      */
     fun getEncryptPck(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEncryptPckBind, handle)
     }
 
@@ -199,6 +219,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_encrypt_directory
      */
     fun getEncryptDirectory(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEncryptDirectoryBind, handle)
     }
 
@@ -208,6 +229,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_encryption_key
      */
     fun getEncryptionKey(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getEncryptionKeyBind, handle)
     }
 
@@ -218,6 +240,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_script_export_mode
      */
     fun getScriptExportMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, handle)
     }
 
@@ -227,6 +250,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_or_env
      */
     fun getOrEnv(name: String, envVar: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, handle, name, envVar)
     }
 
@@ -239,6 +263,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPreset.get_version
      */
     fun getVersion(name: String, windowsVersion: Boolean): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, handle, name, windowsVersion)
     }
 

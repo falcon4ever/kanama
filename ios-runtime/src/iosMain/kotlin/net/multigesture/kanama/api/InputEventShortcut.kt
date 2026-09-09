@@ -16,10 +16,12 @@ class InputEventShortcut(handle: MemorySegment) : InputEvent(handle) {
         set(value) = setShortcut(value)
 
     fun setShortcut(shortcut: Shortcut?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, handle, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getShortcut(): Shortcut? {
+        checkOpen()
         return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, handle))
     }
 

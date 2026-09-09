@@ -29,26 +29,32 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setImageSize(value)
 
     fun setMesh(mesh: Mesh?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMesh(): Mesh? {
+        checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
     }
 
     fun setImageSize(size: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setImageSizeBind, handle, size)
     }
 
     fun getImageSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getImageSizeBind, handle)
     }
 
     fun setBaseTexture(texture: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getBaseTexture(): Texture2D? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseTextureBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)

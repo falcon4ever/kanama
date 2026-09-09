@@ -66,6 +66,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_from
      */
     fun setFrom(from: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setFromBind, handle, from)
     }
 
@@ -75,6 +76,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.get_from
      */
     fun getFrom(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getFromBind, handle)
     }
 
@@ -84,6 +86,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_to
      */
     fun setTo(to: Vector3) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(setToBind, handle, to)
     }
 
@@ -93,6 +96,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.get_to
      */
     fun getTo(): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(getToBind, handle)
     }
 
@@ -105,6 +109,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collision_mask
      */
     fun setCollisionMask(collisionMask: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
     }
 
@@ -117,6 +122,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
     }
 
@@ -129,6 +135,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_exclude
      */
     fun setExclude(exclude: List<RID>) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
     }
 
@@ -141,6 +148,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.get_exclude
      */
     fun getExclude(): List<RID> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
@@ -150,6 +158,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collide_with_bodies
      */
     fun setCollideWithBodies(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
     }
 
@@ -159,6 +168,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.is_collide_with_bodies_enabled
      */
     fun isCollideWithBodiesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
     }
 
@@ -168,6 +178,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_collide_with_areas
      */
     fun setCollideWithAreas(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
     }
 
@@ -177,6 +188,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.is_collide_with_areas_enabled
      */
     fun isCollideWithAreasEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
     }
 
@@ -187,6 +199,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_hit_from_inside
      */
     fun setHitFromInside(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
     }
 
@@ -197,6 +210,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.is_hit_from_inside_enabled
      */
     fun isHitFromInsideEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
     }
 
@@ -207,6 +221,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.set_hit_back_faces
      */
     fun setHitBackFaces(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, handle, enable)
     }
 
@@ -217,6 +232,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: PhysicsRayQueryParameters3D.is_hit_back_faces_enabled
      */
     fun isHitBackFacesEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, handle)
     }
 

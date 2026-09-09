@@ -15,14 +15,17 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: MemorySegment) : OpenXRS
         set(value) = setArucoDict(value)
 
     fun getEnabledComponents(): List<Long> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
     }
 
     fun setArucoDict(arucoDict: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setArucoDictBind, handle, arucoDict)
     }
 
     fun getArucoDict(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getArucoDictBind, handle)
     }
 

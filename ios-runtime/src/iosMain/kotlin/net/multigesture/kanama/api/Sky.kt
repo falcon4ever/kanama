@@ -28,26 +28,32 @@ class Sky(handle: MemorySegment) : Resource(handle) {
         set(value) = setRadianceSize(value)
 
     fun setRadianceSize(size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRadianceSizeBind, handle, size)
     }
 
     fun getRadianceSize(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRadianceSizeBind, handle)
     }
 
     fun setProcessMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setProcessModeBind, handle, mode)
     }
 
     fun getProcessMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, handle)
     }
 
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 

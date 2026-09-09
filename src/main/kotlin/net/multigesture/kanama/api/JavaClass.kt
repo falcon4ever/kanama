@@ -15,6 +15,7 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: JavaClass.get_java_class_name
      */
     fun getJavaClassName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getJavaClassNameBind, handle)
     }
 
@@ -25,6 +26,7 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: JavaClass.get_java_method_list
      */
     fun getJavaMethodList(): List<Map<String, Any?>> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionaryList(getJavaMethodListBind, handle)
     }
 
@@ -34,6 +36,7 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: JavaClass.get_java_parent_class
      */
     fun getJavaParentClass(): JavaClass? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getJavaParentClassBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -48,6 +51,7 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: JavaClass.has_java_method
      */
     fun hasJavaMethod(method: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
     }
 

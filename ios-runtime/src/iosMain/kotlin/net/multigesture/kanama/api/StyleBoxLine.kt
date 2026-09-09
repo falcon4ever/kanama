@@ -41,42 +41,52 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
         set(value) = setVertical(value)
 
     fun setColor(color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
     }
 
     fun getColor(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
     }
 
     fun setThickness(thickness: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setThicknessBind, handle, thickness)
     }
 
     fun getThickness(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getThicknessBind, handle)
     }
 
     fun setGrowBegin(offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGrowBeginBind, handle, offset)
     }
 
     fun getGrowBegin(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBeginBind, handle)
     }
 
     fun setGrowEnd(offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGrowEndBind, handle, offset)
     }
 
     fun getGrowEnd(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGrowEndBind, handle)
     }
 
     fun setVertical(vertical: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
     }
 
     fun isVertical(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
     }
 

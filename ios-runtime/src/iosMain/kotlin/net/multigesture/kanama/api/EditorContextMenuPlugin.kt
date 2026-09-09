@@ -9,18 +9,22 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorContextMenuPlugin(handle: MemorySegment) : RefCounted(handle) {
     fun addMenuShortcut(shortcut: Shortcut?, callback: GodotCallable) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectCallableArgs(addMenuShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.handle, callback.method)
     }
 
     fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringCallableObjectArgs(addContextMenuItemBind, handle, name, callback.target.handle, callback.method, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextMenuItemFromShortcutBind, handle, name, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextSubmenuItemBind, handle, name, menu.handle, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 

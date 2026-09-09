@@ -9,6 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class AudioStreamPlaybackResampled(handle: MemorySegment) : AudioStreamPlayback(handle) {
     fun beginResample() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(beginResampleBind, handle)
     }
 

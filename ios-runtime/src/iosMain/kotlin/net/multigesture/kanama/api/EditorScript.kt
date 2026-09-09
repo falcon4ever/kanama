@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorScript(handle: MemorySegment) : RefCounted(handle) {
     fun addRootNode(node: Node) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, handle, listOf(node.handle))
     }
 
     fun getScene(): Node? {
+        checkOpen()
         return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSceneBind, handle))
     }
 
     fun getEditorInterface(): EditorInterface? {
+        checkOpen()
         return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorInterfaceBind, handle))
     }
 

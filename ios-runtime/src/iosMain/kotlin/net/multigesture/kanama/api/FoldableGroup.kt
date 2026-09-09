@@ -16,18 +16,22 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
         set(value) = setAllowFoldingAll(value)
 
     fun getExpandedContainer(): FoldableContainer? {
+        checkOpen()
         return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExpandedContainerBind, handle))
     }
 
     fun getContainers(): List<FoldableContainer> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getContainersBind, handle, FoldableContainer::fromHandle)
     }
 
     fun setAllowFoldingAll(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowFoldingAllBind, handle, enabled)
     }
 
     fun isAllowFoldingAll(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowFoldingAllBind, handle)
     }
 

@@ -15,6 +15,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TLSOptions.is_server
      */
     fun isServer(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, handle)
     }
 
@@ -24,6 +25,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TLSOptions.is_unsafe_client
      */
     fun isUnsafeClient(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isUnsafeClientBind, handle)
     }
 
@@ -33,6 +35,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TLSOptions.get_common_name_override
      */
     fun getCommonNameOverride(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getCommonNameOverrideBind, handle)
     }
 
@@ -43,6 +46,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TLSOptions.get_trusted_ca_chain
      */
     fun getTrustedCaChain(): X509Certificate? {
+        checkOpen()
         return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, handle))
     }
 
@@ -52,6 +56,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TLSOptions.get_private_key
      */
     fun getPrivateKey(): CryptoKey? {
+        checkOpen()
         return CryptoKey.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, handle))
     }
 
@@ -61,6 +66,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: TLSOptions.get_own_certificate
      */
     fun getOwnCertificate(): X509Certificate? {
+        checkOpen()
         return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, handle))
     }
 

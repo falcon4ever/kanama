@@ -45,62 +45,77 @@ class NoiseTexture3D(handle: MemorySegment) : Texture3D(handle) {
         set(value) = setSeamlessBlendSkirt(value)
 
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
     fun setHeight(height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
     }
 
     fun setDepth(depth: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setDepthBind, handle, depth)
     }
 
     fun setNoise(noise: Noise?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, handle, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNoise(): Noise? {
+        checkOpen()
         return Noise.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, handle))
     }
 
     fun setColorRamp(gradient: Gradient?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getColorRamp(): Gradient? {
+        checkOpen()
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
     }
 
     fun setSeamless(seamless: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, handle, seamless)
     }
 
     fun getSeamless(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, handle)
     }
 
     fun setInvert(invert: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setInvertBind, handle, invert)
     }
 
     fun getInvert(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, handle)
     }
 
     fun setNormalize(normalize: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, handle, normalize)
     }
 
     fun isNormalized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, handle)
     }
 
     fun setSeamlessBlendSkirt(seamlessBlendSkirt: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, handle, seamlessBlendSkirt)
     }
 
     fun getSeamlessBlendSkirt(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, handle)
     }
 

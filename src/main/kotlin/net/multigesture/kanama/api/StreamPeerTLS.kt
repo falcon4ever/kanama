@@ -16,6 +16,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerTLS.poll
      */
     fun poll() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(pollBind, handle)
     }
 
@@ -25,6 +26,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerTLS.accept_stream
      */
     fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -37,6 +39,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerTLS.connect_to_stream
      */
     fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, commonName, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -46,6 +49,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerTLS.get_status
      */
     fun getStatus(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
     }
 
@@ -55,6 +59,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerTLS.get_stream
      */
     fun getStream(): StreamPeer? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -69,6 +74,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      * Generated from Godot docs: StreamPeerTLS.disconnect_from_stream
      */
     fun disconnectFromStream() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, handle)
     }
 

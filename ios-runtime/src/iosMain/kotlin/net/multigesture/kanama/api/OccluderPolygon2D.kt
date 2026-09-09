@@ -27,22 +27,27 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
         get() = getPolygon()
 
     fun setPolygonClosed(closed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPolygonClosedBind, handle, closed)
     }
 
     fun isPolygonClosed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isPolygonClosedBind, handle)
     }
 
     fun setCullMode(cullMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, cullMode)
     }
 
     fun getCullMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
     }
 
     fun getPolygon(): List<Vector2> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
     }
 

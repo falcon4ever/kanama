@@ -36,6 +36,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Sky.set_radiance_size
      */
     fun setRadianceSize(size: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setRadianceSizeBind, handle, size)
     }
 
@@ -47,6 +48,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Sky.get_radiance_size
      */
     fun getRadianceSize(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getRadianceSizeBind, handle)
     }
 
@@ -58,6 +60,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Sky.set_process_mode
      */
     fun setProcessMode(mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setProcessModeBind, handle, mode)
     }
 
@@ -69,6 +72,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Sky.get_process_mode
      */
     fun getProcessMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, handle)
     }
 
@@ -79,6 +83,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Sky.set_material
      */
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -89,6 +94,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Sky.get_material
      */
     fun getMaterial(): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 

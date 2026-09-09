@@ -9,14 +9,17 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
     fun bind(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(bindBind, handle, path)
     }
 
     fun connectToHost(path: String): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, handle, path)
     }
 
     fun getConnectedPath(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getConnectedPathBind, handle)
     }
 

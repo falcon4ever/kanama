@@ -22,42 +22,52 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setState(value)
 
     fun setSeed(seed: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setSeedBind, handle, seed)
     }
 
     fun getSeed(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getSeedBind, handle)
     }
 
     fun setState(state: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setStateBind, handle, state)
     }
 
     fun getState(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, handle)
     }
 
     fun randi(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(randiBind, handle)
     }
 
     fun randf(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(randfBind, handle)
     }
 
     fun randfn(mean: Double = 0.0, deviation: Double = 1.0): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfnBind, handle, mean, deviation)
     }
 
     fun randfRange(from: Double, to: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfRangeBind, handle, from, to)
     }
 
     fun randiRange(from: Int, to: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(randiRangeBind, handle, from, to)
     }
 
     fun randomize() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(randomizeBind, handle)
     }
 

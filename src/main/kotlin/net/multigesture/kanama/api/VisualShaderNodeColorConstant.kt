@@ -16,10 +16,12 @@ class VisualShaderNodeColorConstant(handle: MemorySegment) : VisualShaderNodeCon
         set(value) = setConstant(value)
 
     fun setConstant(constant: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithColorArg(setConstantBind, handle, constant)
     }
 
     fun getConstant(): Color {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getConstantBind, handle)
     }
 

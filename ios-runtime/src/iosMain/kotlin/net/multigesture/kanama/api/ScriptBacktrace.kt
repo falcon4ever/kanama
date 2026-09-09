@@ -9,30 +9,37 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     fun getLanguageName(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getLanguageNameBind, handle)
     }
 
     fun isEmpty(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
     }
 
     fun getFrameCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFrameCountBind, handle)
     }
 
     fun getFrameLine(index: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getFrameLineBind, handle, index)
     }
 
     fun getGlobalVariableCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGlobalVariableCountBind, handle)
     }
 
     fun getLocalVariableCount(frameIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getLocalVariableCountBind, handle, frameIndex)
     }
 
     fun getMemberVariableCount(frameIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getMemberVariableCountBind, handle, frameIndex)
     }
 

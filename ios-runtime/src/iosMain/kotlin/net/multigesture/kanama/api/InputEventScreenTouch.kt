@@ -29,34 +29,42 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
         set(value) = setDoubleTap(value)
 
     fun setIndex(index: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setIndexBind, handle, index)
     }
 
     fun getIndex(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, handle)
     }
 
     fun setPosition(position: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
     }
 
     fun getPosition(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
     }
 
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 
     fun setCanceled(canceled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setCanceledBind, handle, canceled)
     }
 
     fun setDoubleTap(doubleTap: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDoubleTapBind, handle, doubleTap)
     }
 
     fun isDoubleTap(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDoubleTapBind, handle)
     }
 

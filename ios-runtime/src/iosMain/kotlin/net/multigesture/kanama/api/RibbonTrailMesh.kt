@@ -46,50 +46,62 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         set(value) = setCurve(value)
 
     fun setSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSizeBind, handle, size)
     }
 
     fun getSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, handle)
     }
 
     fun setSections(sections: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
     }
 
     fun getSections(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
     }
 
     fun setSectionLength(sectionLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
     }
 
     fun getSectionLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
     }
 
     fun setSectionSegments(sectionSegments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionSegmentsBind, handle, sectionSegments)
     }
 
     fun getSectionSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionSegmentsBind, handle)
     }
 
     fun setCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 
     fun setShape(shape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setShapeBind, handle, shape)
     }
 
     fun getShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, handle)
     }
 

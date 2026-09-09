@@ -417,22 +417,27 @@ class AudioStreamPlaylist(handle: MemorySegment) : AudioStream(handle) {
         set(value) = setListStream(63, value)
 
     fun setStreamCount(streamCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setStreamCountBind, handle, streamCount)
     }
 
     fun getStreamCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, handle)
     }
 
     fun getBpm(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, handle)
     }
 
     fun setListStream(streamIndex: Int, audioStream: AudioStream?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setListStreamBind, handle, streamIndex, audioStream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getListStream(streamIndex: Int): AudioStream? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(getListStreamBind, handle, streamIndex)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -442,26 +447,32 @@ class AudioStreamPlaylist(handle: MemorySegment) : AudioStream(handle) {
     }
 
     fun setShuffle(shuffle: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setShuffleBind, handle, shuffle)
     }
 
     fun getShuffle(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getShuffleBind, handle)
     }
 
     fun setFadeTime(dec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setFadeTimeBind, handle, dec)
     }
 
     fun getFadeTime(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getFadeTimeBind, handle)
     }
 
     fun setLoop(loop: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
     }
 
     fun hasLoop(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
     }
 

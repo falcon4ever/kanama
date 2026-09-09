@@ -37,38 +37,47 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
         set(value) = setContentMargin(3L, value)
 
     fun getMinimumSize(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, handle)
     }
 
     fun setContentMargin(margin: Long, offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongAndDoubleArg(setContentMarginBind, handle, margin, offset)
     }
 
     fun setContentMarginAll(offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setContentMarginAllBind, handle, offset)
     }
 
     fun getContentMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getContentMarginBind, handle, margin)
     }
 
     fun getMargin(margin: Long): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDouble(getMarginBind, handle, margin)
     }
 
     fun getOffset(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
     }
 
     fun draw(canvasItem: RID, rect: Rect2) {
+        checkOpen()
         ObjectCalls.ptrcallWithRIDAndRect2Arg(drawBind, handle, canvasItem, rect)
     }
 
     fun getCurrentItemDrawn(): CanvasItem? {
+        checkOpen()
         return CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentItemDrawnBind, handle))
     }
 
     fun testMask(point: Vector2, rect: Rect2): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(testMaskBind, handle, point, rect)
     }
 

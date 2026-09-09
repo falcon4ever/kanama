@@ -70,90 +70,112 @@ class NoiseTexture2D(handle: MemorySegment) : Texture2D(handle) {
         set(value) = setBumpStrength(value)
 
     fun setWidth(width: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
     }
 
     fun setHeight(height: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
     }
 
     fun setGenerateMipmaps(invert: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, invert)
     }
 
     fun isGeneratingMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isGeneratingMipmapsBind, handle)
     }
 
     fun setNoise(noise: Noise?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, handle, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNoise(): Noise? {
+        checkOpen()
         return Noise.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, handle))
     }
 
     fun setColorRamp(gradient: Gradient?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getColorRamp(): Gradient? {
+        checkOpen()
         return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
     }
 
     fun setSeamless(seamless: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, handle, seamless)
     }
 
     fun getSeamless(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, handle)
     }
 
     fun setInvert(invert: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setInvertBind, handle, invert)
     }
 
     fun getInvert(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, handle)
     }
 
     fun setIn3dSpace(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setIn3dSpaceBind, handle, enable)
     }
 
     fun isIn3dSpace(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isIn3dSpaceBind, handle)
     }
 
     fun setAsNormalMap(asNormalMap: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAsNormalMapBind, handle, asNormalMap)
     }
 
     fun isNormalMap(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isNormalMapBind, handle)
     }
 
     fun setNormalize(normalize: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, handle, normalize)
     }
 
     fun isNormalized(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, handle)
     }
 
     fun setSeamlessBlendSkirt(seamlessBlendSkirt: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, handle, seamlessBlendSkirt)
     }
 
     fun getSeamlessBlendSkirt(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, handle)
     }
 
     fun setBumpStrength(bumpStrength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setBumpStrengthBind, handle, bumpStrength)
     }
 
     fun getBumpStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getBumpStrengthBind, handle)
     }
 

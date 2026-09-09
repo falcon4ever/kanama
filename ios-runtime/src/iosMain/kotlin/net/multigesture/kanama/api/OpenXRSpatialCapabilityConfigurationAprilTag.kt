@@ -16,10 +16,12 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: MemorySegment) : Open
         set(value) = setAprilDict(value)
 
     fun setAprilDict(aprilDict: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAprilDictBind, handle, aprilDict)
     }
 
     fun getAprilDict(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getAprilDictBind, handle)
     }
 

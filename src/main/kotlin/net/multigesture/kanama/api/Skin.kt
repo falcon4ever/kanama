@@ -9,46 +9,57 @@ import net.multigesture.kanama.types.Transform3D
  */
 class Skin(handle: MemorySegment) : Resource(handle) {
     fun setBindCount(bindCount: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setBindCountBind, handle, bindCount)
     }
 
     fun getBindCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBindCountBind, handle)
     }
 
     fun addBind(bone: Int, pose: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(addBindBind, handle, bone, pose)
     }
 
     fun addNamedBind(name: String, pose: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringAndTransform3DArg(addNamedBindBind, handle, name, pose)
     }
 
     fun setBindPose(bindIndex: Int, pose: Transform3D) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setBindPoseBind, handle, bindIndex, pose)
     }
 
     fun getBindPose(bindIndex: Int): Transform3D {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBindPoseBind, handle, bindIndex)
     }
 
     fun setBindName(bindIndex: Int, name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBindNameBind, handle, bindIndex, name)
     }
 
     fun getBindName(bindIndex: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(getBindNameBind, handle, bindIndex)
     }
 
     fun setBindBone(bindIndex: Int, bone: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setBindBoneBind, handle, bindIndex, bone)
     }
 
     fun getBindBone(bindIndex: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getBindBoneBind, handle, bindIndex)
     }
 
     fun clearBinds() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBindsBind, handle)
     }
 

@@ -47,6 +47,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.set_material
      */
     fun setMaterial(material: Material?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -56,6 +57,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.get_material
      */
     fun getMaterial(): Material? {
+        checkOpen()
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
     }
 
@@ -65,6 +67,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.get_mesh_arrays
      */
     fun getMeshArrays(): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getMeshArraysBind, handle)
     }
 
@@ -75,6 +78,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.set_custom_aabb
      */
     fun setCustomAabb(aabb: AABB) {
+        checkOpen()
         ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
     }
 
@@ -85,6 +89,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.get_custom_aabb
      */
     fun getCustomAabb(): AABB {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
     }
 
@@ -96,6 +101,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.set_flip_faces
      */
     fun setFlipFaces(flipFaces: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, handle, flipFaces)
     }
 
@@ -107,6 +113,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.get_flip_faces
      */
     fun getFlipFaces(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, handle)
     }
 
@@ -117,6 +124,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.set_add_uv2
      */
     fun setAddUv2(addUv2: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAddUv2Bind, handle, addUv2)
     }
 
@@ -127,6 +135,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.get_add_uv2
      */
     fun getAddUv2(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getAddUv2Bind, handle)
     }
 
@@ -140,6 +149,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.set_uv2_padding
      */
     fun setUv2Padding(uv2Padding: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setUv2PaddingBind, handle, uv2Padding)
     }
 
@@ -153,6 +163,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.get_uv2_padding
      */
     fun getUv2Padding(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getUv2PaddingBind, handle)
     }
 
@@ -162,6 +173,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: PrimitiveMesh.request_update
      */
     fun requestUpdate() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(requestUpdateBind, handle)
     }
 

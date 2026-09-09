@@ -33,66 +33,82 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
         get() = getColors()
 
     fun addPoint(offset: Double, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleAndColorArg(addPointBind, handle, offset, color)
     }
 
     fun removePoint(point: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removePointBind, handle, point)
     }
 
     fun setOffset(point: Int, offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(setOffsetBind, handle, point, offset)
     }
 
     fun getOffset(point: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getOffsetBind, handle, point)
     }
 
     fun reverse() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(reverseBind, handle)
     }
 
     fun setColor(point: Int, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndColorArg(setColorBind, handle, point, color)
     }
 
     fun getColor(point: Int): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetColor(getColorBind, handle, point)
     }
 
     fun sample(offset: Double): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithDoubleArgRetColor(sampleBind, handle, offset)
     }
 
     fun getPointCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
     }
 
     fun setOffsets(offsets: List<Float>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setOffsetsBind, handle, offsets)
     }
 
     fun getOffsets(): List<Float> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getOffsetsBind, handle)
     }
 
     fun getColors(): List<Color> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
     }
 
     fun setInterpolationMode(interpolationMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, handle, interpolationMode)
     }
 
     fun getInterpolationMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, handle)
     }
 
     fun setInterpolationColorSpace(interpolationColorSpace: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, handle, interpolationColorSpace)
     }
 
     fun getInterpolationColorSpace(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, handle)
     }
 

@@ -23,6 +23,7 @@ class InputEventPanGesture(handle: MemorySegment) : InputEventGesture(handle) {
      * Generated from Godot docs: InputEventPanGesture.set_delta
      */
     fun setDelta(delta: Vector2) {
+        checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setDeltaBind, handle, delta)
     }
 
@@ -32,6 +33,7 @@ class InputEventPanGesture(handle: MemorySegment) : InputEventGesture(handle) {
      * Generated from Godot docs: InputEventPanGesture.get_delta
      */
     fun getDelta(): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(getDeltaBind, handle)
     }
 

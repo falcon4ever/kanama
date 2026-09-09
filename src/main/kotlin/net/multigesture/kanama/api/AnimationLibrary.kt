@@ -15,6 +15,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationLibrary.add_animation
      */
     fun addAnimation(name: String, animation: Animation?): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, handle, name, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -24,6 +25,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationLibrary.remove_animation
      */
     fun removeAnimation(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, handle, name)
     }
 
@@ -33,6 +35,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationLibrary.rename_animation
      */
     fun renameAnimation(name: String, newname: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, handle, name, newname)
     }
 
@@ -42,6 +45,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationLibrary.has_animation
      */
     fun hasAnimation(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, name)
     }
 
@@ -52,6 +56,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationLibrary.get_animation
      */
     fun getAnimation(name: String): Animation? {
+        checkOpen()
         return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, handle, name))
     }
 
@@ -61,6 +66,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationLibrary.get_animation_list
      */
     fun getAnimationList(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationListBind, handle)
     }
 
@@ -70,6 +76,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: AnimationLibrary.get_animation_list_size
      */
     fun getAnimationListSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAnimationListSizeBind, handle)
     }
 

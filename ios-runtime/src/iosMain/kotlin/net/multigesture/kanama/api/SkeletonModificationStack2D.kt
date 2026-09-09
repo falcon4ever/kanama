@@ -28,62 +28,77 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
         set(value) = setModificationCount(value)
 
     fun setup() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(setupBind, handle)
     }
 
     fun execute(delta: Double, executionMode: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleAndIntArgs(executeBind, handle, delta, executionMode)
     }
 
     fun enableAllModifications(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(enableAllModificationsBind, handle, enabled)
     }
 
     fun getModification(modIdx: Int): SkeletonModification2D? {
+        checkOpen()
         return SkeletonModification2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, handle, modIdx))
     }
 
     fun addModification(modification: SkeletonModification2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(addModificationBind, handle, listOf(modification?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun deleteModification(modIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(deleteModificationBind, handle, modIdx)
     }
 
     fun setModification(modIdx: Int, modification: SkeletonModification2D?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, handle, modIdx, modification?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setModificationCount(count: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setModificationCountBind, handle, count)
     }
 
     fun getModificationCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getModificationCountBind, handle)
     }
 
     fun getIsSetup(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
     }
 
     fun setEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
     }
 
     fun getEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
     }
 
     fun setStrength(strength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
     }
 
     fun getStrength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
     }
 
     fun getSkeleton(): Skeleton2D? {
+        checkOpen()
         return Skeleton2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
     }
 

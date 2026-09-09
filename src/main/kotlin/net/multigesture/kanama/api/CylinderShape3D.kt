@@ -28,6 +28,7 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: CylinderShape3D.set_radius
      */
     fun setRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
     }
 
@@ -37,6 +38,7 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: CylinderShape3D.get_radius
      */
     fun getRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
     }
 
@@ -46,6 +48,7 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: CylinderShape3D.set_height
      */
     fun setHeight(height: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
     }
 
@@ -55,6 +58,7 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      * Generated from Godot docs: CylinderShape3D.get_height
      */
     fun getHeight(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
     }
 

@@ -15,6 +15,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.generate_random_bytes
      */
     fun generateRandomBytes(size: Int): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetByteArray(generateRandomBytesBind, handle, size)
     }
 
@@ -25,6 +26,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.generate_rsa
      */
     fun generateRsa(size: Int): CryptoKey? {
+        checkOpen()
         return CryptoKey.wrap(ObjectCalls.ptrcallWithIntArgRetObject(generateRsaBind, handle, size))
     }
 
@@ -39,6 +41,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.generate_self_signed_certificate
      */
     fun generateSelfSignedCertificate(key: CryptoKey?, issuerName: String = "CN=myserver,O=myorganisation,C=IT", notBefore: String = "20140101000000", notAfter: String = "20340101000000"): X509Certificate? {
+        checkOpen()
         return X509Certificate.wrap(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(generateSelfSignedCertificateBind, handle, key?.requireOpenHandle() ?: MemorySegment.NULL, issuerName, notBefore, notAfter))
     }
 
@@ -48,6 +51,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.sign
      */
     fun sign(hashType: Long, hash: ByteArray, key: CryptoKey?): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(signBind, handle, hashType, hash, key?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -58,6 +62,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.verify
      */
     fun verify(hashType: Long, hash: ByteArray, signature: ByteArray, key: CryptoKey?): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(verifyBind, handle, hashType, hash, signature, key?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -68,6 +73,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.encrypt
      */
     fun encrypt(key: CryptoKey?, plaintext: ByteArray): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(encryptBind, handle, key?.requireOpenHandle() ?: MemorySegment.NULL, plaintext)
     }
 
@@ -78,6 +84,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.decrypt
      */
     fun decrypt(key: CryptoKey?, ciphertext: ByteArray): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(decryptBind, handle, key?.requireOpenHandle() ?: MemorySegment.NULL, ciphertext)
     }
 
@@ -89,6 +96,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.hmac_digest
      */
     fun hmacDigest(hashType: Long, key: ByteArray, msg: ByteArray): ByteArray {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetByteArray(hmacDigestBind, handle, hashType, key, msg)
     }
 
@@ -101,6 +109,7 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: Crypto.constant_time_compare
      */
     fun constantTimeCompare(trusted: ByteArray, received: ByteArray): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoByteArrayArgsRetBool(constantTimeCompareBind, handle, trusted, received)
     }
 

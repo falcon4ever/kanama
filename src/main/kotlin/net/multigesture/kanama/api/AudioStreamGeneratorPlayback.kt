@@ -18,6 +18,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      * Generated from Godot docs: AudioStreamGeneratorPlayback.push_frame
      */
     fun pushFrame(frame: Vector2): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetBool(pushFrameBind, handle, frame)
     }
 
@@ -28,6 +29,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      * Generated from Godot docs: AudioStreamGeneratorPlayback.can_push_buffer
      */
     fun canPushBuffer(amount: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(canPushBufferBind, handle, amount)
     }
 
@@ -39,6 +41,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      * Generated from Godot docs: AudioStreamGeneratorPlayback.push_buffer
      */
     fun pushBuffer(frames: List<Vector2>): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(pushBufferBind, handle, frames)
     }
 
@@ -49,6 +52,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      * Generated from Godot docs: AudioStreamGeneratorPlayback.get_frames_available
      */
     fun getFramesAvailable(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, handle)
     }
 
@@ -59,6 +63,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      * Generated from Godot docs: AudioStreamGeneratorPlayback.get_skips
      */
     fun getSkips(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSkipsBind, handle)
     }
 
@@ -68,6 +73,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      * Generated from Godot docs: AudioStreamGeneratorPlayback.clear_buffer
      */
     fun clearBuffer() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBufferBind, handle)
     }
 

@@ -9,26 +9,32 @@ import net.multigesture.kanama.binding.runtime.*
  */
 open class AudioStream(handle: MemorySegment) : Resource(handle) {
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
     fun isMonophonic(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMonophonicBind, handle)
     }
 
     fun instantiatePlayback(): AudioStreamPlayback? {
+        checkOpen()
         return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, handle))
     }
 
     fun canBeSampled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(canBeSampledBind, handle)
     }
 
     fun generateSample(): AudioSample? {
+        checkOpen()
         return AudioSample.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, handle))
     }
 
     fun isMetaStream(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaStreamBind, handle)
     }
 

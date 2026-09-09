@@ -53,6 +53,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.set_size
      */
     fun setSize(size: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSizeBind, handle, size)
     }
 
@@ -63,6 +64,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.get_size
      */
     fun getSize(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, handle)
     }
 
@@ -72,6 +74,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.set_sections
      */
     fun setSections(sections: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
     }
 
@@ -81,6 +84,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.get_sections
      */
     fun getSections(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
     }
 
@@ -90,6 +94,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.set_section_length
      */
     fun setSectionLength(sectionLength: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
     }
 
@@ -99,6 +104,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.get_section_length
      */
     fun getSectionLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
     }
 
@@ -109,6 +115,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.set_section_segments
      */
     fun setSectionSegments(sectionSegments: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSectionSegmentsBind, handle, sectionSegments)
     }
 
@@ -119,6 +126,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.get_section_segments
      */
     fun getSectionSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSectionSegmentsBind, handle)
     }
 
@@ -130,6 +138,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.set_curve
      */
     fun setCurve(curve: Curve?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
@@ -141,6 +150,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.get_curve
      */
     fun getCurve(): Curve? {
+        checkOpen()
         return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
     }
 
@@ -150,6 +160,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.set_shape
      */
     fun setShape(shape: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setShapeBind, handle, shape)
     }
 
@@ -159,6 +170,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: RibbonTrailMesh.get_shape
      */
     fun getShape(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, handle)
     }
 

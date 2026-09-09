@@ -40,6 +40,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.set_inner_radius
      */
     fun setInnerRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, handle, radius)
     }
 
@@ -49,6 +50,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.get_inner_radius
      */
     fun getInnerRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, handle)
     }
 
@@ -58,6 +60,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.set_outer_radius
      */
     fun setOuterRadius(radius: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, handle, radius)
     }
 
@@ -67,6 +70,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.get_outer_radius
      */
     fun getOuterRadius(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, handle)
     }
 
@@ -76,6 +80,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.set_rings
      */
     fun setRings(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
     }
 
@@ -85,6 +90,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.get_rings
      */
     fun getRings(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
     }
 
@@ -94,6 +100,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.set_ring_segments
      */
     fun setRingSegments(rings: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setRingSegmentsBind, handle, rings)
     }
 
@@ -103,6 +110,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      * Generated from Godot docs: TorusMesh.get_ring_segments
      */
     fun getRingSegments(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getRingSegmentsBind, handle)
     }
 

@@ -17,6 +17,7 @@ class ArrayOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      * Generated from Godot docs: ArrayOccluder3D.set_arrays
      */
     fun setArrays(vertices: List<Vector3>, indices: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListAndPackedInt32ListArgs(setArraysBind, handle, vertices, indices)
     }
 
@@ -28,6 +29,7 @@ class ArrayOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      * Generated from Godot docs: ArrayOccluder3D.set_vertices
      */
     fun setVertices(vertices: List<Vector3>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
     }
 
@@ -40,6 +42,7 @@ class ArrayOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      * Generated from Godot docs: ArrayOccluder3D.set_indices
      */
     fun setIndices(indices: List<Int>) {
+        checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, handle, indices)
     }
 

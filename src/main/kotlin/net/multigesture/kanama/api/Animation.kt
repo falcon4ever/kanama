@@ -43,6 +43,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.add_track
      */
     fun addTrack(type: Long, atPosition: Int = -1): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(addTrackBind, handle, type, atPosition)
     }
 
@@ -52,6 +53,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.remove_track
      */
     fun removeTrack(trackIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeTrackBind, handle, trackIdx)
     }
 
@@ -61,6 +63,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_track_count
      */
     fun getTrackCount(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getTrackCountBind, handle)
     }
 
@@ -70,6 +73,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_type
      */
     fun trackGetType(trackIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(trackGetTypeBind, handle, trackIdx)
     }
 
@@ -79,6 +83,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_path
      */
     fun trackGetPath(trackIdx: Int): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetNodePath(trackGetPathBind, handle, trackIdx)
     }
 
@@ -91,6 +96,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_path
      */
     fun trackSetPath(trackIdx: Int, path: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndNodePathArg(trackSetPathBind, handle, trackIdx, path)
     }
 
@@ -100,6 +106,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.find_track
      */
     fun findTrack(path: NodePath, type: Long): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(findTrackBind, handle, path, type)
     }
 
@@ -109,6 +116,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_move_up
      */
     fun trackMoveUp(trackIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(trackMoveUpBind, handle, trackIdx)
     }
 
@@ -118,6 +126,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_move_down
      */
     fun trackMoveDown(trackIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(trackMoveDownBind, handle, trackIdx)
     }
 
@@ -127,6 +136,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_move_to
      */
     fun trackMoveTo(trackIdx: Int, toIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(trackMoveToBind, handle, trackIdx, toIdx)
     }
 
@@ -136,6 +146,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_swap
      */
     fun trackSwap(trackIdx: Int, withIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(trackSwapBind, handle, trackIdx, withIdx)
     }
 
@@ -145,6 +156,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_imported
      */
     fun trackSetImported(trackIdx: Int, imported: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetImportedBind, handle, trackIdx, imported)
     }
 
@@ -154,6 +166,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_is_imported
      */
     fun trackIsImported(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackIsImportedBind, handle, trackIdx)
     }
 
@@ -163,6 +176,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_enabled
      */
     fun trackSetEnabled(trackIdx: Int, enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetEnabledBind, handle, trackIdx, enabled)
     }
 
@@ -172,6 +186,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_is_enabled
      */
     fun trackIsEnabled(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackIsEnabledBind, handle, trackIdx)
     }
 
@@ -181,6 +196,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.position_track_insert_key
      */
     fun positionTrackInsertKey(trackIdx: Int, time: Double, position: Vector3): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(positionTrackInsertKeyBind, handle, trackIdx, time, position)
     }
 
@@ -190,6 +206,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.rotation_track_insert_key
      */
     fun rotationTrackInsertKey(trackIdx: Int, time: Double, rotation: Quaternion): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(rotationTrackInsertKeyBind, handle, trackIdx, time, rotation)
     }
 
@@ -199,6 +216,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.scale_track_insert_key
      */
     fun scaleTrackInsertKey(trackIdx: Int, time: Double, scale: Vector3): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(scaleTrackInsertKeyBind, handle, trackIdx, time, scale)
     }
 
@@ -208,6 +226,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.blend_shape_track_insert_key
      */
     fun blendShapeTrackInsertKey(trackIdx: Int, time: Double, amount: Double): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(blendShapeTrackInsertKeyBind, handle, trackIdx, time, amount)
     }
 
@@ -218,6 +237,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.position_track_interpolate
      */
     fun positionTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(positionTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
@@ -228,6 +248,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.rotation_track_interpolate
      */
     fun rotationTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Quaternion {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(rotationTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
@@ -238,6 +259,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.scale_track_interpolate
      */
     fun scaleTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(scaleTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
@@ -248,6 +270,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.blend_shape_track_interpolate
      */
     fun blendShapeTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(blendShapeTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
@@ -257,6 +280,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_insert_key
      */
     fun trackInsertKey(trackIdx: Int, time: Double, key: Any?, transition: Double = 1.0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(trackInsertKeyBind, handle, trackIdx, time, key, transition)
     }
 
@@ -266,6 +290,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_remove_key
      */
     fun trackRemoveKey(trackIdx: Int, keyIdx: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(trackRemoveKeyBind, handle, trackIdx, keyIdx)
     }
 
@@ -275,6 +300,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_remove_key_at_time
      */
     fun trackRemoveKeyAtTime(trackIdx: Int, time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(trackRemoveKeyAtTimeBind, handle, trackIdx, time)
     }
 
@@ -284,6 +310,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_key_value
      */
     fun trackSetKeyValue(trackIdx: Int, key: Int, value: Any?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndVariantArg(trackSetKeyValueBind, handle, trackIdx, key, value)
     }
 
@@ -294,6 +321,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_key_transition
      */
     fun trackSetKeyTransition(trackIdx: Int, keyIdx: Int, transition: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTransitionBind, handle, trackIdx, keyIdx, transition)
     }
 
@@ -303,6 +331,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_key_time
      */
     fun trackSetKeyTime(trackIdx: Int, keyIdx: Int, time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTimeBind, handle, trackIdx, keyIdx, time)
     }
 
@@ -313,6 +342,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_key_transition
      */
     fun trackGetKeyTransition(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTransitionBind, handle, trackIdx, keyIdx)
     }
 
@@ -322,6 +352,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_key_count
      */
     fun trackGetKeyCount(trackIdx: Int): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(trackGetKeyCountBind, handle, trackIdx)
     }
 
@@ -331,6 +362,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_key_value
      */
     fun trackGetKeyValue(trackIdx: Int, keyIdx: Int): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(trackGetKeyValueBind, handle, trackIdx, keyIdx)
     }
 
@@ -340,6 +372,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_key_time
      */
     fun trackGetKeyTime(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTimeBind, handle, trackIdx, keyIdx)
     }
 
@@ -354,6 +387,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_find_key
      */
     fun trackFindKey(trackIdx: Int, time: Double, findMode: Long = 0L, limit: Boolean = false, backward: Boolean = false): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(trackFindKeyBind, handle, trackIdx, time, findMode, limit, backward)
     }
 
@@ -363,6 +397,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_interpolation_type
      */
     fun trackSetInterpolationType(trackIdx: Int, interpolation: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(trackSetInterpolationTypeBind, handle, trackIdx, interpolation)
     }
 
@@ -372,6 +407,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_interpolation_type
      */
     fun trackGetInterpolationType(trackIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(trackGetInterpolationTypeBind, handle, trackIdx)
     }
 
@@ -381,6 +417,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_set_interpolation_loop_wrap
      */
     fun trackSetInterpolationLoopWrap(trackIdx: Int, interpolation: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetInterpolationLoopWrapBind, handle, trackIdx, interpolation)
     }
 
@@ -391,6 +428,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_get_interpolation_loop_wrap
      */
     fun trackGetInterpolationLoopWrap(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackGetInterpolationLoopWrapBind, handle, trackIdx)
     }
 
@@ -400,6 +438,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.track_is_compressed
      */
     fun trackIsCompressed(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(trackIsCompressedBind, handle, trackIdx)
     }
 
@@ -409,6 +448,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.value_track_set_update_mode
      */
     fun valueTrackSetUpdateMode(trackIdx: Int, mode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(valueTrackSetUpdateModeBind, handle, trackIdx, mode)
     }
 
@@ -418,6 +458,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.value_track_get_update_mode
      */
     fun valueTrackGetUpdateMode(trackIdx: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, handle, trackIdx)
     }
 
@@ -431,6 +472,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.value_track_interpolate
      */
     fun valueTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(valueTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
@@ -440,6 +482,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.method_track_get_name
      */
     fun methodTrackGetName(trackIdx: Int, keyIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(methodTrackGetNameBind, handle, trackIdx, keyIdx)
     }
 
@@ -449,6 +492,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.method_track_get_params
      */
     fun methodTrackGetParams(trackIdx: Int, keyIdx: Int): List<Any?> {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetArray(methodTrackGetParamsBind, handle, trackIdx, keyIdx)
     }
 
@@ -460,6 +504,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_insert_key
      */
     fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0f, 0f), outHandle: Vector2 = Vector2(0f, 0f)): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(bezierTrackInsertKeyBind, handle, trackIdx, time, value, inHandle, outHandle)
     }
 
@@ -470,6 +515,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_set_key_value
      */
     fun bezierTrackSetKeyValue(trackIdx: Int, keyIdx: Int, value: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(bezierTrackSetKeyValueBind, handle, trackIdx, keyIdx, value)
     }
 
@@ -480,6 +526,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_set_key_in_handle
      */
     fun bezierTrackSetKeyInHandle(trackIdx: Int, keyIdx: Int, inHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyInHandleBind, handle, trackIdx, keyIdx, inHandle, balancedValueTimeRatio)
     }
 
@@ -490,6 +537,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_set_key_out_handle
      */
     fun bezierTrackSetKeyOutHandle(trackIdx: Int, keyIdx: Int, outHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyOutHandleBind, handle, trackIdx, keyIdx, outHandle, balancedValueTimeRatio)
     }
 
@@ -500,6 +548,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_get_key_value
      */
     fun bezierTrackGetKeyValue(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(bezierTrackGetKeyValueBind, handle, trackIdx, keyIdx)
     }
 
@@ -510,6 +559,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_get_key_in_handle
      */
     fun bezierTrackGetKeyInHandle(trackIdx: Int, keyIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyInHandleBind, handle, trackIdx, keyIdx)
     }
 
@@ -520,6 +570,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_get_key_out_handle
      */
     fun bezierTrackGetKeyOutHandle(trackIdx: Int, keyIdx: Int): Vector2 {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyOutHandleBind, handle, trackIdx, keyIdx)
     }
 
@@ -530,6 +581,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.bezier_track_interpolate
      */
     fun bezierTrackInterpolate(trackIdx: Int, time: Double): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(bezierTrackInterpolateBind, handle, trackIdx, time)
     }
 
@@ -541,6 +593,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_insert_key
      */
     fun audioTrackInsertKey(trackIdx: Int, time: Double, stream: Resource?, startOffset: Double = 0.0, endOffset: Double = 0.0): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(audioTrackInsertKeyBind, handle, trackIdx, time, stream?.requireOpenHandle() ?: MemorySegment.NULL, startOffset, endOffset)
     }
 
@@ -551,6 +604,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_set_key_stream
      */
     fun audioTrackSetKeyStream(trackIdx: Int, keyIdx: Int, stream: Resource?) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndObjectArg(audioTrackSetKeyStreamBind, handle, trackIdx, keyIdx, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -561,6 +615,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_set_key_start_offset
      */
     fun audioTrackSetKeyStartOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyStartOffsetBind, handle, trackIdx, keyIdx, offset)
     }
 
@@ -571,6 +626,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_set_key_end_offset
      */
     fun audioTrackSetKeyEndOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyEndOffsetBind, handle, trackIdx, keyIdx, offset)
     }
 
@@ -581,6 +637,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_get_key_stream
      */
     fun audioTrackGetKeyStream(trackIdx: Int, keyIdx: Int): Resource? {
+        checkOpen()
         val ret = ObjectCalls.ptrcallWithTwoIntArgsRetObject(audioTrackGetKeyStreamBind, handle, trackIdx, keyIdx)
         if (ret.address() == handle.address()) {
             RefCounted.releaseHandle(ret)
@@ -597,6 +654,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_get_key_start_offset
      */
     fun audioTrackGetKeyStartOffset(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyStartOffsetBind, handle, trackIdx, keyIdx)
     }
 
@@ -607,6 +665,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_get_key_end_offset
      */
     fun audioTrackGetKeyEndOffset(trackIdx: Int, keyIdx: Int): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyEndOffsetBind, handle, trackIdx, keyIdx)
     }
 
@@ -617,6 +676,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_set_use_blend
      */
     fun audioTrackSetUseBlend(trackIdx: Int, enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndBoolArgs(audioTrackSetUseBlendBind, handle, trackIdx, enable)
     }
 
@@ -626,6 +686,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.audio_track_is_use_blend
      */
     fun audioTrackIsUseBlend(trackIdx: Int): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(audioTrackIsUseBlendBind, handle, trackIdx)
     }
 
@@ -636,6 +697,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.animation_track_insert_key
      */
     fun animationTrackInsertKey(trackIdx: Int, time: Double, animation: String): Int {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(animationTrackInsertKeyBind, handle, trackIdx, time, animation)
     }
 
@@ -646,6 +708,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.animation_track_set_key_animation
      */
     fun animationTrackSetKeyAnimation(trackIdx: Int, keyIdx: Int, animation: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringNameArg(animationTrackSetKeyAnimationBind, handle, trackIdx, keyIdx, animation)
     }
 
@@ -656,6 +719,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.animation_track_get_key_animation
      */
     fun animationTrackGetKeyAnimation(trackIdx: Int, keyIdx: Int): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(animationTrackGetKeyAnimationBind, handle, trackIdx, keyIdx)
     }
 
@@ -665,6 +729,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.add_marker
      */
     fun addMarker(name: String, time: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(addMarkerBind, handle, name, time)
     }
 
@@ -674,6 +739,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.remove_marker
      */
     fun removeMarker(name: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(removeMarkerBind, handle, name)
     }
 
@@ -683,6 +749,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.has_marker
      */
     fun hasMarker(name: String): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasMarkerBind, handle, name)
     }
 
@@ -692,6 +759,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_marker_at_time
      */
     fun getMarkerAtTime(time: Double): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetStringName(getMarkerAtTimeBind, handle, time)
     }
 
@@ -702,6 +770,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_next_marker
      */
     fun getNextMarker(time: Double): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetStringName(getNextMarkerBind, handle, time)
     }
 
@@ -712,6 +781,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_prev_marker
      */
     fun getPrevMarker(time: Double): String {
+        checkOpen()
         return ObjectCalls.ptrcallWithFloatArgRetStringName(getPrevMarkerBind, handle, time)
     }
 
@@ -721,6 +791,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_marker_time
      */
     fun getMarkerTime(name: String): Double {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetDouble(getMarkerTimeBind, handle, name)
     }
 
@@ -730,6 +801,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_marker_names
      */
     fun getMarkerNames(): List<String> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMarkerNamesBind, handle)
     }
 
@@ -739,6 +811,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_marker_color
      */
     fun getMarkerColor(name: String): Color {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetColor(getMarkerColorBind, handle, name)
     }
 
@@ -748,6 +821,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.set_marker_color
      */
     fun setMarkerColor(name: String, color: Color) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameAndColorArg(setMarkerColorBind, handle, name, color)
     }
 
@@ -758,6 +832,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.set_length
      */
     fun setLength(timeSec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, timeSec)
     }
 
@@ -768,6 +843,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_length
      */
     fun getLength(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
     }
 
@@ -779,6 +855,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.set_loop_mode
      */
     fun setLoopMode(loopMode: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
     }
 
@@ -790,6 +867,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_loop_mode
      */
     fun getLoopMode(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
     }
 
@@ -799,6 +877,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.set_step
      */
     fun setStep(sizeSec: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setStepBind, handle, sizeSec)
     }
 
@@ -808,6 +887,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.get_step
      */
     fun getStep(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
     }
 
@@ -817,6 +897,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.clear
      */
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
@@ -826,6 +907,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.copy_track
      */
     fun copyTrack(trackIdx: Int, toAnimation: Animation?) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(copyTrackBind, handle, trackIdx, toAnimation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
@@ -836,6 +918,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.optimize
      */
     fun optimize(allowedVelocityErr: Double = 0.01, allowedAngularErr: Double = 0.01, precision: Int = 3) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoDoubleAndIntArgs(optimizeBind, handle, allowedVelocityErr, allowedAngularErr, precision)
     }
 
@@ -850,6 +933,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.compress
      */
     fun compress(pageSize: Long = 8192L, fps: Long = 120L, splitTolerance: Double = 4.0) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoUInt32AndDoubleArg(compressBind, handle, pageSize, fps, splitTolerance)
     }
 
@@ -860,6 +944,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      * Generated from Godot docs: Animation.is_capture_included
      */
     fun isCaptureIncluded(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isCaptureIncludedBind, handle)
     }
 

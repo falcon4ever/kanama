@@ -22,22 +22,27 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
         set(value) = setPressure(value)
 
     fun setButtonIndex(buttonIndex: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, handle, buttonIndex)
     }
 
     fun getButtonIndex(): Long {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, handle)
     }
 
     fun setPressure(pressure: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
     }
 
     fun getPressure(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
     }
 
     fun setPressed(pressed: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
     }
 

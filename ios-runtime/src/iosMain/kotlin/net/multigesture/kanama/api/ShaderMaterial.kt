@@ -16,14 +16,17 @@ class ShaderMaterial(handle: MemorySegment) : Material(handle) {
         set(value) = setShader(value)
 
     fun setShader(shader: Shader?) {
+        checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setShaderBind, handle, listOf(shader?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getShader(): Shader? {
+        checkOpen()
         return Shader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, handle))
     }
 
     fun getShaderParameter(param: String): Any? {
+        checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, handle, param)
     }
 

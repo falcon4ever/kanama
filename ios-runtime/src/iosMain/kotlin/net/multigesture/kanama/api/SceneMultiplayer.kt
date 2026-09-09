@@ -53,78 +53,97 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
         set(value) = setMaxDeltaPacketSize(value)
 
     fun setRootPath(path: NodePath) {
+        checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(setRootPathBind, handle, path)
     }
 
     fun getRootPath(): NodePath {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(getRootPathBind, handle)
     }
 
     fun clear() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
     fun disconnectPeer(id: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(disconnectPeerBind, handle, id)
     }
 
     fun getAuthenticatingPeers(): List<Int> {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAuthenticatingPeersBind, handle)
     }
 
     fun completeAuth(id: Int): Long {
+        checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(completeAuthBind, handle, id)
     }
 
     fun setAuthCallback(callback: GodotCallable) {
+        checkOpen()
         ObjectCalls.ptrcallWithCallableArg(setAuthCallbackBind, handle, callback.target.handle, callback.method)
     }
 
     fun setAuthTimeout(timeout: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAuthTimeoutBind, handle, timeout)
     }
 
     fun getAuthTimeout(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAuthTimeoutBind, handle)
     }
 
     fun setRefuseNewConnections(refuse: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, handle, refuse)
     }
 
     fun isRefusingNewConnections(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, handle)
     }
 
     fun setAllowObjectDecoding(enable: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowObjectDecodingBind, handle, enable)
     }
 
     fun isObjectDecodingAllowed(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isObjectDecodingAllowedBind, handle)
     }
 
     fun setServerRelayEnabled(enabled: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setServerRelayEnabledBind, handle, enabled)
     }
 
     fun isServerRelayEnabled(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerRelayEnabledBind, handle)
     }
 
     fun getMaxSyncPacketSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxSyncPacketSizeBind, handle)
     }
 
     fun setMaxSyncPacketSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxSyncPacketSizeBind, handle, size)
     }
 
     fun getMaxDeltaPacketSize(): Int {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getMaxDeltaPacketSizeBind, handle)
     }
 
     fun setMaxDeltaPacketSize(size: Int) {
+        checkOpen()
         ObjectCalls.ptrcallWithIntArg(setMaxDeltaPacketSizeBind, handle, size)
     }
 

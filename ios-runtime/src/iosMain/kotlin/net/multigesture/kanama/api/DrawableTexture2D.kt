@@ -10,22 +10,27 @@ import net.multigesture.kanama.types.Color
  */
 class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
     fun setFormat(format: Long) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
     }
 
     fun setUseMipmaps(mipmaps: Boolean) {
+        checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, handle, mipmaps)
     }
 
     fun getUseMipmaps(): Boolean {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getUseMipmapsBind, handle)
     }
 
     fun setup(width: Int, height: Int, format: Long, color: Color, useMipmaps: Boolean = false) {
+        checkOpen()
         ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, handle, width, height, format, color, useMipmaps)
     }
 
     fun generateMipmaps() {
+        checkOpen()
         ObjectCalls.ptrcallNoArgs(generateMipmapsBind, handle)
     }
 

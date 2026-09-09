@@ -60,6 +60,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.set_threshold
      */
     fun setThreshold(threshold: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, handle, threshold)
     }
 
@@ -70,6 +71,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.get_threshold
      */
     fun getThreshold(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, handle)
     }
 
@@ -81,6 +83,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.set_ratio
      */
     fun setRatio(ratio: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setRatioBind, handle, ratio)
     }
 
@@ -92,6 +95,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.get_ratio
      */
     fun getRatio(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, handle)
     }
 
@@ -101,6 +105,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.set_gain
      */
     fun setGain(gain: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setGainBind, handle, gain)
     }
 
@@ -110,6 +115,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.get_gain
      */
     fun getGain(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, handle)
     }
 
@@ -120,6 +126,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.set_attack_us
      */
     fun setAttackUs(attackUs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setAttackUsBind, handle, attackUs)
     }
 
@@ -130,6 +137,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.get_attack_us
      */
     fun getAttackUs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getAttackUsBind, handle)
     }
 
@@ -140,6 +148,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.set_release_ms
      */
     fun setReleaseMs(releaseMs: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setReleaseMsBind, handle, releaseMs)
     }
 
@@ -150,6 +159,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.get_release_ms
      */
     fun getReleaseMs(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseMsBind, handle)
     }
 
@@ -160,6 +170,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.set_mix
      */
     fun setMix(mix: Double) {
+        checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(setMixBind, handle, mix)
     }
 
@@ -170,6 +181,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.get_mix
      */
     fun getMix(): Double {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(getMixBind, handle)
     }
 
@@ -179,6 +191,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.set_sidechain
      */
     fun setSidechain(sidechain: String) {
+        checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(setSidechainBind, handle, sidechain)
     }
 
@@ -188,6 +201,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      * Generated from Godot docs: AudioEffectCompressor.get_sidechain
      */
     fun getSidechain(): String {
+        checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringName(getSidechainBind, handle)
     }
 
