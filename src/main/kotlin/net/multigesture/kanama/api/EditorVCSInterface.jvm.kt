@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithFourIntArgsRetDictionary, ptrcallWithStringTwoLongArgsRetDictionary,
 //   ptrcallWithThreeStringTwoLongArgsRetDictionary, ptrcallWithTwoIntTwoStringArgsRetDictionary,
 //   ptrcallWithTwoStringArgsRetDictionary
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Helper function to create a `Dictionary` for storing a line diff. `new_line_no` is the line

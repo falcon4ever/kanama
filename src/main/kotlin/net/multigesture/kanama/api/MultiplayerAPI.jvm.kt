@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP MultiplayerAPI waits on: ptrcallWithIntObjectStringNameArrayArgsRetLong,
 //   ptrcallWithObjectAndVariantArgRetLong
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sends an RPC to the target `peer`. The given `method` will be called on the remote `object` with

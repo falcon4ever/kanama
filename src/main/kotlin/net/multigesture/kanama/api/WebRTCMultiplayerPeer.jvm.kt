@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP WebRTCMultiplayerPeer waits on: ptrcallNoArgsRetDictionary,
 //   ptrcallWithArrayArgRetLong, ptrcallWithIntAndArrayArgRetLong, ptrcallWithIntArgRetDictionary
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun WebRTCMultiplayerPeer.createServer(channelsConfig: List<Any?> = emptyList()): Long {
     checkOpen()

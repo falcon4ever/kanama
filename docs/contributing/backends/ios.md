@@ -80,13 +80,17 @@ model described next.
 
 ## Current architecture: generated wrappers + ObjectCalls
 
-iOS reuses the desktop/Android solution. Desktop's full ~1036-class API in
-`src/main/kotlin/.../api/` is **generated** ("Generated from Godot docs") by
-`scripts/generate_api_wrapper.py` from `extension_api.json`, and since task 30 the
-iOS tree carries the **full desktop-equivalent class set** (1021 generated wrappers +
-the hand-written collision classes; the only exceptions are the documented
-`IOS_UNSUPPORTED_CLASSES` entries). Each generated wrapper caches a `MethodBind` and
-calls a typed helper on a runtime abstraction `ObjectCalls`:
+iOS reuses the desktop/Android solution. The Godot API wrappers are **generated**
+("Generated from Godot docs") by `scripts/generate_api_wrapper.py` from
+`extension_api.json`, once, into the shared tree `src/commonMain/kotlin/.../api/`,
+which iOS compiles as-is (task 103). Since task 30 iOS hosts the **full
+desktop-equivalent class set** (the shared classes plus its iOS-only generated,
+hand-shaped and hand-written collision classes; the only exceptions are the documented
+`IOS_UNSUPPORTED_CLASSES`). Methods whose ptrcall shape is not audited on iOS are
+desktop-only companions, listed in the generated
+[iOS Shape Gap](../../reference/generated/ios-shape-gap.md) page. Each generated
+wrapper caches a `MethodBind` and calls a typed helper on a runtime abstraction
+`ObjectCalls`:
 
 ```kotlin
 // generated CharacterBody3D.kt (desktop)
@@ -119,9 +123,10 @@ The proven runtime stayed; the hand-written API was replaced with generated wrap
   signature taxonomy (the finite `(argtypes→return)` → helper-name map), its
   conservative skip logic (`--skip-report`), and its fixture-based check harness
   (`scripts/check_wrapper_generator.py`). See `docs/contributing/wrapper-maintenance.md`.
-- The iOS emission target produces the generated wrappers (copied into `iosMain`
-  today; `commonMain` + `expect/actual ObjectCalls` sharing is on the backlog) and
-  the matching `ObjectCalls` helper bodies (generated from the CallShape set).
+- The iOS emission target decides the shared tree's method set, renders the iOS-only
+  generated wrappers (`ios-runtime/.../api`) and the matching `ObjectCalls` helper
+  bodies (generated from the CallShape set); the `expect/actual ObjectCalls` form is
+  a separate task (see the Shared Wrapper Tree design check).
 - The hand-written layer is now only genuinely bespoke runtime pieces:
   `KanamaScript` base, `KanamaScope`, `Input`/InputMap glue, the signal/Callable
   registry, lifecycle. Everything else is generated.
@@ -154,9 +159,9 @@ primitive. Hand-writing a C function per shape is untenable, so:
   we avoid repeating the SIGSEGV / over-deref / boxing bug class.
 - **Varargs / shapes ptrcall can't express** fall back to the Variant
   `object_method_bind_call` path (already used by connect/emit/tween).
-- **Sharing strategy**: today iOS wrapper copies are generated into `iosMain` (no
-  module restructure); moving them to shared `commonMain` with
-  `expect/actual ObjectCalls` is a backlog item.
+- **Sharing strategy**: one shared source directory (`src/commonMain/kotlin`)
+  compiled by each platform module, no module restructure (task 103); the KMP
+  `expect/actual ObjectCalls` form remains the long-term target.
 
 ## Generator approach
 
@@ -165,8 +170,8 @@ as `ObjectCalls.<shape.function>(bind, receiver, args)` (see `render_method`) �
 wrapper code is **platform-agnostic**. So the iOS target does NOT need different
 wrapper output:
 
-- **Reuse the generated wrapper classes unchanged** (start by emitting copies into
-  `iosMain`; toward shared `commonMain` later). They depend only on `ObjectCalls` +
+- **Reuse the generated wrapper classes unchanged** (they are the shared
+  `src/commonMain` files since task 103). They depend only on `ObjectCalls` +
   types + `MemorySegment`, all present on iOS.
 - **Generate the iOS `ObjectCalls` helper bodies** for the set of `shape.function`
   names the wrappers use. As the generator picks each method's `CallShape` it knows

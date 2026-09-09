@@ -2874,7 +2874,7 @@ def render_draft(
 IOS_OBJECTCALLS_GENERATED = (
     ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCallsGenerated.kt"
 )
-GAP_INDEX_PATH = ROOT / "docs/contributing/ios-shape-gap.md"
+GAP_INDEX_PATH = ROOT / "docs/reference/generated/ios-shape-gap.md"
 IOS_HELPER_IMPORT = "import net.multigesture.kanama.binding.runtime.*\n"
 DESKTOP_COMPANION_SUFFIX = ".jvm.kt"
 IOS_COMPANION_SUFFIX = ".ios.kt"
@@ -3076,7 +3076,7 @@ def render_shared_class(
                 "// ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so",
                 "// they compile for desktop/Android only. Re-run the generator when iOS gains the helper.",
                 *_wrap_comment(f"// KANAMA-IOS-GAP {cls.name} waits on: ", tokens),
-                "// Index: docs/contributing/ios-shape-gap.md",
+                "// Index: docs/reference/generated/ios-shape-gap.md",
                 "",
             ]
             binds = [_bind_section(cls.name, method, 0) for method in companion_methods]

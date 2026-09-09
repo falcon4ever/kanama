@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP EditorUndoRedoManager waits on: ptrcallWithObjectStringNameAndVariantArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Register a property value change for "do". If this is the first operation, the `object` will be

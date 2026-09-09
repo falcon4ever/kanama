@@ -17,7 +17,7 @@ import net.multigesture.kanama.types.Vector3
 //   ptrcallWithTwoDoubleIntLongArgsRetPlaneList, ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList,
 //   ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List,
 //   ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List, ptrcallWithVector3ArgRetPlaneList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Calculates and returns all the vertex points of a convex shape defined by an array of `planes`.

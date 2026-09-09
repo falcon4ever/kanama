@@ -113,3 +113,32 @@ common stdlib, like the `@JvmName` the iOS tree already carries; confirm with
 in `check_wrapper_generator.py`; `Node.createTween()` `open` on both platforms;
 iOS `GodotObject` aligned with desktop (not `AutoCloseable`; `RefCounted` is)
 and its `unreference()` hidden.
+
+## What was done (2026-09, task 103)
+
+Mechanism (b) landed; (a) stays the long-term target and is filed separately.
+
+- One generated tree, `src/commonMain/kotlin/net/multigesture/kanama/api` (979 classes),
+  compiled by the root JVM module, by `:ios-runtime` as an `iosMain` source root, and by the
+  Android plugin through the PanamaPort copy. The iOS copies are gone; iOS keeps 54 files
+  (8 hand-shaped, 34 iOS-only generated, 3 collision-class files, 4 `<Class>.ios.kt`
+  companions, 5 non-API).
+- The shared file holds the members both backends can call. The 1,178 desktop-only
+  methods became extension members in 277 `<Class>.jvm.kt` desktop companions (1,274
+  members with the desktop-only properties; 494 helper shapes waited on), each headed by
+  the helpers it waits on, all listed in the generated
+  [iOS Shape Gap](../reference/generated/ios-shape-gap.md) page. 99 properties are
+  read-only in the shared tree because only their setter is desktop-only. A script that
+  calls a companion member needs `import net.multigesture.kanama.api.*`.
+- One platform-tagged table, `PER_PLATFORM_WRAPPERS` (56 classes), replaced the two
+  hand-shaped lists and the collision/unsupported registries.
+- The gate is single-tree (`check_single_tree`) and runs in-process: about 5 s instead
+  of 57 s.
+- The alignments: `@JvmStatic` on every platform (Kotlin/Native accepts the
+  `@OptionalExpectation` annotation), `Node.createTween()` `open` on both, the iOS
+  `GodotObject` no longer `AutoCloseable` (the generated iOS `RefCounted` declares it),
+  iOS `RefCounted.unreference()` `internal`, `@ManualGodotLifetimeApi` gone from the
+  generated iOS `close()`.
+- Not done, by decision: the audit of the missing iOS helper shapes (its own task; each
+  family that lands moves its members back into the shared file on the next regen), and
+  the KMP `expect/actual` move, which still needs everything listed under (a) above.

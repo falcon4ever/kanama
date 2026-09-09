@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
 //   ptrcallWithPackedVector3ListAndDoubleArgRetPackedVector3List,
 //   ptrcallWithRIDAndPackedVector3ListArg, ptrcallWithRIDArgRetPackedVector3List,
 //   ptrcallWithRIDArgRetRIDList, ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns all created navigation map `RID`s on the NavigationServer. This returns both 2D and 3D

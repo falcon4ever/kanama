@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP Marshalls waits on: ptrcallWithByteArrayArgRetString,
 //   ptrcallWithStringAndBoolArgRetVariantScalar, ptrcallWithStringArgRetByteArray,
 //   ptrcallWithVariantAndBoolArgRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a Base64-encoded string of the `Variant` `variant`. If `full_objects` is `true`,

@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector4
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP VisualShaderNodeVec4Parameter waits on: ptrcallNoArgsRetVector4,
 //   ptrcallWithVector4Arg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun VisualShaderNodeVec4Parameter.setDefaultValue(value: Vector4) {
     checkOpen()

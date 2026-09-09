@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3i
 // KANAMA-IOS-GAP GridMap waits on: ptrcallNoArgsRetVector3iList, ptrcallWithAABBArgRetVector3iList,
 //   ptrcallWithIntArgRetVector3iList, ptrcallWithVector3iAndIntArgRetVector3iList,
 //   ptrcallWithVector3iArgRetVector3iList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GridMap.getUsedCells(): List<Vector3i> {
     return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedCellsBind, handle)

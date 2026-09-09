@@ -37,7 +37,7 @@ import net.multigesture.kanama.types.Vector3i
 //   ptrcallWithStringAndPackedStringListArgRetLong,
 //   ptrcallWithTwoStringAndLongArgRetPackedInt32List, ptrcallWithTwoStringArgsRetPackedInt32List,
 //   ptrcallWithTwoStringArgsRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns default TextServer database (e.g. ICU break iterators and dictionaries).

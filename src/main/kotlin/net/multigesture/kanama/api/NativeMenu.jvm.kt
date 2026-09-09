@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.RID
 //   ptrcallWithRIDStringRIDVariantIntArgsRetInt,
 //   ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns readable name of a special system menu. Note: This method is implemented only on macOS.

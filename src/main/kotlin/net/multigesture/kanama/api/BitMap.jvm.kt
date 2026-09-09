@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP BitMap waits on: ptrcallWithIntAndRect2iArg, ptrcallWithRect2iAndBoolArg,
 //   ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets a rectangular portion of the bitmap to the specified value.

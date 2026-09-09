@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP VoxelGIData waits on: ptrcallNoArgsRetByteArray,
 //   ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Initializes this `VoxelGIData` with the specified data. `octree_cells` must be a multiple of 32.

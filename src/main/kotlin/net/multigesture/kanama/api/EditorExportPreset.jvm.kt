@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP EditorExportPreset waits on: ptrcallNoArgsRetDictionary,
 //   ptrcallWithStringNameAndBoolArgRetString, ptrcallWithStringNameAndStringArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a dictionary of files selected in the "Resources" tab of the export dialog. The

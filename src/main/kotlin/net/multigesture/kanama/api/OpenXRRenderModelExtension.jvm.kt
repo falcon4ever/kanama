@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
 // KANAMA-IOS-GAP OpenXRRenderModelExtension waits on: ptrcallNoArgsRetRIDList,
 //   ptrcallWithRIDAndUInt32ArgRetString, ptrcallWithRIDArgRetPackedStringList,
 //   ptrcallWithRIDArgRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun OpenXRRenderModelExtension.renderModelGetAll(): List<RID> {
     return ObjectCalls.ptrcallNoArgsRetRIDList(renderModelGetAllBind, handle)

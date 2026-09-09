@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
 //   ptrcallWithIntArgRetArray, ptrcallWithStringObjectIntStringVariantArgsRetBool,
 //   ptrcallWithVariantArgRetBool, ptrcallWithVariantVector2LongDoubleArgsRetBool,
 //   ptrcallWithVariantVector2LongIntDoubleArgsRetBool
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Overrides BiDi for the structured text. Override ranges should cover full source text without

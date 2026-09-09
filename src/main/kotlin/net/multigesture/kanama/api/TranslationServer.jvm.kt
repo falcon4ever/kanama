@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithStringAndBoolArgRetTypedObjectList, ptrcallWithTwoStringArgsRetString,
 //   ptrcallWithTwoStringNameArgsRetStringName,
 //   ptrcallWithTwoStringNameIntStringNameArgsRetStringName
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a `locale` string standardized to match known locales (e.g. `en-US` would be matched to

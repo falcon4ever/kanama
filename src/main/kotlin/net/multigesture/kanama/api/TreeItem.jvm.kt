@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP TreeItem waits on: ptrcallWithIntAndArrayArg, ptrcallWithIntAndVariantArg,
 //   ptrcallWithIntArgRetArray, ptrcallWithIntArgRetCallable, ptrcallWithIntArgRetDictionary,
 //   ptrcallWithIntArgRetString, ptrcallWithIntArgRetVariantScalar, ptrcallWithTwoIntArgsRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the given column's text.

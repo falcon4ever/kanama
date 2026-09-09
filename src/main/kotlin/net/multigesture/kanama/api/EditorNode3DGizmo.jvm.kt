@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
 // KANAMA-IOS-GAP EditorNode3DGizmo waits on: ptrcallWithPackedVector3ListArg,
 //   ptrcallWithPackedVector3ListObjectBoolColorArgs,
 //   ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Adds lines to the gizmo (as sets of 2 points), with a given material. The lines are used for

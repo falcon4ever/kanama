@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP XRInterfaceExtension waits on: ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Blits our render results to screen optionally applying lens distortion. This can only be called

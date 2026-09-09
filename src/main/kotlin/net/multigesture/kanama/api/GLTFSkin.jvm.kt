@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Transform3D
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP GLTFSkin waits on: ptrcallNoArgsRetDictionary, ptrcallNoArgsRetTransform3DList,
 //   ptrcallWithDictionaryArg, ptrcallWithPackedInt32ListArg, ptrcallWithTransform3DListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFSkin.setJointsOriginal(jointsOriginal: List<Int>) {
     checkOpen()

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Transform3D
 //   ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
 //   ptrcallWithObjectListTransform3DListBoolArgsRetObject, ptrcallWithTwoDoubleArrayArgs,
 //   ptrcallWithTwoIntArgsRetArray, ptrcallWithTwoIntArgsRetPackedInt32List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Merges multiple `ImporterMesh`es into a single `ImporterMesh`. Each input mesh is transformed by

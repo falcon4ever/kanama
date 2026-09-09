@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP Translation waits on: ptrcallWithStringNamePackedStringListAndStringNameArgs,
 //   ptrcallWithTwoStringNameArgsRetStringName,
 //   ptrcallWithTwoStringNameIntStringNameArgsRetStringName
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Adds a message involving plural translation if nonexistent, followed by its translation. An

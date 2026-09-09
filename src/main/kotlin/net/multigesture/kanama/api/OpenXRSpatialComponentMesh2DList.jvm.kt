@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP OpenXRSpatialComponentMesh2DList waits on: ptrcallWithRIDAndLongArgRetPackedInt32List,
 //   ptrcallWithRIDAndLongArgRetPackedVector2List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun OpenXRSpatialComponentMesh2DList.getVertices(snapshot: RID, index: Long): List<Vector2> {
     checkOpen()

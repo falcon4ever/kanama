@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP AESContext waits on: ptrcallNoArgsRetByteArray,
 //   ptrcallWithByteArrayArgRetByteArray, ptrcallWithLongAndTwoByteArrayArgsRetLong
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Start the AES context in the given `mode`. A `key` of either 16 or 32 bytes must always be

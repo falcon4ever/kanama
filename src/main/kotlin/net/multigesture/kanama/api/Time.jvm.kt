@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithDictionaryArgRetLong, ptrcallWithLongAndBoolArgRetString,
 //   ptrcallWithLongArgRetDictionary, ptrcallWithLongArgRetString,
 //   ptrcallWithStringAndBoolArgRetDictionary, ptrcallWithTwoBoolArgsRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun Time.getDateTimeDictFromUnixTime(unixTime: Long): Map<String, Any?> {
     return ObjectCalls.ptrcallWithLongArgRetDictionary(getDateTimeDictFromUnixTimeBind, timeSingleton, unixTime)

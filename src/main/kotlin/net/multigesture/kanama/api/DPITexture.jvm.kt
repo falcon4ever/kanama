@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP DPITexture waits on: ptrcallNoArgsRetDictionary, ptrcallWithDictionaryArg,
 //   ptrcallWithStringTwoDoubleDictionaryArgsRetObject
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Creates a new `DPITexture` and initializes it by allocating and setting the SVG data to

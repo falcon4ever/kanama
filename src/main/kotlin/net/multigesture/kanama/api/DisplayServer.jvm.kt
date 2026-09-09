@@ -24,7 +24,7 @@ import net.multigesture.kanama.types.Vector2
 //   ptrcallWithTwoStringPackedStringListCallableArgsRetLong,
 //   ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Adds a new item with text `label` to the global menu with ID `menu_root`. Returns index of the

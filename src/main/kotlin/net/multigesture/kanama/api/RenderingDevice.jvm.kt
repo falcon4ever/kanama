@@ -29,7 +29,7 @@ import net.multigesture.kanama.types.Rect2
 //   ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID,
 //   ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID,
 //   ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Creates a new texture. It can be accessed with the RID that is returned. Once finished with your

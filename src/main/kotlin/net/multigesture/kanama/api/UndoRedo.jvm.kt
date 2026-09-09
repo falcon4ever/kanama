@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP UndoRedo waits on: ptrcallWithIntArgRetString,
 //   ptrcallWithObjectStringNameAndVariantArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Register a `property` that would change its value to `value` when the action is committed.

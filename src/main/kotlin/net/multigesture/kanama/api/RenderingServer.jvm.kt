@@ -42,7 +42,7 @@ import net.multigesture.kanama.types.Vector3i
 //   ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs,
 //   ptrcallWithStringNameAndVariantArg, ptrcallWithStringNameLongVariantArgs,
 //   ptrcallWithTwoVector3RIDArgsRetPackedInt64List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Creates a 2-dimensional layered texture and adds it to the RenderingServer. It can be accessed

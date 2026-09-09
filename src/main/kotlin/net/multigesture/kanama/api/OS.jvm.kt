@@ -14,7 +14,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt,
 //   ptrcallWithStringPackedStringListBoolArgsRetDictionary,
 //   ptrcallWithStringPackedStringListBoolArgsRetInt, ptrcallWithStringTwoIntBoolArgsRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Generates a `PackedByteArray` of cryptographically secure random bytes with given `size`. Note:

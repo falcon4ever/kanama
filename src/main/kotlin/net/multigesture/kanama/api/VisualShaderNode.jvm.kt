@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP VisualShaderNode waits on: ptrcallWithArrayArg, ptrcallWithIntAndTwoVariantArgs,
 //   ptrcallWithIntArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun VisualShaderNode.setInputPortDefaultValue(port: Int, value: Any?, prevValue: Any? = null) {
     checkOpen()

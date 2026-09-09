@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP JSON waits on: ptrcallWithStringArgRetVariantScalar,
 //   ptrcallWithVariantAndBoolArgRetVariantScalar, ptrcallWithVariantArg,
 //   ptrcallWithVariantStringTwoBoolArgsRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Converts a `Variant` var to JSON text and returns the result. Useful for serializing data to

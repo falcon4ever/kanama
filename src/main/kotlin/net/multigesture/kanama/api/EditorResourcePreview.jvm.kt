@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP EditorResourcePreview waits on: ptrcallWithStringObjectStringNameVariantArgs,
 //   ptrcallWithTwoObjectStringNameVariantArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Queue a resource file located at `path` for preview. Once the preview is ready, the `receiver`'s

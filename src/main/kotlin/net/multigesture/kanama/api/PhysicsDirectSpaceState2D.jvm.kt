@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 // KANAMA-IOS-GAP PhysicsDirectSpaceState2D waits on: ptrcallWithObjectAndIntArgRetDictionaryList,
 //   ptrcallWithObjectAndIntArgRetVector2List, ptrcallWithObjectArgRetDictionary,
 //   ptrcallWithObjectArgRetPackedFloat32List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Checks whether a point is inside any solid shape. Position and other parameters are defined

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithIntAndPackedStringListArg, ptrcallWithIntArgRetPackedStringList,
 //   ptrcallWithIntArgRetString, ptrcallWithPackedStringListArg,
 //   ptrcallWithStringPackedStringListAndIntArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * The available file type filters. Each filter string in the array should be formatted like this:

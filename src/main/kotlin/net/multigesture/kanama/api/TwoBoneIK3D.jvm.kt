@@ -9,7 +9,7 @@ import net.multigesture.kanama.types.NodePath
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TwoBoneIK3D waits on: ptrcallWithIntArgRetNodePath, ptrcallWithIntArgRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the target node that the end bone is trying to reach.

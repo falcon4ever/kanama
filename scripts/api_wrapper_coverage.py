@@ -68,34 +68,37 @@ def parse_ratio(value: str) -> tuple[int, int] | None:
 
 
 def platform_class_set_lines(classes: dict[str, ApiClass], wrapper_classes: set[str]) -> list[str]:
-    """Per-platform emitted class counts (the drift-gate view, task 30)."""
-    from check_wrapper_generator import API_DIR, DESKTOP_HANDSHAPED, IOS_API_DIR, IOS_HANDSHAPED
-    from generate_api_wrapper import IOS_HANDWRITTEN_COLLISION_CLASSES, IOS_UNSUPPORTED_CLASSES
-    from wrapper_model import wrapper_source_files
+    """Where each promoted class is generated (the single-tree drift-gate view, task 103)."""
+    from generate_api_wrapper import (
+        DESKTOP_HANDSHAPED,
+        DESKTOP_ONLY_GENERATED,
+        IOS_HANDSHAPED,
+        IOS_HANDWRITTEN_COLLISION_CLASSES,
+        IOS_ONLY_GENERATED,
+        IOS_UNSUPPORTED_CLASSES,
+        PER_PLATFORM_WRAPPERS,
+    )
+    from wrapper_model import DESKTOP_API_DIR, SHARED_API_DIR, is_companion_file
 
     api_names = set(classes)
-    desktop_committed = {p.stem for p in wrapper_source_files(API_DIR)}
-    desktop_generated = len((desktop_committed & api_names) - DESKTOP_HANDSHAPED)
-    ios_committed = {p.stem for p in wrapper_source_files(IOS_API_DIR)}
-    ios_generated = len(
-        (ios_committed & api_names) - set(IOS_HANDWRITTEN_COLLISION_CLASSES) - IOS_HANDSHAPED
-    )
+    shared = len({p.stem for p in SHARED_API_DIR.glob("*.kt")} & api_names)
+    companions = len([p for p in DESKTOP_API_DIR.glob("*.jvm.kt") if is_companion_file(p)])
     unsupported = ", ".join(f"`{name}`" for name in sorted(IOS_UNSUPPORTED_CLASSES))
     return [
         "### Per-Platform Class Sets",
         "",
-        "Every platform tree is held to `check_full_drift_gate` (committed == fresh regen; "
-        "see wrapper-maintenance.md).",
+        "One generated tree, held to the single-tree drift gate (`check_single_tree`: committed == fresh "
+        "regen for every generated file; see wrapper-maintenance.md).",
         "",
-        f"- Desktop: {desktop_generated} generated classes + {len(DESKTOP_HANDSHAPED)} hand-shaped "
-        "policy classes. Android reuses the desktop sources (no separate tree).",
-        f"- iOS: {ios_generated} generated classes — full desktop-equivalent breadth (task 30) — plus "
-        f"{len(IOS_HANDSHAPED)} hand-shaped policy classes (`IOS_HANDSHAPED`: generated base + "
-        "static-dispatch/byte-array/factory hand sugar, snowplow enablement) and "
-        f"{len(IOS_HANDWRITTEN_COLLISION_CLASSES)} hand-written collision classes "
-        "(`IOS_HANDWRITTEN_COLLISION_CLASSES`). The only classes not emitted on iOS are the "
-        f"documented `IOS_UNSUPPORTED_CLASSES`: {unsupported}. Per-method iOS skips remain "
-        "conservative (un-audited marshalling shapes are skipped with report entries, never stubbed).",
+        f"- Shared tree (`src/commonMain/kotlin/.../api`): {shared} classes compiled by desktop, Android and "
+        f"iOS. {companions} of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose "
+        "ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.",
+        f"- Per-platform (`PER_PLATFORM_WRAPPERS`, {len(PER_PLATFORM_WRAPPERS)} classes): desktop generates "
+        f"{len(DESKTOP_ONLY_GENERATED)} and hand-shapes {len(DESKTOP_HANDSHAPED)}; iOS generates "
+        f"{len(IOS_ONLY_GENERATED)}, hand-shapes {len(IOS_HANDSHAPED)}, hand-writes "
+        f"{len(IOS_HANDWRITTEN_COLLISION_CLASSES)} collision classes, and does not host {unsupported}. "
+        "Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative "
+        "(un-audited marshalling shapes become desktop companions with report entries, never stubs).",
         "",
     ]
 
@@ -143,7 +146,7 @@ def render_markdown(
         generated,
         "",
         "This page distinguishes generator coverage from promoted source coverage. "
-        "Generator coverage is the practical API reach for upcoming wrapper promotion; promoted coverage only counts wrappers currently checked into `src/main/kotlin/net/multigesture/kanama/api`.",
+        "Generator coverage is the practical API reach for upcoming wrapper promotion; promoted coverage only counts wrappers currently checked into the shared tree `src/commonMain/kotlin/net/multigesture/kanama/api` or the desktop directory `src/main/kotlin/net/multigesture/kanama/api`.",
         "",
         "## Generator Summary",
         "",

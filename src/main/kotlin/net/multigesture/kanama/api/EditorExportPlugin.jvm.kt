@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP EditorExportPlugin waits on: ptrcallWithStringByteArrayBoolArgs,
 //   ptrcallWithStringPackedStringListAndStringArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Adds a shared object or a directory containing only shared objects with the given `tags` and

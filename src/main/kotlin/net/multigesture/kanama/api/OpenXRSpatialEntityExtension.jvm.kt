@@ -17,7 +17,7 @@ import net.multigesture.kanama.types.Vector3
 //   ptrcallWithRIDObjectListObjectArgsRetBool, ptrcallWithRIDObjectListObjectCallableArgsRetObject,
 //   ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject,
 //   ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun OpenXRSpatialEntityExtension.createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
     return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithObjectListObjectCallableArgsRetObject(createSpatialContextBind, handle, capabilityConfigurations, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))

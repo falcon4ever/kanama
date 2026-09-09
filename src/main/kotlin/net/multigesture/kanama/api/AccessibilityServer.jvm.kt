@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.RID
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP AccessibilityServer waits on: ptrcallWithRIDAndVariantArg,
 //   ptrcallWithRIDArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the metadata of the accessibility element `id` to `meta`.

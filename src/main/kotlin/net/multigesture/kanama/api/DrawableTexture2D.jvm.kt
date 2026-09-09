@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Rect2i
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP DrawableTexture2D waits on: ptrcallWithRect2iObjectColorIntObjectArgs,
 //   ptrcallWithRect2iTwoObjectListColorIntObjectArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Draws to given `rect` on this texture by copying from the given `source`. A `modulate` color can

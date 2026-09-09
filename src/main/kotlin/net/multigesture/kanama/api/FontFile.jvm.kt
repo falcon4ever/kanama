@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithIntArgRetDictionary, ptrcallWithIntArgRetVector2iList,
 //   ptrcallWithIntVector2iArgsRetPackedInt32List, ptrcallWithIntVector2iIntArgsRetPackedInt32List,
 //   ptrcallWithIntVector2iIntPackedInt32ListArgs, ptrcallWithTwoIntArgsRetVector2iList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Contents of the dynamic font source file.

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Noise waits on: ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList,
 //   ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun Noise.getImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, normalize: Boolean = true): List<Image> {
     checkOpen()

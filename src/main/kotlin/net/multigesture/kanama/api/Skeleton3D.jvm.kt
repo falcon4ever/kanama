@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithIntArgRetPackedInt32List, ptrcallWithIntArgRetString,
 //   ptrcallWithIntArgRetStringNameList, ptrcallWithIntStringNameAndVariantArg,
 //   ptrcallWithStringNameListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the name of the bone at index `bone_idx`.

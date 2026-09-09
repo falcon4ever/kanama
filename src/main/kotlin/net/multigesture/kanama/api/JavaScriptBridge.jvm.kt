@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP JavaScriptBridge waits on: ptrcallWithByteArrayTwoStringArgs,
 //   ptrcallWithObjectArgRetByteArray, ptrcallWithStringAndBoolArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Execute the string `code` as JavaScript code within the browser window. This is a call to the

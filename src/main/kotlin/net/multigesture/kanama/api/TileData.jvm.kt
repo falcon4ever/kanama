@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 // KANAMA-IOS-GAP TileData waits on: ptrcallWithIntAndVariantArg, ptrcallWithIntArgRetVariantScalar,
 //   ptrcallWithStringAndVariantArg, ptrcallWithStringArgRetVariantScalar,
 //   ptrcallWithTwoIntAndPackedVector2ListArg, ptrcallWithTwoIntArgsRetPackedVector2List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the points of the polygon at index `polygon_index` for TileSet physics layer with index

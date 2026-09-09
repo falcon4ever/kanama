@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP JSONRPC waits on: ptrcallWithIntStringVariantArgsRetDictionary,
 //   ptrcallWithStringAndTwoVariantArgsRetDictionary, ptrcallWithStringAndVariantArgRetDictionary,
 //   ptrcallWithTwoVariantArgsRetDictionary, ptrcallWithVariantAndBoolArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Given a Dictionary which takes the form of a JSON-RPC request: unpack the request and run it.

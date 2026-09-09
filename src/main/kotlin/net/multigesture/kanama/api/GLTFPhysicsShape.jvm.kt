@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP GLTFPhysicsShape waits on: ptrcallNoArgsRetDictionary,
 //   ptrcallWithDictionaryArgRetObject
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFPhysicsShape.Companion.fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsShape? {
     return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))

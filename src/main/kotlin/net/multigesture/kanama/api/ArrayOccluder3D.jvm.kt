@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP ArrayOccluder3D waits on: ptrcallWithPackedInt32ListArg,
 //   ptrcallWithPackedVector3ListAndPackedInt32ListArgs, ptrcallWithPackedVector3ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets `indices` and `vertices`, while updating the final occluder only once after both values are

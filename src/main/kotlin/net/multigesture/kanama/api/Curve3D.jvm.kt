@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Curve3D waits on: ptrcallNoArgsRetPackedVector3List,
 //   ptrcallWithIntAndDoubleArgRetPackedVector3List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the cache of points as a `PackedVector3Array`.

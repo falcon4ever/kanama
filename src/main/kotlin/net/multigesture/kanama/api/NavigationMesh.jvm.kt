@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
 // KANAMA-IOS-GAP NavigationMesh waits on: ptrcallNoArgsRetPackedVector3List,
 //   ptrcallWithIntArgRetPackedInt32List, ptrcallWithPackedInt32ListArg,
 //   ptrcallWithPackedVector3ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the vertices that can be then indexed to create polygons with the `add_polygon` method.

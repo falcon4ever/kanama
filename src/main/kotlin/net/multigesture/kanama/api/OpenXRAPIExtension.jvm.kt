@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Transform3D
 // KANAMA-IOS-GAP OpenXRAPIExtension waits on: ptrcallNoArgsRetPackedInt64List,
 //   ptrcallWithConstVoidPtrArg, ptrcallWithConstVoidPtrArgRetTransform3D,
 //   ptrcallWithLongArgRetString, ptrcallWithLongStringArrayArgsRetBool, ptrcallWithRect2iArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
     checkOpen()

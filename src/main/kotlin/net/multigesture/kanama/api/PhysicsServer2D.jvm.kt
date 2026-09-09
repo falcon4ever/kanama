@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
 // KANAMA-IOS-GAP PhysicsServer2D waits on: ptrcallWithRIDAndLongArgRetVariantScalar,
 //   ptrcallWithRIDAndVariantArg, ptrcallWithRIDArgRetVariantScalar,
 //   ptrcallWithRIDCallableVariantArgs, ptrcallWithRIDLongAndVariantArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the shape data that defines the configuration of the shape. The `data` to be passed depends

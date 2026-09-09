@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP AudioStreamMP3 waits on: ptrcallNoArgsRetByteArray, ptrcallWithByteArrayArg,
 //   ptrcallWithByteArrayArgRetObject
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun AudioStreamMP3.Companion.loadFromBuffer(streamData: ByteArray): AudioStreamMP3? {
     return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData))

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP GDScriptLanguageProtocol waits on: ptrcallWithDictionaryArgRetVariantScalar,
 //   ptrcallWithStringVariantAndIntArg, ptrcallWithVariantArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GDScriptLanguageProtocol.initialize(params: Map<String, Any?>): Any? {
     return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(initializeBind, gDScriptLanguageProtocolSingleton, params)

@@ -7,6 +7,34 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — one shared generated wrapper tree (task 103)
+
+- **The generated Godot API wrappers are emitted once.** The shared tree
+  `src/commonMain/kotlin/net/multigesture/kanama/api` (979 classes) is compiled by the
+  desktop JVM module, by `:ios-runtime` and by the Android plugin; the iOS copies under
+  `ios-runtime/.../api` are gone. A shared file holds the members both native backends
+  can call; the members only desktop/Android can call (no audited iOS ptrcall helper
+  yet) are generated as extensions into per-class `<Class>.jvm.kt` companions (277
+  classes, 1,274 members) whose headers name the helpers they wait on, all listed in
+  the new generated page `docs/reference/generated/ios-shape-gap.md`. A helper landing
+  on iOS moves its members back into the shared file on the next regen.
+- **Scripts calling a desktop-only member need the package import.** Those members are
+  extension functions now, so `import net.multigesture.kanama.api.*` (or the specific
+  import) is required where a class import alone used to do; two example scripts and
+  the wrapper probe were updated. Call syntax is unchanged.
+- **Aligned across platforms:** `@JvmStatic` is emitted on iOS too (harmless on
+  Kotlin/Native); `Node.createTween()` is `open` on both; the iOS `GodotObject` is no
+  longer `AutoCloseable` (like desktop; `RefCounted` still is and owns `close()`); iOS
+  `RefCounted.unreference()` is `internal`; the generated iOS `close()` no longer carries
+  the deprecated `@ManualGodotLifetimeApi`.
+- **Tooling.** One platform-tagged table, `PER_PLATFORM_WRAPPERS`, lists the 56 classes
+  that are not shared. `check_wrapper_generator.py` is a single-tree gate (every
+  generated file, companion and the gap index must equal a fresh in-process regen; a
+  per-platform copy of a shared class fails) and runs in about 5 s instead of 57 s.
+  `generate_api_wrapper.py --write-tree` re-adopts the whole tree (`upgrade_godot.sh`
+  step 5 uses it); the wrapper audits, property coverage, KDoc sync and iOS stub check
+  read the shared tree.
+
 ### Changed — docs consolidation (task 94)
 
 - **One page owns each fact.** Requirements (Godot pin, JDKs, host platforms,

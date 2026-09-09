@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Color
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP FontVariation waits on: ptrcallNoArgsRetDictionary, ptrcallWithDictionaryArg,
 //   ptrcallWithPackedColorListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Font OpenType variation coordinates. More info: OpenType variation tags

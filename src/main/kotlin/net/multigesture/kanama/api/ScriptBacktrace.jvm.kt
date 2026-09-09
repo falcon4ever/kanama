@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP ScriptBacktrace waits on: ptrcallWithIntArgRetString,
 //   ptrcallWithIntArgRetVariantScalar, ptrcallWithTwoIntArgsRetString,
 //   ptrcallWithTwoIntArgsRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the name of the function called at the stack frame at the specified index.

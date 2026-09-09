@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Rect2
 //   ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs, ptrcallWithVariantArg,
 //   ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs,
 //   ptrcallWithVariantLongStringArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Adds an image's opening and closing tags to the tag stack, optionally providing a `width` and

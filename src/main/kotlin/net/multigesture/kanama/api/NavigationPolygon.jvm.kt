@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
 //   ptrcallWithIntArgRetPackedInt32List, ptrcallWithIntArgRetPackedVector2List,
 //   ptrcallWithPackedInt32ListArg, ptrcallWithPackedVector2ListAndIntArgs,
 //   ptrcallWithPackedVector2ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the vertices that can be then indexed to create polygons with the `add_polygon` method.

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithByteArrayArg, ptrcallWithIntVector2iAndIntArgsRetVector2iList,
 //   ptrcallWithVector2iArgRetVector2iList, ptrcallWithVector2iListArgRetObject,
 //   ptrcallWithVector2iListTwoIntAndBoolArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a `Vector2i` array with the positions of all cells containing a tile. A cell is

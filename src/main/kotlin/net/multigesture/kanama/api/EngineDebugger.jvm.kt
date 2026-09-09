@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP EngineDebugger waits on: ptrcallWithStringAndArrayArg,
 //   ptrcallWithStringNameArrayArgs, ptrcallWithStringNameBoolArrayArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Calls the `add` callable of the profiler with given `name` and `data`.

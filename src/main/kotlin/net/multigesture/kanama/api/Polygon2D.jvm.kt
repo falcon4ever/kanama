@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
 //   ptrcallWithIntArgRetNodePath, ptrcallWithIntArgRetPackedFloat32List,
 //   ptrcallWithNodePathAndPackedFloat32ListArgs, ptrcallWithPackedColorListArg,
 //   ptrcallWithPackedVector2ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * The polygon's list of vertices. The final point will be connected to the first.

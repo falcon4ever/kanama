@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP AudioStreamOggVorbis waits on: ptrcallNoArgsRetDictionary,
 //   ptrcallWithByteArrayArgRetObject, ptrcallWithDictionaryArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun AudioStreamOggVorbis.Companion.loadFromBuffer(streamData: ByteArray): AudioStreamOggVorbis? {
     return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData))

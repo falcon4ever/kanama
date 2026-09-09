@@ -18,7 +18,7 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithPackedVector2ListDoubleAndTwoLongArgsRetPackedVector2ListList,
 //   ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList,
 //   ptrcallWithTwoVector2iArgsRetVector2iList, ptrcallWithVector2PackedVector2ListArgsRetBool
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Checks if two line segments intersect, with line `a` between `from_a` and `to_a` and line `b`

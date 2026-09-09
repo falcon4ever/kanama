@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP XRVRS waits on: ptrcallWithRect2iArg,
 //   ptrcallWithVector2PackedVector2ListArgsRetRID
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * The render region that the VRS texture will be scaled to when generated.

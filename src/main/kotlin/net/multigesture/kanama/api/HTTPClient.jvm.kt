@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP HTTPClient waits on: ptrcallNoArgsRetByteArray, ptrcallNoArgsRetDictionary,
 //   ptrcallWithDictionaryArgRetString, ptrcallWithLongStringPackedStringListByteArrayArgsRetLong,
 //   ptrcallWithLongStringPackedStringListStringArgsRetLong
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sends a raw HTTP request to the connected host with the given `method`. The URL parameter is

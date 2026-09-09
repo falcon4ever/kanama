@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP HMACContext waits on: ptrcallNoArgsRetByteArray, ptrcallWithByteArrayArgRetLong,
 //   ptrcallWithLongAndByteArrayArgRetLong
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Initializes the HMACContext. This method cannot be called again on the same HMACContext until

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithIntArgRetPackedStringList, ptrcallWithIntArgRetString,
 //   ptrcallWithTwoBoolArgsRetVector2iList, ptrcallWithTwoIntAndVariantArg,
 //   ptrcallWithTwoIntArgsRetString, ptrcallWithTwoIntArgsRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Set additional options for BiDi override.

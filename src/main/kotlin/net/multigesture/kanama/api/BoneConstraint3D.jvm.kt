@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP BoneConstraint3D waits on: ptrcallWithIntArgRetNodePath,
 //   ptrcallWithIntArgRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the apply bone name of the setting at `index`. This bone will be modified.

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TabContainer waits on: ptrcallWithIntAndVariantArg, ptrcallWithIntArgRetString,
 //   ptrcallWithIntArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the title of the tab at index `tab_idx`. Tab titles default to the name of the indexed

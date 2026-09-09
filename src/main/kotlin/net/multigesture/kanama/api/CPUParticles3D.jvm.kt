@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP CPUParticles3D waits on: ptrcallNoArgsRetPackedVector3List,
 //   ptrcallWithPackedColorListArg, ptrcallWithPackedVector3ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or

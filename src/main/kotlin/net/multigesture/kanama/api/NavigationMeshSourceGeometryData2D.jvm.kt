@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
 // KANAMA-IOS-GAP NavigationMeshSourceGeometryData2D waits on: ptrcallNoArgsRetPackedVector2ListList,
 //   ptrcallWithArrayArg, ptrcallWithPackedVector2ListAndBoolArg, ptrcallWithPackedVector2ListArg,
 //   ptrcallWithPackedVector2ListListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets all the traversable area outlines arrays.

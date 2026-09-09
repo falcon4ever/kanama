@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithLongAndTwoStringNameAndVariantArg,
 //   ptrcallWithLongAndTwoStringNameArgsRetVariantScalar, ptrcallWithLongArgRetPackedStringList,
 //   ptrcallWithStringArgRetPackedStringList, ptrcallWithStringNameArgRetPackedStringList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a list of names for icon properties defined with `theme_type`. Use `get_icon_type_list`

@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithRect2iArg, ptrcallWithRect2iArgRetDictionaryList,
 //   ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List,
 //   ptrcallWithTwoVector2iAndBoolArgsRetVector2iList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * The region of grid cells available for pathfinding. If changed, `update` needs to be called

@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.NodePath
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP GLTFObjectModelProperty waits on: ptrcallNoArgsRetPackedStringListList,
 //   ptrcallWithNodePathListArg, ptrcallWithPackedStringListListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFObjectModelProperty.setNodePaths(nodePaths: List<NodePath>) {
     checkOpen()

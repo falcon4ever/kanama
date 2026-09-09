@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Input waits on: ptrcallWithIntAndDictionaryArg, ptrcallWithIntArgRetDictionary,
 //   ptrcallWithIntArgRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the name of the joypad at the specified device index, e.g. `PS4 Controller`. Godot uses

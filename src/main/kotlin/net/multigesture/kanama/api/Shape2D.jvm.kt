@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Shape2D waits on: ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List,
 //   ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a list of contact point pairs where this shape touches another. If there are no

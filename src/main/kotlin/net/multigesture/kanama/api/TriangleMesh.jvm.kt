@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TriangleMesh waits on: ptrcallNoArgsRetPackedVector3List,
 //   ptrcallWithPackedVector3ListArgRetBool, ptrcallWithTwoVector3ArgsRetDictionary
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Creates the BVH tree from an array of faces. Each 3 vertices of the input `faces` array

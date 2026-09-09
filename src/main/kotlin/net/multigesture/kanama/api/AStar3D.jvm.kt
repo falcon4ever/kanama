@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
 // KANAMA-IOS-GAP AStar3D waits on: ptrcallNoArgsRetPackedInt64List,
 //   ptrcallWithLongArgRetPackedInt64List, ptrcallWithTwoLongAndBoolArgsRetPackedInt64List,
 //   ptrcallWithTwoLongAndBoolArgsRetPackedVector3List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns an array with the IDs of the points that form the connection with the given point.

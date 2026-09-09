@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Color
 //   ptrcallNoArgsRetTypedStringList, ptrcallWithDictionaryArg, ptrcallWithIntArgRetDictionary,
 //   ptrcallWithIntArgRetString, ptrcallWithLongTwoStringColorObjectVariantIntArgs,
 //   ptrcallWithTwoIntArgsRetString, ptrcallWithTypedIntListArg, ptrcallWithTypedStringListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Prefixes to trigger an automatic indent. Used when `indent_automatic` is set to `true`.

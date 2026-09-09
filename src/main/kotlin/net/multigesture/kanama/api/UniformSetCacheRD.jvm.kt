@@ -9,7 +9,7 @@ import net.multigesture.kanama.types.RID
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP UniformSetCacheRD waits on: ptrcallWithRIDUInt32ObjectListArgsRetRID
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Creates/returns a cached uniform set based on the provided uniforms for a given shader.

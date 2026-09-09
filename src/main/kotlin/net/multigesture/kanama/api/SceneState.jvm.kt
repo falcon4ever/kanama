@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
 //   ptrcallWithIntArgRetArray, ptrcallWithIntArgRetNodePath, ptrcallWithIntArgRetPackedStringList,
 //   ptrcallWithIntArgRetString, ptrcallWithIntArgRetStringName, ptrcallWithTwoIntArgsRetStringName,
 //   ptrcallWithTwoIntArgsRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the type of the node at `idx`.

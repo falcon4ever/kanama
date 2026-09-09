@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP PhysicsTestMotionParameters2D waits on: ptrcallNoArgsRetRIDList,
 //   ptrcallWithRIDListArg, ptrcallWithTypedIntListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Optional array of body `RID` to exclude from collision. Use `CollisionObject2D.get_rid` to get

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP GLTFAccessor waits on: ptrcallNoArgsRetDictionary,
 //   ptrcallNoArgsRetPackedFloat64List, ptrcallWithDictionaryArgRetObject,
 //   ptrcallWithPackedFloat64ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFAccessor.Companion.fromDictionary(dictionary: Map<String, Any?>): GLTFAccessor? {
     return GLTFAccessor.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))

@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP AudioServer waits on: ptrcallWithIntArgRetPackedVector2List,
 //   ptrcallWithIntArgRetString, ptrcallWithIntArgRetStringName
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the name of the bus with the index `bus_idx`.

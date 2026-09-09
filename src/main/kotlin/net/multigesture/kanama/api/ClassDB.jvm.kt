@@ -14,7 +14,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList,
 //   ptrcallWithTwoStringNameAndBoolArgsRetStringName, ptrcallWithTwoStringNameArgsRetDictionary,
 //   ptrcallWithTwoStringNameArgsRetStringName, ptrcallWithTwoStringNameArgsRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the names of all engine classes that directly or indirectly inherit from `class`.

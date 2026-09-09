@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP TranslationDomain waits on: ptrcallWithStringAndBoolArgRetTypedObjectList,
 //   ptrcallWithTwoStringNameArgsRetStringName,
 //   ptrcallWithTwoStringNameIntStringNameArgsRetStringName
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the `Translation` instances that match `locale` (see

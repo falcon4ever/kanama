@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP ImageTexture3D waits on: ptrcallWithLongThreeIntBoolObjectListArgsRetLong,
 //   ptrcallWithObjectListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Creates the `ImageTexture3D` with specified `format`, `width`, `height`, and `depth`. If

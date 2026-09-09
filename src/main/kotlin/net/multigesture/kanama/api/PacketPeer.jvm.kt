@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP PacketPeer waits on: ptrcallNoArgsRetByteArray, ptrcallWithBoolArgRetVariantScalar,
 //   ptrcallWithByteArrayArgRetLong, ptrcallWithVariantAndBoolArgRetLong
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Gets a Variant. If `allow_objects` is `true`, decoding objects is allowed. Internally, this uses

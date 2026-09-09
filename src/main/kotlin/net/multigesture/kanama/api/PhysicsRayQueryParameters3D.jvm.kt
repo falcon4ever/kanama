@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP PhysicsRayQueryParameters3D waits on: ptrcallNoArgsRetRIDList,
 //   ptrcallWithRIDListArg, ptrcallWithTwoVector3UInt32RIDListArgsRetObject
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a new, pre-configured `PhysicsRayQueryParameters3D` object. Use it to quickly create

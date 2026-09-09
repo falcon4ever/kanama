@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP AudioStreamWAV waits on: ptrcallNoArgsRetByteArray, ptrcallNoArgsRetDictionary,
 //   ptrcallWithByteArrayAndDictionaryArgRetObject, ptrcallWithByteArrayArg,
 //   ptrcallWithDictionaryArg, ptrcallWithStringAndDictionaryArgRetObject
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Creates a new `AudioStreamWAV` instance from the given buffer. The buffer must contain WAV data.

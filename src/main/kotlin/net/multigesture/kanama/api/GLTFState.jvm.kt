@@ -14,7 +14,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithDictionaryArg, ptrcallWithObjectListArg, ptrcallWithPackedInt32ListArg,
 //   ptrcallWithStringNameAndVariantArg, ptrcallWithTypedMaterialListArg,
 //   ptrcallWithTypedStringListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFState.appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
     checkOpen()

@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP NavigationObstacle3D waits on: ptrcallNoArgsRetPackedVector3List,
 //   ptrcallWithPackedVector3ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will

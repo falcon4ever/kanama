@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2i
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TileSetAtlasSource waits on: ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns an array of tiles coordinates ID that will be automatically removed when modifying one

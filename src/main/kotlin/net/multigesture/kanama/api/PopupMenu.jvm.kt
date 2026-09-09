@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP PopupMenu waits on: ptrcallWithIntAndVariantArg, ptrcallWithIntArgRetString,
 //   ptrcallWithIntArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the metadata of an item, which may be of any type. You can later get it with

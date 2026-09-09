@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP MultiplayerSpawner waits on: ptrcallNoArgsRetCallable, ptrcallWithIntArgRetString,
 //   ptrcallWithVariantArgRetObject
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun MultiplayerSpawner.getSpawnableScene(index: Int): String {
     return ObjectCalls.ptrcallWithIntArgRetString(getSpawnableSceneBind, handle, index)

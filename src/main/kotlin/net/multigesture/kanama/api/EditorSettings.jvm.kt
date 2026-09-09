@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithStringAndObjectListArgs, ptrcallWithStringAndVariantArg,
 //   ptrcallWithStringArgRetVariantScalar, ptrcallWithStringNameVariantBoolArgs,
 //   ptrcallWithTwoStringAndVariantArg, ptrcallWithTwoStringAndVariantArgRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the `value` of the setting specified by `name`. This is equivalent to using `Object.set` on

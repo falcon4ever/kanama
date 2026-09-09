@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP StreamPeer waits on: ptrcallWithBoolArgRetVariantScalar,
 //   ptrcallWithByteArrayArgRetArray, ptrcallWithByteArrayArgRetLong, ptrcallWithIntArgRetArray,
 //   ptrcallWithIntArgRetString, ptrcallWithVariantAndBoolArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sends a chunk of data through the connection, blocking if necessary until the data is done

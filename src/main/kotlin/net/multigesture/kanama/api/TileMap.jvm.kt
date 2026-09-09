@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithIntArgRetString, ptrcallWithIntArgRetVector2iList,
 //   ptrcallWithIntVector2iListTwoIntAndBoolArgs, ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList,
 //   ptrcallWithVector2iArgRetVector2iList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a TileMap layer's name. If `layer` is negative, the layers are accessed from the last

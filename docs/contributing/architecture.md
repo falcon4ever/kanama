@@ -90,7 +90,7 @@ flowchart TB
 
     subgraph APP["Exported iOS app (.xcframework, device arm64)"]
         KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, MemorySegment shim"]
-        WRAP["Generated wrappers<br/>same generator as desktop/Android"]
+        WRAP["Shared generated wrappers<br/>src/commonMain, the same files desktop/Android compile"]
         OC["ObjectCalls (iOS actual)<br/>typed ptrcall helpers"]
         SHIM["C GDExtension shim<br/>entry, get_method_bind, generic ptrcall dispatch"]
     end

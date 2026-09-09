@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP GLTFNode waits on: ptrcallWithPackedInt32ListArg,
 //   ptrcallWithStringNameAndVariantArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFNode.setChildren(children: List<Int>) {
     checkOpen()

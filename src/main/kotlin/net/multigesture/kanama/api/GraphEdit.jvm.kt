@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
 //   ptrcallWithDictionaryArg, ptrcallWithDictionaryListArg, ptrcallWithRect2ArgRetDictionaryList,
 //   ptrcallWithStringNameArgRetDictionaryList, ptrcallWithStringNameArgRetStringNameList,
 //   ptrcallWithTwoVector2ArgsRetPackedVector2List, ptrcallWithVector2AndDoubleArgRetDictionary
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * The connections between `GraphNode`s. A connection is represented as a `Dictionary` in the form

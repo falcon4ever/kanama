@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
 //   ptrcallWithArrayTransform3DArgs, ptrcallWithPackedFloat32ListAndPackedInt32ListArgs,
 //   ptrcallWithPackedInt32ListArg, ptrcallWithPackedVector3ListAndTransform3DArg,
 //   ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the parsed source geometry data indices. The indices need to be matched with appropriated

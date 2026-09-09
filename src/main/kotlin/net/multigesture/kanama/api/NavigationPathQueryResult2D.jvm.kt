@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
 // KANAMA-IOS-GAP NavigationPathQueryResult2D waits on: ptrcallNoArgsRetPackedInt64List,
 //   ptrcallNoArgsRetRIDList, ptrcallWithPackedInt32ListArg, ptrcallWithPackedInt64ListArg,
 //   ptrcallWithPackedVector2ListArg, ptrcallWithRIDListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * The resulting path array from the navigation query. All path array positions are in global

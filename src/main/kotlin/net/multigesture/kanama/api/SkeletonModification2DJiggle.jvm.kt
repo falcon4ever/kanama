@@ -9,7 +9,7 @@ import net.multigesture.kanama.types.NodePath
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP SkeletonModification2DJiggle waits on: ptrcallWithIntArgRetNodePath
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns the `Bone2D` node assigned to the Jiggle joint at `joint_idx`.

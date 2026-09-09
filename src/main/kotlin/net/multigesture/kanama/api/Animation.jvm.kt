@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
 //   ptrcallWithIntDoubleBoolArgsRetVariantScalar, ptrcallWithIntDoubleVariantDoubleArgsRetInt,
 //   ptrcallWithTwoIntAndVariantArg, ptrcallWithTwoIntArgsRetArray,
 //   ptrcallWithTwoIntArgsRetStringName, ptrcallWithTwoIntArgsRetVariantScalar
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Gets the path of a track. For more information on the path format, see `track_set_path`.

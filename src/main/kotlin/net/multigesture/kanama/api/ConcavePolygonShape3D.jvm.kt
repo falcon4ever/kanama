@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP ConcavePolygonShape3D waits on: ptrcallNoArgsRetPackedVector3List,
 //   ptrcallWithPackedVector3ListArg
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Sets the faces of the trimesh shape from an array of vertices. The `faces` array should be

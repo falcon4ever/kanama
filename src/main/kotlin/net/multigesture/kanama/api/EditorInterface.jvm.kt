@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Rect2i
 //   ptrcallWithCallableStringNameTwoStringStringNameListArgs, ptrcallWithObjectAndRect2iArg,
 //   ptrcallWithObjectCallablePackedInt32ListStringArgs,
 //   ptrcallWithObjectListIntArgsRetTypedObjectList
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns mesh previews rendered at the given size as an `Array` of `Texture2D`s.

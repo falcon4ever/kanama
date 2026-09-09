@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // KANAMA-IOS-GAP IP waits on: ptrcallNoArgsRetDictionaryList, ptrcallWithIntArgRetArray,
 //   ptrcallWithIntArgRetString, ptrcallWithStringAndLongArgRetPackedStringList,
 //   ptrcallWithStringAndLongArgRetString
-// Index: docs/contributing/ios-shape-gap.md
+// Index: docs/reference/generated/ios-shape-gap.md
 
 /**
  * Returns a given hostname's IPv4 or IPv6 address when resolved (blocking-type method). The
