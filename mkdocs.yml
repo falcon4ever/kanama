@@ -66,6 +66,7 @@ nav:
       - Contributor Guide: contributing/index.md
       - Architecture: contributing/architecture.md
       - Wrapper Maintenance: contributing/wrapper-maintenance.md
+      - Shared Wrapper Tree Design Check: contributing/shared-wrapper-tree-design-check.md
       - Godot Upgrade Runbook: contributing/godot-upgrade.md
       - Hot Reload Internals: contributing/hot-reload-internals.md
       - Demo Porting Rules: contributing/demo-porting-rules.md

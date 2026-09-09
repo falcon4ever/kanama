@@ -52,7 +52,9 @@ Android has no separate committed tree — `prepareAndroidKanamaSources` copies 
 desktop sources through the PanamaPort remap, so the desktop gate covers it
 transitively. Adopted classes with skipped methods are only accepted when every
 skip is a Godot virtual callback that belongs to the override-registration design
-rather than the public ptrcall wrapper surface.
+rather than the public ptrcall wrapper surface. The desktop and iOS trees are
+still two committed copies; what merging them would take is recorded in
+[Shared Wrapper Tree: Design Check](shared-wrapper-tree-design-check.md).
 
 ## RefCounted Return Ownership
 
