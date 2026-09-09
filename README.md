@@ -15,6 +15,7 @@
   <img alt="JDK 25+" src="https://img.shields.io/badge/JDK-25%2B-f89820.svg">
   <img alt="Android: supported" src="https://img.shields.io/badge/Android-supported-3ddc84.svg">
   <img alt="iOS: supported" src="https://img.shields.io/badge/iOS-supported-000000.svg">
+  <img alt="Web: experimental" src="https://img.shields.io/badge/Web-experimental-f5a623.svg">
   <img alt="Status: 0.4.0 preview" src="https://img.shields.io/badge/status-0.4.0_preview-478cbf.svg">
 </p>
 
@@ -33,95 +34,32 @@ separate project with a different runtime and export model.
 
 ## Status
 
-Kanama is desktop-first. The `0.4.0` preview baseline is
-Godot 4.7.2 stable. macOS arm64, Windows x86_64, and Linux x86_64/arm64 are
-**supported** on 4.7 stable. Use the
-[Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/)
-for compatible editor/player binaries and Android export templates. Desktop
-release kits and store add-ons are package artifacts that can be built from
-source today and are the intended release path. Exported games are
-unpack-and-play — they ship a bundled, jlink-trimmed JVM runtime, and that
-runtime is cross-target, so a macOS machine can produce a Windows or Linux
-build. A macOS-cross-built Windows export was verified on real Windows hardware
-(2026-08-10): it booted from its own bundled runtime even with a system JDK
-installed. See [Desktop and Packaging](docs/exporting/desktop.md); distribution
-signing/notarization remains a separate release-readiness track.
-
-Android is **Supported** on 4.7 stable for the v0.4.0 line: the workflow builds a
-Godot Android plugin AAR and uses
-[PanamaPort](https://github.com/vova7878/PanamaPort) for the Android FFM layer.
-Device-validated across four models (Pixel 7 / Moto g 5G 2023 / Galaxy S10+ /
-Pixel 3 XL); the Godot 4.7 stable debug demo matrix, an R8-minified Match3
-release APK, and the nine-demo Vulkan/Mobile renderer smoke all pass on physical
-devices. **Debug builds are validated down to Android 9; release builds require
-Android 13+** (validated on 14 + 16). The R8/release path is validated against
-Kanama's PanamaPort fork, not upstream, and the packaged addon is runtime-only
-(compiling project scripts needs the Kanama checkout).
-
-iOS is a **Supported** Kotlin/Native backend on 4.7 stable: a C GDExtension shim
-plus a Kotlin/Native static `.xcframework` run full Kanama project scripts through
-the same wrapper generator as desktop/Android, with no JVM on device. The full
-device gate (fresh-project install + nine-demo matrix) has passed on both
-iPhone 12 and iPhone 15 Pro, with one FPS Audio autoload follow-up tracked as
-non-blocking. The packaged `.xcframework` addon is runtime-only (compiling
-project scripts needs the Kanama checkout), and there is no mobile hot reload —
-see the [iOS export guide](docs/exporting/ios.md) and
-[Version Support](docs/reference/version-support.md).
-
-A **Kotlin/Wasm Web backend is Experimental (preview)**. The full twelve-demo
-corpus — Bunnymark and Match3 through FPS, Racing, City-Builder, and tps-demo —
-runs as production Godot Web exports through a generated proxy and a versioned
-JavaScript bridge, with no on-device JVM. Chrome and Firefox gate it in CI on
-Linux — a three-demo subset per pull request, the corpus minus tps-demo on
-`main` and nightly (tps-demo is a local gate), plus a ten-minute leak soak
-nightly — against tested browser floors and measured per-engine performance
-budgets, and Safari passes the same gate as a local pre-release check (it has
-no headless mode). It is
-still **not a Supported target**: single-thread Compatibility renderer only, a
-source-checkout export (no packaged addon), and desktop browsers only
-(iOS/iPadOS hand-checked on device, not gated). See the
-[Web export guide](docs/exporting/web.md) and
-[Web Internals](docs/contributing/web-internals.md) for the architecture.
-
-See [Version Support](docs/reference/version-support.md) for the current test matrix and
-the `0.4.0` public preview criteria.
+Kanama is desktop-first. The badges above are the current platform tiers;
+[Version Support](docs/reference/version-support.md) is the one page that
+records what each tier was validated on, when, and with which caveats, and
+it is the only page that states requirements. Exported desktop games are
+unpack-and-play: they ship a bundled, jlink-trimmed JVM runtime, and that
+runtime is cross-target, so one host can produce Windows, Linux, and macOS
+builds — see [Desktop and Packaging](docs/exporting/desktop.md).
 
 ## Highlights
 
 - Kotlin scripts attach to Godot nodes like GDScript
 - No engine fork, no engine module, no JNI glue in game code
 - Desktop runtime powered by the JDK Foreign Function & Memory API
-- Android runtime through Godot's Android plugin AAR flow (Supported on 4.7 stable)
-- iOS runtime through a Kotlin/Native `.xcframework`, no on-device JVM (Supported on 4.7 stable)
+- Android runtime through Godot's Android plugin AAR flow (ART + PanamaPort)
+- iOS runtime through a Kotlin/Native `.xcframework`, no on-device JVM
+- Kotlin/Wasm Web backend through a generated proxy and a versioned JavaScript
+  bridge, no on-device JVM
 - Hot reload and editor build tools for a fast iteration loop
 - Full Godot 4.7 class coverage (1036/1036 wrapped classes, generated KDoc from
   Godot docs; engine virtuals overridable via `@OverrideVirtual`)
-- Desktop-first: macOS arm64 is the primary 4.7 stable validation path; Windows
-  x64, Linux x64, and Linux ARM64 remain tracked smoke targets
 
 ## Requirements
 
-Desktop/editor workflow:
-
-- Godot 4.7.2 stable from the
-  [Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/)
-- JDK 25+ (Temurin 25 recommended)
-- CMake 3.22.1+ and a platform C toolchain for source checkout workflows that
-  build the desktop native bootstrap locally; release kits already include the
-  platform bootstrap
-- macOS arm64, Windows x64, Linux x64, or Linux ARM64 for the current
-  editor/runtime smoke paths
-
-Android export workflow:
-
-- Godot 4.7.2 stable Android export templates from the
-  [Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/);
-  Kanama's stable emulator smoke path and the Pixel 7 device gate (debug demo
-  matrix + R8-minified Match3 release APK) have both passed
-- Android SDK API 36, build-tools 36.1.0, and NDK 29.0.14206865 for Godot export
-- CMake 3.22.1 for the Kanama Android plugin native bootstrap
-- JDK 21 for Android Gradle/export tooling
-- JDK 25 for normal Kanama desktop development
+The Godot pin and JDK are the badges above. The full list — per workflow, and
+per export platform — lives once, in
+[Version Support → Requirements](docs/reference/version-support.md#requirements).
 
 ## Quick Start
 

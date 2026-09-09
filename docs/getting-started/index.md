@@ -11,25 +11,19 @@ flows only after matching GitHub zip artifacts are published.
 | Store addon | You have a locally built or published store-addon zip and want to add Kanama to an existing Godot project without a sibling Kanama source checkout. | [Use a Store Addon](store-addon.md) |
 | Contributor checkout | You want to work on Kanama runtime, wrappers, docs, native bootstrap, or release packaging. | [Work on Kanama](work-on-kanama.md) |
 
-Android export is Supported on 4.7 stable and uses a separate Gradle/Android
-toolchain. See [Android](../exporting/android.md) after the desktop workflow is
-running. iOS is also Supported (a Kotlin/Native backend, device-validated on
-iPhone 12 / 15 Pro) — see [iOS](../exporting/ios.md).
+Android and iOS exports use their own toolchains; once the desktop workflow is
+running, continue with [Android](../exporting/android.md) or
+[iOS](../exporting/ios.md). Which platforms are Supported, and on what
+evidence, is recorded in [Version Support](../reference/version-support.md).
 
 ## Requirements
 
-Desktop Kanama projects use:
-
-- Godot 4.7.2 stable from the
-  [Godot 4.7.2 stable archive](https://godotengine.org/download/archive/4.7.2-stable/).
-- JDK 25+ for desktop runtime and Gradle builds.
-- macOS arm64, Windows x64, Linux x64, or Linux ARM64 for the current desktop
-  package targets.
-
-Source and contributor workflows also require CMake 3.22.1+ and the platform C
-toolchain because they build the native bootstrap locally. Package artifacts
-contain the native bootstrap libraries included by their local package build or
-published release artifact.
+The Godot release, JDK, host platforms, and per-workflow toolchains are listed
+once, in [Version Support → Requirements](../reference/version-support.md#requirements).
+In short: a desktop project needs the pinned Godot release and a JDK; a source
+or contributor checkout additionally needs CMake and a C toolchain because it
+builds the native bootstrap locally, while release kits and store add-ons ship
+the prebuilt bootstrap.
 
 ## How Kanama Fits Into Godot
 

@@ -63,13 +63,11 @@ ART, and the Android build maps the Kanama FFM-facing code to
 [PanamaPort](https://github.com/vova7878/PanamaPort)'s `com.v7878.foreign`
 package.
 
-The build tools are also separate from the runtime:
-
-- Desktop development currently uses JDK 25.
-- Godot's Android Gradle export flow is run with JDK 21.
-- Godot 4.7.2 stable Android export templates require Android SDK platform API
-  36, build-tools 36.1.0, and NDK 29.0.14206865.
-- The exported Android game runs on ART and PanamaPort, not on a desktop JVM.
+The build tools are also separate from the runtime: Kanama itself builds on
+the desktop JDK, Godot's Android Gradle export flow runs on its own JDK, and
+the exported game runs on ART and PanamaPort, not on a desktop JVM. The
+versions are in [Version Support → Requirements](../reference/version-support.md#requirements)
+and the [Android toolchain table](../exporting/android.md#toolchain).
 
 ## Implementation Shape
 

@@ -122,13 +122,10 @@ Two `Ref<Material>` sinks (surface override + material override) plus a
 `scripts/runtime_smoke.sh`; iOS guards the same on-device in its
 `ObjectCalls` self-test.
 
-The contract is the ordinary `AutoCloseable` one: **close what you create.** A
-created resource that is never closed leaks its `+1` (Godot prints
-`Leaked instance: <Class>` at exit in debug/editor runs — the same signal the
-smoke gates on). Prefer `X.create().use { … }`, or assign it and `close()` after.
-A `getMesh()`/`getMaterial()`-style read-back is *also* an owned return (see
-[RefCounted Return Ownership](#refcounted-return-ownership) above) and must be
-closed too — forgetting one leaks the resource it points at.
+What a game developer does about this `+1` — close what you create, close what
+a getter hands back, `use { }` where possible — is the one rule in
+[Godot API → Resource Ownership](../game-dev/godot-api.md#resource-ownership);
+this page only records why the `+1` exists on every path.
 
 > **Issue #81 is subsumed.** Before the `construct_object3` migration (task 62),
 > `create()` was non-owning, so `ResourceSaver.save`'s transient `Ref` could drop

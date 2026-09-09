@@ -109,8 +109,8 @@ All other package jobs use read-only repository permissions.
 
 ## Runtime Requirements
 
-Desktop Kanama development needs a JDK 25+ distribution that contains
-`libjvm`. The native bootstrap checks for a bundled app-relative `runtime/`
+Desktop Kanama development needs a JDK distribution that contains `libjvm`
+(the JDK floor is in [Version Support → Requirements](../reference/version-support.md#requirements)). The native bootstrap checks for a bundled app-relative `runtime/`
 image first (exported games, see below), then `JAVA_HOME`, then platform
 fallback locations. The optional `addons/kanama_tools` editor plugin runs the
 same preflight and warns inside Godot if it cannot find `libjvm`.
@@ -273,7 +273,6 @@ smoke is the exported-game gate.
 ## Android Track
 
 Android exports use a different runtime path: a Godot Android plugin AAR, ART,
-PanamaPort, and Android-specific packaging. Android is Supported on 4.7 stable;
-release builds require Android 13+ (debug down to Android 9).
-
-See [Android](android.md) for the workflow, validation status, and boundaries.
+PanamaPort, and Android-specific packaging. See [Android](android.md) for the
+workflow and [Version Support](../reference/version-support.md) for the tier
+and its caveats.
