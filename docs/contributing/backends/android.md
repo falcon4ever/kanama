@@ -1,30 +1,21 @@
 # Android Internals
 
-This page records the current Android implementation path. Android is a
-**Supported** Kanama target on the Godot 4.7 stable baseline; the API/build flow
-is less settled than the desktop path.
+This page records the current Android implementation path: the runtime design,
+the PanamaPort fork, and the audits that guard the source remap. The support
+tier and the device evidence behind it are in
+[Version Support → Android](../../reference/version-support.md#android); the
+user-facing export workflow is [Exporting → Android](../../exporting/android.md).
+The API/build flow is less settled than the desktop path.
 
 ## What Works
 
-Nine Kanama demo exports are Android smoke targets (the eight starter/creeps
-demos plus Bunnymark; `tps-demo-kanama` also carries an Android preset but sits
-outside the automated matrix). On 2026-06-26, the Godot
-4.7 stable demo matrix passed on Pixel 7 with debug APK exports, and
-Starter-Kit-Match3 also passed the R8-minified release smoke with Kanama's
-PanamaPort fork:
-
-- `godot-demo-2d-dodge-the-creeps`
-- `Starter-Kit-3D-Platformer`
-- `Starter-Kit-Match3`
-- `godot-demo-3d-squash-the-creeps`
-- `Starter-Kit-FPS`
-- `Starter-Kit-Racing`
-- `godot-4-3d-character-controller-tutorial`
-- `godot-4-3d-third-person-controller`
-
-The 3D Platformer and third-person controller runs are stronger signals because
-they exercise larger scenes, Android input overlays, and gameplay warmup paths.
-The exported APK path:
+The nine Android smoke targets (the eight starter/creeps demos plus Bunnymark;
+`tps-demo-kanama` also carries an Android preset but sits outside the automated
+matrix) and their device results are the
+[Android demo matrix](../../reference/version-support.md#android-demo-matrix).
+The 3D Platformer and third-person controller runs are the stronger signals
+because they exercise larger scenes, Android input overlays, and gameplay
+warmup paths. The exported APK path:
 
 - loads the Android Godot plugin AAR,
 - loads `libkanama_bootstrap.so` from the APK,
@@ -37,9 +28,8 @@ The exported APK path:
 - renders the 3D scene through Godot's OpenGL compatibility renderer.
 
 This proves the Kanama runtime path on Android, including the forked-PanamaPort
-minified path. Android is Supported on 4.7 stable; release builds require
-Android 13+ (debug down to Android 9), and the release path depends on Kanama's
-PanamaPort fork.
+minified path. The validated Android version floors per build type are in
+[Version Support → Validated Android versions](../../reference/version-support.md#validated-android-versions).
 
 ## PanamaPort
 
@@ -84,7 +74,7 @@ are in [Version Support → Validated Android versions](../../reference/version-
 
 ## Desktop vs Android FFM
 
-Desktop Kanama uses JDK 25 and `java.lang.foreign`.
+Desktop Kanama uses the JDK and `java.lang.foreign`.
 
 Android does not run a desktop JDK inside the game. The Android runtime uses
 ART, and the Android build maps the Kanama FFM-facing code to
@@ -181,6 +171,8 @@ not leave demo processes alive after validation.
 
 Android validation uses the normal demo folders plus Android export metadata,
 the Kanama Android plugin AAR, `adb install`, logcat checks, screenshots, and a
-forced package stop after the run. Keep stable support wording pending until
-the matching APK smoke matrix passes; physical device validation remains a
-stronger platform claim.
+forced package stop after the run (`scripts/android_smoke.sh`,
+`scripts/android_export_minified.sh`). Which device runs back the current
+claim, and when they last ran on the current Godot pin, is the
+[Gates Index](../../reference/generated/gates.md) ledger; never widen the
+support wording past what those runs validated.

@@ -5,10 +5,10 @@ C-shim generic `ptrcall`, the same wrapper generator as desktop/Android. For the
 hand-written/stub registry see
 [ios-backend-handwritten.md](../../reference/generated/ios-backend-handwritten.md).
 
-> **Status:** Supported on 4.7 stable — the core smoke matrix and the iOS demo
-> ports are device-validated on real iPhones (iPhone 12 + iPhone 15 Pro). This
-> page describes the shipped architecture; support claims live in
-> [version-support.md](../../reference/version-support.md).
+> This page describes the shipped architecture. The support tier and the device
+> evidence behind it live in
+> [Version Support → iOS](../../reference/version-support.md#ios); the
+> user-facing export workflow is [Exporting → iOS](../../exporting/ios.md).
 
 ## Why iOS is different from desktop/Android
 
