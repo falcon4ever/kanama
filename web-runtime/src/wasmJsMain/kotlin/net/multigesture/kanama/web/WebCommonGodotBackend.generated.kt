@@ -168,7 +168,10 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(52, 115, 129, 140, 185, 189, 209, 273, 274, 285, 286))
+    require(
+      descriptor.opcode in
+        setOf(52, 115, 129, 140, 185, 189, 209, 273, 274, 285, 286, 295, 297, 301, 302)
+    )
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
     }
@@ -1132,7 +1135,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    require(descriptor.opcode in setOf(86, 87, 190))
+    require(descriptor.opcode in setOf(86, 87, 190, 292, 294))
     commands.flush()
     immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
   }
@@ -1680,6 +1683,27 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       receiver.webId(),
       name,
       value.webId(),
+    )
+  }
+
+  override fun invokeStringNameObjectArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    name: String,
+    value: GodotHandle,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 293)
+    commands.flush()
+    // Task 64 tier 3: action name and event handle packed into one query string (unit
+    // separator) on the active script's own query channel; the applier resolves the event
+    // from that script's handle table. Immediate so the queued keycode writes land first and
+    // the caller may close() the event right after.
+    immediateWebObjectQuery(
+      descriptor.opcode,
+      requireActiveWebScriptHandle(),
+      name + "" + value.webId().toString(),
     )
   }
 

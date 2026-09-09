@@ -333,6 +333,20 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     288: {},
     289: {},
     290: {},
+    291: {},
+    292: {},
+    293: {},
+    294: {},
+    295: {},
+    296: {},
+    297: {},
+    298: {},
+    299: {},
+    300: {},
+    301: {},
+    302: {},
+    303: {},
+    304: {},
 }
 
 
@@ -1787,6 +1801,23 @@ def body_STRINGNAME_OBJECT_ARG(calls):
     ]
 
 
+def body_STRINGNAME_OBJECT_ARG_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Task 64 tier 3: action name and event handle packed into one query string (unit",
+        "// separator) on the active script's own query channel; the applier resolves the event",
+        "// from that script's handle table. Immediate so the queued keycode writes land first and",
+        "// the caller may close() the event right after.",
+        "immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "requireActiveWebScriptHandle(),",
+        'name + "\u001f" + value.webId().toString(),',
+        ")",
+    ]
+
+
 def body_STRINGNAME_RET_VECTOR2(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -2100,6 +2131,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         ["receiver: GodotHandle", "name: String", "value: GodotHandle"],
         "",
     ),
+    "STRINGNAME_OBJECT_ARG_SINGLETON": (["name: String", "value: GodotHandle"], ""),
     "STRINGNAME_RET_VECTOR2": (["receiver: GodotHandle", "name: String"], "GodotVector2"),
     "NOARGS_RET_STRING": (["receiver: GodotHandle"], "String"),
     "STRINGNAME_RET_STRING": (["receiver: GodotHandle", "name: String"], "String"),
@@ -2247,6 +2279,7 @@ EMIT_ORDER = [
     "STRINGNAME_LONG_ARG",
     "STRINGNAME_VECTOR2_ARG",
     "STRINGNAME_OBJECT_ARG",
+    "STRINGNAME_OBJECT_ARG_SINGLETON",
     "STRINGNAME_RET_VECTOR2",
     "NOARGS_RET_STRING",
     "STRINGNAME_RET_STRING",
