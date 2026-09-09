@@ -34,10 +34,10 @@ FIXTURE_DIR = ROOT / "scripts/fixtures/wrapper_generator"
 # the desktop per-platform directory. The shared tree is SHARED_API_DIR.
 API_DIR = DESKTOP_API_DIR
 
-# Transitional (task 103, step 1 -> step 2): while the iOS copies of the shared classes still
-# exist under IOS_API_DIR they are reported as pending deletion instead of failing the gate.
-# Step 2 wires :ios-runtime to the shared tree, deletes the copies, and flips this to False.
-IOS_COPIES_PENDING_DELETION = True
+# Task 103 step 1 kept the iOS copies of the shared classes until :ios-runtime compiled the shared
+# tree (step 2); a copy under IOS_API_DIR is a gate failure now. Left as a switch for the next
+# platform that joins the tree in two steps.
+IOS_COPIES_PENDING_DELETION = False
 
 # The per-platform wrapper table lives in generate_api_wrapper.PER_PLATFORM_WRAPPERS (one table,
 # platform-tagged). DESKTOP_HANDSHAPED / IOS_HANDSHAPED are derived views of it, re-exported here.

@@ -3789,6 +3789,16 @@ def tree_main(args: argparse.Namespace) -> int:
                         copy.unlink()
                         pruned += 1
         print(f"{summary}; wrote {written} changed files, removed {len(stale)} stale companions, pruned {pruned} copies")
+    elif args.prune_copies:
+        dirs = {"desktop": [DESKTOP_API_DIR], "ios": [IOS_API_DIR], "all": [DESKTOP_API_DIR, IOS_API_DIR]}[args.prune_copies]
+        pruned = 0
+        for name in tree.shared:
+            for directory in dirs:
+                copy = directory / f"{name}.kt"
+                if copy.exists():
+                    copy.unlink()
+                    pruned += 1
+        print(f"{summary}; pruned {pruned} copies")
     return 0
 
 
@@ -3854,17 +3864,17 @@ def main() -> int:
     parser.add_argument(
         "--prune-copies",
         choices=("desktop", "ios", "all"),
-        help="With --write-tree: delete per-platform copies of classes that live in the shared tree.",
+        help="Delete per-platform copies of classes that live in the shared tree (alone, or with --write-tree).",
     )
     args = parser.parse_args()
-    if args.regen_tree is not None or args.write_tree:
+    if args.regen_tree is not None or args.write_tree or args.prune_copies:
         return tree_main(args)
     if args.class_list_file is not None:
         args.classes += args.class_list_file.read_text(encoding="utf-8").split()
     if args.ios_class_list_file is not None:
         args.ios_classes += args.ios_class_list_file.read_text(encoding="utf-8").split()
     if not args.classes and not args.emit_classes and not args.ios_classes:
-        parser.error("at least one --class, --emit-class, --ios-emit-class, --regen-tree, or --write-tree is required")
+        parser.error("at least one --class, --emit-class, --ios-emit-class, --regen-tree, --write-tree, or --prune-copies is required")
 
     api_classes = load_api_classes(args.api)
     singleton_names = load_api_singletons(args.api)
