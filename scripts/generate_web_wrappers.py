@@ -186,7 +186,7 @@ def api_param_type(tree: Tree, godot_type: str, meta: str, spi_type: str) -> str
     if godot_type == "bool":
         return "Boolean"
     if godot_type == "int":
-        return int_type(meta)
+        return "Int" if spi_type == "Int" else int_type(meta)
     if godot_type.startswith("enum::") or godot_type.startswith("bitfield::"):
         return "Long"
     if godot_type == "float":
@@ -684,12 +684,314 @@ WRAPPER_POLICY: dict[int, dict] = {
     # ResourceLoader.load: hand back the typed variants the corpus spells.
     7: {"typed_loads": {"Texture2D": "loadTexture2D", "PackedScene": "loadPackedScene", "AudioStream": "loadAudioStream"}},
 }
-CLASS_POLICY: dict[str, dict] = {}
+# Per-class hand-shaped content. `custom` is emitted inside the class body, `companion` inside the
+# companion object, `top_level` after the class (import-compat aliases for custom members, private
+# helpers). Everything here is Web-specific glue the contract cannot express: compositions over
+# several opcodes, Kotlin-side mirrors, and the Variant-style dispatchers over the typed arms.
+CLASS_POLICY: dict[str, dict] = {
+    "Object": {
+        "enums": ["ConnectFlags"],
+        "custom": """
+  val handle: GodotHandle
+    get() = WebObjectId(backendHandle.backendToken().toInt())
+
+  /** Returns true when both wrappers refer to the same Godot object instance. */
+  fun isSameInstance(other: GodotObject): Boolean =
+    backendHandle.backendToken() == other.backendHandle.backendToken()
+
+  fun signal(name: String): GodotSignal = GodotSignal(this, name)
+
+  /**
+   * Variant-style emit over the typed arms the Web backend admits: Web models desktop's variadic
+   * `emit_signal` as the typed argument shapes the corpus dispatches.
+   */
+  fun emitSignal(signal: String, vararg args: Any?) {
+    if (args.isEmpty()) return emitSignal(signal)
+    when (val value = args.singleOrNull()) {
+      is Int -> emitSignal(signal, value)
+      is Long -> emitSignal(signal, value.toInt())
+      is String -> emitSignal(signal, value)
+      is GodotObject -> emitSignal(signal, value)
+      is Vector2i -> emitSignal(signal, value)
+      else -> unsupportedWebGameplayFamily("GodotObject.emit_signal_typed")
+    }
+  }
+""",
+    },
+    "Node": {
+        "enums": ["ProcessMode"],
+        "custom": """
+  fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
+    getNodeOrNull(path)?.let { ctor(it.handle) }
+
+  fun <T : GodotObject> getAsOrNull(path: NodePath, ctor: (GodotHandle) -> T): T? =
+    getAsOrNull(path.path, ctor)
+
+  fun <T : GodotObject> requireAs(path: String, ctor: (GodotHandle) -> T): T =
+    getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
+
+  fun <T : GodotObject> requireAs(path: NodePath, ctor: (GodotHandle) -> T): T =
+    requireAs(path.path, ctor)
+
+  fun hasNode(path: String): Boolean = getNodeOrNull(path) != null
+
+  fun getNode(path: String): Node? = getNodeOrNull(path)
+
+  /** All children as tracked handles, walked over get_child_count + get_child. */
+  fun getChildren(includeInternal: Boolean = false): List<Node> {
+    require(!includeInternal) { "Web get_children supports only include_internal=false" }
+    return (0 until getChildCount()).mapNotNull { getChild(it) }
+  }
+
+  /** Web adaptation: the corpus runs the default 60 Hz fixed physics tick. */
+  fun getPhysicsProcessDeltaTime(): Double = 1.0 / 60.0
+
+  /** Web no-ops: generated proxies dispatch input only to scripts that declare handlers. */
+  fun setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
+
+  fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
+""",
+        "top_level": """
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.getChildren(includeInternal: Boolean = false): List<Node> = getChildren(includeInternal)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.getPhysicsProcessDeltaTime(): Double = getPhysicsProcessDeltaTime()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.setProcessInput(enable: Boolean) = setProcessInput(enable)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.setProcessUnhandledInput(enable: Boolean) = setProcessUnhandledInput(enable)
+""",
+    },
+    "CanvasItem": {
+        "custom": """
+  fun show() {
+    visible = true
+  }
+
+  fun hide() {
+    visible = false
+  }
+""",
+    },
+    "Node3D": {
+        "custom": """
+  fun hide() {
+    visible = false
+  }
+
+  fun show() {
+    visible = true
+  }
+
+  /** The node's local rotation+scale basis; writes decompose to the two snapshot families. */
+  var basis: Basis
+    get() = composeBasis(rotation, scale)
+    set(value) {
+      rotation = value.getEuler()
+      scale = value.getScale()
+    }
+
+  /** The node's local transform (basis + origin over the mirrored snapshots). */
+  var transform: Transform3D
+    get() = Transform3D(basis, position)
+    set(value) {
+      position = value.origin
+      basis = value.basis
+    }
+
+  /** The node's world transform; rotation/origin cross synchronously, global scale assumed 1. */
+  var globalTransform: Transform3D
+    get() = Transform3D(Basis.fromEuler(globalRotation), globalPosition)
+    set(value) {
+      globalPosition = value.origin
+      globalRotation = value.basis.getEuler()
+    }
+
+  /** World-space rotation basis over the synchronous global-rotation reads (scale-1 rigs). */
+  var globalBasis: Basis
+    get() = Basis.fromEuler(globalRotation)
+    set(value) {
+      globalRotation = value.getEuler()
+    }
+
+  /** Orient the forward axis at [target] from the current position (rides look_at_from_position). */
+  fun lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
+    lookAtFromPosition(globalPosition, target, up, useModelFront)
+  }
+
+  /** Godot's rotate_object_local: right-multiply the local basis by an axis-angle rotation. */
+  fun rotateObjectLocal(axis: Vector3, angle: Double) {
+    basis = basis * Basis.fromAxisAngle(axis, angle)
+  }
+
+  /** Godot's Node3D.orthonormalize: re-orthonormalize the local basis in place. */
+  fun orthonormalize() {
+    basis = basis.orthonormalized()
+  }
+""",
+        "top_level": """
+private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {
+  val rotationBasis = Basis.fromEuler(rotation)
+  // Node basis = R * S: columns scaled (Godot composes scale on the right of rotation).
+  return Basis(
+    rotationBasis.getColumn(0) * scale.x,
+    rotationBasis.getColumn(1) * scale.y,
+    rotationBasis.getColumn(2) * scale.z,
+  )
+}
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.hide() = hide()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.show() = show()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Node3D.basis: Basis
+  get() = basis
+  set(value) {
+    basis = value
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Node3D.transform: Transform3D
+  get() = transform
+  set(value) {
+    transform = value
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Node3D.globalTransform: Transform3D
+  get() = globalTransform
+  set(value) {
+    globalTransform = value
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Node3D.globalBasis: Basis
+  get() = globalBasis
+  set(value) {
+    globalBasis = value
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node3D.lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) =
+  lookAt(target, up, useModelFront)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(axis, angle)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node3D.orthonormalize() = orthonormalize()
+""",
+    },
+    "Sprite2D": {"instantiable": True},
+    "Resource": {"from_handle": True, "from_object": True},
+    "Texture2D": {"release": "resource", "guard": True},
+    "AudioStream": {"release": "resource"},
+    "PackedScene": {"release": "resource"},
+    "Tween": {
+        "enums": ["TransitionType", "EaseType"],
+        "signals": ["finished"],
+        "custom": """
+  /**
+   * Variant-style final value over the typed arms; a component path such as `"position:y"` takes a
+   * number, and Int/Long are accepted so a caller writing `0` for a float property need not care.
+   */
+  fun tweenProperty(
+    target: GodotObject,
+    property: String,
+    finalValue: Any?,
+    duration: Double,
+  ): PropertyTweener? =
+    when (finalValue) {
+      is Vector2 -> tweenProperty(target, property, finalValue, duration)
+      is Color -> tweenProperty(target, property, finalValue, duration)
+      is Vector3 -> tweenProperty(target, property, finalValue, duration)
+      is Double -> tweenProperty(target, property, finalValue, duration)
+      is Float -> tweenProperty(target, property, finalValue.toDouble(), duration)
+      is Int -> tweenProperty(target, property, finalValue.toDouble(), duration)
+      is Long -> tweenProperty(target, property, finalValue.toDouble(), duration)
+      else ->
+        unsupportedWebGameplayCall(
+          "Tween.tween_property final value ${finalValue?.let { it::class.simpleName } ?: "null"}"
+        )
+    }
+""",
+    },
+    "PropertyTweener": {
+        "custom": """
+  /** Variant-style starting value: Color is the one arm the Web backend has (Icone's fade). */
+  fun from(value: Any?): PropertyTweener =
+    when (value) {
+      is Color -> from(value)
+      else ->
+        unsupportedWebGameplayCall(
+          "PropertyTweener.from value ${value?.let { it::class.simpleName } ?: "null"} " +
+            "(the Web backend has the Color arm only)"
+        )
+    }
+""",
+    },
+    "SceneTree": {
+        "imports": [
+            "kotlin.coroutines.resume",
+            "kotlinx.coroutines.Job",
+            "kotlinx.coroutines.suspendCancellableCoroutine",
+        ],
+        "custom": """
+  /** The root window as its Viewport face (the tps corpus's `getTree().root`). */
+  val root: Viewport
+    get() = Viewport(getRoot())
+
+  /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
+  suspend fun delaySeconds(seconds: Double) = SceneTree.delaySeconds(seconds)
+""",
+        "companion": """
+    suspend fun delaySeconds(seconds: Double) {
+      require(seconds.isFinite() && seconds >= 0.0) {
+        "SceneTree.delaySeconds requires a finite, non-negative duration"
+      }
+      suspendCancellableCoroutine { continuation ->
+        val taskId =
+          WebFrameScheduler.scheduleDelay(seconds, continuation.context[Job]) {
+            if (continuation.isActive) continuation.resume(Unit)
+          }
+        continuation.invokeOnCancellation { WebFrameScheduler.cancelTask(taskId) }
+      }
+    }
+""",
+        "top_level": """
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+val SceneTree.root: Viewport
+  get() = root
+""",
+    },
+    "AudioStreamPlayer": {
+        "instantiable": True,
+        "signals": ["finished"],
+        "custom": """
+  /** Load-assign-release: the engine takes its reference before the temporary handle is dropped. */
+  fun setStreamFromPath(path: String) {
+    val stream = ResourceLoader.loadAudioStream(path) ?: return
+    try {
+      setStream(stream)
+    } finally {
+      stream.close()
+    }
+  }
+""",
+    },
+    "AudioStreamPlayer3D": {"signals": ["finished"]},
+    "Timer": {"signals": ["timeout"]},
+    "Area3D": {"signals": ["body_entered", "body_exited"]},
+    "BaseButton": {"signals": ["pressed"]},
+}
 # Leaf and intermediate Godot classes the corpus types against that own no opcode themselves.
 EXTRA_CLASSES: tuple[str, ...] = (
-    "AnimationTree", "Area2D", "AudioStream", "BoneAttachment3D", "ColorRect", "LightmapGIData",
-    "Marker2D", "Marker3D", "MultiMeshInstance3D", "OmniLight3D", "ProgressBar", "SpinBox",
-    "SpotLight3D", "StaticBody3D", "Texture2D", "TextureButton",
+    "AnimationTree", "Area2D", "AudioStream", "BoneAttachment3D", "ButtonGroup", "ColorRect",
+    "LightmapGIData", "Marker2D", "Marker3D", "MultiMeshInstance3D", "OmniLight3D", "ProgressBar",
+    "SpinBox", "SpotLight3D", "StaticBody3D", "Texture2D", "TextureButton",
 )
 # Bespoke facades that stay hand-written under api/ (name -> why the generator cannot emit it).
 WEB_HANDSHAPED: dict[str, str] = {
@@ -930,7 +1232,6 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
             lines.append("")
             lines.append("  /** The live backend handle; guarded wrappers (closeable resources) override this. */")
             lines.append("  internal open fun requireOpenHandle(): BackendGodotHandle = backendHandle")
-            lines.append("")
         else:
             lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject) {{")
     sections: list[list[str]] = [m.body for m in members]
