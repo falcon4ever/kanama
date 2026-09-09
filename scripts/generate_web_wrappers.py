@@ -681,6 +681,8 @@ WRAPPER_POLICY: dict[int, dict] = {
     187: {"name": "getSettingDouble", "doc": "Float-valued setting read (x1000 integer transport; millis precision)."},
     # Camera getter: keep the corpus's `getCamera3D` spelling next to Godot's `getCamera3d`.
     194: {"extra_names": ["getCamera3D"]},
+    # Resource.duplicate is open so Material can re-type the copy.
+    222: {"open": True},
     # ResourceLoader.load: hand back the typed variants the corpus spells.
     7: {"typed_loads": {"Texture2D": "loadTexture2D", "PackedScene": "loadPackedScene", "AudioStream": "loadAudioStream"}},
 }
@@ -986,7 +988,251 @@ val SceneTree.root: Viewport
     "Timer": {"signals": ["timeout"]},
     "Area3D": {"signals": ["body_entered", "body_exited"]},
     "BaseButton": {"signals": ["pressed"]},
+    "AnimationMixer": {
+        "signals": ["animation_finished"],
+        "custom": """
+  /** Resolve the playback object behind a `parameters/.../playback` property. */
+  fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
+    getObjectProperty(path)?.let { AnimationNodeStateMachinePlayback(it.handle) }
+      ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
+
+  /** Double-valued blend parameter write (the run tilt add_amount). */
+  fun setParameter(path: String, value: Double) {
+    set(path, value)
+  }
+
+  /** Long parameters (one-shot requests) ride the double family; Godot coerces Variants. */
+  fun setParameter(path: String, value: Long) {
+    set(path, value.toDouble())
+  }
+""",
+    },
+    "AnimationNodeStateMachinePlayback": {
+        "custom": """
+  private var lastTravelled: String = ""
+
+  /**
+   * Web adaptation: the last travelled state, tracked client-side (the engine node may still be
+   * mid-transition; the corpus only compares against its own travel targets).
+   */
+  fun getCurrentNode(): String = lastTravelled
+""",
+    },
+    "AnimationPlayer": {
+        "custom": """
+  /**
+   * The name of the currently playing animation (empty when nothing plays). No typed opcode
+   * carries this string read, so it rides the task-76 generic `callv` tier.
+   */
+  fun getCurrentAnimation(): String {
+    genericWebGameplayFallback("AnimationPlayer.get_current_animation")
+    return webGenericImmediateStringCall(this, "get_current_animation")
+  }
+""",
+    },
+    "@GlobalScope": {
+        "custom": """
+  fun randiRange(from: Long, to: Long): Long {
+    require(from <= to)
+    val range = to - from + 1
+    return from + (randi().toULong() % range.toULong()).toLong()
+  }
+
+  /** Normally-distributed random (Box-Muller over the engine-seeded randf). */
+  fun randfn(mean: Double, deviation: Double): Double {
+    val u1 = randf().coerceAtLeast(1e-12)
+    val u2 = randf()
+    val gaussian =
+      kotlin.math.sqrt(-2.0 * kotlin.math.ln(u1)) * kotlin.math.cos(2.0 * kotlin.math.PI * u2)
+    return mean + deviation * gaussian
+  }
+
+  /** Web adaptation: liveness of the tracked script/browser handle. */
+  fun isInstanceValid(instance: GodotObject?): Boolean {
+    if (instance == null) return false
+    val handle = instance.handle.value
+    return webScriptInstance(handle) != null || isWebBrowserHandleLive(handle)
+  }
+
+  fun randfRange(from: Double, to: Double): Double {
+    require(from <= to)
+    return from + (to - from) * randf()
+  }
+
+  fun lerpf(from: Double, to: Double, weight: Double): Double = Mathf.lerp(from, to, weight)
+
+  fun signf(value: Double): Double = if (value > 0.0) 1.0 else if (value < 0.0) -1.0 else 0.0
+
+  /** Godot's remap: linear map of [value] from [istart, istop] onto [ostart, ostop]. */
+  fun remap(value: Double, istart: Double, istop: Double, ostart: Double, ostop: Double): Double =
+    ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
+
+  fun clampf(value: Double, min: Double, max: Double): Double = Mathf.clamp(value, min, max)
+
+  fun lerpAngle(from: Double, to: Double, weight: Double): Double =
+    Mathf.lerpAngle(from, to, weight)
+
+  fun degToRad(degrees: Double): Double = degrees * kotlin.math.PI / 180.0
+
+  fun radToDeg(radians: Double): Double = radians * 180.0 / kotlin.math.PI
+
+  /** Web adaptation: Godot's print lands on the browser console via Wasm stdout. */
+  fun print(message: Any?) {
+    println(message)
+  }
+
+  fun pushError(message: Any?) {
+    println("ERROR: $message")
+  }
+""",
+        "imports": ["net.multigesture.kanama.web.webScriptInstance"],
+        "top_level": """
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun GD.radToDeg(radians: Double): Double = radToDeg(radians)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun GD.pushError(message: Any?) = pushError(message)
+""",
+    },
+    "Input": {
+        "enums": ["MouseMode"],
+        "custom": """
+  /**
+   * Composed from two get_axis reads (deadzone-normalized identically for digital keys, the only
+   * inputs the Web demos drive), clamped to unit length like Godot's get_vector.
+   */
+  fun getVector(
+    negativeX: String,
+    positiveX: String,
+    negativeY: String,
+    positiveY: String,
+    deadzone: Double = -1.0,
+  ): Vector2 {
+    val vector = Vector2(getAxis(negativeX, positiveX), getAxis(negativeY, positiveY))
+    val length = vector.length()
+    if (deadzone >= 0.0) {
+      // Godot's deadzone remap: inside the deadzone reads zero, outside rescales to [0, 1].
+      if (length <= deadzone) return Vector2.ZERO
+      if (length > 1.0) return vector / length
+      return vector * ((length - deadzone) / (1.0 - deadzone) / length)
+    }
+    return if (length > 1.0) vector / length else vector
+  }
+""",
+    },
+    "InputEventKey": {
+        "instantiable": True,
+        "release": "constructed",
+        "from_class_check": True,
+        "enums": ["@GlobalScope.Key"],
+    },
+    "InputEventMouseButton": {"from_class_check": True, "enums": ["@GlobalScope.MouseButton"]},
+    "InputEventMouseMotion": {"from_class_check": True},
+    "Mesh": {"from_object_checked": True},
+    "Material": {
+        "from_resource": True,
+        "release": "tracked",
+        "custom": """
+  /** Duplicate this material; the copy is owned (close it, or release it at teardown). */
+  override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { Material(it.handle) }
+""",
+    },
+    "ShaderMaterial": {"from_resource": True},
+    "LightmapGI": {"instantiable": True},
+    "ButtonGroup": {"instantiable": True, "release": "constructed"},
+    "ConfigFile": {"instantiable": True, "release": "constructed"},
+    "FastNoiseLite": {"instantiable": True, "release": "constructed"},
+    "MeshLibrary": {"instantiable": True, "release": "constructed"},
+    "KinematicCollision3D": {"release": "collision", "guard": True},
+    "Light3D": {
+        "enums": ["Param"],
+        "custom": """
+  /** Write-only on Web: light_energy is Light3D.set_param(PARAM_ENERGY, value). */
+  var lightEnergy: Double
+    get() = unsupportedWebGameplayFamily("Light3D.get_light_energy")
+    set(value) = setParam(PARAM_ENERGY, value)
+
+  /** Write-only on Web: shadow_opacity is Light3D.set_param(PARAM_SHADOW_OPACITY, value). */
+  var shadowOpacity: Double
+    get() = unsupportedWebGameplayFamily("Light3D.get_shadow_opacity")
+    set(value) = setParam(PARAM_SHADOW_OPACITY, value)
+""",
+    },
+    "DirectionalLight3D": {"enums": ["SkyMode"]},
+    "Animation": {"enums": ["LoopMode"]},
+    "GridMap": {"constants": ["INVALID_CELL_ITEM"]},
+    "ResourceLoader": {"enums": ["CacheMode"]},
+    "RenderingServer": {"enums": ["ShadowQuality"]},
+    "Viewport": {"enums": ["Scaling3DMode", "MSAA", "ScreenSpaceAA"]},
+    "PhysicsBody3D": {"enums": ["PhysicsServer3D.BodyAxis"]},
+    "OS": {
+        "custom": """
+  /** Web ships the release template; debug-gated tooling stays off. */
+  fun isDebugBuild(): Boolean = false
+""",
+    },
+    "ClassDB": {"visibility": "internal"},
 }
+
+SUPPORT_FILE = '''@file:OptIn(InternalKanamaBackendApi::class)
+
+package net.multigesture.kanama.api
+
+import net.multigesture.kanama.backend.GodotBasis
+import net.multigesture.kanama.backend.GodotColor
+import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
+import net.multigesture.kanama.backend.GodotRect2
+import net.multigesture.kanama.backend.GodotTransform3D
+import net.multigesture.kanama.backend.GodotVector2
+import net.multigesture.kanama.backend.GodotVector2i
+import net.multigesture.kanama.backend.GodotVector3
+import net.multigesture.kanama.backend.GodotVector3i
+import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.types.Basis
+import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Transform3D
+import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
+import net.multigesture.kanama.types.Vector3
+import net.multigesture.kanama.types.Vector3i
+import net.multigesture.kanama.web.WebObjectId
+
+// Conversions between the public value types and the contract's value types; every generated
+// member goes through these, so the float/double policy lives in exactly one place.
+
+internal fun GodotHandle.toBackendHandle(): BackendGodotHandle =
+  BackendGodotHandle.fromBackendToken(value.toLong())
+
+internal fun BackendGodotHandle.toWebId(): WebObjectId = WebObjectId(backendToken().toInt())
+
+internal fun Vector2.toBackend(): GodotVector2 = GodotVector2(x.toFloat(), y.toFloat())
+
+internal fun GodotVector2.toApi(): Vector2 = Vector2(x.toDouble(), y.toDouble())
+
+internal fun Vector3.toBackend(): GodotVector3 =
+  GodotVector3(x.toFloat(), y.toFloat(), z.toFloat())
+
+internal fun GodotVector3.toApi(): Vector3 = Vector3(x.toDouble(), y.toDouble(), z.toDouble())
+
+internal fun Vector2i.toBackend(): GodotVector2i = GodotVector2i(x, y)
+
+internal fun GodotVector2i.toApi(): Vector2i = Vector2i(x, y)
+
+internal fun Vector3i.toBackend(): GodotVector3i = GodotVector3i(x, y, z)
+
+internal fun GodotVector3i.toApi(): Vector3i = Vector3i(x, y, z)
+
+internal fun Color.toBackend(): GodotColor = GodotColor(r, g, b, a)
+
+internal fun GodotColor.toApi(): Color = Color(r, g, b, a)
+
+internal fun GodotRect2.toApi(): Rect2 = Rect2(position.toApi(), size.toApi())
+
+internal fun Basis.toBackend(): GodotBasis =
+  GodotBasis(x.toBackend(), y.toBackend(), z.toBackend())
+
+internal fun Transform3D.toBackend(): GodotTransform3D =
+  GodotTransform3D(basis.toBackend(), origin.toBackend())
+'''
 # Leaf and intermediate Godot classes the corpus types against that own no opcode themselves.
 EXTRA_CLASSES: tuple[str, ...] = (
     "AnimationTree", "Area2D", "AudioStream", "BoneAttachment3D", "ButtonGroup", "ColorRect",
@@ -1158,7 +1404,7 @@ def emit_companion(godot_name: str, class_policy: dict, constants: list[str]) ->
     if class_policy.get("companion"):
         if lines:
             lines.append("")
-        lines += class_policy["companion"].rstrip("\n").split("\n")
+        lines += class_policy["companion"].strip("\n").split("\n")
     if not lines:
         return []
     return ["  companion object {", *lines, "  }"]
@@ -1236,7 +1482,7 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
             lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject) {{")
     sections: list[list[str]] = [m.body for m in members]
     if class_policy.get("custom"):
-        sections.append(class_policy["custom"].rstrip("\n").split("\n"))
+        sections.append(class_policy["custom"].strip("\n").split("\n"))
     sections.append(emit_release(godot_name, class_policy))
     sections.append(emit_signals(api, godot_name, class_policy))
     constants = emit_constants(api, godot_name, class_policy)
@@ -1244,7 +1490,7 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
         # An `object` has no companion: constants and factories sit directly in its body.
         sections.append([line[2:] for line in constants])
         if class_policy.get("companion"):
-            sections.append(class_policy["companion"].rstrip("\n").split("\n"))
+            sections.append(class_policy["companion"].strip("\n").split("\n"))
     else:
         sections.append(emit_companion(godot_name, class_policy, constants))
     first = True
@@ -1262,7 +1508,7 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
             lines += member.alias
     if class_policy.get("top_level"):
         lines.append("")
-        lines += class_policy["top_level"].rstrip("\n").split("\n")
+        lines += class_policy["top_level"].strip("\n").split("\n")
     return file_text(lines, list(class_policy.get("imports", ())))
 
 
@@ -1277,7 +1523,7 @@ def render_all(api: Api) -> dict[str, str]:
                 raise GenerationError(f"opcode {call.opcode} belongs to hand-shaped {call.class_name} but is not allowlisted")
             continue
         by_class[call.class_name].append(call)
-    files: dict[str, str] = {}
+    files: dict[str, str] = {"WebWrapperSupport.kt": HEADER + SUPPORT_FILE}
     for godot_name, calls in by_class.items():
         file_name = ("GD" if godot_name == "@GlobalScope" else kotlin_class_name(godot_name)) + ".kt"
         files[file_name] = render_class(tree, godot_name, sorted(calls, key=lambda c: c.opcode))
