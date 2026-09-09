@@ -7,6 +7,52 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — lifetime safety (task 98)
+
+- **`GD.isInstanceValid` no longer reads a freed object.** `GodotObject` captures
+  its engine instance id once at construction (`instanceId`, via the
+  `object_get_instance_id` interface function) and `isInstanceValid` asks
+  `is_instance_id_valid` about that id — the same thing GDScript does with the id
+  its Variant cached — instead of building an OBJECT Variant from the wrapper's
+  raw pointer, which dereferenced the freed object's header. Measured cost of the
+  capture on Godot 4.7.2 (macOS arm64, JIT-warm): `GodotObject(handle)` goes from
+  ~4 ns to ~9 ns per mint; the `getChildren()` element decode it rides on costs
+  125–220 ns per element. iOS mirrors it through the shim's
+  `object_get_instance_id` / `object_get_instance_from_id`, replacing the
+  "non-zero handle" approximation. Every *other* wrapper member still assumes
+  the object is alive; nothing invalidates a wrapper for you.
+- **Every RefCounted-derived wrapper refuses use after `close()`.** The generator
+  now opens each receiver-bound method with `checkOpen()` (the guard 13
+  hand-shaped classes already had), on desktop/Android and iOS, and the same line
+  was inserted into the hand-shaped RefCounted classes the drift gate exempts
+  (`BaseMaterial3D`, `Material`, `Font`, `SurfaceTool`, …). A call through a
+  handle whose `close()` destroyed the object is
+  `IllegalStateException("RefCounted handle is closed")` instead of a ptrcall on
+  freed memory — 661/661 desktop and 654/654 iOS RefCounted wrappers
+  (11,400 generated guard lines). `check_wrapper_generator.py` locks the policy.
+- **A throwing callback can no longer take Godot down.** `Upcalls.stub` wraps
+  every Godot→JVM stub in `MethodHandles.catchException`: an exception escaping a
+  `@RegisterFunction`, a generated virtual dispatcher, the `.kt` resource loader
+  or any ScriptInstance callback is logged
+  (`[kanama] upcall <Class.method> threw: …`, stack trace once per site) and the
+  engine receives the zero of the return type (NIL / `false` / `NULL`) instead of
+  the JVM aborting through native frames. Containment used to be nine hand-placed
+  catches for 112 upcall targets; the bespoke ones whose return value carries
+  meaning (`siCall`, the property accessors) stay on top. No new native adapter
+  is linked, so the prewarm gate is unaffected.
+
+### Added — threading note and diagnostic
+
+- `docs/game-dev/scripts.md` gains a **Threads** section: what runs on the main
+  thread, that Kanama performs no thread-affinity checks, and that
+  `ResourceLoader.load_threaded_request` on a `.kt` script runs the loader — and
+  any script constructor it reaches — on a worker thread. `KANAMA_THREAD_DIAGNOSTICS=1`
+  logs once per site when `ScriptBridge.siCall` or the `.kt` loader runs off the
+  `initialize` thread (a diagnostic, not an assertion; one boolean read when
+  unset). `runtime_smoke.sh` gains the `LifetimeSmoke` row (validity across
+  `free()`, use-after-close at receiver, inherited, generated and argument
+  positions) and the upcall-containment row.
+
 ### Fixed — CI change filter skipped the mobile and Web lanes on large PRs
 
 - `ci.yml` and `web.yml` decide whether to run the Android/iOS lanes and the Web matrix
