@@ -360,7 +360,11 @@ The `package` workflow runs it that way on purpose: a macOS job cross-builds
 the Windows and Linux runtimes, uploads them, and the `windows-2025` and
 `ubuntu-24.04` jobs export and boot a game against those exact artifacts. A
 runner that jlinked its own runtime would be green and would still prove
-nothing about exporting from another host.
+nothing about exporting from another host. The matrix carries a `macos-arm64`
+row as well; host and target coincide there, so it proves something narrower —
+that an image linked from the pinned per-platform Temurin jmods (the recipe
+every cross target uses, rather than the build JDK's own run-time image) boots a
+real export.
 
 The desktop kits still validate editor/runtime onboarding only; the export
 smoke is the exported-game gate.

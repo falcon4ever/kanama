@@ -120,6 +120,13 @@ jobs:
   # make Kanama's export story strictly worse than Godot's. The macOS-built
   # artifact travelling to the Windows runner is what makes the proof
   # non-circular.
+  #
+  # macos-arm64 is in the matrix for a different reason: host and target are the
+  # same machine there, so nothing travels. What it proves is that the image
+  # jlink linked from the pinned per-platform Temurin JMODS (not from the build
+  # JDK's own run-time image, which is the only thing a plain `jlinkGameRuntime`
+  # can use) boots a real export. That is the same recipe every cross target
+  # uses, so a break in it would otherwise only surface on Windows or Linux.
   # ---------------------------------------------------------------------------
   cross-runtimes:
     name: cross-runtime (${{ matrix.target }} built on macOS)
@@ -128,7 +135,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [windows-x64, linux-x64]
+        target: [windows-x64, linux-x64, macos-arm64]
 
     steps:
       - name: Checkout
@@ -165,6 +172,7 @@ jobs:
           image="build/game-runtime/${{ matrix.target }}/runtime"
           case "${{ matrix.target }}" in
             windows-*) jvm="$image/bin/server/jvm.dll" ;;
+            macos-*) jvm="$image/lib/server/libjvm.dylib" ;;
             *) jvm="$image/lib/server/libjvm.so" ;;
           esac
           echo "host: $(uname -s) $(uname -m)"
@@ -204,6 +212,12 @@ jobs:
             godot_asset_suffix: linux.x86_64.zip
             godot_bin_suffix: linux.x86_64
             export_template: linux_release.x86_64
+          # No godot_bin_suffix: the macOS download unpacks to a Godot.app
+          # bundle rather than a bare binary, so the smoke step resolves it.
+          - target: macos-arm64
+            runner: macos-15
+            godot_asset_suffix: macos.universal.zip
+            export_template: macos.zip
 
     steps:
       - name: Checkout
@@ -241,6 +255,7 @@ jobs:
           tar -C cross-runtime -xzf "cross-runtime/kanama-game-runtime-${{ matrix.target }}.tar.gz"
           case "${{ matrix.target }}" in
             windows-*) jvm="cross-runtime/runtime/bin/server/jvm.dll" ;;
+            macos-*) jvm="cross-runtime/runtime/lib/server/libjvm.dylib" ;;
             *) jvm="cross-runtime/runtime/lib/server/libjvm.so" ;;
           esac
           test -f "$jvm"
@@ -287,6 +302,8 @@ jobs:
           godot_dot="${GODOT_VERSION/-/.}"
           if [ "${{ runner.os }}" = "Windows" ]; then
             templates="$(cygpath -u "$APPDATA")/Godot/export_templates/$godot_dot"
+          elif [ "${{ runner.os }}" = "macOS" ]; then
+            templates="$HOME/Library/Application Support/Godot/export_templates/$godot_dot"
           else
             templates="$HOME/.local/share/godot/export_templates/$godot_dot"
           fi
@@ -303,7 +320,11 @@ jobs:
       - name: Exported-game smoke (JAVA_HOME unset, macOS-built runtime)
         shell: bash
         run: |
-          godot_bin="$PWD/godot-tools/Godot_v${GODOT_VERSION}_${{ matrix.godot_bin_suffix }}"
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            godot_bin="$PWD/godot-tools/Godot.app/Contents/MacOS/Godot"
+          else
+            godot_bin="$PWD/godot-tools/Godot_v${GODOT_VERSION}_${{ matrix.godot_bin_suffix }}"
+          fi
           chmod +x "$godot_bin" || true
           scripts/export_game_smoke.sh \
             --runtime "$PWD/cross-runtime/runtime" \
