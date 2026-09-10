@@ -56,6 +56,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
@@ -67,20 +68,8 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_container_blob
-
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_array
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_byte_array
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_array_blob
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_scalar
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.decodeIosCallArg

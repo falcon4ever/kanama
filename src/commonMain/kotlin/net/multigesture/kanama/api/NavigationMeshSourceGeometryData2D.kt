@@ -67,6 +67,26 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
     }
 
     /**
+     * Adds the outline points of a shape as traversable area.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_traversable_outline
+     */
+    fun addTraversableOutline(shapeOutline: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(addTraversableOutlineBind, handle, shapeOutline)
+    }
+
+    /**
+     * Adds the outline points of a shape as obstructed area.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_obstruction_outline
+     */
+    fun addObstructionOutline(shapeOutline: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(addObstructionOutlineBind, handle, shapeOutline)
+    }
+
+    /**
      * Adds the geometry data of another `NavigationMeshSourceGeometryData2D` to the navigation mesh
      * baking data.
      *
@@ -75,6 +95,18 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
     fun merge(otherGeometry: NavigationMeshSourceGeometryData2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
+    }
+
+    /**
+     * Adds a projected obstruction shape to the source geometry. If `carve` is `true` the carved shape
+     * will not be affected by additional offsets (e.g. agent radius) of the navigation mesh baking
+     * process.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_projected_obstruction
+     */
+    fun addProjectedObstruction(vertices: List<Vector2>, carve: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(addProjectedObstructionBind, handle, vertices, carve)
     }
 
     /**
@@ -141,9 +173,24 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_obstruction_outlines", GET_OBSTRUCTION_OUTLINES_HASH)
         }
 
+        private const val ADD_TRAVERSABLE_OUTLINE_HASH = 1509147220L
+        private val addTraversableOutlineBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_traversable_outline", ADD_TRAVERSABLE_OUTLINE_HASH)
+        }
+
+        private const val ADD_OBSTRUCTION_OUTLINE_HASH = 1509147220L
+        private val addObstructionOutlineBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_obstruction_outline", ADD_OBSTRUCTION_OUTLINE_HASH)
+        }
+
         private const val MERGE_HASH = 742424872L
         private val mergeBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "merge", MERGE_HASH)
+        }
+
+        private const val ADD_PROJECTED_OBSTRUCTION_HASH = 3882407395L
+        private val addProjectedObstructionBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_projected_obstruction", ADD_PROJECTED_OBSTRUCTION_HASH)
         }
 
         private const val CLEAR_PROJECTED_OBSTRUCTIONS_HASH = 3218959716L

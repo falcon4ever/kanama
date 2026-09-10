@@ -8,8 +8,8 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TileMapLayer waits on: ptrcallWithByteArrayArg,
-//   ptrcallWithVector2iListArgRetObject, ptrcallWithVector2iListTwoIntAndBoolArgs
+// KANAMA-IOS-GAP TileMapLayer waits on: ptrcallWithVector2iListArgRetObject,
+//   ptrcallWithVector2iListTwoIntAndBoolArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -53,15 +53,6 @@ fun TileMapLayer.setCellsTerrainPath(path: List<Vector2i>, terrainSet: Int, terr
     ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(setCellsTerrainPathBind, handle, path, terrainSet, terrain, ignoreEmptyTerrains)
 }
 
-/**
- * The raw tile map data as a byte array.
- *
- * Generated from Godot docs: TileMapLayer.set_tile_map_data_from_array
- */
-fun TileMapLayer.setTileMapDataFromArray(tileMapLayerData: ByteArray) {
-    ObjectCalls.ptrcallWithByteArrayArg(setTileMapDataFromArrayBind, handle, tileMapLayerData)
-}
-
 private const val GET_PATTERN_HASH = 3820813253L
 private val getPatternBind by lazy {
     ObjectCalls.getMethodBind("TileMapLayer", "get_pattern", GET_PATTERN_HASH)
@@ -75,9 +66,4 @@ private val setCellsTerrainConnectBind by lazy {
 private const val SET_CELLS_TERRAIN_PATH_HASH = 748968311L
 private val setCellsTerrainPathBind by lazy {
     ObjectCalls.getMethodBind("TileMapLayer", "set_cells_terrain_path", SET_CELLS_TERRAIN_PATH_HASH)
-}
-
-private const val SET_TILE_MAP_DATA_FROM_ARRAY_HASH = 2971499966L
-private val setTileMapDataFromArrayBind by lazy {
-    ObjectCalls.getMethodBind("TileMapLayer", "set_tile_map_data_from_array", SET_TILE_MAP_DATA_FROM_ARRAY_HASH)
 }
