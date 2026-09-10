@@ -3750,7 +3750,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check("packed-arg(NavigationPolygon.add_polygon int32 round-trip)", argIdxBack == argIdx)
   ObjectCalls.destroyObject(argNav)
 
-  // NavigationMesh, not a Shape3D: every Shape3D constructor calls PhysicsServer3D::shape_create and
+  // NavigationMesh, not a Shape3D: every Shape3D constructor calls PhysicsServer3D::shape_create
+  // and
   // the physics servers do not exist yet when this self-test runs (scene-level extension init is
   // before Main::setup2 creates them) — a ConvexPolygonShape3D here segfaulted on the iPhone 12
   // (2026-09-10). NavigationMesh is a plain data resource with the same PackedVector3Array shape.
