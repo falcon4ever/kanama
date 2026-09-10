@@ -5,7 +5,9 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Helper class for XR interfaces that generates VRS images.
@@ -78,6 +80,18 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
         return ObjectCalls.ptrcallNoArgsRetRect2i(getVrsRenderRegionBind, handle)
     }
 
+    /**
+     * Generates the VRS texture based on a render `target_size` adjusted by our VRS tile size. For
+     * each eyes focal point passed in `eye_foci` a layer is created. Focal point should be in NDC. The
+     * result will be cached, requesting a VRS texture with unchanged parameters and settings will
+     * return the cached RID.
+     *
+     * Generated from Godot docs: XRVRS.make_vrs_texture
+     */
+    fun makeVrsTexture(targetSize: Vector2, eyeFoci: List<Vector2>): RID {
+        return ObjectCalls.ptrcallWithVector2PackedVector2ListArgsRetRID(makeVrsTextureBind, handle, targetSize, eyeFoci)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): XRVRS? =
@@ -109,6 +123,11 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
         private const val GET_VRS_RENDER_REGION_HASH = 410525958L
         private val getVrsRenderRegionBind by lazy {
             ObjectCalls.getMethodBind("XRVRS", "get_vrs_render_region", GET_VRS_RENDER_REGION_HASH)
+        }
+
+        private const val MAKE_VRS_TEXTURE_HASH = 3647044786L
+        private val makeVrsTextureBind by lazy {
+            ObjectCalls.getMethodBind("XRVRS", "make_vrs_texture", MAKE_VRS_TEXTURE_HASH)
         }
     }
 }

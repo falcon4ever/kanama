@@ -7,7 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP EditorSettings waits on: ptrcallWithDictionaryArg, ptrcallWithPackedStringListArg,
+// KANAMA-IOS-GAP EditorSettings waits on: ptrcallWithDictionaryArg,
 //   ptrcallWithStringAndObjectListArgs, ptrcallWithStringAndVariantArg,
 //   ptrcallWithStringNameVariantBoolArgs, ptrcallWithTwoStringAndVariantArg,
 //   ptrcallWithTwoStringAndVariantArgRetVariantScalar
@@ -72,26 +72,6 @@ fun EditorSettings.getProjectMetadata(section: String, key: String, default: Any
 }
 
 /**
- * Sets the list of favorite files and directories for this project.
- *
- * Generated from Godot docs: EditorSettings.set_favorites
- */
-fun EditorSettings.setFavorites(dirs: List<String>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedStringListArg(setFavoritesBind, handle, dirs)
-}
-
-/**
- * Sets the list of recently visited folders in the file dialog for this project.
- *
- * Generated from Godot docs: EditorSettings.set_recent_dirs
- */
-fun EditorSettings.setRecentDirs(dirs: List<String>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedStringListArg(setRecentDirsBind, handle, dirs)
-}
-
-/**
  * Overrides the built-in editor action `name` with the input actions defined in `actions_list`.
  *
  * Generated from Godot docs: EditorSettings.set_builtin_action_override
@@ -124,16 +104,6 @@ private val setProjectMetadataBind by lazy {
 private const val GET_PROJECT_METADATA_HASH = 89809366L
 private val getProjectMetadataBind by lazy {
     ObjectCalls.getMethodBind("EditorSettings", "get_project_metadata", GET_PROJECT_METADATA_HASH)
-}
-
-private const val SET_FAVORITES_HASH = 4015028928L
-private val setFavoritesBind by lazy {
-    ObjectCalls.getMethodBind("EditorSettings", "set_favorites", SET_FAVORITES_HASH)
-}
-
-private const val SET_RECENT_DIRS_HASH = 4015028928L
-private val setRecentDirsBind by lazy {
-    ObjectCalls.getMethodBind("EditorSettings", "set_recent_dirs", SET_RECENT_DIRS_HASH)
 }
 
 private const val SET_BUILTIN_ACTION_OVERRIDE_HASH = 1209351045L

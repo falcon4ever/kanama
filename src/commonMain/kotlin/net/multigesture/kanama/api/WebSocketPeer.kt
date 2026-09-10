@@ -10,13 +10,17 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: WebSocketPeer
  */
 class WebSocketPeer(handle: MemorySegment) : PacketPeer(handle) {
-    val supportedProtocols: List<String>
+    var supportedProtocols: List<String>
         @JvmName("supportedProtocolsProperty")
         get() = getSupportedProtocols()
+        @JvmName("setSupportedProtocolsProperty")
+        set(value) = setSupportedProtocols(value)
 
-    val handshakeHeaders: List<String>
+    var handshakeHeaders: List<String>
         @JvmName("handshakeHeadersProperty")
         get() = getHandshakeHeaders()
+        @JvmName("setHandshakeHeadersProperty")
+        set(value) = setHandshakeHeaders(value)
 
     var inboundBufferSize: Int
         @JvmName("inboundBufferSizeProperty")
@@ -50,6 +54,11 @@ class WebSocketPeer(handle: MemorySegment) : PacketPeer(handle) {
     fun acceptStream(stream: StreamPeer?): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(acceptStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
+    fun send(message: ByteArray, writeMode: Long = 1L): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayAndLongArgRetLong(sendBind, handle, message, writeMode)
     }
 
     fun sendText(message: String): Long {
@@ -122,9 +131,19 @@ class WebSocketPeer(handle: MemorySegment) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedProtocolsBind, handle)
     }
 
+    fun setSupportedProtocols(protocols: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setSupportedProtocolsBind, handle, protocols)
+    }
+
     fun getHandshakeHeaders(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getHandshakeHeadersBind, handle)
+    }
+
+    fun setHandshakeHeaders(protocols: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setHandshakeHeadersBind, handle, protocols)
     }
 
     fun getInboundBufferSize(): Int {
@@ -190,6 +209,11 @@ class WebSocketPeer(handle: MemorySegment) : PacketPeer(handle) {
         private const val ACCEPT_STREAM_HASH = 255125695L
         private val acceptStreamBind by lazy {
             ObjectCalls.getMethodBind("WebSocketPeer", "accept_stream", ACCEPT_STREAM_HASH)
+        }
+
+        private const val SEND_HASH = 2780360567L
+        private val sendBind by lazy {
+            ObjectCalls.getMethodBind("WebSocketPeer", "send", SEND_HASH)
         }
 
         private const val SEND_TEXT_HASH = 166001499L
@@ -262,9 +286,19 @@ class WebSocketPeer(handle: MemorySegment) : PacketPeer(handle) {
             ObjectCalls.getMethodBind("WebSocketPeer", "get_supported_protocols", GET_SUPPORTED_PROTOCOLS_HASH)
         }
 
+        private const val SET_SUPPORTED_PROTOCOLS_HASH = 4015028928L
+        private val setSupportedProtocolsBind by lazy {
+            ObjectCalls.getMethodBind("WebSocketPeer", "set_supported_protocols", SET_SUPPORTED_PROTOCOLS_HASH)
+        }
+
         private const val GET_HANDSHAKE_HEADERS_HASH = 1139954409L
         private val getHandshakeHeadersBind by lazy {
             ObjectCalls.getMethodBind("WebSocketPeer", "get_handshake_headers", GET_HANDSHAKE_HEADERS_HASH)
+        }
+
+        private const val SET_HANDSHAKE_HEADERS_HASH = 4015028928L
+        private val setHandshakeHeadersBind by lazy {
+            ObjectCalls.getMethodBind("WebSocketPeer", "set_handshake_headers", SET_HANDSHAKE_HEADERS_HASH)
         }
 
         private const val GET_INBOUND_BUFFER_SIZE_HASH = 3905245786L

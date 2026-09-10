@@ -12,27 +12,46 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: RDFramebufferPass
  */
 class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
-    val colorAttachments: List<Int>
+    var colorAttachments: List<Int>
         @JvmName("colorAttachmentsProperty")
         get() = getColorAttachments()
+        @JvmName("setColorAttachmentsProperty")
+        set(value) = setColorAttachments(value)
 
-    val inputAttachments: List<Int>
+    var inputAttachments: List<Int>
         @JvmName("inputAttachmentsProperty")
         get() = getInputAttachments()
+        @JvmName("setInputAttachmentsProperty")
+        set(value) = setInputAttachments(value)
 
-    val resolveAttachments: List<Int>
+    var resolveAttachments: List<Int>
         @JvmName("resolveAttachmentsProperty")
         get() = getResolveAttachments()
+        @JvmName("setResolveAttachmentsProperty")
+        set(value) = setResolveAttachments(value)
 
-    val preserveAttachments: List<Int>
+    var preserveAttachments: List<Int>
         @JvmName("preserveAttachmentsProperty")
         get() = getPreserveAttachments()
+        @JvmName("setPreserveAttachmentsProperty")
+        set(value) = setPreserveAttachments(value)
 
     var depthAttachment: Int
         @JvmName("depthAttachmentProperty")
         get() = getDepthAttachment()
         @JvmName("setDepthAttachmentProperty")
         set(value) = setDepthAttachment(value)
+
+    /**
+     * Color attachments in order starting from 0. If this attachment is not used by the shader, pass
+     * ATTACHMENT_UNUSED to skip.
+     *
+     * Generated from Godot docs: RDFramebufferPass.set_color_attachments
+     */
+    fun setColorAttachments(pMember: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setColorAttachmentsBind, handle, pMember)
+    }
 
     /**
      * Color attachments in order starting from 0. If this attachment is not used by the shader, pass
@@ -49,6 +68,17 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      * Used for multipass framebuffers (more than one render pass). Converts an attachment to an input.
      * Make sure to also supply it properly in the `RDUniform` for the uniform set.
      *
+     * Generated from Godot docs: RDFramebufferPass.set_input_attachments
+     */
+    fun setInputAttachments(pMember: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setInputAttachmentsBind, handle, pMember)
+    }
+
+    /**
+     * Used for multipass framebuffers (more than one render pass). Converts an attachment to an input.
+     * Make sure to also supply it properly in the `RDUniform` for the uniform set.
+     *
      * Generated from Godot docs: RDFramebufferPass.get_input_attachments
      */
     fun getInputAttachments(): List<Int> {
@@ -59,11 +89,31 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
     /**
      * If the color attachments are multisampled, non-multisampled resolve attachments can be provided.
      *
+     * Generated from Godot docs: RDFramebufferPass.set_resolve_attachments
+     */
+    fun setResolveAttachments(pMember: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setResolveAttachmentsBind, handle, pMember)
+    }
+
+    /**
+     * If the color attachments are multisampled, non-multisampled resolve attachments can be provided.
+     *
      * Generated from Godot docs: RDFramebufferPass.get_resolve_attachments
      */
     fun getResolveAttachments(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getResolveAttachmentsBind, handle)
+    }
+
+    /**
+     * Attachments to preserve in this pass (otherwise they are erased).
+     *
+     * Generated from Godot docs: RDFramebufferPass.set_preserve_attachments
+     */
+    fun setPreserveAttachments(pMember: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setPreserveAttachmentsBind, handle, pMember)
     }
 
     /**
@@ -106,9 +156,19 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
         internal fun wrap(handle: MemorySegment): RDFramebufferPass? =
             if (handle.address() == 0L) null else RDFramebufferPass(handle)
 
+        private const val SET_COLOR_ATTACHMENTS_HASH = 3614634198L
+        private val setColorAttachmentsBind by lazy {
+            ObjectCalls.getMethodBind("RDFramebufferPass", "set_color_attachments", SET_COLOR_ATTACHMENTS_HASH)
+        }
+
         private const val GET_COLOR_ATTACHMENTS_HASH = 1930428628L
         private val getColorAttachmentsBind by lazy {
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_color_attachments", GET_COLOR_ATTACHMENTS_HASH)
+        }
+
+        private const val SET_INPUT_ATTACHMENTS_HASH = 3614634198L
+        private val setInputAttachmentsBind by lazy {
+            ObjectCalls.getMethodBind("RDFramebufferPass", "set_input_attachments", SET_INPUT_ATTACHMENTS_HASH)
         }
 
         private const val GET_INPUT_ATTACHMENTS_HASH = 1930428628L
@@ -116,9 +176,19 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_input_attachments", GET_INPUT_ATTACHMENTS_HASH)
         }
 
+        private const val SET_RESOLVE_ATTACHMENTS_HASH = 3614634198L
+        private val setResolveAttachmentsBind by lazy {
+            ObjectCalls.getMethodBind("RDFramebufferPass", "set_resolve_attachments", SET_RESOLVE_ATTACHMENTS_HASH)
+        }
+
         private const val GET_RESOLVE_ATTACHMENTS_HASH = 1930428628L
         private val getResolveAttachmentsBind by lazy {
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_resolve_attachments", GET_RESOLVE_ATTACHMENTS_HASH)
+        }
+
+        private const val SET_PRESERVE_ATTACHMENTS_HASH = 3614634198L
+        private val setPreserveAttachmentsBind by lazy {
+            ObjectCalls.getMethodBind("RDFramebufferPass", "set_preserve_attachments", SET_PRESERVE_ATTACHMENTS_HASH)
         }
 
         private const val GET_PRESERVE_ATTACHMENTS_HASH = 1930428628L

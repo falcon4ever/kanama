@@ -19,34 +19,9 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, handle))
     }
 
-    fun findExportTemplate(templateFileName: String): Map<String, Any?> {
-        checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetDictionary(findExportTemplateBind, handle, templateFileName)
-    }
-
     fun getCurrentPresets(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getCurrentPresetsBind, handle)
-    }
-
-    fun savePack(preset: EditorExportPreset?, debug: Boolean, path: String, embed: Boolean = false): Map<String, Any?> {
-        checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(savePackBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, embed)
-    }
-
-    fun saveZip(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
-        checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
-    }
-
-    fun savePackPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
-        checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(savePackPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
-    }
-
-    fun saveZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
-        checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): Long {
@@ -67,6 +42,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
     fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
+    }
+
+    fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
+    }
+
+    fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
     }
 
     fun clearMessages() {
@@ -104,9 +89,14 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, handle)
     }
 
-    fun getInternalExportFiles(preset: EditorExportPreset?, debug: Boolean): Map<String, Any?> {
+    fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = -1): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug)
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(sshRunOnRemoteNoWaitBind, handle, host, port, sshArgs, cmdArgs, portFwd)
+    }
+
+    fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, handle, host, port, scpArgs, srcFile, dstFile)
     }
 
     companion object {
@@ -137,34 +127,9 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("EditorExportPlatform", "create_preset", CREATE_PRESET_HASH)
         }
 
-        private const val FIND_EXPORT_TEMPLATE_HASH = 2248993622L
-        private val findExportTemplateBind by lazy {
-            ObjectCalls.getMethodBind("EditorExportPlatform", "find_export_template", FIND_EXPORT_TEMPLATE_HASH)
-        }
-
         private const val GET_CURRENT_PRESETS_HASH = 3995934104L
         private val getCurrentPresetsBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_current_presets", GET_CURRENT_PRESETS_HASH)
-        }
-
-        private const val SAVE_PACK_HASH = 3420080977L
-        private val savePackBind by lazy {
-            ObjectCalls.getMethodBind("EditorExportPlatform", "save_pack", SAVE_PACK_HASH)
-        }
-
-        private const val SAVE_ZIP_HASH = 1485052307L
-        private val saveZipBind by lazy {
-            ObjectCalls.getMethodBind("EditorExportPlatform", "save_zip", SAVE_ZIP_HASH)
-        }
-
-        private const val SAVE_PACK_PATCH_HASH = 1485052307L
-        private val savePackPatchBind by lazy {
-            ObjectCalls.getMethodBind("EditorExportPlatform", "save_pack_patch", SAVE_PACK_PATCH_HASH)
-        }
-
-        private const val SAVE_ZIP_PATCH_HASH = 1485052307L
-        private val saveZipPatchBind by lazy {
-            ObjectCalls.getMethodBind("EditorExportPlatform", "save_zip_patch", SAVE_ZIP_PATCH_HASH)
         }
 
         private const val EXPORT_PROJECT_FILES_HASH = 1063735070L
@@ -185,6 +150,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         private const val EXPORT_ZIP_HASH = 3879521245L
         private val exportZipBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_zip", EXPORT_ZIP_HASH)
+        }
+
+        private const val EXPORT_PACK_PATCH_HASH = 608021658L
+        private val exportPackPatchBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "export_pack_patch", EXPORT_PACK_PATCH_HASH)
+        }
+
+        private const val EXPORT_ZIP_PATCH_HASH = 608021658L
+        private val exportZipPatchBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "export_zip_patch", EXPORT_ZIP_PATCH_HASH)
         }
 
         private const val CLEAR_MESSAGES_HASH = 3218959716L
@@ -222,9 +197,14 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_worst_message_type", GET_WORST_MESSAGE_TYPE_HASH)
         }
 
-        private const val GET_INTERNAL_EXPORT_FILES_HASH = 89550086L
-        private val getInternalExportFilesBind by lazy {
-            ObjectCalls.getMethodBind("EditorExportPlatform", "get_internal_export_files", GET_INTERNAL_EXPORT_FILES_HASH)
+        private const val SSH_RUN_ON_REMOTE_NO_WAIT_HASH = 3606362233L
+        private val sshRunOnRemoteNoWaitBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_run_on_remote_no_wait", SSH_RUN_ON_REMOTE_NO_WAIT_HASH)
+        }
+
+        private const val SSH_PUSH_TO_REMOTE_HASH = 218756989L
+        private val sshPushToRemoteBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_push_to_remote", SSH_PUSH_TO_REMOTE_HASH)
         }
     }
 }

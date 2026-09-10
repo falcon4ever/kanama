@@ -11,8 +11,7 @@ import net.multigesture.kanama.types.Rect2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP RichTextLabel waits on: ptrcallWithArrayArg, ptrcallWithObjectAndDictionaryArg,
 //   ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs,
-//   ptrcallWithPackedStringListArgRetDictionary,
-//   ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs, ptrcallWithVariantArg,
+//   ptrcallWithPackedStringListArgRetDictionary, ptrcallWithVariantArg,
 //   ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs,
 //   ptrcallWithVariantLongStringArgs
 // Index: docs/reference/generated/ios-shape-gap.md
@@ -42,15 +41,6 @@ fun RichTextLabel.addImage(image: Texture2D?, width: Double = 0.0, height: Doubl
  */
 fun RichTextLabel.updateImage(key: Any?, mask: Long, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L) {
     ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, handle, key, mask, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
-}
-
-/**
- * Adds a ``p`` tag to the tag stack.
- *
- * Generated from Godot docs: RichTextLabel.push_paragraph
- */
-fun RichTextLabel.pushParagraph(alignment: Long, baseDirection: Long = 0L, language: String = "", stParser: Long = 0L, justificationFlags: Long = 163L, tabStops: List<Float>) {
-    ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, handle, alignment, baseDirection, language, stParser, justificationFlags, tabStops)
 }
 
 /**
@@ -122,11 +112,6 @@ private val addImageBind by lazy {
 private const val UPDATE_IMAGE_HASH = 202998225L
 private val updateImageBind by lazy {
     ObjectCalls.getMethodBind("RichTextLabel", "update_image", UPDATE_IMAGE_HASH)
-}
-
-private const val PUSH_PARAGRAPH_HASH = 3089306873L
-private val pushParagraphBind by lazy {
-    ObjectCalls.getMethodBind("RichTextLabel", "push_paragraph", PUSH_PARAGRAPH_HASH)
 }
 
 private const val PUSH_META_HASH = 3765356747L

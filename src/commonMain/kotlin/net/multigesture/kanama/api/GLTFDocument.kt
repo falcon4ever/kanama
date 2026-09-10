@@ -128,6 +128,11 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, handle, path, state?.requireOpenHandle() ?: MemorySegment.NULL, flags, basePath)
     }
 
+    fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, handle, bytes, basePath, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
+    }
+
     fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, handle, node.handle, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
@@ -262,6 +267,11 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
         private const val APPEND_FROM_FILE_HASH = 866380864L
         private val appendFromFileBind by lazy {
             ObjectCalls.getMethodBind("GLTFDocument", "append_from_file", APPEND_FROM_FILE_HASH)
+        }
+
+        private const val APPEND_FROM_BUFFER_HASH = 1616081266L
+        private val appendFromBufferBind by lazy {
+            ObjectCalls.getMethodBind("GLTFDocument", "append_from_buffer", APPEND_FROM_BUFFER_HASH)
         }
 
         private const val APPEND_FROM_SCENE_HASH = 1622574258L

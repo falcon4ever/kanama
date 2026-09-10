@@ -14,9 +14,11 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: Line2D
  */
 class Line2D(handle: MemorySegment) : Node2D(handle) {
-    val points: List<Vector2>
+    var points: List<Vector2>
         @JvmName("pointsProperty")
         get() = getPoints()
+        @JvmName("setPointsProperty")
+        set(value) = setPoints(value)
 
     var closed: Boolean
         @JvmName("closedProperty")
@@ -95,6 +97,16 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
         get() = getAntialiased()
         @JvmName("setAntialiasedProperty")
         set(value) = setAntialiased(value)
+
+    /**
+     * The points of the polyline, interpreted in local 2D coordinates. Segments are drawn between the
+     * adjacent points in this array.
+     *
+     * Generated from Godot docs: Line2D.set_points
+     */
+    fun setPoints(points: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, handle, points)
+    }
 
     /**
      * The points of the polyline, interpreted in local 2D coordinates. Segments are drawn between the
@@ -437,6 +449,11 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
 
         internal fun wrap(handle: MemorySegment): Line2D? =
             if (handle.address() == 0L) null else Line2D(handle)
+
+        private const val SET_POINTS_HASH = 1509147220L
+        private val setPointsBind by lazy {
+            ObjectCalls.getMethodBind("Line2D", "set_points", SET_POINTS_HASH)
+        }
 
         private const val GET_POINTS_HASH = 2961356807L
         private val getPointsBind by lazy {

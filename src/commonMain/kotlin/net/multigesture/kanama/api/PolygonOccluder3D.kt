@@ -13,9 +13,23 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: PolygonOccluder3D
  */
 class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
-    val polygon: List<Vector2>
+    var polygon: List<Vector2>
         @JvmName("polygonProperty")
         get() = getPolygon()
+        @JvmName("setPolygonProperty")
+        set(value) = setPolygon(value)
+
+    /**
+     * The polygon to use for occlusion culling. The polygon can be convex or concave, but it should
+     * have as few points as possible to maximize performance. The polygon must not have intersecting
+     * lines. Otherwise, triangulation will fail (with an error message printed).
+     *
+     * Generated from Godot docs: PolygonOccluder3D.set_polygon
+     */
+    fun setPolygon(polygon: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+    }
 
     /**
      * The polygon to use for occlusion culling. The polygon can be convex or concave, but it should
@@ -36,6 +50,11 @@ class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
 
         internal fun wrap(handle: MemorySegment): PolygonOccluder3D? =
             if (handle.address() == 0L) null else PolygonOccluder3D(handle)
+
+        private const val SET_POLYGON_HASH = 1509147220L
+        private val setPolygonBind by lazy {
+            ObjectCalls.getMethodBind("PolygonOccluder3D", "set_polygon", SET_POLYGON_HASH)
+        }
 
         private const val GET_POLYGON_HASH = 2961356807L
         private val getPolygonBind by lazy {

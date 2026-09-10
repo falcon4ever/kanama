@@ -37,6 +37,17 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithStringObjectBoolStringArgs(addPropertyEditorBind, handle, property, editor.handle, addToEnd, label)
     }
 
+    /**
+     * Adds an editor that allows modifying multiple properties. The `editor` control must extend
+     * `EditorProperty`.
+     *
+     * Generated from Godot docs: EditorInspectorPlugin.add_property_editor_for_multiple_properties
+     */
+    fun addPropertyEditorForMultipleProperties(label: String, properties: List<String>, editor: Control) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringPackedStringListAndObjectArgs(addPropertyEditorForMultiplePropertiesBind, handle, label, properties, editor.handle)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): EditorInspectorPlugin? =
@@ -53,6 +64,11 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
         private const val ADD_PROPERTY_EDITOR_HASH = 2042698479L
         private val addPropertyEditorBind by lazy {
             ObjectCalls.getMethodBind("EditorInspectorPlugin", "add_property_editor", ADD_PROPERTY_EDITOR_HASH)
+        }
+
+        private const val ADD_PROPERTY_EDITOR_FOR_MULTIPLE_PROPERTIES_HASH = 788598683L
+        private val addPropertyEditorForMultiplePropertiesBind by lazy {
+            ObjectCalls.getMethodBind("EditorInspectorPlugin", "add_property_editor_for_multiple_properties", ADD_PROPERTY_EDITOR_FOR_MULTIPLE_PROPERTIES_HASH)
         }
     }
 }

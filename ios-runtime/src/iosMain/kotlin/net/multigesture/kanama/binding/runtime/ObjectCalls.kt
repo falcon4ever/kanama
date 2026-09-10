@@ -1048,7 +1048,7 @@ object ObjectCalls {
 
   // Lay a ByteArray into scratch + a {count,data} descriptor for a BUILD-tagged
   // PT_PACKED_BYTE_ARRAY arg (the C dispatch builds the Godot array from it).
-  private fun MemScope.packByteDesc(bytes: ByteArray): CPointer<KanamaIosPackedArgDesc> {
+  internal fun MemScope.packByteDesc(bytes: ByteArray): CPointer<KanamaIosPackedArgDesc> {
     val n = bytes.size
     val buf = allocArray<ByteVar>(if (n > 0) n else 1)
     for (i in 0 until n) buf[i] = bytes[i]
@@ -1443,7 +1443,7 @@ object ObjectCalls {
 
   // Lay a List<Vector2> into a flat float32 buffer + a {count,data} descriptor; returns the
   // descriptor pointer for use as a PT_PACKED_VECTOR2_ARRAY arg in a multi-arg dispatch.
-  private fun MemScope.packVector2Desc(values: List<Vector2>): CPointer<KanamaIosPackedArgDesc> {
+  internal fun MemScope.packVector2Desc(values: List<Vector2>): CPointer<KanamaIosPackedArgDesc> {
     val n = values.size
     val floats = allocArray<GodotRealVar>(if (n > 0) n * 2 else 1)
     for (i in 0 until n) {
@@ -1456,7 +1456,7 @@ object ObjectCalls {
     return desc.ptr
   }
 
-  private fun MemScope.packColorDesc(values: List<Color>): CPointer<KanamaIosPackedArgDesc> {
+  internal fun MemScope.packColorDesc(values: List<Color>): CPointer<KanamaIosPackedArgDesc> {
     val n = values.size
     val floats = allocArray<FloatVar>(if (n > 0) n * 4 else 1)
     for (i in 0 until n) {
@@ -1468,6 +1468,92 @@ object ObjectCalls {
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
     desc.data = floats.reinterpret()
+    return desc.ptr
+  }
+
+  // task 100 (parcel 4) — descriptor helpers for the remaining BUILD-tagged Packed*Array args.
+  // Element layouts match kanama_ios_build_packed_arg: int32 4 B, int64 8 B, float32 4 B,
+  // float64 8 B, Vector3 3 × float32; PackedStringArray is the [int32 count]([int32 len][utf8])*
+  // blob kanama_ios_build_packed_string_array_from_blob consumes (desc.data points at it,
+  // desc.count is the string count). The generated helpers call these; the dispatch builds the
+  // Godot array from the descriptor and destroys it after the call.
+  internal fun MemScope.packInt32Desc(values: List<Int>): CPointer<KanamaIosPackedArgDesc> {
+    val n = values.size
+    val buf = allocArray<IntVar>(if (n > 0) n else 1)
+    for (i in 0 until n) buf[i] = values[i]
+    val desc = alloc<KanamaIosPackedArgDesc>()
+    desc.count = n.toLong()
+    desc.data = buf.reinterpret()
+    return desc.ptr
+  }
+
+  internal fun MemScope.packInt64Desc(values: List<Long>): CPointer<KanamaIosPackedArgDesc> {
+    val n = values.size
+    val buf = allocArray<LongVar>(if (n > 0) n else 1)
+    for (i in 0 until n) buf[i] = values[i]
+    val desc = alloc<KanamaIosPackedArgDesc>()
+    desc.count = n.toLong()
+    desc.data = buf.reinterpret()
+    return desc.ptr
+  }
+
+  internal fun MemScope.packFloat32Desc(values: List<Float>): CPointer<KanamaIosPackedArgDesc> {
+    val n = values.size
+    val buf = allocArray<FloatVar>(if (n > 0) n else 1)
+    for (i in 0 until n) buf[i] = values[i]
+    val desc = alloc<KanamaIosPackedArgDesc>()
+    desc.count = n.toLong()
+    desc.data = buf.reinterpret()
+    return desc.ptr
+  }
+
+  internal fun MemScope.packFloat64Desc(values: List<Double>): CPointer<KanamaIosPackedArgDesc> {
+    val n = values.size
+    val buf = allocArray<DoubleVar>(if (n > 0) n else 1)
+    for (i in 0 until n) buf[i] = values[i]
+    val desc = alloc<KanamaIosPackedArgDesc>()
+    desc.count = n.toLong()
+    desc.data = buf.reinterpret()
+    return desc.ptr
+  }
+
+  internal fun MemScope.packVector3Desc(values: List<Vector3>): CPointer<KanamaIosPackedArgDesc> {
+    val n = values.size
+    val floats = allocArray<FloatVar>(if (n > 0) n * 3 else 1)
+    for (i in 0 until n) {
+      floats[i * 3] = values[i].x
+      floats[i * 3 + 1] = values[i].y
+      floats[i * 3 + 2] = values[i].z
+    }
+    val desc = alloc<KanamaIosPackedArgDesc>()
+    desc.count = n.toLong()
+    desc.data = floats.reinterpret()
+    return desc.ptr
+  }
+
+  internal fun MemScope.packStringDesc(values: List<String>): CPointer<KanamaIosPackedArgDesc> {
+    val encoded = values.map { it.encodeToByteArray() }
+    val total = 4 + encoded.sumOf { 4 + it.size }
+    val blob = allocArray<ByteVar>(total)
+    var off = 0
+    fun putInt(v: Int) {
+      blob[off] = (v and 0xff).toByte()
+      blob[off + 1] = ((v ushr 8) and 0xff).toByte()
+      blob[off + 2] = ((v ushr 16) and 0xff).toByte()
+      blob[off + 3] = ((v ushr 24) and 0xff).toByte()
+      off += 4
+    }
+    putInt(encoded.size)
+    for (bytes in encoded) {
+      putInt(bytes.size)
+      for (b in bytes) {
+        blob[off] = b
+        off += 1
+      }
+    }
+    val desc = alloc<KanamaIosPackedArgDesc>()
+    desc.count = encoded.size.toLong()
+    desc.data = blob.reinterpret()
     return desc.ptr
   }
 
@@ -3607,6 +3693,147 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "container-ret(ClassDB.class_get_signal(Node, ready).name==ready)",
     containerSignal["name"] == "ready",
   )
+
+  // task 100 (parcel 4) — Packed*Array ARGUMENTS through the generated BUILD-tagged descriptors
+  // (ObjectCalls.pack<Kind>Desc -> kanama_ios_build_packed_arg -> ptrcall). Each row sets an array
+  // through the GENERATED setter and reads it back through a read-back helper, asserting equality
+  // element for element. The Vector2 row uses 300 points and the int64 row 1000 ids, so both also
+  // cross the 256-element inline read-back capacity; the string row carries a non-ASCII and an
+  // empty element to pin the blob's byte-length framing.
+  val argPoly = ObjectCalls.constructObject("Polygon2D")
+  val argPoints = List(300) { Vector2(it.toFloat(), (it * 2).toFloat()) }
+  ObjectCalls.ptrcallWithPackedVector2ListArg(
+    ObjectCalls.getMethodBind("Polygon2D", "set_polygon", 1509147220L),
+    argPoly,
+    argPoints,
+  )
+  val argPointsBack =
+    ObjectCalls.ptrcallNoArgsRetPackedVector2List(
+      ObjectCalls.getMethodBind("Polygon2D", "get_polygon", 2961356807L),
+      argPoly,
+    )
+  check("packed-arg(Polygon2D.set_polygon 300 Vector2 round-trip)", argPointsBack == argPoints)
+  ObjectCalls.destroyObject(argPoly)
+
+  val argPeer = ObjectCalls.constructObject("StreamPeerBuffer")
+  val argBytes = ByteArray(700) { ((it * 7) and 0xff).toByte() }
+  val argPutErr =
+    ObjectCalls.ptrcallWithByteArrayArgRetLong(
+      ObjectCalls.getMethodBind("StreamPeer", "put_data", 680677267L),
+      argPeer,
+      argBytes,
+    )
+  val argBytesBack =
+    ObjectCalls.ptrcallNoArgsRetByteArray(
+      ObjectCalls.getMethodBind("StreamPeerBuffer", "get_data_array", 2362200018L),
+      argPeer,
+    )
+  check(
+    "packed-arg(StreamPeer.put_data 700 B == get_data_array, Error.OK)",
+    argPutErr == 0L && argBytesBack.contentEquals(argBytes),
+  )
+  ObjectCalls.destroyObject(argPeer)
+
+  val argNav = ObjectCalls.constructObject("NavigationPolygon")
+  val argIdx = listOf(3, 1, 4, 1, 5, 9, 2, 6)
+  ObjectCalls.ptrcallWithPackedInt32ListArg(
+    ObjectCalls.getMethodBind("NavigationPolygon", "add_polygon", 3614634198L),
+    argNav,
+    argIdx,
+  )
+  val argIdxBack =
+    ObjectCalls.ptrcallWithIntArgRetPackedInt32List(
+      ObjectCalls.getMethodBind("NavigationPolygon", "get_polygon", 3668444399L),
+      argNav,
+      0,
+    )
+  check("packed-arg(NavigationPolygon.add_polygon int32 round-trip)", argIdxBack == argIdx)
+  ObjectCalls.destroyObject(argNav)
+
+  val argShape = ObjectCalls.constructObject("ConvexPolygonShape3D")
+  val argVerts =
+    listOf(Vector3(0f, 0f, 0f), Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f))
+  ObjectCalls.ptrcallWithPackedVector3ListArg(
+    ObjectCalls.getMethodBind("ConvexPolygonShape3D", "set_points", 334873810L),
+    argShape,
+    argVerts,
+  )
+  val argVertsBack =
+    ObjectCalls.ptrcallNoArgsRetPackedVector3List(
+      ObjectCalls.getMethodBind("ConvexPolygonShape3D", "get_points", 497664490L),
+      argShape,
+    )
+  check("packed-arg(ConvexPolygonShape3D.set_points Vector3 round-trip)", argVertsBack == argVerts)
+  ObjectCalls.destroyObject(argShape)
+
+  val argParticles = ObjectCalls.constructObject("CPUParticles2D")
+  val argColors = listOf(Color(1f, 0f, 0f, 1f), Color(0f, 0.5f, 0f, 0.25f))
+  ObjectCalls.ptrcallWithPackedColorListArg(
+    ObjectCalls.getMethodBind("CPUParticles2D", "set_emission_colors", 3546319833L),
+    argParticles,
+    argColors,
+  )
+  val argColorsBack =
+    ObjectCalls.ptrcallNoArgsRetPackedColorList(
+      ObjectCalls.getMethodBind("CPUParticles2D", "get_emission_colors", 1392750486L),
+      argParticles,
+    )
+  check(
+    "packed-arg(CPUParticles2D.set_emission_colors Color round-trip)",
+    argColorsBack == argColors,
+  )
+  ObjectCalls.destroyObject(argParticles)
+
+  val argNavRes = ObjectCalls.constructObject("NavigationPathQueryResult2D")
+  val argIds = List(1000) { it.toLong() * 1_000_000_007L }
+  ObjectCalls.ptrcallWithPackedInt64ListArg(
+    ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "set_path_owner_ids", 3709968205L),
+    argNavRes,
+    argIds,
+  )
+  val argIdsBack =
+    ObjectCalls.ptrcallNoArgsRetPackedInt64List(
+      ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "get_path_owner_ids", 235988956L),
+      argNavRes,
+    )
+  check(
+    "packed-arg(NavigationPathQueryResult2D.set_path_owner_ids 1000 int64 round-trip)",
+    argIdsBack == argIds,
+  )
+  ObjectCalls.destroyObject(argNavRes)
+
+  val argAcc = ObjectCalls.constructObject("GLTFAccessor")
+  val argMin = listOf(-1.5, 2.25, 1e10)
+  ObjectCalls.ptrcallWithPackedFloat64ListArg(
+    ObjectCalls.getMethodBind("GLTFAccessor", "set_min", 2576592201L),
+    argAcc,
+    argMin,
+  )
+  val argMinBack =
+    ObjectCalls.ptrcallNoArgsRetPackedFloat64List(
+      ObjectCalls.getMethodBind("GLTFAccessor", "get_min", 547233126L),
+      argAcc,
+    )
+  check("packed-arg(GLTFAccessor.set_min float64 round-trip)", argMinBack == argMin)
+  ObjectCalls.destroyObject(argAcc)
+
+  val argWs = ObjectCalls.constructObject("WebSocketPeer")
+  val argProtos = listOf("kanama", "g\u00fcltig", "")
+  ObjectCalls.ptrcallWithPackedStringListArg(
+    ObjectCalls.getMethodBind("WebSocketPeer", "set_supported_protocols", 4015028928L),
+    argWs,
+    argProtos,
+  )
+  val argProtosBack =
+    ObjectCalls.ptrcallNoArgsRetPackedStringList(
+      ObjectCalls.getMethodBind("WebSocketPeer", "get_supported_protocols", 1139954409L),
+      argWs,
+    )
+  check(
+    "packed-arg(WebSocketPeer.set_supported_protocols strings round-trip)",
+    argProtosBack == argProtos,
+  )
+  ObjectCalls.destroyObject(argWs)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

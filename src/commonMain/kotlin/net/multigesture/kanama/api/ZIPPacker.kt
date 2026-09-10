@@ -41,6 +41,11 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, handle, path, permissions, modifiedTime)
     }
 
+    fun writeFile(data: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(writeFileBind, handle, data)
+    }
+
     fun closeFile(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(closeFileBind, handle)
@@ -90,6 +95,11 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
         private const val START_FILE_HASH = 4260848715L
         private val startFileBind by lazy {
             ObjectCalls.getMethodBind("ZIPPacker", "start_file", START_FILE_HASH)
+        }
+
+        private const val WRITE_FILE_HASH = 680677267L
+        private val writeFileBind by lazy {
+            ObjectCalls.getMethodBind("ZIPPacker", "write_file", WRITE_FILE_HASH)
         }
 
         private const val CLOSE_FILE_HASH = 166280745L

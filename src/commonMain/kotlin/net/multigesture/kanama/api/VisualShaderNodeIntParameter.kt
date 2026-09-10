@@ -34,9 +34,11 @@ class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodePara
         @JvmName("setStepProperty")
         set(value) = setStep(value)
 
-    val enumNames: List<String>
+    var enumNames: List<String>
         @JvmName("enumNamesProperty")
         get() = getEnumNames()
+        @JvmName("setEnumNamesProperty")
+        set(value) = setEnumNames(value)
 
     var defaultValueEnabled: Boolean
         @JvmName("defaultValueEnabledProperty")
@@ -88,6 +90,11 @@ class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodePara
     fun getStep(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getStepBind, handle)
+    }
+
+    fun setEnumNames(names: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setEnumNamesBind, handle, names)
     }
 
     fun getEnumNames(): List<String> {
@@ -167,6 +174,11 @@ class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodePara
         private const val GET_STEP_HASH = 3905245786L
         private val getStepBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "get_step", GET_STEP_HASH)
+        }
+
+        private const val SET_ENUM_NAMES_HASH = 4015028928L
+        private val setEnumNamesBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_enum_names", SET_ENUM_NAMES_HASH)
         }
 
         private const val GET_ENUM_NAMES_HASH = 1139954409L

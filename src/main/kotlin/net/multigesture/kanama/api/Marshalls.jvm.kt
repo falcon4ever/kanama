@@ -7,8 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Marshalls waits on: ptrcallWithByteArrayArgRetString,
-//   ptrcallWithVariantAndBoolArgRetString
+// KANAMA-IOS-GAP Marshalls waits on: ptrcallWithVariantAndBoolArgRetString
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -22,15 +21,6 @@ fun Marshalls.variantToBase64(variant: Any?, fullObjects: Boolean = false): Stri
     return ObjectCalls.ptrcallWithVariantAndBoolArgRetString(variantToBase64Bind, marshallsSingleton, variant, fullObjects)
 }
 
-/**
- * Returns a Base64-encoded string of a given `PackedByteArray`.
- *
- * Generated from Godot docs: Marshalls.raw_to_base64
- */
-fun Marshalls.rawToBase64(array: ByteArray): String {
-    return ObjectCalls.ptrcallWithByteArrayArgRetString(rawToBase64Bind, marshallsSingleton, array)
-}
-
 private val marshallsSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("Marshalls")
 }
@@ -38,9 +28,4 @@ private val marshallsSingleton: MemorySegment by lazy {
 private const val VARIANT_TO_BASE64_HASH = 3876248563L
 private val variantToBase64Bind by lazy {
     ObjectCalls.getMethodBind("Marshalls", "variant_to_base64", VARIANT_TO_BASE64_HASH)
-}
-
-private const val RAW_TO_BASE64_HASH = 3999417757L
-private val rawToBase64Bind by lazy {
-    ObjectCalls.getMethodBind("Marshalls", "raw_to_base64", RAW_TO_BASE64_HASH)
 }

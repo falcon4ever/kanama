@@ -11,7 +11,6 @@ import net.multigesture.kanama.types.Rect2i
 // KANAMA-IOS-GAP EditorInterface waits on: ptrcallWithCallableStringNameListArgs,
 //   ptrcallWithCallableStringNameListObjectArgs,
 //   ptrcallWithCallableStringNameTwoStringStringNameListArgs, ptrcallWithObjectAndRect2iArg,
-//   ptrcallWithObjectCallablePackedInt32ListStringArgs,
 //   ptrcallWithObjectListIntArgsRetTypedObjectList
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -45,20 +44,6 @@ fun EditorInterface.popupDialog(dialog: Window, rect: Rect2i) {
  */
 fun EditorInterface.popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node) {
     ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(popupNodeSelectorBind, editorInterfaceSingleton, callback.target.handle, callback.method, validTypes, currentValue.handle)
-}
-
-/**
- * Pops up an editor dialog for selecting properties from `object`. The `callback` must take a
- * single argument of type `NodePath`. It is called on the selected property path (see
- * `NodePath.get_as_property_path`) or the empty path `^""` if the dialog is canceled. If
- * `type_filter` is provided, the dialog will only show properties that match one of the listed
- * `Variant.Type` values. If `current_value` is provided, the property will be selected
- * automatically in the property list, if it exists.
- *
- * Generated from Godot docs: EditorInterface.popup_property_selector
- */
-fun EditorInterface.popupPropertySelector(objectValue: GodotObject, callback: GodotCallable, typeFilter: List<Int>, currentValue: String = "") {
-    ObjectCalls.ptrcallWithObjectCallablePackedInt32ListStringArgs(popupPropertySelectorBind, editorInterfaceSingleton, objectValue.handle, callback.target.handle, callback.method, typeFilter, currentValue)
 }
 
 /**
@@ -111,11 +96,6 @@ private val popupDialogBind by lazy {
 private const val POPUP_NODE_SELECTOR_HASH = 2444591477L
 private val popupNodeSelectorBind by lazy {
     ObjectCalls.getMethodBind("EditorInterface", "popup_node_selector", POPUP_NODE_SELECTOR_HASH)
-}
-
-private const val POPUP_PROPERTY_SELECTOR_HASH = 2955609011L
-private val popupPropertySelectorBind by lazy {
-    ObjectCalls.getMethodBind("EditorInterface", "popup_property_selector", POPUP_PROPERTY_SELECTOR_HASH)
 }
 
 private const val POPUP_QUICK_OPEN_HASH = 2271411043L

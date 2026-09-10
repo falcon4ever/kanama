@@ -3,14 +3,12 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Rect2i
-import net.multigesture.kanama.types.Vector2
 
 // GENERATED desktop/Android companion for Window (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Window waits on: ptrcallWithObjectAndRect2iArg, ptrcallWithPackedVector2ListArg,
-//   ptrcallWithRect2iArg
+// KANAMA-IOS-GAP Window waits on: ptrcallWithObjectAndRect2iArg, ptrcallWithRect2iArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -22,17 +20,6 @@ import net.multigesture.kanama.types.Vector2
  */
 fun Window.setNonclientArea(area: Rect2i) {
     ObjectCalls.ptrcallWithRect2iArg(setNonclientAreaBind, handle, area)
-}
-
-/**
- * Sets a polygonal region of the window which accepts mouse events. Mouse events outside the
- * region will be passed through. Passing an empty array will disable passthrough support (all
- * mouse events will be intercepted by the window, which is the default behavior).
- *
- * Generated from Godot docs: Window.set_mouse_passthrough_polygon
- */
-fun Window.setMousePassthroughPolygon(polygon: List<Vector2>) {
-    ObjectCalls.ptrcallWithPackedVector2ListArg(setMousePassthroughPolygonBind, handle, polygon)
 }
 
 /**
@@ -88,11 +75,6 @@ fun Window.popupExclusiveOnParent(fromNode: Node, parentRect: Rect2i) {
 private const val SET_NONCLIENT_AREA_HASH = 1763793166L
 private val setNonclientAreaBind by lazy {
     ObjectCalls.getMethodBind("Window", "set_nonclient_area", SET_NONCLIENT_AREA_HASH)
-}
-
-private const val SET_MOUSE_PASSTHROUGH_POLYGON_HASH = 1509147220L
-private val setMousePassthroughPolygonBind by lazy {
-    ObjectCalls.getMethodBind("Window", "set_mouse_passthrough_polygon", SET_MOUSE_PASSTHROUGH_POLYGON_HASH)
 }
 
 private const val POPUP_HASH = 1680304321L

@@ -56,6 +56,19 @@ object JavaClassWrapper {
         return JavaObject.wrap(ObjectCalls.ptrcallWithStringCallableArgsRetObject(createSamCallbackBind, singleton, samInterface, callable.target.handle, callable.method))
     }
 
+    /**
+     * Creates a `JavaObject` implementing the given Java interfaces using the given `Object` as the
+     * implementation. The `object` must contain methods signatures matching the methods signatures
+     * from the passed Java `interfaces`. Invoking methods from the Java `interfaces` will route to the
+     * matching `object` method.
+     *
+     * Generated from Godot docs: JavaClassWrapper.create_proxy
+     */
+    @JvmStatic
+    fun createProxy(objectValue: GodotObject, interfaces: List<String>): JavaObject? {
+        return JavaObject.wrap(ObjectCalls.ptrcallWithObjectAndPackedStringListArgsRetObject(createProxyBind, singleton, objectValue.handle, interfaces))
+    }
+
     @JvmStatic
     fun fromHandle(handle: MemorySegment): JavaClassWrapper? =
         wrap(handle)
@@ -76,5 +89,10 @@ object JavaClassWrapper {
     private const val CREATE_SAM_CALLBACK_HASH = 2479014754L
     private val createSamCallbackBind by lazy {
         ObjectCalls.getMethodBind("JavaClassWrapper", "create_sam_callback", CREATE_SAM_CALLBACK_HASH)
+    }
+
+    private const val CREATE_PROXY_HASH = 2694931752L
+    private val createProxyBind by lazy {
+        ObjectCalls.getMethodBind("JavaClassWrapper", "create_proxy", CREATE_PROXY_HASH)
     }
 }

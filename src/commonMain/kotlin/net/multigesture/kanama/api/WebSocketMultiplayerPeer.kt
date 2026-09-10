@@ -10,13 +10,17 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: WebSocketMultiplayerPeer
  */
 class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
-    val supportedProtocols: List<String>
+    var supportedProtocols: List<String>
         @JvmName("supportedProtocolsProperty")
         get() = getSupportedProtocols()
+        @JvmName("setSupportedProtocolsProperty")
+        set(value) = setSupportedProtocols(value)
 
-    val handshakeHeaders: List<String>
+    var handshakeHeaders: List<String>
         @JvmName("handshakeHeadersProperty")
         get() = getHandshakeHeaders()
+        @JvmName("setHandshakeHeadersProperty")
+        set(value) = setHandshakeHeaders(value)
 
     var inboundBufferSize: Int
         @JvmName("inboundBufferSizeProperty")
@@ -72,9 +76,19 @@ class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) 
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedProtocolsBind, handle)
     }
 
+    fun setSupportedProtocols(protocols: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setSupportedProtocolsBind, handle, protocols)
+    }
+
     fun getHandshakeHeaders(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getHandshakeHeadersBind, handle)
+    }
+
+    fun setHandshakeHeaders(protocols: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setHandshakeHeadersBind, handle, protocols)
     }
 
     fun getInboundBufferSize(): Int {
@@ -155,9 +169,19 @@ class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) 
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_supported_protocols", GET_SUPPORTED_PROTOCOLS_HASH)
         }
 
+        private const val SET_SUPPORTED_PROTOCOLS_HASH = 4015028928L
+        private val setSupportedProtocolsBind by lazy {
+            ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_supported_protocols", SET_SUPPORTED_PROTOCOLS_HASH)
+        }
+
         private const val GET_HANDSHAKE_HEADERS_HASH = 1139954409L
         private val getHandshakeHeadersBind by lazy {
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_handshake_headers", GET_HANDSHAKE_HEADERS_HASH)
+        }
+
+        private const val SET_HANDSHAKE_HEADERS_HASH = 4015028928L
+        private val setHandshakeHeadersBind by lazy {
+            ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_handshake_headers", SET_HANDSHAKE_HEADERS_HASH)
         }
 
         private const val GET_INBOUND_BUFFER_SIZE_HASH = 3905245786L

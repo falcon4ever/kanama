@@ -54,9 +54,19 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, handle)
     }
 
+    fun loadEncrypted(path: String, key: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, handle, path, key)
+    }
+
     fun loadEncryptedPass(path: String, password: String): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, handle, path, password)
+    }
+
+    fun saveEncrypted(path: String, key: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, handle, path, key)
     }
 
     fun saveEncryptedPass(path: String, password: String): Long {
@@ -136,9 +146,19 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("ConfigFile", "encode_to_text", ENCODE_TO_TEXT_HASH)
         }
 
+        private const val LOAD_ENCRYPTED_HASH = 887037711L
+        private val loadEncryptedBind by lazy {
+            ObjectCalls.getMethodBind("ConfigFile", "load_encrypted", LOAD_ENCRYPTED_HASH)
+        }
+
         private const val LOAD_ENCRYPTED_PASS_HASH = 852856452L
         private val loadEncryptedPassBind by lazy {
             ObjectCalls.getMethodBind("ConfigFile", "load_encrypted_pass", LOAD_ENCRYPTED_PASS_HASH)
+        }
+
+        private const val SAVE_ENCRYPTED_HASH = 887037711L
+        private val saveEncryptedBind by lazy {
+            ObjectCalls.getMethodBind("ConfigFile", "save_encrypted", SAVE_ENCRYPTED_HASH)
         }
 
         private const val SAVE_ENCRYPTED_PASS_HASH = 852856452L

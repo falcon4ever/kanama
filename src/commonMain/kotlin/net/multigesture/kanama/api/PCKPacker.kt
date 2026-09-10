@@ -35,6 +35,18 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Adds the `data` to the current PCK package at the `target_path` internal path. The `res://`
+     * prefix for `target_path` is optional and stripped internally. File content is immediately
+     * written to the PCK.
+     *
+     * Generated from Godot docs: PCKPacker.add_file_from_buffer
+     */
+    fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, handle, targetPath, data, encrypt)
+    }
+
+    /**
      * Registers a file removal of the `target_path` internal path to the PCK. This is mainly used for
      * patches. If the file at this path has been loaded from a previous PCK, it will be removed. The
      * `res://` prefix for `target_path` is optional and stripped internally.
@@ -76,6 +88,11 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
         private const val ADD_FILE_HASH = 2215643711L
         private val addFileBind by lazy {
             ObjectCalls.getMethodBind("PCKPacker", "add_file", ADD_FILE_HASH)
+        }
+
+        private const val ADD_FILE_FROM_BUFFER_HASH = 1131482346L
+        private val addFileFromBufferBind by lazy {
+            ObjectCalls.getMethodBind("PCKPacker", "add_file_from_buffer", ADD_FILE_FROM_BUFFER_HASH)
         }
 
         private const val ADD_FILE_REMOVAL_HASH = 166001499L

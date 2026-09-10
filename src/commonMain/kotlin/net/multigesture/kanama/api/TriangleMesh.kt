@@ -13,6 +13,18 @@ import net.multigesture.kanama.types.Vector3
  */
 class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
     /**
+     * Creates the BVH tree from an array of faces. Each 3 vertices of the input `faces` array
+     * represent one triangle (face). Returns `true` if the tree is successfully built, `false`
+     * otherwise.
+     *
+     * Generated from Godot docs: TriangleMesh.create_from_faces
+     */
+    fun createFromFaces(faces: List<Vector3>): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(createFromFacesBind, handle, faces)
+    }
+
+    /**
      * Returns a copy of the geometry faces. Each 3 vertices of the array represent one triangle
      * (face).
      *
@@ -59,6 +71,11 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): TriangleMesh? =
             if (handle.address() == 0L) null else TriangleMesh(handle)
+
+        private const val CREATE_FROM_FACES_HASH = 2637816732L
+        private val createFromFacesBind by lazy {
+            ObjectCalls.getMethodBind("TriangleMesh", "create_from_faces", CREATE_FROM_FACES_HASH)
+        }
 
         private const val GET_FACES_HASH = 497664490L
         private val getFacesBind by lazy {

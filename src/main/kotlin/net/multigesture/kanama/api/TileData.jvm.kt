@@ -2,25 +2,13 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
 
 // GENERATED desktop/Android companion for TileData (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TileData waits on: ptrcallWithIntAndVariantArg, ptrcallWithStringAndVariantArg,
-//   ptrcallWithTwoIntAndPackedVector2ListArg
+// KANAMA-IOS-GAP TileData waits on: ptrcallWithIntAndVariantArg, ptrcallWithStringAndVariantArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Sets the points of the polygon at index `polygon_index` for TileSet physics layer with index
- * `layer_id`.
- *
- * Generated from Godot docs: TileData.set_collision_polygon_points
- */
-fun TileData.setCollisionPolygonPoints(layerId: Int, polygonIndex: Int, polygon: List<Vector2>) {
-    ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(setCollisionPolygonPointsBind, handle, layerId, polygonIndex, polygon)
-}
 
 /**
  * Sets the tile's custom data value for the TileSet custom data layer with name `layer_name`.
@@ -38,11 +26,6 @@ fun TileData.setCustomData(layerName: String, value: Any?) {
  */
 fun TileData.setCustomDataByLayerId(layerId: Int, value: Any?) {
     ObjectCalls.ptrcallWithIntAndVariantArg(setCustomDataByLayerIdBind, handle, layerId, value)
-}
-
-private const val SET_COLLISION_POLYGON_POINTS_HASH = 3230546541L
-private val setCollisionPolygonPointsBind by lazy {
-    ObjectCalls.getMethodBind("TileData", "set_collision_polygon_points", SET_COLLISION_POLYGON_POINTS_HASH)
 }
 
 private const val SET_CUSTOM_DATA_HASH = 402577236L

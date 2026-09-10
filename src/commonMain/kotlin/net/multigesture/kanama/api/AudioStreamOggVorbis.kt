@@ -116,6 +116,10 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
     }
 
     companion object {
+        fun loadFromBuffer(streamData: ByteArray): AudioStreamOggVorbis? {
+            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData))
+        }
+
         fun loadFromFile(path: String): AudioStreamOggVorbis? {
             return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, MemorySegment.NULL, path))
         }
@@ -126,6 +130,11 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
 
         internal fun wrap(handle: MemorySegment): AudioStreamOggVorbis? =
             if (handle.address() == 0L) null else AudioStreamOggVorbis(handle)
+
+        private const val LOAD_FROM_BUFFER_HASH = 354904730L
+        private val loadFromBufferBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamOggVorbis", "load_from_buffer", LOAD_FROM_BUFFER_HASH)
+        }
 
         private const val LOAD_FROM_FILE_HASH = 797568536L
         private val loadFromFileBind by lazy {

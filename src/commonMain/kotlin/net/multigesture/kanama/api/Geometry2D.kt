@@ -124,6 +124,69 @@ object Geometry2D {
         return ObjectCalls.ptrcallWithFourVector2ArgsRetBool(pointIsInsideTriangleBind, singleton, point, a, b, c)
     }
 
+    /**
+     * Returns `true` if `polygon`'s vertices are ordered in clockwise order, otherwise returns
+     * `false`. Note: Assumes a Cartesian coordinate system where `+x` is right and `+y` is up. If
+     * using screen coordinates (`+y` is down), the result will need to be flipped (i.e. a `true`
+     * result will indicate counter-clockwise).
+     *
+     * Generated from Godot docs: Geometry2D.is_polygon_clockwise
+     */
+    @JvmStatic
+    fun isPolygonClockwise(polygon: List<Vector2>): Boolean {
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(isPolygonClockwiseBind, singleton, polygon)
+    }
+
+    /**
+     * Returns `true` if `point` is inside `polygon` or if it's located exactly on polygon's boundary,
+     * otherwise returns `false`.
+     *
+     * Generated from Godot docs: Geometry2D.is_point_in_polygon
+     */
+    @JvmStatic
+    fun isPointInPolygon(point: Vector2, polygon: List<Vector2>): Boolean {
+        return ObjectCalls.ptrcallWithVector2PackedVector2ListArgsRetBool(isPointInPolygonBind, singleton, point, polygon)
+    }
+
+    /**
+     * Triangulates the polygon specified by the points in `polygon`. Returns a `PackedInt32Array`
+     * where each triangle consists of three consecutive point indices into `polygon` (i.e. the
+     * returned array will have `n * 3` elements, with `n` being the number of found triangles). Output
+     * triangles will always be counter clockwise, and the contour will be flipped if it's clockwise.
+     * If the triangulation did not succeed, an empty `PackedInt32Array` is returned.
+     *
+     * Generated from Godot docs: Geometry2D.triangulate_polygon
+     */
+    @JvmStatic
+    fun triangulatePolygon(polygon: List<Vector2>): List<Int> {
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetPackedInt32List(triangulatePolygonBind, singleton, polygon)
+    }
+
+    /**
+     * Triangulates the area specified by discrete set of `points` such that no point is inside the
+     * circumcircle of any resulting triangle. Returns a `PackedInt32Array` where each triangle
+     * consists of three consecutive point indices into `points` (i.e. the returned array will have `n
+     * * 3` elements, with `n` being the number of found triangles). If the triangulation did not
+     * succeed, an empty `PackedInt32Array` is returned.
+     *
+     * Generated from Godot docs: Geometry2D.triangulate_delaunay
+     */
+    @JvmStatic
+    fun triangulateDelaunay(points: List<Vector2>): List<Int> {
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetPackedInt32List(triangulateDelaunayBind, singleton, points)
+    }
+
+    /**
+     * Given an array of `Vector2`s, returns the convex hull as a list of points in counterclockwise
+     * order. The last point is the same as the first one.
+     *
+     * Generated from Godot docs: Geometry2D.convex_hull
+     */
+    @JvmStatic
+    fun convexHull(points: List<Vector2>): List<Vector2> {
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetPackedVector2List(convexHullBind, singleton, points)
+    }
+
     @JvmStatic
     fun fromHandle(handle: MemorySegment): Geometry2D? =
         wrap(handle)
@@ -169,5 +232,30 @@ object Geometry2D {
     private const val POINT_IS_INSIDE_TRIANGLE_HASH = 1025948137L
     private val pointIsInsideTriangleBind by lazy {
         ObjectCalls.getMethodBind("Geometry2D", "point_is_inside_triangle", POINT_IS_INSIDE_TRIANGLE_HASH)
+    }
+
+    private const val IS_POLYGON_CLOCKWISE_HASH = 1361156557L
+    private val isPolygonClockwiseBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "is_polygon_clockwise", IS_POLYGON_CLOCKWISE_HASH)
+    }
+
+    private const val IS_POINT_IN_POLYGON_HASH = 738277916L
+    private val isPointInPolygonBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "is_point_in_polygon", IS_POINT_IN_POLYGON_HASH)
+    }
+
+    private const val TRIANGULATE_POLYGON_HASH = 1389921771L
+    private val triangulatePolygonBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "triangulate_polygon", TRIANGULATE_POLYGON_HASH)
+    }
+
+    private const val TRIANGULATE_DELAUNAY_HASH = 1389921771L
+    private val triangulateDelaunayBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "triangulate_delaunay", TRIANGULATE_DELAUNAY_HASH)
+    }
+
+    private const val CONVEX_HULL_HASH = 2004331998L
+    private val convexHullBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "convex_hull", CONVEX_HULL_HASH)
     }
 }

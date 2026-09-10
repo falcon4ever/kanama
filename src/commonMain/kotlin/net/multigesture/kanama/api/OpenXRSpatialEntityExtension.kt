@@ -32,6 +32,10 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
         return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialContextHandleBind, handle, spatialContext)
     }
 
+    fun discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject(discoverSpatialEntitiesBind, handle, spatialContext, componentTypes, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
+    }
+
     fun freeSpatialSnapshot(spatialSnapshot: RID) {
         ObjectCalls.ptrcallWithRIDArg(freeSpatialSnapshotBind, handle, spatialSnapshot)
     }
@@ -149,6 +153,11 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
         private const val GET_SPATIAL_CONTEXT_HANDLE_HASH = 2198884583L
         private val getSpatialContextHandleBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_spatial_context_handle", GET_SPATIAL_CONTEXT_HANDLE_HASH)
+        }
+
+        private const val DISCOVER_SPATIAL_ENTITIES_HASH = 2252833536L
+        private val discoverSpatialEntitiesBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "discover_spatial_entities", DISCOVER_SPATIAL_ENTITIES_HASH)
         }
 
         private const val FREE_SPATIAL_SNAPSHOT_HASH = 2722037293L

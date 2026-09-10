@@ -16,21 +16,29 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         @JvmName("setSkinRootProperty")
         set(value) = setSkinRoot(value)
 
-    val jointsOriginal: List<Int>
+    var jointsOriginal: List<Int>
         @JvmName("jointsOriginalProperty")
         get() = getJointsOriginal()
+        @JvmName("setJointsOriginalProperty")
+        set(value) = setJointsOriginal(value)
 
-    val joints: List<Int>
+    var joints: List<Int>
         @JvmName("jointsProperty")
         get() = getJoints()
+        @JvmName("setJointsProperty")
+        set(value) = setJoints(value)
 
-    val nonJoints: List<Int>
+    var nonJoints: List<Int>
         @JvmName("nonJointsProperty")
         get() = getNonJoints()
+        @JvmName("setNonJointsProperty")
+        set(value) = setNonJoints(value)
 
-    val roots: List<Int>
+    var roots: List<Int>
         @JvmName("rootsProperty")
         get() = getRoots()
+        @JvmName("setRootsProperty")
+        set(value) = setRoots(value)
 
     var skeleton: Int
         @JvmName("skeletonProperty")
@@ -67,9 +75,19 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsOriginalBind, handle)
     }
 
+    fun setJointsOriginal(jointsOriginal: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsOriginalBind, handle, jointsOriginal)
+    }
+
     fun getJoints(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
+    }
+
+    fun setJoints(joints: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, handle, joints)
     }
 
     fun getNonJoints(): List<Int> {
@@ -77,9 +95,19 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getNonJointsBind, handle)
     }
 
+    fun setNonJoints(nonJoints: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setNonJointsBind, handle, nonJoints)
+    }
+
     fun getRoots(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
+    }
+
+    fun setRoots(roots: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, handle, roots)
     }
 
     fun getSkeleton(): Int {
@@ -135,9 +163,19 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFSkin", "get_joints_original", GET_JOINTS_ORIGINAL_HASH)
         }
 
+        private const val SET_JOINTS_ORIGINAL_HASH = 3614634198L
+        private val setJointsOriginalBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "set_joints_original", SET_JOINTS_ORIGINAL_HASH)
+        }
+
         private const val GET_JOINTS_HASH = 969006518L
         private val getJointsBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkin", "get_joints", GET_JOINTS_HASH)
+        }
+
+        private const val SET_JOINTS_HASH = 3614634198L
+        private val setJointsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "set_joints", SET_JOINTS_HASH)
         }
 
         private const val GET_NON_JOINTS_HASH = 969006518L
@@ -145,9 +183,19 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFSkin", "get_non_joints", GET_NON_JOINTS_HASH)
         }
 
+        private const val SET_NON_JOINTS_HASH = 3614634198L
+        private val setNonJointsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "set_non_joints", SET_NON_JOINTS_HASH)
+        }
+
         private const val GET_ROOTS_HASH = 969006518L
         private val getRootsBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkin", "get_roots", GET_ROOTS_HASH)
+        }
+
+        private const val SET_ROOTS_HASH = 3614634198L
+        private val setRootsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "set_roots", SET_ROOTS_HASH)
         }
 
         private const val GET_SKELETON_HASH = 2455072627L

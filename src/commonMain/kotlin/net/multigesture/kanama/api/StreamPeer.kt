@@ -19,27 +19,14 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setBigEndian(value)
 
     /**
-     * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
-     * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
-     * bytes are available, the function will block until the desired amount is received.
+     * Sends a chunk of data through the connection, blocking if necessary until the data is done
+     * sending. This function returns an `Error` code.
      *
-     * Generated from Godot docs: StreamPeer.get_data
+     * Generated from Godot docs: StreamPeer.put_data
      */
-    fun getData(bytes: Int): List<Any?> {
+    fun putData(data: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, handle, bytes)
-    }
-
-    /**
-     * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
-     * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
-     * bytes are available, the function will return how many were actually received.
-     *
-     * Generated from Godot docs: StreamPeer.get_partial_data
-     */
-    fun getPartialData(bytes: Int): List<Any?> {
-        checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, handle, bytes)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, handle, data)
     }
 
     /**
@@ -361,14 +348,9 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         internal fun wrap(handle: MemorySegment): StreamPeer? =
             if (handle.address() == 0L) null else StreamPeer(handle)
 
-        private const val GET_DATA_HASH = 1171824711L
-        private val getDataBind by lazy {
-            ObjectCalls.getMethodBind("StreamPeer", "get_data", GET_DATA_HASH)
-        }
-
-        private const val GET_PARTIAL_DATA_HASH = 1171824711L
-        private val getPartialDataBind by lazy {
-            ObjectCalls.getMethodBind("StreamPeer", "get_partial_data", GET_PARTIAL_DATA_HASH)
+        private const val PUT_DATA_HASH = 680677267L
+        private val putDataBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "put_data", PUT_DATA_HASH)
         }
 
         private const val GET_AVAILABLE_BYTES_HASH = 3905245786L

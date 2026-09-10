@@ -364,6 +364,15 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Adds a ``p`` tag to the tag stack.
+     *
+     * Generated from Godot docs: RichTextLabel.push_paragraph
+     */
+    fun pushParagraph(alignment: Long, baseDirection: Long = 0L, language: String = "", stParser: Long = 0L, justificationFlags: Long = 163L, tabStops: List<Float>) {
+        ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, handle, alignment, baseDirection, language, stParser, justificationFlags, tabStops)
+    }
+
+    /**
      * Adds an ``indent`` tag to the tag stack. Multiplies `level` by current `tab_size` to determine
      * new margin length.
      *
@@ -1618,6 +1627,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         private const val PUSH_OUTLINE_COLOR_HASH = 2920490490L
         private val pushOutlineColorBind by lazy {
             ObjectCalls.getMethodBind("RichTextLabel", "push_outline_color", PUSH_OUTLINE_COLOR_HASH)
+        }
+
+        private const val PUSH_PARAGRAPH_HASH = 3089306873L
+        private val pushParagraphBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "push_paragraph", PUSH_PARAGRAPH_HASH)
         }
 
         private const val PUSH_INDENT_HASH = 1286410249L

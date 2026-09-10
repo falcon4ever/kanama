@@ -10,9 +10,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: AudioStreamMP3
  */
 class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
-    val data: ByteArray
+    var data: ByteArray
         @JvmName("dataProperty")
         get() = getData()
+        @JvmName("setDataProperty")
+        set(value) = setData(value)
 
     var bpm: Double
         @JvmName("bpmProperty")
@@ -43,6 +45,11 @@ class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
         get() = getLoopOffset()
         @JvmName("setLoopOffsetProperty")
         set(value) = setLoopOffset(value)
+
+    fun setData(data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
+    }
 
     fun getData(): ByteArray {
         checkOpen()
@@ -100,6 +107,10 @@ class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
     }
 
     companion object {
+        fun loadFromBuffer(streamData: ByteArray): AudioStreamMP3? {
+            return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData))
+        }
+
         fun loadFromFile(path: String): AudioStreamMP3? {
             return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, MemorySegment.NULL, path))
         }
@@ -111,9 +122,19 @@ class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
         internal fun wrap(handle: MemorySegment): AudioStreamMP3? =
             if (handle.address() == 0L) null else AudioStreamMP3(handle)
 
+        private const val LOAD_FROM_BUFFER_HASH = 1674970313L
+        private val loadFromBufferBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamMP3", "load_from_buffer", LOAD_FROM_BUFFER_HASH)
+        }
+
         private const val LOAD_FROM_FILE_HASH = 4238362998L
         private val loadFromFileBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamMP3", "load_from_file", LOAD_FROM_FILE_HASH)
+        }
+
+        private const val SET_DATA_HASH = 2971499966L
+        private val setDataBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamMP3", "set_data", SET_DATA_HASH)
         }
 
         private const val GET_DATA_HASH = 2362200018L

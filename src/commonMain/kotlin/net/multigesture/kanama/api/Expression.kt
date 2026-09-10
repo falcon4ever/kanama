@@ -12,6 +12,18 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Expression(handle: MemorySegment) : RefCounted(handle) {
     /**
+     * Parses the expression and returns an `Error` code. You can optionally specify names of variables
+     * that may appear in the expression with `input_names`, so that you can bind them when it gets
+     * executed.
+     *
+     * Generated from Godot docs: Expression.parse
+     */
+    fun parse(expression: String, inputNames: List<String>): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, handle, expression, inputNames)
+    }
+
+    /**
      * Returns `true` if `execute` has failed.
      *
      * Generated from Godot docs: Expression.has_execute_failed
@@ -38,6 +50,11 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): Expression? =
             if (handle.address() == 0L) null else Expression(handle)
+
+        private const val PARSE_HASH = 3069722906L
+        private val parseBind by lazy {
+            ObjectCalls.getMethodBind("Expression", "parse", PARSE_HASH)
+        }
 
         private const val HAS_EXECUTE_FAILED_HASH = 36873697L
         private val hasExecuteFailedBind by lazy {

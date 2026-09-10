@@ -39,6 +39,11 @@ class ENetPacketPeer(handle: MemorySegment) : PacketPeer(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, handle)
     }
 
+    fun send(channel: Int, packet: ByteArray, flags: Int): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(sendBind, handle, channel, packet, flags)
+    }
+
     fun throttleConfigure(interval: Int, acceleration: Int, deceleration: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeIntArgs(throttleConfigureBind, handle, interval, acceleration, deceleration)
@@ -150,6 +155,11 @@ class ENetPacketPeer(handle: MemorySegment) : PacketPeer(handle) {
         private const val RESET_HASH = 3218959716L
         private val resetBind by lazy {
             ObjectCalls.getMethodBind("ENetPacketPeer", "reset", RESET_HASH)
+        }
+
+        private const val SEND_HASH = 120522849L
+        private val sendBind by lazy {
+            ObjectCalls.getMethodBind("ENetPacketPeer", "send", SEND_HASH)
         }
 
         private const val THROTTLE_CONFIGURE_HASH = 1649997291L

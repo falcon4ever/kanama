@@ -80,9 +80,11 @@ class GLTFNode(handle: MemorySegment) : Resource(handle) {
         @JvmName("setScaleProperty")
         set(value) = setScale(value)
 
-    val children: List<Int>
+    var children: List<Int>
         @JvmName("childrenProperty")
         get() = getChildren()
+        @JvmName("setChildrenProperty")
+        set(value) = setChildren(value)
 
     var light: Int
         @JvmName("lightProperty")
@@ -209,6 +211,11 @@ class GLTFNode(handle: MemorySegment) : Resource(handle) {
     fun getChildren(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getChildrenBind, handle)
+    }
+
+    fun setChildren(children: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setChildrenBind, handle, children)
     }
 
     fun appendChildIndex(childIndex: Int) {
@@ -367,6 +374,11 @@ class GLTFNode(handle: MemorySegment) : Resource(handle) {
         private const val GET_CHILDREN_HASH = 969006518L
         private val getChildrenBind by lazy {
             ObjectCalls.getMethodBind("GLTFNode", "get_children", GET_CHILDREN_HASH)
+        }
+
+        private const val SET_CHILDREN_HASH = 3614634198L
+        private val setChildrenBind by lazy {
+            ObjectCalls.getMethodBind("GLTFNode", "set_children", SET_CHILDREN_HASH)
         }
 
         private const val APPEND_CHILD_INDEX_HASH = 1286410249L

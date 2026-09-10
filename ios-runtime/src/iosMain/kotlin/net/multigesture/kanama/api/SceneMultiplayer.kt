@@ -78,6 +78,11 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAuthenticatingPeersBind, handle)
     }
 
+    fun sendAuth(id: Int, data: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(sendAuthBind, handle, id, data)
+    }
+
     fun completeAuth(id: Int): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(completeAuthBind, handle, id)
@@ -126,6 +131,11 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
     fun isServerRelayEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isServerRelayEnabledBind, handle)
+    }
+
+    fun sendBytes(bytes: ByteArray, id: Int = 0, mode: Long = 2L, channel: Int = 0): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(sendBytesBind, handle, bytes, id, mode, channel)
     }
 
     fun getMaxSyncPacketSize(): Int {
@@ -191,6 +201,11 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
             ObjectCalls.getMethodBind("SceneMultiplayer", "get_authenticating_peers", GET_AUTHENTICATING_PEERS_HASH)
         }
 
+        private const val SEND_AUTH_HASH = 506032537L
+        private val sendAuthBind by lazy {
+            ObjectCalls.getMethodBind("SceneMultiplayer", "send_auth", SEND_AUTH_HASH)
+        }
+
         private const val COMPLETE_AUTH_HASH = 844576869L
         private val completeAuthBind by lazy {
             ObjectCalls.getMethodBind("SceneMultiplayer", "complete_auth", COMPLETE_AUTH_HASH)
@@ -239,6 +254,11 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
         private const val IS_SERVER_RELAY_ENABLED_HASH = 36873697L
         private val isServerRelayEnabledBind by lazy {
             ObjectCalls.getMethodBind("SceneMultiplayer", "is_server_relay_enabled", IS_SERVER_RELAY_ENABLED_HASH)
+        }
+
+        private const val SEND_BYTES_HASH = 1307428718L
+        private val sendBytesBind by lazy {
+            ObjectCalls.getMethodBind("SceneMultiplayer", "send_bytes", SEND_BYTES_HASH)
         }
 
         private const val GET_MAX_SYNC_PACKET_SIZE_HASH = 3905245786L

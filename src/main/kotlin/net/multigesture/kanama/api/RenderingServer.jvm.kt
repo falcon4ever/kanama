@@ -2,16 +2,12 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Transform3D
-import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
-import net.multigesture.kanama.types.Vector3
-import net.multigesture.kanama.types.Vector3i
 
 // GENERATED desktop/Android companion for RenderingServer (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
@@ -20,21 +16,12 @@ import net.multigesture.kanama.types.Vector3i
 // KANAMA-IOS-GAP RenderingServer waits on: ptrcallWithDictionaryListIntArgsRetRID,
 //   ptrcallWithLongThreeIntBoolObjectListArgsRetRID, ptrcallWithObjectListLongArgsRetRID,
 //   ptrcallWithPlaneListAndRIDArgsRetPackedInt64List, ptrcallWithRIDAndDictionaryArg,
-//   ptrcallWithRIDAndIntArgRetArrayList, ptrcallWithRIDAndObjectListArgs,
-//   ptrcallWithRIDAndPackedFloat32ListArg, ptrcallWithRIDAndRIDListArgs,
-//   ptrcallWithRIDAndTransform3DListArgs, ptrcallWithRIDAndTwoPackedFloat32ListArgs,
-//   ptrcallWithRIDArgRetTypedObjectList,
-//   ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs,
-//   ptrcallWithRIDIntIntAndByteArrayArgs, ptrcallWithRIDListRect2iRIDColorRIDListIntArgs,
-//   ptrcallWithRIDLongTwoArrayDictionaryLongArgs,
-//   ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs,
-//   ptrcallWithRIDPackedVector2ListAndBoolArg,
-//   ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs,
-//   ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs,
-//   ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs,
-//   ptrcallWithRIDPackedVector3ListPackedInt32ListArgs,
+//   ptrcallWithRIDAndIntArgRetArray, ptrcallWithRIDAndIntArgRetArrayList,
+//   ptrcallWithRIDAndIntArgRetDictionary, ptrcallWithRIDAndObjectListArgs,
+//   ptrcallWithRIDAndRIDListArgs, ptrcallWithRIDAndTransform3DListArgs,
+//   ptrcallWithRIDArgRetDictionaryList, ptrcallWithRIDArgRetTypedObjectList,
+//   ptrcallWithRIDListRect2iRIDColorRIDListIntArgs, ptrcallWithRIDLongTwoArrayDictionaryLongArgs,
 //   ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList, ptrcallWithRIDStringNameAndVariantArgs,
-//   ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs,
 //   ptrcallWithStringNameAndVariantArg, ptrcallWithStringNameLongVariantArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -91,6 +78,15 @@ fun RenderingServer.textureDrawableBlitRect(textures: List<RID>, rect: Rect2i, m
  */
 fun RenderingServer.texture3dGet(texture: RID): List<Image> {
     return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(texture3dGetBind, renderingServerSingleton, texture, Image::fromHandle)
+}
+
+/**
+ * Returns the parameters of a shader.
+ *
+ * Generated from Godot docs: RenderingServer.get_shader_parameter_list
+ */
+fun RenderingServer.getShaderParameterList(shader: RID): List<Map<String, Any?>> {
+    return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(getShaderParameterListBind, renderingServerSingleton, shader)
 }
 
 /**
@@ -164,113 +160,31 @@ fun RenderingServer.meshAddSurfaceFromArrays(mesh: RID, primitive: Long, arrays:
 }
 
 /**
+ * Returns a mesh's surface as a dictionary following the same structure as described in
+ * `mesh_add_surface`.
+ *
+ * Generated from Godot docs: RenderingServer.mesh_get_surface
+ */
+fun RenderingServer.meshGetSurface(mesh: RID, surface: Int): Map<String, Any?> {
+    return ObjectCalls.ptrcallWithRIDAndIntArgRetDictionary(meshGetSurfaceBind, renderingServerSingleton, mesh, surface)
+}
+
+/**
+ * Returns a mesh's surface's buffer arrays.
+ *
+ * Generated from Godot docs: RenderingServer.mesh_surface_get_arrays
+ */
+fun RenderingServer.meshSurfaceGetArrays(mesh: RID, surface: Int): List<Any?> {
+    return ObjectCalls.ptrcallWithRIDAndIntArgRetArray(meshSurfaceGetArraysBind, renderingServerSingleton, mesh, surface)
+}
+
+/**
  * Returns a mesh's surface's arrays for blend shapes.
  *
  * Generated from Godot docs: RenderingServer.mesh_surface_get_blend_shape_arrays
  */
 fun RenderingServer.meshSurfaceGetBlendShapeArrays(mesh: RID, surface: Int): List<List<Any?>> {
     return ObjectCalls.ptrcallWithRIDAndIntArgRetArrayList(meshSurfaceGetBlendShapeArraysBind, renderingServerSingleton, mesh, surface)
-}
-
-/**
- * Updates the vertex buffer of the mesh surface with the given `data`. The expected data per
- * vertex is 8 or 12 bytes (4 bytes per float, 2 floats per `Vector2`, and 3 floats per `Vector3`)
- * depending on if the mesh is using `Vector2` or `Vector3` vertices. This value can be determined
- * with `mesh_surface_get_format_vertex_stride` instead. The starting point of the updates can be
- * changed with `offset`. The value of `offset` should be a multiple of 12 bytes in most cases to
- * align to each vertex. A `PackedVector3Array` of vertex locations can be converted into a
- * `PackedByteArray` using `PackedVector3Array.to_byte_array` for use in `data`.
- *
- * Generated from Godot docs: RenderingServer.mesh_surface_update_vertex_region
- */
-fun RenderingServer.meshSurfaceUpdateVertexRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-    ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateVertexRegionBind, renderingServerSingleton, mesh, surface, offset, data)
-}
-
-/**
- * Updates the attribute buffer of the mesh surface with the given `data`. The expected data per
- * attribute is 8 or 12 bytes (4 bytes per float, 2 floats per `Vector2`, and 3 floats per
- * `Vector3`) depending on if the mesh is using `Vector2` or `Vector3` vertices. This value can be
- * determined with `mesh_surface_get_format_attribute_stride` instead. The starting point of the
- * updates can be changed with `offset`. The value of `offset` should be a multiple of 12 bytes in
- * most cases to align to each attribute. A `PackedVector3Array` of attribute locations can be
- * converted into a `PackedByteArray` using `PackedVector3Array.to_byte_array` for use in `data`.
- *
- * Generated from Godot docs: RenderingServer.mesh_surface_update_attribute_region
- */
-fun RenderingServer.meshSurfaceUpdateAttributeRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-    ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateAttributeRegionBind, renderingServerSingleton, mesh, surface, offset, data)
-}
-
-/**
- * Updates the skin buffer of the mesh surface with the given `data`. The expected data per skin is
- * 8 or 12 bytes (4 bytes per float, 2 floats per `Vector2`, and 3 floats per `Vector3`) depending
- * on if the mesh is using `Vector2` or `Vector3` vertices. This value can be determined with
- * `mesh_surface_get_format_skin_stride` instead. The starting point of the updates can be changed
- * with `offset`. The value of `offset` should be a multiple of 12 bytes in most cases to align to
- * each skin. A `PackedVector3Array` of skin locations can be converted into a `PackedByteArray`
- * using `PackedVector3Array.to_byte_array` for use in `data`.
- *
- * Generated from Godot docs: RenderingServer.mesh_surface_update_skin_region
- */
-fun RenderingServer.meshSurfaceUpdateSkinRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-    ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateSkinRegionBind, renderingServerSingleton, mesh, surface, offset, data)
-}
-
-/**
- * Updates the index buffer of the mesh surface with the given `data`. The expected data are 16 or
- * 32-bit unsigned integers, which can be determined with `mesh_surface_get_format_index_stride`.
- *
- * Generated from Godot docs: RenderingServer.mesh_surface_update_index_region
- */
-fun RenderingServer.meshSurfaceUpdateIndexRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-    ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateIndexRegionBind, renderingServerSingleton, mesh, surface, offset, data)
-}
-
-/**
- * Set the entire data to use for drawing the `multimesh` at once to `buffer` (such as instance
- * transforms and colors). `buffer`'s size must match the number of instances multiplied by the
- * per-instance data size (which depends on the enabled MultiMesh fields). Otherwise, an error
- * message is printed and nothing is rendered. See also `multimesh_get_buffer`. The per-instance
- * data size and expected data order is:
- *
- * Generated from Godot docs: RenderingServer.multimesh_set_buffer
- */
-fun RenderingServer.multimeshSetBuffer(multimesh: RID, buffer: List<Float>) {
-    ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArg(multimeshSetBufferBind, renderingServerSingleton, multimesh, buffer)
-}
-
-/**
- * Alternative version of `multimesh_set_buffer` for use with physics interpolation. Takes both an
- * array of current data and an array of data for the previous physics tick.
- *
- * Generated from Godot docs: RenderingServer.multimesh_set_buffer_interpolated
- */
-fun RenderingServer.multimeshSetBufferInterpolated(multimesh: RID, buffer: List<Float>, bufferPrevious: List<Float>) {
-    ObjectCalls.ptrcallWithRIDAndTwoPackedFloat32ListArgs(multimeshSetBufferInterpolatedBind, renderingServerSingleton, multimesh, buffer, bufferPrevious)
-}
-
-/**
- * Allocates and initializes the voxel GI data for the specified `voxel_gi` RID. `octree_cells`
- * must be a multiple of 32. `octree_cells` must be double the size of `data_cells`. The allocated
- * data can be retrieved later using the various `voxel_gi_get_*` methods.
- *
- * Generated from Godot docs: RenderingServer.voxel_gi_allocate_data
- */
-fun RenderingServer.voxelGiAllocateData(voxelGi: RID, toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3i, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
-    ObjectCalls.ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs(voxelGiAllocateDataBind, renderingServerSingleton, voxelGi, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
-}
-
-/**
- * Sets the probe capture data for the given lightmap instance. See
- * `lightmap_get_probe_capture_points`, `lightmap_get_probe_capture_sh`,
- * `lightmap_get_probe_capture_tetrahedra`, and `lightmap_get_probe_capture_bsp_tree` for the
- * expected data formats.
- *
- * Generated from Godot docs: RenderingServer.lightmap_set_probe_capture_data
- */
-fun RenderingServer.lightmapSetProbeCaptureData(lightmap: RID, points: List<Vector3>, pointSh: List<Color>, tetrahedra: List<Int>, bspTree: List<Int>) {
-    ObjectCalls.ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs(lightmapSetProbeCaptureDataBind, renderingServerSingleton, lightmap, points, pointSh, tetrahedra, bspTree)
 }
 
 /**
@@ -287,16 +201,6 @@ fun RenderingServer.particlesSetTrailBindPoses(particles: RID, bindPoses: List<T
 }
 
 /**
- * Sets the mesh data for the given occluder RID, which controls the shape of the occlusion culling
- * that will be performed.
- *
- * Generated from Godot docs: RenderingServer.occluder_set_mesh
- */
-fun RenderingServer.occluderSetMesh(occluder: RID, vertices: List<Vector3>, indices: List<Int>) {
-    ObjectCalls.ptrcallWithRIDPackedVector3ListPackedInt32ListArgs(occluderSetMeshBind, renderingServerSingleton, occluder, vertices, indices)
-}
-
-/**
  * Sets the compositor effects for the specified compositor RID. `effects` should be an array
  * containing RIDs created with `compositor_effect_create`.
  *
@@ -307,16 +211,6 @@ fun RenderingServer.compositorSetCompositorEffects(compositor: RID, effects: Lis
 }
 
 /**
- * Configures glow for the specified environment RID. See `glow_*` properties in `Environment` for
- * more information.
- *
- * Generated from Godot docs: RenderingServer.environment_set_glow
- */
-fun RenderingServer.environmentSetGlow(env: RID, enable: Boolean, levels: List<Float>, intensity: Double, strength: Double, mix: Double, bloomThreshold: Double, blendMode: Long, hdrBleedThreshold: Double, hdrBleedScale: Double, hdrLuminanceCap: Double, glowMapStrength: Double, glowMap: RID) {
-    ObjectCalls.ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(environmentSetGlowBind, renderingServerSingleton, env, enable, levels, intensity, strength, mix, bloomThreshold, blendMode, hdrBleedThreshold, hdrBleedScale, hdrLuminanceCap, glowMapStrength, glowMap)
-}
-
-/**
  * Sets the per-instance shader uniform on the specified 3D geometry instance. Equivalent to
  * `GeometryInstance3D.set_instance_shader_parameter`.
  *
@@ -324,6 +218,18 @@ fun RenderingServer.environmentSetGlow(env: RID, enable: Boolean, levels: List<F
  */
 fun RenderingServer.instanceGeometrySetShaderParameter(instance: RID, parameter: String, value: Any?) {
     ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(instanceGeometrySetShaderParameterBind, renderingServerSingleton, instance, parameter, value)
+}
+
+/**
+ * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
+ * from the specified 3D geometry instance. The returned dictionary is in PropertyInfo format, with
+ * the keys `name`, `class_name`, `type`, `hint`, `hint_string` and `usage`. Equivalent to
+ * `GeometryInstance3D.get_instance_shader_parameter`.
+ *
+ * Generated from Godot docs: RenderingServer.instance_geometry_get_shader_parameter_list
+ */
+fun RenderingServer.instanceGeometryGetShaderParameterList(instance: RID): List<Map<String, Any?>> {
+    return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(instanceGeometryGetShaderParameterListBind, renderingServerSingleton, instance)
 }
 
 /**
@@ -352,63 +258,6 @@ fun RenderingServer.bakeRenderUv2(base: RID, materialOverrides: List<RID>, image
 }
 
 /**
- * Draws a 2D polyline on the `CanvasItem` pointed to by the `item` `RID`. See also
- * `CanvasItem.draw_polyline` and `CanvasItem.draw_polyline_colors`.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_add_polyline
- */
-fun RenderingServer.canvasItemAddPolyline(item: RID, points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-    ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(canvasItemAddPolylineBind, renderingServerSingleton, item, points, colors, width, antialiased)
-}
-
-/**
- * Draws a 2D multiline on the `CanvasItem` pointed to by the `item` `RID`. See also
- * `CanvasItem.draw_multiline` and `CanvasItem.draw_multiline_colors`.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_add_multiline
- */
-fun RenderingServer.canvasItemAddMultiline(item: RID, points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-    ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(canvasItemAddMultilineBind, renderingServerSingleton, item, points, colors, width, antialiased)
-}
-
-/**
- * Draws a 2D primitive on the `CanvasItem` pointed to by the `item` `RID`. See also
- * `CanvasItem.draw_primitive`.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_add_primitive
- */
-fun RenderingServer.canvasItemAddPrimitive(item: RID, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: RID) {
-    ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(canvasItemAddPrimitiveBind, renderingServerSingleton, item, points, colors, uvs, texture)
-}
-
-/**
- * Draws a 2D polygon on the `CanvasItem` pointed to by the `item` `RID`. If you need more
- * flexibility (such as being able to use bones), use `canvas_item_add_triangle_array` instead. See
- * also `CanvasItem.draw_polygon`. Note: If you frequently redraw the same polygon with a large
- * number of vertices, consider pre-calculating the triangulation with
- * `Geometry2D.triangulate_polygon` and using `CanvasItem.draw_mesh`, `CanvasItem.draw_multimesh`,
- * or `canvas_item_add_triangle_array`.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_add_polygon
- */
-fun RenderingServer.canvasItemAddPolygon(item: RID, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: RID) {
-    ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(canvasItemAddPolygonBind, renderingServerSingleton, item, points, colors, uvs, texture)
-}
-
-/**
- * Draws a triangle array on the `CanvasItem` pointed to by the `item` `RID`. This is internally
- * used by `Line2D` and `StyleBoxFlat` for rendering. `canvas_item_add_triangle_array` is highly
- * flexible, but more complex to use than `canvas_item_add_polygon`. Note: If `count` is set to a
- * non-negative value, only the first `count * 3` indices (corresponding to `count` triangles) will
- * be drawn. Otherwise, all indices are drawn.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_add_triangle_array
- */
-fun RenderingServer.canvasItemAddTriangleArray(item: RID, indices: List<Int>, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, bones: List<Int>, weights: List<Float>, texture: RID, count: Int = -1) {
-    ObjectCalls.ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs(canvasItemAddTriangleArrayBind, renderingServerSingleton, item, indices, points, colors, uvs, bones, weights, texture, count)
-}
-
-/**
  * Sets the per-instance shader uniform on the specified canvas item instance. Equivalent to
  * `CanvasItem.set_instance_shader_parameter`.
  *
@@ -419,12 +268,14 @@ fun RenderingServer.canvasItemSetInstanceShaderParameter(instance: RID, paramete
 }
 
 /**
- * Sets the shape of the occluder polygon.
+ * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
+ * from the specified canvas item instance. The returned dictionary is in PropertyInfo format, with
+ * the keys `name`, `class_name`, `type`, `hint`, `hint_string`, and `usage`.
  *
- * Generated from Godot docs: RenderingServer.canvas_occluder_polygon_set_shape
+ * Generated from Godot docs: RenderingServer.canvas_item_get_instance_shader_parameter_list
  */
-fun RenderingServer.canvasOccluderPolygonSetShape(occluderPolygon: RID, shape: List<Vector2>, closed: Boolean) {
-    ObjectCalls.ptrcallWithRIDPackedVector2ListAndBoolArg(canvasOccluderPolygonSetShapeBind, renderingServerSingleton, occluderPolygon, shape, closed)
+fun RenderingServer.canvasItemGetInstanceShaderParameterList(instance: RID): List<Map<String, Any?>> {
+    return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(canvasItemGetInstanceShaderParameterListBind, renderingServerSingleton, instance)
 }
 
 /**
@@ -484,6 +335,11 @@ private val texture3dGetBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "texture_3d_get", TEXTURE_3D_GET_HASH)
 }
 
+private const val GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
+private val getShaderParameterListBind by lazy {
+    ObjectCalls.getMethodBind("RenderingServer", "get_shader_parameter_list", GET_SHADER_PARAMETER_LIST_HASH)
+}
+
 private const val MATERIAL_SET_PARAM_HASH = 3477296213L
 private val materialSetParamBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "material_set_param", MATERIAL_SET_PARAM_HASH)
@@ -504,49 +360,19 @@ private val meshAddSurfaceFromArraysBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "mesh_add_surface_from_arrays", MESH_ADD_SURFACE_FROM_ARRAYS_HASH)
 }
 
+private const val MESH_GET_SURFACE_HASH = 186674697L
+private val meshGetSurfaceBind by lazy {
+    ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface", MESH_GET_SURFACE_HASH)
+}
+
+private const val MESH_SURFACE_GET_ARRAYS_HASH = 1778388067L
+private val meshSurfaceGetArraysBind by lazy {
+    ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_arrays", MESH_SURFACE_GET_ARRAYS_HASH)
+}
+
 private const val MESH_SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH = 1778388067L
 private val meshSurfaceGetBlendShapeArraysBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_blend_shape_arrays", MESH_SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH)
-}
-
-private const val MESH_SURFACE_UPDATE_VERTEX_REGION_HASH = 2900195149L
-private val meshSurfaceUpdateVertexRegionBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_vertex_region", MESH_SURFACE_UPDATE_VERTEX_REGION_HASH)
-}
-
-private const val MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH = 2900195149L
-private val meshSurfaceUpdateAttributeRegionBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_attribute_region", MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH)
-}
-
-private const val MESH_SURFACE_UPDATE_SKIN_REGION_HASH = 2900195149L
-private val meshSurfaceUpdateSkinRegionBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_skin_region", MESH_SURFACE_UPDATE_SKIN_REGION_HASH)
-}
-
-private const val MESH_SURFACE_UPDATE_INDEX_REGION_HASH = 2900195149L
-private val meshSurfaceUpdateIndexRegionBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_index_region", MESH_SURFACE_UPDATE_INDEX_REGION_HASH)
-}
-
-private const val MULTIMESH_SET_BUFFER_HASH = 2960552364L
-private val multimeshSetBufferBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer", MULTIMESH_SET_BUFFER_HASH)
-}
-
-private const val MULTIMESH_SET_BUFFER_INTERPOLATED_HASH = 659844711L
-private val multimeshSetBufferInterpolatedBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer_interpolated", MULTIMESH_SET_BUFFER_INTERPOLATED_HASH)
-}
-
-private const val VOXEL_GI_ALLOCATE_DATA_HASH = 4108223027L
-private val voxelGiAllocateDataBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_allocate_data", VOXEL_GI_ALLOCATE_DATA_HASH)
-}
-
-private const val LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH = 3217845880L
-private val lightmapSetProbeCaptureDataBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_capture_data", LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH)
 }
 
 private const val PARTICLES_SET_TRAIL_BIND_POSES_HASH = 684822712L
@@ -554,24 +380,19 @@ private val particlesSetTrailBindPosesBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "particles_set_trail_bind_poses", PARTICLES_SET_TRAIL_BIND_POSES_HASH)
 }
 
-private const val OCCLUDER_SET_MESH_HASH = 3854404263L
-private val occluderSetMeshBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "occluder_set_mesh", OCCLUDER_SET_MESH_HASH)
-}
-
 private const val COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH = 684822712L
 private val compositorSetCompositorEffectsBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "compositor_set_compositor_effects", COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH)
 }
 
-private const val ENVIRONMENT_SET_GLOW_HASH = 2421724940L
-private val environmentSetGlowBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "environment_set_glow", ENVIRONMENT_SET_GLOW_HASH)
-}
-
 private const val INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH = 3477296213L
 private val instanceGeometrySetShaderParameterBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_shader_parameter", INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH)
+}
+
+private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
+private val instanceGeometryGetShaderParameterListBind by lazy {
+    ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_list", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH)
 }
 
 private const val INSTANCES_CULL_CONVEX_HASH = 2488539944L
@@ -584,39 +405,14 @@ private val bakeRenderUv2Bind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "bake_render_uv2", BAKE_RENDER_UV2_HASH)
 }
 
-private const val CANVAS_ITEM_ADD_POLYLINE_HASH = 3098767073L
-private val canvasItemAddPolylineBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polyline", CANVAS_ITEM_ADD_POLYLINE_HASH)
-}
-
-private const val CANVAS_ITEM_ADD_MULTILINE_HASH = 3098767073L
-private val canvasItemAddMultilineBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_multiline", CANVAS_ITEM_ADD_MULTILINE_HASH)
-}
-
-private const val CANVAS_ITEM_ADD_PRIMITIVE_HASH = 3731601077L
-private val canvasItemAddPrimitiveBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_primitive", CANVAS_ITEM_ADD_PRIMITIVE_HASH)
-}
-
-private const val CANVAS_ITEM_ADD_POLYGON_HASH = 3580000528L
-private val canvasItemAddPolygonBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polygon", CANVAS_ITEM_ADD_POLYGON_HASH)
-}
-
-private const val CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH = 660261329L
-private val canvasItemAddTriangleArrayBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_triangle_array", CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH)
-}
-
 private const val CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH = 3477296213L
 private val canvasItemSetInstanceShaderParameterBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_instance_shader_parameter", CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH)
 }
 
-private const val CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH = 2103882027L
-private val canvasOccluderPolygonSetShapeBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_set_shape", CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH)
+private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH = 2684255073L
+private val canvasItemGetInstanceShaderParameterListBind by lazy {
+    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_list", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH)
 }
 
 private const val GLOBAL_SHADER_PARAMETER_ADD_HASH = 463390080L
