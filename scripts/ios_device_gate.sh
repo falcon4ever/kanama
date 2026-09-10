@@ -10,6 +10,7 @@ RUN_FRESH=1
 RUN_DEMOS=1
 ALLOW_PROVISIONING_UPDATES=0
 PAUSE_SECONDS=8
+BUILD_JOBS=1
 DEVICE_LABEL="${KANAMA_IOS_DEVICE_LABEL:-}"
 START_AT=""
 CLEAN_INSTALLED=1
@@ -54,6 +55,13 @@ Options:
                                known Kanama gate apps before installing the
                                next one, but leaves the active app installed.
   --pause-seconds N            Warning countdown before each device launch.
+  --build-jobs N               Build the demo apps N at a time (default 1). Each job builds in
+                               its own throwaway worktree of this repo at HEAD (the tree must be
+                               clean), because installIosAddon writes into the repo's build
+                               directories; the device steps still run one demo at a time, in
+                               order. Needs a demos checkout whose ios_device_run.sh supports
+                               KANAMA_IOS_RUN_STAGE. The native link of each demo runs on one
+                               core, so N=3 or 4 on a 10-core Mac cuts the run roughly N-fold.
   --help, -h                   Show this help.
 
 The script reads private device/signing values only from the environment. Do not
@@ -109,6 +117,10 @@ while [[ $# -gt 0 ]]; do
       PAUSE_SECONDS="${2:-}"
       shift 2
       ;;
+    --build-jobs)
+      BUILD_JOBS="${2:-}"
+      shift 2
+      ;;
     --help|-h)
       usage
       exit 0
@@ -156,6 +168,20 @@ fi
 if ! [[ "$PAUSE_SECONDS" =~ ^[0-9]+$ ]]; then
   echo "[ios_device_gate] --pause-seconds must be a non-negative integer." >&2
   exit 2
+fi
+if ! [[ "$BUILD_JOBS" =~ ^[1-9][0-9]*$ ]]; then
+  echo "[ios_device_gate] --build-jobs must be a positive integer." >&2
+  exit 2
+fi
+if [[ "$BUILD_JOBS" -gt 1 && "$RUN_DEMOS" -eq 1 ]]; then
+  if ! grep -q "KANAMA_IOS_RUN_STAGE" "$DEMOS_ROOT/scripts/ios_device_run.sh"; then
+    echo "[ios_device_gate] --build-jobs > 1 needs a demos checkout whose scripts/ios_device_run.sh supports KANAMA_IOS_RUN_STAGE." >&2
+    exit 2
+  fi
+  if [[ -n "$(git -C "$ROOT_DIR" status --porcelain)" ]]; then
+    echo "[ios_device_gate] --build-jobs > 1 builds in worktrees of HEAD; commit or stash the working tree first (it is dirty)." >&2
+    exit 2
+  fi
 fi
 
 if [[ -z "$OUTPUT_DIR" ]]; then
@@ -352,11 +378,9 @@ if [[ "$RUN_FRESH" -eq 1 ]]; then
   run_step "fresh-starter-project" "$OUTPUT_DIR/fresh-starter.log" "${fresh_args[@]}" || true
 fi
 
-if [[ "$RUN_DEMOS" -eq 1 ]]; then
-  start_found=0
-  if [[ -z "$START_AT" ]]; then
-    start_found=1
-  fi
+# Demo matrix, serial (the original path): build + install + launch per demo, in order.
+run_demo_matrix_serial() {
+  local i
   for i in "${!demo_names[@]}"; do
     if [[ "$start_found" -eq 0 ]]; then
       if [[ "$START_AT" == "${demo_names[$i]}" || "$START_AT" == "${demo_dirs[$i]}" || "$START_AT" == "${demo_apps[$i]}" ]]; then
@@ -384,12 +408,115 @@ if [[ "$RUN_DEMOS" -eq 1 ]]; then
       "${demo_apps[$i]}" \
       "$OUTPUT_DIR/${demo_apps[$i]}" || true
   done
+}
+
+# Demo matrix, parallel builds: phase 1 builds the apps BUILD_JOBS at a time, each job in its own
+# worktree of this repo at HEAD (installIosAddon writes into the repo's build directories, so two
+# builds cannot share one checkout); phase 2 installs and launches one demo at a time, in the
+# original order, exactly like the serial path. A demo whose build failed is recorded FAIL and its
+# launch is skipped. Build logs: <app>.build.log; launch logs: <app>.log.
+run_demo_matrix_parallel() {
+  local roots_dir="$OUTPUT_DIR/build-roots"
+  local -a job_roots=()
+  local k i
+  mkdir -p "$roots_dir"
+  for ((k = 0; k < BUILD_JOBS; k++)); do
+    local root="$roots_dir/job$k"
+    git -C "$ROOT_DIR" worktree add --detach --quiet "$root" HEAD
+    job_roots+=("$root")
+  done
+  echo "[ios_device_gate] build phase: ${#demo_names[@]} demos, $BUILD_JOBS job(s), worktrees under $roots_dir"
+  local build_started
+  build_started="$(date +%s)"
+  local -a selected=()
+  local found=$start_found
+  for i in "${!demo_names[@]}"; do
+    if [[ "$found" -eq 0 ]]; then
+      if [[ "$START_AT" == "${demo_names[$i]}" || "$START_AT" == "${demo_dirs[$i]}" || "$START_AT" == "${demo_apps[$i]}" ]]; then
+        found=1
+      else
+        append_result "${demo_names[$i]}" "SKIP" "0" "resumed after this demo"
+        continue
+      fi
+    fi
+    if [[ ! -f "$DEMOS_ROOT/${demo_dirs[$i]}/project.godot" ]]; then
+      echo "[ios_device_gate] Missing demo project: $DEMOS_ROOT/${demo_dirs[$i]}" >&2
+      append_result "${demo_names[$i]}" "FAIL" "0" "missing project.godot"
+      exit 1
+    fi
+    selected+=("$i")
+    prepare_demo_copy "$DEMOS_ROOT/${demo_dirs[$i]}" "${demo_apps[$i]}" >/dev/null
+  done
+  start_found=$found
+  # Round-robin the selected demos over the jobs; each job builds its share sequentially.
+  local -a pids=()
+  for ((k = 0; k < BUILD_JOBS; k++)); do
+    (
+      local n
+      for ((n = k; n < ${#selected[@]}; n += BUILD_JOBS)); do
+        i="${selected[$n]}"
+        local app="${demo_apps[$i]}"
+        local log="$OUTPUT_DIR/$app.build.log"
+        local t0 t1
+        t0="$(date +%s)"
+        if KANAMA_ROOT="${job_roots[$k]}" KANAMA_IOS_RUN_STAGE=build \
+           KANAMA_IOS_RUN_GRADLE_ARGS="--no-daemon -Pkotlin.compiler.execution.strategy=in-process" \
+           "$DEMOS_ROOT/scripts/ios_device_run.sh" "$GODOT_BIN" "$OUTPUT_DIR/project-copies/$app" \
+           "$GATE_BUNDLE_ID" "$app" "$OUTPUT_DIR/$app" >"$log" 2>&1; then
+          t1="$(date +%s)"; echo "$((t1 - t0))" >"$OUTPUT_DIR/$app.build.ok"
+          echo "[ios_device_gate] BUILT ${demo_names[$i]} (job $k, $((t1 - t0))s)"
+        else
+          t1="$(date +%s)"; echo "$((t1 - t0))" >"$OUTPUT_DIR/$app.build.failed"
+          echo "[ios_device_gate] BUILD FAILED ${demo_names[$i]} (job $k, $((t1 - t0))s); see $log" >&2
+        fi
+      done
+    ) &
+    pids+=("$!")
+  done
+  local pid
+  for pid in "${pids[@]}"; do wait "$pid" || true; done
+  local build_ended
+  build_ended="$(date +%s)"
+  echo "[ios_device_gate] build phase done in $((build_ended - build_started))s"
+  for ((k = 0; k < BUILD_JOBS; k++)); do
+    git -C "$ROOT_DIR" worktree remove --force "${job_roots[$k]}" >/dev/null 2>&1 || true
+  done
+  # Phase 2: the device, one demo at a time, in order.
+  local idx
+  for idx in "${selected[@]}"; do
+    local app="${demo_apps[$idx]}"
+    if [[ -f "$OUTPUT_DIR/$app.build.failed" ]]; then
+      append_result "${demo_names[$idx]}" "FAIL" "$(cat "$OUTPUT_DIR/$app.build.failed")" "$OUTPUT_DIR/$app.build.log"
+      continue
+    fi
+    uninstall_other_gate_bundles "$GATE_BUNDLE_ID"
+    KANAMA_IOS_RUN_STAGE=launch run_step \
+      "${demo_names[$idx]}" \
+      "$OUTPUT_DIR/$app.log" \
+      "$DEMOS_ROOT/scripts/ios_device_run.sh" \
+      "$GODOT_BIN" \
+      "$OUTPUT_DIR/project-copies/$app" \
+      "$GATE_BUNDLE_ID" \
+      "$app" \
+      "$OUTPUT_DIR/$app" || true
+  done
+}
+
+if [[ "$RUN_DEMOS" -eq 1 ]]; then
+  start_found=0
+  if [[ -z "$START_AT" ]]; then
+    start_found=1
+  fi
+  if [[ "$BUILD_JOBS" -gt 1 ]]; then
+    run_demo_matrix_parallel
+  else
+    run_demo_matrix_serial
+  fi
   if [[ "$start_found" -eq 0 ]]; then
     echo "[ios_device_gate] --start-at did not match any demo: $START_AT" >&2
     exit 2
   fi
 fi
-
 if rg -q $'\tFAIL\t' "$RESULTS_TSV"; then
   echo "[ios_device_gate] one or more gate steps failed; summary: $SUMMARY" >&2
   exit 1
