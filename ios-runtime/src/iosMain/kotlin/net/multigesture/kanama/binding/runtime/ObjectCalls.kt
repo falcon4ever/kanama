@@ -3750,21 +3750,25 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check("packed-arg(NavigationPolygon.add_polygon int32 round-trip)", argIdxBack == argIdx)
   ObjectCalls.destroyObject(argNav)
 
-  val argShape = ObjectCalls.constructObject("ConvexPolygonShape3D")
+  // NavigationMesh, not a Shape3D: every Shape3D constructor calls PhysicsServer3D::shape_create and
+  // the physics servers do not exist yet when this self-test runs (scene-level extension init is
+  // before Main::setup2 creates them) — a ConvexPolygonShape3D here segfaulted on the iPhone 12
+  // (2026-09-10). NavigationMesh is a plain data resource with the same PackedVector3Array shape.
+  val argNavMesh = ObjectCalls.constructObject("NavigationMesh")
   val argVerts =
     listOf(Vector3(0f, 0f, 0f), Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f))
   ObjectCalls.ptrcallWithPackedVector3ListArg(
-    ObjectCalls.getMethodBind("ConvexPolygonShape3D", "set_points", 334873810L),
-    argShape,
+    ObjectCalls.getMethodBind("NavigationMesh", "set_vertices", 334873810L),
+    argNavMesh,
     argVerts,
   )
   val argVertsBack =
     ObjectCalls.ptrcallNoArgsRetPackedVector3List(
-      ObjectCalls.getMethodBind("ConvexPolygonShape3D", "get_points", 497664490L),
-      argShape,
+      ObjectCalls.getMethodBind("NavigationMesh", "get_vertices", 497664490L),
+      argNavMesh,
     )
-  check("packed-arg(ConvexPolygonShape3D.set_points Vector3 round-trip)", argVertsBack == argVerts)
-  ObjectCalls.destroyObject(argShape)
+  check("packed-arg(NavigationMesh.set_vertices Vector3 round-trip)", argVertsBack == argVerts)
+  ObjectCalls.destroyObject(argNavMesh)
 
   val argParticles = ObjectCalls.constructObject("CPUParticles2D")
   val argColors = listOf(Color(1f, 0f, 0f, 1f), Color(0f, 0.5f, 0f, 0.25f))
