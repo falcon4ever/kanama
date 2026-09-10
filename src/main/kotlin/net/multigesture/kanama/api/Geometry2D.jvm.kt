@@ -9,8 +9,7 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Geometry2D waits on: ptrcallWithPackedVector2ListArgRetDictionary,
-//   ptrcallWithPackedVector2ListArgRetPackedVector2ListList,
+// KANAMA-IOS-GAP Geometry2D waits on: ptrcallWithPackedVector2ListArgRetPackedVector2ListList,
 //   ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList,
 //   ptrcallWithPackedVector2ListDoubleAndTwoLongArgsRetPackedVector2ListList,
 //   ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList,
@@ -132,17 +131,6 @@ fun Geometry2D.offsetPolyline(polyline: List<Vector2>, delta: Double, joinType: 
 }
 
 /**
- * Given an array of `Vector2`s representing tiles, builds an atlas. The returned dictionary has
- * two keys: `points` is a `PackedVector2Array` that specifies the positions of each tile, `size`
- * contains the overall size of the whole atlas as `Vector2i`.
- *
- * Generated from Godot docs: Geometry2D.make_atlas
- */
-fun Geometry2D.makeAtlas(sizes: List<Vector2>): Map<String, Any?> {
-    return ObjectCalls.ptrcallWithPackedVector2ListArgRetDictionary(makeAtlasBind, geometry2DSingleton, sizes)
-}
-
-/**
  * Returns the Bresenham line (https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm) between
  * the `from` and `to` points. A Bresenham line is a series of pixels that draws a line and is
  * always 1-pixel thick on every row and column of the drawing (never more, never less). Example
@@ -201,11 +189,6 @@ private val offsetPolygonBind by lazy {
 private const val OFFSET_POLYLINE_HASH = 2328231778L
 private val offsetPolylineBind by lazy {
     ObjectCalls.getMethodBind("Geometry2D", "offset_polyline", OFFSET_POLYLINE_HASH)
-}
-
-private const val MAKE_ATLAS_HASH = 1337682371L
-private val makeAtlasBind by lazy {
-    ObjectCalls.getMethodBind("Geometry2D", "make_atlas", MAKE_ATLAS_HASH)
 }
 
 private const val BRESENHAM_LINE_HASH = 1989391000L

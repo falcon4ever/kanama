@@ -187,6 +187,18 @@ object Geometry2D {
         return ObjectCalls.ptrcallWithPackedVector2ListArgRetPackedVector2List(convexHullBind, singleton, points)
     }
 
+    /**
+     * Given an array of `Vector2`s representing tiles, builds an atlas. The returned dictionary has
+     * two keys: `points` is a `PackedVector2Array` that specifies the positions of each tile, `size`
+     * contains the overall size of the whole atlas as `Vector2i`.
+     *
+     * Generated from Godot docs: Geometry2D.make_atlas
+     */
+    @JvmStatic
+    fun makeAtlas(sizes: List<Vector2>): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetDictionary(makeAtlasBind, singleton, sizes)
+    }
+
     @JvmStatic
     fun fromHandle(handle: MemorySegment): Geometry2D? =
         wrap(handle)
@@ -257,5 +269,10 @@ object Geometry2D {
     private const val CONVEX_HULL_HASH = 2004331998L
     private val convexHullBind by lazy {
         ObjectCalls.getMethodBind("Geometry2D", "convex_hull", CONVEX_HULL_HASH)
+    }
+
+    private const val MAKE_ATLAS_HASH = 1337682371L
+    private val makeAtlasBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "make_atlas", MAKE_ATLAS_HASH)
     }
 }

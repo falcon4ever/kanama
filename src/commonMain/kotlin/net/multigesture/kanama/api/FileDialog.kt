@@ -305,6 +305,16 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
     }
 
     /**
+     * Returns a `Dictionary` with the selected values of the additional `OptionButton`s and/or
+     * `CheckBox`es. `Dictionary` keys are names and values are selected value indices.
+     *
+     * Generated from Godot docs: FileDialog.get_selected_options
+     */
+    fun getSelectedOptions(): Map<String, Any?> {
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSelectedOptionsBind, handle)
+    }
+
+    /**
      * The current working directory of the file dialog. Note: For native file dialogs, this property
      * is only treated as a hint and may not be respected by specific OS implementations.
      *
@@ -763,6 +773,11 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
         private const val ADD_OPTION_HASH = 149592325L
         private val addOptionBind by lazy {
             ObjectCalls.getMethodBind("FileDialog", "add_option", ADD_OPTION_HASH)
+        }
+
+        private const val GET_SELECTED_OPTIONS_HASH = 3102165223L
+        private val getSelectedOptionsBind by lazy {
+            ObjectCalls.getMethodBind("FileDialog", "get_selected_options", GET_SELECTED_OPTIONS_HASH)
         }
 
         private const val GET_CURRENT_DIR_HASH = 201670096L

@@ -360,6 +360,34 @@ object OS {
     }
 
     /**
+     * Creates a new process that runs independently of Godot with redirected IO. It will not terminate
+     * when Godot terminates. The path specified in `path` must exist and be an executable file or
+     * macOS `.app` bundle. The path is resolved based on the current platform. The `arguments` are
+     * used in the given order and separated by a space. If `blocking` is `false`, created pipes work
+     * in non-blocking mode, i.e. read and write operations will return immediately. Use
+     * `FileAccess.get_error` to check if the last read/write operation was successful. If the process
+     * cannot be created, this method returns an empty `Dictionary`. Otherwise, this method returns a
+     * `Dictionary` with the following keys: - `"stdio"` - `FileAccess` to access the process stdin and
+     * stdout pipes (read/write). - `"stderr"` - `FileAccess` to access the process stderr pipe (read
+     * only). - `"pid"` - Process ID as an `int`, which you can use to monitor the process (and
+     * potentially terminate it with `kill`). Note: This method is implemented on Android, Linux,
+     * macOS, and Windows. Note: To execute a Windows command interpreter built-in command, specify
+     * `cmd.exe` in `path`, `/c` as the first argument, and the desired command as the second argument.
+     * Note: To execute a PowerShell built-in command, specify `powershell.exe` in `path`, `-Command`
+     * as the first argument, and the desired command as the second argument. Note: To execute a Unix
+     * shell built-in command, specify shell executable name in `path`, `-c` as the first argument, and
+     * the desired command as the second argument. Note: On macOS, sandboxed applications are limited
+     * to run only embedded helper executables, specified during export or system .app bundle, system
+     * .app bundles will ignore arguments.
+     *
+     * Generated from Godot docs: OS.execute_with_pipe
+     */
+    @JvmStatic
+    fun executeWithPipe(path: String, arguments: List<String>, blocking: Boolean = true): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithStringPackedStringListBoolArgsRetDictionary(executeWithPipeBind, singleton, path, arguments, blocking)
+    }
+
+    /**
      * Creates a new process that runs independently of Godot. It will not terminate when Godot
      * terminates. The path specified in `path` must exist and be an executable file or macOS `.app`
      * bundle. The path is resolved based on the current platform. The `arguments` are used in the
@@ -1277,6 +1305,11 @@ object OS {
     private const val GET_STDERR_TYPE_HASH = 1704816237L
     private val getStderrTypeBind by lazy {
         ObjectCalls.getMethodBind("OS", "get_stderr_type", GET_STDERR_TYPE_HASH)
+    }
+
+    private const val EXECUTE_WITH_PIPE_HASH = 2851312030L
+    private val executeWithPipeBind by lazy {
+        ObjectCalls.getMethodBind("OS", "execute_with_pipe", EXECUTE_WITH_PIPE_HASH)
     }
 
     private const val CREATE_PROCESS_HASH = 2903767230L

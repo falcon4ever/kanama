@@ -7,45 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP StreamPeer waits on: ptrcallWithByteArrayArgRetArray, ptrcallWithIntArgRetArray,
-//   ptrcallWithVariantAndBoolArg
+// KANAMA-IOS-GAP StreamPeer waits on: ptrcallWithVariantAndBoolArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Sends a chunk of data through the connection. If all the data could not be sent at once, only
- * part of it will. This function returns two values, an `Error` code and an integer, describing
- * how much data was actually sent.
- *
- * Generated from Godot docs: StreamPeer.put_partial_data
- */
-fun StreamPeer.putPartialData(data: ByteArray): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithByteArrayArgRetArray(putPartialDataBind, handle, data)
-}
-
-/**
- * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
- * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
- * bytes are available, the function will block until the desired amount is received.
- *
- * Generated from Godot docs: StreamPeer.get_data
- */
-fun StreamPeer.getData(bytes: Int): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, handle, bytes)
-}
-
-/**
- * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
- * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
- * bytes are available, the function will return how many were actually received.
- *
- * Generated from Godot docs: StreamPeer.get_partial_data
- */
-fun StreamPeer.getPartialData(bytes: Int): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, handle, bytes)
-}
 
 /**
  * Puts a Variant into the stream. If `full_objects` is `true` encoding objects is allowed (and can
@@ -57,21 +20,6 @@ fun StreamPeer.getPartialData(bytes: Int): List<Any?> {
 fun StreamPeer.putVar(value: Any?, fullObjects: Boolean = false) {
     checkOpen()
     ObjectCalls.ptrcallWithVariantAndBoolArg(putVarBind, handle, value, fullObjects)
-}
-
-private const val PUT_PARTIAL_DATA_HASH = 2934048347L
-private val putPartialDataBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "put_partial_data", PUT_PARTIAL_DATA_HASH)
-}
-
-private const val GET_DATA_HASH = 1171824711L
-private val getDataBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "get_data", GET_DATA_HASH)
-}
-
-private const val GET_PARTIAL_DATA_HASH = 1171824711L
-private val getPartialDataBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "get_partial_data", GET_PARTIAL_DATA_HASH)
 }
 
 private const val PUT_VAR_HASH = 738511890L

@@ -11,8 +11,7 @@ import net.multigesture.kanama.types.Rect2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP RichTextLabel waits on: ptrcallWithArrayArg, ptrcallWithObjectAndDictionaryArg,
 //   ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs,
-//   ptrcallWithPackedStringListArgRetDictionary, ptrcallWithVariantArg,
-//   ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs,
+//   ptrcallWithVariantArg, ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs,
 //   ptrcallWithVariantLongStringArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -76,15 +75,6 @@ fun RichTextLabel.setStructuredTextBidiOverrideOptions(args: List<Any?>) {
 }
 
 /**
- * Parses BBCode parameter `expressions` into a dictionary.
- *
- * Generated from Godot docs: RichTextLabel.parse_expressions_for_values
- */
-fun RichTextLabel.parseExpressionsForValues(expressions: List<String>): Map<String, Any?> {
-    return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(parseExpressionsForValuesBind, handle, expressions)
-}
-
-/**
  * The currently installed custom effects. This is an array of `RichTextEffect`s. To add a custom
  * effect, it's more convenient to use `install_effect`.
  *
@@ -127,11 +117,6 @@ private val pushCustomfxBind by lazy {
 private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
 private val setStructuredTextBidiOverrideOptionsBind by lazy {
     ObjectCalls.getMethodBind("RichTextLabel", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-}
-
-private const val PARSE_EXPRESSIONS_FOR_VALUES_HASH = 1522900837L
-private val parseExpressionsForValuesBind by lazy {
-    ObjectCalls.getMethodBind("RichTextLabel", "parse_expressions_for_values", PARSE_EXPRESSIONS_FOR_VALUES_HASH)
 }
 
 private const val SET_EFFECTS_HASH = 381264803L

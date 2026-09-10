@@ -9,8 +9,8 @@ import net.multigesture.kanama.types.Transform3D
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP GLTFSkin waits on: ptrcallNoArgsRetDictionary, ptrcallNoArgsRetTransform3DList,
-//   ptrcallWithDictionaryArg, ptrcallWithTransform3DListArg
+// KANAMA-IOS-GAP GLTFSkin waits on: ptrcallNoArgsRetTransform3DList, ptrcallWithDictionaryArg,
+//   ptrcallWithTransform3DListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFSkin.getInverseBinds(): List<Transform3D> {
@@ -23,19 +23,9 @@ fun GLTFSkin.setInverseBinds(inverseBinds: List<Transform3D>) {
     ObjectCalls.ptrcallWithTransform3DListArg(setInverseBindsBind, handle, inverseBinds)
 }
 
-fun GLTFSkin.getJointIToBoneI(): Map<String, Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToBoneIBind, handle)
-}
-
 fun GLTFSkin.setJointIToBoneI(jointIToBoneI: Map<String, Any?>) {
     checkOpen()
     ObjectCalls.ptrcallWithDictionaryArg(setJointIToBoneIBind, handle, jointIToBoneI)
-}
-
-fun GLTFSkin.getJointIToName(): Map<String, Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToNameBind, handle)
 }
 
 fun GLTFSkin.setJointIToName(jointIToName: Map<String, Any?>) {
@@ -49,18 +39,6 @@ var GLTFSkin.inverseBinds: List<Transform3D>
     @JvmName("setInverseBindsProperty")
     set(value) = setInverseBinds(value)
 
-var GLTFSkin.jointIToBoneI: Map<String, Any?>
-    @JvmName("jointIToBoneIProperty")
-    get() = getJointIToBoneI()
-    @JvmName("setJointIToBoneIProperty")
-    set(value) = setJointIToBoneI(value)
-
-var GLTFSkin.jointIToName: Map<String, Any?>
-    @JvmName("jointIToNameProperty")
-    get() = getJointIToName()
-    @JvmName("setJointIToNameProperty")
-    set(value) = setJointIToName(value)
-
 private const val GET_INVERSE_BINDS_HASH = 2915620761L
 private val getInverseBindsBind by lazy {
     ObjectCalls.getMethodBind("GLTFSkin", "get_inverse_binds", GET_INVERSE_BINDS_HASH)
@@ -71,19 +49,9 @@ private val setInverseBindsBind by lazy {
     ObjectCalls.getMethodBind("GLTFSkin", "set_inverse_binds", SET_INVERSE_BINDS_HASH)
 }
 
-private const val GET_JOINT_I_TO_BONE_I_HASH = 2382534195L
-private val getJointIToBoneIBind by lazy {
-    ObjectCalls.getMethodBind("GLTFSkin", "get_joint_i_to_bone_i", GET_JOINT_I_TO_BONE_I_HASH)
-}
-
 private const val SET_JOINT_I_TO_BONE_I_HASH = 4155329257L
 private val setJointIToBoneIBind by lazy {
     ObjectCalls.getMethodBind("GLTFSkin", "set_joint_i_to_bone_i", SET_JOINT_I_TO_BONE_I_HASH)
-}
-
-private const val GET_JOINT_I_TO_NAME_HASH = 2382534195L
-private val getJointIToNameBind by lazy {
-    ObjectCalls.getMethodBind("GLTFSkin", "get_joint_i_to_name", GET_JOINT_I_TO_NAME_HASH)
 }
 
 private const val SET_JOINT_I_TO_NAME_HASH = 4155329257L

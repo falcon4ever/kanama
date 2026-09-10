@@ -1459,6 +1459,15 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Parses BBCode parameter `expressions` into a dictionary.
+     *
+     * Generated from Godot docs: RichTextLabel.parse_expressions_for_values
+     */
+    fun parseExpressionsForValues(expressions: List<String>): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(parseExpressionsForValuesBind, handle, expressions)
+    }
+
+    /**
      * The currently installed custom effects. This is an array of `RichTextEffect`s. To add a custom
      * effect, it's more convenient to use `install_effect`.
      *
@@ -2167,6 +2176,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         private const val GET_PARAGRAPH_OFFSET_HASH = 4025615559L
         private val getParagraphOffsetBind by lazy {
             ObjectCalls.getMethodBind("RichTextLabel", "get_paragraph_offset", GET_PARAGRAPH_OFFSET_HASH)
+        }
+
+        private const val PARSE_EXPRESSIONS_FOR_VALUES_HASH = 1522900837L
+        private val parseExpressionsForValuesBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "parse_expressions_for_values", PARSE_EXPRESSIONS_FOR_VALUES_HASH)
         }
 
         private const val GET_EFFECTS_HASH = 2915620761L
