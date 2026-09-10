@@ -50,8 +50,10 @@ import net.multigesture.kanama.types.Vector4
  * helper marshals through the single generic C dispatch `kanama_ios_godot_ptrcall`,
  * applying the authoritative ptrcall width table (scalar float->double/8B, scalar
  * int->int64/8B, Vector components->GodotReal, Object->8B handle, StringName built
- * C-side). Helpers already hand-written in ObjectCalls.kt are the override set and
- * are NOT regenerated here.
+ * C-side). String / StringName / NodePath returns hand the same arg cells to
+ * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
+ * read-back, no truncation). Helpers already hand-written in ObjectCalls.kt are the
+ * override set and are NOT regenerated here.
  */
 
 private const val PT_VOID = 0
