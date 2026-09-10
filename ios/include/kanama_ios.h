@@ -249,6 +249,43 @@ int64_t kanama_ios_godot_ptrcall_ret_container_blob(
  * drain before the next container-returning call.
  */
 int64_t kanama_ios_godot_take_pending_container_blob(
+
+ * Blob kinds for kanama_ios_godot_ptrcall_ret_array_blob (task 100, parcel 5).
+ */
+enum {
+    KANAMA_IOS_BLOB_PACKED_STRING_ARRAY = 1,  // [int32 count]([int32 len][utf8])*
+    KANAMA_IOS_BLOB_TYPED_ARRAY = 2,          // [int32 count]([int32 byteLen][bytes])*, bytes by elem_kind
+};
+
+/*
+ * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a
+ * PackedStringArray (blob_kind KANAMA_IOS_BLOB_PACKED_STRING_ARRAY) or a typed builtin Array
+ * (KANAMA_IOS_BLOB_TYPED_ARRAY; elem_kind is the KANAMA_IOS_PT_* element selector: INT32/INT64,
+ * PLANE, RID, VECTOR2I, VECTOR3I, VECTOR2, VECTOR3, RECT2, TRANSFORM3D, PACKED_BYTE_ARRAY,
+ * PACKED_VECTOR2_ARRAY, PACKED_STRING_ARRAY, STRING, STRING_NAME, NODE_PATH), serialized to the
+ * length-prefixed blob the no-arg read-backs use. The method runs ONCE. When the blob fits
+ * buf_size it is written to out_buf; otherwise it is parked in a single pending slot and the
+ * caller drains it with kanama_ios_godot_take_pending_blob. Returns the full blob size (>= 4),
+ * or -1 on a null method/instance, an unknown blob kind or an unavailable API.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_array_blob(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t blob_kind,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Drain the blob parked by kanama_ios_godot_ptrcall_ret_array_blob into out_buf (up to buf_size
+ * bytes), free it and return its full size. Returns -1 when nothing is pending. Single slot:
+ * drain before the next array-returning call.
+ */
+int64_t kanama_ios_godot_take_pending_blob(
     char *out_buf,
     int64_t buf_size
 );
