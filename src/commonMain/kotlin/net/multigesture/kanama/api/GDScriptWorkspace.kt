@@ -19,6 +19,11 @@ class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringArgRetString(getFileUriBind, handle, path)
     }
 
+    fun generateScriptApi(path: String): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetDictionary(generateScriptApiBind, handle, path)
+    }
+
     fun parseScript(path: String, content: String): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, handle, path, content)
@@ -50,6 +55,11 @@ class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_FILE_URI_HASH = 3135753539L
         private val getFileUriBind by lazy {
             ObjectCalls.getMethodBind("GDScriptWorkspace", "get_file_uri", GET_FILE_URI_HASH)
+        }
+
+        private const val GENERATE_SCRIPT_API_HASH = 2786125124L
+        private val generateScriptApiBind by lazy {
+            ObjectCalls.getMethodBind("GDScriptWorkspace", "generate_script_api", GENERATE_SCRIPT_API_HASH)
         }
 
         private const val PARSE_SCRIPT_HASH = 852856452L

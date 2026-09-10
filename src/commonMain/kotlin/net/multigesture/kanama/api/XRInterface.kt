@@ -119,6 +119,19 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns a `Dictionary` with extra system info. Interfaces are expected to return `XRRuntimeName`
+     * and `XRRuntimeVersion` providing info about the used XR runtime. Additional entries may be
+     * provided specific to an interface. Note:This information may only be available after
+     * `initialize` was successfully called.
+     *
+     * Generated from Godot docs: XRInterface.get_system_info
+     */
+    fun getSystemInfo(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSystemInfoBind, handle)
+    }
+
+    /**
      * If supported, returns the status of our tracking. This will allow you to provide feedback to the
      * user whether there are issues with positional tracking.
      *
@@ -406,6 +419,11 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
         private const val UNINITIALIZE_HASH = 3218959716L
         private val uninitializeBind by lazy {
             ObjectCalls.getMethodBind("XRInterface", "uninitialize", UNINITIALIZE_HASH)
+        }
+
+        private const val GET_SYSTEM_INFO_HASH = 2382534195L
+        private val getSystemInfoBind by lazy {
+            ObjectCalls.getMethodBind("XRInterface", "get_system_info", GET_SYSTEM_INFO_HASH)
         }
 
         private const val GET_TRACKING_STATUS_HASH = 167423259L

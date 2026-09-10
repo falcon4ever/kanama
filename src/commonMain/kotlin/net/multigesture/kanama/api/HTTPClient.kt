@@ -110,6 +110,18 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns all response headers as a `Dictionary`. Each entry is composed by the header name, and a
+     * `String` containing the values separated by `"; "`. The casing is kept the same as the headers
+     * were received.
+     *
+     * Generated from Godot docs: HTTPClient.get_response_headers_as_dictionary
+     */
+    fun getResponseHeadersAsDictionary(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getResponseHeadersAsDictionaryBind, handle)
+    }
+
+    /**
      * Returns the response's body length. Note: Some Web servers may not send a body length. In this
      * case, the value returned will be `-1`. If using chunked transfer encoding, the body length will
      * also be `-1`. Note: This function always returns `-1` on the Web platform due to browsers
@@ -344,6 +356,11 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_RESPONSE_HEADERS_HASH = 2981934095L
         private val getResponseHeadersBind by lazy {
             ObjectCalls.getMethodBind("HTTPClient", "get_response_headers", GET_RESPONSE_HEADERS_HASH)
+        }
+
+        private const val GET_RESPONSE_HEADERS_AS_DICTIONARY_HASH = 2382534195L
+        private val getResponseHeadersAsDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("HTTPClient", "get_response_headers_as_dictionary", GET_RESPONSE_HEADERS_AS_DICTIONARY_HASH)
         }
 
         private const val GET_RESPONSE_BODY_LENGTH_HASH = 3905245786L

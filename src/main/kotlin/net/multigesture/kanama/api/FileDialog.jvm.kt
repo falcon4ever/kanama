@@ -7,9 +7,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP FileDialog waits on: ptrcallNoArgsRetDictionary,
-//   ptrcallWithIntAndPackedStringListArg, ptrcallWithIntArgRetPackedStringList,
-//   ptrcallWithPackedStringListArg, ptrcallWithStringPackedStringListAndIntArgs
+// KANAMA-IOS-GAP FileDialog waits on: ptrcallWithIntAndPackedStringListArg,
+//   ptrcallWithIntArgRetPackedStringList, ptrcallWithPackedStringListArg,
+//   ptrcallWithStringPackedStringListAndIntArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -52,16 +52,6 @@ fun FileDialog.setOptionValues(option: Int, values: List<String>) {
  */
 fun FileDialog.addOption(name: String, values: List<String>, defaultValueIndex: Int) {
     ObjectCalls.ptrcallWithStringPackedStringListAndIntArgs(addOptionBind, handle, name, values, defaultValueIndex)
-}
-
-/**
- * Returns a `Dictionary` with the selected values of the additional `OptionButton`s and/or
- * `CheckBox`es. `Dictionary` keys are names and values are selected value indices.
- *
- * Generated from Godot docs: FileDialog.get_selected_options
- */
-fun FileDialog.getSelectedOptions(): Map<String, Any?> {
-    return ObjectCalls.ptrcallNoArgsRetDictionary(getSelectedOptionsBind, handle)
 }
 
 /**
@@ -108,11 +98,6 @@ private val setOptionValuesBind by lazy {
 private const val ADD_OPTION_HASH = 149592325L
 private val addOptionBind by lazy {
     ObjectCalls.getMethodBind("FileDialog", "add_option", ADD_OPTION_HASH)
-}
-
-private const val GET_SELECTED_OPTIONS_HASH = 3102165223L
-private val getSelectedOptionsBind by lazy {
-    ObjectCalls.getMethodBind("FileDialog", "get_selected_options", GET_SELECTED_OPTIONS_HASH)
 }
 
 private const val SET_FAVORITE_LIST_HASH = 4015028928L

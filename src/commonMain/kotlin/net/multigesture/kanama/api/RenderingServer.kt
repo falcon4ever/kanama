@@ -856,6 +856,16 @@ object RenderingServer {
     }
 
     /**
+     * Returns the parameters of a shader.
+     *
+     * Generated from Godot docs: RenderingServer.get_shader_parameter_list
+     */
+    @JvmStatic
+    fun getShaderParameterList(shader: RID): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(getShaderParameterListBind, singleton, shader)
+    }
+
+    /**
      * Returns the default value for the specified shader uniform. This is usually the value written in
      * the shader source code.
      *
@@ -1082,6 +1092,27 @@ object RenderingServer {
     @JvmStatic
     fun meshSurfaceGetMaterial(mesh: RID, surface: Int): RID {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(meshSurfaceGetMaterialBind, singleton, mesh, surface)
+    }
+
+    /**
+     * Returns a mesh's surface as a dictionary following the same structure as described in
+     * `mesh_add_surface`.
+     *
+     * Generated from Godot docs: RenderingServer.mesh_get_surface
+     */
+    @JvmStatic
+    fun meshGetSurface(mesh: RID, surface: Int): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetDictionary(meshGetSurfaceBind, singleton, mesh, surface)
+    }
+
+    /**
+     * Returns a mesh's surface's buffer arrays.
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_get_arrays
+     */
+    @JvmStatic
+    fun meshSurfaceGetArrays(mesh: RID, surface: Int): List<Any?> {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetArray(meshSurfaceGetArraysBind, singleton, mesh, surface)
     }
 
     /**
@@ -4769,6 +4800,19 @@ object RenderingServer {
     }
 
     /**
+     * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
+     * from the specified 3D geometry instance. The returned dictionary is in PropertyInfo format, with
+     * the keys `name`, `class_name`, `type`, `hint`, `hint_string` and `usage`. Equivalent to
+     * `GeometryInstance3D.get_instance_shader_parameter`.
+     *
+     * Generated from Godot docs: RenderingServer.instance_geometry_get_shader_parameter_list
+     */
+    @JvmStatic
+    fun instanceGeometryGetShaderParameterList(instance: RID): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(instanceGeometryGetShaderParameterListBind, singleton, instance)
+    }
+
+    /**
      * Returns an array of object IDs intersecting with the provided AABB. Only 3D nodes that inherit
      * from `VisualInstance3D` are considered, such as `MeshInstance3D` or `DirectionalLight3D`. Use
      * `@GlobalScope.instance_from_id` to obtain the actual nodes. A scenario RID must be provided,
@@ -5389,6 +5433,18 @@ object RenderingServer {
     @JvmStatic
     fun canvasItemGetInstanceShaderParameterDefaultValue(instance: RID, parameter: String): Any? {
         return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(canvasItemGetInstanceShaderParameterDefaultValueBind, singleton, instance, parameter)
+    }
+
+    /**
+     * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
+     * from the specified canvas item instance. The returned dictionary is in PropertyInfo format, with
+     * the keys `name`, `class_name`, `type`, `hint`, `hint_string`, and `usage`.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_get_instance_shader_parameter_list
+     */
+    @JvmStatic
+    fun canvasItemGetInstanceShaderParameterList(instance: RID): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(canvasItemGetInstanceShaderParameterListBind, singleton, instance)
     }
 
     /**
@@ -6369,6 +6425,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "shader_get_code", SHADER_GET_CODE_HASH)
     }
 
+    private const val GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
+    private val getShaderParameterListBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "get_shader_parameter_list", GET_SHADER_PARAMETER_LIST_HASH)
+    }
+
     private const val SHADER_GET_PARAMETER_DEFAULT_HASH = 2621281810L
     private val shaderGetParameterDefaultBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "shader_get_parameter_default", SHADER_GET_PARAMETER_DEFAULT_HASH)
@@ -6472,6 +6533,16 @@ object RenderingServer {
     private const val MESH_SURFACE_GET_MATERIAL_HASH = 1066463050L
     private val meshSurfaceGetMaterialBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_material", MESH_SURFACE_GET_MATERIAL_HASH)
+    }
+
+    private const val MESH_GET_SURFACE_HASH = 186674697L
+    private val meshGetSurfaceBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface", MESH_GET_SURFACE_HASH)
+    }
+
+    private const val MESH_SURFACE_GET_ARRAYS_HASH = 1778388067L
+    private val meshSurfaceGetArraysBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_arrays", MESH_SURFACE_GET_ARRAYS_HASH)
     }
 
     private const val MESH_GET_SURFACE_COUNT_HASH = 2198884583L
@@ -8074,6 +8145,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_default_value", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
     }
 
+    private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
+    private val instanceGeometryGetShaderParameterListBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_list", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH)
+    }
+
     private const val INSTANCES_CULL_AABB_HASH = 2570105777L
     private val instancesCullAabbBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "instances_cull_aabb", INSTANCES_CULL_AABB_HASH)
@@ -8347,6 +8423,11 @@ object RenderingServer {
     private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
     private val canvasItemGetInstanceShaderParameterDefaultValueBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_default_value", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
+    }
+
+    private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH = 2684255073L
+    private val canvasItemGetInstanceShaderParameterListBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_list", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH)
     }
 
     private const val CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH = 3568945579L

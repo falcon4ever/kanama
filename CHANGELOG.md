@@ -7,6 +7,32 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: Dictionary and Array returns on every audited argument shape (task 100, parcel 6)
+
+- A method returning a `Dictionary`, a generic `Array` or an `Array[Dictionary]` reached iOS only
+  through two hand-written generic-Array helpers and the fixed-shape raycast decode. Every such
+  method whose arguments are already audited now gets a generated helper: the new C entry
+  `kanama_ios_godot_ptrcall_ret_container_blob` runs the method once through the generic ptrcall
+  dispatch and serializes the container into one self-describing blob (records of variant type,
+  byte length and payload; nested Dictionary / Array values as nested blobs; String and StringName
+  keys as UTF-8), parking a blob longer than the 4 KiB inline buffer C-side for
+  `kanama_ios_godot_take_pending_container_blob` — nothing is truncated and nothing is re-issued.
+  Decode parity with desktop: `Map<String, Any?>` keeps String / StringName keys only (as
+  `BuiltinTypes.readDictionaryScalars` does) and values decode as bool, int, float, String family,
+  borrowed Object handle, Vector2 / Vector2i / Vector3 / Color, nested Map / List; other value types
+  surface `null`. `Array[Dictionary]` drops non-Dictionary elements like `readArrayDictionaries`.
+  The existing generic-Array blob entry is now a thin wrapper over the same encoder, so its
+  hand-written callers see nested containers instead of `null`. 36 helpers, 129 members on 53
+  classes move into the shared tree — `Time.get_datetime_dict_from_unix_time`,
+  `OS.get_memory_info`, `ClassDB.class_get_method_list`, `ClassDB.class_get_signal`,
+  `Script.get_script_property_list`, `GraphEdit.get_connection_list`,
+  `PhysicsDirectSpaceState2D.intersect_ray`, `RenderingServer.mesh_surface_get_arrays`,
+  `StreamPeer.get_data` among them; the gap index goes from 852 to 723 desktop-only members
+  (229 → 218 companion files). Six self-test rows cover a Dictionary with an int64 argument,
+  a no-arg Dictionary, an Array with an int argument, an `Array[Dictionary]` far larger than the
+  inline buffer with nested records, the drained pending slot, and a two-StringName-argument
+  Dictionary.
+
 ### Added — iOS: Packed*Array returns on every audited argument shape (task 100, parcel 3)
 
 - A method returning a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,

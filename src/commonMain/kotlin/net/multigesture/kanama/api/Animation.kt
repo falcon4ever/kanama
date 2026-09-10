@@ -469,6 +469,16 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the arguments values to be called on a method track for a given key in a given track.
+     *
+     * Generated from Godot docs: Animation.method_track_get_params
+     */
+    fun methodTrackGetParams(trackIdx: Int, keyIdx: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(methodTrackGetParamsBind, handle, trackIdx, keyIdx)
+    }
+
+    /**
      * Inserts a Bezier Track key at the given `time` in seconds. The `track_idx` must be the index of
      * a Bezier Track. `in_handle` is the left-side weight of the added Bezier curve point,
      * `out_handle` is the right-side one, while `value` is the actual value at this point.
@@ -1158,6 +1168,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
         private const val METHOD_TRACK_GET_NAME_HASH = 351665558L
         private val methodTrackGetNameBind by lazy {
             ObjectCalls.getMethodBind("Animation", "method_track_get_name", METHOD_TRACK_GET_NAME_HASH)
+        }
+
+        private const val METHOD_TRACK_GET_PARAMS_HASH = 2345056839L
+        private val methodTrackGetParamsBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "method_track_get_params", METHOD_TRACK_GET_PARAMS_HASH)
         }
 
         private const val BEZIER_TRACK_INSERT_KEY_HASH = 3656773645L

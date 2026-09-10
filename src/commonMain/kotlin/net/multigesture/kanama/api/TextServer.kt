@@ -257,6 +257,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns `Dictionary` with OpenType font name strings (localized font names, version,
+     * description, license information, sample text, etc.).
+     *
+     * Generated from Godot docs: TextServer.font_get_ot_name_strings
+     */
+    fun fontGetOtNameStrings(fontRid: RID): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOtNameStringsBind, handle, fontRid)
+    }
+
+    /**
      * Sets the font style name.
      *
      * Generated from Godot docs: TextServer.font_set_style_name
@@ -781,6 +792,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns variation coordinates for the specified font cache entry. See
+     * `font_supported_variation_list` for more info.
+     *
+     * Generated from Godot docs: TextServer.font_get_variation_coordinates
+     */
+    fun fontGetVariationCoordinates(fontRid: RID): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetVariationCoordinatesBind, handle, fontRid)
+    }
+
+    /**
      * If set to a positive value, overrides the oversampling factor of the viewport this font is used
      * in. See `Viewport.oversampling`. This value doesn't override the `oversampling` parameter of
      * `draw_*` methods. Used by dynamic fonts only.
@@ -822,6 +844,19 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun fontRemoveSizeCache(fontRid: RID, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndVector2iArg(fontRemoveSizeCacheBind, handle, fontRid, size)
+    }
+
+    /**
+     * Returns font cache information, each entry contains the following fields: `Vector2i size_px` -
+     * font size in pixels, `float viewport_oversampling` - viewport oversampling factor, `int glyphs`
+     * - number of rendered glyphs, `int textures` - number of used textures, `int textures_size` -
+     * size of texture data in bytes.
+     *
+     * Generated from Godot docs: TextServer.font_get_size_cache_info
+     */
+    fun fontGetSizeCacheInfo(fontRid: RID): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(fontGetSizeCacheInfoBind, handle, fontRid)
     }
 
     /**
@@ -1143,6 +1178,27 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns outline contours of the glyph as a `Dictionary` with the following contents: `points` -
+     * `PackedVector3Array`, containing outline points. `x` and `y` are point coordinates. `z` is the
+     * type of the point, using the `ContourPointTag` values. `contours` - `PackedInt32Array`,
+     * containing indices the end points of each contour. `orientation` - `bool`, contour orientation.
+     * If `true`, clockwise contours must be filled. - Two successive `CONTOUR_CURVE_TAG_ON` points
+     * indicate a line segment. - One `CONTOUR_CURVE_TAG_OFF_CONIC` point between two
+     * `CONTOUR_CURVE_TAG_ON` points indicates a single conic (quadratic) Bézier arc. - Two
+     * `CONTOUR_CURVE_TAG_OFF_CUBIC` points between two `CONTOUR_CURVE_TAG_ON` points indicate a single
+     * cubic Bézier arc. - Two successive `CONTOUR_CURVE_TAG_OFF_CONIC` points indicate two successive
+     * conic (quadratic) Bézier arcs with a virtual `CONTOUR_CURVE_TAG_ON` point at their middle. -
+     * Each contour is closed. The last point of a contour uses the first point of a contour as its
+     * next point, and vice versa. The first point can be `CONTOUR_CURVE_TAG_OFF_CONIC` point.
+     *
+     * Generated from Godot docs: TextServer.font_get_glyph_contours
+     */
+    fun fontGetGlyphContours(font: RID, size: Long, index: Long): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetDictionary(fontGetGlyphContoursBind, handle, font, size, index)
+    }
+
+    /**
      * Removes all kerning overrides.
      *
      * Generated from Godot docs: TextServer.font_clear_kerning_map
@@ -1363,6 +1419,36 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun fontRemoveScriptSupportOverride(fontRid: RID, script: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveScriptSupportOverrideBind, handle, fontRid, script)
+    }
+
+    /**
+     * Returns font OpenType feature set override.
+     *
+     * Generated from Godot docs: TextServer.font_get_opentype_feature_overrides
+     */
+    fun fontGetOpentypeFeatureOverrides(fontRid: RID): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOpentypeFeatureOverridesBind, handle, fontRid)
+    }
+
+    /**
+     * Returns the dictionary of the supported OpenType features.
+     *
+     * Generated from Godot docs: TextServer.font_supported_feature_list
+     */
+    fun fontSupportedFeatureList(fontRid: RID): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedFeatureListBind, handle, fontRid)
+    }
+
+    /**
+     * Returns the dictionary of the supported OpenType variation coordinates.
+     *
+     * Generated from Godot docs: TextServer.font_supported_variation_list
+     */
+    fun fontSupportedVariationList(fontRid: RID): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedVariationListBind, handle, fontRid)
     }
 
     /**
@@ -1811,6 +1897,26 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns an array of glyphs in the visual order.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_glyphs
+     */
+    fun shapedTextGetGlyphs(shaped: RID): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetGlyphsBind, handle, shaped)
+    }
+
+    /**
+     * Returns text glyphs in the logical order.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_sort_logical
+     */
+    fun shapedTextSortLogical(shaped: RID): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextSortLogicalBind, handle, shaped)
+    }
+
+    /**
      * Returns number of glyphs in the buffer.
      *
      * Generated from Godot docs: TextServer.shaped_text_get_glyph_count
@@ -1872,6 +1978,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns array of the glyphs in the ellipsis.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_ellipsis_glyphs
+     */
+    fun shapedTextGetEllipsisGlyphs(shaped: RID): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetEllipsisGlyphsBind, handle, shaped)
+    }
+
+    /**
      * Returns number of glyphs in the ellipsis.
      *
      * Generated from Godot docs: TextServer.shaped_text_get_ellipsis_glyph_count
@@ -1889,6 +2005,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedTextOverrunTrimToWidth(shaped: RID, width: Double = 0.0, overrunTrimFlags: Long = 0L) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(shapedTextOverrunTrimToWidthBind, handle, shaped, width, overrunTrimFlags)
+    }
+
+    /**
+     * Returns array of inline objects.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_objects
+     */
+    fun shapedTextGetObjects(shaped: RID): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetArray(shapedTextGetObjectsBind, handle, shaped)
     }
 
     /**
@@ -1953,6 +2079,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedTextGetUnderlineThickness(shaped: RID): Double {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlineThicknessBind, handle, shaped)
+    }
+
+    /**
+     * Returns shapes of the carets corresponding to the character offset `position` in the text.
+     * Returned caret shape is 1 pixel wide rectangle.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_carets
+     */
+    fun shapedTextGetCarets(shaped: RID, position: Long): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDictionary(shapedTextGetCaretsBind, handle, shaped, position)
     }
 
     /**
@@ -2476,6 +2613,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_name", FONT_GET_NAME_HASH)
         }
 
+        private const val FONT_GET_OT_NAME_STRINGS_HASH = 1882737106L
+        private val fontGetOtNameStringsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_ot_name_strings", FONT_GET_OT_NAME_STRINGS_HASH)
+        }
+
         private const val FONT_SET_STYLE_NAME_HASH = 2726140452L
         private val fontSetStyleNameBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_set_style_name", FONT_SET_STYLE_NAME_HASH)
@@ -2721,6 +2863,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_transform", FONT_GET_TRANSFORM_HASH)
         }
 
+        private const val FONT_GET_VARIATION_COORDINATES_HASH = 1882737106L
+        private val fontGetVariationCoordinatesBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_variation_coordinates", FONT_GET_VARIATION_COORDINATES_HASH)
+        }
+
         private const val FONT_SET_OVERSAMPLING_HASH = 1794382983L
         private val fontSetOversamplingBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_set_oversampling", FONT_SET_OVERSAMPLING_HASH)
@@ -2739,6 +2886,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val FONT_REMOVE_SIZE_CACHE_HASH = 2450610377L
         private val fontRemoveSizeCacheBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_remove_size_cache", FONT_REMOVE_SIZE_CACHE_HASH)
+        }
+
+        private const val FONT_GET_SIZE_CACHE_INFO_HASH = 2684255073L
+        private val fontGetSizeCacheInfoBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_size_cache_info", FONT_GET_SIZE_CACHE_INFO_HASH)
         }
 
         private const val FONT_SET_ASCENT_HASH = 1892459533L
@@ -2896,6 +3048,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_glyph_texture_size", FONT_GET_GLYPH_TEXTURE_SIZE_HASH)
         }
 
+        private const val FONT_GET_GLYPH_CONTOURS_HASH = 2903964473L
+        private val fontGetGlyphContoursBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_glyph_contours", FONT_GET_GLYPH_CONTOURS_HASH)
+        }
+
         private const val FONT_CLEAR_KERNING_MAP_HASH = 3411492887L
         private val fontClearKerningMapBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_clear_kerning_map", FONT_CLEAR_KERNING_MAP_HASH)
@@ -2999,6 +3156,21 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val FONT_REMOVE_SCRIPT_SUPPORT_OVERRIDE_HASH = 2726140452L
         private val fontRemoveScriptSupportOverrideBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_remove_script_support_override", FONT_REMOVE_SCRIPT_SUPPORT_OVERRIDE_HASH)
+        }
+
+        private const val FONT_GET_OPENTYPE_FEATURE_OVERRIDES_HASH = 1882737106L
+        private val fontGetOpentypeFeatureOverridesBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_opentype_feature_overrides", FONT_GET_OPENTYPE_FEATURE_OVERRIDES_HASH)
+        }
+
+        private const val FONT_SUPPORTED_FEATURE_LIST_HASH = 1882737106L
+        private val fontSupportedFeatureListBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_supported_feature_list", FONT_SUPPORTED_FEATURE_LIST_HASH)
+        }
+
+        private const val FONT_SUPPORTED_VARIATION_LIST_HASH = 1882737106L
+        private val fontSupportedVariationListBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_supported_variation_list", FONT_SUPPORTED_VARIATION_LIST_HASH)
         }
 
         private const val FONT_GET_GLOBAL_OVERSAMPLING_HASH = 1740695150L
@@ -3216,6 +3388,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_has_visible_chars", SHAPED_TEXT_HAS_VISIBLE_CHARS_HASH)
         }
 
+        private const val SHAPED_TEXT_GET_GLYPHS_HASH = 2684255073L
+        private val shapedTextGetGlyphsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_glyphs", SHAPED_TEXT_GET_GLYPHS_HASH)
+        }
+
+        private const val SHAPED_TEXT_SORT_LOGICAL_HASH = 2670461153L
+        private val shapedTextSortLogicalBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_sort_logical", SHAPED_TEXT_SORT_LOGICAL_HASH)
+        }
+
         private const val SHAPED_TEXT_GET_GLYPH_COUNT_HASH = 2198884583L
         private val shapedTextGetGlyphCountBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_glyph_count", SHAPED_TEXT_GET_GLYPH_COUNT_HASH)
@@ -3246,6 +3428,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_ellipsis_pos", SHAPED_TEXT_GET_ELLIPSIS_POS_HASH)
         }
 
+        private const val SHAPED_TEXT_GET_ELLIPSIS_GLYPHS_HASH = 2684255073L
+        private val shapedTextGetEllipsisGlyphsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_ellipsis_glyphs", SHAPED_TEXT_GET_ELLIPSIS_GLYPHS_HASH)
+        }
+
         private const val SHAPED_TEXT_GET_ELLIPSIS_GLYPH_COUNT_HASH = 2198884583L
         private val shapedTextGetEllipsisGlyphCountBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_ellipsis_glyph_count", SHAPED_TEXT_GET_ELLIPSIS_GLYPH_COUNT_HASH)
@@ -3254,6 +3441,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_TEXT_OVERRUN_TRIM_TO_WIDTH_HASH = 2723146520L
         private val shapedTextOverrunTrimToWidthBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_overrun_trim_to_width", SHAPED_TEXT_OVERRUN_TRIM_TO_WIDTH_HASH)
+        }
+
+        private const val SHAPED_TEXT_GET_OBJECTS_HASH = 2684255073L
+        private val shapedTextGetObjectsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_objects", SHAPED_TEXT_GET_OBJECTS_HASH)
         }
 
         private const val SHAPED_TEXT_GET_SIZE_HASH = 2440833711L
@@ -3284,6 +3476,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_TEXT_GET_UNDERLINE_THICKNESS_HASH = 866169185L
         private val shapedTextGetUnderlineThicknessBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_underline_thickness", SHAPED_TEXT_GET_UNDERLINE_THICKNESS_HASH)
+        }
+
+        private const val SHAPED_TEXT_GET_CARETS_HASH = 1574219346L
+        private val shapedTextGetCaretsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_carets", SHAPED_TEXT_GET_CARETS_HASH)
         }
 
         private const val SHAPED_TEXT_GET_SELECTION_HASH = 3714187733L

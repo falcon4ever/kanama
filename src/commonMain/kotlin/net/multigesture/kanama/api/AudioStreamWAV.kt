@@ -52,6 +52,10 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
         @JvmName("setStereoProperty")
         set(value) = setStereo(value)
 
+    val tags: Map<String, Any?>
+        @JvmName("tagsProperty")
+        get() = getTags()
+
     /**
      * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
      * expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from each byte.
@@ -197,6 +201,20 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
     }
 
     /**
+     * Contains user-defined tags if found in the WAV data. Commonly used tags include `title`,
+     * `artist`, `album`, `tracknumber`, and `date` (`date` does not have a standard date format).
+     * Note: No tag is guaranteed to be present in every file, so make sure to account for the keys not
+     * always existing. Note: Only WAV files using a `LIST` chunk with an identifier of `INFO` to
+     * encode the tags are currently supported.
+     *
+     * Generated from Godot docs: AudioStreamWAV.get_tags
+     */
+    fun getTags(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, handle)
+    }
+
+    /**
      * Saves the AudioStreamWAV as a WAV file to `path`. Samples with IMA ADPCM or Quite OK Audio
      * formats can't be saved. Note: A `.wav` extension is automatically appended to `path` if it is
      * missing.
@@ -288,6 +306,11 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
         private const val IS_STEREO_HASH = 36873697L
         private val isStereoBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamWAV", "is_stereo", IS_STEREO_HASH)
+        }
+
+        private const val GET_TAGS_HASH = 3102165223L
+        private val getTagsBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamWAV", "get_tags", GET_TAGS_HASH)
         }
 
         private const val SAVE_TO_WAV_HASH = 166001499L

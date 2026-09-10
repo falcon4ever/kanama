@@ -38,6 +38,14 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         @JvmName("setSkeletonProperty")
         set(value) = setSkeleton(value)
 
+    val jointIToBoneI: Map<String, Any?>
+        @JvmName("jointIToBoneIProperty")
+        get() = getJointIToBoneI()
+
+    val jointIToName: Map<String, Any?>
+        @JvmName("jointIToNameProperty")
+        get() = getJointIToName()
+
     var godotSkin: Skin?
         @JvmName("godotSkinProperty")
         get() = getGodotSkin()
@@ -82,6 +90,16 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
     fun setSkeleton(skeleton: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(setSkeletonBind, handle, skeleton)
+    }
+
+    fun getJointIToBoneI(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToBoneIBind, handle)
+    }
+
+    fun getJointIToName(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToNameBind, handle)
     }
 
     fun getGodotSkin(): Skin? {
@@ -140,6 +158,16 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         private const val SET_SKELETON_HASH = 1286410249L
         private val setSkeletonBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkin", "set_skeleton", SET_SKELETON_HASH)
+        }
+
+        private const val GET_JOINT_I_TO_BONE_I_HASH = 2382534195L
+        private val getJointIToBoneIBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "get_joint_i_to_bone_i", GET_JOINT_I_TO_BONE_I_HASH)
+        }
+
+        private const val GET_JOINT_I_TO_NAME_HASH = 2382534195L
+        private val getJointIToNameBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "get_joint_i_to_name", GET_JOINT_I_TO_NAME_HASH)
         }
 
         private const val GET_GODOT_SKIN_HASH = 1032037385L

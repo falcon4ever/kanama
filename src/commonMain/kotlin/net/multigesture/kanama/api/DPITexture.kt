@@ -38,6 +38,10 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setSaturationProperty")
         set(value) = setSaturation(value)
 
+    val colorMap: Map<String, Any?>
+        @JvmName("colorMapProperty")
+        get() = getColorMap()
+
     /**
      * Sets this SVG texture's source code.
      *
@@ -157,6 +161,16 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
     }
 
     /**
+     * If set, remaps texture colors according to `Color`-`Color` map.
+     *
+     * Generated from Godot docs: DPITexture.get_color_map
+     */
+    fun getColorMap(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getColorMapBind, handle)
+    }
+
+    /**
      * Resizes the texture to the specified dimensions.
      *
      * Generated from Godot docs: DPITexture.set_size_override
@@ -233,6 +247,11 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         private const val GET_SATURATION_HASH = 1740695150L
         private val getSaturationBind by lazy {
             ObjectCalls.getMethodBind("DPITexture", "get_saturation", GET_SATURATION_HASH)
+        }
+
+        private const val GET_COLOR_MAP_HASH = 3102165223L
+        private val getColorMapBind by lazy {
+            ObjectCalls.getMethodBind("DPITexture", "get_color_map", GET_COLOR_MAP_HASH)
         }
 
         private const val SET_SIZE_OVERRIDE_HASH = 1130785943L

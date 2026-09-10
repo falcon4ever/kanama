@@ -20,11 +20,10 @@ import net.multigesture.kanama.types.Vector3i
 // KANAMA-IOS-GAP RenderingServer waits on: ptrcallWithDictionaryListIntArgsRetRID,
 //   ptrcallWithLongThreeIntBoolObjectListArgsRetRID, ptrcallWithObjectListLongArgsRetRID,
 //   ptrcallWithPlaneListAndRIDArgsRetPackedInt64List, ptrcallWithRIDAndDictionaryArg,
-//   ptrcallWithRIDAndIntArgRetArray, ptrcallWithRIDAndIntArgRetArrayList,
-//   ptrcallWithRIDAndIntArgRetDictionary, ptrcallWithRIDAndObjectListArgs,
+//   ptrcallWithRIDAndIntArgRetArrayList, ptrcallWithRIDAndObjectListArgs,
 //   ptrcallWithRIDAndPackedFloat32ListArg, ptrcallWithRIDAndRIDListArgs,
 //   ptrcallWithRIDAndTransform3DListArgs, ptrcallWithRIDAndTwoPackedFloat32ListArgs,
-//   ptrcallWithRIDArgRetDictionaryList, ptrcallWithRIDArgRetTypedObjectList,
+//   ptrcallWithRIDArgRetTypedObjectList,
 //   ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs,
 //   ptrcallWithRIDIntIntAndByteArrayArgs, ptrcallWithRIDListRect2iRIDColorRIDListIntArgs,
 //   ptrcallWithRIDLongTwoArrayDictionaryLongArgs,
@@ -95,15 +94,6 @@ fun RenderingServer.texture3dGet(texture: RID): List<Image> {
 }
 
 /**
- * Returns the parameters of a shader.
- *
- * Generated from Godot docs: RenderingServer.get_shader_parameter_list
- */
-fun RenderingServer.getShaderParameterList(shader: RID): List<Map<String, Any?>> {
-    return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(getShaderParameterListBind, renderingServerSingleton, shader)
-}
-
-/**
  * Sets a material's parameter.
  *
  * Generated from Godot docs: RenderingServer.material_set_param
@@ -171,25 +161,6 @@ fun RenderingServer.meshAddSurface(mesh: RID, surface: Map<String, Any?>) {
  */
 fun RenderingServer.meshAddSurfaceFromArrays(mesh: RID, primitive: Long, arrays: List<Any?>, blendShapes: List<Any?> = emptyList(), lods: Map<String, Any?> = emptyMap(), compressFormat: Long = 0L) {
     ObjectCalls.ptrcallWithRIDLongTwoArrayDictionaryLongArgs(meshAddSurfaceFromArraysBind, renderingServerSingleton, mesh, primitive, arrays, blendShapes, lods, compressFormat)
-}
-
-/**
- * Returns a mesh's surface as a dictionary following the same structure as described in
- * `mesh_add_surface`.
- *
- * Generated from Godot docs: RenderingServer.mesh_get_surface
- */
-fun RenderingServer.meshGetSurface(mesh: RID, surface: Int): Map<String, Any?> {
-    return ObjectCalls.ptrcallWithRIDAndIntArgRetDictionary(meshGetSurfaceBind, renderingServerSingleton, mesh, surface)
-}
-
-/**
- * Returns a mesh's surface's buffer arrays.
- *
- * Generated from Godot docs: RenderingServer.mesh_surface_get_arrays
- */
-fun RenderingServer.meshSurfaceGetArrays(mesh: RID, surface: Int): List<Any?> {
-    return ObjectCalls.ptrcallWithRIDAndIntArgRetArray(meshSurfaceGetArraysBind, renderingServerSingleton, mesh, surface)
 }
 
 /**
@@ -356,18 +327,6 @@ fun RenderingServer.instanceGeometrySetShaderParameter(instance: RID, parameter:
 }
 
 /**
- * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
- * from the specified 3D geometry instance. The returned dictionary is in PropertyInfo format, with
- * the keys `name`, `class_name`, `type`, `hint`, `hint_string` and `usage`. Equivalent to
- * `GeometryInstance3D.get_instance_shader_parameter`.
- *
- * Generated from Godot docs: RenderingServer.instance_geometry_get_shader_parameter_list
- */
-fun RenderingServer.instanceGeometryGetShaderParameterList(instance: RID): List<Map<String, Any?>> {
-    return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(instanceGeometryGetShaderParameterListBind, renderingServerSingleton, instance)
-}
-
-/**
  * Returns an array of object IDs intersecting with the provided convex shape. Only 3D nodes that
  * inherit from `VisualInstance3D` are considered, such as `MeshInstance3D` or
  * `DirectionalLight3D`. Use `@GlobalScope.instance_from_id` to obtain the actual nodes. A scenario
@@ -460,17 +419,6 @@ fun RenderingServer.canvasItemSetInstanceShaderParameter(instance: RID, paramete
 }
 
 /**
- * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
- * from the specified canvas item instance. The returned dictionary is in PropertyInfo format, with
- * the keys `name`, `class_name`, `type`, `hint`, `hint_string`, and `usage`.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_get_instance_shader_parameter_list
- */
-fun RenderingServer.canvasItemGetInstanceShaderParameterList(instance: RID): List<Map<String, Any?>> {
-    return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(canvasItemGetInstanceShaderParameterListBind, renderingServerSingleton, instance)
-}
-
-/**
  * Sets the shape of the occluder polygon.
  *
  * Generated from Godot docs: RenderingServer.canvas_occluder_polygon_set_shape
@@ -536,11 +484,6 @@ private val texture3dGetBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "texture_3d_get", TEXTURE_3D_GET_HASH)
 }
 
-private const val GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
-private val getShaderParameterListBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "get_shader_parameter_list", GET_SHADER_PARAMETER_LIST_HASH)
-}
-
 private const val MATERIAL_SET_PARAM_HASH = 3477296213L
 private val materialSetParamBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "material_set_param", MATERIAL_SET_PARAM_HASH)
@@ -559,16 +502,6 @@ private val meshAddSurfaceBind by lazy {
 private const val MESH_ADD_SURFACE_FROM_ARRAYS_HASH = 2342446560L
 private val meshAddSurfaceFromArraysBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "mesh_add_surface_from_arrays", MESH_ADD_SURFACE_FROM_ARRAYS_HASH)
-}
-
-private const val MESH_GET_SURFACE_HASH = 186674697L
-private val meshGetSurfaceBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface", MESH_GET_SURFACE_HASH)
-}
-
-private const val MESH_SURFACE_GET_ARRAYS_HASH = 1778388067L
-private val meshSurfaceGetArraysBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_arrays", MESH_SURFACE_GET_ARRAYS_HASH)
 }
 
 private const val MESH_SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH = 1778388067L
@@ -641,11 +574,6 @@ private val instanceGeometrySetShaderParameterBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_shader_parameter", INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH)
 }
 
-private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
-private val instanceGeometryGetShaderParameterListBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_list", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH)
-}
-
 private const val INSTANCES_CULL_CONVEX_HASH = 2488539944L
 private val instancesCullConvexBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "instances_cull_convex", INSTANCES_CULL_CONVEX_HASH)
@@ -684,11 +612,6 @@ private val canvasItemAddTriangleArrayBind by lazy {
 private const val CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH = 3477296213L
 private val canvasItemSetInstanceShaderParameterBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_instance_shader_parameter", CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH)
-}
-
-private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH = 2684255073L
-private val canvasItemGetInstanceShaderParameterListBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_list", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH)
 }
 
 private const val CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH = 2103882027L

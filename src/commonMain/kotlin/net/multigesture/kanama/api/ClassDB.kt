@@ -105,6 +105,40 @@ object ClassDB {
     }
 
     /**
+     * Returns the `signal` data of `class` or its ancestry. The returned value is a `Dictionary` with
+     * the following keys: `args`, `default_args`, `flags`, `id`, `name`, `return: (class_name, hint,
+     * hint_string, name, type, usage)`.
+     *
+     * Generated from Godot docs: ClassDB.class_get_signal
+     */
+    @JvmStatic
+    fun classGetSignal(classValue: String, signal: String): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDictionary(classGetSignalBind, singleton, classValue, signal)
+    }
+
+    /**
+     * Returns an array with all the signals of `class` or its ancestry if `no_inheritance` is `false`.
+     * Every element of the array is a `Dictionary` as described in `class_get_signal`.
+     *
+     * Generated from Godot docs: ClassDB.class_get_signal_list
+     */
+    @JvmStatic
+    fun classGetSignalList(classValue: String, noInheritance: Boolean = false): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDictionaryList(classGetSignalListBind, singleton, classValue, noInheritance)
+    }
+
+    /**
+     * Returns an array with all the properties of `class` or its ancestry if `no_inheritance` is
+     * `false`.
+     *
+     * Generated from Godot docs: ClassDB.class_get_property_list
+     */
+    @JvmStatic
+    fun classGetPropertyList(classValue: String, noInheritance: Boolean = false): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDictionaryList(classGetPropertyListBind, singleton, classValue, noInheritance)
+    }
+
+    /**
      * Returns the getter method name of `property` of `class`.
      *
      * Generated from Godot docs: ClassDB.class_get_property_getter
@@ -164,6 +198,20 @@ object ClassDB {
     @JvmStatic
     fun classGetMethodArgumentCount(classValue: String, method: String, noInheritance: Boolean = false): Int {
         return ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetInt(classGetMethodArgumentCountBind, singleton, classValue, method, noInheritance)
+    }
+
+    /**
+     * Returns an array with all the methods of `class` or its ancestry if `no_inheritance` is `false`.
+     * Every element of the array is a `Dictionary` with the following keys: `args`, `default_args`,
+     * `flags`, `id`, `name`, `return: (class_name, hint, hint_string, name, type, usage)`. Note: In
+     * exported release builds the debug info is not available, so the returned dictionaries will
+     * contain only method names.
+     *
+     * Generated from Godot docs: ClassDB.class_get_method_list
+     */
+    @JvmStatic
+    fun classGetMethodList(classValue: String, noInheritance: Boolean = false): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDictionaryList(classGetMethodListBind, singleton, classValue, noInheritance)
     }
 
     /**
@@ -285,6 +333,21 @@ object ClassDB {
         ObjectCalls.getMethodBind("ClassDB", "class_has_signal", CLASS_HAS_SIGNAL_HASH)
     }
 
+    private const val CLASS_GET_SIGNAL_HASH = 3061114238L
+    private val classGetSignalBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_signal", CLASS_GET_SIGNAL_HASH)
+    }
+
+    private const val CLASS_GET_SIGNAL_LIST_HASH = 3504980660L
+    private val classGetSignalListBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_signal_list", CLASS_GET_SIGNAL_LIST_HASH)
+    }
+
+    private const val CLASS_GET_PROPERTY_LIST_HASH = 3504980660L
+    private val classGetPropertyListBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_property_list", CLASS_GET_PROPERTY_LIST_HASH)
+    }
+
     private const val CLASS_GET_PROPERTY_GETTER_HASH = 3770832642L
     private val classGetPropertyGetterBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_get_property_getter", CLASS_GET_PROPERTY_GETTER_HASH)
@@ -313,6 +376,11 @@ object ClassDB {
     private const val CLASS_GET_METHOD_ARGUMENT_COUNT_HASH = 3885694822L
     private val classGetMethodArgumentCountBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_get_method_argument_count", CLASS_GET_METHOD_ARGUMENT_COUNT_HASH)
+    }
+
+    private const val CLASS_GET_METHOD_LIST_HASH = 3504980660L
+    private val classGetMethodListBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_method_list", CLASS_GET_METHOD_LIST_HASH)
     }
 
     private const val CLASS_CALL_STATIC_HASH = 3344196419L

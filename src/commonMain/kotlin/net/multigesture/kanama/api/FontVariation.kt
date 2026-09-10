@@ -20,6 +20,10 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
         @JvmName("setBaseFontProperty")
         set(value) = setBaseFont(value)
 
+    val variationOpentype: Map<String, Any?>
+        @JvmName("variationOpentypeProperty")
+        get() = getVariationOpentype()
+
     var variationFaceIndex: Int
         @JvmName("variationFaceIndexProperty")
         get() = getVariationFaceIndex()
@@ -101,6 +105,23 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
             return this
         }
         return Font.wrap(ret)
+    }
+
+    /**
+     * Font OpenType variation coordinates. More info: OpenType variation tags
+     * (https://docs.microsoft.com/en-us/typography/opentype/spec/dvaraxisreg). Note: This `Dictionary`
+     * uses OpenType tags as keys. Variation axes can be identified both by tags (`int`, e.g.
+     * `0x77678674`) and names (`String`, e.g. `wght`). Some axes might be accessible by multiple
+     * names. For example, `wght` refers to the same axis as `weight`. Tags on the other hand are
+     * unique. To convert between names and tags, use `TextServer.name_to_tag` and
+     * `TextServer.tag_to_name`. Note: To get available variation axes of a font, use
+     * `Font.get_supported_variation_list`.
+     *
+     * Generated from Godot docs: FontVariation.get_variation_opentype
+     */
+    fun getVariationOpentype(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getVariationOpentypeBind, handle)
     }
 
     /**
@@ -248,6 +269,11 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
         private const val GET_BASE_FONT_HASH = 3229501585L
         private val getBaseFontBind by lazy {
             ObjectCalls.getMethodBind("FontVariation", "get_base_font", GET_BASE_FONT_HASH)
+        }
+
+        private const val GET_VARIATION_OPENTYPE_HASH = 3102165223L
+        private val getVariationOpentypeBind by lazy {
+            ObjectCalls.getMethodBind("FontVariation", "get_variation_opentype", GET_VARIATION_OPENTYPE_HASH)
         }
 
         private const val SET_VARIATION_EMBOLDEN_HASH = 373806689L

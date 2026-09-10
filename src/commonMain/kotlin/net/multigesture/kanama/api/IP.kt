@@ -71,6 +71,17 @@ object IP {
     }
 
     /**
+     * Returns resolved addresses, or an empty array if an error happened or resolution didn't happen
+     * yet (see `get_resolve_item_status`).
+     *
+     * Generated from Godot docs: IP.get_resolve_item_addresses
+     */
+    @JvmStatic
+    fun getResolveItemAddresses(id: Int): List<Any?> {
+        return ObjectCalls.ptrcallWithIntArgRetArray(getResolveItemAddressesBind, singleton, id)
+    }
+
+    /**
      * Removes a given item `id` from the queue. This should be used to free a queue after it has
      * completed to enable more queries to happen.
      *
@@ -89,6 +100,16 @@ object IP {
     @JvmStatic
     fun getLocalAddresses(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLocalAddressesBind, singleton)
+    }
+
+    /**
+     * Returns all network adapters as an array. Each adapter is a dictionary of the form:
+     *
+     * Generated from Godot docs: IP.get_local_interfaces
+     */
+    @JvmStatic
+    fun getLocalInterfaces(): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getLocalInterfacesBind, singleton)
     }
 
     /**
@@ -129,6 +150,11 @@ object IP {
         ObjectCalls.getMethodBind("IP", "get_resolve_item_address", GET_RESOLVE_ITEM_ADDRESS_HASH)
     }
 
+    private const val GET_RESOLVE_ITEM_ADDRESSES_HASH = 663333327L
+    private val getResolveItemAddressesBind by lazy {
+        ObjectCalls.getMethodBind("IP", "get_resolve_item_addresses", GET_RESOLVE_ITEM_ADDRESSES_HASH)
+    }
+
     private const val ERASE_RESOLVE_ITEM_HASH = 1286410249L
     private val eraseResolveItemBind by lazy {
         ObjectCalls.getMethodBind("IP", "erase_resolve_item", ERASE_RESOLVE_ITEM_HASH)
@@ -137,6 +163,11 @@ object IP {
     private const val GET_LOCAL_ADDRESSES_HASH = 1139954409L
     private val getLocalAddressesBind by lazy {
         ObjectCalls.getMethodBind("IP", "get_local_addresses", GET_LOCAL_ADDRESSES_HASH)
+    }
+
+    private const val GET_LOCAL_INTERFACES_HASH = 3995934104L
+    private val getLocalInterfacesBind by lazy {
+        ObjectCalls.getMethodBind("IP", "get_local_interfaces", GET_LOCAL_INTERFACES_HASH)
     }
 
     private const val CLEAR_CACHE_HASH = 3005725572L

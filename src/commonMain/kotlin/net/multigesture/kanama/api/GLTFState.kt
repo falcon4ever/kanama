@@ -10,6 +10,10 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: GLTFState
  */
 open class GLTFState(handle: MemorySegment) : Resource(handle) {
+    val json: Map<String, Any?>
+        @JvmName("jsonProperty")
+        get() = getJson()
+
     var majorVersion: Int
         @JvmName("majorVersionProperty")
         get() = getMajorVersion()
@@ -150,6 +154,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun appendGltfNode(gltfNode: GLTFNode?, godotSceneNode: Node, parentNodeIndex: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(appendGltfNodeBind, handle, gltfNode?.requireOpenHandle() ?: MemorySegment.NULL, godotSceneNode.handle, parentNodeIndex)
+    }
+
+    fun getJson(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getJsonBind, handle)
     }
 
     fun getMajorVersion(): Int {
@@ -397,6 +406,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val APPEND_GLTF_NODE_HASH = 3562288551L
         private val appendGltfNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "append_gltf_node", APPEND_GLTF_NODE_HASH)
+        }
+
+        private const val GET_JSON_HASH = 3102165223L
+        private val getJsonBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "get_json", GET_JSON_HASH)
         }
 
         private const val GET_MAJOR_VERSION_HASH = 3905245786L

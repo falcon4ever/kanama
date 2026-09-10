@@ -59,6 +59,10 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setColorProperty")
         set(value) = setColor(value)
 
+    val env: Map<String, Any?>
+        @JvmName("envProperty")
+        get() = getEnvironment()
+
     var glyphIndex: Long
         @JvmName("glyphIndexProperty")
         get() = getGlyphIndex()
@@ -243,6 +247,21 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
     fun setColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+    }
+
+    /**
+     * Contains the arguments passed in the opening BBCode tag. By default, arguments are strings; if
+     * their contents match a type such as `bool`, `int` or `float`, they will be converted
+     * automatically. Color codes in the form `#rrggbb` or `#rgb` will be converted to an opaque
+     * `Color`. String arguments may not contain spaces, even if they're quoted. If present, quotes
+     * will also be present in the final string. For example, the opening BBCode tag `[example
+     * foo=hello bar=true baz=42 color=#ffffff]` will map to the following `Dictionary`:
+     *
+     * Generated from Godot docs: CharFXTransform.get_environment
+     */
+    fun getEnvironment(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getEnvironmentBind, handle)
     }
 
     /**
@@ -433,6 +452,11 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
         private const val SET_COLOR_HASH = 2920490490L
         private val setColorBind by lazy {
             ObjectCalls.getMethodBind("CharFXTransform", "set_color", SET_COLOR_HASH)
+        }
+
+        private const val GET_ENVIRONMENT_HASH = 2382534195L
+        private val getEnvironmentBind by lazy {
+            ObjectCalls.getMethodBind("CharFXTransform", "get_environment", GET_ENVIRONMENT_HASH)
         }
 
         private const val GET_GLYPH_INDEX_HASH = 3905245786L

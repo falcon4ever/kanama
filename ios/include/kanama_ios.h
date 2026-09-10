@@ -219,6 +219,41 @@ int64_t kanama_ios_godot_take_pending_packed(
 );
 
 /*
+ * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a Dictionary or
+ * a (typed or generic) Array, serialized ONCE into a self-describing blob (task 100, parcel 6):
+ *   Array:      [int32 count] ( record )*
+ *   Dictionary: [int32 count] ( [int32 keyLen][key utf8] record )*      (String/StringName keys)
+ *   record:     [int32 variant_type][int32 byteLen][bytes]
+ * Scalar records: BOOL 1, INT / OBJECT handle 8, FLOAT 8 (double), STRING family utf8, VECTOR2
+ * 2x float32, VECTOR2I 2x int32, VECTOR3 3x float32, COLOR 4x float32; a nested DICTIONARY / ARRAY
+ * value is a nested blob; every other type keeps its tag with byteLen 0. container_kind is
+ * KANAMA_IOS_VARIANT_TYPE_DICTIONARY (27) or KANAMA_IOS_VARIANT_TYPE_ARRAY (28). Returns the full
+ * blob size: when it fits buf_size the blob is written to out_buf, otherwise it is parked in a
+ * single pending slot for kanama_ios_godot_take_pending_container_blob. -1 on a null method /
+ * instance, an unknown kind, an unavailable API or allocation failure (nothing pending then).
+ */
+int64_t kanama_ios_godot_ptrcall_ret_container_blob(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t container_kind,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Drain the blob parked by kanama_ios_godot_ptrcall_ret_container_blob into out_buf (up to
+ * buf_size bytes), free it and return its full size. -1 when nothing is pending. Single slot:
+ * drain before the next container-returning call.
+ */
+int64_t kanama_ios_godot_take_pending_container_blob(
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
  * No-arg ptrcall returning a Godot PackedInt32Array, read back into int32 elements.
  *
  * ptrcall writes the returned array; its element count comes from the "size" builtin
