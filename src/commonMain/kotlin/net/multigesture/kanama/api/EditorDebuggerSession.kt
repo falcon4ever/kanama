@@ -12,6 +12,28 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
     /**
+     * Sends the given `message` to the attached remote instance, optionally passing additionally
+     * `data`. See `EngineDebugger` for how to retrieve those messages.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.send_message
+     */
+    fun sendMessage(message: String, data: List<Any?> = emptyList()) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, handle, message, data)
+    }
+
+    /**
+     * Toggle the given `profiler` on the attached remote instance, optionally passing additionally
+     * `data`. See `EngineProfiler` for more details.
+     *
+     * Generated from Godot docs: EditorDebuggerSession.toggle_profiler
+     */
+    fun toggleProfiler(profiler: String, enable: Boolean, data: List<Any?> = emptyList()) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringBoolArrayArgs(toggleProfilerBind, handle, profiler, enable, data)
+    }
+
+    /**
      * Returns `true` if the attached remote instance is currently in the debug loop.
      *
      * Generated from Godot docs: EditorDebuggerSession.is_breaked
@@ -87,6 +109,16 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): EditorDebuggerSession? =
             if (handle.address() == 0L) null else EditorDebuggerSession(handle)
+
+        private const val SEND_MESSAGE_HASH = 85656714L
+        private val sendMessageBind by lazy {
+            ObjectCalls.getMethodBind("EditorDebuggerSession", "send_message", SEND_MESSAGE_HASH)
+        }
+
+        private const val TOGGLE_PROFILER_HASH = 1198443697L
+        private val toggleProfilerBind by lazy {
+            ObjectCalls.getMethodBind("EditorDebuggerSession", "toggle_profiler", TOGGLE_PROFILER_HASH)
+        }
 
         private const val IS_BREAKED_HASH = 2240911060L
         private val isBreakedBind by lazy {

@@ -211,6 +211,151 @@ object NativeMenu {
     }
 
     /**
+     * Adds an item that will act as a submenu of the global menu `rid`. The `submenu_rid` argument is
+     * the RID of the global menu that will be shown when the item is clicked. Returns index of the
+     * inserted item, it's not guaranteed to be the same as `index` value. Note: This method is
+     * implemented on macOS and Windows.
+     *
+     * Generated from Godot docs: NativeMenu.add_submenu_item
+     */
+    @JvmStatic
+    fun addSubmenuItem(rid: RID, label: String, submenuRid: RID, tag: Any? = null, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringRIDVariantIntArgsRetInt(addSubmenuItemBind, singleton, rid, label, submenuRid, tag, index)
+    }
+
+    /**
+     * Adds a new item with text `label` to the global menu `rid`. Returns index of the inserted item,
+     * it's not guaranteed to be the same as `index` value. An `accelerator` can optionally be defined,
+     * which is a keyboard shortcut that can be pressed to trigger the menu button even if it's not
+     * currently open. The `accelerator` is generally a combination of `KeyModifierMask`s and `Key`s
+     * using bitwise OR such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). Note: The `callback` and
+     * `key_callback` Callables need to accept exactly one Variant parameter, the parameter passed to
+     * the Callables will be the value passed to `tag`. Note: This method is implemented on macOS and
+     * Windows. Note: On Windows, `accelerator` and `key_callback` are ignored.
+     *
+     * Generated from Godot docs: NativeMenu.add_item
+     */
+    @JvmStatic
+    fun addItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addItemBind, singleton, rid, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new checkable item with text `label` to the global menu `rid`. Returns index of the
+     * inserted item, it's not guaranteed to be the same as `index` value. An `accelerator` can
+     * optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu
+     * button even if it's not currently open. The `accelerator` is generally a combination of
+     * `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). Note:
+     * The `callback` and `key_callback` Callables need to accept exactly one Variant parameter, the
+     * parameter passed to the Callables will be the value passed to `tag`. Note: This method is
+     * implemented on macOS and Windows. Note: On Windows, `accelerator` and `key_callback` are
+     * ignored.
+     *
+     * Generated from Godot docs: NativeMenu.add_check_item
+     */
+    @JvmStatic
+    fun addCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addCheckItemBind, singleton, rid, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new item with text `label` and icon `icon` to the global menu `rid`. Returns index of the
+     * inserted item, it's not guaranteed to be the same as `index` value. An `accelerator` can
+     * optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu
+     * button even if it's not currently open. The `accelerator` is generally a combination of
+     * `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). Note:
+     * The `callback` and `key_callback` Callables need to accept exactly one Variant parameter, the
+     * parameter passed to the Callables will be the value passed to `tag`. Note: This method is
+     * implemented on macOS and Windows. Note: On Windows, `accelerator` and `key_callback` are
+     * ignored.
+     *
+     * Generated from Godot docs: NativeMenu.add_icon_item
+     */
+    @JvmStatic
+    fun addIconItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new checkable item with text `label` and icon `icon` to the global menu `rid`. Returns
+     * index of the inserted item, it's not guaranteed to be the same as `index` value. An
+     * `accelerator` can optionally be defined, which is a keyboard shortcut that can be pressed to
+     * trigger the menu button even if it's not currently open. The `accelerator` is generally a
+     * combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A`
+     * (Ctrl + A). Note: The `callback` and `key_callback` Callables need to accept exactly one Variant
+     * parameter, the parameter passed to the Callables will be the value passed to `tag`. Note: This
+     * method is implemented on macOS and Windows. Note: On Windows, `accelerator` and `key_callback`
+     * are ignored.
+     *
+     * Generated from Godot docs: NativeMenu.add_icon_check_item
+     */
+    @JvmStatic
+    fun addIconCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new radio-checkable item with text `label` to the global menu `rid`. Returns index of the
+     * inserted item, it's not guaranteed to be the same as `index` value. An `accelerator` can
+     * optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu
+     * button even if it's not currently open. The `accelerator` is generally a combination of
+     * `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). Note:
+     * Radio-checkable items just display a checkmark, but don't have any built-in checking behavior
+     * and must be checked/unchecked manually. See `set_item_checked` for more info on how to control
+     * it. Note: The `callback` and `key_callback` Callables need to accept exactly one Variant
+     * parameter, the parameter passed to the Callables will be the value passed to `tag`. Note: This
+     * method is implemented on macOS and Windows. Note: On Windows, `accelerator` and `key_callback`
+     * are ignored.
+     *
+     * Generated from Godot docs: NativeMenu.add_radio_check_item
+     */
+    @JvmStatic
+    fun addRadioCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addRadioCheckItemBind, singleton, rid, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new radio-checkable item with text `label` and icon `icon` to the global menu `rid`.
+     * Returns index of the inserted item, it's not guaranteed to be the same as `index` value. An
+     * `accelerator` can optionally be defined, which is a keyboard shortcut that can be pressed to
+     * trigger the menu button even if it's not currently open. The `accelerator` is generally a
+     * combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A`
+     * (Ctrl + A). Note: Radio-checkable items just display a checkmark, but don't have any built-in
+     * checking behavior and must be checked/unchecked manually. See `set_item_checked` for more info
+     * on how to control it. Note: The `callback` and `key_callback` Callables need to accept exactly
+     * one Variant parameter, the parameter passed to the Callables will be the value passed to `tag`.
+     * Note: This method is implemented on macOS and Windows. Note: On Windows, `accelerator` and
+     * `key_callback` are ignored.
+     *
+     * Generated from Godot docs: NativeMenu.add_icon_radio_check_item
+     */
+    @JvmStatic
+    fun addIconRadioCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new item with text `label` to the global menu `rid`. Contrarily to normal binary items,
+     * multistate items can have more than two states, as defined by `max_states`. Each press or
+     * activate of the item will increase the state by one. The default value is defined by
+     * `default_state`. Returns index of the inserted item, it's not guaranteed to be the same as
+     * `index` value. An `accelerator` can optionally be defined, which is a keyboard shortcut that can
+     * be pressed to trigger the menu button even if it's not currently open. The `accelerator` is
+     * generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL
+     * | KEY_A` (Ctrl + A). Note: By default, there's no indication of the current item state, it
+     * should be changed manually. Note: The `callback` and `key_callback` Callables need to accept
+     * exactly one Variant parameter, the parameter passed to the Callables will be the value passed to
+     * `tag`. Note: This method is implemented on macOS and Windows. Note: On Windows, `accelerator`
+     * and `key_callback` are ignored.
+     *
+     * Generated from Godot docs: NativeMenu.add_multistate_item
+     */
+    @JvmStatic
+    fun addMultistateItem(rid: RID, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(addMultistateItemBind, singleton, rid, label, maxStates, defaultState, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
      * Adds a separator between items to the global menu `rid`. Separators also occupy an index.
      * Returns index of the inserted item, it's not guaranteed to be the same as `index` value. Note:
      * This method is implemented on macOS and Windows.
@@ -231,6 +376,17 @@ object NativeMenu {
     @JvmStatic
     fun findItemIndexWithText(rid: RID, text: String): Int {
         return ObjectCalls.ptrcallWithRIDAndStringArgRetInt(findItemIndexWithTextBind, singleton, rid, text)
+    }
+
+    /**
+     * Returns the index of the item with the specified `tag`. Indices are automatically assigned to
+     * each item by the engine. Note: This method is implemented on macOS and Windows.
+     *
+     * Generated from Godot docs: NativeMenu.find_item_index_with_tag
+     */
+    @JvmStatic
+    fun findItemIndexWithTag(rid: RID, tag: Any?): Int {
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetInt(findItemIndexWithTagBind, singleton, rid, tag)
     }
 
     /**
@@ -475,6 +631,18 @@ object NativeMenu {
     @JvmStatic
     fun setItemKeyCallback(rid: RID, idx: Int, keyCallback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemKeyCallbackBind, singleton, rid, idx, keyCallback.target.handle, keyCallback.method)
+    }
+
+    /**
+     * Sets the metadata of an item, which may be of any type. You can later get it with
+     * `get_item_tag`, which provides a simple way of assigning context data to items. Note: This
+     * method is implemented on macOS and Windows.
+     *
+     * Generated from Godot docs: NativeMenu.set_item_tag
+     */
+    @JvmStatic
+    fun setItemTag(rid: RID, idx: Int, tag: Any?) {
+        ObjectCalls.ptrcallWithRIDIntAndVariantArgs(setItemTagBind, singleton, rid, idx, tag)
     }
 
     /**
@@ -736,6 +904,46 @@ object NativeMenu {
         ObjectCalls.getMethodBind("NativeMenu", "is_opened", IS_OPENED_HASH)
     }
 
+    private const val ADD_SUBMENU_ITEM_HASH = 1002030223L
+    private val addSubmenuItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_submenu_item", ADD_SUBMENU_ITEM_HASH)
+    }
+
+    private const val ADD_ITEM_HASH = 980552939L
+    private val addItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_item", ADD_ITEM_HASH)
+    }
+
+    private const val ADD_CHECK_ITEM_HASH = 980552939L
+    private val addCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_check_item", ADD_CHECK_ITEM_HASH)
+    }
+
+    private const val ADD_ICON_ITEM_HASH = 1372188274L
+    private val addIconItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_icon_item", ADD_ICON_ITEM_HASH)
+    }
+
+    private const val ADD_ICON_CHECK_ITEM_HASH = 1372188274L
+    private val addIconCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_icon_check_item", ADD_ICON_CHECK_ITEM_HASH)
+    }
+
+    private const val ADD_RADIO_CHECK_ITEM_HASH = 980552939L
+    private val addRadioCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_radio_check_item", ADD_RADIO_CHECK_ITEM_HASH)
+    }
+
+    private const val ADD_ICON_RADIO_CHECK_ITEM_HASH = 1372188274L
+    private val addIconRadioCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_icon_radio_check_item", ADD_ICON_RADIO_CHECK_ITEM_HASH)
+    }
+
+    private const val ADD_MULTISTATE_ITEM_HASH = 2674635658L
+    private val addMultistateItemBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "add_multistate_item", ADD_MULTISTATE_ITEM_HASH)
+    }
+
     private const val ADD_SEPARATOR_HASH = 448810126L
     private val addSeparatorBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "add_separator", ADD_SEPARATOR_HASH)
@@ -744,6 +952,11 @@ object NativeMenu {
     private const val FIND_ITEM_INDEX_WITH_TEXT_HASH = 1362438794L
     private val findItemIndexWithTextBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_text", FIND_ITEM_INDEX_WITH_TEXT_HASH)
+    }
+
+    private const val FIND_ITEM_INDEX_WITH_TAG_HASH = 1260085030L
+    private val findItemIndexWithTagBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_tag", FIND_ITEM_INDEX_WITH_TAG_HASH)
     }
 
     private const val FIND_ITEM_INDEX_WITH_SUBMENU_HASH = 893635918L
@@ -849,6 +1062,11 @@ object NativeMenu {
     private const val SET_ITEM_KEY_CALLBACK_HASH = 2779810226L
     private val setItemKeyCallbackBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "set_item_key_callback", SET_ITEM_KEY_CALLBACK_HASH)
+    }
+
+    private const val SET_ITEM_TAG_HASH = 2706844827L
+    private val setItemTagBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "set_item_tag", SET_ITEM_TAG_HASH)
     }
 
     private const val SET_ITEM_TEXT_HASH = 4153150897L

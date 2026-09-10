@@ -24,6 +24,11 @@ class OpenXRFutureResult(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(cancelFutureBind, handle)
     }
 
+    fun setResultValue(resultValue: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithVariantArg(setResultValueBind, handle, resultValue)
+    }
+
     fun getResultValue(): Any? {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getResultValueBind, handle)
@@ -58,6 +63,11 @@ class OpenXRFutureResult(handle: MemorySegment) : RefCounted(handle) {
         private const val CANCEL_FUTURE_HASH = 3218959716L
         private val cancelFutureBind by lazy {
             ObjectCalls.getMethodBind("OpenXRFutureResult", "cancel_future", CANCEL_FUTURE_HASH)
+        }
+
+        private const val SET_RESULT_VALUE_HASH = 1114965689L
+        private val setResultValueBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRFutureResult", "set_result_value", SET_RESULT_VALUE_HASH)
         }
 
         private const val GET_RESULT_VALUE_HASH = 1214101251L

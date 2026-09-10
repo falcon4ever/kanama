@@ -147,6 +147,10 @@ class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
             return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromResourceBind, MemorySegment.NULL, shapeResource?.requireOpenHandle() ?: MemorySegment.NULL))
         }
 
+        fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsShape? {
+            return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
+        }
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GLTFPhysicsShape? =
             wrap(handle)
@@ -172,6 +176,11 @@ class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
         private const val TO_RESOURCE_HASH = 1913542110L
         private val toResourceBind by lazy {
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "to_resource", TO_RESOURCE_HASH)
+        }
+
+        private const val FROM_DICTIONARY_HASH = 2390691823L
+        private val fromDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFPhysicsShape", "from_dictionary", FROM_DICTIONARY_HASH)
         }
 
         private const val TO_DICTIONARY_HASH = 3102165223L

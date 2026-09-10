@@ -939,6 +939,9 @@ private const val IOS_PT_PACKED_VECTOR2_ARRAY = 23
 private const val IOS_PT_PACKED_COLOR_ARRAY = 24
 private const val IOS_PT_DICTIONARY = 29
 private const val IOS_PT_ARRAY = 30
+// BUILD-tagged Variant ARG (task 100, parcel 7): the desc {tag, ptr} boxed by the dispatch. Must
+// match KANAMA_IOS_PT_VARIANT (38) at the end of the C PT enum and PT_VARIANT in the generator.
+internal const val IOS_PT_VARIANT = 38
 private const val IOS_PT_PACKED_BYTE_ARRAY = 31
 private const val IOS_PT_PACKED_INT32_ARRAY = 32
 private const val IOS_PT_PACKED_INT64_ARRAY = 33
@@ -1434,7 +1437,7 @@ private object IosReturnPackedDescScratch {
 // value ships as PT_VOID/nil (the same policy as the Variant-return dispatch). Same buffer-reuse
 // contract as the other return scratches.
 @OptIn(ExperimentalForeignApi::class)
-private object IosReturnContainerScratch {
+internal object IosReturnContainerScratch {
   private var buf: CPointer<ByteVar>? = null
   private var capacity: Int = 0
 
@@ -1467,8 +1470,12 @@ private object IosReturnContainerScratch {
     return out
   }
 
-  /** PT tag + payload bytes for one audited container value; unaudited -> PT_VOID/nil. */
-  internal fun taggedValue(value: Any?): Pair<Int, ByteArray> =
+  /**
+   * PT tag + payload bytes for one audited container value; unaudited -> PT_VOID/nil. With [strict]
+   * (the argument direction, task 100 parcel 7) an unaudited value — a nested Map / List or any
+   * other Kotlin object — throws instead, so a caller never silently passes nil.
+   */
+  internal fun taggedValue(value: Any?, strict: Boolean = false): Pair<Int, ByteArray> =
     when (value) {
       null -> Pair(IOS_PT_VOID, ByteArray(0))
       is Boolean -> Pair(IOS_PT_BOOL, byteArrayOf(if (value) 1 else 0))
@@ -1492,17 +1499,35 @@ private object IosReturnContainerScratch {
         )
       is Color -> Pair(IOS_PT_COLOR, float32Bytes(value.r, value.g, value.b, value.a))
       is RID -> Pair(IOS_PT_RID, int64Bytes(value.value))
-      else -> Pair(IOS_PT_VOID, ByteArray(0))
+      else ->
+        if (strict) {
+          error(
+            "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
+              "Dictionary / Array argument (nested containers and non-scalar values are not " +
+              "marshalled yet — task 100 parcel 7)"
+          )
+        } else {
+          Pair(IOS_PT_VOID, ByteArray(0))
+        }
     }
 
-  fun encodeDictionary(map: Map<*, *>): CPointer<ByteVar> {
+  /**
+   * Encode [map] into the entry blob. [alloc] provides the destination bytes: the return path uses
+   * the persistent scratch (default); the argument path (task 100 parcel 7) passes a memScoped
+   * allocator so two container arguments of one call do not share a buffer.
+   */
+  fun encodeDictionary(
+    map: Map<*, *>,
+    alloc: (Int) -> CPointer<ByteVar> = ::ensure,
+    strict: Boolean = false,
+  ): CPointer<ByteVar> {
     val entries =
       map.entries.map { (k, v) ->
-        Pair((k as? String ?: k.toString()).encodeToByteArray(), taggedValue(v))
+        Pair((k as? String ?: k.toString()).encodeToByteArray(), taggedValue(v, strict))
       }
     var needed = 4
     for ((key, tagged) in entries) needed += 4 + key.size + 8 + tagged.second.size
-    val b = ensure(needed)
+    val b = alloc(needed)
     var off = 0
     fun putInt32(v: Int) {
       b[off] = (v and 0xFF).toByte()
@@ -1526,11 +1551,15 @@ private object IosReturnContainerScratch {
     return b
   }
 
-  fun encodeArray(values: List<*>): CPointer<ByteVar> {
-    val elements = values.map { taggedValue(it) }
+  fun encodeArray(
+    values: List<*>,
+    alloc: (Int) -> CPointer<ByteVar> = ::ensure,
+    strict: Boolean = false,
+  ): CPointer<ByteVar> {
+    val elements = values.map { taggedValue(it, strict) }
     var needed = 4
     for (tagged in elements) needed += 8 + tagged.second.size
-    val b = ensure(needed)
+    val b = alloc(needed)
     var off = 0
     fun putInt32(v: Int) {
       b[off] = (v and 0xFF).toByte()

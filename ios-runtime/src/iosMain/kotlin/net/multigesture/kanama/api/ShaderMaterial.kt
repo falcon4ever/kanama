@@ -26,6 +26,11 @@ class ShaderMaterial(handle: MemorySegment) : Material(handle) {
         return Shader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, handle))
     }
 
+    fun setShaderParameter(param: String, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setShaderParameterBind, handle, param, value)
+    }
+
     fun getShaderParameter(param: String): Any? {
         checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, handle, param)
@@ -57,6 +62,11 @@ class ShaderMaterial(handle: MemorySegment) : Material(handle) {
         private const val GET_SHADER_HASH = 2078273437L
         private val getShaderBind by lazy {
             ObjectCalls.getMethodBind("ShaderMaterial", "get_shader", GET_SHADER_HASH)
+        }
+
+        private const val SET_SHADER_PARAMETER_HASH = 3776071444L
+        private val setShaderParameterBind by lazy {
+            ObjectCalls.getMethodBind("ShaderMaterial", "set_shader_parameter", SET_SHADER_PARAMETER_HASH)
         }
 
         private const val GET_SHADER_PARAMETER_HASH = 2760726917L

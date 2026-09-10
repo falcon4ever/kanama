@@ -230,6 +230,18 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Puts a Variant into the stream. If `full_objects` is `true` encoding objects is allowed (and can
+     * potentially include code). Internally, this uses the same encoding mechanism as the
+     * `@GlobalScope.var_to_bytes` method.
+     *
+     * Generated from Godot docs: StreamPeer.put_var
+     */
+    fun putVar(value: Any?, fullObjects: Boolean = false) {
+        checkOpen()
+        ObjectCalls.ptrcallWithVariantAndBoolArg(putVarBind, handle, value, fullObjects)
+    }
+
+    /**
      * Gets a signed byte from the stream.
      *
      * Generated from Godot docs: StreamPeer.get_8
@@ -482,6 +494,11 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         private const val PUT_UTF8_STRING_HASH = 83702148L
         private val putUtf8StringBind by lazy {
             ObjectCalls.getMethodBind("StreamPeer", "put_utf8_string", PUT_UTF8_STRING_HASH)
+        }
+
+        private const val PUT_VAR_HASH = 738511890L
+        private val putVarBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "put_var", PUT_VAR_HASH)
         }
 
         private const val GET_8_HASH = 2455072627L

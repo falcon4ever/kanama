@@ -469,6 +469,12 @@ IOS_ARG_KINDS = {
     # retention (callable-args ownership design, Decisions 1-3, 5; record in the internal task repo). Callable
     # *return* and Callable-as-Variant-arg stay unsupported (no emitted iOS method needs them).
     "Callable",
+    # task 100 parcel 7: Variant / Dictionary / Array ARGS are BUILD-tagged through
+    # ObjectCalls.packVariantDesc / packDictionaryBlob / packArrayBlob (scalars, one level of
+    # Map / List inside a Variant; strict — an unsupported value throws instead of passing nil).
+    "Variant",
+    "Dictionary",
+    "Array",
 }
 # Return shapes the iOS helpers can read back (keyed by CallShape.kotlin_return, the
 # stable per-helper return-type token). StringName/String/RID/List/Map returns
@@ -3344,7 +3350,9 @@ import net.multigesture.kanama.types.Vector4
  * typed-Array returns to the `ObjectCalls.ptrcallRetTyped<Kind>List` blob read-backs
  * (kanama_ios_godot_ptrcall_ret_array_blob). Packed*Array ARGS are laid out by the
  * `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch builds the Godot
- * array from. Helpers already hand-written in ObjectCalls.kt are the override set and are NOT
+ * array from; Variant / Dictionary / Array ARGS by `packVariantDesc` / `packDictionaryBlob` /
+ * `packArrayBlob` (a KanamaIosVariantArgDesc or the task-29 entry blob the dispatch boxes for the
+ * call). Helpers already hand-written in ObjectCalls.kt are the override set and are NOT
  * regenerated here.
  */
 '''
@@ -3384,6 +3392,12 @@ IOS_PT_TAG_VALUES = {
     # engine untyped, so the tag is documentation + self-test selector). Appended at the
     # C enum's end (37) — never renumber existing tags.
     "PT_RECT2I": 37,
+    # task 100 parcel 7: Variant ARG (a KanamaIosVariantArgDesc, appended at the C enum's end) and
+    # the task-29 DICTIONARY / ARRAY tags doubling as BUILD-tagged args (the arg ptr is the entry
+    # blob). Values match the C enum and KanamaIosRuntime.kt.
+    "PT_VARIANT": 38,
+    "PT_DICTIONARY": 29,
+    "PT_ARRAY": 30,
     # Packed*Array BUILD-tagged args (task 100, parcel 4): the arg ptr is a KanamaIosPackedArgDesc
     # {count, data} (PT_PACKED_STRING_ARRAY: data is the [int32 count]([int32 len][utf8])* blob).
     # Values match the C enum and KanamaIosRuntime.kt; 23/24 predate the task-29 return tags.
@@ -3556,6 +3570,15 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
     if kind in IOS_PACKED_ARGS:
         param_type, tag, helper = IOS_PACKED_ARGS[kind]
         return (param_type, tag, [f"val {c} = {helper}({a})"], f"{c}.reinterpret<CPointed>()")
+    # task 100 parcel 7: Variant / Dictionary / Array args — the descriptor / entry blob is laid
+    # out in the call's memScope by a hand-written packer; the dispatch boxes / rebuilds the Godot
+    # value for the call and destroys it afterwards.
+    if kind == "Variant":
+        return ("Any?", "PT_VARIANT", [f"val {c} = packVariantDesc({a})"], f"{c}.reinterpret<CPointed>()")
+    if kind == "Dictionary":
+        return ("Map<String, Any?>", "PT_DICTIONARY", [f"val {c} = packDictionaryBlob({a})"], f"{c}.reinterpret<CPointed>()")
+    if kind == "Array":
+        return ("List<Any?>", "PT_ARRAY", [f"val {c} = packArrayBlob({a})"], f"{c}.reinterpret<CPointed>()")
     raise ValueError(f"iOS arg kind not audited: {kind}")
 
 

@@ -10,9 +10,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: GLTFState
  */
 open class GLTFState(handle: MemorySegment) : Resource(handle) {
-    val json: Map<String, Any?>
+    var json: Map<String, Any?>
         @JvmName("jsonProperty")
         get() = getJson()
+        @JvmName("setJsonProperty")
+        set(value) = setJson(value)
 
     var majorVersion: Int
         @JvmName("majorVersionProperty")
@@ -180,6 +182,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun getJson(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getJsonBind, handle)
+    }
+
+    fun setJson(json: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(setJsonBind, handle, json)
     }
 
     fun getMajorVersion(): Int {
@@ -397,6 +404,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
+    fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+    }
+
     fun getHandleBinaryImageMode(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getHandleBinaryImageModeBind, handle)
@@ -462,6 +474,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_JSON_HASH = 3102165223L
         private val getJsonBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_json", GET_JSON_HASH)
+        }
+
+        private const val SET_JSON_HASH = 4155329257L
+        private val setJsonBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_json", SET_JSON_HASH)
         }
 
         private const val GET_MAJOR_VERSION_HASH = 3905245786L
@@ -677,6 +694,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_ADDITIONAL_DATA_HASH = 2760726917L
         private val getAdditionalDataBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_additional_data", GET_ADDITIONAL_DATA_HASH)
+        }
+
+        private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
+        private val setAdditionalDataBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
         }
 
         private const val GET_HANDLE_BINARY_IMAGE_MODE_HASH = 1363384196L

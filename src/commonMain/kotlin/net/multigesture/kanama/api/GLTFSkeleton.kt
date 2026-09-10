@@ -26,9 +26,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         @JvmName("uniqueNamesProperty")
         get() = getUniqueNames()
 
-    val godotBoneNode: Map<String, Any?>
+    var godotBoneNode: Map<String, Any?>
         @JvmName("godotBoneNodeProperty")
         get() = getGodotBoneNode()
+        @JvmName("setGodotBoneNodeProperty")
+        set(value) = setGodotBoneNode(value)
 
     fun getJoints(): List<Int> {
         checkOpen()
@@ -63,6 +65,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
     fun getGodotBoneNode(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(getGodotBoneNodeBind, handle)
+    }
+
+    fun setGodotBoneNode(godotBoneNode: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(setGodotBoneNodeBind, handle, godotBoneNode)
     }
 
     fun getBoneAttachmentCount(): Int {
@@ -116,6 +123,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         private const val GET_GODOT_BONE_NODE_HASH = 2382534195L
         private val getGodotBoneNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkeleton", "get_godot_bone_node", GET_GODOT_BONE_NODE_HASH)
+        }
+
+        private const val SET_GODOT_BONE_NODE_HASH = 4155329257L
+        private val setGodotBoneNodeBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkeleton", "set_godot_bone_node", SET_GODOT_BONE_NODE_HASH)
         }
 
         private const val GET_BONE_ATTACHMENT_COUNT_HASH = 2455072627L

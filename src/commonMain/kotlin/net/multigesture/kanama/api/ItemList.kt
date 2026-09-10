@@ -330,6 +330,15 @@ class ItemList(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Sets a value (of any type) to be stored with the item associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.set_item_metadata
+     */
+    fun setItemMetadata(idx: Int, metadata: Any?) {
+        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, idx, metadata)
+    }
+
+    /**
      * Returns the metadata value of the specified index.
      *
      * Generated from Godot docs: ItemList.get_item_metadata
@@ -1058,6 +1067,11 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         private const val IS_ITEM_DISABLED_HASH = 1116898809L
         private val isItemDisabledBind by lazy {
             ObjectCalls.getMethodBind("ItemList", "is_item_disabled", IS_ITEM_DISABLED_HASH)
+        }
+
+        private const val SET_ITEM_METADATA_HASH = 2152698145L
+        private val setItemMetadataBind by lazy {
+            ObjectCalls.getMethodBind("ItemList", "set_item_metadata", SET_ITEM_METADATA_HASH)
         }
 
         private const val GET_ITEM_METADATA_HASH = 4227898402L

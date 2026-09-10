@@ -32,11 +32,13 @@ import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.RefCounted
+import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
 import net.multigesture.kanama.ios.KanamaIosRpcConfig
 import net.multigesture.kanama.ios.KanamaIosRuntime
 import net.multigesture.kanama.ios.KanamaIosScriptDescriptor
 import net.multigesture.kanama.ios.cinterop.KanamaIosPackedArgDesc
+import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
@@ -132,6 +134,7 @@ object ObjectCalls {
   private const val PT_PACKED_VECTOR2_ARRAY = 23
   private const val PT_PACKED_COLOR_ARRAY = 24
   private const val PT_ARRAY = 30
+  private const val PT_DICTIONARY = 29
   private const val PT_PACKED_BYTE_ARRAY = 31
 
   // Godot Variant type tags (returned by kanama_ios_godot_object_call, for decoding
@@ -1354,6 +1357,144 @@ object ObjectCalls {
 
   // Lay a ByteArray into scratch + a {count,data} descriptor for a BUILD-tagged
   // PT_PACKED_BYTE_ARRAY arg (the C dispatch builds the Godot array from it).
+  // task 100 (parcel 7) — Variant / Dictionary / Array ARGUMENTS. The generated helpers lay out a
+  // KanamaIosVariantArgDesc {tag, ptr} (Variant) or the task-29 entry blob (Dictionary / Array) in
+  // the call's memScope and hand the pointer to the dispatch, which boxes / rebuilds the Godot
+  // value
+  // for the call and destroys it afterwards. Supported inside a Variant: null, Boolean, Int/Long,
+  // Float/Double, String, NodePath, Vector2/2i/3, Color, RID, GodotObject / MemorySegment handle,
+  // and ONE level of Map<String, *> / List<*> whose values are scalars. Supported inside a
+  // Dictionary / Array argument: scalars only; a nested container or any other Kotlin object throws
+  // (IosReturnContainerScratch.taggedValue strict mode) rather than passing nil.
+  internal fun MemScope.packVariantDesc(value: Any?): CPointer<KanamaIosVariantArgDesc> {
+    val desc = alloc<KanamaIosVariantArgDesc>()
+    when (value) {
+      null -> {
+        desc.tag = PT_VOID
+        desc.ptr = null
+      }
+      is Boolean -> {
+        val c = alloc<ByteVar>()
+        c.value = if (value) 1 else 0
+        desc.tag = PT_BOOL
+        desc.ptr = c.ptr
+      }
+      is Int -> {
+        val c = alloc<LongVar>()
+        c.value = value.toLong()
+        desc.tag = PT_INT64
+        desc.ptr = c.ptr
+      }
+      is Long -> {
+        val c = alloc<LongVar>()
+        c.value = value
+        desc.tag = PT_INT64
+        desc.ptr = c.ptr
+      }
+      is Float -> {
+        val c = alloc<DoubleVar>()
+        c.value = value.toDouble()
+        desc.tag = PT_FLOAT64
+        desc.ptr = c.ptr
+      }
+      is Double -> {
+        val c = alloc<DoubleVar>()
+        c.value = value
+        desc.tag = PT_FLOAT64
+        desc.ptr = c.ptr
+      }
+      is String -> {
+        desc.tag = PT_STRING
+        desc.ptr = value.cstr.ptr
+      }
+      is NodePath -> {
+        desc.tag = PT_NODE_PATH
+        desc.ptr = value.path.cstr.ptr
+      }
+      is Vector2 -> {
+        val c = allocArray<GodotRealVar>(2)
+        c[0] = GodotReal.toC(value.x)
+        c[1] = GodotReal.toC(value.y)
+        desc.tag = PT_VECTOR2
+        desc.ptr = c
+      }
+      is Vector2i -> {
+        val c = allocArray<IntVar>(2)
+        c[0] = value.x
+        c[1] = value.y
+        desc.tag = PT_VECTOR2I
+        desc.ptr = c
+      }
+      is Vector3 -> {
+        val c = allocArray<GodotRealVar>(3)
+        c[0] = GodotReal.toC(value.x)
+        c[1] = GodotReal.toC(value.y)
+        c[2] = GodotReal.toC(value.z)
+        desc.tag = PT_VECTOR3
+        desc.ptr = c
+      }
+      is Color -> {
+        val c = allocArray<FloatVar>(4)
+        c[0] = value.r
+        c[1] = value.g
+        c[2] = value.b
+        c[3] = value.a
+        desc.tag = PT_COLOR
+        desc.ptr = c
+      }
+      is RID -> {
+        val c = alloc<LongVar>()
+        c.value = value.value
+        desc.tag = PT_RID
+        desc.ptr = c.ptr
+      }
+      is GodotObject -> {
+        val c = alloc<LongVar>()
+        c.value = value.handle.address()
+        desc.tag = PT_OBJECT
+        desc.ptr = c.ptr
+      }
+      is MemorySegment -> {
+        val c = alloc<LongVar>()
+        c.value = value.address()
+        desc.tag = PT_OBJECT
+        desc.ptr = c.ptr
+      }
+      is Map<*, *> -> {
+        desc.tag = PT_DICTIONARY
+        desc.ptr =
+          IosReturnContainerScratch.encodeDictionary(
+            value,
+            { n -> allocArray<ByteVar>(n) },
+            strict = true,
+          )
+      }
+      is List<*> -> {
+        desc.tag = PT_ARRAY
+        desc.ptr =
+          IosReturnContainerScratch.encodeArray(
+            value,
+            { n -> allocArray<ByteVar>(n) },
+            strict = true,
+          )
+      }
+      else ->
+        error(
+          "iOS: unsupported Variant argument type " +
+            (value::class.simpleName ?: "<anonymous>") +
+            " (task 100 parcel 7 marshals scalars, String/NodePath, Vector2/2i/3, Color, RID, " +
+            "object handles and one level of Map / List)"
+        )
+    }
+    return desc.ptr
+  }
+
+  internal fun MemScope.packDictionaryBlob(map: Map<String, Any?>): CPointer<ByteVar> =
+    IosReturnContainerScratch.encodeDictionary(map, { n -> allocArray<ByteVar>(n) }, strict = true)
+
+  internal fun MemScope.packArrayBlob(values: List<Any?>): CPointer<ByteVar> =
+    IosReturnContainerScratch.encodeArray(values, { n -> allocArray<ByteVar>(n) }, strict = true)
+
   internal fun MemScope.packByteDesc(bytes: ByteArray): CPointer<KanamaIosPackedArgDesc> {
     val n = bytes.size
     val buf = allocArray<ByteVar>(if (n > 0) n else 1)
@@ -4256,6 +4397,118 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     arrayOctantCells.isEmpty(),
   )
   ObjectCalls.destroyObject(arrayGrid)
+
+  // task 100 (parcel 7) — Variant / Dictionary / Array ARGUMENTS through the generated helpers
+  // (packVariantDesc / packDictionaryBlob / packArrayBlob; the dispatch boxes or rebuilds the Godot
+  // value for the call and destroys it afterwards). ConfigFile and Expression are RefCounted,
+  // AudioStreamWAV a data Resource, ProjectSettings a core singleton — none of them reach the
+  // physics / navigation servers, which do not exist at scene-level init.
+  val argCfg = ObjectCalls.constructObject("ConfigFile")
+  fun cfgSet(key: String, value: Any?) =
+    ObjectCalls.ptrcallWithTwoStringAndVariantArg(
+      ObjectCalls.getMethodBind("ConfigFile", "set_value", 2504492430L),
+      argCfg,
+      "s",
+      key,
+      value,
+    )
+  fun cfgGet(key: String, default: Any?): Any? =
+    ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(
+      ObjectCalls.getMethodBind("ConfigFile", "get_value", 89809366L),
+      argCfg,
+      "s",
+      key,
+      default,
+    )
+  fun cfgHas(key: String): Boolean =
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("ConfigFile", "has_section_key", 820780508L),
+      argCfg,
+      listOf("s", key),
+    ) == true
+  cfgSet("i", 42L)
+  check("arg-variant(ConfigFile int==42)", cfgGet("i", null) == 42L)
+  cfgSet("f", 2.5)
+  check("arg-variant(ConfigFile float==2.5)", cfgGet("f", null) == 2.5)
+  cfgSet("str", "Kanama \u00e9")
+  check("arg-variant(ConfigFile string round-trips utf8)", cfgGet("str", null) == "Kanama \u00e9")
+  cfgSet("b", true)
+  check("arg-variant(ConfigFile bool==true)", cfgGet("b", null) == true)
+  cfgSet("v", Vector2(1f, 2f))
+  check("arg-variant(ConfigFile Vector2 round-trip)", cfgGet("v", null) == Vector2(1f, 2f))
+  // A null Variant must arrive as nil: ConfigFile.set_value(null) erases the key.
+  cfgSet("i", null)
+  check(
+    "arg-variant(null erases the key; default 7 returned)",
+    !cfgHas("i") && cfgGet("i", 7L) == 7L,
+  )
+  // One level of Map / List inside a Variant: stored (a nil would have erased the key); the Variant
+  // scalar decode surfaces containers as null on both backends, so read back through
+  // has_section_key.
+  cfgSet("m", mapOf("a" to 1L, "b" to "x"))
+  check("arg-variant(Map inside a Variant is stored)", cfgHas("m"))
+  cfgSet("l", listOf(1L, 2L, 3L))
+  check("arg-variant(List inside a Variant is stored)", cfgHas("l"))
+  ObjectCalls.destroyObject(argCfg)
+
+  // Array argument whose element VALUE must reach the engine: Expression x + 1 with inputs [41].
+  val argExpr = ObjectCalls.constructObject("Expression")
+  val argParse =
+    ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(
+      ObjectCalls.getMethodBind("Expression", "parse", 3069722906L),
+      argExpr,
+      "x + 1",
+      listOf("x"),
+    )
+  val argResult =
+    ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(
+      ObjectCalls.getMethodBind("Expression", "execute", 3712471238L),
+      argExpr,
+      listOf(41L),
+      MemorySegment.NULL,
+      true,
+      false,
+    )
+  check("arg-array(Expression.execute([41]) x + 1 == 42)", argParse == 0L && argResult == 42L)
+  ObjectCalls.destroyObject(argExpr)
+
+  // Dictionary argument read back through the parcel-6 Dictionary return.
+  val argWav = ObjectCalls.constructObject("AudioStreamWAV")
+  ObjectCalls.ptrcallWithDictionaryArg(
+    ObjectCalls.getMethodBind("AudioStreamWAV", "set_tags", 4155329257L),
+    argWav,
+    mapOf("title" to "Kanama", "track" to 3L, "gain" to 0.5),
+  )
+  val argTags =
+    ObjectCalls.ptrcallNoArgsRetDictionary(
+      ObjectCalls.getMethodBind("AudioStreamWAV", "get_tags", 3102165223L),
+      argWav,
+    )
+  check(
+    "arg-dictionary(AudioStreamWAV.set_tags/get_tags round-trip)",
+    argTags["title"] == "Kanama" &&
+      argTags["track"] == 3L &&
+      argTags["gain"] == 0.5 &&
+      argTags.size == 3,
+  )
+  ObjectCalls.destroyObject(argWav)
+
+  // String + Variant on a singleton: ProjectSettings.set_setting then has_setting.
+  val argPs = ObjectCalls.getSingleton("ProjectSettings")
+  ObjectCalls.ptrcallWithStringAndVariantArg(
+    ObjectCalls.getMethodBind("ProjectSettings", "set_setting", 402577236L),
+    argPs,
+    "kanama/selftest_parcel7",
+    42L,
+  )
+  check(
+    "arg-variant(ProjectSettings.set_setting stored)",
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("ProjectSettings", "has_setting", 3927539163L),
+      argPs,
+      listOf("kanama/selftest_parcel7"),
+    ) == true,
+  )
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

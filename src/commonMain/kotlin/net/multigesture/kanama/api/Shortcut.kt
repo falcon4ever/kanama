@@ -12,9 +12,22 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: Shortcut
  */
 class Shortcut(handle: MemorySegment) : Resource(handle) {
-    val events: List<Any?>
+    var events: List<Any?>
         @JvmName("eventsProperty")
         get() = getEvents()
+        @JvmName("setEventsProperty")
+        set(value) = setEvents(value)
+
+    /**
+     * The shortcut's `InputEvent` array. Generally the `InputEvent` used is an `InputEventKey`, though
+     * it can be any `InputEvent`, including an `InputEventAction`.
+     *
+     * Generated from Godot docs: Shortcut.set_events
+     */
+    fun setEvents(events: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setEventsBind, handle, events)
+    }
 
     /**
      * The shortcut's `InputEvent` array. Generally the `InputEvent` used is an `InputEventKey`, though
@@ -65,6 +78,11 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): Shortcut? =
             if (handle.address() == 0L) null else Shortcut(handle)
+
+        private const val SET_EVENTS_HASH = 381264803L
+        private val setEventsBind by lazy {
+            ObjectCalls.getMethodBind("Shortcut", "set_events", SET_EVENTS_HASH)
+        }
 
         private const val GET_EVENTS_HASH = 3995934104L
         private val getEventsBind by lazy {

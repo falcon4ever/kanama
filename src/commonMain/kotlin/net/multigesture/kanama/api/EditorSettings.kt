@@ -22,6 +22,17 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Sets the `value` of the setting specified by `name`. This is equivalent to using `Object.set` on
+     * the EditorSettings instance.
+     *
+     * Generated from Godot docs: EditorSettings.set_setting
+     */
+    fun setSetting(name: String, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringAndVariantArg(setSettingBind, handle, name, value)
+    }
+
+    /**
      * Returns the value of the setting specified by `name`. This is equivalent to using `Object.get`
      * on the EditorSettings instance.
      *
@@ -40,6 +51,53 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
     fun erase(property: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(eraseBind, handle, property)
+    }
+
+    /**
+     * Sets the initial value of the setting specified by `name` to `value`. This is used to provide a
+     * value for the Revert button in the Editor Settings. If `update_current` is `true`, the setting
+     * is reset to `value` as well.
+     *
+     * Generated from Godot docs: EditorSettings.set_initial_value
+     */
+    fun setInitialValue(name: String, value: Any?, updateCurrent: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameVariantBoolArgs(setInitialValueBind, handle, name, value, updateCurrent)
+    }
+
+    /**
+     * Adds a custom property info to a property. The dictionary must contain: - `name`: `String` (the
+     * name of the property) - `type`: `int` (see `Variant.Type`) - optionally `hint`: `int` (see
+     * `PropertyHint`) and `hint_string`: `String`
+     *
+     * Generated from Godot docs: EditorSettings.add_property_info
+     */
+    fun addPropertyInfo(info: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(addPropertyInfoBind, handle, info)
+    }
+
+    /**
+     * Sets project-specific metadata with the `section`, `key` and `data` specified. This metadata is
+     * stored outside the project folder and therefore won't be checked into version control. See also
+     * `get_project_metadata`.
+     *
+     * Generated from Godot docs: EditorSettings.set_project_metadata
+     */
+    fun setProjectMetadata(section: String, key: String, data: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setProjectMetadataBind, handle, section, key, data)
+    }
+
+    /**
+     * Returns project-specific metadata for the `section` and `key` specified. If the metadata doesn't
+     * exist, `default` will be returned instead. See also `set_project_metadata`.
+     *
+     * Generated from Godot docs: EditorSettings.get_project_metadata
+     */
+    fun getProjectMetadata(section: String, key: String, default: Any? = null): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getProjectMetadataBind, handle, section, key, default)
     }
 
     /**
@@ -207,6 +265,11 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("EditorSettings", "has_setting", HAS_SETTING_HASH)
         }
 
+        private const val SET_SETTING_HASH = 402577236L
+        private val setSettingBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "set_setting", SET_SETTING_HASH)
+        }
+
         private const val GET_SETTING_HASH = 1868160156L
         private val getSettingBind by lazy {
             ObjectCalls.getMethodBind("EditorSettings", "get_setting", GET_SETTING_HASH)
@@ -215,6 +278,26 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
         private const val ERASE_HASH = 83702148L
         private val eraseBind by lazy {
             ObjectCalls.getMethodBind("EditorSettings", "erase", ERASE_HASH)
+        }
+
+        private const val SET_INITIAL_VALUE_HASH = 1529169264L
+        private val setInitialValueBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "set_initial_value", SET_INITIAL_VALUE_HASH)
+        }
+
+        private const val ADD_PROPERTY_INFO_HASH = 4155329257L
+        private val addPropertyInfoBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "add_property_info", ADD_PROPERTY_INFO_HASH)
+        }
+
+        private const val SET_PROJECT_METADATA_HASH = 2504492430L
+        private val setProjectMetadataBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "set_project_metadata", SET_PROJECT_METADATA_HASH)
+        }
+
+        private const val GET_PROJECT_METADATA_HASH = 89809366L
+        private val getProjectMetadataBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "get_project_metadata", GET_PROJECT_METADATA_HASH)
         }
 
         private const val SET_FAVORITES_HASH = 4015028928L

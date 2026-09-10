@@ -256,6 +256,10 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        fun fromDictionary(dictionary: Map<String, Any?>): GLTFAccessor? {
+            return GLTFAccessor.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
+        }
+
         const val TYPE_SCALAR: Long = 0L
         const val TYPE_VEC2: Long = 1L
         const val TYPE_VEC3: Long = 2L
@@ -282,6 +286,11 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): GLTFAccessor? =
             if (handle.address() == 0L) null else GLTFAccessor(handle)
+
+        private const val FROM_DICTIONARY_HASH = 3495091019L
+        private val fromDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFAccessor", "from_dictionary", FROM_DICTIONARY_HASH)
+        }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
         private val toDictionaryBind by lazy {

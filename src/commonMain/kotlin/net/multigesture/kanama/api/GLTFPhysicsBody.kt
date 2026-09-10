@@ -156,6 +156,10 @@ class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
             return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, bodyNode.handle))
         }
 
+        fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsBody? {
+            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
+        }
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GLTFPhysicsBody? =
             wrap(handle)
@@ -171,6 +175,11 @@ class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
         private const val TO_NODE_HASH = 3224013656L
         private val toNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "to_node", TO_NODE_HASH)
+        }
+
+        private const val FROM_DICTIONARY_HASH = 1177544336L
+        private val fromDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFPhysicsBody", "from_dictionary", FROM_DICTIONARY_HASH)
         }
 
         private const val TO_DICTIONARY_HASH = 3102165223L

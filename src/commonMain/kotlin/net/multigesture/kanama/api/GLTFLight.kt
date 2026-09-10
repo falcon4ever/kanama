@@ -122,9 +122,18 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
+    fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+    }
+
     companion object {
         fun fromNode(lightNode: Light3D): GLTFLight? {
             return GLTFLight.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, lightNode.handle))
+        }
+
+        fun fromDictionary(dictionary: Map<String, Any?>): GLTFLight? {
+            return GLTFLight.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
         }
 
         @JvmStatic
@@ -142,6 +151,11 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
         private const val TO_NODE_HASH = 2040811672L
         private val toNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFLight", "to_node", TO_NODE_HASH)
+        }
+
+        private const val FROM_DICTIONARY_HASH = 4057087208L
+        private val fromDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFLight", "from_dictionary", FROM_DICTIONARY_HASH)
         }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
@@ -212,6 +226,11 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
         private const val GET_ADDITIONAL_DATA_HASH = 2138907829L
         private val getAdditionalDataBind by lazy {
             ObjectCalls.getMethodBind("GLTFLight", "get_additional_data", GET_ADDITIONAL_DATA_HASH)
+        }
+
+        private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
+        private val setAdditionalDataBind by lazy {
+            ObjectCalls.getMethodBind("GLTFLight", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
         }
     }
 }
