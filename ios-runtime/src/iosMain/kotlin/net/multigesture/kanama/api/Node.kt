@@ -597,12 +597,6 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
             Tween(MemorySegment.ofAddress(it))
         }
 
-    // Node.propagate_call(method, args, parent_first) via the Variant call path (Array arg boxed
-    // through callWithVariantArgs). Matches desktop Node.propagateCall.
-    fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
-        call("propagate_call", method, args, parentFirst)
-    }
-
     // String overloads for the NodePath-typed accessors (desktop exposes both), so demo code can
     // pass a plain path literal.
     fun hasNode(path: String): Boolean = hasNode(NodePath(path))

@@ -755,6 +755,9 @@ DESKTOP_COMPANION_MEMBER_SECTIONS = {
 # after every regen. Emitting them here makes regeneration lossless. Referenced types
 # (SceneTree, Tween, IosGodot, Node, NodePath) are all in the same package, so no extra
 # imports are needed. Gated to IOS_AUDIT_ONLY in render_wrapper.
+# task 100 parcel 7: the ConfigFile setValue/getValue, ShaderMaterial setShaderParameter and Node
+# propagateCall sugar that routed Variant / Array arguments through call() is gone — those members
+# are generated now (Variant / Dictionary / Array are audited arg kinds).
 IOS_MEMBER_SECTIONS = {
     "RefCounted": """
     // ── Kanama iOS RefCounted ownership (generator custom-section; task 31 mirror) ─────
@@ -823,12 +826,6 @@ IOS_MEMBER_SECTIONS = {
             Tween(MemorySegment.ofAddress(it))
         }
 
-    // Node.propagate_call(method, args, parent_first) via the Variant call path (Array arg boxed
-    // through callWithVariantArgs). Matches desktop Node.propagateCall.
-    fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
-        call("propagate_call", method, args, parentFirst)
-    }
-
     // String overloads for the NodePath-typed accessors (desktop exposes both), so demo code can
     // pass a plain path literal.
     fun hasNode(path: String): Boolean = hasNode(NodePath(path))
@@ -843,24 +840,6 @@ IOS_MEMBER_SECTIONS = {
         if (rpc(method, *extraArgs) != 0L) {
             call(method, *extraArgs)
         }
-    }
-""".strip("\n"),
-    "ConfigFile": """
-    // ConfigFile.set_value / get_value are (StringName, StringName, Variant) methods the generator
-    // skips on iOS (Variant value); route through the call() Variant path. Matches desktop's
-    // hand-written Variant-coercion helpers.
-    fun setValue(section: String, key: String, value: Any?) {
-        call("set_value", section, key, value)
-    }
-
-    fun getValue(section: String, key: String, default: Any? = null): Any? =
-        call("get_value", section, key, default)
-""".strip("\n"),
-    "ShaderMaterial": """
-    // ShaderMaterial.set_shader_parameter(param, value) via the Variant call path (iOS has no
-    // (StringName, Variant) ptrcall shape; call() boxes the value). Matches desktop.
-    fun setShaderParameter(param: String, value: Any?) {
-        call("set_shader_parameter", param, value)
     }
 """.strip("\n"),
     "SurfaceTool": """

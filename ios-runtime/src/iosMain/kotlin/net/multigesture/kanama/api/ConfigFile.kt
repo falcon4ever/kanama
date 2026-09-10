@@ -94,16 +94,6 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
-    // ConfigFile.set_value / get_value are (StringName, StringName, Variant) methods the generator
-    // skips on iOS (Variant value); route through the call() Variant path. Matches desktop's
-    // hand-written Variant-coercion helpers.
-    fun setValue(section: String, key: String, value: Any?) {
-        call("set_value", section, key, value)
-    }
-
-    fun getValue(section: String, key: String, default: Any? = null): Any? =
-        call("get_value", section, key, default)
-
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): ConfigFile? =

@@ -22,6 +22,7 @@ import kotlinx.cinterop.cstr
 import kotlinx.cinterop.get
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.plus
+import kotlinx.cinterop.pointed
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
@@ -1367,7 +1368,10 @@ object ObjectCalls {
   // Dictionary / Array argument: scalars only; a nested container or any other Kotlin object throws
   // (IosReturnContainerScratch.taggedValue strict mode) rather than passing nil.
   internal fun MemScope.packVariantDesc(value: Any?): CPointer<KanamaIosVariantArgDesc> {
-    val desc = alloc<KanamaIosVariantArgDesc>()
+    // The struct's own `ptr` FIELD shadows kotlinx.cinterop's `.ptr` on the pointed value, so keep
+    // the pointer to the descriptor from the allocation and touch fields through `pointed`.
+    val descPtr = allocArray<KanamaIosVariantArgDesc>(1)
+    val desc = descPtr.pointed
     when (value) {
       null -> {
         desc.tag = PT_VOID
@@ -1486,7 +1490,7 @@ object ObjectCalls {
             "object handles and one level of Map / List)"
         )
     }
-    return desc.ptr
+    return descPtr
   }
 
   internal fun MemScope.packDictionaryBlob(map: Map<String, Any?>): CPointer<ByteVar> =

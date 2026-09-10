@@ -36,12 +36,6 @@ class ShaderMaterial(handle: MemorySegment) : Material(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, handle, param)
     }
 
-    // ShaderMaterial.set_shader_parameter(param, value) via the Variant call path (iOS has no
-    // (StringName, Variant) ptrcall shape; call() boxes the value). Matches desktop.
-    fun setShaderParameter(param: String, value: Any?) {
-        call("set_shader_parameter", param, value)
-    }
-
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): ShaderMaterial? =
