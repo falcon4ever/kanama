@@ -86,6 +86,16 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearIdsBind, handle)
     }
 
+    /**
+     * Returns an array of all ids currently bound to the uniform.
+     *
+     * Generated from Godot docs: RDUniform.get_ids
+     */
+    fun getIds(): List<RID> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getIdsBind, handle)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): RDUniform? =
@@ -122,6 +132,11 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
         private const val CLEAR_IDS_HASH = 3218959716L
         private val clearIdsBind by lazy {
             ObjectCalls.getMethodBind("RDUniform", "clear_ids", CLEAR_IDS_HASH)
+        }
+
+        private const val GET_IDS_HASH = 3995934104L
+        private val getIdsBind by lazy {
+            ObjectCalls.getMethodBind("RDUniform", "get_ids", GET_IDS_HASH)
         }
     }
 }

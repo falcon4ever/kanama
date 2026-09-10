@@ -8,25 +8,36 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP GLTFState waits on: ptrcallNoArgsRetByteArrayList, ptrcallNoArgsRetTypedStringList,
-//   ptrcallWithByteArrayListArg, ptrcallWithDictionaryArg, ptrcallWithObjectListArg,
+// KANAMA-IOS-GAP GLTFState waits on: ptrcallNoArgsRetDictionary,
+//   ptrcallWithByteArrayAndBoolArgRetInt, ptrcallWithByteArrayArg, ptrcallWithByteArrayListArg,
+//   ptrcallWithDictionaryArg, ptrcallWithObjectListArg, ptrcallWithPackedInt32ListArg,
 //   ptrcallWithStringNameAndVariantArg, ptrcallWithTypedMaterialListArg,
 //   ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
+
+fun GLTFState.appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
+    checkOpen()
+    return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(appendDataToBuffersBind, handle, data, deduplication)
+}
+
+fun GLTFState.getJson(): Map<String, Any?> {
+    checkOpen()
+    return ObjectCalls.ptrcallNoArgsRetDictionary(getJsonBind, handle)
+}
 
 fun GLTFState.setJson(json: Map<String, Any?>) {
     checkOpen()
     ObjectCalls.ptrcallWithDictionaryArg(setJsonBind, handle, json)
 }
 
+fun GLTFState.setGlbData(glbData: ByteArray) {
+    checkOpen()
+    ObjectCalls.ptrcallWithByteArrayArg(setGlbDataBind, handle, glbData)
+}
+
 fun GLTFState.setNodes(nodes: List<GLTFNode>) {
     checkOpen()
     ObjectCalls.ptrcallWithObjectListArg(setNodesBind, handle, nodes)
-}
-
-fun GLTFState.getBuffers(): List<ByteArray> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArrayList(getBuffersBind, handle)
 }
 
 fun GLTFState.setBuffers(buffers: List<ByteArray>) {
@@ -52,6 +63,11 @@ fun GLTFState.setMeshes(meshes: List<GLTFMesh>) {
 fun GLTFState.setMaterials(materials: List<Material>) {
     checkOpen()
     ObjectCalls.ptrcallWithTypedMaterialListArg(setMaterialsBind, handle, materials)
+}
+
+fun GLTFState.setRootNodes(rootNodes: List<Int>) {
+    checkOpen()
+    ObjectCalls.ptrcallWithPackedInt32ListArg(setRootNodesBind, handle, rootNodes)
 }
 
 fun GLTFState.setTextures(textures: List<GLTFTexture>) {
@@ -84,19 +100,9 @@ fun GLTFState.setLights(lights: List<GLTFLight>) {
     ObjectCalls.ptrcallWithObjectListArg(setLightsBind, handle, lights)
 }
 
-fun GLTFState.getUniqueNames(): List<String> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
-}
-
 fun GLTFState.setUniqueNames(uniqueNames: List<String>) {
     checkOpen()
     ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, handle, uniqueNames)
-}
-
-fun GLTFState.getUniqueAnimationNames(): List<String> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueAnimationNamesBind, handle)
 }
 
 fun GLTFState.setUniqueAnimationNames(uniqueAnimationNames: List<String>) {
@@ -119,37 +125,35 @@ fun GLTFState.setAdditionalData(extensionName: String, additionalData: Any?) {
     ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
 }
 
-var GLTFState.buffers: List<ByteArray>
-    @JvmName("buffersProperty")
-    get() = getBuffers()
-    @JvmName("setBuffersProperty")
-    set(value) = setBuffers(value)
+var GLTFState.json: Map<String, Any?>
+    @JvmName("jsonProperty")
+    get() = getJson()
+    @JvmName("setJsonProperty")
+    set(value) = setJson(value)
 
-var GLTFState.uniqueNames: List<String>
-    @JvmName("uniqueNamesProperty")
-    get() = getUniqueNames()
-    @JvmName("setUniqueNamesProperty")
-    set(value) = setUniqueNames(value)
+private const val APPEND_DATA_TO_BUFFERS_HASH = 1460416665L
+private val appendDataToBuffersBind by lazy {
+    ObjectCalls.getMethodBind("GLTFState", "append_data_to_buffers", APPEND_DATA_TO_BUFFERS_HASH)
+}
 
-var GLTFState.uniqueAnimationNames: List<String>
-    @JvmName("uniqueAnimationNamesProperty")
-    get() = getUniqueAnimationNames()
-    @JvmName("setUniqueAnimationNamesProperty")
-    set(value) = setUniqueAnimationNames(value)
+private const val GET_JSON_HASH = 3102165223L
+private val getJsonBind by lazy {
+    ObjectCalls.getMethodBind("GLTFState", "get_json", GET_JSON_HASH)
+}
 
 private const val SET_JSON_HASH = 4155329257L
 private val setJsonBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_json", SET_JSON_HASH)
 }
 
+private const val SET_GLB_DATA_HASH = 2971499966L
+private val setGlbDataBind by lazy {
+    ObjectCalls.getMethodBind("GLTFState", "set_glb_data", SET_GLB_DATA_HASH)
+}
+
 private const val SET_NODES_HASH = 381264803L
 private val setNodesBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_nodes", SET_NODES_HASH)
-}
-
-private const val GET_BUFFERS_HASH = 3995934104L
-private val getBuffersBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "get_buffers", GET_BUFFERS_HASH)
 }
 
 private const val SET_BUFFERS_HASH = 381264803L
@@ -175,6 +179,11 @@ private val setMeshesBind by lazy {
 private const val SET_MATERIALS_HASH = 381264803L
 private val setMaterialsBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_materials", SET_MATERIALS_HASH)
+}
+
+private const val SET_ROOT_NODES_HASH = 3614634198L
+private val setRootNodesBind by lazy {
+    ObjectCalls.getMethodBind("GLTFState", "set_root_nodes", SET_ROOT_NODES_HASH)
 }
 
 private const val SET_TEXTURES_HASH = 381264803L
@@ -207,19 +216,9 @@ private val setLightsBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_lights", SET_LIGHTS_HASH)
 }
 
-private const val GET_UNIQUE_NAMES_HASH = 3995934104L
-private val getUniqueNamesBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "get_unique_names", GET_UNIQUE_NAMES_HASH)
-}
-
 private const val SET_UNIQUE_NAMES_HASH = 381264803L
 private val setUniqueNamesBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_unique_names", SET_UNIQUE_NAMES_HASH)
-}
-
-private const val GET_UNIQUE_ANIMATION_NAMES_HASH = 3995934104L
-private val getUniqueAnimationNamesBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "get_unique_animation_names", GET_UNIQUE_ANIMATION_NAMES_HASH)
 }
 
 private const val SET_UNIQUE_ANIMATION_NAMES_HASH = 381264803L

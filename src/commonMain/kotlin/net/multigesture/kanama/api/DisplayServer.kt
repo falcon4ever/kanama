@@ -727,17 +727,6 @@ object DisplayServer {
     }
 
     /**
-     * Returns Dictionary of supported system menu IDs and names. Note: This method is implemented only
-     * on macOS.
-     *
-     * Generated from Godot docs: DisplayServer.global_menu_get_system_menu_roots
-     */
-    @JvmStatic
-    fun globalMenuGetSystemMenuRoots(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(globalMenuGetSystemMenuRootsBind, singleton)
-    }
-
-    /**
      * Returns `true` if the synthesizer is generating speech, or have utterance waiting in the queue.
      * Note: This method is implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
      *
@@ -760,21 +749,14 @@ object DisplayServer {
     }
 
     /**
-     * Returns an `Array` of voice information dictionaries. Each `Dictionary` contains two `String`
-     * entries: - `name` is voice name. - `id` is voice identifier. - `language` is language code in
-     * `lang_Variant` format. The `lang` part is a 2 or 3-letter code based on the ISO-639 standard, in
-     * lowercase. The `Variant` part is an engine-dependent string describing country, region or/and
-     * dialect. Note that Godot depends on system libraries for text-to-speech functionality. These
-     * libraries are installed by default on Windows and macOS, but not on all Linux distributions. If
-     * they are not present, this method will return an empty list. This applies to both Godot users on
-     * Linux, as well as end-users on Linux running Godot games that use text-to-speech. Note: This
-     * method is implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
+     * Returns a `PackedStringArray` of voice identifiers for the `language`. Note: This method is
+     * implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
      *
-     * Generated from Godot docs: DisplayServer.tts_get_voices
+     * Generated from Godot docs: DisplayServer.tts_get_voices_for_language
      */
     @JvmStatic
-    fun ttsGetVoices(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(ttsGetVoicesBind, singleton)
+    fun ttsGetVoicesForLanguage(language: String): List<String> {
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(ttsGetVoicesForLanguageBind, singleton, language)
     }
 
     /**
@@ -1035,6 +1017,20 @@ object DisplayServer {
     @JvmStatic
     fun clipboardGetPrimary(): String {
         return ObjectCalls.ptrcallNoArgsRetString(clipboardGetPrimaryBind, singleton)
+    }
+
+    /**
+     * Returns an `Array` of `Rect2`, each of which is the bounding rectangle for a display cutout or
+     * notch. These are non-functional areas on edge-to-edge screens used by cameras and sensors.
+     * Returns an empty array if the device does not have cutouts. See also `get_display_safe_area`.
+     * Note: Currently only implemented on Android. Other platforms will return an empty array even if
+     * they do have display cutouts or notches.
+     *
+     * Generated from Godot docs: DisplayServer.get_display_cutouts
+     */
+    @JvmStatic
+    fun getDisplayCutouts(): List<Rect2> {
+        return ObjectCalls.ptrcallNoArgsRetRect2List(getDisplayCutoutsBind, singleton)
     }
 
     /**
@@ -1366,18 +1362,6 @@ object DisplayServer {
     @JvmStatic
     fun windowGetTitleSize(title: String, windowId: Int = 0): Vector2i {
         return ObjectCalls.ptrcallWithStringAndIntArgRetVector2i(windowGetTitleSizeBind, singleton, title, windowId)
-    }
-
-    /**
-     * Sets a polygonal region of the window which accepts mouse events. Mouse events outside the
-     * region will be passed through. Passing an empty array will disable passthrough support (all
-     * mouse events will be intercepted by the window, which is the default behavior).
-     *
-     * Generated from Godot docs: DisplayServer.window_set_mouse_passthrough
-     */
-    @JvmStatic
-    fun windowSetMousePassthrough(region: List<Vector2>, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(windowSetMousePassthroughBind, singleton, region, windowId)
     }
 
     /**
@@ -2979,19 +2963,6 @@ object DisplayServer {
     }
 
     /**
-     * Shows a text dialog which uses the operating system's native look-and-feel. `callback` should
-     * accept a single `int` parameter which corresponds to the index of the pressed button. Note: This
-     * method is implemented if the display server has the `FEATURE_NATIVE_DIALOG` feature. Supported
-     * platforms include macOS, Windows, and Android.
-     *
-     * Generated from Godot docs: DisplayServer.dialog_show
-     */
-    @JvmStatic
-    fun dialogShow(title: String, description: String, buttons: List<String>, callback: GodotCallable): Long {
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(dialogShowBind, singleton, title, description, buttons, callback.target.handle, callback.method)
-    }
-
-    /**
      * Shows a text input dialog which uses the operating system's native look-and-feel. `callback`
      * should accept a single `String` parameter which contains the text field's contents. Note: This
      * method is implemented if the display server has the `FEATURE_NATIVE_DIALOG_INPUT` feature.
@@ -3002,35 +2973,6 @@ object DisplayServer {
     @JvmStatic
     fun dialogInputText(title: String, description: String, existingText: String, callback: GodotCallable): Long {
         return ObjectCalls.ptrcallWithThreeStringCallableArgsRetLong(dialogInputTextBind, singleton, title, description, existingText, callback.target.handle, callback.method)
-    }
-
-    /**
-     * Displays OS native dialog for selecting files or directories in the file system. Each filter
-     * string in the `filters` array should be formatted like this: `*.png,*.jpg,*.jpeg;Image
-     * Files;image/png,image/jpeg`. The description text of the filter is optional and can be omitted.
-     * It is recommended to set both file extension and MIME type. See also `FileDialog.filters`.
-     * Callbacks have the following arguments: `status: bool, selected_paths: PackedStringArray,
-     * selected_filter_index: int`. On Android, the third callback argument (`selected_filter_index`)
-     * is always `0`. Note: This method is implemented if the display server has the
-     * `FEATURE_NATIVE_DIALOG_FILE` feature. Supported platforms include Linux (X11/Wayland), Windows,
-     * macOS, and Android. Note: `current_directory` might be ignored. Note: Embedded file dialogs and
-     * Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs
-     * also support MIME types. Note: On Android and Linux, `show_hidden` is ignored. Note: On Android
-     * and macOS, native file dialogs have no title. Note: On macOS, sandboxed apps will save
-     * security-scoped bookmarks to retain access to the opened folders across multiple sessions. Use
-     * `OS.get_granted_permissions` to get a list of saved bookmarks. Note: On Android, this method
-     * uses the Android Storage Access Framework (SAF). The file picker returns a URI instead of a
-     * filesystem path. This URI can be passed directly to `FileAccess` to perform read/write
-     * operations. When using `FILE_DIALOG_MODE_OPEN_DIR`, it returns a tree URI that grants full
-     * access to the selected directory. File operations inside this directory can be performed by
-     * passing a path on the form `treeUri#relative/path/to/file` to `FileAccess`. To avoid opening the
-     * file picker again after each app restart, you can take persistable URI permission as follows:
-     *
-     * Generated from Godot docs: DisplayServer.file_dialog_show
-     */
-    @JvmStatic
-    fun fileDialogShow(title: String, currentDirectory: String, filename: String, showHidden: Boolean, mode: Long, filters: List<String>, callback: GodotCallable, parentWindowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(fileDialogShowBind, singleton, title, currentDirectory, filename, showHidden, mode, filters, callback.target.handle, callback.method, parentWindowId)
     }
 
     /**
@@ -3623,11 +3565,6 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_clear", GLOBAL_MENU_CLEAR_HASH)
     }
 
-    private const val GLOBAL_MENU_GET_SYSTEM_MENU_ROOTS_HASH = 3102165223L
-    private val globalMenuGetSystemMenuRootsBind by lazy {
-        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_system_menu_roots", GLOBAL_MENU_GET_SYSTEM_MENU_ROOTS_HASH)
-    }
-
     private const val TTS_IS_SPEAKING_HASH = 36873697L
     private val ttsIsSpeakingBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "tts_is_speaking", TTS_IS_SPEAKING_HASH)
@@ -3638,9 +3575,9 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "tts_is_paused", TTS_IS_PAUSED_HASH)
     }
 
-    private const val TTS_GET_VOICES_HASH = 3995934104L
-    private val ttsGetVoicesBind by lazy {
-        ObjectCalls.getMethodBind("DisplayServer", "tts_get_voices", TTS_GET_VOICES_HASH)
+    private const val TTS_GET_VOICES_FOR_LANGUAGE_HASH = 4291131558L
+    private val ttsGetVoicesForLanguageBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "tts_get_voices_for_language", TTS_GET_VOICES_FOR_LANGUAGE_HASH)
     }
 
     private const val TTS_SPEAK_HASH = 903992738L
@@ -3751,6 +3688,11 @@ object DisplayServer {
     private const val CLIPBOARD_GET_PRIMARY_HASH = 201670096L
     private val clipboardGetPrimaryBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "clipboard_get_primary", CLIPBOARD_GET_PRIMARY_HASH)
+    }
+
+    private const val GET_DISPLAY_CUTOUTS_HASH = 3995934104L
+    private val getDisplayCutoutsBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "get_display_cutouts", GET_DISPLAY_CUTOUTS_HASH)
     }
 
     private const val GET_DISPLAY_SAFE_AREA_HASH = 410525958L
@@ -3881,11 +3823,6 @@ object DisplayServer {
     private const val WINDOW_GET_TITLE_SIZE_HASH = 2925301799L
     private val windowGetTitleSizeBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "window_get_title_size", WINDOW_GET_TITLE_SIZE_HASH)
-    }
-
-    private const val WINDOW_SET_MOUSE_PASSTHROUGH_HASH = 1993637420L
-    private val windowSetMousePassthroughBind by lazy {
-        ObjectCalls.getMethodBind("DisplayServer", "window_set_mouse_passthrough", WINDOW_SET_MOUSE_PASSTHROUGH_HASH)
     }
 
     private const val WINDOW_GET_CURRENT_SCREEN_HASH = 1591665591L
@@ -4593,19 +4530,9 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "enable_for_stealing_focus", ENABLE_FOR_STEALING_FOCUS_HASH)
     }
 
-    private const val DIALOG_SHOW_HASH = 4115553226L
-    private val dialogShowBind by lazy {
-        ObjectCalls.getMethodBind("DisplayServer", "dialog_show", DIALOG_SHOW_HASH)
-    }
-
     private const val DIALOG_INPUT_TEXT_HASH = 3088703427L
     private val dialogInputTextBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "dialog_input_text", DIALOG_INPUT_TEXT_HASH)
-    }
-
-    private const val FILE_DIALOG_SHOW_HASH = 1386825884L
-    private val fileDialogShowBind by lazy {
-        ObjectCalls.getMethodBind("DisplayServer", "file_dialog_show", FILE_DIALOG_SHOW_HASH)
     }
 
     private const val BEEP_HASH = 4051624405L

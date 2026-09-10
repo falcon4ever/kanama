@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector2i
 
 /**
  * Provides methods for some common 2D geometric operations.
@@ -125,78 +126,16 @@ object Geometry2D {
     }
 
     /**
-     * Returns `true` if `polygon`'s vertices are ordered in clockwise order, otherwise returns
-     * `false`. Note: Assumes a Cartesian coordinate system where `+x` is right and `+y` is up. If
-     * using screen coordinates (`+y` is down), the result will need to be flipped (i.e. a `true`
-     * result will indicate counter-clockwise).
+     * Returns the Bresenham line (https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm) between
+     * the `from` and `to` points. A Bresenham line is a series of pixels that draws a line and is
+     * always 1-pixel thick on every row and column of the drawing (never more, never less). Example
+     * code to draw a line between two `Marker2D` nodes using a series of `CanvasItem.draw_rect` calls:
      *
-     * Generated from Godot docs: Geometry2D.is_polygon_clockwise
+     * Generated from Godot docs: Geometry2D.bresenham_line
      */
     @JvmStatic
-    fun isPolygonClockwise(polygon: List<Vector2>): Boolean {
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(isPolygonClockwiseBind, singleton, polygon)
-    }
-
-    /**
-     * Returns `true` if `point` is inside `polygon` or if it's located exactly on polygon's boundary,
-     * otherwise returns `false`.
-     *
-     * Generated from Godot docs: Geometry2D.is_point_in_polygon
-     */
-    @JvmStatic
-    fun isPointInPolygon(point: Vector2, polygon: List<Vector2>): Boolean {
-        return ObjectCalls.ptrcallWithVector2PackedVector2ListArgsRetBool(isPointInPolygonBind, singleton, point, polygon)
-    }
-
-    /**
-     * Triangulates the polygon specified by the points in `polygon`. Returns a `PackedInt32Array`
-     * where each triangle consists of three consecutive point indices into `polygon` (i.e. the
-     * returned array will have `n * 3` elements, with `n` being the number of found triangles). Output
-     * triangles will always be counter clockwise, and the contour will be flipped if it's clockwise.
-     * If the triangulation did not succeed, an empty `PackedInt32Array` is returned.
-     *
-     * Generated from Godot docs: Geometry2D.triangulate_polygon
-     */
-    @JvmStatic
-    fun triangulatePolygon(polygon: List<Vector2>): List<Int> {
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetPackedInt32List(triangulatePolygonBind, singleton, polygon)
-    }
-
-    /**
-     * Triangulates the area specified by discrete set of `points` such that no point is inside the
-     * circumcircle of any resulting triangle. Returns a `PackedInt32Array` where each triangle
-     * consists of three consecutive point indices into `points` (i.e. the returned array will have `n
-     * * 3` elements, with `n` being the number of found triangles). If the triangulation did not
-     * succeed, an empty `PackedInt32Array` is returned.
-     *
-     * Generated from Godot docs: Geometry2D.triangulate_delaunay
-     */
-    @JvmStatic
-    fun triangulateDelaunay(points: List<Vector2>): List<Int> {
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetPackedInt32List(triangulateDelaunayBind, singleton, points)
-    }
-
-    /**
-     * Given an array of `Vector2`s, returns the convex hull as a list of points in counterclockwise
-     * order. The last point is the same as the first one.
-     *
-     * Generated from Godot docs: Geometry2D.convex_hull
-     */
-    @JvmStatic
-    fun convexHull(points: List<Vector2>): List<Vector2> {
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetPackedVector2List(convexHullBind, singleton, points)
-    }
-
-    /**
-     * Given an array of `Vector2`s representing tiles, builds an atlas. The returned dictionary has
-     * two keys: `points` is a `PackedVector2Array` that specifies the positions of each tile, `size`
-     * contains the overall size of the whole atlas as `Vector2i`.
-     *
-     * Generated from Godot docs: Geometry2D.make_atlas
-     */
-    @JvmStatic
-    fun makeAtlas(sizes: List<Vector2>): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetDictionary(makeAtlasBind, singleton, sizes)
+    fun bresenhamLine(from: Vector2i, to: Vector2i): List<Vector2i> {
+        return ObjectCalls.ptrcallWithTwoVector2iArgsRetVector2iList(bresenhamLineBind, singleton, from, to)
     }
 
     @JvmStatic
@@ -246,33 +185,8 @@ object Geometry2D {
         ObjectCalls.getMethodBind("Geometry2D", "point_is_inside_triangle", POINT_IS_INSIDE_TRIANGLE_HASH)
     }
 
-    private const val IS_POLYGON_CLOCKWISE_HASH = 1361156557L
-    private val isPolygonClockwiseBind by lazy {
-        ObjectCalls.getMethodBind("Geometry2D", "is_polygon_clockwise", IS_POLYGON_CLOCKWISE_HASH)
-    }
-
-    private const val IS_POINT_IN_POLYGON_HASH = 738277916L
-    private val isPointInPolygonBind by lazy {
-        ObjectCalls.getMethodBind("Geometry2D", "is_point_in_polygon", IS_POINT_IN_POLYGON_HASH)
-    }
-
-    private const val TRIANGULATE_POLYGON_HASH = 1389921771L
-    private val triangulatePolygonBind by lazy {
-        ObjectCalls.getMethodBind("Geometry2D", "triangulate_polygon", TRIANGULATE_POLYGON_HASH)
-    }
-
-    private const val TRIANGULATE_DELAUNAY_HASH = 1389921771L
-    private val triangulateDelaunayBind by lazy {
-        ObjectCalls.getMethodBind("Geometry2D", "triangulate_delaunay", TRIANGULATE_DELAUNAY_HASH)
-    }
-
-    private const val CONVEX_HULL_HASH = 2004331998L
-    private val convexHullBind by lazy {
-        ObjectCalls.getMethodBind("Geometry2D", "convex_hull", CONVEX_HULL_HASH)
-    }
-
-    private const val MAKE_ATLAS_HASH = 1337682371L
-    private val makeAtlasBind by lazy {
-        ObjectCalls.getMethodBind("Geometry2D", "make_atlas", MAKE_ATLAS_HASH)
+    private const val BRESENHAM_LINE_HASH = 1989391000L
+    private val bresenhamLineBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "bresenham_line", BRESENHAM_LINE_HASH)
     }
 }

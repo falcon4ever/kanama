@@ -28,6 +28,7 @@ import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.GodotReal
 import net.multigesture.kanama.types.GodotRealVar
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.RID
@@ -54,12 +55,10 @@ import net.multigesture.kanama.types.Vector4
  * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
  * read-back, no truncation); Variant-scalar returns to `ObjectCalls.ptrcallRetVariantScalar`
  * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
- * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed); Dictionary /
- * Array returns to `ObjectCalls.ptrcallRetDictionary` / `ptrcallRetArray` /
- * `ptrcallRetDictionaryList` (kanama_ios_godot_ptrcall_ret_container_blob). Packed*Array ARGS are
- * laid out by the `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch
- * builds the Godot array from. Helpers already hand-written in ObjectCalls.kt are the override set
- * and are NOT regenerated here.
+ * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed); string-list
+ * and typed-Array returns to the `ObjectCalls.ptrcallRetTyped<Kind>List` blob read-backs
+ * (kanama_ios_godot_ptrcall_ret_array_blob). Helpers already hand-written in ObjectCalls.kt are
+ * the override set and are NOT regenerated here.
  */
 
 private const val PT_VOID = 0

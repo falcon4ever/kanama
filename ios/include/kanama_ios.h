@@ -249,7 +249,11 @@ int64_t kanama_ios_godot_ptrcall_ret_container_blob(
  * drain before the next container-returning call.
  */
 int64_t kanama_ios_godot_take_pending_container_blob(
+    char *out_buf,
+    int64_t buf_size
+);
 
+/*
  * Blob kinds for kanama_ios_godot_ptrcall_ret_array_blob (task 100, parcel 5).
  */
 enum {

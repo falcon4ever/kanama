@@ -10,30 +10,21 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: GLTFSkeleton
  */
 class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
-    var joints: List<Int>
+    val joints: List<Int>
         @JvmName("jointsProperty")
         get() = getJoints()
-        @JvmName("setJointsProperty")
-        set(value) = setJoints(value)
 
-    var roots: List<Int>
+    val roots: List<Int>
         @JvmName("rootsProperty")
         get() = getRoots()
-        @JvmName("setRootsProperty")
-        set(value) = setRoots(value)
 
-    val godotBoneNode: Map<String, Any?>
-        @JvmName("godotBoneNodeProperty")
-        get() = getGodotBoneNode()
+    val uniqueNames: List<String>
+        @JvmName("uniqueNamesProperty")
+        get() = getUniqueNames()
 
     fun getJoints(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
-    }
-
-    fun setJoints(joints: List<Int>) {
-        checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, handle, joints)
     }
 
     fun getRoots(): List<Int> {
@@ -41,19 +32,14 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
     }
 
-    fun setRoots(roots: List<Int>) {
-        checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, handle, roots)
-    }
-
     fun getGodotSkeleton(): Skeleton3D? {
         checkOpen()
         return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkeletonBind, handle))
     }
 
-    fun getGodotBoneNode(): Map<String, Any?> {
+    fun getUniqueNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getGodotBoneNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
     }
 
     fun getBoneAttachmentCount(): Int {
@@ -79,19 +65,9 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFSkeleton", "get_joints", GET_JOINTS_HASH)
         }
 
-        private const val SET_JOINTS_HASH = 3614634198L
-        private val setJointsBind by lazy {
-            ObjectCalls.getMethodBind("GLTFSkeleton", "set_joints", SET_JOINTS_HASH)
-        }
-
         private const val GET_ROOTS_HASH = 969006518L
         private val getRootsBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkeleton", "get_roots", GET_ROOTS_HASH)
-        }
-
-        private const val SET_ROOTS_HASH = 3614634198L
-        private val setRootsBind by lazy {
-            ObjectCalls.getMethodBind("GLTFSkeleton", "set_roots", SET_ROOTS_HASH)
         }
 
         private const val GET_GODOT_SKELETON_HASH = 1814733083L
@@ -99,9 +75,9 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFSkeleton", "get_godot_skeleton", GET_GODOT_SKELETON_HASH)
         }
 
-        private const val GET_GODOT_BONE_NODE_HASH = 2382534195L
-        private val getGodotBoneNodeBind by lazy {
-            ObjectCalls.getMethodBind("GLTFSkeleton", "get_godot_bone_node", GET_GODOT_BONE_NODE_HASH)
+        private const val GET_UNIQUE_NAMES_HASH = 2915620761L
+        private val getUniqueNamesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkeleton", "get_unique_names", GET_UNIQUE_NAMES_HASH)
         }
 
         private const val GET_BONE_ATTACHMENT_COUNT_HASH = 2455072627L

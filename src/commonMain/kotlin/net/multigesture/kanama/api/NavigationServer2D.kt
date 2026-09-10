@@ -31,6 +31,17 @@ object NavigationServer2D {
     const val INFO_OBSTACLE_COUNT: Long = 9L
 
     /**
+     * Returns all created navigation map `RID`s on the NavigationServer. This returns both 2D and 3D
+     * created navigation maps as there is technically no distinction between them.
+     *
+     * Generated from Godot docs: NavigationServer2D.get_maps
+     */
+    @JvmStatic
+    fun getMaps(): List<RID> {
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getMapsBind, singleton)
+    }
+
+    /**
      * Create a new map.
      *
      * Generated from Godot docs: NavigationServer2D.map_create
@@ -198,6 +209,50 @@ object NavigationServer2D {
     @JvmStatic
     fun mapGetClosestPointOwner(map: RID, toPoint: Vector2): RID {
         return ObjectCalls.ptrcallWithRIDAndVector2ArgRetRID(mapGetClosestPointOwnerBind, singleton, map, toPoint)
+    }
+
+    /**
+     * Returns all navigation link `RID`s that are currently assigned to the requested navigation
+     * `map`.
+     *
+     * Generated from Godot docs: NavigationServer2D.map_get_links
+     */
+    @JvmStatic
+    fun mapGetLinks(map: RID): List<RID> {
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetLinksBind, singleton, map)
+    }
+
+    /**
+     * Returns all navigation regions `RID`s that are currently assigned to the requested navigation
+     * `map`.
+     *
+     * Generated from Godot docs: NavigationServer2D.map_get_regions
+     */
+    @JvmStatic
+    fun mapGetRegions(map: RID): List<RID> {
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetRegionsBind, singleton, map)
+    }
+
+    /**
+     * Returns all navigation agents `RID`s that are currently assigned to the requested navigation
+     * `map`.
+     *
+     * Generated from Godot docs: NavigationServer2D.map_get_agents
+     */
+    @JvmStatic
+    fun mapGetAgents(map: RID): List<RID> {
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetAgentsBind, singleton, map)
+    }
+
+    /**
+     * Returns all navigation obstacle `RID`s that are currently assigned to the requested navigation
+     * `map`.
+     *
+     * Generated from Godot docs: NavigationServer2D.map_get_obstacles
+     */
+    @JvmStatic
+    fun mapGetObstacles(map: RID): List<RID> {
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetObstaclesBind, singleton, map)
     }
 
     /**
@@ -1479,6 +1534,11 @@ object NavigationServer2D {
     internal fun wrap(handle: MemorySegment): NavigationServer2D? =
         if (handle.address() == 0L) null else this
 
+    private const val GET_MAPS_HASH = 3995934104L
+    private val getMapsBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "get_maps", GET_MAPS_HASH)
+    }
+
     private const val MAP_CREATE_HASH = 529393457L
     private val mapCreateBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer2D", "map_create", MAP_CREATE_HASH)
@@ -1557,6 +1617,26 @@ object NavigationServer2D {
     private const val MAP_GET_CLOSEST_POINT_OWNER_HASH = 1353467510L
     private val mapGetClosestPointOwnerBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer2D", "map_get_closest_point_owner", MAP_GET_CLOSEST_POINT_OWNER_HASH)
+    }
+
+    private const val MAP_GET_LINKS_HASH = 2684255073L
+    private val mapGetLinksBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_links", MAP_GET_LINKS_HASH)
+    }
+
+    private const val MAP_GET_REGIONS_HASH = 2684255073L
+    private val mapGetRegionsBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_regions", MAP_GET_REGIONS_HASH)
+    }
+
+    private const val MAP_GET_AGENTS_HASH = 2684255073L
+    private val mapGetAgentsBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_agents", MAP_GET_AGENTS_HASH)
+    }
+
+    private const val MAP_GET_OBSTACLES_HASH = 2684255073L
+    private val mapGetObstaclesBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_obstacles", MAP_GET_OBSTACLES_HASH)
     }
 
     private const val MAP_FORCE_UPDATE_HASH = 2722037293L

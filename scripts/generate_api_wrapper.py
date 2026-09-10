@@ -1793,12 +1793,18 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
         method.return_type in IOS_CONTAINER_RETURNS
         and IOS_CONTAINER_RETURNS[method.return_type][1] == shape.kotlin_return
     )
+    # String-list / typed-Array returns (task 100, parcel 5): same rule, read back as a blob through
+    # kanama_ios_godot_ptrcall_ret_array_blob. Detected by the Godot return type for the same reason.
+    array_blob_return = (
+        method.return_type in IOS_ARRAY_BLOB_RETURNS
+        and IOS_ARRAY_BLOB_RETURNS[method.return_type][1] == shape.kotlin_return
+    )
     if typed_array_element is not None:
         if shape.function not in IOS_WIRED_TYPED_OBJECT_LIST_HELPERS:
             return False
         if IOS_EMIT_CLASSES is not None and typed_array_element != "Object" and typed_array_element not in IOS_EMIT_CLASSES:
             return False
-    elif packed_return or container_return:
+    elif packed_return or container_return or array_blob_return:
         pass
     elif shape.kotlin_return not in IOS_RET_KOTLIN:
         return False
@@ -1815,31 +1821,31 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # (ptrcallNoArgsRetPackedInt32List → List<Int> via the size + operator_index_const C
     # helper, two-call length protocol). Other shapes share the "List<Int>" return token
     # (arg-bearing PackedInt32 returns) but route through helpers not audited yet.
-    if not packed_return and shape.kotlin_return == "List<Int>" and shape.function != "ptrcallNoArgsRetPackedInt32List":
+    if not packed_return and not array_blob_return and shape.kotlin_return == "List<Int>" and shape.function != "ptrcallNoArgsRetPackedInt32List":
         return False
     # PackedFloat32Array read-back: same gate, only the no-arg getter is wired.
-    if not packed_return and shape.kotlin_return == "List<Float>" and shape.function != "ptrcallNoArgsRetPackedFloat32List":
+    if not packed_return and not array_blob_return and shape.kotlin_return == "List<Float>" and shape.function != "ptrcallNoArgsRetPackedFloat32List":
         return False
     # PackedVector2Array / PackedColorArray read-back: same gate, no-arg getter only.
-    if not packed_return and shape.kotlin_return == "List<Vector2>" and shape.function != "ptrcallNoArgsRetPackedVector2List":
+    if not packed_return and not array_blob_return and shape.kotlin_return == "List<Vector2>" and shape.function != "ptrcallNoArgsRetPackedVector2List":
         return False
-    if not packed_return and shape.kotlin_return == "List<Color>" and shape.function != "ptrcallNoArgsRetPackedColorList":
+    if not packed_return and not array_blob_return and shape.kotlin_return == "List<Color>" and shape.function != "ptrcallNoArgsRetPackedColorList":
         return False
     # PackedStringArray read-back (variable-length blob): "List<String>" is shared with the typed
     # string-array shapes, so gate on the concrete wired helpers — the no-arg PackedString getter and
     # (2.7g) the typed Array[StringName] getter (both use a blob read-back).
-    if shape.kotlin_return == "List<String>" and shape.function not in (
+    if not array_blob_return and shape.kotlin_return == "List<String>" and shape.function not in (
         "ptrcallNoArgsRetPackedStringList",
         "ptrcallNoArgsRetStringNameList",
     ):
         return False
     # Typed Array[NodePath] / Array[int] read-back (2.7g blob helpers) — only the no-arg getters.
-    if shape.kotlin_return == "List<NodePath>" and shape.function != "ptrcallNoArgsRetNodePathList":
+    if not array_blob_return and shape.kotlin_return == "List<NodePath>" and shape.function != "ptrcallNoArgsRetNodePathList":
         return False
-    if not packed_return and shape.kotlin_return == "List<Long>" and shape.function != "ptrcallNoArgsRetLongList":
+    if not packed_return and not array_blob_return and shape.kotlin_return == "List<Long>" and shape.function != "ptrcallNoArgsRetLongList":
         return False
     # Typed Array[Plane] read-back (2.7i blob helper, 16-byte float32 records) — no-arg getter only.
-    if shape.kotlin_return == "List<Plane>" and shape.function != "ptrcallNoArgsRetPlaneList":
+    if not array_blob_return and shape.kotlin_return == "List<Plane>" and shape.function != "ptrcallNoArgsRetPlaneList":
         return False
     # Generic Array -> List<Any?> (2.7j variant-array blob): the no-arg getter + the NodePath-arg one.
     if not container_return and shape.kotlin_return == "List<Any?>" and shape.function not in (
@@ -3305,6 +3311,7 @@ import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.GodotReal
 import net.multigesture.kanama.types.GodotRealVar
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.RID
@@ -3333,10 +3340,12 @@ import net.multigesture.kanama.types.Vector4
  * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
  * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed); Dictionary /
  * Array returns to `ObjectCalls.ptrcallRetDictionary` / `ptrcallRetArray` /
- * `ptrcallRetDictionaryList` (kanama_ios_godot_ptrcall_ret_container_blob). Packed*Array ARGS are
- * laid out by the `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch
- * builds the Godot array from. Helpers already hand-written in ObjectCalls.kt are the override set
- * and are NOT regenerated here.
+ * `ptrcallRetDictionaryList` (kanama_ios_godot_ptrcall_ret_container_blob); string-list and
+ * typed-Array returns to the `ObjectCalls.ptrcallRetTyped<Kind>List` blob read-backs
+ * (kanama_ios_godot_ptrcall_ret_array_blob). Packed*Array ARGS are laid out by the
+ * `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch builds the Godot
+ * array from. Helpers already hand-written in ObjectCalls.kt are the override set and are NOT
+ * regenerated here.
  */
 '''
 
@@ -3699,6 +3708,29 @@ IOS_CONTAINER_RETURNS = {
     "typedarray::Dictionary": ("ptrcallRetDictionaryList", "List<Map<String, Any?>>"),
 }
 
+# String-list and typed-Array returns the iOS helpers read back as a length-prefixed blob through
+# kanama_ios_godot_ptrcall_ret_array_blob (task 100, parcel 5): Godot return type -> (Kotlin helper
+# on ObjectCalls, kotlin_return token). Typed OBJECT arrays keep IOS_WIRED_TYPED_OBJECT_LIST_HELPERS;
+# typedarray::Dictionary / typedarray::Array wait for the Dictionary / Array decode (parcel 6).
+IOS_ARRAY_BLOB_RETURNS = {
+    "PackedStringArray": ("ptrcallRetPackedStringList", "List<String>"),
+    "typedarray::RID": ("ptrcallRetTypedRIDList", "List<RID>"),
+    "typedarray::Vector2i": ("ptrcallRetTypedVector2iList", "List<Vector2i>"),
+    "typedarray::Vector3i": ("ptrcallRetTypedVector3iList", "List<Vector3i>"),
+    "typedarray::String": ("ptrcallRetTypedStringList", "List<String>"),
+    "typedarray::StringName": ("ptrcallRetTypedStringNameList", "List<String>"),
+    "typedarray::NodePath": ("ptrcallRetTypedNodePathList", "List<NodePath>"),
+    "typedarray::int": ("ptrcallRetTypedLongList", "List<Long>"),
+    "typedarray::Plane": ("ptrcallRetTypedPlaneList", "List<Plane>"),
+    "typedarray::Vector2": ("ptrcallRetTypedVector2List", "List<Vector2>"),
+    "typedarray::Vector3": ("ptrcallRetTypedVector3List", "List<Vector3>"),
+    "typedarray::Rect2": ("ptrcallRetTypedRect2List", "List<Rect2>"),
+    "typedarray::Transform3D": ("ptrcallRetTypedTransform3DList", "List<Transform3D>"),
+    "typedarray::PackedVector2Array": ("ptrcallRetTypedPackedVector2ListList", "List<List<Vector2>>"),
+    "typedarray::PackedByteArray": ("ptrcallRetTypedByteArrayList", "List<ByteArray>"),
+    "typedarray::PackedStringArray": ("ptrcallRetTypedPackedStringListList", "List<List<String>>"),
+}
+
 
 def render_ios_helper(
     function: str,
@@ -3713,8 +3745,12 @@ def render_ios_helper(
     container_return = (
         return_type in IOS_CONTAINER_RETURNS and IOS_CONTAINER_RETURNS[return_type][1] == kotlin_return
     )
-    if container_return:
-        # Dictionary / Array return (task 100, parcel 6): the C entry owns the container cell and the blob.
+    array_blob_return = (
+        return_type in IOS_ARRAY_BLOB_RETURNS and IOS_ARRAY_BLOB_RETURNS[return_type][1] == kotlin_return
+    )
+    if container_return or array_blob_return:
+        # Dictionary / Array (parcel 6) or string-list / typed-Array (parcel 5) return: the C entry owns
+        # the cell and the blob; no ret tag or cell is laid out here.
         ret_type, ret_tag, ret_decl, ret_ptr, read_expr = kotlin_return, None, [], "null", None
     elif packed_return:
         # Packed*Array return (task 100, parcel 3): the C entry owns the array cell and the copy.
@@ -3781,6 +3817,10 @@ def render_ios_helper(
         body.append(f"{IOS_PACKED_RETURNS[return_type][0]}(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
     elif container_return:
         body.append(f"{IOS_CONTAINER_RETURNS[return_type][0]}(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
+    elif array_blob_return:
+        body.append(
+            f"{IOS_ARRAY_BLOB_RETURNS[return_type][0]}(methodBind, instance, {types_arg}, {ptrs_arg}, {n})"
+        )
     else:
         body.append(
             f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "

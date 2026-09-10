@@ -23,8 +23,16 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
         ObjectCalls.ptrcallWithRIDArg(renderModelDestroyBind, handle, renderModel)
     }
 
+    fun renderModelGetAll(): List<RID> {
+        return ObjectCalls.ptrcallNoArgsRetRIDList(renderModelGetAllBind, handle)
+    }
+
     fun renderModelNewSceneInstance(renderModel: RID): Node3D? {
         return Node3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(renderModelNewSceneInstanceBind, handle, renderModel))
+    }
+
+    fun renderModelGetSubactionPaths(renderModel: RID): List<String> {
+        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(renderModelGetSubactionPathsBind, handle, renderModel)
     }
 
     fun renderModelGetTopLevelPath(renderModel: RID): String {
@@ -84,9 +92,19 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
             ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_destroy", RENDER_MODEL_DESTROY_HASH)
         }
 
+        private const val RENDER_MODEL_GET_ALL_HASH = 2915620761L
+        private val renderModelGetAllBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_all", RENDER_MODEL_GET_ALL_HASH)
+        }
+
         private const val RENDER_MODEL_NEW_SCENE_INSTANCE_HASH = 788010739L
         private val renderModelNewSceneInstanceBind by lazy {
             ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_new_scene_instance", RENDER_MODEL_NEW_SCENE_INSTANCE_HASH)
+        }
+
+        private const val RENDER_MODEL_GET_SUBACTION_PATHS_HASH = 2801473409L
+        private val renderModelGetSubactionPathsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_subaction_paths", RENDER_MODEL_GET_SUBACTION_PATHS_HASH)
         }
 
         private const val RENDER_MODEL_GET_TOP_LEVEL_PATH_HASH = 642473191L

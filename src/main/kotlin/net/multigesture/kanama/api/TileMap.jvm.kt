@@ -9,8 +9,7 @@ import net.multigesture.kanama.types.Vector2i
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TileMap waits on: ptrcallWithIntAndVector2iListArgsRetObject,
-//   ptrcallWithIntArgRetVector2iList, ptrcallWithIntVector2iListTwoIntAndBoolArgs,
-//   ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList, ptrcallWithVector2iArgRetVector2iList
+//   ptrcallWithIntVector2iListTwoIntAndBoolArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -55,43 +54,6 @@ fun TileMap.setCellsTerrainPath(layer: Int, path: List<Vector2i>, terrainSet: In
     ObjectCalls.ptrcallWithIntVector2iListTwoIntAndBoolArgs(setCellsTerrainPathBind, handle, layer, path, terrainSet, terrain, ignoreEmptyTerrains)
 }
 
-/**
- * Returns the list of all neighbourings cells to the one at `coords`.
- *
- * Generated from Godot docs: TileMap.get_surrounding_cells
- */
-fun TileMap.getSurroundingCells(coords: Vector2i): List<Vector2i> {
-    return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(getSurroundingCellsBind, handle, coords)
-}
-
-/**
- * Returns a `Vector2i` array with the positions of all cells containing a tile in the given layer.
- * A cell is considered empty if its source identifier equals -1, its atlas coordinates identifiers
- * is `Vector2(-1, -1)` and its alternative identifier is -1. If `layer` is negative, the layers
- * are accessed from the last one.
- *
- * Generated from Godot docs: TileMap.get_used_cells
- */
-fun TileMap.getUsedCells(layer: Int): List<Vector2i> {
-    return ObjectCalls.ptrcallWithIntArgRetVector2iList(getUsedCellsBind, handle, layer)
-}
-
-/**
- * Returns a `Vector2i` array with the positions of all cells containing a tile in the given layer.
- * Tiles may be filtered according to their source (`source_id`), their atlas coordinates
- * (`atlas_coords`) or alternative id (`alternative_tile`). If a parameter has its value set to the
- * default one, this parameter is not used to filter a cell. Thus, if all parameters have their
- * respective default value, this method returns the same result as `get_used_cells`. A cell is
- * considered empty if its source identifier equals -1, its atlas coordinates identifiers is
- * `Vector2(-1, -1)` and its alternative identifier is -1. If `layer` is negative, the layers are
- * accessed from the last one.
- *
- * Generated from Godot docs: TileMap.get_used_cells_by_id
- */
-fun TileMap.getUsedCellsById(layer: Int, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1): List<Vector2i> {
-    return ObjectCalls.ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, handle, layer, sourceId, atlasCoords, alternativeTile)
-}
-
 private const val GET_PATTERN_HASH = 2833570986L
 private val getPatternBind by lazy {
     ObjectCalls.getMethodBind("TileMap", "get_pattern", GET_PATTERN_HASH)
@@ -105,19 +67,4 @@ private val setCellsTerrainConnectBind by lazy {
 private const val SET_CELLS_TERRAIN_PATH_HASH = 3578627656L
 private val setCellsTerrainPathBind by lazy {
     ObjectCalls.getMethodBind("TileMap", "set_cells_terrain_path", SET_CELLS_TERRAIN_PATH_HASH)
-}
-
-private const val GET_SURROUNDING_CELLS_HASH = 2673526557L
-private val getSurroundingCellsBind by lazy {
-    ObjectCalls.getMethodBind("TileMap", "get_surrounding_cells", GET_SURROUNDING_CELLS_HASH)
-}
-
-private const val GET_USED_CELLS_HASH = 663333327L
-private val getUsedCellsBind by lazy {
-    ObjectCalls.getMethodBind("TileMap", "get_used_cells", GET_USED_CELLS_HASH)
-}
-
-private const val GET_USED_CELLS_BY_ID_HASH = 2931012785L
-private val getUsedCellsByIdBind by lazy {
-    ObjectCalls.getMethodBind("TileMap", "get_used_cells_by_id", GET_USED_CELLS_BY_ID_HASH)
 }

@@ -8,36 +8,9 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TileMapLayer waits on: ptrcallNoArgsRetVector2iList,
-//   ptrcallWithIntVector2iAndIntArgsRetVector2iList, ptrcallWithVector2iArgRetVector2iList,
+// KANAMA-IOS-GAP TileMapLayer waits on: ptrcallWithByteArrayArg,
 //   ptrcallWithVector2iListArgRetObject, ptrcallWithVector2iListTwoIntAndBoolArgs
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns a `Vector2i` array with the positions of all cells containing a tile. A cell is
- * considered empty if its source identifier equals `-1`, its atlas coordinate identifier is
- * `Vector2(-1, -1)` and its alternative identifier is `-1`.
- *
- * Generated from Godot docs: TileMapLayer.get_used_cells
- */
-fun TileMapLayer.getUsedCells(): List<Vector2i> {
-    return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, handle)
-}
-
-/**
- * Returns a `Vector2i` array with the positions of all cells containing a tile. Tiles may be
- * filtered according to their source (`source_id`), their atlas coordinates (`atlas_coords`), or
- * alternative id (`alternative_tile`). If a parameter has its value set to the default one, this
- * parameter is not used to filter a cell. Thus, if all parameters have their respective default
- * values, this method returns the same result as `get_used_cells`. A cell is considered empty if
- * its source identifier equals `-1`, its atlas coordinate identifier is `Vector2(-1, -1)` and its
- * alternative identifier is `-1`.
- *
- * Generated from Godot docs: TileMapLayer.get_used_cells_by_id
- */
-fun TileMapLayer.getUsedCellsById(sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1): List<Vector2i> {
-    return ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, handle, sourceId, atlasCoords, alternativeTile)
-}
 
 /**
  * Creates and returns a new `TileMapPattern` from the given array of cells. See also
@@ -81,24 +54,12 @@ fun TileMapLayer.setCellsTerrainPath(path: List<Vector2i>, terrainSet: Int, terr
 }
 
 /**
- * Returns the list of all neighboring cells to the one at `coords`. Any neighboring cell is one
- * that is touching edges, so for a square cell 4 cells would be returned, for a hexagon 6 cells
- * are returned.
+ * The raw tile map data as a byte array.
  *
- * Generated from Godot docs: TileMapLayer.get_surrounding_cells
+ * Generated from Godot docs: TileMapLayer.set_tile_map_data_from_array
  */
-fun TileMapLayer.getSurroundingCells(coords: Vector2i): List<Vector2i> {
-    return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(getSurroundingCellsBind, handle, coords)
-}
-
-private const val GET_USED_CELLS_HASH = 3995934104L
-private val getUsedCellsBind by lazy {
-    ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells", GET_USED_CELLS_HASH)
-}
-
-private const val GET_USED_CELLS_BY_ID_HASH = 4175304538L
-private val getUsedCellsByIdBind by lazy {
-    ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells_by_id", GET_USED_CELLS_BY_ID_HASH)
+fun TileMapLayer.setTileMapDataFromArray(tileMapLayerData: ByteArray) {
+    ObjectCalls.ptrcallWithByteArrayArg(setTileMapDataFromArrayBind, handle, tileMapLayerData)
 }
 
 private const val GET_PATTERN_HASH = 3820813253L
@@ -116,7 +77,7 @@ private val setCellsTerrainPathBind by lazy {
     ObjectCalls.getMethodBind("TileMapLayer", "set_cells_terrain_path", SET_CELLS_TERRAIN_PATH_HASH)
 }
 
-private const val GET_SURROUNDING_CELLS_HASH = 2673526557L
-private val getSurroundingCellsBind by lazy {
-    ObjectCalls.getMethodBind("TileMapLayer", "get_surrounding_cells", GET_SURROUNDING_CELLS_HASH)
+private const val SET_TILE_MAP_DATA_FROM_ARRAY_HASH = 2971499966L
+private val setTileMapDataFromArrayBind by lazy {
+    ObjectCalls.getMethodBind("TileMapLayer", "set_tile_map_data_from_array", SET_TILE_MAP_DATA_FROM_ARRAY_HASH)
 }
