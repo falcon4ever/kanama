@@ -28,7 +28,7 @@ import net.multigesture.kanama.types.Vector3i
 //   ptrcallWithRIDArgRetByteArray, ptrcallWithRIDArgRetDictionaryList,
 //   ptrcallWithRIDArgRetPackedColorList, ptrcallWithRIDArgRetPackedFloat32List,
 //   ptrcallWithRIDArgRetPackedInt32List, ptrcallWithRIDArgRetPackedVector3List,
-//   ptrcallWithRIDArgRetString, ptrcallWithRIDArgRetTypedObjectList,
+//   ptrcallWithRIDArgRetTypedObjectList,
 //   ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs,
 //   ptrcallWithRIDIntIntAndByteArrayArgs, ptrcallWithRIDListRect2iRIDColorRIDListIntArgs,
 //   ptrcallWithRIDLongTwoArrayDictionaryLongArgs,
@@ -97,25 +97,6 @@ fun RenderingServer.textureDrawableBlitRect(textures: List<RID>, rect: Rect2i, m
  */
 fun RenderingServer.texture3dGet(texture: RID): List<Image> {
     return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(texture3dGetBind, renderingServerSingleton, texture, Image::fromHandle)
-}
-
-/**
- * Returns the resource path (starting with `res://` or `uid://`) for the specified texture RID.
- * Returns an empty `String` if the resource is built-in. See also `texture_set_path`.
- *
- * Generated from Godot docs: RenderingServer.texture_get_path
- */
-fun RenderingServer.textureGetPath(texture: RID): String {
-    return ObjectCalls.ptrcallWithRIDArgRetString(textureGetPathBind, renderingServerSingleton, texture)
-}
-
-/**
- * Returns a shader's source code as a string.
- *
- * Generated from Godot docs: RenderingServer.shader_get_code
- */
-fun RenderingServer.shaderGetCode(shader: RID): String {
-    return ObjectCalls.ptrcallWithRIDArgRetString(shaderGetCodeBind, renderingServerSingleton, shader)
 }
 
 /**
@@ -746,16 +727,6 @@ private val textureDrawableBlitRectBind by lazy {
 private const val TEXTURE_3D_GET_HASH = 2684255073L
 private val texture3dGetBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "texture_3d_get", TEXTURE_3D_GET_HASH)
-}
-
-private const val TEXTURE_GET_PATH_HASH = 642473191L
-private val textureGetPathBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "texture_get_path", TEXTURE_GET_PATH_HASH)
-}
-
-private const val SHADER_GET_CODE_HASH = 642473191L
-private val shaderGetCodeBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "shader_get_code", SHADER_GET_CODE_HASH)
 }
 
 private const val GET_SHADER_PARAMETER_LIST_HASH = 2684255073L

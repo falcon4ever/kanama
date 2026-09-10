@@ -40,6 +40,11 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
     }
 
+    fun getBlendShapeName(index: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendShapeNameBind, handle, index)
+    }
+
     fun setBlendShapeName(index: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendShapeNameBind, handle, index, name)
@@ -100,6 +105,11 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         ObjectCalls.ptrcallWithIntAndStringArg(surfaceSetNameBind, handle, surfIdx, name)
     }
 
+    fun surfaceGetName(surfIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(surfaceGetNameBind, handle, surfIdx)
+    }
+
     fun regenNormalMaps() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(regenNormalMapsBind, handle)
@@ -155,6 +165,11 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         private const val GET_BLEND_SHAPE_COUNT_HASH = 3905245786L
         private val getBlendShapeCountBind by lazy {
             ObjectCalls.getMethodBind("ArrayMesh", "get_blend_shape_count", GET_BLEND_SHAPE_COUNT_HASH)
+        }
+
+        private const val GET_BLEND_SHAPE_NAME_HASH = 659327637L
+        private val getBlendShapeNameBind by lazy {
+            ObjectCalls.getMethodBind("ArrayMesh", "get_blend_shape_name", GET_BLEND_SHAPE_NAME_HASH)
         }
 
         private const val SET_BLEND_SHAPE_NAME_HASH = 3780747571L
@@ -215,6 +230,11 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         private const val SURFACE_SET_NAME_HASH = 501894301L
         private val surfaceSetNameBind by lazy {
             ObjectCalls.getMethodBind("ArrayMesh", "surface_set_name", SURFACE_SET_NAME_HASH)
+        }
+
+        private const val SURFACE_GET_NAME_HASH = 844755477L
+        private val surfaceGetNameBind by lazy {
+            ObjectCalls.getMethodBind("ArrayMesh", "surface_get_name", SURFACE_GET_NAME_HASH)
         }
 
         private const val REGEN_NORMAL_MAPS_HASH = 3218959716L

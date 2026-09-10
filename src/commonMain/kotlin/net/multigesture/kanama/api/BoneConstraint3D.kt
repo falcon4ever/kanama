@@ -40,6 +40,15 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
     }
 
     /**
+     * Returns the apply bone name of the setting at `index`. This bone will be modified.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_apply_bone_name
+     */
+    fun getApplyBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getApplyBoneNameBind, handle, index)
+    }
+
+    /**
      * Sets the apply bone of the setting at `index` to `bone`. This bone will be modified.
      *
      * Generated from Godot docs: BoneConstraint3D.set_apply_bone
@@ -86,6 +95,16 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
     }
 
     /**
+     * Returns the reference bone name of the setting at `index`. This bone will be only referenced and
+     * not modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_reference_bone_name
+     */
+    fun getReferenceBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, handle, index)
+    }
+
+    /**
      * Sets the reference bone of the setting at `index` to `bone`. This bone will be only referenced
      * and not modified by this modifier.
      *
@@ -113,6 +132,16 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      */
     fun setReferenceNode(index: Int, node: NodePath) {
         ObjectCalls.ptrcallWithIntAndNodePathArg(setReferenceNodeBind, handle, index, node)
+    }
+
+    /**
+     * Returns the reference node path of the setting at `index`. This node will be only referenced and
+     * not modified by this modifier.
+     *
+     * Generated from Godot docs: BoneConstraint3D.get_reference_node
+     */
+    fun getReferenceNode(index: Int): NodePath {
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getReferenceNodeBind, handle, index)
     }
 
     /**
@@ -168,6 +197,11 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_apply_bone_name", SET_APPLY_BONE_NAME_HASH)
         }
 
+        private const val GET_APPLY_BONE_NAME_HASH = 844755477L
+        private val getApplyBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("BoneConstraint3D", "get_apply_bone_name", GET_APPLY_BONE_NAME_HASH)
+        }
+
         private const val SET_APPLY_BONE_HASH = 3937882851L
         private val setApplyBoneBind by lazy {
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_apply_bone", SET_APPLY_BONE_HASH)
@@ -193,6 +227,11 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_reference_bone_name", SET_REFERENCE_BONE_NAME_HASH)
         }
 
+        private const val GET_REFERENCE_BONE_NAME_HASH = 844755477L
+        private val getReferenceBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("BoneConstraint3D", "get_reference_bone_name", GET_REFERENCE_BONE_NAME_HASH)
+        }
+
         private const val SET_REFERENCE_BONE_HASH = 3937882851L
         private val setReferenceBoneBind by lazy {
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_reference_bone", SET_REFERENCE_BONE_HASH)
@@ -206,6 +245,11 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
         private const val SET_REFERENCE_NODE_HASH = 2761262315L
         private val setReferenceNodeBind by lazy {
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_reference_node", SET_REFERENCE_NODE_HASH)
+        }
+
+        private const val GET_REFERENCE_NODE_HASH = 408788394L
+        private val getReferenceNodeBind by lazy {
+            ObjectCalls.getMethodBind("BoneConstraint3D", "get_reference_node", GET_REFERENCE_NODE_HASH)
         }
 
         private const val SET_SETTING_COUNT_HASH = 1286410249L

@@ -23,6 +23,15 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
     }
 
     /**
+     * Returns the target node that the end bone is trying to reach.
+     *
+     * Generated from Godot docs: TwoBoneIK3D.get_target_node
+     */
+    fun getTargetNode(index: Int): NodePath {
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getTargetNodeBind, handle, index)
+    }
+
+    /**
      * Sets the pole target node that constructs a plane which the joints are all on and the pole is
      * trying to direct.
      *
@@ -33,12 +42,31 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
     }
 
     /**
+     * Returns the pole target node that constructs a plane which the joints are all on and the pole is
+     * trying to direct.
+     *
+     * Generated from Godot docs: TwoBoneIK3D.get_pole_node
+     */
+    fun getPoleNode(index: Int): NodePath {
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPoleNodeBind, handle, index)
+    }
+
+    /**
      * Sets the root bone name.
      *
      * Generated from Godot docs: TwoBoneIK3D.set_root_bone_name
      */
     fun setRootBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
+    }
+
+    /**
+     * Returns the root bone name.
+     *
+     * Generated from Godot docs: TwoBoneIK3D.get_root_bone_name
+     */
+    fun getRootBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
     }
 
     /**
@@ -66,6 +94,15 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      */
     fun setMiddleBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setMiddleBoneNameBind, handle, index, boneName)
+    }
+
+    /**
+     * Returns the middle bone name.
+     *
+     * Generated from Godot docs: TwoBoneIK3D.get_middle_bone_name
+     */
+    fun getMiddleBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getMiddleBoneNameBind, handle, index)
     }
 
     /**
@@ -133,6 +170,15 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      */
     fun setEndBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+    }
+
+    /**
+     * Returns the end bone name.
+     *
+     * Generated from Godot docs: TwoBoneIK3D.get_end_bone_name
+     */
+    fun getEndBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
     }
 
     /**
@@ -238,14 +284,29 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
             ObjectCalls.getMethodBind("TwoBoneIK3D", "set_target_node", SET_TARGET_NODE_HASH)
         }
 
+        private const val GET_TARGET_NODE_HASH = 408788394L
+        private val getTargetNodeBind by lazy {
+            ObjectCalls.getMethodBind("TwoBoneIK3D", "get_target_node", GET_TARGET_NODE_HASH)
+        }
+
         private const val SET_POLE_NODE_HASH = 2761262315L
         private val setPoleNodeBind by lazy {
             ObjectCalls.getMethodBind("TwoBoneIK3D", "set_pole_node", SET_POLE_NODE_HASH)
         }
 
+        private const val GET_POLE_NODE_HASH = 408788394L
+        private val getPoleNodeBind by lazy {
+            ObjectCalls.getMethodBind("TwoBoneIK3D", "get_pole_node", GET_POLE_NODE_HASH)
+        }
+
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L
         private val setRootBoneNameBind by lazy {
             ObjectCalls.getMethodBind("TwoBoneIK3D", "set_root_bone_name", SET_ROOT_BONE_NAME_HASH)
+        }
+
+        private const val GET_ROOT_BONE_NAME_HASH = 844755477L
+        private val getRootBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("TwoBoneIK3D", "get_root_bone_name", GET_ROOT_BONE_NAME_HASH)
         }
 
         private const val SET_ROOT_BONE_HASH = 3937882851L
@@ -261,6 +322,11 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
         private const val SET_MIDDLE_BONE_NAME_HASH = 501894301L
         private val setMiddleBoneNameBind by lazy {
             ObjectCalls.getMethodBind("TwoBoneIK3D", "set_middle_bone_name", SET_MIDDLE_BONE_NAME_HASH)
+        }
+
+        private const val GET_MIDDLE_BONE_NAME_HASH = 844755477L
+        private val getMiddleBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("TwoBoneIK3D", "get_middle_bone_name", GET_MIDDLE_BONE_NAME_HASH)
         }
 
         private const val SET_MIDDLE_BONE_HASH = 3937882851L
@@ -296,6 +362,11 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
         private const val SET_END_BONE_NAME_HASH = 501894301L
         private val setEndBoneNameBind by lazy {
             ObjectCalls.getMethodBind("TwoBoneIK3D", "set_end_bone_name", SET_END_BONE_NAME_HASH)
+        }
+
+        private const val GET_END_BONE_NAME_HASH = 844755477L
+        private val getEndBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("TwoBoneIK3D", "get_end_bone_name", GET_END_BONE_NAME_HASH)
         }
 
         private const val SET_END_BONE_HASH = 3937882851L

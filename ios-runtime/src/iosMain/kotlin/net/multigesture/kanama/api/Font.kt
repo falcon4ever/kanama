@@ -77,6 +77,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getPaletteCountBind, handle)
     }
 
+    fun getPaletteName(index: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(getPaletteNameBind, handle, index)
+    }
+
     fun getSpacing(spacing: Long): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, handle, spacing)
@@ -223,6 +228,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         private const val GET_PALETTE_COUNT_HASH = 3905245786L
         private val getPaletteCountBind by lazy {
             ObjectCalls.getMethodBind("Font", "get_palette_count", GET_PALETTE_COUNT_HASH)
+        }
+
+        private const val GET_PALETTE_NAME_HASH = 844755477L
+        private val getPaletteNameBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_palette_name", GET_PALETTE_NAME_HASH)
         }
 
         private const val GET_SPACING_HASH = 1310880908L

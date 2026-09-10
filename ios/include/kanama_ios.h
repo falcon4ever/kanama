@@ -127,6 +127,42 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
 );
 
 /*
+ * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a Godot
+ * String, StringName or NodePath, marshalled to UTF-8 in ONE method invocation (task 100,
+ * parcel 1). ret_type selects the return builtin: KANAMA_IOS_PT_STRING,
+ * KANAMA_IOS_PT_STRING_NAME or KANAMA_IOS_PT_NODE_PATH; the latter two are converted with the
+ * String(from: StringName|NodePath) constructor, like the no-arg helpers above.
+ *
+ * Returns the full UTF-8 byte length (no terminator). When it fits buf_size the bytes are
+ * written to out_buf and the String is destroyed. When it does not fit (or out_buf is NULL and
+ * the length is non-zero), the converted String is parked in a single pending slot and the
+ * caller drains it with kanama_ios_godot_take_pending_utf8 — so a long return is neither
+ * truncated nor re-issued (the no-arg helpers' second call is only safe for pure getters).
+ * Returns -1 on a null method/instance, an unsupported ret_type, or an unavailable API; a
+ * negative return leaves nothing pending.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_utf8(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_type,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Drain the String parked by kanama_ios_godot_ptrcall_ret_utf8 into out_buf (up to buf_size
+ * bytes, no terminator), destroy it and return its full UTF-8 length. Returns -1 when nothing
+ * is pending. Single slot: drain before the next String-returning call.
+ */
+int64_t kanama_ios_godot_take_pending_utf8(
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
  * No-arg ptrcall returning a Godot PackedInt32Array, read back into int32 elements.
  *
  * ptrcall writes the returned array; its element count comes from the "size" builtin

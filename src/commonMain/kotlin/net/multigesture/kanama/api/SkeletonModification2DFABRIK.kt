@@ -79,6 +79,16 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
     }
 
     /**
+     * Returns the `Bone2D` node assigned to the FABRIK joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DFABRIK.get_fabrik_joint_bone2d_node
+     */
+    fun getFabrikJointBone2dNode(jointIdx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getFabrikJointBone2dNodeBind, handle, jointIdx)
+    }
+
+    /**
      * Sets the bone index, `bone_idx`, of the FABRIK joint at `joint_idx`. When possible, this will
      * also update the `bone2d_node` of the FABRIK joint based on data provided by the linked skeleton.
      *
@@ -173,6 +183,11 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
         private const val SET_FABRIK_JOINT_BONE2D_NODE_HASH = 2761262315L
         private val setFabrikJointBone2dNodeBind by lazy {
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_fabrik_joint_bone2d_node", SET_FABRIK_JOINT_BONE2D_NODE_HASH)
+        }
+
+        private const val GET_FABRIK_JOINT_BONE2D_NODE_HASH = 408788394L
+        private val getFabrikJointBone2dNodeBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "get_fabrik_joint_bone2d_node", GET_FABRIK_JOINT_BONE2D_NODE_HASH)
         }
 
         private const val SET_FABRIK_JOINT_BONE_INDEX_HASH = 3937882851L

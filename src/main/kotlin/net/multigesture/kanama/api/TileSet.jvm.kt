@@ -8,29 +8,9 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TileSet waits on: ptrcallWithIntArgRetString, ptrcallWithIntVector2iArgsRetArray,
-//   ptrcallWithIntVector2iIntArgsRetArray, ptrcallWithTwoIntArgsRetString
+// KANAMA-IOS-GAP TileSet waits on: ptrcallWithIntVector2iArgsRetArray,
+//   ptrcallWithIntVector2iIntArgsRetArray
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns a terrain's name.
- *
- * Generated from Godot docs: TileSet.get_terrain_name
- */
-fun TileSet.getTerrainName(terrainSet: Int, terrainIndex: Int): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTerrainNameBind, handle, terrainSet, terrainIndex)
-}
-
-/**
- * Returns the name of the custom data layer identified by the given index.
- *
- * Generated from Godot docs: TileSet.get_custom_data_layer_name
- */
-fun TileSet.getCustomDataLayerName(layerIndex: Int): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetString(getCustomDataLayerNameBind, handle, layerIndex)
-}
 
 /**
  * Returns the coordinate-level proxy for the given identifiers. The returned array contains the
@@ -68,16 +48,6 @@ fun TileSet.getAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, 
 fun TileSet.mapTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
     checkOpen()
     return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(mapTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
-}
-
-private const val GET_TERRAIN_NAME_HASH = 1391810591L
-private val getTerrainNameBind by lazy {
-    ObjectCalls.getMethodBind("TileSet", "get_terrain_name", GET_TERRAIN_NAME_HASH)
-}
-
-private const val GET_CUSTOM_DATA_LAYER_NAME_HASH = 844755477L
-private val getCustomDataLayerNameBind by lazy {
-    ObjectCalls.getMethodBind("TileSet", "get_custom_data_layer_name", GET_CUSTOM_DATA_LAYER_NAME_HASH)
 }
 
 private const val GET_COORDS_LEVEL_TILE_PROXY_HASH = 2856536371L

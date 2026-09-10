@@ -1774,25 +1774,10 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
             return False
     elif shape.kotlin_return not in IOS_RET_KOTLIN:
         return False
-    # iOS String read-back is wired for the two no-arg getters: ptrcallNoArgsRetString
-    # (String return) and ptrcallNoArgsRetStringName (StringName return → String via the
-    # String-from-StringName ctor hop). Arg+String/StringName shapes share the "String"
-    # kotlin_return token but route through helpers not audited on iOS yet — gate on the
-    # concrete helper so only the no-arg getters emit a real call.
-    if shape.kotlin_return == "String" and shape.function not in (
-        "ptrcallNoArgsRetString",
-        "ptrcallNoArgsRetStringName",
-        # 2.7f-1 arg-bearing String returns — route through the device-proven Object-call STRING
-        # decode (callWithVariantArgs), same as 2.7e Variant. No new C/header.
-        "ptrcallWithVector2ArgRetString",
-        "ptrcallWithStringArgRetString",
-        "ptrcallWithStringAndStringNameArgRetString",
-        "ptrcallWithStringStringNameIntStringNameArgsRetString",
-        # 2.7f-2 arg-bearing StringName returns (kotlin_return "String") — Object-call decode now
-        # converts a STRING_NAME Variant return to utf8.
-        "ptrcallWithStringNameArgRetStringName",
-    ):
-        return False
+    # String / StringName / NodePath returns (kotlin_return "String" / "NodePath"): every audited
+    # arg shape is admitted — the generated helper reads the return back as UTF-8 through
+    # kanama_ios_godot_ptrcall_ret_utf8 (task 100, parcel 1). The hand-written no-arg getters and
+    # the Object-call-decode helpers in IOS_HANDWRITTEN_HELPERS keep their bodies.
     # Variant (scalar) return: iOS routes these through the device-proven Object-call decode
     # (callWithVariantArgs over kanama_ios_godot_object_call — bool/int/float/String/Object
     # scalars; complex types surface null, matching desktop's RetVariantScalar). Only the no-arg
@@ -1804,17 +1789,6 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
         # task 43: hand-written owned decode over the dedicated C entry (retain must happen
         # before the C shim destroys the return Variant — see kanama_ios_classdb_instantiate_owned).
         "ptrcallWithStringNameArgRetVariantScalarOwned",
-    ):
-        return False
-    # NodePath read-back is wired only for the no-arg getter (ptrcallNoArgsRetNodePath, the
-    # hand-written C helper + two-call length protocol). Arg-bearing NodePath returns would
-    # need a generated read-back path that doesn't exist yet — keep them skipped.
-    if shape.kotlin_return == "NodePath" and shape.function not in (
-        "ptrcallNoArgsRetNodePath",
-        # 2.7f-2 arg-bearing NodePath returns — Object-call decode now converts a NODE_PATH Variant
-        # return to utf8, which the helper re-wraps in NodePath.
-        "ptrcallWithLongArgRetNodePath",
-        "ptrcallWithObjectAndBoolArgRetNodePath",
     ):
         return False
     # PackedInt32Array read-back is wired only for the no-arg getter
@@ -3345,8 +3319,10 @@ import net.multigesture.kanama.types.Vector4
  * helper marshals through the single generic C dispatch `kanama_ios_godot_ptrcall`,
  * applying the authoritative ptrcall width table (scalar float->double/8B, scalar
  * int->int64/8B, Vector components->GodotReal, Object->8B handle, StringName built
- * C-side). Helpers already hand-written in ObjectCalls.kt are the override set and
- * are NOT regenerated here.
+ * C-side). String / StringName / NodePath returns hand the same arg cells to
+ * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
+ * read-back, no truncation). Helpers already hand-written in ObjectCalls.kt are the
+ * override set and are NOT regenerated here.
  */
 '''
 
@@ -3649,8 +3625,30 @@ def ios_ret_layout(kotlin_return: str) -> tuple[str | None, str, list[str], str,
     raise ValueError(f"iOS return kind not audited: {kotlin_return}")
 
 
-def render_ios_helper(function: str, logical_args: tuple[str, ...], kotlin_return: str, tags_used: set[str]) -> str:
-    ret_type, ret_tag, ret_decl, ret_ptr, read_expr = ios_ret_layout(kotlin_return)
+# Return builtins the iOS helpers read back as UTF-8 through kanama_ios_godot_ptrcall_ret_utf8
+# (task 100, parcel 1): Godot return type -> (ptrcall tag, Kotlin wrap of the decoded String).
+IOS_UTF8_RETURNS = {
+    "String": ("PT_STRING", "{}"),
+    "StringName": ("PT_STRING_NAME", "{}"),
+    "NodePath": ("PT_NODE_PATH", "NodePath({})"),
+}
+
+
+def render_ios_helper(
+    function: str,
+    logical_args: tuple[str, ...],
+    kotlin_return: str,
+    tags_used: set[str],
+    return_type: str | None = None,
+) -> str:
+    utf8_return = kotlin_return in ("String", "NodePath")
+    if utf8_return:
+        if return_type not in IOS_UTF8_RETURNS:
+            raise ValueError(f"iOS UTF-8 return kind not audited: {return_type} ({function})")
+        ret_tag, utf8_wrap = IOS_UTF8_RETURNS[return_type]
+        ret_type, ret_decl, ret_ptr, read_expr = kotlin_return, [], "null", None
+    else:
+        ret_type, ret_tag, ret_decl, ret_ptr, read_expr = ios_ret_layout(kotlin_return)
     tags_used.add(ret_tag)
     params = ["methodBind: MemorySegment", "instance: MemorySegment"]
     arg_tags: list[str] = []
@@ -3691,11 +3689,16 @@ def render_ios_helper(function: str, logical_args: tuple[str, ...], kotlin_retur
         types_arg, ptrs_arg = "types", "ptrs"
     else:
         types_arg, ptrs_arg = "null", "null"
-    body.append(
-        f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "
-        f"{types_arg}, {ptrs_arg}, {n}, {ret_tag}, {ret_ptr})"
-    )
-    body.append("Unit" if read_expr is None else read_expr)
+    if utf8_return:
+        body.append(
+            utf8_wrap.format(f"ptrcallRetUtf8(methodBind, instance, {types_arg}, {ptrs_arg}, {n}, {ret_tag})")
+        )
+    else:
+        body.append(
+            f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "
+            f"{types_arg}, {ptrs_arg}, {n}, {ret_tag}, {ret_ptr})"
+        )
+        body.append("Unit" if read_expr is None else read_expr)
 
     signature_ret = "" if ret_type is None else f": {ret_type}"
     indented_body = "\n".join(f"        {line}" for line in body)
@@ -3711,14 +3714,14 @@ def collect_ios_shapes(
     wrapper_classes: set[str],
     api_classes: dict[str, ApiClass],
     api_dir: Path,
-) -> dict[str, tuple[tuple[str, ...], str]]:
-    """shape.function -> (logical_args, kotlin_return) for the emitted iOS wrappers.
+) -> dict[str, tuple[tuple[str, ...], str, str]]:
+    """shape.function -> (logical_args, kotlin_return, godot_return_type) for the emitted iOS wrappers.
 
     Relies on IOS_AUDIT_ONLY being set: `unsupported_reason` then guarantees every
     surviving method is iOS-marshalable, so the collected shapes are too. Hand-written
     override helpers are excluded.
     """
-    registry: dict[str, tuple[tuple[str, ...], str]] = {}
+    registry: dict[str, tuple[tuple[str, ...], str, str]] = {}
     for cls in classes:
         for method_list in cls.methods.values():
             for method in method_list:
@@ -3731,15 +3734,17 @@ def collect_ios_shapes(
                 shape = candidate_for(method, object_types, cls.name)
                 if shape is None or shape.function in IOS_HANDWRITTEN_HELPERS:
                     continue
-                registry.setdefault(shape.function, (method.logical_arg_kinds(object_types), shape.kotlin_return))
+                registry.setdefault(
+                    shape.function, (method.logical_arg_kinds(object_types), shape.kotlin_return, method.return_type)
+                )
     return registry
 
 
-def render_ios_objectcalls(registry: dict[str, tuple[tuple[str, ...], str]]) -> str:
+def render_ios_objectcalls(registry: dict[str, tuple[tuple[str, ...], str, str]]) -> str:
     tags_used: set[str] = set()
     helpers = [
-        render_ios_helper(function, logical_args, kotlin_return, tags_used)
-        for function, (logical_args, kotlin_return) in sorted(registry.items())
+        render_ios_helper(function, logical_args, kotlin_return, tags_used, return_type)
+        for function, (logical_args, kotlin_return, return_type) in sorted(registry.items())
     ]
     const_lines = [
         f"private const val {tag} = {IOS_PT_TAG_VALUES[tag]}"

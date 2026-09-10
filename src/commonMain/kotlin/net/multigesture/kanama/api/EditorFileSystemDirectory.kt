@@ -39,6 +39,54 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the name of the file at index `idx`.
+     *
+     * Generated from Godot docs: EditorFileSystemDirectory.get_file
+     */
+    fun getFile(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getFileBind, handle, idx)
+    }
+
+    /**
+     * Returns the path to the file at index `idx`.
+     *
+     * Generated from Godot docs: EditorFileSystemDirectory.get_file_path
+     */
+    fun getFilePath(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getFilePathBind, handle, idx)
+    }
+
+    /**
+     * Returns the resource type of the file at index `idx`. This returns a string such as `"Resource"`
+     * or `"GDScript"`, not a file extension such as `".gd"`.
+     *
+     * Generated from Godot docs: EditorFileSystemDirectory.get_file_type
+     */
+    fun getFileType(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getFileTypeBind, handle, idx)
+    }
+
+    /**
+     * Returns the name of the script class defined in the file at index `idx`. If the file doesn't
+     * define a script class using the `class_name` syntax, this will return an empty string.
+     *
+     * Generated from Godot docs: EditorFileSystemDirectory.get_file_script_class_name
+     */
+    fun getFileScriptClassName(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassNameBind, handle, idx)
+    }
+
+    /**
+     * Returns the base class of the script class defined in the file at index `idx`. If the file
+     * doesn't define a script class using the `class_name` syntax, this will return an empty string.
+     *
+     * Generated from Godot docs: EditorFileSystemDirectory.get_file_script_class_extends
+     */
+    fun getFileScriptClassExtends(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassExtendsBind, handle, idx)
+    }
+
+    /**
      * Returns `true` if the file at index `idx` imported properly.
      *
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_import_is_valid
@@ -114,6 +162,31 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
         private const val GET_FILE_COUNT_HASH = 3905245786L
         private val getFileCountBind by lazy {
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_count", GET_FILE_COUNT_HASH)
+        }
+
+        private const val GET_FILE_HASH = 844755477L
+        private val getFileBind by lazy {
+            ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file", GET_FILE_HASH)
+        }
+
+        private const val GET_FILE_PATH_HASH = 844755477L
+        private val getFilePathBind by lazy {
+            ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_path", GET_FILE_PATH_HASH)
+        }
+
+        private const val GET_FILE_TYPE_HASH = 659327637L
+        private val getFileTypeBind by lazy {
+            ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_type", GET_FILE_TYPE_HASH)
+        }
+
+        private const val GET_FILE_SCRIPT_CLASS_NAME_HASH = 844755477L
+        private val getFileScriptClassNameBind by lazy {
+            ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_script_class_name", GET_FILE_SCRIPT_CLASS_NAME_HASH)
+        }
+
+        private const val GET_FILE_SCRIPT_CLASS_EXTENDS_HASH = 844755477L
+        private val getFileScriptClassExtendsBind by lazy {
+            ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_script_class_extends", GET_FILE_SCRIPT_CLASS_EXTENDS_HASH)
         }
 
         private const val GET_FILE_IMPORT_IS_VALID_HASH = 1116898809L

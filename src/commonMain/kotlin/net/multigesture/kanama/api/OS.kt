@@ -242,6 +242,20 @@ object OS {
     }
 
     /**
+     * Returns the path to the system font file with `font_name` and style. Returns an empty string if
+     * no matching fonts found. The following aliases can be used to request default fonts:
+     * "sans-serif", "serif", "monospace", "cursive", and "fantasy". Note: Returned font might have
+     * different style if the requested style is not available. Note: This method is implemented on
+     * Android, iOS, Linux, macOS and Windows.
+     *
+     * Generated from Godot docs: OS.get_system_font_path
+     */
+    @JvmStatic
+    fun getSystemFontPath(fontName: String, weight: Int = 400, stretch: Int = 100, italic: Boolean = false): String {
+        return ObjectCalls.ptrcallWithStringTwoIntBoolArgsRetString(getSystemFontPathBind, singleton, fontName, weight, stretch, italic)
+    }
+
+    /**
      * Returns the file path to the current engine executable. Note: On macOS, if you want to launch
      * another instance of Godot, always use `create_instance` instead of relying on the executable
      * path.
@@ -251,6 +265,29 @@ object OS {
     @JvmStatic
     fun getExecutablePath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getExecutablePathBind, singleton)
+    }
+
+    /**
+     * Reads a user input as a UTF-8 encoded string from the standard input. This operation can be
+     * blocking, which causes the window to freeze if `read_string_from_stdin` is called on the main
+     * thread. - If standard input is console, this method will block until the program receives a line
+     * break in standard input (usually by the user pressing Enter). - If standard input is pipe, this
+     * method will block until a specific amount of data is read or pipe is closed. - If standard input
+     * is a file, this method will read a specific amount of data (or less if end-of-file is reached)
+     * and return immediately. Note: This method automatically replaces `\r\n` line breaks with `\n`
+     * and removes them from the end of the string. Use `read_buffer_from_stdin` to read the
+     * unprocessed data. Note: This method is implemented on Linux, macOS, and Windows. Note: On
+     * exported Windows builds, run the console wrapper executable to access the terminal. If standard
+     * input is console, calling this method without console wrapped will freeze permanently. If
+     * standard input is pipe or file, it can be used without console wrapper. If you need a single
+     * executable with full console support, use a custom build compiled with the
+     * `windows_subsystem=console` flag.
+     *
+     * Generated from Godot docs: OS.read_string_from_stdin
+     */
+    @JvmStatic
+    fun readStringFromStdin(bufferSize: Long = 1024L): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(readStringFromStdinBind, singleton, bufferSize)
     }
 
     /**
@@ -739,6 +776,20 @@ object OS {
     }
 
     /**
+     * Returns the path to commonly used folders across different platforms, as defined by `dir`. See
+     * the `SystemDir` constants for available locations. Note: This method is implemented on Android,
+     * Linux, macOS and Windows. Note: Shared storage is implemented on Android and allows to
+     * differentiate between app specific and shared directories, if `shared_storage` is `true`. Shared
+     * directories have additional restrictions on Android.
+     *
+     * Generated from Godot docs: OS.get_system_dir
+     */
+    @JvmStatic
+    fun getSystemDir(dir: Long, sharedStorage: Boolean = true): String {
+        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getSystemDirBind, singleton, dir, sharedStorage)
+    }
+
+    /**
      * Returns the global user configuration directory according to the operating system's standards.
      * On the Linux/BSD platform, this path can be overridden by setting the `XDG_CONFIG_HOME`
      * environment variable before starting the project. See File paths in Godot projects
@@ -807,6 +858,16 @@ object OS {
     @JvmStatic
     fun getUniqueId(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getUniqueIdBind, singleton)
+    }
+
+    /**
+     * Returns the given keycode as a `String`.
+     *
+     * Generated from Godot docs: OS.get_keycode_string
+     */
+    @JvmStatic
+    fun getKeycodeString(code: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getKeycodeStringBind, singleton, code)
     }
 
     /**
@@ -1062,9 +1123,19 @@ object OS {
         ObjectCalls.getMethodBind("OS", "get_system_fonts", GET_SYSTEM_FONTS_HASH)
     }
 
+    private const val GET_SYSTEM_FONT_PATH_HASH = 626580860L
+    private val getSystemFontPathBind by lazy {
+        ObjectCalls.getMethodBind("OS", "get_system_font_path", GET_SYSTEM_FONT_PATH_HASH)
+    }
+
     private const val GET_EXECUTABLE_PATH_HASH = 201670096L
     private val getExecutablePathBind by lazy {
         ObjectCalls.getMethodBind("OS", "get_executable_path", GET_EXECUTABLE_PATH_HASH)
+    }
+
+    private const val READ_STRING_FROM_STDIN_HASH = 723587915L
+    private val readStringFromStdinBind by lazy {
+        ObjectCalls.getMethodBind("OS", "read_string_from_stdin", READ_STRING_FROM_STDIN_HASH)
     }
 
     private const val GET_STDIN_TYPE_HASH = 1704816237L
@@ -1237,6 +1308,11 @@ object OS {
         ObjectCalls.getMethodBind("OS", "get_user_data_dir", GET_USER_DATA_DIR_HASH)
     }
 
+    private const val GET_SYSTEM_DIR_HASH = 3073895123L
+    private val getSystemDirBind by lazy {
+        ObjectCalls.getMethodBind("OS", "get_system_dir", GET_SYSTEM_DIR_HASH)
+    }
+
     private const val GET_CONFIG_DIR_HASH = 201670096L
     private val getConfigDirBind by lazy {
         ObjectCalls.getMethodBind("OS", "get_config_dir", GET_CONFIG_DIR_HASH)
@@ -1260,6 +1336,11 @@ object OS {
     private const val GET_UNIQUE_ID_HASH = 201670096L
     private val getUniqueIdBind by lazy {
         ObjectCalls.getMethodBind("OS", "get_unique_id", GET_UNIQUE_ID_HASH)
+    }
+
+    private const val GET_KEYCODE_STRING_HASH = 2261993717L
+    private val getKeycodeStringBind by lazy {
+        ObjectCalls.getMethodBind("OS", "get_keycode_string", GET_KEYCODE_STRING_HASH)
     }
 
     private const val IS_KEYCODE_UNICODE_HASH = 1116898809L

@@ -99,6 +99,16 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the `NodePath` of the baked object at index `user_idx`.
+     *
+     * Generated from Godot docs: LightmapGIData.get_user_path
+     */
+    fun getUserPath(userIdx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getUserPathBind, handle, userIdx)
+    }
+
+    /**
      * Clear all objects that are considered baked within this `LightmapGIData`.
      *
      * Generated from Godot docs: LightmapGIData.clear_users
@@ -168,6 +178,11 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
         private const val GET_USER_COUNT_HASH = 3905245786L
         private val getUserCountBind by lazy {
             ObjectCalls.getMethodBind("LightmapGIData", "get_user_count", GET_USER_COUNT_HASH)
+        }
+
+        private const val GET_USER_PATH_HASH = 408788394L
+        private val getUserPathBind by lazy {
+            ObjectCalls.getMethodBind("LightmapGIData", "get_user_path", GET_USER_PATH_HASH)
         }
 
         private const val CLEAR_USERS_HASH = 3218959716L

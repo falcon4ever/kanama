@@ -31,6 +31,10 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getSpawnableSceneCountBind, handle)
     }
 
+    fun getSpawnableScene(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getSpawnableSceneBind, handle, index)
+    }
+
     fun clearSpawnableScenes() {
         ObjectCalls.ptrcallNoArgs(clearSpawnableScenesBind, handle)
     }
@@ -76,6 +80,11 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
         private const val GET_SPAWNABLE_SCENE_COUNT_HASH = 3905245786L
         private val getSpawnableSceneCountBind by lazy {
             ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawnable_scene_count", GET_SPAWNABLE_SCENE_COUNT_HASH)
+        }
+
+        private const val GET_SPAWNABLE_SCENE_HASH = 844755477L
+        private val getSpawnableSceneBind by lazy {
+            ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawnable_scene", GET_SPAWNABLE_SCENE_HASH)
         }
 
         private const val CLEAR_SPAWNABLE_SCENES_HASH = 3218959716L

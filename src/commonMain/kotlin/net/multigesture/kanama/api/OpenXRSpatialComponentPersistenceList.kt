@@ -9,6 +9,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: OpenXRSpatialComponentPersistenceList
  */
 class OpenXRSpatialComponentPersistenceList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+    fun getPersistentUuid(index: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(getPersistentUuidBind, handle, index)
+    }
+
     fun getPersistentState(index: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(getPersistentStateBind, handle, index)
@@ -21,6 +26,11 @@ class OpenXRSpatialComponentPersistenceList(handle: MemorySegment) : OpenXRSpati
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentPersistenceList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPersistenceList(handle)
+
+        private const val GET_PERSISTENT_UUID_HASH = 844755477L
+        private val getPersistentUuidBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialComponentPersistenceList", "get_persistent_uuid", GET_PERSISTENT_UUID_HASH)
+        }
 
         private const val GET_PERSISTENT_STATE_HASH = 923996154L
         private val getPersistentStateBind by lazy {

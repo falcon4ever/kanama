@@ -68,6 +68,17 @@ object TranslationServer {
     }
 
     /**
+     * Returns a `locale` string standardized to match known locales (e.g. `en-US` would be matched to
+     * `en_US`). If `add_defaults` is `true`, the locale may have a default script or country added.
+     *
+     * Generated from Godot docs: TranslationServer.standardize_locale
+     */
+    @JvmStatic
+    fun standardizeLocale(locale: String, addDefaults: Boolean = false): String {
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetString(standardizeLocaleBind, singleton, locale, addDefaults)
+    }
+
+    /**
      * Returns array of known language codes.
      *
      * Generated from Godot docs: TranslationServer.get_all_languages
@@ -146,6 +157,30 @@ object TranslationServer {
     @JvmStatic
     fun getPluralRules(locale: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getPluralRulesBind, singleton, locale)
+    }
+
+    /**
+     * Returns the current locale's translation for the given message and context. Note: This method
+     * always uses the main translation domain.
+     *
+     * Generated from Godot docs: TranslationServer.translate
+     */
+    @JvmStatic
+    fun translate(message: String, context: String = ""): String {
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, singleton, message, context)
+    }
+
+    /**
+     * Returns the current locale's translation for the given message, plural message and context. The
+     * number `n` is the number or quantity of the plural object. It will be used to guide the
+     * translation system to fetch the correct plural form for the selected language. Note: This method
+     * always uses the main translation domain.
+     *
+     * Generated from Godot docs: TranslationServer.translate_plural
+     */
+    @JvmStatic
+    fun translatePlural(message: String, pluralMessage: String, n: Int, context: String = ""): String {
+        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, singleton, message, pluralMessage, n, context)
     }
 
     /**
@@ -265,6 +300,16 @@ object TranslationServer {
     }
 
     /**
+     * Converts a number from Western Arabic (0..9) to the numeral system used in the given `locale`.
+     *
+     * Generated from Godot docs: TranslationServer.format_number
+     */
+    @JvmStatic
+    fun formatNumber(number: String, locale: String): String {
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(formatNumberBind, singleton, number, locale)
+    }
+
+    /**
      * Returns the percent sign used in the given `locale`.
      *
      * Generated from Godot docs: TranslationServer.get_percent_sign
@@ -272,6 +317,16 @@ object TranslationServer {
     @JvmStatic
     fun getPercentSign(locale: String): String {
         return ObjectCalls.ptrcallWithStringArgRetString(getPercentSignBind, singleton, locale)
+    }
+
+    /**
+     * Converts `number` from the numeral system used in the given `locale` to Western Arabic (0..9).
+     *
+     * Generated from Godot docs: TranslationServer.parse_number
+     */
+    @JvmStatic
+    fun parseNumber(number: String, locale: String): String {
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(parseNumberBind, singleton, number, locale)
     }
 
     /**
@@ -345,6 +400,11 @@ object TranslationServer {
         ObjectCalls.getMethodBind("TranslationServer", "compare_locales", COMPARE_LOCALES_HASH)
     }
 
+    private const val STANDARDIZE_LOCALE_HASH = 4216441673L
+    private val standardizeLocaleBind by lazy {
+        ObjectCalls.getMethodBind("TranslationServer", "standardize_locale", STANDARDIZE_LOCALE_HASH)
+    }
+
     private const val GET_ALL_LANGUAGES_HASH = 1139954409L
     private val getAllLanguagesBind by lazy {
         ObjectCalls.getMethodBind("TranslationServer", "get_all_languages", GET_ALL_LANGUAGES_HASH)
@@ -383,6 +443,16 @@ object TranslationServer {
     private const val GET_PLURAL_RULES_HASH = 3135753539L
     private val getPluralRulesBind by lazy {
         ObjectCalls.getMethodBind("TranslationServer", "get_plural_rules", GET_PLURAL_RULES_HASH)
+    }
+
+    private const val TRANSLATE_HASH = 1829228469L
+    private val translateBind by lazy {
+        ObjectCalls.getMethodBind("TranslationServer", "translate", TRANSLATE_HASH)
+    }
+
+    private const val TRANSLATE_PLURAL_HASH = 229954002L
+    private val translatePluralBind by lazy {
+        ObjectCalls.getMethodBind("TranslationServer", "translate_plural", TRANSLATE_PLURAL_HASH)
     }
 
     private const val ADD_TRANSLATION_HASH = 1466479800L
@@ -440,9 +510,19 @@ object TranslationServer {
         ObjectCalls.getMethodBind("TranslationServer", "get_loaded_locales", GET_LOADED_LOCALES_HASH)
     }
 
+    private const val FORMAT_NUMBER_HASH = 315676799L
+    private val formatNumberBind by lazy {
+        ObjectCalls.getMethodBind("TranslationServer", "format_number", FORMAT_NUMBER_HASH)
+    }
+
     private const val GET_PERCENT_SIGN_HASH = 3135753539L
     private val getPercentSignBind by lazy {
         ObjectCalls.getMethodBind("TranslationServer", "get_percent_sign", GET_PERCENT_SIGN_HASH)
+    }
+
+    private const val PARSE_NUMBER_HASH = 315676799L
+    private val parseNumberBind by lazy {
+        ObjectCalls.getMethodBind("TranslationServer", "parse_number", PARSE_NUMBER_HASH)
     }
 
     private const val IS_PSEUDOLOCALIZATION_ENABLED_HASH = 36873697L

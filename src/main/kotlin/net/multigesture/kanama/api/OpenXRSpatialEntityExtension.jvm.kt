@@ -13,8 +13,8 @@ import net.multigesture.kanama.types.Vector3
 // KANAMA-IOS-GAP OpenXRSpatialEntityExtension waits on: ptrcallWithObjectListObjectCallableArgsRetObject,
 //   ptrcallWithRIDAndLongArgRetByteArray, ptrcallWithRIDAndLongArgRetPackedFloat32List,
 //   ptrcallWithRIDAndLongArgRetPackedInt32List, ptrcallWithRIDAndLongArgRetPackedVector2List,
-//   ptrcallWithRIDAndLongArgRetPackedVector3List, ptrcallWithRIDAndLongArgRetString,
-//   ptrcallWithRIDObjectListObjectArgsRetBool, ptrcallWithRIDObjectListObjectCallableArgsRetObject,
+//   ptrcallWithRIDAndLongArgRetPackedVector3List, ptrcallWithRIDObjectListObjectArgsRetBool,
+//   ptrcallWithRIDObjectListObjectCallableArgsRetObject,
 //   ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject,
 //   ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID
 // Index: docs/reference/generated/ios-shape-gap.md
@@ -37,10 +37,6 @@ fun OpenXRSpatialEntityExtension.updateSpatialEntities(spatialContext: RID, enti
 
 fun OpenXRSpatialEntityExtension.querySnapshot(spatialSnapshot: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?): Boolean {
     return ObjectCalls.ptrcallWithRIDObjectListObjectArgsRetBool(querySnapshotBind, handle, spatialSnapshot, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL)
-}
-
-fun OpenXRSpatialEntityExtension.getString(spatialSnapshot: RID, bufferId: Long): String {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetString(getStringBind, handle, spatialSnapshot, bufferId)
 }
 
 fun OpenXRSpatialEntityExtension.getUint8Buffer(spatialSnapshot: RID, bufferId: Long): ByteArray {
@@ -90,11 +86,6 @@ private val updateSpatialEntitiesBind by lazy {
 private const val QUERY_SNAPSHOT_HASH = 641015484L
 private val querySnapshotBind by lazy {
     ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "query_snapshot", QUERY_SNAPSHOT_HASH)
-}
-
-private const val GET_STRING_HASH = 1464764419L
-private val getStringBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_string", GET_STRING_HASH)
 }
 
 private const val GET_UINT8_BUFFER_HASH = 3570600051L

@@ -7,19 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP AnimationNode waits on: ptrcallWithIntArgRetString,
-//   ptrcallWithStringNameAndVariantArg
+// KANAMA-IOS-GAP AnimationNode waits on: ptrcallWithStringNameAndVariantArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Gets the name of an input by index.
- *
- * Generated from Godot docs: AnimationNode.get_input_name
- */
-fun AnimationNode.getInputName(input: Int): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetString(getInputNameBind, handle, input)
-}
 
 /**
  * Sets a custom parameter. These are used as local memory, because resources can be reused across
@@ -30,11 +19,6 @@ fun AnimationNode.getInputName(input: Int): String {
 fun AnimationNode.setParameter(name: String, value: Any?) {
     checkOpen()
     ObjectCalls.ptrcallWithStringNameAndVariantArg(setParameterBind, handle, name, value)
-}
-
-private const val GET_INPUT_NAME_HASH = 844755477L
-private val getInputNameBind by lazy {
-    ObjectCalls.getMethodBind("AnimationNode", "get_input_name", GET_INPUT_NAME_HASH)
 }
 
 private const val SET_PARAMETER_HASH = 3776071444L

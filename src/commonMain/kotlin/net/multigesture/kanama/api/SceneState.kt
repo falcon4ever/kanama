@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.NodePath
 
 /**
  * Provides access to a scene file's information.
@@ -49,6 +50,47 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the type of the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_type
+     */
+    fun getNodeType(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeTypeBind, handle, idx)
+    }
+
+    /**
+     * Returns the name of the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_name
+     */
+    fun getNodeName(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeNameBind, handle, idx)
+    }
+
+    /**
+     * Returns the path to the node at `idx`. If `for_parent` is `true`, returns the path of the `idx`
+     * node's parent instead.
+     *
+     * Generated from Godot docs: SceneState.get_node_path
+     */
+    fun getNodePath(idx: Int, forParent: Boolean = false): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(getNodePathBind, handle, idx, forParent)
+    }
+
+    /**
+     * Returns the path to the owner of the node at `idx`, relative to the root node.
+     *
+     * Generated from Godot docs: SceneState.get_node_owner_path
+     */
+    fun getNodeOwnerPath(idx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getNodeOwnerPathBind, handle, idx)
+    }
+
+    /**
      * Returns `true` if the node at `idx` is an `InstancePlaceholder`.
      *
      * Generated from Godot docs: SceneState.is_node_instance_placeholder
@@ -56,6 +98,16 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     fun isNodeInstancePlaceholder(idx: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(isNodeInstancePlaceholderBind, handle, idx)
+    }
+
+    /**
+     * Returns the path to the represented scene file if the node at `idx` is an `InstancePlaceholder`.
+     *
+     * Generated from Godot docs: SceneState.get_node_instance_placeholder
+     */
+    fun getNodeInstancePlaceholder(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getNodeInstancePlaceholderBind, handle, idx)
     }
 
     /**
@@ -95,6 +147,16 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the name of the property at `prop_idx` for the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_property_name
+     */
+    fun getNodePropertyName(idx: Int, propIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(getNodePropertyNameBind, handle, idx, propIdx)
+    }
+
+    /**
      * Returns the number of signal connections in the scene. The `idx` argument used to query
      * connection metadata in other `get_connection_*` methods in the interval `[0,
      * get_connection_count() - 1]`.
@@ -104,6 +166,47 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     fun getConnectionCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getConnectionCountBind, handle)
+    }
+
+    /**
+     * Returns the path to the node that owns the signal at `idx`, relative to the root node.
+     *
+     * Generated from Godot docs: SceneState.get_connection_source
+     */
+    fun getConnectionSource(idx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionSourceBind, handle, idx)
+    }
+
+    /**
+     * Returns the name of the signal at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_signal
+     */
+    fun getConnectionSignal(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionSignalBind, handle, idx)
+    }
+
+    /**
+     * Returns the path to the node that owns the method connected to the signal at `idx`, relative to
+     * the root node.
+     *
+     * Generated from Godot docs: SceneState.get_connection_target
+     */
+    fun getConnectionTarget(idx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionTargetBind, handle, idx)
+    }
+
+    /**
+     * Returns the method connected to the signal at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_method
+     */
+    fun getConnectionMethod(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionMethodBind, handle, idx)
     }
 
     /**
@@ -154,9 +257,34 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("SceneState", "get_node_count", GET_NODE_COUNT_HASH)
         }
 
+        private const val GET_NODE_TYPE_HASH = 659327637L
+        private val getNodeTypeBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_type", GET_NODE_TYPE_HASH)
+        }
+
+        private const val GET_NODE_NAME_HASH = 659327637L
+        private val getNodeNameBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_name", GET_NODE_NAME_HASH)
+        }
+
+        private const val GET_NODE_PATH_HASH = 2272487792L
+        private val getNodePathBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_path", GET_NODE_PATH_HASH)
+        }
+
+        private const val GET_NODE_OWNER_PATH_HASH = 408788394L
+        private val getNodeOwnerPathBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_owner_path", GET_NODE_OWNER_PATH_HASH)
+        }
+
         private const val IS_NODE_INSTANCE_PLACEHOLDER_HASH = 1116898809L
         private val isNodeInstancePlaceholderBind by lazy {
             ObjectCalls.getMethodBind("SceneState", "is_node_instance_placeholder", IS_NODE_INSTANCE_PLACEHOLDER_HASH)
+        }
+
+        private const val GET_NODE_INSTANCE_PLACEHOLDER_HASH = 844755477L
+        private val getNodeInstancePlaceholderBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_instance_placeholder", GET_NODE_INSTANCE_PLACEHOLDER_HASH)
         }
 
         private const val GET_NODE_INSTANCE_HASH = 511017218L
@@ -174,9 +302,34 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("SceneState", "get_node_property_count", GET_NODE_PROPERTY_COUNT_HASH)
         }
 
+        private const val GET_NODE_PROPERTY_NAME_HASH = 351665558L
+        private val getNodePropertyNameBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_property_name", GET_NODE_PROPERTY_NAME_HASH)
+        }
+
         private const val GET_CONNECTION_COUNT_HASH = 3905245786L
         private val getConnectionCountBind by lazy {
             ObjectCalls.getMethodBind("SceneState", "get_connection_count", GET_CONNECTION_COUNT_HASH)
+        }
+
+        private const val GET_CONNECTION_SOURCE_HASH = 408788394L
+        private val getConnectionSourceBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_connection_source", GET_CONNECTION_SOURCE_HASH)
+        }
+
+        private const val GET_CONNECTION_SIGNAL_HASH = 659327637L
+        private val getConnectionSignalBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_connection_signal", GET_CONNECTION_SIGNAL_HASH)
+        }
+
+        private const val GET_CONNECTION_TARGET_HASH = 408788394L
+        private val getConnectionTargetBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_connection_target", GET_CONNECTION_TARGET_HASH)
+        }
+
+        private const val GET_CONNECTION_METHOD_HASH = 659327637L
+        private val getConnectionMethodBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_connection_method", GET_CONNECTION_METHOD_HASH)
         }
 
         private const val GET_CONNECTION_FLAGS_HASH = 923996154L

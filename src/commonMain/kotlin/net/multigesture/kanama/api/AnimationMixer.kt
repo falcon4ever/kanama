@@ -510,6 +510,25 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isResetOnSaveEnabledBind, handle)
     }
 
+    /**
+     * Returns the key of `animation` or an empty `StringName` if not found.
+     *
+     * Generated from Godot docs: AnimationMixer.find_animation
+     */
+    fun findAnimation(animation: Animation?): String {
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationBind, handle, animation?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
+    /**
+     * Returns the key for the `AnimationLibrary` that contains `animation` or an empty `StringName` if
+     * not found.
+     *
+     * Generated from Godot docs: AnimationMixer.find_animation_library
+     */
+    fun findAnimationLibrary(animation: Animation?): String {
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, handle, animation?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
     object Signals {
         const val animationListChanged: String = "animation_list_changed"
         const val animationLibrariesUpdated: String = "animation_libraries_updated"
@@ -725,6 +744,16 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
         private const val IS_RESET_ON_SAVE_ENABLED_HASH = 36873697L
         private val isResetOnSaveEnabledBind by lazy {
             ObjectCalls.getMethodBind("AnimationMixer", "is_reset_on_save_enabled", IS_RESET_ON_SAVE_ENABLED_HASH)
+        }
+
+        private const val FIND_ANIMATION_HASH = 1559484580L
+        private val findAnimationBind by lazy {
+            ObjectCalls.getMethodBind("AnimationMixer", "find_animation", FIND_ANIMATION_HASH)
+        }
+
+        private const val FIND_ANIMATION_LIBRARY_HASH = 1559484580L
+        private val findAnimationLibraryBind by lazy {
+            ObjectCalls.getMethodBind("AnimationMixer", "find_animation_library", FIND_ANIMATION_LIBRARY_HASH)
         }
     }
 }

@@ -47,6 +47,11 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setClipNameBind, handle, clipIndex, name)
     }
 
+    fun getClipName(clipIndex: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getClipNameBind, handle, clipIndex)
+    }
+
     fun setClipStream(clipIndex: Int, stream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setClipStreamBind, handle, clipIndex, stream?.requireOpenHandle() ?: MemorySegment.NULL)
@@ -185,6 +190,11 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
         private const val SET_CLIP_NAME_HASH = 3780747571L
         private val setClipNameBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_clip_name", SET_CLIP_NAME_HASH)
+        }
+
+        private const val GET_CLIP_NAME_HASH = 659327637L
+        private val getClipNameBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamInteractive", "get_clip_name", GET_CLIP_NAME_HASH)
         }
 
         private const val SET_CLIP_STREAM_HASH = 111075094L

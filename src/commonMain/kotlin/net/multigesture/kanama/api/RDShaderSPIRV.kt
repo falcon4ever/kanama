@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
@@ -11,6 +12,66 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: RDShaderSPIRV
  */
 class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
+    var compileErrorVertex: String
+        @JvmName("compileErrorVertexProperty")
+        get() = getStageCompileError(0L)
+        @JvmName("setCompileErrorVertexProperty")
+        set(value) = setStageCompileError(0L, value)
+
+    var compileErrorFragment: String
+        @JvmName("compileErrorFragmentProperty")
+        get() = getStageCompileError(1L)
+        @JvmName("setCompileErrorFragmentProperty")
+        set(value) = setStageCompileError(1L, value)
+
+    var compileErrorTesselationControl: String
+        @JvmName("compileErrorTesselationControlProperty")
+        get() = getStageCompileError(2L)
+        @JvmName("setCompileErrorTesselationControlProperty")
+        set(value) = setStageCompileError(2L, value)
+
+    var compileErrorTesselationEvaluation: String
+        @JvmName("compileErrorTesselationEvaluationProperty")
+        get() = getStageCompileError(3L)
+        @JvmName("setCompileErrorTesselationEvaluationProperty")
+        set(value) = setStageCompileError(3L, value)
+
+    var compileErrorCompute: String
+        @JvmName("compileErrorComputeProperty")
+        get() = getStageCompileError(4L)
+        @JvmName("setCompileErrorComputeProperty")
+        set(value) = setStageCompileError(4L, value)
+
+    var compileErrorRaygen: String
+        @JvmName("compileErrorRaygenProperty")
+        get() = getStageCompileError(5L)
+        @JvmName("setCompileErrorRaygenProperty")
+        set(value) = setStageCompileError(5L, value)
+
+    var compileErrorAnyHit: String
+        @JvmName("compileErrorAnyHitProperty")
+        get() = getStageCompileError(6L)
+        @JvmName("setCompileErrorAnyHitProperty")
+        set(value) = setStageCompileError(6L, value)
+
+    var compileErrorClosestHit: String
+        @JvmName("compileErrorClosestHitProperty")
+        get() = getStageCompileError(7L)
+        @JvmName("setCompileErrorClosestHitProperty")
+        set(value) = setStageCompileError(7L, value)
+
+    var compileErrorMiss: String
+        @JvmName("compileErrorMissProperty")
+        get() = getStageCompileError(8L)
+        @JvmName("setCompileErrorMissProperty")
+        set(value) = setStageCompileError(8L, value)
+
+    var compileErrorIntersection: String
+        @JvmName("compileErrorIntersectionProperty")
+        get() = getStageCompileError(9L)
+        @JvmName("setCompileErrorIntersectionProperty")
+        set(value) = setStageCompileError(9L, value)
+
     /**
      * The compilation error message for the vertex shader stage (set by the SPIR-V compiler and
      * Godot). If empty, shader compilation was successful.
@@ -20,6 +81,17 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
     fun setStageCompileError(stage: Long, compileError: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, handle, stage, compileError)
+    }
+
+    /**
+     * The compilation error message for the vertex shader stage (set by the SPIR-V compiler and
+     * Godot). If empty, shader compilation was successful.
+     *
+     * Generated from Godot docs: RDShaderSPIRV.get_stage_compile_error
+     */
+    fun getStageCompileError(stage: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, handle, stage)
     }
 
     companion object {
@@ -33,6 +105,11 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
         private const val SET_STAGE_COMPILE_ERROR_HASH = 620821314L
         private val setStageCompileErrorBind by lazy {
             ObjectCalls.getMethodBind("RDShaderSPIRV", "set_stage_compile_error", SET_STAGE_COMPILE_ERROR_HASH)
+        }
+
+        private const val GET_STAGE_COMPILE_ERROR_HASH = 3354920045L
+        private val getStageCompileErrorBind by lazy {
+            ObjectCalls.getMethodBind("RDShaderSPIRV", "get_stage_compile_error", GET_STAGE_COMPILE_ERROR_HASH)
         }
     }
 }

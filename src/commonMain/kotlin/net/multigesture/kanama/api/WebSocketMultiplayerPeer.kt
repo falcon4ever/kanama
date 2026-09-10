@@ -57,6 +57,11 @@ class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) 
         return WebSocketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, handle, peerId))
     }
 
+    fun getPeerAddress(id: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getPeerAddressBind, handle, id)
+    }
+
     fun getPeerPort(id: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getPeerPortBind, handle, id)
@@ -133,6 +138,11 @@ class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) 
         private const val GET_PEER_HASH = 1381378851L
         private val getPeerBind by lazy {
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_peer", GET_PEER_HASH)
+        }
+
+        private const val GET_PEER_ADDRESS_HASH = 844755477L
+        private val getPeerAddressBind by lazy {
+            ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_peer_address", GET_PEER_ADDRESS_HASH)
         }
 
         private const val GET_PEER_PORT_HASH = 923996154L

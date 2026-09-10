@@ -320,6 +320,15 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Returns the path to the node associated with the specified bone.
+     *
+     * Generated from Godot docs: Polygon2D.get_bone_path
+     */
+    fun getBonePath(index: Int): NodePath {
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getBonePathBind, handle, index)
+    }
+
+    /**
      * Removes the specified bone from this `Polygon2D`.
      *
      * Generated from Godot docs: Polygon2D.erase_bone
@@ -505,6 +514,11 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         private const val GET_BONE_COUNT_HASH = 3905245786L
         private val getBoneCountBind by lazy {
             ObjectCalls.getMethodBind("Polygon2D", "get_bone_count", GET_BONE_COUNT_HASH)
+        }
+
+        private const val GET_BONE_PATH_HASH = 408788394L
+        private val getBonePathBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "get_bone_path", GET_BONE_PATH_HASH)
         }
 
         private const val ERASE_BONE_HASH = 1286410249L

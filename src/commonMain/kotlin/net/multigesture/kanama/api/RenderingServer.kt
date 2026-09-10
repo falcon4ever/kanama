@@ -742,6 +742,17 @@ object RenderingServer {
     }
 
     /**
+     * Returns the resource path (starting with `res://` or `uid://`) for the specified texture RID.
+     * Returns an empty `String` if the resource is built-in. See also `texture_set_path`.
+     *
+     * Generated from Godot docs: RenderingServer.texture_get_path
+     */
+    @JvmStatic
+    fun textureGetPath(texture: RID): String {
+        return ObjectCalls.ptrcallWithRIDArgRetString(textureGetPathBind, singleton, texture)
+    }
+
+    /**
      * Returns the format for the texture.
      *
      * Generated from Godot docs: RenderingServer.texture_get_format
@@ -832,6 +843,16 @@ object RenderingServer {
     @JvmStatic
     fun shaderSetPathHint(shader: RID, path: String) {
         ObjectCalls.ptrcallWithRIDAndStringArg(shaderSetPathHintBind, singleton, shader, path)
+    }
+
+    /**
+     * Returns a shader's source code as a string.
+     *
+     * Generated from Godot docs: RenderingServer.shader_get_code
+     */
+    @JvmStatic
+    fun shaderGetCode(shader: RID): String {
+        return ObjectCalls.ptrcallWithRIDArgRetString(shaderGetCodeBind, singleton, shader)
     }
 
     /**
@@ -6093,6 +6114,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "texture_set_path", TEXTURE_SET_PATH_HASH)
     }
 
+    private const val TEXTURE_GET_PATH_HASH = 642473191L
+    private val textureGetPathBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "texture_get_path", TEXTURE_GET_PATH_HASH)
+    }
+
     private const val TEXTURE_GET_FORMAT_HASH = 1932918979L
     private val textureGetFormatBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "texture_get_format", TEXTURE_GET_FORMAT_HASH)
@@ -6131,6 +6157,11 @@ object RenderingServer {
     private const val SHADER_SET_PATH_HINT_HASH = 2726140452L
     private val shaderSetPathHintBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "shader_set_path_hint", SHADER_SET_PATH_HINT_HASH)
+    }
+
+    private const val SHADER_GET_CODE_HASH = 642473191L
+    private val shaderGetCodeBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "shader_get_code", SHADER_GET_CODE_HASH)
     }
 
     private const val SHADER_SET_DEFAULT_TEXTURE_PARAMETER_HASH = 4094001817L

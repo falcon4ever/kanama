@@ -14,11 +14,11 @@ import net.multigesture.kanama.types.Vector2
 // KANAMA-IOS-GAP DisplayServer waits on: ptrcallNoArgsRetDictionary, ptrcallNoArgsRetDictionaryList,
 //   ptrcallNoArgsRetRect2List,
 //   ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong,
-//   ptrcallWithIntAndRect2iArg, ptrcallWithIntArgRetString, ptrcallWithPackedVector2ListAndIntArgs,
-//   ptrcallWithRIDAndVariantArg, ptrcallWithRIDArgRetVariantScalar, ptrcallWithRect2iArgRetObject,
-//   ptrcallWithStringAndIntArgRetString, ptrcallWithStringAndIntArgRetVariantScalar,
-//   ptrcallWithStringAndVariantArgRetInt, ptrcallWithStringArgRetPackedStringList,
-//   ptrcallWithStringIntAndVariantArg, ptrcallWithStringIntArgsRetCallable,
+//   ptrcallWithIntAndRect2iArg, ptrcallWithPackedVector2ListAndIntArgs, ptrcallWithRIDAndVariantArg,
+//   ptrcallWithRIDArgRetVariantScalar, ptrcallWithRect2iArgRetObject,
+//   ptrcallWithStringAndIntArgRetVariantScalar, ptrcallWithStringAndVariantArgRetInt,
+//   ptrcallWithStringArgRetPackedStringList, ptrcallWithStringIntAndVariantArg,
+//   ptrcallWithStringIntArgsRetCallable,
 //   ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong,
 //   ptrcallWithTwoStringPackedStringListCallableArgsRetLong,
@@ -185,35 +185,6 @@ fun DisplayServer.globalMenuGetItemKeyCallback(menuRoot: String, idx: Int): Godo
  */
 fun DisplayServer.globalMenuGetItemTag(menuRoot: String, idx: Int): Any? {
     return ObjectCalls.ptrcallWithStringAndIntArgRetVariantScalar(globalMenuGetItemTagBind, displayServerSingleton, menuRoot, idx)
-}
-
-/**
- * Returns the text of the item at index `idx`. Note: This method is implemented only on macOS.
- *
- * Generated from Godot docs: DisplayServer.global_menu_get_item_text
- */
-fun DisplayServer.globalMenuGetItemText(menuRoot: String, idx: Int): String {
-    return ObjectCalls.ptrcallWithStringAndIntArgRetString(globalMenuGetItemTextBind, displayServerSingleton, menuRoot, idx)
-}
-
-/**
- * Returns the submenu ID of the item at index `idx`. See `global_menu_add_submenu_item` for more
- * info on how to add a submenu. Note: This method is implemented only on macOS.
- *
- * Generated from Godot docs: DisplayServer.global_menu_get_item_submenu
- */
-fun DisplayServer.globalMenuGetItemSubmenu(menuRoot: String, idx: Int): String {
-    return ObjectCalls.ptrcallWithStringAndIntArgRetString(globalMenuGetItemSubmenuBind, displayServerSingleton, menuRoot, idx)
-}
-
-/**
- * Returns the tooltip associated with the specified index `idx`. Note: This method is implemented
- * only on macOS.
- *
- * Generated from Godot docs: DisplayServer.global_menu_get_item_tooltip
- */
-fun DisplayServer.globalMenuGetItemTooltip(menuRoot: String, idx: Int): String {
-    return ObjectCalls.ptrcallWithStringAndIntArgRetString(globalMenuGetItemTooltipBind, displayServerSingleton, menuRoot, idx)
 }
 
 /**
@@ -395,36 +366,6 @@ fun DisplayServer.fileDialogWithOptionsShow(title: String, currentDirectory: Str
     return ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(fileDialogWithOptionsShowBind, displayServerSingleton, title, currentDirectory, root, filename, showHidden, mode, filters, options, callback.target.handle, callback.method, parentWindowId)
 }
 
-/**
- * Returns the ISO-639/BCP-47 language code of the keyboard layout at position `index`. Note: This
- * method is implemented on Linux (X11/Wayland), macOS and Windows.
- *
- * Generated from Godot docs: DisplayServer.keyboard_get_layout_language
- */
-fun DisplayServer.keyboardGetLayoutLanguage(index: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(keyboardGetLayoutLanguageBind, displayServerSingleton, index)
-}
-
-/**
- * Returns the localized name of the keyboard layout at position `index`. Note: This method is
- * implemented on Linux (X11/Wayland), macOS and Windows.
- *
- * Generated from Godot docs: DisplayServer.keyboard_get_layout_name
- */
-fun DisplayServer.keyboardGetLayoutName(index: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(keyboardGetLayoutNameBind, displayServerSingleton, index)
-}
-
-/**
- * Returns the tablet driver name for the given index. Note: This method is implemented only on
- * Windows.
- *
- * Generated from Godot docs: DisplayServer.tablet_get_driver_name
- */
-fun DisplayServer.tabletGetDriverName(idx: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(tabletGetDriverNameBind, displayServerSingleton, idx)
-}
-
 private val displayServerSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("DisplayServer")
 }
@@ -482,21 +423,6 @@ private val globalMenuGetItemKeyCallbackBind by lazy {
 private const val GLOBAL_MENU_GET_ITEM_TAG_HASH = 330672633L
 private val globalMenuGetItemTagBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_tag", GLOBAL_MENU_GET_ITEM_TAG_HASH)
-}
-
-private const val GLOBAL_MENU_GET_ITEM_TEXT_HASH = 591067909L
-private val globalMenuGetItemTextBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_text", GLOBAL_MENU_GET_ITEM_TEXT_HASH)
-}
-
-private const val GLOBAL_MENU_GET_ITEM_SUBMENU_HASH = 591067909L
-private val globalMenuGetItemSubmenuBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_submenu", GLOBAL_MENU_GET_ITEM_SUBMENU_HASH)
-}
-
-private const val GLOBAL_MENU_GET_ITEM_TOOLTIP_HASH = 591067909L
-private val globalMenuGetItemTooltipBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_tooltip", GLOBAL_MENU_GET_ITEM_TOOLTIP_HASH)
 }
 
 private const val GLOBAL_MENU_SET_ITEM_TAG_HASH = 453659863L
@@ -562,19 +488,4 @@ private val fileDialogShowBind by lazy {
 private const val FILE_DIALOG_WITH_OPTIONS_SHOW_HASH = 1448789813L
 private val fileDialogWithOptionsShowBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "file_dialog_with_options_show", FILE_DIALOG_WITH_OPTIONS_SHOW_HASH)
-}
-
-private const val KEYBOARD_GET_LAYOUT_LANGUAGE_HASH = 844755477L
-private val keyboardGetLayoutLanguageBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "keyboard_get_layout_language", KEYBOARD_GET_LAYOUT_LANGUAGE_HASH)
-}
-
-private const val KEYBOARD_GET_LAYOUT_NAME_HASH = 844755477L
-private val keyboardGetLayoutNameBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "keyboard_get_layout_name", KEYBOARD_GET_LAYOUT_NAME_HASH)
-}
-
-private const val TABLET_GET_DRIVER_NAME_HASH = 844755477L
-private val tabletGetDriverNameBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "tablet_get_driver_name", TABLET_GET_DRIVER_NAME_HASH)
 }

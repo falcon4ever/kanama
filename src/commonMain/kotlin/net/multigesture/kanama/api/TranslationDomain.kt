@@ -146,6 +146,28 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the current locale's translation for the given message and context.
+     *
+     * Generated from Godot docs: TranslationDomain.translate
+     */
+    fun translate(message: String, context: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, handle, message, context)
+    }
+
+    /**
+     * Returns the current locale's translation for the given message, plural message and context. The
+     * number `n` is the number or quantity of the plural object. It will be used to guide the
+     * translation system to fetch the correct plural form for the selected language.
+     *
+     * Generated from Godot docs: TranslationDomain.translate_plural
+     */
+    fun translatePlural(message: String, messagePlural: String, n: Int, context: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, handle, message, messagePlural, n, context)
+    }
+
+    /**
      * Returns the locale override of the domain. Returns an empty string if locale override is
      * disabled.
      *
@@ -486,6 +508,16 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
         private const val HAS_TRANSLATION_HASH = 2696976312L
         private val hasTranslationBind by lazy {
             ObjectCalls.getMethodBind("TranslationDomain", "has_translation", HAS_TRANSLATION_HASH)
+        }
+
+        private const val TRANSLATE_HASH = 1829228469L
+        private val translateBind by lazy {
+            ObjectCalls.getMethodBind("TranslationDomain", "translate", TRANSLATE_HASH)
+        }
+
+        private const val TRANSLATE_PLURAL_HASH = 229954002L
+        private val translatePluralBind by lazy {
+            ObjectCalls.getMethodBind("TranslationDomain", "translate_plural", TRANSLATE_PLURAL_HASH)
         }
 
         private const val GET_LOCALE_OVERRIDE_HASH = 201670096L

@@ -9,11 +9,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP OS waits on: ptrcallNoArgsRetDictionary, ptrcallWithBoolAndPackedStringArrayArgs,
 //   ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList, ptrcallWithIntArgRetByteArray,
-//   ptrcallWithLongAndBoolArgRetString, ptrcallWithLongArgRetByteArray, ptrcallWithLongArgRetString,
-//   ptrcallWithPackedStringListArgRetInt, ptrcallWithStringAndPackedStringListArgRetLong,
+//   ptrcallWithLongArgRetByteArray, ptrcallWithPackedStringListArgRetInt,
+//   ptrcallWithStringAndPackedStringListArgRetLong,
 //   ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt,
 //   ptrcallWithStringPackedStringListBoolArgsRetDictionary,
-//   ptrcallWithStringPackedStringListBoolArgsRetInt, ptrcallWithStringTwoIntBoolArgsRetString
+//   ptrcallWithStringPackedStringListBoolArgsRetInt
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -26,19 +26,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 fun OS.getEntropy(size: Int): ByteArray {
     return ObjectCalls.ptrcallWithIntArgRetByteArray(getEntropyBind, oSSingleton, size)
-}
-
-/**
- * Returns the path to the system font file with `font_name` and style. Returns an empty string if
- * no matching fonts found. The following aliases can be used to request default fonts:
- * "sans-serif", "serif", "monospace", "cursive", and "fantasy". Note: Returned font might have
- * different style if the requested style is not available. Note: This method is implemented on
- * Android, iOS, Linux, macOS and Windows.
- *
- * Generated from Godot docs: OS.get_system_font_path
- */
-fun OS.getSystemFontPath(fontName: String, weight: Int = 400, stretch: Int = 100, italic: Boolean = false): String {
-    return ObjectCalls.ptrcallWithStringTwoIntBoolArgsRetString(getSystemFontPathBind, oSSingleton, fontName, weight, stretch, italic)
 }
 
 /**
@@ -56,28 +43,6 @@ fun OS.getSystemFontPath(fontName: String, weight: Int = 400, stretch: Int = 100
  */
 fun OS.getSystemFontPathForText(fontName: String, text: String, locale: String = "", script: String = "", weight: Int = 400, stretch: Int = 100, italic: Boolean = false): List<String> {
     return ObjectCalls.ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(getSystemFontPathForTextBind, oSSingleton, fontName, text, locale, script, weight, stretch, italic)
-}
-
-/**
- * Reads a user input as a UTF-8 encoded string from the standard input. This operation can be
- * blocking, which causes the window to freeze if `read_string_from_stdin` is called on the main
- * thread. - If standard input is console, this method will block until the program receives a line
- * break in standard input (usually by the user pressing Enter). - If standard input is pipe, this
- * method will block until a specific amount of data is read or pipe is closed. - If standard input
- * is a file, this method will read a specific amount of data (or less if end-of-file is reached)
- * and return immediately. Note: This method automatically replaces `\r\n` line breaks with `\n`
- * and removes them from the end of the string. Use `read_buffer_from_stdin` to read the
- * unprocessed data. Note: This method is implemented on Linux, macOS, and Windows. Note: On
- * exported Windows builds, run the console wrapper executable to access the terminal. If standard
- * input is console, calling this method without console wrapped will freeze permanently. If
- * standard input is pipe or file, it can be used without console wrapper. If you need a single
- * executable with full console support, use a custom build compiled with the
- * `windows_subsystem=console` flag.
- *
- * Generated from Godot docs: OS.read_string_from_stdin
- */
-fun OS.readStringFromStdin(bufferSize: Long = 1024L): String {
-    return ObjectCalls.ptrcallWithLongArgRetString(readStringFromStdinBind, oSSingleton, bufferSize)
 }
 
 /**
@@ -223,28 +188,6 @@ fun OS.getMemoryInfo(): Map<String, Any?> {
     return ObjectCalls.ptrcallNoArgsRetDictionary(getMemoryInfoBind, oSSingleton)
 }
 
-/**
- * Returns the path to commonly used folders across different platforms, as defined by `dir`. See
- * the `SystemDir` constants for available locations. Note: This method is implemented on Android,
- * Linux, macOS and Windows. Note: Shared storage is implemented on Android and allows to
- * differentiate between app specific and shared directories, if `shared_storage` is `true`. Shared
- * directories have additional restrictions on Android.
- *
- * Generated from Godot docs: OS.get_system_dir
- */
-fun OS.getSystemDir(dir: Long, sharedStorage: Boolean = true): String {
-    return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getSystemDirBind, oSSingleton, dir, sharedStorage)
-}
-
-/**
- * Returns the given keycode as a `String`.
- *
- * Generated from Godot docs: OS.get_keycode_string
- */
-fun OS.getKeycodeString(code: Long): String {
-    return ObjectCalls.ptrcallWithLongArgRetString(getKeycodeStringBind, oSSingleton, code)
-}
-
 private val oSSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("OS")
 }
@@ -254,19 +197,9 @@ private val getEntropyBind by lazy {
     ObjectCalls.getMethodBind("OS", "get_entropy", GET_ENTROPY_HASH)
 }
 
-private const val GET_SYSTEM_FONT_PATH_HASH = 626580860L
-private val getSystemFontPathBind by lazy {
-    ObjectCalls.getMethodBind("OS", "get_system_font_path", GET_SYSTEM_FONT_PATH_HASH)
-}
-
 private const val GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH = 197317981L
 private val getSystemFontPathForTextBind by lazy {
     ObjectCalls.getMethodBind("OS", "get_system_font_path_for_text", GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH)
-}
-
-private const val READ_STRING_FROM_STDIN_HASH = 723587915L
-private val readStringFromStdinBind by lazy {
-    ObjectCalls.getMethodBind("OS", "read_string_from_stdin", READ_STRING_FROM_STDIN_HASH)
 }
 
 private const val READ_BUFFER_FROM_STDIN_HASH = 3249455752L
@@ -307,14 +240,4 @@ private val setRestartOnExitBind by lazy {
 private const val GET_MEMORY_INFO_HASH = 3102165223L
 private val getMemoryInfoBind by lazy {
     ObjectCalls.getMethodBind("OS", "get_memory_info", GET_MEMORY_INFO_HASH)
-}
-
-private const val GET_SYSTEM_DIR_HASH = 3073895123L
-private val getSystemDirBind by lazy {
-    ObjectCalls.getMethodBind("OS", "get_system_dir", GET_SYSTEM_DIR_HASH)
-}
-
-private const val GET_KEYCODE_STRING_HASH = 2261993717L
-private val getKeycodeStringBind by lazy {
-    ObjectCalls.getMethodBind("OS", "get_keycode_string", GET_KEYCODE_STRING_HASH)
 }

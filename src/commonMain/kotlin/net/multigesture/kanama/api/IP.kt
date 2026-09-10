@@ -27,6 +27,17 @@ object IP {
     const val TYPE_ANY: Long = 3L
 
     /**
+     * Returns a given hostname's IPv4 or IPv6 address when resolved (blocking-type method). The
+     * address type returned depends on the `Type` constant given as `ip_type`.
+     *
+     * Generated from Godot docs: IP.resolve_hostname
+     */
+    @JvmStatic
+    fun resolveHostname(host: String, ipType: Long = 3L): String {
+        return ObjectCalls.ptrcallWithStringAndLongArgRetString(resolveHostnameBind, singleton, host, ipType)
+    }
+
+    /**
      * Creates a queue item to resolve a hostname to an IPv4 or IPv6 address depending on the `Type`
      * constant given as `ip_type`. Returns the queue ID if successful, or `RESOLVER_INVALID_ID` on
      * error.
@@ -46,6 +57,17 @@ object IP {
     @JvmStatic
     fun getResolveItemStatus(id: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getResolveItemStatusBind, singleton, id)
+    }
+
+    /**
+     * Returns a queued hostname's IP address, given its queue `id`. Returns an empty string on error
+     * or if resolution hasn't happened yet (see `get_resolve_item_status`).
+     *
+     * Generated from Godot docs: IP.get_resolve_item_address
+     */
+    @JvmStatic
+    fun getResolveItemAddress(id: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getResolveItemAddressBind, singleton, id)
     }
 
     /**
@@ -87,6 +109,11 @@ object IP {
     internal fun wrap(handle: MemorySegment): IP? =
         if (handle.address() == 0L) null else this
 
+    private const val RESOLVE_HOSTNAME_HASH = 4283295457L
+    private val resolveHostnameBind by lazy {
+        ObjectCalls.getMethodBind("IP", "resolve_hostname", RESOLVE_HOSTNAME_HASH)
+    }
+
     private const val RESOLVE_HOSTNAME_QUEUE_ITEM_HASH = 1749894742L
     private val resolveHostnameQueueItemBind by lazy {
         ObjectCalls.getMethodBind("IP", "resolve_hostname_queue_item", RESOLVE_HOSTNAME_QUEUE_ITEM_HASH)
@@ -95,6 +122,11 @@ object IP {
     private const val GET_RESOLVE_ITEM_STATUS_HASH = 3812250196L
     private val getResolveItemStatusBind by lazy {
         ObjectCalls.getMethodBind("IP", "get_resolve_item_status", GET_RESOLVE_ITEM_STATUS_HASH)
+    }
+
+    private const val GET_RESOLVE_ITEM_ADDRESS_HASH = 844755477L
+    private val getResolveItemAddressBind by lazy {
+        ObjectCalls.getMethodBind("IP", "get_resolve_item_address", GET_RESOLVE_ITEM_ADDRESS_HASH)
     }
 
     private const val ERASE_RESOLVE_ITEM_HASH = 1286410249L

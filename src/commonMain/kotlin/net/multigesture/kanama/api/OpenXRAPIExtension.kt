@@ -36,6 +36,16 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(getInstanceProcAddrBind, handle, name)
     }
 
+    fun getErrorString(result: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(getErrorStringBind, handle, result)
+    }
+
+    fun getSwapchainFormatName(swapchainFormat: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(getSwapchainFormatNameBind, handle, swapchainFormat)
+    }
+
     fun setObjectName(objectType: Long, objectHandle: Long, objectName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongStringArgs(setObjectNameBind, handle, objectType, objectHandle, objectName)
@@ -270,6 +280,16 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_INSTANCE_PROC_ADDR_HASH = 1597066294L
         private val getInstanceProcAddrBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_instance_proc_addr", GET_INSTANCE_PROC_ADDR_HASH)
+        }
+
+        private const val GET_ERROR_STRING_HASH = 990163283L
+        private val getErrorStringBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_error_string", GET_ERROR_STRING_HASH)
+        }
+
+        private const val GET_SWAPCHAIN_FORMAT_NAME_HASH = 990163283L
+        private val getSwapchainFormatNameBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_swapchain_format_name", GET_SWAPCHAIN_FORMAT_NAME_HASH)
         }
 
         private const val SET_OBJECT_NAME_HASH = 2285447957L

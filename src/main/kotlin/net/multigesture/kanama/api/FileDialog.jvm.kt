@@ -9,8 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP FileDialog waits on: ptrcallNoArgsRetDictionary,
 //   ptrcallWithIntAndPackedStringListArg, ptrcallWithIntArgRetPackedStringList,
-//   ptrcallWithIntArgRetString, ptrcallWithPackedStringListArg,
-//   ptrcallWithStringPackedStringListAndIntArgs
+//   ptrcallWithPackedStringListArg, ptrcallWithStringPackedStringListAndIntArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -24,15 +23,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 fun FileDialog.setFilters(filters: List<String>) {
     ObjectCalls.ptrcallWithPackedStringListArg(setFiltersBind, handle, filters)
-}
-
-/**
- * Returns the name of the `OptionButton` or `CheckBox` with index `option`.
- *
- * Generated from Godot docs: FileDialog.get_option_name
- */
-fun FileDialog.getOptionName(option: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getOptionNameBind, handle, option)
 }
 
 /**
@@ -103,11 +93,6 @@ fun FileDialog.Companion.setRecentList(recents: List<String>) {
 private const val SET_FILTERS_HASH = 4015028928L
 private val setFiltersBind by lazy {
     ObjectCalls.getMethodBind("FileDialog", "set_filters", SET_FILTERS_HASH)
-}
-
-private const val GET_OPTION_NAME_HASH = 844755477L
-private val getOptionNameBind by lazy {
-    ObjectCalls.getMethodBind("FileDialog", "get_option_name", GET_OPTION_NAME_HASH)
 }
 
 private const val GET_OPTION_VALUES_HASH = 647634434L

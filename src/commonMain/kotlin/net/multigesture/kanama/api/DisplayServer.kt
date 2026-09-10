@@ -389,6 +389,27 @@ object DisplayServer {
     }
 
     /**
+     * Returns the text of the item at index `idx`. Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_item_text
+     */
+    @JvmStatic
+    fun globalMenuGetItemText(menuRoot: String, idx: Int): String {
+        return ObjectCalls.ptrcallWithStringAndIntArgRetString(globalMenuGetItemTextBind, singleton, menuRoot, idx)
+    }
+
+    /**
+     * Returns the submenu ID of the item at index `idx`. See `global_menu_add_submenu_item` for more
+     * info on how to add a submenu. Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_item_submenu
+     */
+    @JvmStatic
+    fun globalMenuGetItemSubmenu(menuRoot: String, idx: Int): String {
+        return ObjectCalls.ptrcallWithStringAndIntArgRetString(globalMenuGetItemSubmenuBind, singleton, menuRoot, idx)
+    }
+
+    /**
      * Returns the accelerator of the item at index `idx`. Accelerators are special combinations of
      * keys that activate the item, no matter which control is focused. Note: This method is
      * implemented only on macOS.
@@ -421,6 +442,17 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuIsItemHidden(menuRoot: String, idx: Int): Boolean {
         return ObjectCalls.ptrcallWithStringAndIntArgRetBool(globalMenuIsItemHiddenBind, singleton, menuRoot, idx)
+    }
+
+    /**
+     * Returns the tooltip associated with the specified index `idx`. Note: This method is implemented
+     * only on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_item_tooltip
+     */
+    @JvmStatic
+    fun globalMenuGetItemTooltip(menuRoot: String, idx: Int): String {
+        return ObjectCalls.ptrcallWithStringAndIntArgRetString(globalMenuGetItemTooltipBind, singleton, menuRoot, idx)
     }
 
     /**
@@ -2943,6 +2975,28 @@ object DisplayServer {
     }
 
     /**
+     * Returns the ISO-639/BCP-47 language code of the keyboard layout at position `index`. Note: This
+     * method is implemented on Linux (X11/Wayland), macOS and Windows.
+     *
+     * Generated from Godot docs: DisplayServer.keyboard_get_layout_language
+     */
+    @JvmStatic
+    fun keyboardGetLayoutLanguage(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(keyboardGetLayoutLanguageBind, singleton, index)
+    }
+
+    /**
+     * Returns the localized name of the keyboard layout at position `index`. Note: This method is
+     * implemented on Linux (X11/Wayland), macOS and Windows.
+     *
+     * Generated from Godot docs: DisplayServer.keyboard_get_layout_name
+     */
+    @JvmStatic
+    fun keyboardGetLayoutName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(keyboardGetLayoutNameBind, singleton, index)
+    }
+
+    /**
      * Converts a physical (US QWERTY) `keycode` to one in the active keyboard layout. Note: This
      * method is implemented on Linux (X11/Wayland), macOS and Windows.
      *
@@ -3132,6 +3186,17 @@ object DisplayServer {
     }
 
     /**
+     * Returns the tablet driver name for the given index. Note: This method is implemented only on
+     * Windows.
+     *
+     * Generated from Godot docs: DisplayServer.tablet_get_driver_name
+     */
+    @JvmStatic
+    fun tabletGetDriverName(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(tabletGetDriverNameBind, singleton, idx)
+    }
+
+    /**
      * Returns current active tablet driver name. Note: This method is implemented only on Windows.
      *
      * Generated from Godot docs: DisplayServer.tablet_get_current_driver
@@ -3303,6 +3368,16 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_is_item_radio_checkable", GLOBAL_MENU_IS_ITEM_RADIO_CHECKABLE_HASH)
     }
 
+    private const val GLOBAL_MENU_GET_ITEM_TEXT_HASH = 591067909L
+    private val globalMenuGetItemTextBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_text", GLOBAL_MENU_GET_ITEM_TEXT_HASH)
+    }
+
+    private const val GLOBAL_MENU_GET_ITEM_SUBMENU_HASH = 591067909L
+    private val globalMenuGetItemSubmenuBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_submenu", GLOBAL_MENU_GET_ITEM_SUBMENU_HASH)
+    }
+
     private const val GLOBAL_MENU_GET_ITEM_ACCELERATOR_HASH = 936065394L
     private val globalMenuGetItemAcceleratorBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_accelerator", GLOBAL_MENU_GET_ITEM_ACCELERATOR_HASH)
@@ -3316,6 +3391,11 @@ object DisplayServer {
     private const val GLOBAL_MENU_IS_ITEM_HIDDEN_HASH = 3511468594L
     private val globalMenuIsItemHiddenBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_is_item_hidden", GLOBAL_MENU_IS_ITEM_HIDDEN_HASH)
+    }
+
+    private const val GLOBAL_MENU_GET_ITEM_TOOLTIP_HASH = 591067909L
+    private val globalMenuGetItemTooltipBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_tooltip", GLOBAL_MENU_GET_ITEM_TOOLTIP_HASH)
     }
 
     private const val GLOBAL_MENU_GET_ITEM_STATE_HASH = 3422818498L
@@ -4408,6 +4488,16 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "keyboard_set_current_layout", KEYBOARD_SET_CURRENT_LAYOUT_HASH)
     }
 
+    private const val KEYBOARD_GET_LAYOUT_LANGUAGE_HASH = 844755477L
+    private val keyboardGetLayoutLanguageBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "keyboard_get_layout_language", KEYBOARD_GET_LAYOUT_LANGUAGE_HASH)
+    }
+
+    private const val KEYBOARD_GET_LAYOUT_NAME_HASH = 844755477L
+    private val keyboardGetLayoutNameBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "keyboard_get_layout_name", KEYBOARD_GET_LAYOUT_NAME_HASH)
+    }
+
     private const val KEYBOARD_GET_KEYCODE_FROM_PHYSICAL_HASH = 3447613187L
     private val keyboardGetKeycodeFromPhysicalBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "keyboard_get_keycode_from_physical", KEYBOARD_GET_KEYCODE_FROM_PHYSICAL_HASH)
@@ -4486,6 +4576,11 @@ object DisplayServer {
     private const val TABLET_GET_DRIVER_COUNT_HASH = 3905245786L
     private val tabletGetDriverCountBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "tablet_get_driver_count", TABLET_GET_DRIVER_COUNT_HASH)
+    }
+
+    private const val TABLET_GET_DRIVER_NAME_HASH = 844755477L
+    private val tabletGetDriverNameBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "tablet_get_driver_name", TABLET_GET_DRIVER_NAME_HASH)
     }
 
     private const val TABLET_GET_CURRENT_DRIVER_HASH = 201670096L

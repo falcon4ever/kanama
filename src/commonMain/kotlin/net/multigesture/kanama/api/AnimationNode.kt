@@ -51,6 +51,16 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Gets the name of an input by index.
+     *
+     * Generated from Godot docs: AnimationNode.get_input_name
+     */
+    fun getInputName(input: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getInputNameBind, handle, input)
+    }
+
+    /**
      * Amount of inputs in this animation node, only useful for animation nodes that go into
      * `AnimationNodeBlendTree`.
      *
@@ -213,6 +223,11 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
         private const val SET_INPUT_NAME_HASH = 215573526L
         private val setInputNameBind by lazy {
             ObjectCalls.getMethodBind("AnimationNode", "set_input_name", SET_INPUT_NAME_HASH)
+        }
+
+        private const val GET_INPUT_NAME_HASH = 844755477L
+        private val getInputNameBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNode", "get_input_name", GET_INPUT_NAME_HASH)
         }
 
         private const val GET_INPUT_COUNT_HASH = 3905245786L

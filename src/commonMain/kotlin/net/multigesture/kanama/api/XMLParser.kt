@@ -78,6 +78,26 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the name of an attribute of the currently parsed element, specified by the `idx` index.
+     *
+     * Generated from Godot docs: XMLParser.get_attribute_name
+     */
+    fun getAttributeName(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeNameBind, handle, idx)
+    }
+
+    /**
+     * Returns the value of an attribute of the currently parsed element, specified by the `idx` index.
+     *
+     * Generated from Godot docs: XMLParser.get_attribute_value
+     */
+    fun getAttributeValue(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeValueBind, handle, idx)
+    }
+
+    /**
      * Returns `true` if the currently parsed element has an attribute with the `name`.
      *
      * Generated from Godot docs: XMLParser.has_attribute
@@ -205,6 +225,16 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_ATTRIBUTE_COUNT_HASH = 3905245786L
         private val getAttributeCountBind by lazy {
             ObjectCalls.getMethodBind("XMLParser", "get_attribute_count", GET_ATTRIBUTE_COUNT_HASH)
+        }
+
+        private const val GET_ATTRIBUTE_NAME_HASH = 844755477L
+        private val getAttributeNameBind by lazy {
+            ObjectCalls.getMethodBind("XMLParser", "get_attribute_name", GET_ATTRIBUTE_NAME_HASH)
+        }
+
+        private const val GET_ATTRIBUTE_VALUE_HASH = 844755477L
+        private val getAttributeValueBind by lazy {
+            ObjectCalls.getMethodBind("XMLParser", "get_attribute_value", GET_ATTRIBUTE_VALUE_HASH)
         }
 
         private const val HAS_ATTRIBUTE_HASH = 3927539163L

@@ -583,12 +583,30 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
     }
 
     /**
+     * Returns the text of the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_text
+     */
+    fun getItemText(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, index)
+    }
+
+    /**
      * Returns item's text base writing direction.
      *
      * Generated from Godot docs: PopupMenu.get_item_text_direction
      */
     fun getItemTextDirection(index: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, handle, index)
+    }
+
+    /**
+     * Returns item's text language code.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_language
+     */
+    fun getItemLanguage(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, handle, index)
     }
 
     /**
@@ -680,6 +698,16 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
     }
 
     /**
+     * Returns the submenu name of the item at the given `index`. See `add_submenu_item` for more info
+     * on how to add a submenu.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_submenu
+     */
+    fun getItemSubmenu(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemSubmenuBind, handle, index)
+    }
+
+    /**
      * Returns the submenu of the item at the given `index`, or `null` if no submenu was added. See
      * `add_submenu_node_item` for more info on how to add a submenu.
      *
@@ -727,6 +755,15 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      */
     fun isItemShortcutDisabled(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(isItemShortcutDisabledBind, handle, index)
+    }
+
+    /**
+     * Returns the tooltip associated with the item at the given `index`.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_tooltip
+     */
+    fun getItemTooltip(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, index)
     }
 
     /**
@@ -1336,9 +1373,19 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
             ObjectCalls.getMethodBind("PopupMenu", "toggle_item_multistate", TOGGLE_ITEM_MULTISTATE_HASH)
         }
 
+        private const val GET_ITEM_TEXT_HASH = 844755477L
+        private val getItemTextBind by lazy {
+            ObjectCalls.getMethodBind("PopupMenu", "get_item_text", GET_ITEM_TEXT_HASH)
+        }
+
         private const val GET_ITEM_TEXT_DIRECTION_HASH = 4235602388L
         private val getItemTextDirectionBind by lazy {
             ObjectCalls.getMethodBind("PopupMenu", "get_item_text_direction", GET_ITEM_TEXT_DIRECTION_HASH)
+        }
+
+        private const val GET_ITEM_LANGUAGE_HASH = 844755477L
+        private val getItemLanguageBind by lazy {
+            ObjectCalls.getMethodBind("PopupMenu", "get_item_language", GET_ITEM_LANGUAGE_HASH)
         }
 
         private const val GET_ITEM_AUTO_TRANSLATE_MODE_HASH = 906302372L
@@ -1386,6 +1433,11 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
             ObjectCalls.getMethodBind("PopupMenu", "is_item_disabled", IS_ITEM_DISABLED_HASH)
         }
 
+        private const val GET_ITEM_SUBMENU_HASH = 844755477L
+        private val getItemSubmenuBind by lazy {
+            ObjectCalls.getMethodBind("PopupMenu", "get_item_submenu", GET_ITEM_SUBMENU_HASH)
+        }
+
         private const val GET_ITEM_SUBMENU_NODE_HASH = 2100501353L
         private val getItemSubmenuNodeBind by lazy {
             ObjectCalls.getMethodBind("PopupMenu", "get_item_submenu_node", GET_ITEM_SUBMENU_NODE_HASH)
@@ -1409,6 +1461,11 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
         private const val IS_ITEM_SHORTCUT_DISABLED_HASH = 1116898809L
         private val isItemShortcutDisabledBind by lazy {
             ObjectCalls.getMethodBind("PopupMenu", "is_item_shortcut_disabled", IS_ITEM_SHORTCUT_DISABLED_HASH)
+        }
+
+        private const val GET_ITEM_TOOLTIP_HASH = 844755477L
+        private val getItemTooltipBind by lazy {
+            ObjectCalls.getMethodBind("PopupMenu", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
         }
 
         private const val GET_ITEM_SHORTCUT_HASH = 1449483325L

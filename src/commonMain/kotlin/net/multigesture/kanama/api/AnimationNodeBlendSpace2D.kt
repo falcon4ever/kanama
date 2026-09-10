@@ -145,6 +145,16 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
     }
 
     /**
+     * Returns the name of the blend point at index `point`.
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.get_blend_point_name
+     */
+    fun getBlendPointName(point: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendPointNameBind, handle, point)
+    }
+
+    /**
      * Returns the index of the blend point with the given `name`. Returns `-1` if no blend point with
      * that name is found.
      *
@@ -484,6 +494,11 @@ class AnimationNodeBlendSpace2D(handle: MemorySegment) : AnimationRootNode(handl
         private const val SET_BLEND_POINT_NAME_HASH = 3780747571L
         private val setBlendPointNameBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "set_blend_point_name", SET_BLEND_POINT_NAME_HASH)
+        }
+
+        private const val GET_BLEND_POINT_NAME_HASH = 659327637L
+        private val getBlendPointNameBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeBlendSpace2D", "get_blend_point_name", GET_BLEND_POINT_NAME_HASH)
         }
 
         private const val FIND_BLEND_POINT_BY_NAME_HASH = 2458036349L

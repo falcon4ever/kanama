@@ -106,6 +106,16 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
     }
 
     /**
+     * Returns the `Bone2D` node assigned to the CCDIK joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DCCDIK.get_ccdik_joint_bone2d_node
+     */
+    fun getCcdikJointBone2dNode(jointIdx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getCcdikJointBone2dNodeBind, handle, jointIdx)
+    }
+
+    /**
      * Sets the bone index, `bone_idx`, of the CCDIK joint at `joint_idx`. When possible, this will
      * also update the `bone2d_node` of the CCDIK joint based on data provided by the linked skeleton.
      *
@@ -274,6 +284,11 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
         private const val SET_CCDIK_JOINT_BONE2D_NODE_HASH = 2761262315L
         private val setCcdikJointBone2dNodeBind by lazy {
             ObjectCalls.getMethodBind("SkeletonModification2DCCDIK", "set_ccdik_joint_bone2d_node", SET_CCDIK_JOINT_BONE2D_NODE_HASH)
+        }
+
+        private const val GET_CCDIK_JOINT_BONE2D_NODE_HASH = 408788394L
+        private val getCcdikJointBone2dNodeBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2DCCDIK", "get_ccdik_joint_bone2d_node", GET_CCDIK_JOINT_BONE2D_NODE_HASH)
         }
 
         private const val SET_CCDIK_JOINT_BONE_INDEX_HASH = 3937882851L

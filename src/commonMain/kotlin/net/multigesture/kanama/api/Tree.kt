@@ -486,12 +486,30 @@ class Tree(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the column's title.
+     *
+     * Generated from Godot docs: Tree.get_column_title
+     */
+    fun getColumnTitle(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleBind, handle, column)
+    }
+
+    /**
      * Sets the column title's tooltip text.
      *
      * Generated from Godot docs: Tree.set_column_title_tooltip_text
      */
     fun setColumnTitleTooltipText(column: Int, tooltipText: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleTooltipTextBind, handle, column, tooltipText)
+    }
+
+    /**
+     * Returns the column title's tooltip text.
+     *
+     * Generated from Godot docs: Tree.get_column_title_tooltip_text
+     */
+    fun getColumnTitleTooltipText(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleTooltipTextBind, handle, column)
     }
 
     /**
@@ -539,6 +557,15 @@ class Tree(handle: MemorySegment) : Control(handle) {
      */
     fun setColumnTitleLanguage(column: Int, language: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleLanguageBind, handle, column, language)
+    }
+
+    /**
+     * Returns column title language code.
+     *
+     * Generated from Godot docs: Tree.get_column_title_language
+     */
+    fun getColumnTitleLanguage(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleLanguageBind, handle, column)
     }
 
     /**
@@ -1013,9 +1040,19 @@ class Tree(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("Tree", "set_column_title", SET_COLUMN_TITLE_HASH)
         }
 
+        private const val GET_COLUMN_TITLE_HASH = 844755477L
+        private val getColumnTitleBind by lazy {
+            ObjectCalls.getMethodBind("Tree", "get_column_title", GET_COLUMN_TITLE_HASH)
+        }
+
         private const val SET_COLUMN_TITLE_TOOLTIP_TEXT_HASH = 501894301L
         private val setColumnTitleTooltipTextBind by lazy {
             ObjectCalls.getMethodBind("Tree", "set_column_title_tooltip_text", SET_COLUMN_TITLE_TOOLTIP_TEXT_HASH)
+        }
+
+        private const val GET_COLUMN_TITLE_TOOLTIP_TEXT_HASH = 844755477L
+        private val getColumnTitleTooltipTextBind by lazy {
+            ObjectCalls.getMethodBind("Tree", "get_column_title_tooltip_text", GET_COLUMN_TITLE_TOOLTIP_TEXT_HASH)
         }
 
         private const val SET_COLUMN_TITLE_ALIGNMENT_HASH = 3276431499L
@@ -1041,6 +1078,11 @@ class Tree(handle: MemorySegment) : Control(handle) {
         private const val SET_COLUMN_TITLE_LANGUAGE_HASH = 501894301L
         private val setColumnTitleLanguageBind by lazy {
             ObjectCalls.getMethodBind("Tree", "set_column_title_language", SET_COLUMN_TITLE_LANGUAGE_HASH)
+        }
+
+        private const val GET_COLUMN_TITLE_LANGUAGE_HASH = 844755477L
+        private val getColumnTitleLanguageBind by lazy {
+            ObjectCalls.getMethodBind("Tree", "get_column_title_language", GET_COLUMN_TITLE_LANGUAGE_HASH)
         }
 
         private const val GET_SCROLL_HASH = 3341600327L

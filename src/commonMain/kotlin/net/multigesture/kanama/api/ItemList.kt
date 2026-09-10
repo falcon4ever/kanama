@@ -154,6 +154,15 @@ class ItemList(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the text associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_text
+     */
+    fun getItemText(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
+    }
+
+    /**
      * Sets (or replaces) the icon's `Texture2D` associated with the specified index.
      *
      * Generated from Godot docs: ItemList.set_item_icon
@@ -198,6 +207,15 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      */
     fun setItemLanguage(idx: Int, language: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, handle, idx, language)
+    }
+
+    /**
+     * Returns item's text language code.
+     *
+     * Generated from Godot docs: ItemList.get_item_language
+     */
+    fun getItemLanguage(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, handle, idx)
     }
 
     /**
@@ -384,6 +402,15 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      */
     fun setItemTooltip(idx: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, idx, tooltip)
+    }
+
+    /**
+     * Returns the tooltip hint associated with the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_tooltip
+     */
+    fun getItemTooltip(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
     }
 
     /**
@@ -929,6 +956,11 @@ class ItemList(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("ItemList", "set_item_text", SET_ITEM_TEXT_HASH)
         }
 
+        private const val GET_ITEM_TEXT_HASH = 844755477L
+        private val getItemTextBind by lazy {
+            ObjectCalls.getMethodBind("ItemList", "get_item_text", GET_ITEM_TEXT_HASH)
+        }
+
         private const val SET_ITEM_ICON_HASH = 666127730L
         private val setItemIconBind by lazy {
             ObjectCalls.getMethodBind("ItemList", "set_item_icon", SET_ITEM_ICON_HASH)
@@ -952,6 +984,11 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         private const val SET_ITEM_LANGUAGE_HASH = 501894301L
         private val setItemLanguageBind by lazy {
             ObjectCalls.getMethodBind("ItemList", "set_item_language", SET_ITEM_LANGUAGE_HASH)
+        }
+
+        private const val GET_ITEM_LANGUAGE_HASH = 844755477L
+        private val getItemLanguageBind by lazy {
+            ObjectCalls.getMethodBind("ItemList", "get_item_language", GET_ITEM_LANGUAGE_HASH)
         }
 
         private const val SET_ITEM_AUTO_TRANSLATE_MODE_HASH = 287402019L
@@ -1052,6 +1089,11 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         private const val SET_ITEM_TOOLTIP_HASH = 501894301L
         private val setItemTooltipBind by lazy {
             ObjectCalls.getMethodBind("ItemList", "set_item_tooltip", SET_ITEM_TOOLTIP_HASH)
+        }
+
+        private const val GET_ITEM_TOOLTIP_HASH = 844755477L
+        private val getItemTooltipBind by lazy {
+            ObjectCalls.getMethodBind("ItemList", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
         }
 
         private const val SELECT_HASH = 972357352L

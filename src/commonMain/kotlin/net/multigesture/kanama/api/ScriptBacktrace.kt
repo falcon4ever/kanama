@@ -42,6 +42,26 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the name of the function called at the stack frame at the specified index.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_frame_function
+     */
+    fun getFrameFunction(index: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFunctionBind, handle, index)
+    }
+
+    /**
+     * Returns the file name of the call site represented by the stack frame at the specified index.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_frame_file
+     */
+    fun getFrameFile(index: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFileBind, handle, index)
+    }
+
+    /**
      * Returns the line number of the call site represented by the stack frame at the specified index.
      *
      * Generated from Godot docs: ScriptBacktrace.get_frame_line
@@ -64,6 +84,16 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the name of the global variable at the specified index.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_global_variable_name
+     */
+    fun getGlobalVariableName(variableIndex: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getGlobalVariableNameBind, handle, variableIndex)
+    }
+
+    /**
      * Returns the number of local variables in the stack frame at the specified index. Note: This will
      * be non-zero only if the `include_variables` parameter was `true` when capturing the backtrace
      * with `Engine.capture_script_backtraces`.
@@ -76,6 +106,17 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the name of the local variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_local_variable_name
+     */
+    fun getLocalVariableName(frameIndex: Int, variableIndex: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLocalVariableNameBind, handle, frameIndex, variableIndex)
+    }
+
+    /**
      * Returns the number of member variables in the stack frame at the specified index. Note: This
      * will be non-zero only if the `include_variables` parameter was `true` when capturing the
      * backtrace with `Engine.capture_script_backtraces`.
@@ -85,6 +126,30 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     fun getMemberVariableCount(frameIndex: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(getMemberVariableCountBind, handle, frameIndex)
+    }
+
+    /**
+     * Returns the name of the member variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_member_variable_name
+     */
+    fun getMemberVariableName(frameIndex: Int, variableIndex: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getMemberVariableNameBind, handle, frameIndex, variableIndex)
+    }
+
+    /**
+     * Converts the backtrace to a `String`, where the entire string will be indented by `indent_all`
+     * number of spaces, and the individual stack frames will be additionally indented by
+     * `indent_frames` number of spaces. Note: Calling `Object.to_string` on a `ScriptBacktrace` will
+     * produce the same output as calling `format` with all parameters left at their default values.
+     *
+     * Generated from Godot docs: ScriptBacktrace.format
+     */
+    fun format(indentAll: Int = 0, indentFrames: Int = 4): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(formatBind, handle, indentAll, indentFrames)
     }
 
     companion object {
@@ -110,6 +175,16 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_count", GET_FRAME_COUNT_HASH)
         }
 
+        private const val GET_FRAME_FUNCTION_HASH = 844755477L
+        private val getFrameFunctionBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_function", GET_FRAME_FUNCTION_HASH)
+        }
+
+        private const val GET_FRAME_FILE_HASH = 844755477L
+        private val getFrameFileBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_file", GET_FRAME_FILE_HASH)
+        }
+
         private const val GET_FRAME_LINE_HASH = 923996154L
         private val getFrameLineBind by lazy {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_line", GET_FRAME_LINE_HASH)
@@ -120,14 +195,34 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_global_variable_count", GET_GLOBAL_VARIABLE_COUNT_HASH)
         }
 
+        private const val GET_GLOBAL_VARIABLE_NAME_HASH = 844755477L
+        private val getGlobalVariableNameBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_global_variable_name", GET_GLOBAL_VARIABLE_NAME_HASH)
+        }
+
         private const val GET_LOCAL_VARIABLE_COUNT_HASH = 923996154L
         private val getLocalVariableCountBind by lazy {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_count", GET_LOCAL_VARIABLE_COUNT_HASH)
         }
 
+        private const val GET_LOCAL_VARIABLE_NAME_HASH = 1391810591L
+        private val getLocalVariableNameBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_name", GET_LOCAL_VARIABLE_NAME_HASH)
+        }
+
         private const val GET_MEMBER_VARIABLE_COUNT_HASH = 923996154L
         private val getMemberVariableCountBind by lazy {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_count", GET_MEMBER_VARIABLE_COUNT_HASH)
+        }
+
+        private const val GET_MEMBER_VARIABLE_NAME_HASH = 1391810591L
+        private val getMemberVariableNameBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_name", GET_MEMBER_VARIABLE_NAME_HASH)
+        }
+
+        private const val FORMAT_HASH = 3464456933L
+        private val formatBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "format", FORMAT_HASH)
         }
     }
 }

@@ -292,6 +292,29 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDoubleBind, handle)
     }
 
+    /**
+     * Gets an ASCII string with byte-length `bytes` from the stream. If `bytes` is negative (default)
+     * the length will be read from the stream using the reverse process of `put_string`.
+     *
+     * Generated from Godot docs: StreamPeer.get_string
+     */
+    fun getString(bytes: Int = -1): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getStringBind, handle, bytes)
+    }
+
+    /**
+     * Gets a UTF-8 string with byte-length `bytes` from the stream (this decodes the string sent as
+     * UTF-8). If `bytes` is negative (default) the length will be read from the stream using the
+     * reverse process of `put_utf8_string`.
+     *
+     * Generated from Godot docs: StreamPeer.get_utf8_string
+     */
+    fun getUtf8String(bytes: Int = -1): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getUtf8StringBind, handle, bytes)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): StreamPeer? =
@@ -433,6 +456,16 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_DOUBLE_HASH = 191475506L
         private val getDoubleBind by lazy {
             ObjectCalls.getMethodBind("StreamPeer", "get_double", GET_DOUBLE_HASH)
+        }
+
+        private const val GET_STRING_HASH = 2309358862L
+        private val getStringBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "get_string", GET_STRING_HASH)
+        }
+
+        private const val GET_UTF8_STRING_HASH = 2309358862L
+        private val getUtf8StringBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "get_utf8_string", GET_UTF8_STRING_HASH)
         }
     }
 }

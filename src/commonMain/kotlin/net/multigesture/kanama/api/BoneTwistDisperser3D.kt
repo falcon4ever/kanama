@@ -82,6 +82,15 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
     }
 
     /**
+     * Returns the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_root_bone_name
+     */
+    fun getRootBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+    }
+
+    /**
      * Sets the root bone index of the bone chain.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.set_root_bone
@@ -109,6 +118,15 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
     }
 
     /**
+     * Returns the end bone name of the bone chain.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone_name
+     */
+    fun getEndBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
+    }
+
+    /**
      * Sets the end bone index of the bone chain.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone
@@ -124,6 +142,16 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      */
     fun getEndBone(index: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
+    }
+
+    /**
+     * Returns the reference bone name to extract twist of the setting at `index`. This bone is either
+     * the end of the chain or its parent, depending on `is_end_bone_extended`.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_reference_bone_name
+     */
+    fun getReferenceBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, handle, index)
     }
 
     /**
@@ -279,6 +307,15 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
     }
 
     /**
+     * Returns the bone name at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.get_joint_bone_name
+     */
+    fun getJointBoneName(index: Int, joint: Int): String {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, handle, index, joint)
+    }
+
+    /**
      * Returns the bone index at `joint` in the bone chain's joint list.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.get_joint_bone
@@ -358,6 +395,11 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_root_bone_name", SET_ROOT_BONE_NAME_HASH)
         }
 
+        private const val GET_ROOT_BONE_NAME_HASH = 844755477L
+        private val getRootBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_root_bone_name", GET_ROOT_BONE_NAME_HASH)
+        }
+
         private const val SET_ROOT_BONE_HASH = 3937882851L
         private val setRootBoneBind by lazy {
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_root_bone", SET_ROOT_BONE_HASH)
@@ -373,6 +415,11 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_end_bone_name", SET_END_BONE_NAME_HASH)
         }
 
+        private const val GET_END_BONE_NAME_HASH = 844755477L
+        private val getEndBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_end_bone_name", GET_END_BONE_NAME_HASH)
+        }
+
         private const val SET_END_BONE_HASH = 3937882851L
         private val setEndBoneBind by lazy {
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_end_bone", SET_END_BONE_HASH)
@@ -381,6 +428,11 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         private const val GET_END_BONE_HASH = 923996154L
         private val getEndBoneBind by lazy {
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_end_bone", GET_END_BONE_HASH)
+        }
+
+        private const val GET_REFERENCE_BONE_NAME_HASH = 844755477L
+        private val getReferenceBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_reference_bone_name", GET_REFERENCE_BONE_NAME_HASH)
         }
 
         private const val GET_REFERENCE_BONE_HASH = 923996154L
@@ -456,6 +508,11 @@ class BoneTwistDisperser3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         private const val GET_DAMPING_CURVE_HASH = 747537754L
         private val getDampingCurveBind by lazy {
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_damping_curve", GET_DAMPING_CURVE_HASH)
+        }
+
+        private const val GET_JOINT_BONE_NAME_HASH = 1391810591L
+        private val getJointBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_joint_bone_name", GET_JOINT_BONE_NAME_HASH)
         }
 
         private const val GET_JOINT_BONE_HASH = 3175239445L

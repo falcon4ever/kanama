@@ -122,6 +122,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Converts the given OpenType tag to the readable name of a feature, variation, script, or
+     * language.
+     *
+     * Generated from Godot docs: TextServer.tag_to_name
+     */
+    fun tagToName(tag: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(tagToNameBind, handle, tag)
+    }
+
+    /**
      * Returns `true` if `rid` is valid resource owned by this text server.
      *
      * Generated from Godot docs: TextServer.has
@@ -226,6 +237,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns font family name.
+     *
+     * Generated from Godot docs: TextServer.font_get_name
+     */
+    fun fontGetName(fontRid: RID): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetNameBind, handle, fontRid)
+    }
+
+    /**
      * Sets the font style name.
      *
      * Generated from Godot docs: TextServer.font_set_style_name
@@ -233,6 +254,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun fontSetStyleName(fontRid: RID, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontSetStyleNameBind, handle, fontRid, name)
+    }
+
+    /**
+     * Returns font style name.
+     *
+     * Generated from Godot docs: TextServer.font_get_style_name
+     */
+    fun fontGetStyleName(fontRid: RID): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetStyleNameBind, handle, fontRid)
     }
 
     /**
@@ -537,6 +568,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun fontGetPaletteCount(fontRid: RID): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetPaletteCountBind, handle, fontRid)
+    }
+
+    /**
+     * Returns the name of the predefined color palette at `index`. Palette contains all colors used to
+     * render font glyphs. Each palette has the same number of colors.
+     *
+     * Generated from Godot docs: TextServer.font_get_palette_name
+     */
+    fun fontGetPaletteName(fontRid: RID, index: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(fontGetPaletteNameBind, handle, fontRid, index)
     }
 
     /**
@@ -1121,6 +1163,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns a string containing all the characters available in the font.
+     *
+     * Generated from Godot docs: TextServer.font_get_supported_chars
+     */
+    fun fontGetSupportedChars(fontRid: RID): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetSupportedCharsBind, handle, fontRid)
+    }
+
+    /**
      * Renders the range of characters to the font cache texture.
      *
      * Generated from Godot docs: TextServer.font_render_range
@@ -1370,6 +1422,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns custom punctuation character list, used for word breaking. If set to empty string,
+     * server defaults are used.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_custom_punctuation
+     */
+    fun shapedTextGetCustomPunctuation(shaped: RID): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetString(shapedTextGetCustomPunctuationBind, handle, shaped)
+    }
+
+    /**
      * Sets ellipsis character used for text clipping.
      *
      * Generated from Godot docs: TextServer.shaped_text_set_custom_ellipsis
@@ -1473,6 +1536,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the text buffer source text, including object replacement characters.
+     *
+     * Generated from Godot docs: TextServer.shaped_get_text
+     */
+    fun shapedGetText(shaped: RID): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetString(shapedGetTextBind, handle, shaped)
+    }
+
+    /**
      * Returns number of text spans added using `shaped_text_add_string` or `shaped_text_add_object`.
      *
      * Generated from Godot docs: TextServer.shaped_get_span_count
@@ -1483,6 +1556,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the text span source text.
+     *
+     * Generated from Godot docs: TextServer.shaped_get_span_text
+     */
+    fun shapedGetSpanText(shaped: RID, index: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetSpanTextBind, handle, shaped, index)
+    }
+
+    /**
      * Returns the number of uniform text runs in the buffer.
      *
      * Generated from Godot docs: TextServer.shaped_get_run_count
@@ -1490,6 +1573,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedGetRunCount(shaped: RID): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetRunCountBind, handle, shaped)
+    }
+
+    /**
+     * Returns the source text of the `index` text run (in visual order).
+     *
+     * Generated from Godot docs: TextServer.shaped_get_run_text
+     */
+    fun shapedGetRunText(shaped: RID, index: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunTextBind, handle, shaped, index)
     }
 
     /**
@@ -1530,6 +1623,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedGetRunFontSize(shaped: RID, index: Long): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetInt(shapedGetRunFontSizeBind, handle, shaped, index)
+    }
+
+    /**
+     * Returns the language of the `index` text run (in visual order).
+     *
+     * Generated from Godot docs: TextServer.shaped_get_run_language
+     */
+    fun shapedGetRunLanguage(shaped: RID, index: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunLanguageBind, handle, shaped, index)
     }
 
     /**
@@ -1853,6 +1956,28 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Converts a number from Western Arabic (0..9) to the numeral system used in the given `language`.
+     * If `language` is an empty string, the active locale will be used.
+     *
+     * Generated from Godot docs: TextServer.format_number
+     */
+    fun formatNumber(number: String, language: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(formatNumberBind, handle, number, language)
+    }
+
+    /**
+     * Converts `number` from the numeral system used in the given `language` to Western Arabic (0..9).
+     * If `language` is an empty string, the active locale will be used.
+     *
+     * Generated from Godot docs: TextServer.parse_number
+     */
+    fun parseNumber(number: String, language: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(parseNumberBind, handle, number, language)
+    }
+
+    /**
      * Returns the percent sign used in the given `language`. If `language` is an empty string, the
      * active locale will be used.
      *
@@ -1909,6 +2034,42 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun isValidLetter(unicode: Long): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(isValidLetterBind, handle, unicode)
+    }
+
+    /**
+     * Returns the string converted to `UPPERCASE`. Note: Casing is locale dependent and context
+     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
+     *
+     * Generated from Godot docs: TextServer.string_to_upper
+     */
+    fun stringToUpper(string: String, language: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToUpperBind, handle, string, language)
+    }
+
+    /**
+     * Returns the string converted to `lowercase`. Note: Casing is locale dependent and context
+     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
+     *
+     * Generated from Godot docs: TextServer.string_to_lower
+     */
+    fun stringToLower(string: String, language: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToLowerBind, handle, string, language)
+    }
+
+    /**
+     * Returns the string converted to `Title Case`. Note: Casing is locale dependent and context
+     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
+     *
+     * Generated from Godot docs: TextServer.string_to_title
+     */
+    fun stringToTitle(string: String, language: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToTitleBind, handle, string, language)
     }
 
     companion object {
@@ -2085,6 +2246,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "name_to_tag", NAME_TO_TAG_HASH)
         }
 
+        private const val TAG_TO_NAME_HASH = 844755477L
+        private val tagToNameBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "tag_to_name", TAG_TO_NAME_HASH)
+        }
+
         private const val HAS_HASH = 3521089500L
         private val hasBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "has", HAS_HASH)
@@ -2135,9 +2301,19 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_set_name", FONT_SET_NAME_HASH)
         }
 
+        private const val FONT_GET_NAME_HASH = 642473191L
+        private val fontGetNameBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_name", FONT_GET_NAME_HASH)
+        }
+
         private const val FONT_SET_STYLE_NAME_HASH = 2726140452L
         private val fontSetStyleNameBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_set_style_name", FONT_SET_STYLE_NAME_HASH)
+        }
+
+        private const val FONT_GET_STYLE_NAME_HASH = 642473191L
+        private val fontGetStyleNameBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_style_name", FONT_GET_STYLE_NAME_HASH)
         }
 
         private const val FONT_SET_WEIGHT_HASH = 3411492887L
@@ -2278,6 +2454,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val FONT_GET_PALETTE_COUNT_HASH = 2198884583L
         private val fontGetPaletteCountBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_get_palette_count", FONT_GET_PALETTE_COUNT_HASH)
+        }
+
+        private const val FONT_GET_PALETTE_NAME_HASH = 1464764419L
+        private val fontGetPaletteNameBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_palette_name", FONT_GET_PALETTE_NAME_HASH)
         }
 
         private const val FONT_GET_USED_PALETTE_HASH = 2198884583L
@@ -2560,6 +2741,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_has_char", FONT_HAS_CHAR_HASH)
         }
 
+        private const val FONT_GET_SUPPORTED_CHARS_HASH = 642473191L
+        private val fontGetSupportedCharsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_supported_chars", FONT_GET_SUPPORTED_CHARS_HASH)
+        }
+
         private const val FONT_RENDER_RANGE_HASH = 4254580980L
         private val fontRenderRangeBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_render_range", FONT_RENDER_RANGE_HASH)
@@ -2675,6 +2861,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_set_custom_punctuation", SHAPED_TEXT_SET_CUSTOM_PUNCTUATION_HASH)
         }
 
+        private const val SHAPED_TEXT_GET_CUSTOM_PUNCTUATION_HASH = 642473191L
+        private val shapedTextGetCustomPunctuationBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_custom_punctuation", SHAPED_TEXT_GET_CUSTOM_PUNCTUATION_HASH)
+        }
+
         private const val SHAPED_TEXT_SET_CUSTOM_ELLIPSIS_HASH = 3411492887L
         private val shapedTextSetCustomEllipsisBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_set_custom_ellipsis", SHAPED_TEXT_SET_CUSTOM_ELLIPSIS_HASH)
@@ -2725,14 +2916,29 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_spacing", SHAPED_TEXT_GET_SPACING_HASH)
         }
 
+        private const val SHAPED_GET_TEXT_HASH = 642473191L
+        private val shapedGetTextBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_text", SHAPED_GET_TEXT_HASH)
+        }
+
         private const val SHAPED_GET_SPAN_COUNT_HASH = 2198884583L
         private val shapedGetSpanCountBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_get_span_count", SHAPED_GET_SPAN_COUNT_HASH)
         }
 
+        private const val SHAPED_GET_SPAN_TEXT_HASH = 1464764419L
+        private val shapedGetSpanTextBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_span_text", SHAPED_GET_SPAN_TEXT_HASH)
+        }
+
         private const val SHAPED_GET_RUN_COUNT_HASH = 2198884583L
         private val shapedGetRunCountBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_get_run_count", SHAPED_GET_RUN_COUNT_HASH)
+        }
+
+        private const val SHAPED_GET_RUN_TEXT_HASH = 1464764419L
+        private val shapedGetRunTextBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_run_text", SHAPED_GET_RUN_TEXT_HASH)
         }
 
         private const val SHAPED_GET_RUN_RANGE_HASH = 4069534484L
@@ -2753,6 +2959,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_GET_RUN_FONT_SIZE_HASH = 1120910005L
         private val shapedGetRunFontSizeBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_get_run_font_size", SHAPED_GET_RUN_FONT_SIZE_HASH)
+        }
+
+        private const val SHAPED_GET_RUN_LANGUAGE_HASH = 1464764419L
+        private val shapedGetRunLanguageBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_run_language", SHAPED_GET_RUN_LANGUAGE_HASH)
         }
 
         private const val SHAPED_GET_RUN_DIRECTION_HASH = 2413896864L
@@ -2905,6 +3116,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_dominant_direction_in_range", SHAPED_TEXT_GET_DOMINANT_DIRECTION_IN_RANGE_HASH)
         }
 
+        private const val FORMAT_NUMBER_HASH = 2664628024L
+        private val formatNumberBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "format_number", FORMAT_NUMBER_HASH)
+        }
+
+        private const val PARSE_NUMBER_HASH = 2664628024L
+        private val parseNumberBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "parse_number", PARSE_NUMBER_HASH)
+        }
+
         private const val PERCENT_SIGN_HASH = 993269549L
         private val percentSignBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "percent_sign", PERCENT_SIGN_HASH)
@@ -2928,6 +3149,21 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val IS_VALID_LETTER_HASH = 1116898809L
         private val isValidLetterBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "is_valid_letter", IS_VALID_LETTER_HASH)
+        }
+
+        private const val STRING_TO_UPPER_HASH = 2664628024L
+        private val stringToUpperBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "string_to_upper", STRING_TO_UPPER_HASH)
+        }
+
+        private const val STRING_TO_LOWER_HASH = 2664628024L
+        private val stringToLowerBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "string_to_lower", STRING_TO_LOWER_HASH)
+        }
+
+        private const val STRING_TO_TITLE_HASH = 2664628024L
+        private val stringToTitleBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "string_to_title", STRING_TO_TITLE_HASH)
         }
     }
 }

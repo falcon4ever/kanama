@@ -64,6 +64,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, handle, index)
     }
 
+    fun getMessageCategory(index: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getMessageCategoryBind, handle, index)
+    }
+
+    fun getMessageText(index: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getMessageTextBind, handle, index)
+    }
+
     fun getWorstMessageType(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, handle)
@@ -140,6 +150,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_MESSAGE_TYPE_HASH = 2667287293L
         private val getMessageTypeBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_message_type", GET_MESSAGE_TYPE_HASH)
+        }
+
+        private const val GET_MESSAGE_CATEGORY_HASH = 844755477L
+        private val getMessageCategoryBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "get_message_category", GET_MESSAGE_CATEGORY_HASH)
+        }
+
+        private const val GET_MESSAGE_TEXT_HASH = 844755477L
+        private val getMessageTextBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "get_message_text", GET_MESSAGE_TEXT_HASH)
         }
 
         private const val GET_WORST_MESSAGE_TYPE_HASH = 2580557466L

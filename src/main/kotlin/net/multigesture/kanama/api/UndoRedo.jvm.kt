@@ -7,8 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP UndoRedo waits on: ptrcallWithIntArgRetString,
-//   ptrcallWithObjectStringNameAndVariantArg
+// KANAMA-IOS-GAP UndoRedo waits on: ptrcallWithObjectStringNameAndVariantArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -29,15 +28,6 @@ fun UndoRedo.addUndoProperty(objectValue: GodotObject, property: String, value: 
     ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, handle, objectValue.handle, property, value)
 }
 
-/**
- * Gets the action name from its index.
- *
- * Generated from Godot docs: UndoRedo.get_action_name
- */
-fun UndoRedo.getActionName(id: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getActionNameBind, handle, id)
-}
-
 private const val ADD_DO_PROPERTY_HASH = 1017172818L
 private val addDoPropertyBind by lazy {
     ObjectCalls.getMethodBind("UndoRedo", "add_do_property", ADD_DO_PROPERTY_HASH)
@@ -46,9 +36,4 @@ private val addDoPropertyBind by lazy {
 private const val ADD_UNDO_PROPERTY_HASH = 1017172818L
 private val addUndoPropertyBind by lazy {
     ObjectCalls.getMethodBind("UndoRedo", "add_undo_property", ADD_UNDO_PROPERTY_HASH)
-}
-
-private const val GET_ACTION_NAME_HASH = 990163283L
-private val getActionNameBind by lazy {
-    ObjectCalls.getMethodBind("UndoRedo", "get_action_name", GET_ACTION_NAME_HASH)
 }

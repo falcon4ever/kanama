@@ -51,6 +51,16 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
     }
 
     /**
+     * Returns the `PhysicalBone2D` node at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.get_physical_bone_node
+     */
+    fun getPhysicalBoneNode(jointIdx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPhysicalBoneNodeBind, handle, jointIdx)
+    }
+
+    /**
      * Empties the list of `PhysicalBone2D` nodes and populates it with all `PhysicalBone2D` nodes that
      * are children of the `Skeleton2D`.
      *
@@ -82,6 +92,11 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
         private const val SET_PHYSICAL_BONE_NODE_HASH = 2761262315L
         private val setPhysicalBoneNodeBind by lazy {
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "set_physical_bone_node", SET_PHYSICAL_BONE_NODE_HASH)
+        }
+
+        private const val GET_PHYSICAL_BONE_NODE_HASH = 408788394L
+        private val getPhysicalBoneNodeBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "get_physical_bone_node", GET_PHYSICAL_BONE_NODE_HASH)
         }
 
         private const val FETCH_PHYSICAL_BONES_HASH = 3218959716L

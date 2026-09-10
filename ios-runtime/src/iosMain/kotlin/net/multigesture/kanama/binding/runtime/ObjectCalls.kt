@@ -9,6 +9,7 @@ import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.CPointed
 import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.FloatVar
@@ -57,10 +58,12 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_byte_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
 import net.multigesture.kanama.types.AABB
@@ -430,6 +433,45 @@ object ObjectCalls {
         buf.readBytes(len.toInt()).decodeToString()
       }
     }
+
+  // task 100 (parcel 1) — String / StringName / NodePath return on any audited arg shape. The
+  // generated helpers lay out their arg cells exactly as for kanama_ios_godot_ptrcall and hand
+  // them here with the return builtin's tag (PT_STRING / PT_STRING_NAME / PT_NODE_PATH). The C
+  // entry runs the method ONCE and UTF-8 encodes the return: it fits the inline buffer in the
+  // common case; a longer value is parked C-side and drained in full by the second call, so
+  // nothing is truncated (unlike the 1 KiB Object-call decode) and nothing is re-issued (unlike
+  // the no-arg helpers' two-call length protocol, which is only safe for pure getters).
+  fun ptrcallRetUtf8(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    retTag: Int,
+  ): String = memScoped {
+    val inlineCap = 1024L
+    val inline = allocArray<ByteVar>(inlineCap)
+    val len =
+      kanama_ios_godot_ptrcall_ret_utf8(
+        methodBind.address(),
+        instance.address(),
+        argTypes,
+        argPtrs,
+        argCount,
+        retTag,
+        inline,
+        inlineCap,
+      )
+    when {
+      len <= 0L -> ""
+      len <= inlineCap -> inline.readBytes(len.toInt()).decodeToString()
+      else -> {
+        val full = allocArray<ByteVar>(len)
+        val got = kanama_ios_godot_take_pending_utf8(full, len)
+        if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
+      }
+    }
+  }
 
   // NodePath return: GDExtension has no NodePath->utf8, so the dedicated C helper converts
   // the returned NodePath to a String (String(from: NodePath) ctor) and UTF-8 encodes it,
@@ -2816,6 +2858,104 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       "none",
     )
   check("stringname-arg-ret(animation_get_next==\"\")", animNext == "")
+
+  // task 100 (parcel 1) — String / StringName / NodePath returns on arg-bearing shapes through the
+  // generated UTF-8 read-back (ptrcallRetUtf8 over kanama_ios_godot_ptrcall_ret_utf8). One row per
+  // return builtin, plus a >1 KiB String that must come back whole through the C-side pending slot
+  // (the inline buffer is 1 KiB). StreamPeerBuffer round-trips exactly the bytes put in, so the
+  // rows assert equality, not just non-emptiness; the multi-byte character checks the length is
+  // counted in UTF-8 bytes. get_utf8_string CONSUMES the stream — a second invocation would read
+  // nothing — so the row also proves the return is captured in one call.
+  val utf8Short = "KanamaUtf8 \u00e9"
+  val utf8Peer = ObjectCalls.constructObject("StreamPeerBuffer")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("StreamPeer", "put_utf8_string", 83702148L),
+    utf8Peer,
+    listOf(utf8Short),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("StreamPeerBuffer", "seek", 1286410249L),
+    utf8Peer,
+    listOf(0),
+  )
+  val utf8ShortBack =
+    ObjectCalls.ptrcallWithIntArgRetString(
+      ObjectCalls.getMethodBind("StreamPeer", "get_utf8_string", 2309358862L),
+      utf8Peer,
+      -1,
+    )
+  check("utf8-ret(get_utf8_string short==put)", utf8ShortBack == utf8Short)
+  ObjectCalls.destroyObject(utf8Peer)
+
+  val utf8Long = buildString {
+    repeat(300) { append("Kanama").append(it.toString().padStart(4, '0')) }
+  }
+  val utf8LongPeer = ObjectCalls.constructObject("StreamPeerBuffer")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("StreamPeer", "put_utf8_string", 83702148L),
+    utf8LongPeer,
+    listOf(utf8Long),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("StreamPeerBuffer", "seek", 1286410249L),
+    utf8LongPeer,
+    listOf(0),
+  )
+  val utf8LongBack =
+    ObjectCalls.ptrcallWithIntArgRetString(
+      ObjectCalls.getMethodBind("StreamPeer", "get_utf8_string", 2309358862L),
+      utf8LongPeer,
+      -1,
+    )
+  check("utf8-ret(get_utf8_string 3000B==put, pending slot)", utf8LongBack == utf8Long)
+  check("utf8-ret(pending slot drained)", kanama_ios_godot_take_pending_utf8(null, 0L) == -1L)
+  ObjectCalls.destroyObject(utf8LongPeer)
+
+  // StringName return with an int arg: Skin.set_bind_name(0, "KBind") then get_bind_name(0).
+  val utf8Skin = ObjectCalls.constructObject("Skin")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Skin", "set_bind_count", 1286410249L),
+    utf8Skin,
+    listOf(1),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Skin", "set_bind_name", 3780747571L),
+    utf8Skin,
+    listOf(0, "KBind"),
+  )
+  val utf8Bind =
+    ObjectCalls.ptrcallWithIntArgRetStringName(
+      ObjectCalls.getMethodBind("Skin", "get_bind_name", 659327637L),
+      utf8Skin,
+      0,
+    )
+  check("utf8-ret(Skin.get_bind_name(0)==KBind)", utf8Bind == "KBind")
+  ObjectCalls.destroyObject(utf8Skin)
+
+  // NodePath return with an int arg: Animation.add_track(VALUE) + track_set_path(0, path), then
+  // track_get_path(0) must re-wrap the decoded path (the Variant call coerces String -> NodePath).
+  val utf8Anim = ObjectCalls.constructObject("Animation")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Animation", "add_track", 3843682357L),
+    utf8Anim,
+    listOf(0L, -1),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Animation", "track_set_path", 2761262315L),
+    utf8Anim,
+    listOf(0, "KTrack:position"),
+  )
+  val utf8Path =
+    ObjectCalls.ptrcallWithIntArgRetNodePath(
+      ObjectCalls.getMethodBind("Animation", "track_get_path", 408788394L),
+      utf8Anim,
+      0,
+    )
+  check(
+    "utf8-ret(Animation.track_get_path(0)==KTrack:position)",
+    utf8Path == NodePath("KTrack:position"),
+  )
+  ObjectCalls.destroyObject(utf8Anim)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

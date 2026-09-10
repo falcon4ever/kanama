@@ -275,6 +275,16 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
     }
 
     /**
+     * Returns the title of the tab at index `tab_idx`. Tab titles default to the name of the indexed
+     * child node, but this can be overridden with `set_tab_title`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_title
+     */
+    fun getTabTitle(tabIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, handle, tabIdx)
+    }
+
+    /**
      * Sets a custom tooltip text for tab at index `tab_idx`. Note: By default, if the `tooltip` is
      * empty and the tab text is truncated (not all characters fit into the tab), the title will be
      * displayed as a tooltip. To hide the tooltip, assign `" "` as the `tooltip` text.
@@ -283,6 +293,15 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      */
     fun setTabTooltip(tabIdx: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, handle, tabIdx, tooltip)
+    }
+
+    /**
+     * Returns the tooltip text of the tab at index `tab_idx`.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_tooltip
+     */
+    fun getTabTooltip(tabIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, handle, tabIdx)
     }
 
     /**
@@ -659,9 +678,19 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
             ObjectCalls.getMethodBind("TabContainer", "set_tab_title", SET_TAB_TITLE_HASH)
         }
 
+        private const val GET_TAB_TITLE_HASH = 844755477L
+        private val getTabTitleBind by lazy {
+            ObjectCalls.getMethodBind("TabContainer", "get_tab_title", GET_TAB_TITLE_HASH)
+        }
+
         private const val SET_TAB_TOOLTIP_HASH = 501894301L
         private val setTabTooltipBind by lazy {
             ObjectCalls.getMethodBind("TabContainer", "set_tab_tooltip", SET_TAB_TOOLTIP_HASH)
+        }
+
+        private const val GET_TAB_TOOLTIP_HASH = 844755477L
+        private val getTabTooltipBind by lazy {
+            ObjectCalls.getMethodBind("TabContainer", "get_tab_tooltip", GET_TAB_TOOLTIP_HASH)
         }
 
         private const val SET_TAB_ICON_HASH = 666127730L

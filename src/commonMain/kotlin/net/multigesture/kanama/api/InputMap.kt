@@ -57,6 +57,16 @@ object InputMap {
     }
 
     /**
+     * Returns the human-readable description of the given action.
+     *
+     * Generated from Godot docs: InputMap.get_action_description
+     */
+    @JvmStatic
+    fun getActionDescription(action: String): String {
+        return ObjectCalls.ptrcallWithStringNameArgRetString(getActionDescriptionBind, singleton, action)
+    }
+
+    /**
      * Sets a deadzone value for the action.
      *
      * Generated from Godot docs: InputMap.action_set_deadzone
@@ -169,6 +179,11 @@ object InputMap {
     private const val ERASE_ACTION_HASH = 3304788590L
     private val eraseActionBind by lazy {
         ObjectCalls.getMethodBind("InputMap", "erase_action", ERASE_ACTION_HASH)
+    }
+
+    private const val GET_ACTION_DESCRIPTION_HASH = 957595536L
+    private val getActionDescriptionBind by lazy {
+        ObjectCalls.getMethodBind("InputMap", "get_action_description", GET_ACTION_DESCRIPTION_HASH)
     }
 
     private const val ACTION_SET_DEADZONE_HASH = 4135858297L

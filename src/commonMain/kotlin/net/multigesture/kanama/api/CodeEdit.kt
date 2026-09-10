@@ -815,6 +815,24 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
     }
 
     /**
+     * Gets the start key for a string or comment region index.
+     *
+     * Generated from Godot docs: CodeEdit.get_delimiter_start_key
+     */
+    fun getDelimiterStartKey(delimiterIndex: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterStartKeyBind, handle, delimiterIndex)
+    }
+
+    /**
+     * Gets the end key for a string or comment region index.
+     *
+     * Generated from Godot docs: CodeEdit.get_delimiter_end_key
+     */
+    fun getDelimiterEndKey(delimiterIndex: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterEndKeyBind, handle, delimiterIndex)
+    }
+
+    /**
      * If `line` `column` is in a string or comment, returns the start position of the region. If not
      * or no start could be found, both `Vector2` values will be `-1`.
      *
@@ -978,6 +996,15 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      */
     fun getTextForSymbolLookup(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getTextForSymbolLookupBind, handle)
+    }
+
+    /**
+     * Returns the full text with char `0xFFFF` at the specified location.
+     *
+     * Generated from Godot docs: CodeEdit.get_text_with_cursor_char
+     */
+    fun getTextWithCursorChar(line: Int, column: Int): String {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTextWithCursorCharBind, handle, line, column)
     }
 
     /**
@@ -1450,6 +1477,16 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
             ObjectCalls.getMethodBind("CodeEdit", "is_in_comment", IS_IN_COMMENT_HASH)
         }
 
+        private const val GET_DELIMITER_START_KEY_HASH = 844755477L
+        private val getDelimiterStartKeyBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "get_delimiter_start_key", GET_DELIMITER_START_KEY_HASH)
+        }
+
+        private const val GET_DELIMITER_END_KEY_HASH = 844755477L
+        private val getDelimiterEndKeyBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "get_delimiter_end_key", GET_DELIMITER_END_KEY_HASH)
+        }
+
         private const val GET_DELIMITER_START_POSITION_HASH = 3016396712L
         private val getDelimiterStartPositionBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "get_delimiter_start_position", GET_DELIMITER_START_POSITION_HASH)
@@ -1533,6 +1570,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         private const val GET_TEXT_FOR_SYMBOL_LOOKUP_HASH = 201670096L
         private val getTextForSymbolLookupBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "get_text_for_symbol_lookup", GET_TEXT_FOR_SYMBOL_LOOKUP_HASH)
+        }
+
+        private const val GET_TEXT_WITH_CURSOR_CHAR_HASH = 1391810591L
+        private val getTextWithCursorCharBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "get_text_with_cursor_char", GET_TEXT_WITH_CURSOR_CHAR_HASH)
         }
 
         private const val SET_SYMBOL_LOOKUP_WORD_AS_VALID_HASH = 2586408642L

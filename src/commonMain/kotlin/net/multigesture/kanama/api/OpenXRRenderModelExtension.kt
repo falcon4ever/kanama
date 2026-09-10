@@ -27,6 +27,10 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
         return Node3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(renderModelNewSceneInstanceBind, handle, renderModel))
     }
 
+    fun renderModelGetTopLevelPath(renderModel: RID): String {
+        return ObjectCalls.ptrcallWithRIDArgRetString(renderModelGetTopLevelPathBind, handle, renderModel)
+    }
+
     fun renderModelGetConfidence(renderModel: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(renderModelGetConfidenceBind, handle, renderModel)
     }
@@ -37,6 +41,10 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
 
     fun renderModelGetAnimatableNodeCount(renderModel: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(renderModelGetAnimatableNodeCountBind, handle, renderModel)
+    }
+
+    fun renderModelGetAnimatableNodeName(renderModel: RID, index: Long): String {
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetString(renderModelGetAnimatableNodeNameBind, handle, renderModel, index)
     }
 
     fun renderModelIsAnimatableNodeVisible(renderModel: RID, index: Long): Boolean {
@@ -81,6 +89,11 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
             ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_new_scene_instance", RENDER_MODEL_NEW_SCENE_INSTANCE_HASH)
         }
 
+        private const val RENDER_MODEL_GET_TOP_LEVEL_PATH_HASH = 642473191L
+        private val renderModelGetTopLevelPathBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_top_level_path", RENDER_MODEL_GET_TOP_LEVEL_PATH_HASH)
+        }
+
         private const val RENDER_MODEL_GET_CONFIDENCE_HASH = 2350330949L
         private val renderModelGetConfidenceBind by lazy {
             ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_confidence", RENDER_MODEL_GET_CONFIDENCE_HASH)
@@ -94,6 +107,11 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
         private const val RENDER_MODEL_GET_ANIMATABLE_NODE_COUNT_HASH = 2198884583L
         private val renderModelGetAnimatableNodeCountBind by lazy {
             ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_animatable_node_count", RENDER_MODEL_GET_ANIMATABLE_NODE_COUNT_HASH)
+        }
+
+        private const val RENDER_MODEL_GET_ANIMATABLE_NODE_NAME_HASH = 1464764419L
+        private val renderModelGetAnimatableNodeNameBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_animatable_node_name", RENDER_MODEL_GET_ANIMATABLE_NODE_NAME_HASH)
         }
 
         private const val RENDER_MODEL_IS_ANIMATABLE_NODE_VISIBLE_HASH = 3120086654L

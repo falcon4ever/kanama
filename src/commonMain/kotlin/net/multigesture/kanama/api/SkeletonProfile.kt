@@ -107,6 +107,17 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the name of the group at `group_idx` that will be the drawing group in the `BoneMap`
+     * editor.
+     *
+     * Generated from Godot docs: SkeletonProfile.get_group_name
+     */
+    fun getGroupName(groupIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupNameBind, handle, groupIdx)
+    }
+
+    /**
      * Sets the name of the group at `group_idx` that will be the drawing group in the `BoneMap`
      * editor.
      *
@@ -174,6 +185,17 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the name of the bone at `bone_idx` that will be the key name in the `BoneMap`. In the
+     * retargeting process, the returned bone name is the bone name of the target skeleton.
+     *
+     * Generated from Godot docs: SkeletonProfile.get_bone_name
+     */
+    fun getBoneName(boneIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneNameBind, handle, boneIdx)
+    }
+
+    /**
      * Sets the name of the bone at `bone_idx` that will be the key name in the `BoneMap`. In the
      * retargeting process, the setting bone name is the bone name of the target skeleton.
      *
@@ -182,6 +204,17 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
     fun setBoneName(boneIdx: Int, boneName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneNameBind, handle, boneIdx, boneName)
+    }
+
+    /**
+     * Returns the name of the bone which is the parent to the bone at `bone_idx`. The result is empty
+     * if the bone has no parent.
+     *
+     * Generated from Godot docs: SkeletonProfile.get_bone_parent
+     */
+    fun getBoneParent(boneIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneParentBind, handle, boneIdx)
     }
 
     /**
@@ -215,6 +248,16 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
     fun setTailDirection(boneIdx: Int, tailDirection: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, handle, boneIdx, tailDirection)
+    }
+
+    /**
+     * Returns the name of the bone which is the tail of the bone at `bone_idx`.
+     *
+     * Generated from Godot docs: SkeletonProfile.get_bone_tail
+     */
+    fun getBoneTail(boneIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneTailBind, handle, boneIdx)
     }
 
     /**
@@ -267,6 +310,16 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
     fun setHandleOffset(boneIdx: Int, handleOffset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2Arg(setHandleOffsetBind, handle, boneIdx, handleOffset)
+    }
+
+    /**
+     * Returns the group of the bone at `bone_idx`.
+     *
+     * Generated from Godot docs: SkeletonProfile.get_group
+     */
+    fun getGroup(boneIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupBind, handle, boneIdx)
     }
 
     /**
@@ -347,6 +400,11 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("SkeletonProfile", "get_group_size", GET_GROUP_SIZE_HASH)
         }
 
+        private const val GET_GROUP_NAME_HASH = 659327637L
+        private val getGroupNameBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonProfile", "get_group_name", GET_GROUP_NAME_HASH)
+        }
+
         private const val SET_GROUP_NAME_HASH = 3780747571L
         private val setGroupNameBind by lazy {
             ObjectCalls.getMethodBind("SkeletonProfile", "set_group_name", SET_GROUP_NAME_HASH)
@@ -377,9 +435,19 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("SkeletonProfile", "find_bone", FIND_BONE_HASH)
         }
 
+        private const val GET_BONE_NAME_HASH = 659327637L
+        private val getBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonProfile", "get_bone_name", GET_BONE_NAME_HASH)
+        }
+
         private const val SET_BONE_NAME_HASH = 3780747571L
         private val setBoneNameBind by lazy {
             ObjectCalls.getMethodBind("SkeletonProfile", "set_bone_name", SET_BONE_NAME_HASH)
+        }
+
+        private const val GET_BONE_PARENT_HASH = 659327637L
+        private val getBoneParentBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonProfile", "get_bone_parent", GET_BONE_PARENT_HASH)
         }
 
         private const val SET_BONE_PARENT_HASH = 3780747571L
@@ -395,6 +463,11 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
         private const val SET_TAIL_DIRECTION_HASH = 1231951015L
         private val setTailDirectionBind by lazy {
             ObjectCalls.getMethodBind("SkeletonProfile", "set_tail_direction", SET_TAIL_DIRECTION_HASH)
+        }
+
+        private const val GET_BONE_TAIL_HASH = 659327637L
+        private val getBoneTailBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonProfile", "get_bone_tail", GET_BONE_TAIL_HASH)
         }
 
         private const val SET_BONE_TAIL_HASH = 3780747571L
@@ -420,6 +493,11 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
         private const val SET_HANDLE_OFFSET_HASH = 163021252L
         private val setHandleOffsetBind by lazy {
             ObjectCalls.getMethodBind("SkeletonProfile", "set_handle_offset", SET_HANDLE_OFFSET_HASH)
+        }
+
+        private const val GET_GROUP_HASH = 659327637L
+        private val getGroupBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonProfile", "get_group", GET_GROUP_HASH)
         }
 
         private const val SET_GROUP_HASH = 3780747571L

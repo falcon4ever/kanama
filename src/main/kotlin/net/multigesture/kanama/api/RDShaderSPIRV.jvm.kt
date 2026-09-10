@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP RDShaderSPIRV waits on: ptrcallWithLongAndByteArrayArg,
-//   ptrcallWithLongArgRetByteArray, ptrcallWithLongArgRetString
+//   ptrcallWithLongArgRetByteArray
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -30,17 +30,6 @@ fun RDShaderSPIRV.setStageBytecode(stage: Long, bytecode: ByteArray) {
 fun RDShaderSPIRV.getStageBytecode(stage: Long): ByteArray {
     checkOpen()
     return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, handle, stage)
-}
-
-/**
- * The compilation error message for the vertex shader stage (set by the SPIR-V compiler and
- * Godot). If empty, shader compilation was successful.
- *
- * Generated from Godot docs: RDShaderSPIRV.get_stage_compile_error
- */
-fun RDShaderSPIRV.getStageCompileError(stage: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, handle, stage)
 }
 
 var RDShaderSPIRV.bytecodeVertex: ByteArray
@@ -103,66 +92,6 @@ var RDShaderSPIRV.bytecodeIntersection: ByteArray
     @JvmName("setBytecodeIntersectionProperty")
     set(value) = setStageBytecode(9L, value)
 
-var RDShaderSPIRV.compileErrorVertex: String
-    @JvmName("compileErrorVertexProperty")
-    get() = getStageCompileError(0L)
-    @JvmName("setCompileErrorVertexProperty")
-    set(value) = setStageCompileError(0L, value)
-
-var RDShaderSPIRV.compileErrorFragment: String
-    @JvmName("compileErrorFragmentProperty")
-    get() = getStageCompileError(1L)
-    @JvmName("setCompileErrorFragmentProperty")
-    set(value) = setStageCompileError(1L, value)
-
-var RDShaderSPIRV.compileErrorTesselationControl: String
-    @JvmName("compileErrorTesselationControlProperty")
-    get() = getStageCompileError(2L)
-    @JvmName("setCompileErrorTesselationControlProperty")
-    set(value) = setStageCompileError(2L, value)
-
-var RDShaderSPIRV.compileErrorTesselationEvaluation: String
-    @JvmName("compileErrorTesselationEvaluationProperty")
-    get() = getStageCompileError(3L)
-    @JvmName("setCompileErrorTesselationEvaluationProperty")
-    set(value) = setStageCompileError(3L, value)
-
-var RDShaderSPIRV.compileErrorCompute: String
-    @JvmName("compileErrorComputeProperty")
-    get() = getStageCompileError(4L)
-    @JvmName("setCompileErrorComputeProperty")
-    set(value) = setStageCompileError(4L, value)
-
-var RDShaderSPIRV.compileErrorRaygen: String
-    @JvmName("compileErrorRaygenProperty")
-    get() = getStageCompileError(5L)
-    @JvmName("setCompileErrorRaygenProperty")
-    set(value) = setStageCompileError(5L, value)
-
-var RDShaderSPIRV.compileErrorAnyHit: String
-    @JvmName("compileErrorAnyHitProperty")
-    get() = getStageCompileError(6L)
-    @JvmName("setCompileErrorAnyHitProperty")
-    set(value) = setStageCompileError(6L, value)
-
-var RDShaderSPIRV.compileErrorClosestHit: String
-    @JvmName("compileErrorClosestHitProperty")
-    get() = getStageCompileError(7L)
-    @JvmName("setCompileErrorClosestHitProperty")
-    set(value) = setStageCompileError(7L, value)
-
-var RDShaderSPIRV.compileErrorMiss: String
-    @JvmName("compileErrorMissProperty")
-    get() = getStageCompileError(8L)
-    @JvmName("setCompileErrorMissProperty")
-    set(value) = setStageCompileError(8L, value)
-
-var RDShaderSPIRV.compileErrorIntersection: String
-    @JvmName("compileErrorIntersectionProperty")
-    get() = getStageCompileError(9L)
-    @JvmName("setCompileErrorIntersectionProperty")
-    set(value) = setStageCompileError(9L, value)
-
 private const val SET_STAGE_BYTECODE_HASH = 3514097977L
 private val setStageBytecodeBind by lazy {
     ObjectCalls.getMethodBind("RDShaderSPIRV", "set_stage_bytecode", SET_STAGE_BYTECODE_HASH)
@@ -171,9 +100,4 @@ private val setStageBytecodeBind by lazy {
 private const val GET_STAGE_BYTECODE_HASH = 3816765404L
 private val getStageBytecodeBind by lazy {
     ObjectCalls.getMethodBind("RDShaderSPIRV", "get_stage_bytecode", GET_STAGE_BYTECODE_HASH)
-}
-
-private const val GET_STAGE_COMPILE_ERROR_HASH = 3354920045L
-private val getStageCompileErrorBind by lazy {
-    ObjectCalls.getMethodBind("RDShaderSPIRV", "get_stage_compile_error", GET_STAGE_COMPILE_ERROR_HASH)
 }

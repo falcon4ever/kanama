@@ -571,6 +571,16 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a terrain's name.
+     *
+     * Generated from Godot docs: TileSet.get_terrain_name
+     */
+    fun getTerrainName(terrainSet: Int, terrainIndex: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTerrainNameBind, handle, terrainSet, terrainIndex)
+    }
+
+    /**
      * Sets a terrain's color. This color is used for identifying the different terrains in the TileSet
      * editor.
      *
@@ -752,6 +762,16 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
     fun hasCustomDataLayerByName(layerName: String): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataLayerByNameBind, handle, layerName)
+    }
+
+    /**
+     * Returns the name of the custom data layer identified by the given index.
+     *
+     * Generated from Godot docs: TileSet.get_custom_data_layer_name
+     */
+    fun getCustomDataLayerName(layerIndex: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getCustomDataLayerNameBind, handle, layerIndex)
     }
 
     /**
@@ -1234,6 +1254,11 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("TileSet", "set_terrain_name", SET_TERRAIN_NAME_HASH)
         }
 
+        private const val GET_TERRAIN_NAME_HASH = 1391810591L
+        private val getTerrainNameBind by lazy {
+            ObjectCalls.getMethodBind("TileSet", "get_terrain_name", GET_TERRAIN_NAME_HASH)
+        }
+
         private const val SET_TERRAIN_COLOR_HASH = 3733378741L
         private val setTerrainColorBind by lazy {
             ObjectCalls.getMethodBind("TileSet", "set_terrain_color", SET_TERRAIN_COLOR_HASH)
@@ -1317,6 +1342,11 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
         private const val HAS_CUSTOM_DATA_LAYER_BY_NAME_HASH = 3927539163L
         private val hasCustomDataLayerByNameBind by lazy {
             ObjectCalls.getMethodBind("TileSet", "has_custom_data_layer_by_name", HAS_CUSTOM_DATA_LAYER_BY_NAME_HASH)
+        }
+
+        private const val GET_CUSTOM_DATA_LAYER_NAME_HASH = 844755477L
+        private val getCustomDataLayerNameBind by lazy {
+            ObjectCalls.getMethodBind("TileSet", "get_custom_data_layer_name", GET_CUSTOM_DATA_LAYER_NAME_HASH)
         }
 
         private const val SET_CUSTOM_DATA_LAYER_TYPE_HASH = 3492912874L

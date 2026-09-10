@@ -9,20 +9,9 @@ import net.multigesture.kanama.types.Vector2i
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TileMap waits on: ptrcallWithIntAndVector2iListArgsRetObject,
-//   ptrcallWithIntArgRetString, ptrcallWithIntArgRetVector2iList,
-//   ptrcallWithIntVector2iListTwoIntAndBoolArgs, ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList,
-//   ptrcallWithVector2iArgRetVector2iList
+//   ptrcallWithIntArgRetVector2iList, ptrcallWithIntVector2iListTwoIntAndBoolArgs,
+//   ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList, ptrcallWithVector2iArgRetVector2iList
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns a TileMap layer's name. If `layer` is negative, the layers are accessed from the last
- * one.
- *
- * Generated from Godot docs: TileMap.get_layer_name
- */
-fun TileMap.getLayerName(layer: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getLayerNameBind, handle, layer)
-}
 
 /**
  * Creates a new `TileMapPattern` from the given layer and set of cells. If `layer` is negative,
@@ -101,11 +90,6 @@ fun TileMap.getUsedCells(layer: Int): List<Vector2i> {
  */
 fun TileMap.getUsedCellsById(layer: Int, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1): List<Vector2i> {
     return ObjectCalls.ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, handle, layer, sourceId, atlasCoords, alternativeTile)
-}
-
-private const val GET_LAYER_NAME_HASH = 844755477L
-private val getLayerNameBind by lazy {
-    ObjectCalls.getMethodBind("TileMap", "get_layer_name", GET_LAYER_NAME_HASH)
 }
 
 private const val GET_PATTERN_HASH = 2833570986L

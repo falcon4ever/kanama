@@ -7,33 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Input waits on: ptrcallWithIntAndDictionaryArg, ptrcallWithIntArgRetDictionary,
-//   ptrcallWithIntArgRetString
+// KANAMA-IOS-GAP Input waits on: ptrcallWithIntAndDictionaryArg, ptrcallWithIntArgRetDictionary
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns the name of the joypad at the specified device index, e.g. `PS4 Controller`. Godot uses
- * the SDL2 game controller database (https://github.com/gabomdq/SDL_GameControllerDB) to determine
- * gamepad names.
- *
- * Generated from Godot docs: Input.get_joy_name
- */
-fun Input.getJoyName(device: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getJoyNameBind, inputSingleton, device)
-}
-
-/**
- * Returns an SDL-compatible device GUID on platforms that use gamepad remapping, e.g.
- * `030000004c050000c405000000010000`. Returns an empty string if it cannot be found. Godot uses
- * SDL's internal mappings, supplemented by community-contributed mappings, to determine gamepad
- * names and mappings based on this GUID. On Windows, all XInput joypad GUIDs will be overridden by
- * Godot to `__XINPUT_DEVICE__`, because their mappings are the same.
- *
- * Generated from Godot docs: Input.get_joy_guid
- */
-fun Input.getJoyGuid(device: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getJoyGuidBind, inputSingleton, device)
-}
 
 /**
  * Returns a dictionary with extra platform-specific information about the device, e.g. the raw
@@ -82,16 +57,6 @@ fun Input.setJoyMotionSensorsCalibration(device: Int, calibrationInfo: Map<Strin
 
 private val inputSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("Input")
-}
-
-private const val GET_JOY_NAME_HASH = 990163283L
-private val getJoyNameBind by lazy {
-    ObjectCalls.getMethodBind("Input", "get_joy_name", GET_JOY_NAME_HASH)
-}
-
-private const val GET_JOY_GUID_HASH = 844755477L
-private val getJoyGuidBind by lazy {
-    ObjectCalls.getMethodBind("Input", "get_joy_guid", GET_JOY_GUID_HASH)
 }
 
 private const val GET_JOY_INFO_HASH = 3485342025L

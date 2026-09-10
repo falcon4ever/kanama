@@ -22,6 +22,15 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
     }
 
     /**
+     * Returns the node path of the `Path3D` which is describing the path.
+     *
+     * Generated from Godot docs: SplineIK3D.get_path_3d
+     */
+    fun getPath3d(index: Int): NodePath {
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPath3dBind, handle, index)
+    }
+
+    /**
      * Sets if the tilt property of the `Curve3D` should affect the bone twist.
      *
      * Generated from Godot docs: SplineIK3D.set_tilt_enabled
@@ -96,6 +105,11 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
         private const val SET_PATH_3D_HASH = 2761262315L
         private val setPath3dBind by lazy {
             ObjectCalls.getMethodBind("SplineIK3D", "set_path_3d", SET_PATH_3D_HASH)
+        }
+
+        private const val GET_PATH_3D_HASH = 408788394L
+        private val getPath3dBind by lazy {
+            ObjectCalls.getMethodBind("SplineIK3D", "get_path_3d", GET_PATH_3D_HASH)
         }
 
         private const val SET_TILT_ENABLED_HASH = 300928843L
