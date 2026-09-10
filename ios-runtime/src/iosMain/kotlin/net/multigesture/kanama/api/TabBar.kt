@@ -196,6 +196,10 @@ class TabBar(handle: MemorySegment) : Control(handle) {
         return ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, handle, tabIdx)
     }
 
+    fun getTabMetadata(tabIdx: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, handle, tabIdx)
+    }
+
     fun removeTab(tabIdx: Int) {
         ObjectCalls.ptrcallWithIntArg(removeTabBind, handle, tabIdx)
     }
@@ -479,6 +483,11 @@ class TabBar(handle: MemorySegment) : Control(handle) {
         private const val IS_TAB_HIDDEN_HASH = 1116898809L
         private val isTabHiddenBind by lazy {
             ObjectCalls.getMethodBind("TabBar", "is_tab_hidden", IS_TAB_HIDDEN_HASH)
+        }
+
+        private const val GET_TAB_METADATA_HASH = 4227898402L
+        private val getTabMetadataBind by lazy {
+            ObjectCalls.getMethodBind("TabBar", "get_tab_metadata", GET_TAB_METADATA_HASH)
         }
 
         private const val REMOVE_TAB_HASH = 1286410249L

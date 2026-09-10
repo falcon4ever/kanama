@@ -187,6 +187,16 @@ object AccessibilityServer {
     }
 
     /**
+     * Returns the metadata of the accessibility element `id`.
+     *
+     * Generated from Godot docs: AccessibilityServer.element_get_meta
+     */
+    @JvmStatic
+    fun elementGetMeta(id: RID): Any? {
+        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(elementGetMetaBind, singleton, id)
+    }
+
+    /**
      * Sets window outer (with decorations) and inner (without decorations) bounds for assistive apps.
      * Note: This method is implemented on Linux, macOS, and Windows. Note: Advanced users only!
      * `Window` objects call this method automatically.
@@ -901,6 +911,11 @@ object AccessibilityServer {
     private const val FREE_ELEMENT_HASH = 2722037293L
     private val freeElementBind by lazy {
         ObjectCalls.getMethodBind("AccessibilityServer", "free_element", FREE_ELEMENT_HASH)
+    }
+
+    private const val ELEMENT_GET_META_HASH = 4171304767L
+    private val elementGetMetaBind by lazy {
+        ObjectCalls.getMethodBind("AccessibilityServer", "element_get_meta", ELEMENT_GET_META_HASH)
     }
 
     private const val SET_WINDOW_RECT_HASH = 2386961724L

@@ -339,6 +339,16 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the value of a given key in a given track.
+     *
+     * Generated from Godot docs: Animation.track_get_key_value
+     */
+    fun trackGetKeyValue(trackIdx: Int, keyIdx: Int): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(trackGetKeyValueBind, handle, trackIdx, keyIdx)
+    }
+
+    /**
      * Returns the time at which the key is located.
      *
      * Generated from Godot docs: Animation.track_get_key_time
@@ -432,6 +442,20 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     fun valueTrackGetUpdateMode(trackIdx: Int): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, handle, trackIdx)
+    }
+
+    /**
+     * Returns the interpolated value at the given time (in seconds). The `track_idx` must be the index
+     * of a value track. A `backward` mainly affects the direction of key retrieval of the track with
+     * `UPDATE_DISCRETE` converted by
+     * `AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to match the result with
+     * `track_find_key`.
+     *
+     * Generated from Godot docs: Animation.value_track_interpolate
+     */
+    fun valueTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(valueTrackInterpolateBind, handle, trackIdx, timeSec, backward)
     }
 
     /**
@@ -1076,6 +1100,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Animation", "track_get_key_count", TRACK_GET_KEY_COUNT_HASH)
         }
 
+        private const val TRACK_GET_KEY_VALUE_HASH = 678354945L
+        private val trackGetKeyValueBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "track_get_key_value", TRACK_GET_KEY_VALUE_HASH)
+        }
+
         private const val TRACK_GET_KEY_TIME_HASH = 3085491603L
         private val trackGetKeyTimeBind by lazy {
             ObjectCalls.getMethodBind("Animation", "track_get_key_time", TRACK_GET_KEY_TIME_HASH)
@@ -1119,6 +1148,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
         private const val VALUE_TRACK_GET_UPDATE_MODE_HASH = 1440326473L
         private val valueTrackGetUpdateModeBind by lazy {
             ObjectCalls.getMethodBind("Animation", "value_track_get_update_mode", VALUE_TRACK_GET_UPDATE_MODE_HASH)
+        }
+
+        private const val VALUE_TRACK_INTERPOLATE_HASH = 747269075L
+        private val valueTrackInterpolateBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "value_track_interpolate", VALUE_TRACK_INTERPOLATE_HASH)
         }
 
         private const val METHOD_TRACK_GET_NAME_HASH = 351665558L

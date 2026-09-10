@@ -2387,6 +2387,15 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the metadata currently in `gutter` at `line`.
+     *
+     * Generated from Godot docs: TextEdit.get_line_gutter_metadata
+     */
+    fun getLineGutterMetadata(line: Int, gutter: Int): Any? {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLineGutterMetadataBind, handle, line, gutter)
+    }
+
+    /**
      * Sets the text for `gutter` on `line` to `text`. This only works when the gutter type is
      * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
      *
@@ -3801,6 +3810,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val GET_TOTAL_GUTTER_WIDTH_HASH = 3905245786L
         private val getTotalGutterWidthBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "get_total_gutter_width", GET_TOTAL_GUTTER_WIDTH_HASH)
+        }
+
+        private const val GET_LINE_GUTTER_METADATA_HASH = 678354945L
+        private val getLineGutterMetadataBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_line_gutter_metadata", GET_LINE_GUTTER_METADATA_HASH)
         }
 
         private const val SET_LINE_GUTTER_TEXT_HASH = 2285447957L

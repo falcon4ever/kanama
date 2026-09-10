@@ -7,8 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP JSON waits on: ptrcallWithStringArgRetVariantScalar,
-//   ptrcallWithVariantAndBoolArgRetVariantScalar, ptrcallWithVariantArg,
+// KANAMA-IOS-GAP JSON waits on: ptrcallWithVariantAndBoolArgRetVariantScalar, ptrcallWithVariantArg,
 //   ptrcallWithVariantStringTwoBoolArgsRetString
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -32,16 +31,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 fun JSON.Companion.stringify(data: Any?, indent: String = "", sortKeys: Boolean = true, fullPrecision: Boolean = false): String {
     return ObjectCalls.ptrcallWithVariantStringTwoBoolArgsRetString(stringifyBind, MemorySegment.NULL, data, indent, sortKeys, fullPrecision)
-}
-
-/**
- * Attempts to parse the `json_string` provided and returns the parsed data. Returns `null` if
- * parse failed.
- *
- * Generated from Godot docs: JSON.parse_string
- */
-fun JSON.Companion.parseString(jsonString: String): Any? {
-    return ObjectCalls.ptrcallWithStringArgRetVariantScalar(parseStringBind, MemorySegment.NULL, jsonString)
 }
 
 /**
@@ -79,11 +68,6 @@ fun JSON.Companion.toNative(json: Any?, allowObjects: Boolean = false): Any? {
 private const val STRINGIFY_HASH = 462733549L
 private val stringifyBind by lazy {
     ObjectCalls.getMethodBind("JSON", "stringify", STRINGIFY_HASH)
-}
-
-private const val PARSE_STRING_HASH = 309047738L
-private val parseStringBind by lazy {
-    ObjectCalls.getMethodBind("JSON", "parse_string", PARSE_STRING_HASH)
 }
 
 private const val SET_DATA_HASH = 1114965689L

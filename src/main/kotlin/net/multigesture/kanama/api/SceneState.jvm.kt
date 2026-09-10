@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP SceneState waits on: ptrcallWithIntArgRetArray,
-//   ptrcallWithIntArgRetPackedStringList, ptrcallWithTwoIntArgsRetVariantScalar
+//   ptrcallWithIntArgRetPackedStringList
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -19,16 +19,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 fun SceneState.getNodeGroups(idx: Int): List<String> {
     checkOpen()
     return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getNodeGroupsBind, handle, idx)
-}
-
-/**
- * Returns the value of the property at `prop_idx` for the node at `idx`.
- *
- * Generated from Godot docs: SceneState.get_node_property_value
- */
-fun SceneState.getNodePropertyValue(idx: Int, propIdx: Int): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getNodePropertyValueBind, handle, idx, propIdx)
 }
 
 /**
@@ -44,11 +34,6 @@ fun SceneState.getConnectionBinds(idx: Int): List<Any?> {
 private const val GET_NODE_GROUPS_HASH = 647634434L
 private val getNodeGroupsBind by lazy {
     ObjectCalls.getMethodBind("SceneState", "get_node_groups", GET_NODE_GROUPS_HASH)
-}
-
-private const val GET_NODE_PROPERTY_VALUE_HASH = 678354945L
-private val getNodePropertyValueBind by lazy {
-    ObjectCalls.getMethodBind("SceneState", "get_node_property_value", GET_NODE_PROPERTY_VALUE_HASH)
 }
 
 private const val GET_CONNECTION_BINDS_HASH = 663333327L

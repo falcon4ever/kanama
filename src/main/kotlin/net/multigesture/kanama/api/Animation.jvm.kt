@@ -7,9 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Animation waits on: ptrcallWithIntDoubleBoolArgsRetVariantScalar,
-//   ptrcallWithIntDoubleVariantDoubleArgsRetInt, ptrcallWithTwoIntAndVariantArg,
-//   ptrcallWithTwoIntArgsRetArray, ptrcallWithTwoIntArgsRetVariantScalar
+// KANAMA-IOS-GAP Animation waits on: ptrcallWithIntDoubleVariantDoubleArgsRetInt,
+//   ptrcallWithTwoIntAndVariantArg, ptrcallWithTwoIntArgsRetArray
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -33,30 +32,6 @@ fun Animation.trackSetKeyValue(trackIdx: Int, key: Int, value: Any?) {
 }
 
 /**
- * Returns the value of a given key in a given track.
- *
- * Generated from Godot docs: Animation.track_get_key_value
- */
-fun Animation.trackGetKeyValue(trackIdx: Int, keyIdx: Int): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(trackGetKeyValueBind, handle, trackIdx, keyIdx)
-}
-
-/**
- * Returns the interpolated value at the given time (in seconds). The `track_idx` must be the index
- * of a value track. A `backward` mainly affects the direction of key retrieval of the track with
- * `UPDATE_DISCRETE` converted by
- * `AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to match the result with
- * `track_find_key`.
- *
- * Generated from Godot docs: Animation.value_track_interpolate
- */
-fun Animation.valueTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(valueTrackInterpolateBind, handle, trackIdx, timeSec, backward)
-}
-
-/**
  * Returns the arguments values to be called on a method track for a given key in a given track.
  *
  * Generated from Godot docs: Animation.method_track_get_params
@@ -74,16 +49,6 @@ private val trackInsertKeyBind by lazy {
 private const val TRACK_SET_KEY_VALUE_HASH = 2060538656L
 private val trackSetKeyValueBind by lazy {
     ObjectCalls.getMethodBind("Animation", "track_set_key_value", TRACK_SET_KEY_VALUE_HASH)
-}
-
-private const val TRACK_GET_KEY_VALUE_HASH = 678354945L
-private val trackGetKeyValueBind by lazy {
-    ObjectCalls.getMethodBind("Animation", "track_get_key_value", TRACK_GET_KEY_VALUE_HASH)
-}
-
-private const val VALUE_TRACK_INTERPOLATE_HASH = 747269075L
-private val valueTrackInterpolateBind by lazy {
-    ObjectCalls.getMethodBind("Animation", "value_track_interpolate", VALUE_TRACK_INTERPOLATE_HASH)
 }
 
 private const val METHOD_TRACK_GET_PARAMS_HASH = 2345056839L

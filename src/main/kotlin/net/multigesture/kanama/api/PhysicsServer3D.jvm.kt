@@ -8,8 +8,7 @@ import net.multigesture.kanama.types.RID
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP PhysicsServer3D waits on: ptrcallWithRIDAndLongArgRetVariantScalar,
-//   ptrcallWithRIDAndVariantArg, ptrcallWithRIDArgRetVariantScalar,
+// KANAMA-IOS-GAP PhysicsServer3D waits on: ptrcallWithRIDAndVariantArg,
 //   ptrcallWithRIDCallableVariantArgs, ptrcallWithRIDLongAndVariantArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -40,17 +39,6 @@ fun PhysicsServer3D.shapeSetData(shape: RID, data: Any?) {
 }
 
 /**
- * Returns the shape data that configures the shape, such as the half-extents of a box or the
- * triangles of a concave (trimesh) shape. See `shape_set_data` for the precise format of this data
- * in each case.
- *
- * Generated from Godot docs: PhysicsServer3D.shape_get_data
- */
-fun PhysicsServer3D.shapeGetData(shape: RID): Any? {
-    return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(shapeGetDataBind, physicsServer3DSingleton, shape)
-}
-
-/**
  * Sets the value for an area parameter. A list of available parameters is on the `AreaParameter`
  * constants.
  *
@@ -58,16 +46,6 @@ fun PhysicsServer3D.shapeGetData(shape: RID): Any? {
  */
 fun PhysicsServer3D.areaSetParam(area: RID, param: Long, value: Any?) {
     ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, physicsServer3DSingleton, area, param, value)
-}
-
-/**
- * Returns an area parameter value. A list of available parameters is on the `AreaParameter`
- * constants.
- *
- * Generated from Godot docs: PhysicsServer3D.area_get_param
- */
-fun PhysicsServer3D.areaGetParam(area: RID, param: Long): Any? {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, physicsServer3DSingleton, area, param)
 }
 
 /**
@@ -80,31 +58,12 @@ fun PhysicsServer3D.bodySetParam(body: RID, param: Long, value: Any?) {
 }
 
 /**
- * Returns the value of a body parameter. A list of available parameters is on the `BodyParameter`
- * constants.
- *
- * Generated from Godot docs: PhysicsServer3D.body_get_param
- */
-fun PhysicsServer3D.bodyGetParam(body: RID, param: Long): Any? {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, physicsServer3DSingleton, body, param)
-}
-
-/**
  * Sets a body state.
  *
  * Generated from Godot docs: PhysicsServer3D.body_set_state
  */
 fun PhysicsServer3D.bodySetState(body: RID, state: Long, value: Any?) {
     ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, physicsServer3DSingleton, body, state, value)
-}
-
-/**
- * Returns a body state.
- *
- * Generated from Godot docs: PhysicsServer3D.body_get_state
- */
-fun PhysicsServer3D.bodyGetState(body: RID, state: Long): Any? {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, physicsServer3DSingleton, body, state)
 }
 
 /**
@@ -135,17 +94,6 @@ fun PhysicsServer3D.softBodySetState(body: RID, state: Long, variant: Any?) {
     ObjectCalls.ptrcallWithRIDLongAndVariantArgs(softBodySetStateBind, physicsServer3DSingleton, body, state, variant)
 }
 
-/**
- * Returns the given soft body state. Note: Godot's default physics implementation does not support
- * `BODY_STATE_LINEAR_VELOCITY`, `BODY_STATE_ANGULAR_VELOCITY`, `BODY_STATE_SLEEPING`, or
- * `BODY_STATE_CAN_SLEEP`.
- *
- * Generated from Godot docs: PhysicsServer3D.soft_body_get_state
- */
-fun PhysicsServer3D.softBodyGetState(body: RID, state: Long): Any? {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(softBodyGetStateBind, physicsServer3DSingleton, body, state)
-}
-
 private val physicsServer3DSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("PhysicsServer3D")
 }
@@ -155,19 +103,9 @@ private val shapeSetDataBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer3D", "shape_set_data", SHAPE_SET_DATA_HASH)
 }
 
-private const val SHAPE_GET_DATA_HASH = 4171304767L
-private val shapeGetDataBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_data", SHAPE_GET_DATA_HASH)
-}
-
 private const val AREA_SET_PARAM_HASH = 2980114638L
 private val areaSetParamBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_param", AREA_SET_PARAM_HASH)
-}
-
-private const val AREA_GET_PARAM_HASH = 890056067L
-private val areaGetParamBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_param", AREA_GET_PARAM_HASH)
 }
 
 private const val BODY_SET_PARAM_HASH = 910941953L
@@ -175,19 +113,9 @@ private val bodySetParamBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_param", BODY_SET_PARAM_HASH)
 }
 
-private const val BODY_GET_PARAM_HASH = 3385027841L
-private val bodyGetParamBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_param", BODY_GET_PARAM_HASH)
-}
-
 private const val BODY_SET_STATE_HASH = 599977762L
 private val bodySetStateBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_state", BODY_SET_STATE_HASH)
-}
-
-private const val BODY_GET_STATE_HASH = 1850449534L
-private val bodyGetStateBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_state", BODY_GET_STATE_HASH)
 }
 
 private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L
@@ -198,9 +126,4 @@ private val bodySetForceIntegrationCallbackBind by lazy {
 private const val SOFT_BODY_SET_STATE_HASH = 599977762L
 private val softBodySetStateBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_state", SOFT_BODY_SET_STATE_HASH)
-}
-
-private const val SOFT_BODY_GET_STATE_HASH = 1850449534L
-private val softBodyGetStateBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_state", SOFT_BODY_GET_STATE_HASH)
 }

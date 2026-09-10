@@ -1778,19 +1778,11 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # arg shape is admitted — the generated helper reads the return back as UTF-8 through
     # kanama_ios_godot_ptrcall_ret_utf8 (task 100, parcel 1). The hand-written no-arg getters and
     # the Object-call-decode helpers in IOS_HANDWRITTEN_HELPERS keep their bodies.
-    # Variant (scalar) return: iOS routes these through the device-proven Object-call decode
-    # (callWithVariantArgs over kanama_ios_godot_object_call — bool/int/float/String/Object
-    # scalars; complex types surface null, matching desktop's RetVariantScalar). Only the no-arg
-    # and StringName-arg getters are wired; other Variant arg-shapes (Dictionary-arg, etc.) share
-    # the "Any?" token but route through helpers not audited on iOS yet — gate on the concrete helper.
-    if shape.kotlin_return == "Any?" and shape.function not in (
-        "ptrcallNoArgsRetVariantScalar",
-        "ptrcallWithStringNameArgRetVariantScalar",
-        # task 43: hand-written owned decode over the dedicated C entry (retain must happen
-        # before the C shim destroys the return Variant — see kanama_ios_classdb_instantiate_owned).
-        "ptrcallWithStringNameArgRetVariantScalarOwned",
-    ):
-        return False
+    # Variant-scalar returns (kotlin_return "Any?"): every audited arg shape is admitted — the
+    # generated helper ptrcalls into a Variant cell and decodes the scalar payload through
+    # kanama_ios_godot_ptrcall_ret_variant_scalar (task 100, parcel 2; bool/int/float/String/Object
+    # scalars, complex types surface null, matching desktop's RetVariantScalar). The hand-written
+    # no-arg / StringName-arg getters and the owned ClassDB.instantiate decode keep their bodies.
     # PackedInt32Array read-back is wired only for the no-arg getter
     # (ptrcallNoArgsRetPackedInt32List → List<Int> via the size + operator_index_const C
     # helper, two-call length protocol). Other shapes share the "List<Int>" return token
@@ -3321,8 +3313,9 @@ import net.multigesture.kanama.types.Vector4
  * int->int64/8B, Vector components->GodotReal, Object->8B handle, StringName built
  * C-side). String / StringName / NodePath returns hand the same arg cells to
  * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
- * read-back, no truncation). Helpers already hand-written in ObjectCalls.kt are the
- * override set and are NOT regenerated here.
+ * read-back, no truncation); Variant-scalar returns to `ObjectCalls.ptrcallRetVariantScalar`
+ * (kanama_ios_godot_ptrcall_ret_variant_scalar). Helpers already hand-written in
+ * ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 '''
 
@@ -3642,14 +3635,20 @@ def render_ios_helper(
     return_type: str | None = None,
 ) -> str:
     utf8_return = kotlin_return in ("String", "NodePath")
+    variant_return = kotlin_return == "Any?"
     if utf8_return:
         if return_type not in IOS_UTF8_RETURNS:
             raise ValueError(f"iOS UTF-8 return kind not audited: {return_type} ({function})")
         ret_tag, utf8_wrap = IOS_UTF8_RETURNS[return_type]
         ret_type, ret_decl, ret_ptr, read_expr = kotlin_return, [], "null", None
+    elif variant_return:
+        # Variant-scalar return (task 100, parcel 2): the C entry owns the 24-byte Variant cell,
+        # so no ret tag or cell is laid out here.
+        ret_type, ret_tag, ret_decl, ret_ptr, read_expr = "Any?", None, [], "null", None
     else:
         ret_type, ret_tag, ret_decl, ret_ptr, read_expr = ios_ret_layout(kotlin_return)
-    tags_used.add(ret_tag)
+    if ret_tag is not None:
+        tags_used.add(ret_tag)
     params = ["methodBind: MemorySegment", "instance: MemorySegment"]
     arg_tags: list[str] = []
     arg_ptr_exprs: list[str] = []
@@ -3693,6 +3692,8 @@ def render_ios_helper(
         body.append(
             utf8_wrap.format(f"ptrcallRetUtf8(methodBind, instance, {types_arg}, {ptrs_arg}, {n}, {ret_tag})")
         )
+    elif variant_return:
+        body.append(f"ptrcallRetVariantScalar(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
     else:
         body.append(
             f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "

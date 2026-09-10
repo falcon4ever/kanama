@@ -7,6 +7,24 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: Variant-scalar returns on every audited argument shape (task 100, parcel 2)
+
+- A Variant-returning method with arguments was called on iOS only through three hand-written
+  helpers (the no-arg and StringName-arg getters, and the owned `ClassDB.instantiate` decode).
+  Every such method whose arguments are already audited now gets a generated helper: the new C
+  entry `kanama_ios_godot_ptrcall_ret_variant_scalar` ptrcalls into a Variant cell and decodes
+  the scalar payload exactly as the Object-call path does (bool, int, float, String family,
+  borrowed Object handle, Vector2/Vector2i/Vector3/Color; anything else surfaces `null`, matching
+  desktop's `RetVariantScalar`). That decode is now one shared C function, and a String-family
+  payload longer than the 1 KiB buffer is parked C-side and drained whole instead of truncated —
+  which also lifts the 1 KiB cap the Object-call path (`callWithVariantArgs`) had. 18 helpers,
+  56 members on 32 classes move into the shared tree — `StreamPeer.get_var`,
+  `PacketPeer.get_var`, `Animation.track_get_key_value`, `PhysicsServer3D.body_get_param`,
+  `RenderingServer.material_get_param`, `JSON.parse_string`, `Theme.get_theme_item`,
+  `Geometry2D.segment_intersects_segment` among them; the gap index goes from 1062 to 1006
+  desktop-only members (252 → 250 companion files). Seven self-test rows round-trip int, float,
+  bool, short and 3000-byte Strings and null through `StreamPeerBuffer.put_var` / `get_var`.
+
 ### Added — iOS: String, StringName and NodePath returns on every audited argument shape (task 100, parcel 1)
 
 - The iOS backend used to call a String-, StringName- or NodePath-returning method only when

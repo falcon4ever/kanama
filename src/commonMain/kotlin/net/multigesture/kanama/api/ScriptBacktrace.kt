@@ -94,6 +94,19 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the value of the global variable at the specified index. Warning: With GDScript
+     * backtraces, the returned `Variant` will be the variable's actual value, including any object
+     * references. This means that storing the returned `Variant` will prevent any such object from
+     * being deallocated, so it's generally recommended not to do so.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_global_variable_value
+     */
+    fun getGlobalVariableValue(variableIndex: Int): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getGlobalVariableValueBind, handle, variableIndex)
+    }
+
+    /**
      * Returns the number of local variables in the stack frame at the specified index. Note: This will
      * be non-zero only if the `include_variables` parameter was `true` when capturing the backtrace
      * with `Engine.capture_script_backtraces`.
@@ -117,6 +130,20 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the value of the local variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`. Warning: With GDScript backtraces, the returned `Variant` will be
+     * the variable's actual value, including any object references. This means that storing the
+     * returned `Variant` will prevent any such object from being deallocated, so it's generally
+     * recommended not to do so.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_local_variable_value
+     */
+    fun getLocalVariableValue(frameIndex: Int, variableIndex: Int): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLocalVariableValueBind, handle, frameIndex, variableIndex)
+    }
+
+    /**
      * Returns the number of member variables in the stack frame at the specified index. Note: This
      * will be non-zero only if the `include_variables` parameter was `true` when capturing the
      * backtrace with `Engine.capture_script_backtraces`.
@@ -137,6 +164,20 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
     fun getMemberVariableName(frameIndex: Int, variableIndex: Int): String {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetString(getMemberVariableNameBind, handle, frameIndex, variableIndex)
+    }
+
+    /**
+     * Returns the value of the member variable at the specified `variable_index` in the stack frame at
+     * the specified `frame_index`. Warning: With GDScript backtraces, the returned `Variant` will be
+     * the variable's actual value, including any object references. This means that storing the
+     * returned `Variant` will prevent any such object from being deallocated, so it's generally
+     * recommended not to do so.
+     *
+     * Generated from Godot docs: ScriptBacktrace.get_member_variable_value
+     */
+    fun getMemberVariableValue(frameIndex: Int, variableIndex: Int): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getMemberVariableValueBind, handle, frameIndex, variableIndex)
     }
 
     /**
@@ -200,6 +241,11 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_global_variable_name", GET_GLOBAL_VARIABLE_NAME_HASH)
         }
 
+        private const val GET_GLOBAL_VARIABLE_VALUE_HASH = 4227898402L
+        private val getGlobalVariableValueBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_global_variable_value", GET_GLOBAL_VARIABLE_VALUE_HASH)
+        }
+
         private const val GET_LOCAL_VARIABLE_COUNT_HASH = 923996154L
         private val getLocalVariableCountBind by lazy {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_count", GET_LOCAL_VARIABLE_COUNT_HASH)
@@ -210,6 +256,11 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_name", GET_LOCAL_VARIABLE_NAME_HASH)
         }
 
+        private const val GET_LOCAL_VARIABLE_VALUE_HASH = 678354945L
+        private val getLocalVariableValueBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_value", GET_LOCAL_VARIABLE_VALUE_HASH)
+        }
+
         private const val GET_MEMBER_VARIABLE_COUNT_HASH = 923996154L
         private val getMemberVariableCountBind by lazy {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_count", GET_MEMBER_VARIABLE_COUNT_HASH)
@@ -218,6 +269,11 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_MEMBER_VARIABLE_NAME_HASH = 1391810591L
         private val getMemberVariableNameBind by lazy {
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_name", GET_MEMBER_VARIABLE_NAME_HASH)
+        }
+
+        private const val GET_MEMBER_VARIABLE_VALUE_HASH = 678354945L
+        private val getMemberVariableValueBind by lazy {
+            ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_value", GET_MEMBER_VARIABLE_VALUE_HASH)
         }
 
         private const val FORMAT_HASH = 3464456933L

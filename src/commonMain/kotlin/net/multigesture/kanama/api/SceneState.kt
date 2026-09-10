@@ -157,6 +157,16 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the value of the property at `prop_idx` for the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_property_value
+     */
+    fun getNodePropertyValue(idx: Int, propIdx: Int): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getNodePropertyValueBind, handle, idx, propIdx)
+    }
+
+    /**
      * Returns the number of signal connections in the scene. The `idx` argument used to query
      * connection metadata in other `get_connection_*` methods in the interval `[0,
      * get_connection_count() - 1]`.
@@ -305,6 +315,11 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_NODE_PROPERTY_NAME_HASH = 351665558L
         private val getNodePropertyNameBind by lazy {
             ObjectCalls.getMethodBind("SceneState", "get_node_property_name", GET_NODE_PROPERTY_NAME_HASH)
+        }
+
+        private const val GET_NODE_PROPERTY_VALUE_HASH = 678354945L
+        private val getNodePropertyValueBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_property_value", GET_NODE_PROPERTY_VALUE_HASH)
         }
 
         private const val GET_CONNECTION_COUNT_HASH = 3905245786L

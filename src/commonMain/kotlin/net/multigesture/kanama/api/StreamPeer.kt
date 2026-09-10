@@ -315,6 +315,20 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithIntArgRetString(getUtf8StringBind, handle, bytes)
     }
 
+    /**
+     * Gets a Variant from the stream. If `allow_objects` is `true`, decoding objects is allowed.
+     * Internally, this uses the same decoding mechanism as the `@GlobalScope.bytes_to_var` method.
+     * Warning: Deserialized objects can contain code which gets executed. Do not use this option if
+     * the serialized object comes from untrusted sources to avoid potential security threats such as
+     * remote code execution.
+     *
+     * Generated from Godot docs: StreamPeer.get_var
+     */
+    fun getVar(allowObjects: Boolean = false): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): StreamPeer? =
@@ -466,6 +480,11 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_UTF8_STRING_HASH = 2309358862L
         private val getUtf8StringBind by lazy {
             ObjectCalls.getMethodBind("StreamPeer", "get_utf8_string", GET_UTF8_STRING_HASH)
+        }
+
+        private const val GET_VAR_HASH = 3442865206L
+        private val getVarBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "get_var", GET_VAR_HASH)
         }
     }
 }

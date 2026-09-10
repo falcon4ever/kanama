@@ -379,6 +379,16 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
     }
 
     /**
+     * Returns the metadata value set to the tab at index `tab_idx` using `set_tab_metadata`. If no
+     * metadata was previously set, returns `null` by default.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_metadata
+     */
+    fun getTabMetadata(tabIdx: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, handle, tabIdx)
+    }
+
+    /**
      * Sets the button icon from the tab at index `tab_idx`.
      *
      * Generated from Godot docs: TabContainer.set_tab_button_icon
@@ -731,6 +741,11 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
         private const val IS_TAB_HIDDEN_HASH = 1116898809L
         private val isTabHiddenBind by lazy {
             ObjectCalls.getMethodBind("TabContainer", "is_tab_hidden", IS_TAB_HIDDEN_HASH)
+        }
+
+        private const val GET_TAB_METADATA_HASH = 4227898402L
+        private val getTabMetadataBind by lazy {
+            ObjectCalls.getMethodBind("TabContainer", "get_tab_metadata", GET_TAB_METADATA_HASH)
         }
 
         private const val SET_TAB_BUTTON_ICON_HASH = 666127730L

@@ -75,12 +75,27 @@ class JSON(handle: MemorySegment) : Resource(handle) {
     }
 
     companion object {
+        /**
+         * Attempts to parse the `json_string` provided and returns the parsed data. Returns `null` if
+         * parse failed.
+         *
+         * Generated from Godot docs: JSON.parse_string
+         */
+        fun parseString(jsonString: String): Any? {
+            return ObjectCalls.ptrcallWithStringArgRetVariantScalar(parseStringBind, MemorySegment.NULL, jsonString)
+        }
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): JSON? =
             wrap(handle)
 
         internal fun wrap(handle: MemorySegment): JSON? =
             if (handle.address() == 0L) null else JSON(handle)
+
+        private const val PARSE_STRING_HASH = 309047738L
+        private val parseStringBind by lazy {
+            ObjectCalls.getMethodBind("JSON", "parse_string", PARSE_STRING_HASH)
+        }
 
         private const val PARSE_HASH = 885841341L
         private val parseBind by lazy {

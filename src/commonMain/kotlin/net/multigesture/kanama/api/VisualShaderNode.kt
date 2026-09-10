@@ -41,6 +41,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortForPreviewBind, handle)
     }
 
+    fun getInputPortDefaultValue(port: Int): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getInputPortDefaultValueBind, handle, port)
+    }
+
     fun removeInputPortDefaultValue(port: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeInputPortDefaultValueBind, handle, port)
@@ -98,6 +103,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
         private const val GET_OUTPUT_PORT_FOR_PREVIEW_HASH = 3905245786L
         private val getOutputPortForPreviewBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNode", "get_output_port_for_preview", GET_OUTPUT_PORT_FOR_PREVIEW_HASH)
+        }
+
+        private const val GET_INPUT_PORT_DEFAULT_VALUE_HASH = 4227898402L
+        private val getInputPortDefaultValueBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNode", "get_input_port_default_value", GET_INPUT_PORT_DEFAULT_VALUE_HASH)
         }
 
         private const val REMOVE_INPUT_PORT_DEFAULT_VALUE_HASH = 1286410249L

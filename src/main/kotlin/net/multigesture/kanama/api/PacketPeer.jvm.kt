@@ -7,22 +7,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP PacketPeer waits on: ptrcallNoArgsRetByteArray, ptrcallWithBoolArgRetVariantScalar,
-//   ptrcallWithByteArrayArgRetLong, ptrcallWithVariantAndBoolArgRetLong
+// KANAMA-IOS-GAP PacketPeer waits on: ptrcallNoArgsRetByteArray, ptrcallWithByteArrayArgRetLong,
+//   ptrcallWithVariantAndBoolArgRetLong
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Gets a Variant. If `allow_objects` is `true`, decoding objects is allowed. Internally, this uses
- * the same decoding mechanism as the `@GlobalScope.bytes_to_var` method. Warning: Deserialized
- * objects can contain code which gets executed. Do not use this option if the serialized object
- * comes from untrusted sources to avoid potential security threats such as remote code execution.
- *
- * Generated from Godot docs: PacketPeer.get_var
- */
-fun PacketPeer.getVar(allowObjects: Boolean = false): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
-}
 
 /**
  * Sends a `Variant` as a packet. If `full_objects` is `true`, encoding objects is allowed (and can
@@ -54,11 +41,6 @@ fun PacketPeer.getPacket(): ByteArray {
 fun PacketPeer.putPacket(buffer: ByteArray): Long {
     checkOpen()
     return ObjectCalls.ptrcallWithByteArrayArgRetLong(putPacketBind, handle, buffer)
-}
-
-private const val GET_VAR_HASH = 3442865206L
-private val getVarBind by lazy {
-    ObjectCalls.getMethodBind("PacketPeer", "get_var", GET_VAR_HASH)
 }
 
 private const val PUT_VAR_HASH = 2436251611L

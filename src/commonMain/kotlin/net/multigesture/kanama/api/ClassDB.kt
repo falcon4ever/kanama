@@ -125,6 +125,26 @@ object ClassDB {
     }
 
     /**
+     * Returns the value of `property` of `object` or its ancestry.
+     *
+     * Generated from Godot docs: ClassDB.class_get_property
+     */
+    @JvmStatic
+    fun classGetProperty(objectValue: GodotObject, property: String): Any? {
+        return ObjectCalls.ptrcallWithObjectStringNameArgRetVariantScalar(classGetPropertyBind, singleton, objectValue.handle, property)
+    }
+
+    /**
+     * Returns the default value of `property` of `class` or its ancestor classes.
+     *
+     * Generated from Godot docs: ClassDB.class_get_property_default_value
+     */
+    @JvmStatic
+    fun classGetPropertyDefaultValue(classValue: String, property: String): Any? {
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetVariantScalar(classGetPropertyDefaultValueBind, singleton, classValue, property)
+    }
+
+    /**
      * Returns whether `class` (or its ancestry if `no_inheritance` is `false`) has a method called
      * `method` or not.
      *
@@ -273,6 +293,16 @@ object ClassDB {
     private const val CLASS_GET_PROPERTY_SETTER_HASH = 3770832642L
     private val classGetPropertySetterBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_get_property_setter", CLASS_GET_PROPERTY_SETTER_HASH)
+    }
+
+    private const val CLASS_GET_PROPERTY_HASH = 2498641674L
+    private val classGetPropertyBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_property", CLASS_GET_PROPERTY_HASH)
+    }
+
+    private const val CLASS_GET_PROPERTY_DEFAULT_VALUE_HASH = 2718203076L
+    private val classGetPropertyDefaultValueBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_property_default_value", CLASS_GET_PROPERTY_DEFAULT_VALUE_HASH)
     }
 
     private const val CLASS_HAS_METHOD_HASH = 3860701026L

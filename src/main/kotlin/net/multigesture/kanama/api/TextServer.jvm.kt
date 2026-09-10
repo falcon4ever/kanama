@@ -17,9 +17,9 @@ import net.multigesture.kanama.types.Vector3i
 //   ptrcallWithLongArrayStringArgsRetVector3iList, ptrcallWithRIDAndArrayArg,
 //   ptrcallWithRIDAndByteArrayArg, ptrcallWithRIDAndDictionaryArg,
 //   ptrcallWithRIDAndLongArgRetDictionary, ptrcallWithRIDAndLongArgRetPackedColorList,
-//   ptrcallWithRIDAndLongArgRetVariantScalar, ptrcallWithRIDAndLongArgRetVector2iList,
-//   ptrcallWithRIDAndPackedColorListArgs, ptrcallWithRIDAndPackedFloat32ListArgRetDouble,
-//   ptrcallWithRIDAndTwoLongArgsRetDictionary, ptrcallWithRIDAndTwoLongArgsRetPackedInt32List,
+//   ptrcallWithRIDAndLongArgRetVector2iList, ptrcallWithRIDAndPackedColorListArgs,
+//   ptrcallWithRIDAndPackedFloat32ListArgRetDouble, ptrcallWithRIDAndTwoLongArgsRetDictionary,
+//   ptrcallWithRIDAndTwoLongArgsRetPackedInt32List,
 //   ptrcallWithRIDAndTwoLongArgsRetPackedVector2List, ptrcallWithRIDAndVariantArgRetBool,
 //   ptrcallWithRIDAndVariantArgRetLong, ptrcallWithRIDAndVariantArgRetRect2,
 //   ptrcallWithRIDAndVariantArgRetVector2i, ptrcallWithRIDAndVector2iArgRetPackedInt32List,
@@ -330,36 +330,6 @@ fun TextServer.shapedTextHasObject(shaped: RID, key: Any?): Boolean {
 }
 
 /**
- * Returns text span metadata.
- *
- * Generated from Godot docs: TextServer.shaped_get_span_meta
- */
-fun TextServer.shapedGetSpanMeta(shaped: RID, index: Long): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanMetaBind, handle, shaped, index)
-}
-
-/**
- * Returns text embedded object key.
- *
- * Generated from Godot docs: TextServer.shaped_get_span_embedded_object
- */
-fun TextServer.shapedGetSpanEmbeddedObject(shaped: RID, index: Long): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanEmbeddedObjectBind, handle, shaped, index)
-}
-
-/**
- * Returns the text span embedded object key.
- *
- * Generated from Godot docs: TextServer.shaped_get_span_object
- */
-fun TextServer.shapedGetSpanObject(shaped: RID, index: Long): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanObjectBind, handle, shaped, index)
-}
-
-/**
  * Changes text span font, font size, and OpenType features, without changing the text.
  *
  * Generated from Godot docs: TextServer.shaped_set_span_update_font
@@ -367,16 +337,6 @@ fun TextServer.shapedGetSpanObject(shaped: RID, index: Long): Any? {
 fun TextServer.shapedSetSpanUpdateFont(shaped: RID, index: Long, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap()) {
     checkOpen()
     ObjectCalls.ptrcallWithRIDLongRIDListLongDictionaryArgs(shapedSetSpanUpdateFontBind, handle, shaped, index, fonts, size, opentypeFeatures)
-}
-
-/**
- * Returns the embedded object of the `index` text run (in visual order).
- *
- * Generated from Godot docs: TextServer.shaped_get_run_object
- */
-fun TextServer.shapedGetRunObject(shaped: RID, index: Long): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetRunObjectBind, handle, shaped, index)
 }
 
 /**
@@ -701,29 +661,9 @@ private val shapedTextHasObjectBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_has_object", SHAPED_TEXT_HAS_OBJECT_HASH)
 }
 
-private const val SHAPED_GET_SPAN_META_HASH = 4069510997L
-private val shapedGetSpanMetaBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_span_meta", SHAPED_GET_SPAN_META_HASH)
-}
-
-private const val SHAPED_GET_SPAN_EMBEDDED_OBJECT_HASH = 4069510997L
-private val shapedGetSpanEmbeddedObjectBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_span_embedded_object", SHAPED_GET_SPAN_EMBEDDED_OBJECT_HASH)
-}
-
-private const val SHAPED_GET_SPAN_OBJECT_HASH = 4069510997L
-private val shapedGetSpanObjectBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_span_object", SHAPED_GET_SPAN_OBJECT_HASH)
-}
-
 private const val SHAPED_SET_SPAN_UPDATE_FONT_HASH = 2022725822L
 private val shapedSetSpanUpdateFontBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_set_span_update_font", SHAPED_SET_SPAN_UPDATE_FONT_HASH)
-}
-
-private const val SHAPED_GET_RUN_OBJECT_HASH = 4069510997L
-private val shapedGetRunObjectBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_run_object", SHAPED_GET_RUN_OBJECT_HASH)
 }
 
 private const val SHAPED_TEXT_TAB_ALIGN_HASH = 1283669550L

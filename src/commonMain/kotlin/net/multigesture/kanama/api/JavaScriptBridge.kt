@@ -16,6 +16,19 @@ object JavaScriptBridge {
     }
 
     /**
+     * Execute the string `code` as JavaScript code within the browser window. This is a call to the
+     * actual global JavaScript function `eval()`. If `use_global_execution_context` is `true`, the
+     * code will be evaluated in the global execution context. Otherwise, it is evaluated in the
+     * execution context of a function within the engine's runtime environment.
+     *
+     * Generated from Godot docs: JavaScriptBridge.eval
+     */
+    @JvmStatic
+    fun eval(code: String, useGlobalExecutionContext: Boolean = false): Any? {
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(evalBind, singleton, code, useGlobalExecutionContext)
+    }
+
+    /**
      * Returns an interface to a JavaScript object that can be used by scripts. The `interface` must be
      * a valid property of the JavaScript `window`. The callback must accept a single `Array` argument,
      * which will contain the JavaScript `arguments`. See `JavaScriptObject` for usage.
@@ -112,6 +125,11 @@ object JavaScriptBridge {
 
     internal fun wrap(handle: MemorySegment): JavaScriptBridge? =
         if (handle.address() == 0L) null else this
+
+    private const val EVAL_HASH = 218087648L
+    private val evalBind by lazy {
+        ObjectCalls.getMethodBind("JavaScriptBridge", "eval", EVAL_HASH)
+    }
 
     private const val GET_INTERFACE_HASH = 1355533281L
     private val getInterfaceBind by lazy {

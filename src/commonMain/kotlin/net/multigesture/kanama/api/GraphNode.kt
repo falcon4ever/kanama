@@ -178,6 +178,15 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
     }
 
     /**
+     * Returns the left (input) metadata of the slot with the given `slot_index`.
+     *
+     * Generated from Godot docs: GraphNode.get_slot_metadata_left
+     */
+    fun getSlotMetadataLeft(slotIndex: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataLeftBind, handle, slotIndex)
+    }
+
+    /**
      * Returns `true` if right (output) side of the slot with the given `slot_index` is enabled.
      *
      * Generated from Godot docs: GraphNode.is_slot_enabled_right
@@ -250,6 +259,15 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      */
     fun getSlotCustomIconRight(slotIndex: Int): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconRightBind, handle, slotIndex))
+    }
+
+    /**
+     * Returns the right (output) metadata of the slot with the given `slot_index`.
+     *
+     * Generated from Godot docs: GraphNode.get_slot_metadata_right
+     */
+    fun getSlotMetadataRight(slotIndex: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataRightBind, handle, slotIndex)
     }
 
     /**
@@ -491,6 +509,11 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
             ObjectCalls.getMethodBind("GraphNode", "get_slot_custom_icon_left", GET_SLOT_CUSTOM_ICON_LEFT_HASH)
         }
 
+        private const val GET_SLOT_METADATA_LEFT_HASH = 4227898402L
+        private val getSlotMetadataLeftBind by lazy {
+            ObjectCalls.getMethodBind("GraphNode", "get_slot_metadata_left", GET_SLOT_METADATA_LEFT_HASH)
+        }
+
         private const val IS_SLOT_ENABLED_RIGHT_HASH = 1116898809L
         private val isSlotEnabledRightBind by lazy {
             ObjectCalls.getMethodBind("GraphNode", "is_slot_enabled_right", IS_SLOT_ENABLED_RIGHT_HASH)
@@ -529,6 +552,11 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
         private const val GET_SLOT_CUSTOM_ICON_RIGHT_HASH = 3536238170L
         private val getSlotCustomIconRightBind by lazy {
             ObjectCalls.getMethodBind("GraphNode", "get_slot_custom_icon_right", GET_SLOT_CUSTOM_ICON_RIGHT_HASH)
+        }
+
+        private const val GET_SLOT_METADATA_RIGHT_HASH = 4227898402L
+        private val getSlotMetadataRightBind by lazy {
+            ObjectCalls.getMethodBind("GraphNode", "get_slot_metadata_right", GET_SLOT_METADATA_RIGHT_HASH)
         }
 
         private const val IS_SLOT_DRAW_STYLEBOX_HASH = 1116898809L

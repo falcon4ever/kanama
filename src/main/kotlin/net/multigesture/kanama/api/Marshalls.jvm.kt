@@ -8,8 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Marshalls waits on: ptrcallWithByteArrayArgRetString,
-//   ptrcallWithStringAndBoolArgRetVariantScalar, ptrcallWithStringArgRetByteArray,
-//   ptrcallWithVariantAndBoolArgRetString
+//   ptrcallWithStringArgRetByteArray, ptrcallWithVariantAndBoolArgRetString
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -21,19 +20,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 fun Marshalls.variantToBase64(variant: Any?, fullObjects: Boolean = false): String {
     return ObjectCalls.ptrcallWithVariantAndBoolArgRetString(variantToBase64Bind, marshallsSingleton, variant, fullObjects)
-}
-
-/**
- * Returns a decoded `Variant` corresponding to the Base64-encoded string `base64_str`. If
- * `allow_objects` is `true`, decoding objects is allowed. Internally, this uses the same decoding
- * mechanism as the `@GlobalScope.bytes_to_var` method. Warning: Deserialized objects can contain
- * code which gets executed. Do not use this option if the serialized object comes from untrusted
- * sources to avoid potential security threats such as remote code execution.
- *
- * Generated from Godot docs: Marshalls.base64_to_variant
- */
-fun Marshalls.base64ToVariant(base64Str: String, allowObjects: Boolean = false): Any? {
-    return ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(base64ToVariantBind, marshallsSingleton, base64Str, allowObjects)
 }
 
 /**
@@ -61,11 +47,6 @@ private val marshallsSingleton: MemorySegment by lazy {
 private const val VARIANT_TO_BASE64_HASH = 3876248563L
 private val variantToBase64Bind by lazy {
     ObjectCalls.getMethodBind("Marshalls", "variant_to_base64", VARIANT_TO_BASE64_HASH)
-}
-
-private const val BASE64_TO_VARIANT_HASH = 218087648L
-private val base64ToVariantBind by lazy {
-    ObjectCalls.getMethodBind("Marshalls", "base64_to_variant", BASE64_TO_VARIANT_HASH)
 }
 
 private const val RAW_TO_BASE64_HASH = 3999417757L

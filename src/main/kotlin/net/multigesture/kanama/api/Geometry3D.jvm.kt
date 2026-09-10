@@ -9,8 +9,7 @@ import net.multigesture.kanama.types.Vector3
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Geometry3D waits on: ptrcallWithFiveVector3ArgsRetVariantScalar,
-//   ptrcallWithFourVector3ArgsRetPackedVector3List,
+// KANAMA-IOS-GAP Geometry3D waits on: ptrcallWithFourVector3ArgsRetPackedVector3List,
 //   ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List,
 //   ptrcallWithPackedVector3ListArgRetPackedInt32List, ptrcallWithPlaneListArgRetPackedVector3List,
 //   ptrcallWithThreeVector3DoubleArgsRetPackedVector3List,
@@ -73,27 +72,6 @@ fun Geometry3D.buildCapsulePlanes(radius: Double, height: Double, sides: Int, la
  */
 fun Geometry3D.getClosestPointsBetweenSegments(p1: Vector3, p2: Vector3, q1: Vector3, q2: Vector3): List<Vector3> {
     return ObjectCalls.ptrcallWithFourVector3ArgsRetPackedVector3List(getClosestPointsBetweenSegmentsBind, geometry3DSingleton, p1, p2, q1, q2)
-}
-
-/**
- * Tests if the 3D ray starting at `from` with the direction of `dir` intersects the triangle
- * specified by `a`, `b` and `c`. If yes, returns the point of intersection as `Vector3`. If no
- * intersection takes place, returns `null`.
- *
- * Generated from Godot docs: Geometry3D.ray_intersects_triangle
- */
-fun Geometry3D.rayIntersectsTriangle(from: Vector3, dir: Vector3, a: Vector3, b: Vector3, c: Vector3): Any? {
-    return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(rayIntersectsTriangleBind, geometry3DSingleton, from, dir, a, b, c)
-}
-
-/**
- * Tests if the segment (`from`, `to`) intersects the triangle `a`, `b`, `c`. If yes, returns the
- * point of intersection as `Vector3`. If no intersection takes place, returns `null`.
- *
- * Generated from Godot docs: Geometry3D.segment_intersects_triangle
- */
-fun Geometry3D.segmentIntersectsTriangle(from: Vector3, to: Vector3, a: Vector3, b: Vector3, c: Vector3): Any? {
-    return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(segmentIntersectsTriangleBind, geometry3DSingleton, from, to, a, b, c)
 }
 
 /**
@@ -183,16 +161,6 @@ private val buildCapsulePlanesBind by lazy {
 private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 1056373962L
 private val getClosestPointsBetweenSegmentsBind by lazy {
     ObjectCalls.getMethodBind("Geometry3D", "get_closest_points_between_segments", GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH)
-}
-
-private const val RAY_INTERSECTS_TRIANGLE_HASH = 1718655448L
-private val rayIntersectsTriangleBind by lazy {
-    ObjectCalls.getMethodBind("Geometry3D", "ray_intersects_triangle", RAY_INTERSECTS_TRIANGLE_HASH)
-}
-
-private const val SEGMENT_INTERSECTS_TRIANGLE_HASH = 1718655448L
-private val segmentIntersectsTriangleBind by lazy {
-    ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_triangle", SEGMENT_INTERSECTS_TRIANGLE_HASH)
 }
 
 private const val SEGMENT_INTERSECTS_SPHERE_HASH = 4080141172L

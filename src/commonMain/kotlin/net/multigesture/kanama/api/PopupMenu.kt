@@ -687,6 +687,16 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
     }
 
     /**
+     * Returns the metadata of the specified item, which might be of any type. You can set it with
+     * `set_item_metadata`, which provides a simple way of assigning context data to items.
+     *
+     * Generated from Godot docs: PopupMenu.get_item_metadata
+     */
+    fun getItemMetadata(index: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, index)
+    }
+
+    /**
      * Returns `true` if the item at the given `index` is disabled. When it is disabled it can't be
      * selected, or its action invoked. See `set_item_disabled` for more info on how to disable an
      * item.
@@ -1426,6 +1436,11 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
         private const val GET_ITEM_ACCELERATOR_HASH = 253789942L
         private val getItemAcceleratorBind by lazy {
             ObjectCalls.getMethodBind("PopupMenu", "get_item_accelerator", GET_ITEM_ACCELERATOR_HASH)
+        }
+
+        private const val GET_ITEM_METADATA_HASH = 4227898402L
+        private val getItemMetadataBind by lazy {
+            ObjectCalls.getMethodBind("PopupMenu", "get_item_metadata", GET_ITEM_METADATA_HASH)
         }
 
         private const val IS_ITEM_DISABLED_HASH = 1116898809L

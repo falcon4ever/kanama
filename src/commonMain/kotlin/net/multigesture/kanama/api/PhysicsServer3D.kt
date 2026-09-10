@@ -301,6 +301,18 @@ object PhysicsServer3D {
     }
 
     /**
+     * Returns the shape data that configures the shape, such as the half-extents of a box or the
+     * triangles of a concave (trimesh) shape. See `shape_set_data` for the precise format of this data
+     * in each case.
+     *
+     * Generated from Godot docs: PhysicsServer3D.shape_get_data
+     */
+    @JvmStatic
+    fun shapeGetData(shape: RID): Any? {
+        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(shapeGetDataBind, singleton, shape)
+    }
+
+    /**
      * Returns the collision margin for the shape. Note: This is not used in Godot Physics, so will
      * always return `0`.
      *
@@ -544,6 +556,17 @@ object PhysicsServer3D {
     @JvmStatic
     fun areaSetTransform(area: RID, transform: Transform3D) {
         ObjectCalls.ptrcallWithRIDAndTransform3DArg(areaSetTransformBind, singleton, area, transform)
+    }
+
+    /**
+     * Returns an area parameter value. A list of available parameters is on the `AreaParameter`
+     * constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_get_param
+     */
+    @JvmStatic
+    fun areaGetParam(area: RID, param: Long): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param)
     }
 
     /**
@@ -871,6 +894,17 @@ object PhysicsServer3D {
     }
 
     /**
+     * Returns the value of a body parameter. A list of available parameters is on the `BodyParameter`
+     * constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_param
+     */
+    @JvmStatic
+    fun bodyGetParam(body: RID, param: Long): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param)
+    }
+
+    /**
      * Restores the default inertia and center of mass based on shapes to cancel any custom values
      * previously set using `body_set_param`.
      *
@@ -879,6 +913,16 @@ object PhysicsServer3D {
     @JvmStatic
     fun bodyResetMassProperties(body: RID) {
         ObjectCalls.ptrcallWithRIDArg(bodyResetMassPropertiesBind, singleton, body)
+    }
+
+    /**
+     * Returns a body state.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_get_state
+     */
+    @JvmStatic
+    fun bodyGetState(body: RID, state: Long): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state)
     }
 
     /**
@@ -1288,6 +1332,18 @@ object PhysicsServer3D {
     @JvmStatic
     fun softBodyRemoveCollisionException(body: RID, bodyB: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(softBodyRemoveCollisionExceptionBind, singleton, body, bodyB)
+    }
+
+    /**
+     * Returns the given soft body state. Note: Godot's default physics implementation does not support
+     * `BODY_STATE_LINEAR_VELOCITY`, `BODY_STATE_ANGULAR_VELOCITY`, `BODY_STATE_SLEEPING`, or
+     * `BODY_STATE_CAN_SLEEP`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_get_state
+     */
+    @JvmStatic
+    fun softBodyGetState(body: RID, state: Long): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(softBodyGetStateBind, singleton, body, state)
     }
 
     /**
@@ -1925,6 +1981,11 @@ object PhysicsServer3D {
         ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_type", SHAPE_GET_TYPE_HASH)
     }
 
+    private const val SHAPE_GET_DATA_HASH = 4171304767L
+    private val shapeGetDataBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_data", SHAPE_GET_DATA_HASH)
+    }
+
     private const val SHAPE_GET_MARGIN_HASH = 866169185L
     private val shapeGetMarginBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_margin", SHAPE_GET_MARGIN_HASH)
@@ -2043,6 +2104,11 @@ object PhysicsServer3D {
     private const val AREA_SET_TRANSFORM_HASH = 3935195649L
     private val areaSetTransformBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_transform", AREA_SET_TRANSFORM_HASH)
+    }
+
+    private const val AREA_GET_PARAM_HASH = 890056067L
+    private val areaGetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_param", AREA_GET_PARAM_HASH)
     }
 
     private const val AREA_GET_TRANSFORM_HASH = 1128465797L
@@ -2200,9 +2266,19 @@ object PhysicsServer3D {
         ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_continuous_collision_detection_enabled", BODY_IS_CONTINUOUS_COLLISION_DETECTION_ENABLED_HASH)
     }
 
+    private const val BODY_GET_PARAM_HASH = 3385027841L
+    private val bodyGetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_param", BODY_GET_PARAM_HASH)
+    }
+
     private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
     private val bodyResetMassPropertiesBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
+    }
+
+    private const val BODY_GET_STATE_HASH = 1850449534L
+    private val bodyGetStateBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_state", BODY_GET_STATE_HASH)
     }
 
     private const val BODY_APPLY_CENTRAL_IMPULSE_HASH = 3227306858L
@@ -2393,6 +2469,11 @@ object PhysicsServer3D {
     private const val SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
     private val softBodyRemoveCollisionExceptionBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_remove_collision_exception", SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH)
+    }
+
+    private const val SOFT_BODY_GET_STATE_HASH = 1850449534L
+    private val softBodyGetStateBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_state", SOFT_BODY_GET_STATE_HASH)
     }
 
     private const val SOFT_BODY_SET_TRANSFORM_HASH = 3935195649L

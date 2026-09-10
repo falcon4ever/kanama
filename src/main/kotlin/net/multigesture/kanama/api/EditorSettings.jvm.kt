@@ -9,8 +9,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP EditorSettings waits on: ptrcallWithDictionaryArg, ptrcallWithPackedStringListArg,
 //   ptrcallWithStringAndObjectListArgs, ptrcallWithStringAndVariantArg,
-//   ptrcallWithStringArgRetVariantScalar, ptrcallWithStringNameVariantBoolArgs,
-//   ptrcallWithTwoStringAndVariantArg, ptrcallWithTwoStringAndVariantArgRetVariantScalar
+//   ptrcallWithStringNameVariantBoolArgs, ptrcallWithTwoStringAndVariantArg,
+//   ptrcallWithTwoStringAndVariantArgRetVariantScalar
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -22,17 +22,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 fun EditorSettings.setSetting(name: String, value: Any?) {
     checkOpen()
     ObjectCalls.ptrcallWithStringAndVariantArg(setSettingBind, handle, name, value)
-}
-
-/**
- * Returns the value of the setting specified by `name`. This is equivalent to using `Object.get`
- * on the EditorSettings instance.
- *
- * Generated from Godot docs: EditorSettings.get_setting
- */
-fun EditorSettings.getSetting(name: String): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getSettingBind, handle, name)
 }
 
 /**
@@ -115,11 +104,6 @@ fun EditorSettings.setBuiltinActionOverride(name: String, actionsList: List<Inpu
 private const val SET_SETTING_HASH = 402577236L
 private val setSettingBind by lazy {
     ObjectCalls.getMethodBind("EditorSettings", "set_setting", SET_SETTING_HASH)
-}
-
-private const val GET_SETTING_HASH = 1868160156L
-private val getSettingBind by lazy {
-    ObjectCalls.getMethodBind("EditorSettings", "get_setting", GET_SETTING_HASH)
 }
 
 private const val SET_INITIAL_VALUE_HASH = 1529169264L

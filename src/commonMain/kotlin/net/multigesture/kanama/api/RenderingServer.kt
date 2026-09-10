@@ -856,6 +856,17 @@ object RenderingServer {
     }
 
     /**
+     * Returns the default value for the specified shader uniform. This is usually the value written in
+     * the shader source code.
+     *
+     * Generated from Godot docs: RenderingServer.shader_get_parameter_default
+     */
+    @JvmStatic
+    fun shaderGetParameterDefault(shader: RID, name: String): Any? {
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(shaderGetParameterDefaultBind, singleton, shader, name)
+    }
+
+    /**
      * Sets a shader's default texture. Overwrites the texture given by name. Note: If the sampler
      * array is used use `index` to access the specified texture.
      *
@@ -898,6 +909,16 @@ object RenderingServer {
     @JvmStatic
     fun materialSetShader(shaderMaterial: RID, shader: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(materialSetShaderBind, singleton, shaderMaterial, shader)
+    }
+
+    /**
+     * Returns the value of a certain material's parameter.
+     *
+     * Generated from Godot docs: RenderingServer.material_get_param
+     */
+    @JvmStatic
+    fun materialGetParam(material: RID, parameter: String): Any? {
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(materialGetParamBind, singleton, material, parameter)
     }
 
     /**
@@ -4616,6 +4637,29 @@ object RenderingServer {
     }
 
     /**
+     * Returns the value of the per-instance shader uniform from the specified 3D geometry instance.
+     * Equivalent to `GeometryInstance3D.get_instance_shader_parameter`. Note: Per-instance shader
+     * parameter names are case-sensitive.
+     *
+     * Generated from Godot docs: RenderingServer.instance_geometry_get_shader_parameter
+     */
+    @JvmStatic
+    fun instanceGeometryGetShaderParameter(instance: RID, parameter: String): Any? {
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(instanceGeometryGetShaderParameterBind, singleton, instance, parameter)
+    }
+
+    /**
+     * Returns the default value of the per-instance shader uniform from the specified 3D geometry
+     * instance. Equivalent to `GeometryInstance3D.get_instance_shader_parameter`.
+     *
+     * Generated from Godot docs: RenderingServer.instance_geometry_get_shader_parameter_default_value
+     */
+    @JvmStatic
+    fun instanceGeometryGetShaderParameterDefaultValue(instance: RID, parameter: String): Any? {
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(instanceGeometryGetShaderParameterDefaultValueBind, singleton, instance, parameter)
+    }
+
+    /**
      * Creates a canvas and returns the assigned `RID`. It can be accessed with the RID that is
      * returned. This RID will be used in all `canvas_*` RenderingServer functions. Once finished with
      * your RID, you will want to free the RID using the RenderingServer's `free_rid` method. Canvas
@@ -5184,6 +5228,28 @@ object RenderingServer {
     @JvmStatic
     fun canvasItemSetUseParentMaterial(item: RID, enabled: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetUseParentMaterialBind, singleton, item, enabled)
+    }
+
+    /**
+     * Returns the value of the per-instance shader uniform from the specified canvas item instance.
+     * Equivalent to `CanvasItem.get_instance_shader_parameter`.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_get_instance_shader_parameter
+     */
+    @JvmStatic
+    fun canvasItemGetInstanceShaderParameter(instance: RID, parameter: String): Any? {
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(canvasItemGetInstanceShaderParameterBind, singleton, instance, parameter)
+    }
+
+    /**
+     * Returns the default value of the per-instance shader uniform from the specified canvas item
+     * instance. Equivalent to `CanvasItem.get_instance_shader_parameter`.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_get_instance_shader_parameter_default_value
+     */
+    @JvmStatic
+    fun canvasItemGetInstanceShaderParameterDefaultValue(instance: RID, parameter: String): Any? {
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(canvasItemGetInstanceShaderParameterDefaultValueBind, singleton, instance, parameter)
     }
 
     /**
@@ -6164,6 +6230,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "shader_get_code", SHADER_GET_CODE_HASH)
     }
 
+    private const val SHADER_GET_PARAMETER_DEFAULT_HASH = 2621281810L
+    private val shaderGetParameterDefaultBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "shader_get_parameter_default", SHADER_GET_PARAMETER_DEFAULT_HASH)
+    }
+
     private const val SHADER_SET_DEFAULT_TEXTURE_PARAMETER_HASH = 4094001817L
     private val shaderSetDefaultTextureParameterBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "shader_set_default_texture_parameter", SHADER_SET_DEFAULT_TEXTURE_PARAMETER_HASH)
@@ -6182,6 +6253,11 @@ object RenderingServer {
     private const val MATERIAL_SET_SHADER_HASH = 395945892L
     private val materialSetShaderBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "material_set_shader", MATERIAL_SET_SHADER_HASH)
+    }
+
+    private const val MATERIAL_GET_PARAM_HASH = 2621281810L
+    private val materialGetParamBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "material_get_param", MATERIAL_GET_PARAM_HASH)
     }
 
     private const val MATERIAL_SET_RENDER_PRIORITY_HASH = 3411492887L
@@ -7804,6 +7880,16 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_lod_bias", INSTANCE_GEOMETRY_SET_LOD_BIAS_HASH)
     }
 
+    private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH = 2621281810L
+    private val instanceGeometryGetShaderParameterBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH)
+    }
+
+    private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
+    private val instanceGeometryGetShaderParameterDefaultValueBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_default_value", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
+    }
+
     private const val CANVAS_CREATE_HASH = 529393457L
     private val canvasCreateBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_create", CANVAS_CREATE_HASH)
@@ -8057,6 +8143,16 @@ object RenderingServer {
     private const val CANVAS_ITEM_SET_USE_PARENT_MATERIAL_HASH = 1265174801L
     private val canvasItemSetUseParentMaterialBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_use_parent_material", CANVAS_ITEM_SET_USE_PARENT_MATERIAL_HASH)
+    }
+
+    private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH = 2621281810L
+    private val canvasItemGetInstanceShaderParameterBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH)
+    }
+
+    private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
+    private val canvasItemGetInstanceShaderParameterDefaultValueBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_default_value", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
     }
 
     private const val CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH = 3568945579L

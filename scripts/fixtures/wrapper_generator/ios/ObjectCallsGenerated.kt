@@ -52,8 +52,9 @@ import net.multigesture.kanama.types.Vector4
  * int->int64/8B, Vector components->GodotReal, Object->8B handle, StringName built
  * C-side). String / StringName / NodePath returns hand the same arg cells to
  * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
- * read-back, no truncation). Helpers already hand-written in ObjectCalls.kt are the
- * override set and are NOT regenerated here.
+ * read-back, no truncation); Variant-scalar returns to `ObjectCalls.ptrcallRetVariantScalar`
+ * (kanama_ios_godot_ptrcall_ret_variant_scalar). Helpers already hand-written in
+ * ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 
 private const val PT_VOID = 0

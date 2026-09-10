@@ -280,6 +280,18 @@ object NativeMenu {
     }
 
     /**
+     * Returns the metadata of the specified item, which might be of any type. You can set it with
+     * `set_item_tag`, which provides a simple way of assigning context data to items. Note: This
+     * method is implemented on macOS and Windows.
+     *
+     * Generated from Godot docs: NativeMenu.get_item_tag
+     */
+    @JvmStatic
+    fun getItemTag(rid: RID, idx: Int): Any? {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetVariantScalar(getItemTagBind, singleton, rid, idx)
+    }
+
+    /**
      * Returns the text of the item at index `idx`. Note: This method is implemented on macOS and
      * Windows.
      *
@@ -752,6 +764,11 @@ object NativeMenu {
     private const val IS_ITEM_RADIO_CHECKABLE_HASH = 3120086654L
     private val isItemRadioCheckableBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "is_item_radio_checkable", IS_ITEM_RADIO_CHECKABLE_HASH)
+    }
+
+    private const val GET_ITEM_TAG_HASH = 4069510997L
+    private val getItemTagBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_item_tag", GET_ITEM_TAG_HASH)
     }
 
     private const val GET_ITEM_TEXT_HASH = 1464764419L

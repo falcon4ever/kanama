@@ -8,8 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TreeItem waits on: ptrcallWithIntAndArrayArg, ptrcallWithIntAndVariantArg,
-//   ptrcallWithIntArgRetArray, ptrcallWithIntArgRetCallable, ptrcallWithIntArgRetDictionary,
-//   ptrcallWithIntArgRetVariantScalar
+//   ptrcallWithIntArgRetArray, ptrcallWithIntArgRetCallable, ptrcallWithIntArgRetDictionary
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -51,15 +50,6 @@ fun TreeItem.setMetadata(column: Int, meta: Any?) {
 }
 
 /**
- * Returns the metadata value that was set for the given column using `set_metadata`.
- *
- * Generated from Godot docs: TreeItem.get_metadata
- */
-fun TreeItem.getMetadata(column: Int): Any? {
-    return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getMetadataBind, handle, column)
-}
-
-/**
  * Returns the custom callback of column `column`.
  *
  * Generated from Godot docs: TreeItem.get_custom_draw_callback
@@ -86,11 +76,6 @@ private val getRangeConfigBind by lazy {
 private const val SET_METADATA_HASH = 2152698145L
 private val setMetadataBind by lazy {
     ObjectCalls.getMethodBind("TreeItem", "set_metadata", SET_METADATA_HASH)
-}
-
-private const val GET_METADATA_HASH = 4227898402L
-private val getMetadataBind by lazy {
-    ObjectCalls.getMethodBind("TreeItem", "get_metadata", GET_METADATA_HASH)
 }
 
 private const val GET_CUSTOM_DRAW_CALLBACK_HASH = 1317077508L
