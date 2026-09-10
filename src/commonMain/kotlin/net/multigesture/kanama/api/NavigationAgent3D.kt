@@ -928,6 +928,20 @@ class NavigationAgent3D(handle: MemorySegment) : Node(handle) {
     }
 
     /**
+     * Returns this agent's current path from start to finish in global coordinates. The path only
+     * updates when the target position is changed or the agent requires a repath. The path array is
+     * not intended to be used in direct path movement as the agent has its own internal path logic
+     * that would get corrupted by changing the path array manually. Use the intended
+     * `get_next_path_position` once every physics frame to receive the next path point for the agents
+     * movement as this function also updates the internal path logic.
+     *
+     * Generated from Godot docs: NavigationAgent3D.get_current_navigation_path
+     */
+    fun getCurrentNavigationPath(): List<Vector3> {
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getCurrentNavigationPathBind, handle)
+    }
+
+    /**
      * Returns which index the agent is currently on in the navigation path's `PackedVector3Array`.
      *
      * Generated from Godot docs: NavigationAgent3D.get_current_navigation_path_index
@@ -1482,6 +1496,11 @@ class NavigationAgent3D(handle: MemorySegment) : Node(handle) {
         private const val GET_CURRENT_NAVIGATION_RESULT_HASH = 728825684L
         private val getCurrentNavigationResultBind by lazy {
             ObjectCalls.getMethodBind("NavigationAgent3D", "get_current_navigation_result", GET_CURRENT_NAVIGATION_RESULT_HASH)
+        }
+
+        private const val GET_CURRENT_NAVIGATION_PATH_HASH = 497664490L
+        private val getCurrentNavigationPathBind by lazy {
+            ObjectCalls.getMethodBind("NavigationAgent3D", "get_current_navigation_path", GET_CURRENT_NAVIGATION_PATH_HASH)
         }
 
         private const val GET_CURRENT_NAVIGATION_PATH_INDEX_HASH = 3905245786L

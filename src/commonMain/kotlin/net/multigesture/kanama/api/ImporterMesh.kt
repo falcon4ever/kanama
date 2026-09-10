@@ -114,6 +114,16 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the index buffer of a lod for a surface.
+     *
+     * Generated from Godot docs: ImporterMesh.get_surface_lod_indices
+     */
+    fun getSurfaceLodIndices(surfaceIdx: Int, lodIdx: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(getSurfaceLodIndicesBind, handle, surfaceIdx, lodIdx)
+    }
+
+    /**
      * Returns a `Material` in a given surface. Surface is rendered using this material.
      *
      * Generated from Godot docs: ImporterMesh.get_surface_material
@@ -261,6 +271,11 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
         private const val GET_SURFACE_LOD_SIZE_HASH = 3085491603L
         private val getSurfaceLodSizeBind by lazy {
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_lod_size", GET_SURFACE_LOD_SIZE_HASH)
+        }
+
+        private const val GET_SURFACE_LOD_INDICES_HASH = 1265128013L
+        private val getSurfaceLodIndicesBind by lazy {
+            ObjectCalls.getMethodBind("ImporterMesh", "get_surface_lod_indices", GET_SURFACE_LOD_INDICES_HASH)
         }
 
         private const val GET_SURFACE_MATERIAL_HASH = 2897466400L

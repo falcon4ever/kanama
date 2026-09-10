@@ -10,6 +10,10 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: AudioStreamMP3
  */
 class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
+    val data: ByteArray
+        @JvmName("dataProperty")
+        get() = getData()
+
     var bpm: Double
         @JvmName("bpmProperty")
         get() = getBpm()
@@ -39,6 +43,11 @@ class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
         get() = getLoopOffset()
         @JvmName("setLoopOffsetProperty")
         set(value) = setLoopOffset(value)
+
+    fun getData(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
+    }
 
     fun setLoop(enable: Boolean) {
         checkOpen()
@@ -105,6 +114,11 @@ class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
         private const val LOAD_FROM_FILE_HASH = 4238362998L
         private val loadFromFileBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamMP3", "load_from_file", LOAD_FROM_FILE_HASH)
+        }
+
+        private const val GET_DATA_HASH = 2362200018L
+        private val getDataBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamMP3", "get_data", GET_DATA_HASH)
         }
 
         private const val SET_LOOP_HASH = 2586408642L

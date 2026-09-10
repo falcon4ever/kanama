@@ -7,7 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP HMACContext waits on: ptrcallNoArgsRetByteArray, ptrcallWithByteArrayArgRetLong,
+// KANAMA-IOS-GAP HMACContext waits on: ptrcallWithByteArrayArgRetLong,
 //   ptrcallWithLongAndByteArrayArgRetLong
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -33,16 +33,6 @@ fun HMACContext.update(data: ByteArray): Long {
     return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, handle, data)
 }
 
-/**
- * Returns the resulting HMAC. If the HMAC failed, an empty `PackedByteArray` is returned.
- *
- * Generated from Godot docs: HMACContext.finish
- */
-fun HMACContext.finish(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
-}
-
 private const val START_HASH = 3537364598L
 private val startBind by lazy {
     ObjectCalls.getMethodBind("HMACContext", "start", START_HASH)
@@ -51,9 +41,4 @@ private val startBind by lazy {
 private const val UPDATE_HASH = 680677267L
 private val updateBind by lazy {
     ObjectCalls.getMethodBind("HMACContext", "update", UPDATE_HASH)
-}
-
-private const val FINISH_HASH = 2115431945L
-private val finishBind by lazy {
-    ObjectCalls.getMethodBind("HMACContext", "finish", FINISH_HASH)
 }

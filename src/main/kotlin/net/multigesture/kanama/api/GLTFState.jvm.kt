@@ -8,12 +8,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP GLTFState waits on: ptrcallNoArgsRetByteArray, ptrcallNoArgsRetByteArrayList,
-//   ptrcallNoArgsRetDictionary, ptrcallNoArgsRetTypedStringList,
-//   ptrcallWithByteArrayAndBoolArgRetInt, ptrcallWithByteArrayArg, ptrcallWithByteArrayListArg,
-//   ptrcallWithDictionaryArg, ptrcallWithObjectListArg, ptrcallWithPackedInt32ListArg,
-//   ptrcallWithStringNameAndVariantArg, ptrcallWithTypedMaterialListArg,
-//   ptrcallWithTypedStringListArg
+// KANAMA-IOS-GAP GLTFState waits on: ptrcallNoArgsRetByteArrayList, ptrcallNoArgsRetDictionary,
+//   ptrcallNoArgsRetTypedStringList, ptrcallWithByteArrayAndBoolArgRetInt, ptrcallWithByteArrayArg,
+//   ptrcallWithByteArrayListArg, ptrcallWithDictionaryArg, ptrcallWithObjectListArg,
+//   ptrcallWithPackedInt32ListArg, ptrcallWithStringNameAndVariantArg,
+//   ptrcallWithTypedMaterialListArg, ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 fun GLTFState.appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
@@ -29,11 +28,6 @@ fun GLTFState.getJson(): Map<String, Any?> {
 fun GLTFState.setJson(json: Map<String, Any?>) {
     checkOpen()
     ObjectCalls.ptrcallWithDictionaryArg(setJsonBind, handle, json)
-}
-
-fun GLTFState.getGlbData(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(getGlbDataBind, handle)
 }
 
 fun GLTFState.setGlbData(glbData: ByteArray) {
@@ -152,12 +146,6 @@ var GLTFState.json: Map<String, Any?>
     @JvmName("setJsonProperty")
     set(value) = setJson(value)
 
-var GLTFState.glbData: ByteArray
-    @JvmName("glbDataProperty")
-    get() = getGlbData()
-    @JvmName("setGlbDataProperty")
-    set(value) = setGlbData(value)
-
 var GLTFState.buffers: List<ByteArray>
     @JvmName("buffersProperty")
     get() = getBuffers()
@@ -189,11 +177,6 @@ private val getJsonBind by lazy {
 private const val SET_JSON_HASH = 4155329257L
 private val setJsonBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_json", SET_JSON_HASH)
-}
-
-private const val GET_GLB_DATA_HASH = 2362200018L
-private val getGlbDataBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "get_glb_data", GET_GLB_DATA_HASH)
 }
 
 private const val SET_GLB_DATA_HASH = 2971499966L

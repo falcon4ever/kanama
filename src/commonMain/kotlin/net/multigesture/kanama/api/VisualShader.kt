@@ -42,6 +42,11 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
         return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(getNodePositionBind, handle, type, id)
     }
 
+    fun getNodeList(type: Long): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetPackedInt32List(getNodeListBind, handle, type)
+    }
+
     fun getValidNodeId(type: Long): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getValidNodeIdBind, handle, type)
@@ -175,6 +180,11 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
         private const val GET_NODE_POSITION_HASH = 2175036082L
         private val getNodePositionBind by lazy {
             ObjectCalls.getMethodBind("VisualShader", "get_node_position", GET_NODE_POSITION_HASH)
+        }
+
+        private const val GET_NODE_LIST_HASH = 2370592410L
+        private val getNodeListBind by lazy {
+            ObjectCalls.getMethodBind("VisualShader", "get_node_list", GET_NODE_LIST_HASH)
         }
 
         private const val GET_VALID_NODE_ID_HASH = 629467342L

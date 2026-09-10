@@ -17,6 +17,18 @@ object Geometry3D {
     }
 
     /**
+     * Given the two 3D segments (`p1`, `p2`) and (`q1`, `q2`), finds those two points on the two
+     * segments that are closest to each other. Returns a `PackedVector3Array` that contains this point
+     * on (`p1`, `p2`) as well the accompanying point on (`q1`, `q2`).
+     *
+     * Generated from Godot docs: Geometry3D.get_closest_points_between_segments
+     */
+    @JvmStatic
+    fun getClosestPointsBetweenSegments(p1: Vector3, p2: Vector3, q1: Vector3, q2: Vector3): List<Vector3> {
+        return ObjectCalls.ptrcallWithFourVector3ArgsRetPackedVector3List(getClosestPointsBetweenSegmentsBind, singleton, p1, p2, q1, q2)
+    }
+
+    /**
      * Returns the 3D point on the 3D segment (`s1`, `s2`) that is closest to `point`. The returned
      * point will always be inside the specified segment.
      *
@@ -76,12 +88,43 @@ object Geometry3D {
         return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(segmentIntersectsTriangleBind, singleton, from, to, a, b, c)
     }
 
+    /**
+     * Checks if the segment (`from`, `to`) intersects the sphere that is located at `sphere_position`
+     * and has radius `sphere_radius`. If no, returns an empty `PackedVector3Array`. If yes, returns a
+     * `PackedVector3Array` containing the point of intersection and the sphere's normal at the point
+     * of intersection.
+     *
+     * Generated from Godot docs: Geometry3D.segment_intersects_sphere
+     */
+    @JvmStatic
+    fun segmentIntersectsSphere(from: Vector3, to: Vector3, spherePosition: Vector3, sphereRadius: Double): List<Vector3> {
+        return ObjectCalls.ptrcallWithThreeVector3DoubleArgsRetPackedVector3List(segmentIntersectsSphereBind, singleton, from, to, spherePosition, sphereRadius)
+    }
+
+    /**
+     * Checks if the segment (`from`, `to`) intersects the cylinder with height `height` that is
+     * centered at the origin and has radius `radius`. If no, returns an empty `PackedVector3Array`. If
+     * an intersection takes place, the returned array contains the point of intersection and the
+     * cylinder's normal at the point of intersection.
+     *
+     * Generated from Godot docs: Geometry3D.segment_intersects_cylinder
+     */
+    @JvmStatic
+    fun segmentIntersectsCylinder(from: Vector3, to: Vector3, height: Double, radius: Double): List<Vector3> {
+        return ObjectCalls.ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List(segmentIntersectsCylinderBind, singleton, from, to, height, radius)
+    }
+
     @JvmStatic
     fun fromHandle(handle: MemorySegment): Geometry3D? =
         wrap(handle)
 
     internal fun wrap(handle: MemorySegment): Geometry3D? =
         if (handle.address() == 0L) null else this
+
+    private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 1056373962L
+    private val getClosestPointsBetweenSegmentsBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "get_closest_points_between_segments", GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH)
+    }
 
     private const val GET_CLOSEST_POINT_TO_SEGMENT_HASH = 2168193209L
     private val getClosestPointToSegmentBind by lazy {
@@ -106,5 +149,15 @@ object Geometry3D {
     private const val SEGMENT_INTERSECTS_TRIANGLE_HASH = 1718655448L
     private val segmentIntersectsTriangleBind by lazy {
         ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_triangle", SEGMENT_INTERSECTS_TRIANGLE_HASH)
+    }
+
+    private const val SEGMENT_INTERSECTS_SPHERE_HASH = 4080141172L
+    private val segmentIntersectsSphereBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_sphere", SEGMENT_INTERSECTS_SPHERE_HASH)
+    }
+
+    private const val SEGMENT_INTERSECTS_CYLINDER_HASH = 2361316491L
+    private val segmentIntersectsCylinderBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_cylinder", SEGMENT_INTERSECTS_CYLINDER_HASH)
     }
 }

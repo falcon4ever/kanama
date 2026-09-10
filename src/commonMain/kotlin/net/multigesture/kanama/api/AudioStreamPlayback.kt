@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Meta class for playing back audio.
@@ -31,6 +32,19 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
     fun getSamplePlayback(): AudioSamplePlayback? {
         checkOpen()
         return AudioSamplePlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, handle))
+    }
+
+    /**
+     * Mixes up to `frames` of audio from the stream from the current position, at a rate of
+     * `rate_scale`, advancing the stream. Returns a `PackedVector2Array` where each element holds the
+     * left and right channel volume levels of each frame. Note: Can return fewer frames than
+     * requested, make sure to use the size of the return value.
+     *
+     * Generated from Godot docs: AudioStreamPlayback.mix_audio
+     */
+    fun mixAudio(rateScale: Double, frames: Int): List<Vector2> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedVector2List(mixAudioBind, handle, rateScale, frames)
     }
 
     /**
@@ -109,6 +123,11 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_SAMPLE_PLAYBACK_HASH = 3482738536L
         private val getSamplePlaybackBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamPlayback", "get_sample_playback", GET_SAMPLE_PLAYBACK_HASH)
+        }
+
+        private const val MIX_AUDIO_HASH = 3341291446L
+        private val mixAudioBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamPlayback", "mix_audio", MIX_AUDIO_HASH)
         }
 
         private const val START_HASH = 1958160172L

@@ -22,6 +22,16 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithLongArgRetLong(startBind, handle, type)
     }
 
+    /**
+     * Closes the current context, and return the computed hash.
+     *
+     * Generated from Godot docs: HashingContext.finish
+     */
+    fun finish(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
+    }
+
     companion object {
         const val HASH_MD5: Long = 0L
         const val HASH_SHA1: Long = 1L
@@ -37,6 +47,11 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
         private const val START_HASH = 3940338335L
         private val startBind by lazy {
             ObjectCalls.getMethodBind("HashingContext", "start", START_HASH)
+        }
+
+        private const val FINISH_HASH = 2115431945L
+        private val finishBind by lazy {
+            ObjectCalls.getMethodBind("HashingContext", "finish", FINISH_HASH)
         }
     }
 }

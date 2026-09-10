@@ -185,6 +185,40 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
 );
 
 /*
+ * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a Packed*Array
+ * of one of the eight numeric / vector kinds, selected by packed_kind (the Variant type:
+ * KANAMA_IOS_VARIANT_TYPE_PACKED_{BYTE,INT32,INT64,FLOAT32,FLOAT64,VECTOR2,VECTOR3,COLOR}_ARRAY).
+ * Task 100, parcel 3. The method runs ONCE; up to buf_cap ELEMENTS are copied into out_buf in
+ * one contiguous memcpy (element layout: byte 1, int32 4, int64 8, float32 4, float64 8,
+ * Vector2 2x float32, Vector3 3x float32, Color 4x float32) and the array is destroyed. When
+ * the array is longer than buf_cap it is parked in a single pending slot instead and the
+ * caller drains it with kanama_ios_godot_take_pending_packed. Returns the FULL element count,
+ * or -1 on a null method/instance, an unknown kind or an unavailable API.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_packed(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t packed_kind,
+    void *out_buf,
+    int64_t buf_cap
+);
+
+/*
+ * Drain the array parked by kanama_ios_godot_ptrcall_ret_packed (same packed_kind) into
+ * out_buf (up to buf_cap elements), destroy it and return its full element count. Returns -1
+ * when nothing is pending or the kind does not match. Single slot: drain before the next
+ * packed-returning call.
+ */
+int64_t kanama_ios_godot_take_pending_packed(
+    int32_t packed_kind,
+    void *out_buf,
+    int64_t buf_cap
+);
+
+/*
  * No-arg ptrcall returning a Godot PackedInt32Array, read back into int32 elements.
  *
  * ptrcall writes the returned array; its element count comes from the "size" builtin

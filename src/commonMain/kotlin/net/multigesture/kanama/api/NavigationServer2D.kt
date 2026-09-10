@@ -168,6 +168,17 @@ object NavigationServer2D {
     }
 
     /**
+     * Returns the navigation path to reach the destination from the origin. `navigation_layers` is a
+     * bitmask of all region navigation layers that are allowed to be in the path.
+     *
+     * Generated from Godot docs: NavigationServer2D.map_get_path
+     */
+    @JvmStatic
+    fun mapGetPath(map: RID, origin: Vector2, destination: Vector2, optimize: Boolean, navigationLayers: Long = 1L): List<Vector2> {
+        return ObjectCalls.ptrcallWithRIDTwoVector2BoolUInt32ArgsRetPackedVector2List(mapGetPathBind, singleton, map, origin, destination, optimize, navigationLayers)
+    }
+
+    /**
      * Returns the navigation mesh surface point closest to the provided `to_point` on the navigation
      * `map`.
      *
@@ -1274,6 +1285,16 @@ object NavigationServer2D {
     }
 
     /**
+     * Returns the outline vertices for the specified `obstacle`.
+     *
+     * Generated from Godot docs: NavigationServer2D.obstacle_get_vertices
+     */
+    @JvmStatic
+    fun obstacleGetVertices(obstacle: RID): List<Vector2> {
+        return ObjectCalls.ptrcallWithRIDArgRetPackedVector2List(obstacleGetVerticesBind, singleton, obstacle)
+    }
+
+    /**
      * Set the obstacles's `avoidance_layers` bitmask.
      *
      * Generated from Godot docs: NavigationServer2D.obstacle_set_avoidance_layers
@@ -1496,6 +1517,11 @@ object NavigationServer2D {
     private const val MAP_GET_LINK_CONNECTION_RADIUS_HASH = 866169185L
     private val mapGetLinkConnectionRadiusBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer2D", "map_get_link_connection_radius", MAP_GET_LINK_CONNECTION_RADIUS_HASH)
+    }
+
+    private const val MAP_GET_PATH_HASH = 1279824844L
+    private val mapGetPathBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_path", MAP_GET_PATH_HASH)
     }
 
     private const val MAP_GET_CLOSEST_POINT_HASH = 1358334418L
@@ -2006,6 +2032,11 @@ object NavigationServer2D {
     private const val OBSTACLE_GET_POSITION_HASH = 2440833711L
     private val obstacleGetPositionBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_position", OBSTACLE_GET_POSITION_HASH)
+    }
+
+    private const val OBSTACLE_GET_VERTICES_HASH = 2222557395L
+    private val obstacleGetVerticesBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_vertices", OBSTACLE_GET_VERTICES_HASH)
     }
 
     private const val OBSTACLE_SET_AVOIDANCE_LAYERS_HASH = 3411492887L

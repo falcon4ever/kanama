@@ -9,13 +9,10 @@ import net.multigesture.kanama.types.Vector3
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Geometry3D waits on: ptrcallWithFourVector3ArgsRetPackedVector3List,
-//   ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List,
+// KANAMA-IOS-GAP Geometry3D waits on: ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List,
 //   ptrcallWithPackedVector3ListArgRetPackedInt32List, ptrcallWithPlaneListArgRetPackedVector3List,
-//   ptrcallWithThreeVector3DoubleArgsRetPackedVector3List,
 //   ptrcallWithTwoDoubleIntLongArgsRetPlaneList, ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList,
-//   ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List,
-//   ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List, ptrcallWithVector3ArgRetPlaneList
+//   ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List, ptrcallWithVector3ArgRetPlaneList
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -61,41 +58,6 @@ fun Geometry3D.buildCylinderPlanes(radius: Double, height: Double, sides: Int, a
  */
 fun Geometry3D.buildCapsulePlanes(radius: Double, height: Double, sides: Int, lats: Int, axis: Long = 2L): List<Plane> {
     return ObjectCalls.ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(buildCapsulePlanesBind, geometry3DSingleton, radius, height, sides, lats, axis)
-}
-
-/**
- * Given the two 3D segments (`p1`, `p2`) and (`q1`, `q2`), finds those two points on the two
- * segments that are closest to each other. Returns a `PackedVector3Array` that contains this point
- * on (`p1`, `p2`) as well the accompanying point on (`q1`, `q2`).
- *
- * Generated from Godot docs: Geometry3D.get_closest_points_between_segments
- */
-fun Geometry3D.getClosestPointsBetweenSegments(p1: Vector3, p2: Vector3, q1: Vector3, q2: Vector3): List<Vector3> {
-    return ObjectCalls.ptrcallWithFourVector3ArgsRetPackedVector3List(getClosestPointsBetweenSegmentsBind, geometry3DSingleton, p1, p2, q1, q2)
-}
-
-/**
- * Checks if the segment (`from`, `to`) intersects the sphere that is located at `sphere_position`
- * and has radius `sphere_radius`. If no, returns an empty `PackedVector3Array`. If yes, returns a
- * `PackedVector3Array` containing the point of intersection and the sphere's normal at the point
- * of intersection.
- *
- * Generated from Godot docs: Geometry3D.segment_intersects_sphere
- */
-fun Geometry3D.segmentIntersectsSphere(from: Vector3, to: Vector3, spherePosition: Vector3, sphereRadius: Double): List<Vector3> {
-    return ObjectCalls.ptrcallWithThreeVector3DoubleArgsRetPackedVector3List(segmentIntersectsSphereBind, geometry3DSingleton, from, to, spherePosition, sphereRadius)
-}
-
-/**
- * Checks if the segment (`from`, `to`) intersects the cylinder with height `height` that is
- * centered at the origin and has radius `radius`. If no, returns an empty `PackedVector3Array`. If
- * an intersection takes place, the returned array contains the point of intersection and the
- * cylinder's normal at the point of intersection.
- *
- * Generated from Godot docs: Geometry3D.segment_intersects_cylinder
- */
-fun Geometry3D.segmentIntersectsCylinder(from: Vector3, to: Vector3, height: Double, radius: Double): List<Vector3> {
-    return ObjectCalls.ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List(segmentIntersectsCylinderBind, geometry3DSingleton, from, to, height, radius)
 }
 
 /**
@@ -156,21 +118,6 @@ private val buildCylinderPlanesBind by lazy {
 private const val BUILD_CAPSULE_PLANES_HASH = 2113592876L
 private val buildCapsulePlanesBind by lazy {
     ObjectCalls.getMethodBind("Geometry3D", "build_capsule_planes", BUILD_CAPSULE_PLANES_HASH)
-}
-
-private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 1056373962L
-private val getClosestPointsBetweenSegmentsBind by lazy {
-    ObjectCalls.getMethodBind("Geometry3D", "get_closest_points_between_segments", GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH)
-}
-
-private const val SEGMENT_INTERSECTS_SPHERE_HASH = 4080141172L
-private val segmentIntersectsSphereBind by lazy {
-    ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_sphere", SEGMENT_INTERSECTS_SPHERE_HASH)
-}
-
-private const val SEGMENT_INTERSECTS_CYLINDER_HASH = 2361316491L
-private val segmentIntersectsCylinderBind by lazy {
-    ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_cylinder", SEGMENT_INTERSECTS_CYLINDER_HASH)
 }
 
 private const val SEGMENT_INTERSECTS_CONVEX_HASH = 537425332L

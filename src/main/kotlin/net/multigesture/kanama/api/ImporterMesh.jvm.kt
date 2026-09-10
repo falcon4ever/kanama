@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Transform3D
 // KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithIntArgRetArray,
 //   ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
 //   ptrcallWithObjectListTransform3DListBoolArgsRetObject, ptrcallWithTwoDoubleArrayArgs,
-//   ptrcallWithTwoIntArgsRetArray, ptrcallWithTwoIntArgsRetPackedInt32List
+//   ptrcallWithTwoIntArgsRetArray
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -88,16 +88,6 @@ fun ImporterMesh.getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int)
 }
 
 /**
- * Returns the index buffer of a lod for a surface.
- *
- * Generated from Godot docs: ImporterMesh.get_surface_lod_indices
- */
-fun ImporterMesh.getSurfaceLodIndices(surfaceIdx: Int, lodIdx: Int): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(getSurfaceLodIndicesBind, handle, surfaceIdx, lodIdx)
-}
-
-/**
  * Generates all lods for this ImporterMesh. `normal_merge_angle` is in degrees and used in the
  * same way as the importer settings in `lods`. `normal_split_angle` is not used and only remains
  * for compatibility with older versions of the API. The number of generated lods can be accessed
@@ -132,11 +122,6 @@ private val getSurfaceArraysBind by lazy {
 private const val GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH = 2345056839L
 private val getSurfaceBlendShapeArraysBind by lazy {
     ObjectCalls.getMethodBind("ImporterMesh", "get_surface_blend_shape_arrays", GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH)
-}
-
-private const val GET_SURFACE_LOD_INDICES_HASH = 1265128013L
-private val getSurfaceLodIndicesBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "get_surface_lod_indices", GET_SURFACE_LOD_INDICES_HASH)
 }
 
 private const val GENERATE_LODS_HASH = 2491878677L

@@ -46,6 +46,11 @@ class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
         @JvmName("setVertexAttributesProperty")
         set(value) = setVertexAttributes(value)
 
+    fun loadBufferViewData(state: GLTFState?): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(loadBufferViewDataBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
     fun getBuffer(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferBind, handle)
@@ -113,6 +118,11 @@ class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): GLTFBufferView? =
             if (handle.address() == 0L) null else GLTFBufferView(handle)
+
+        private const val LOAD_BUFFER_VIEW_DATA_HASH = 3945446907L
+        private val loadBufferViewDataBind by lazy {
+            ObjectCalls.getMethodBind("GLTFBufferView", "load_buffer_view_data", LOAD_BUFFER_VIEW_DATA_HASH)
+        }
 
         private const val GET_BUFFER_HASH = 3905245786L
         private val getBufferBind by lazy {

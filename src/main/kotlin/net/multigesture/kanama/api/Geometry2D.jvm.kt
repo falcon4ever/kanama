@@ -9,9 +9,8 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Geometry2D waits on: ptrcallWithFourVector2ArgsRetPackedVector2List,
-//   ptrcallWithPackedVector2ListArgRetBool, ptrcallWithPackedVector2ListArgRetDictionary,
-//   ptrcallWithPackedVector2ListArgRetPackedInt32List,
+// KANAMA-IOS-GAP Geometry2D waits on: ptrcallWithPackedVector2ListArgRetBool,
+//   ptrcallWithPackedVector2ListArgRetDictionary, ptrcallWithPackedVector2ListArgRetPackedInt32List,
 //   ptrcallWithPackedVector2ListArgRetPackedVector2List,
 //   ptrcallWithPackedVector2ListArgRetPackedVector2ListList,
 //   ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList,
@@ -19,17 +18,6 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList,
 //   ptrcallWithTwoVector2iArgsRetVector2iList, ptrcallWithVector2PackedVector2ListArgsRetBool
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Given the two 2D segments (`p1`, `q1`) and (`p2`, `q2`), finds those two points on the two
- * segments that are closest to each other. Returns a `PackedVector2Array` that contains this point
- * on (`p1`, `q1`) as well the accompanying point on (`p2`, `q2`).
- *
- * Generated from Godot docs: Geometry2D.get_closest_points_between_segments
- */
-fun Geometry2D.getClosestPointsBetweenSegments(p1: Vector2, q1: Vector2, p2: Vector2, q2: Vector2): List<Vector2> {
-    return ObjectCalls.ptrcallWithFourVector2ArgsRetPackedVector2List(getClosestPointsBetweenSegmentsBind, geometry2DSingleton, p1, q1, p2, q2)
-}
 
 /**
  * Returns `true` if `polygon`'s vertices are ordered in clockwise order, otherwise returns
@@ -228,11 +216,6 @@ fun Geometry2D.bresenhamLine(from: Vector2i, to: Vector2i): List<Vector2i> {
 
 private val geometry2DSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("Geometry2D")
-}
-
-private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 3344690961L
-private val getClosestPointsBetweenSegmentsBind by lazy {
-    ObjectCalls.getMethodBind("Geometry2D", "get_closest_points_between_segments", GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH)
 }
 
 private const val IS_POLYGON_CLOCKWISE_HASH = 1361156557L

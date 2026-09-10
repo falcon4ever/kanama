@@ -9,7 +9,7 @@ import net.multigesture.kanama.types.Vector2
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TileData waits on: ptrcallWithIntAndVariantArg, ptrcallWithStringAndVariantArg,
-//   ptrcallWithTwoIntAndPackedVector2ListArg, ptrcallWithTwoIntArgsRetPackedVector2List
+//   ptrcallWithTwoIntAndPackedVector2ListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -20,16 +20,6 @@ import net.multigesture.kanama.types.Vector2
  */
 fun TileData.setCollisionPolygonPoints(layerId: Int, polygonIndex: Int, polygon: List<Vector2>) {
     ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(setCollisionPolygonPointsBind, handle, layerId, polygonIndex, polygon)
-}
-
-/**
- * Returns the points of the polygon at index `polygon_index` for TileSet physics layer with index
- * `layer_id`.
- *
- * Generated from Godot docs: TileData.get_collision_polygon_points
- */
-fun TileData.getCollisionPolygonPoints(layerId: Int, polygonIndex: Int): List<Vector2> {
-    return ObjectCalls.ptrcallWithTwoIntArgsRetPackedVector2List(getCollisionPolygonPointsBind, handle, layerId, polygonIndex)
 }
 
 /**
@@ -53,11 +43,6 @@ fun TileData.setCustomDataByLayerId(layerId: Int, value: Any?) {
 private const val SET_COLLISION_POLYGON_POINTS_HASH = 3230546541L
 private val setCollisionPolygonPointsBind by lazy {
     ObjectCalls.getMethodBind("TileData", "set_collision_polygon_points", SET_COLLISION_POLYGON_POINTS_HASH)
-}
-
-private const val GET_COLLISION_POLYGON_POINTS_HASH = 103942801L
-private val getCollisionPolygonPointsBind by lazy {
-    ObjectCalls.getMethodBind("TileData", "get_collision_polygon_points", GET_COLLISION_POLYGON_POINTS_HASH)
 }
 
 private const val SET_CUSTOM_DATA_HASH = 402577236L

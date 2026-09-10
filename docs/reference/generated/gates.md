@@ -148,7 +148,7 @@ python3 scripts/record_gate_evidence.py --gate android-device-matrix --result PA
 | `android-device-matrix` | Android Supported | 2026-07-13 | `4.7.stable` | PASS | 2026-10-31 |
 | `android-r8-release` | Android Supported | 2026-07-13 | `4.7.stable` | PASS | 2026-10-31 |
 | `android-vulkan-mobile-matrix` | Android Supported | 2026-07-10 | `4.7.stable` | PASS | 2026-10-31 |
-| `ios-device-gate` | iOS Supported | 2026-07-10 | `4.7.stable` | PASS | 2026-10-31 |
+| `ios-device-gate` | iOS Supported | 2026-09-10 | `4.7.2.stable` | PASS | — |
 | `linux-arm64-full-gate` | Linux arm64 Supported | 2026-07-14 | `4.7.stable` | PASS | 2026-10-31 |
 | `linux-x86_64-full-gate` | Linux x86_64 Supported | 2026-07-14 | `4.7.stable` | PASS | 2026-10-31 |
 | `macos-local-ci-desktop-smoke` | Godot 4.7 stable, macOS arm64 Supported | 2026-09-08 | `4.7.2.stable` | PASS | — |

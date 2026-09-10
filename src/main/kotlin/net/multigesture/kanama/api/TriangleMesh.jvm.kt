@@ -8,8 +8,8 @@ import net.multigesture.kanama.types.Vector3
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TriangleMesh waits on: ptrcallNoArgsRetPackedVector3List,
-//   ptrcallWithPackedVector3ListArgRetBool, ptrcallWithTwoVector3ArgsRetDictionary
+// KANAMA-IOS-GAP TriangleMesh waits on: ptrcallWithPackedVector3ListArgRetBool,
+//   ptrcallWithTwoVector3ArgsRetDictionary
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -22,17 +22,6 @@ import net.multigesture.kanama.types.Vector3
 fun TriangleMesh.createFromFaces(faces: List<Vector3>): Boolean {
     checkOpen()
     return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(createFromFacesBind, handle, faces)
-}
-
-/**
- * Returns a copy of the geometry faces. Each 3 vertices of the array represent one triangle
- * (face).
- *
- * Generated from Godot docs: TriangleMesh.get_faces
- */
-fun TriangleMesh.getFaces(): List<Vector3> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
 }
 
 /**
@@ -67,11 +56,6 @@ fun TriangleMesh.intersectRay(begin: Vector3, dir: Vector3): Map<String, Any?> {
 private const val CREATE_FROM_FACES_HASH = 2637816732L
 private val createFromFacesBind by lazy {
     ObjectCalls.getMethodBind("TriangleMesh", "create_from_faces", CREATE_FROM_FACES_HASH)
-}
-
-private const val GET_FACES_HASH = 497664490L
-private val getFacesBind by lazy {
-    ObjectCalls.getMethodBind("TriangleMesh", "get_faces", GET_FACES_HASH)
 }
 
 private const val INTERSECT_SEGMENT_HASH = 3648293151L

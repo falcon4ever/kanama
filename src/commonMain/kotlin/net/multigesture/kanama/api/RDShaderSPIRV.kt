@@ -12,6 +12,46 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: RDShaderSPIRV
  */
 class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
+    val bytecodeVertex: ByteArray
+        @JvmName("bytecodeVertexProperty")
+        get() = getStageBytecode(0L)
+
+    val bytecodeFragment: ByteArray
+        @JvmName("bytecodeFragmentProperty")
+        get() = getStageBytecode(1L)
+
+    val bytecodeTesselationControl: ByteArray
+        @JvmName("bytecodeTesselationControlProperty")
+        get() = getStageBytecode(2L)
+
+    val bytecodeTesselationEvaluation: ByteArray
+        @JvmName("bytecodeTesselationEvaluationProperty")
+        get() = getStageBytecode(3L)
+
+    val bytecodeCompute: ByteArray
+        @JvmName("bytecodeComputeProperty")
+        get() = getStageBytecode(4L)
+
+    val bytecodeRaygen: ByteArray
+        @JvmName("bytecodeRaygenProperty")
+        get() = getStageBytecode(5L)
+
+    val bytecodeAnyHit: ByteArray
+        @JvmName("bytecodeAnyHitProperty")
+        get() = getStageBytecode(6L)
+
+    val bytecodeClosestHit: ByteArray
+        @JvmName("bytecodeClosestHitProperty")
+        get() = getStageBytecode(7L)
+
+    val bytecodeMiss: ByteArray
+        @JvmName("bytecodeMissProperty")
+        get() = getStageBytecode(8L)
+
+    val bytecodeIntersection: ByteArray
+        @JvmName("bytecodeIntersectionProperty")
+        get() = getStageBytecode(9L)
+
     var compileErrorVertex: String
         @JvmName("compileErrorVertexProperty")
         get() = getStageCompileError(0L)
@@ -73,6 +113,16 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
         set(value) = setStageCompileError(9L, value)
 
     /**
+     * The SPIR-V bytecode for the vertex shader stage.
+     *
+     * Generated from Godot docs: RDShaderSPIRV.get_stage_bytecode
+     */
+    fun getStageBytecode(stage: Long): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, handle, stage)
+    }
+
+    /**
      * The compilation error message for the vertex shader stage (set by the SPIR-V compiler and
      * Godot). If empty, shader compilation was successful.
      *
@@ -101,6 +151,11 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): RDShaderSPIRV? =
             if (handle.address() == 0L) null else RDShaderSPIRV(handle)
+
+        private const val GET_STAGE_BYTECODE_HASH = 3816765404L
+        private val getStageBytecodeBind by lazy {
+            ObjectCalls.getMethodBind("RDShaderSPIRV", "get_stage_bytecode", GET_STAGE_BYTECODE_HASH)
+        }
 
         private const val SET_STAGE_COMPILE_ERROR_HASH = 620821314L
         private val setStageCompileErrorBind by lazy {

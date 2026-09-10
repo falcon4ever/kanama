@@ -114,6 +114,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
     }
 
+    fun generateLod(ndThreshold: Double, targetIndexCount: Int = 3): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedInt32List(generateLodBind, handle, ndThreshold, targetIndexCount)
+    }
+
     fun setMaterial(material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
@@ -280,6 +285,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_AABB_HASH = 1068685055L
         private val getAabbBind by lazy {
             ObjectCalls.getMethodBind("SurfaceTool", "get_aabb", GET_AABB_HASH)
+        }
+
+        private const val GENERATE_LOD_HASH = 1938056459L
+        private val generateLodBind by lazy {
+            ObjectCalls.getMethodBind("SurfaceTool", "generate_lod", GENERATE_LOD_HASH)
         }
 
         private const val SET_MATERIAL_HASH = 2757459619L

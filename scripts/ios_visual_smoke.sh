@@ -2532,7 +2532,25 @@ if [[ "$physical_device" -eq 1 ]]; then
     2>"$stderr_log" &
   launch_pid="$!"
   printf '%s\n' "$launch_pid" >"$launch_pid_file"
-  sleep "$launch_sleep"
+  # The fixed `launch_sleep` window was tuned on an iPhone 15 Pro; an iPhone 12 (task 100 device
+  # run, 2026-09-10) had only reached `initialize: level=1` when it closed, so every scene-init
+  # assertion below failed on a healthy app. Wait for the scene-init self-test summary to stream
+  # (it prints on every debug build, before the probe lines), bounded by
+  # KANAMA_IOS_LAUNCH_TIMEOUT (default 120 s), then keep capturing for `launch_sleep` more so the
+  # probe lines that follow it land. A device that never reaches scene-init still fails the loader
+  # / ready assertions below, just later.
+  launch_timeout="${KANAMA_IOS_LAUNCH_TIMEOUT:-120}"
+  waited=0
+  while [[ "$waited" -lt "$launch_timeout" ]]; do
+    if rg -q 'OBJECTCALLS SELFTEST:' "$stderr_log" "$stdout_log" 2>/dev/null; then
+      break
+    fi
+    sleep 2
+    waited=$((waited + 2))
+  done
+  post_wait=$((launch_sleep + 5))
+  echo "[ios_visual_smoke] scene-init reached after ${waited}s (timeout ${launch_timeout}s); capturing ${post_wait}s more"
+  sleep "$post_wait"
   kill "$launch_pid" >/dev/null 2>&1 || true
   wait "$launch_pid" >/dev/null 2>&1 || true
   launch_pid=""

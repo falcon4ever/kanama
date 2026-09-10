@@ -94,6 +94,26 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the baked octree cell data for this `VoxelGIData`.
+     *
+     * Generated from Godot docs: VoxelGIData.get_octree_cells
+     */
+    fun getOctreeCells(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getOctreeCellsBind, handle)
+    }
+
+    /**
+     * Returns the baked cell data for this `VoxelGIData`.
+     *
+     * Generated from Godot docs: VoxelGIData.get_data_cells
+     */
+    fun getDataCells(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataCellsBind, handle)
+    }
+
+    /**
      * Returns the baked level counts for this `VoxelGIData`.
      *
      * Generated from Godot docs: VoxelGIData.get_level_counts
@@ -304,6 +324,16 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
         private const val GET_TO_CELL_XFORM_HASH = 3229777777L
         private val getToCellXformBind by lazy {
             ObjectCalls.getMethodBind("VoxelGIData", "get_to_cell_xform", GET_TO_CELL_XFORM_HASH)
+        }
+
+        private const val GET_OCTREE_CELLS_HASH = 2362200018L
+        private val getOctreeCellsBind by lazy {
+            ObjectCalls.getMethodBind("VoxelGIData", "get_octree_cells", GET_OCTREE_CELLS_HASH)
+        }
+
+        private const val GET_DATA_CELLS_HASH = 2362200018L
+        private val getDataCellsBind by lazy {
+            ObjectCalls.getMethodBind("VoxelGIData", "get_data_cells", GET_DATA_CELLS_HASH)
         }
 
         private const val GET_LEVEL_COUNTS_HASH = 1930428628L

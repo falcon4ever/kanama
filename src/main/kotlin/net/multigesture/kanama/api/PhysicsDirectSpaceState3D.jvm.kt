@@ -9,8 +9,7 @@ import net.multigesture.kanama.types.Vector3
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP PhysicsDirectSpaceState3D waits on: ptrcallWithObjectAndIntArgRetDictionaryList,
-//   ptrcallWithObjectAndIntArgRetVector3List, ptrcallWithObjectArgRetDictionary,
-//   ptrcallWithObjectArgRetPackedFloat32List
+//   ptrcallWithObjectAndIntArgRetVector3List, ptrcallWithObjectArgRetDictionary
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -60,22 +59,6 @@ fun PhysicsDirectSpaceState3D.intersectShape(parameters: PhysicsShapeQueryParame
 }
 
 /**
- * Checks how far a `Shape3D` can move without colliding. All the parameters for the query,
- * including the shape and the motion, are supplied through a `PhysicsShapeQueryParameters3D`
- * object. Returns an array with the safe and unsafe proportions (between 0 and 1) of the motion.
- * The safe proportion is the maximum fraction of the motion that can be made without a collision.
- * The unsafe proportion is the minimum fraction of the distance that must be moved for a
- * collision. If no collision is detected a result of `[1.0, 1.0]` will be returned. Note: Any
- * `Shape3D`s that the shape is already colliding with e.g. inside of, will be ignored. Use
- * `collide_shape` to determine the `Shape3D`s that the shape is already colliding with.
- *
- * Generated from Godot docs: PhysicsDirectSpaceState3D.cast_motion
- */
-fun PhysicsDirectSpaceState3D.castMotion(parameters: PhysicsShapeQueryParameters3D): List<Float> {
-    return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(castMotionBind, handle, parameters.requireOpenHandle())
-}
-
-/**
  * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters3D` object,
  * against the space. The resulting array contains a list of points where the shape intersects
  * another. Like with `intersect_shape`, the number of returned results can be limited to save
@@ -120,11 +103,6 @@ private val intersectRayBind by lazy {
 private const val INTERSECT_SHAPE_HASH = 3762137681L
 private val intersectShapeBind by lazy {
     ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_shape", INTERSECT_SHAPE_HASH)
-}
-
-private const val CAST_MOTION_HASH = 1778757334L
-private val castMotionBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "cast_motion", CAST_MOTION_HASH)
 }
 
 private const val COLLIDE_SHAPE_HASH = 3762137681L

@@ -9,11 +9,10 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP FontFile waits on: ptrcallNoArgsRetByteArray, ptrcallNoArgsRetDictionary,
-//   ptrcallWithByteArrayArg, ptrcallWithDictionaryArg, ptrcallWithIntAndDictionaryArg,
-//   ptrcallWithIntArgRetDictionary, ptrcallWithIntArgRetVector2iList,
-//   ptrcallWithIntVector2iArgsRetPackedInt32List, ptrcallWithIntVector2iIntArgsRetPackedInt32List,
-//   ptrcallWithIntVector2iIntPackedInt32ListArgs, ptrcallWithTwoIntArgsRetVector2iList
+// KANAMA-IOS-GAP FontFile waits on: ptrcallNoArgsRetDictionary, ptrcallWithByteArrayArg,
+//   ptrcallWithDictionaryArg, ptrcallWithIntAndDictionaryArg, ptrcallWithIntArgRetDictionary,
+//   ptrcallWithIntArgRetVector2iList, ptrcallWithIntVector2iIntPackedInt32ListArgs,
+//   ptrcallWithTwoIntArgsRetVector2iList
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -24,16 +23,6 @@ import net.multigesture.kanama.types.Vector2i
 fun FontFile.setData(data: ByteArray) {
     checkOpen()
     ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
-}
-
-/**
- * Contents of the dynamic font source file.
- *
- * Generated from Godot docs: FontFile.get_data
- */
-fun FontFile.getData(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
 }
 
 /**
@@ -80,26 +69,6 @@ fun FontFile.setTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: In
 }
 
 /**
- * Returns a copy of the array containing glyph packing data.
- *
- * Generated from Godot docs: FontFile.get_texture_offsets
- */
-fun FontFile.getTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(getTextureOffsetsBind, handle, cacheIndex, size, textureIndex)
-}
-
-/**
- * Returns list of rendered glyphs in the cache entry.
- *
- * Generated from Godot docs: FontFile.get_glyph_list
- */
-fun FontFile.getGlyphList(cacheIndex: Int, size: Vector2i): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(getGlyphListBind, handle, cacheIndex, size)
-}
-
-/**
  * Returns list of the kerning overrides.
  *
  * Generated from Godot docs: FontFile.get_kerning_list
@@ -129,12 +98,6 @@ fun FontFile.getOpentypeFeatureOverrides(): Map<String, Any?> {
     return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeatureOverridesBind, handle)
 }
 
-var FontFile.data: ByteArray
-    @JvmName("dataProperty")
-    get() = getData()
-    @JvmName("setDataProperty")
-    set(value) = setData(value)
-
 var FontFile.opentypeFeatureOverrides: Map<String, Any?>
     @JvmName("opentypeFeatureOverridesProperty")
     get() = getOpentypeFeatureOverrides()
@@ -144,11 +107,6 @@ var FontFile.opentypeFeatureOverrides: Map<String, Any?>
 private const val SET_DATA_HASH = 2971499966L
 private val setDataBind by lazy {
     ObjectCalls.getMethodBind("FontFile", "set_data", SET_DATA_HASH)
-}
-
-private const val GET_DATA_HASH = 2362200018L
-private val getDataBind by lazy {
-    ObjectCalls.getMethodBind("FontFile", "get_data", GET_DATA_HASH)
 }
 
 private const val GET_SIZE_CACHE_LIST_HASH = 663333327L
@@ -169,16 +127,6 @@ private val getVariationCoordinatesBind by lazy {
 private const val SET_TEXTURE_OFFSETS_HASH = 2849993437L
 private val setTextureOffsetsBind by lazy {
     ObjectCalls.getMethodBind("FontFile", "set_texture_offsets", SET_TEXTURE_OFFSETS_HASH)
-}
-
-private const val GET_TEXTURE_OFFSETS_HASH = 3703444828L
-private val getTextureOffsetsBind by lazy {
-    ObjectCalls.getMethodBind("FontFile", "get_texture_offsets", GET_TEXTURE_OFFSETS_HASH)
-}
-
-private const val GET_GLYPH_LIST_HASH = 681709689L
-private val getGlyphListBind by lazy {
-    ObjectCalls.getMethodBind("FontFile", "get_glyph_list", GET_GLYPH_LIST_HASH)
 }
 
 private const val GET_KERNING_LIST_HASH = 2345056839L

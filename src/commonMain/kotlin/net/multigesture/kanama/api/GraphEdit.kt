@@ -320,6 +320,15 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the points which would make up a connection between `from_node` and `to_node`.
+     *
+     * Generated from Godot docs: GraphEdit.get_connection_line
+     */
+    fun getConnectionLine(fromNode: Vector2, toNode: Vector2): List<Vector2> {
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getConnectionLineBind, handle, fromNode, toNode)
+    }
+
+    /**
      * Attaches the `element` `GraphElement` to the `frame` `GraphFrame`.
      *
      * Generated from Godot docs: GraphEdit.attach_graph_element_to_frame
@@ -892,6 +901,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         private const val IS_VALID_CONNECTION_TYPE_HASH = 2522259332L
         private val isValidConnectionTypeBind by lazy {
             ObjectCalls.getMethodBind("GraphEdit", "is_valid_connection_type", IS_VALID_CONNECTION_TYPE_HASH)
+        }
+
+        private const val GET_CONNECTION_LINE_HASH = 3932192302L
+        private val getConnectionLineBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "get_connection_line", GET_CONNECTION_LINE_HASH)
         }
 
         private const val ATTACH_GRAPH_ELEMENT_TO_FRAME_HASH = 3740211285L

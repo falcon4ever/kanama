@@ -329,6 +329,15 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Returns the weight values of the specified bone.
+     *
+     * Generated from Godot docs: Polygon2D.get_bone_weights
+     */
+    fun getBoneWeights(index: Int): List<Float> {
+        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getBoneWeightsBind, handle, index)
+    }
+
+    /**
      * Removes the specified bone from this `Polygon2D`.
      *
      * Generated from Godot docs: Polygon2D.erase_bone
@@ -519,6 +528,11 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         private const val GET_BONE_PATH_HASH = 408788394L
         private val getBonePathBind by lazy {
             ObjectCalls.getMethodBind("Polygon2D", "get_bone_path", GET_BONE_PATH_HASH)
+        }
+
+        private const val GET_BONE_WEIGHTS_HASH = 1542882410L
+        private val getBoneWeightsBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "get_bone_weights", GET_BONE_WEIGHTS_HASH)
         }
 
         private const val ERASE_BONE_HASH = 1286410249L

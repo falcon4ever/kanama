@@ -11,8 +11,8 @@ import net.multigesture.kanama.types.Vector2
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Polygon2D waits on: ptrcallWithArrayArg, ptrcallWithIntAndPackedFloat32ListArgs,
-//   ptrcallWithIntArgRetPackedFloat32List, ptrcallWithNodePathAndPackedFloat32ListArgs,
-//   ptrcallWithPackedColorListArg, ptrcallWithPackedVector2ListArg
+//   ptrcallWithNodePathAndPackedFloat32ListArgs, ptrcallWithPackedColorListArg,
+//   ptrcallWithPackedVector2ListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -66,15 +66,6 @@ fun Polygon2D.addBone(path: NodePath, weights: List<Float>) {
 }
 
 /**
- * Returns the weight values of the specified bone.
- *
- * Generated from Godot docs: Polygon2D.get_bone_weights
- */
-fun Polygon2D.getBoneWeights(index: Int): List<Float> {
-    return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getBoneWeightsBind, handle, index)
-}
-
-/**
  * Sets the weight values for the specified bone.
  *
  * Generated from Godot docs: Polygon2D.set_bone_weights
@@ -106,11 +97,6 @@ private val setVertexColorsBind by lazy {
 private const val ADD_BONE_HASH = 703042815L
 private val addBoneBind by lazy {
     ObjectCalls.getMethodBind("Polygon2D", "add_bone", ADD_BONE_HASH)
-}
-
-private const val GET_BONE_WEIGHTS_HASH = 1542882410L
-private val getBoneWeightsBind by lazy {
-    ObjectCalls.getMethodBind("Polygon2D", "get_bone_weights", GET_BONE_WEIGHTS_HASH)
 }
 
 private const val SET_BONE_WEIGHTS_HASH = 1345852415L

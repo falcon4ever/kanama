@@ -97,14 +97,39 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, handle, idx)
     }
 
+    fun getVertexBones(idx: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexBonesBind, handle, idx)
+    }
+
+    fun getVertexWeights(idx: Int): List<Float> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getVertexWeightsBind, handle, idx)
+    }
+
     fun getVertexMeta(idx: Int): Any? {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getVertexMetaBind, handle, idx)
     }
 
+    fun getVertexEdges(idx: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexEdgesBind, handle, idx)
+    }
+
+    fun getVertexFaces(idx: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexFacesBind, handle, idx)
+    }
+
     fun getEdgeVertex(idx: Int, vertex: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getEdgeVertexBind, handle, idx, vertex)
+    }
+
+    fun getEdgeFaces(idx: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getEdgeFacesBind, handle, idx)
     }
 
     fun getEdgeMeta(idx: Int): Any? {
@@ -239,14 +264,39 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_color", GET_VERTEX_COLOR_HASH)
         }
 
+        private const val GET_VERTEX_BONES_HASH = 1706082319L
+        private val getVertexBonesBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_bones", GET_VERTEX_BONES_HASH)
+        }
+
+        private const val GET_VERTEX_WEIGHTS_HASH = 1542882410L
+        private val getVertexWeightsBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_weights", GET_VERTEX_WEIGHTS_HASH)
+        }
+
         private const val GET_VERTEX_META_HASH = 4227898402L
         private val getVertexMetaBind by lazy {
             ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_meta", GET_VERTEX_META_HASH)
         }
 
+        private const val GET_VERTEX_EDGES_HASH = 1706082319L
+        private val getVertexEdgesBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_edges", GET_VERTEX_EDGES_HASH)
+        }
+
+        private const val GET_VERTEX_FACES_HASH = 1706082319L
+        private val getVertexFacesBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_faces", GET_VERTEX_FACES_HASH)
+        }
+
         private const val GET_EDGE_VERTEX_HASH = 3175239445L
         private val getEdgeVertexBind by lazy {
             ObjectCalls.getMethodBind("MeshDataTool", "get_edge_vertex", GET_EDGE_VERTEX_HASH)
+        }
+
+        private const val GET_EDGE_FACES_HASH = 1706082319L
+        private val getEdgeFacesBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "get_edge_faces", GET_EDGE_FACES_HASH)
         }
 
         private const val GET_EDGE_META_HASH = 4227898402L

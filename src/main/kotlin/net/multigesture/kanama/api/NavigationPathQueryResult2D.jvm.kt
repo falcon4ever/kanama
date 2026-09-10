@@ -10,9 +10,9 @@ import net.multigesture.kanama.types.Vector2
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP NavigationPathQueryResult2D waits on: ptrcallNoArgsRetPackedInt64List,
-//   ptrcallNoArgsRetRIDList, ptrcallWithPackedInt32ListArg, ptrcallWithPackedInt64ListArg,
-//   ptrcallWithPackedVector2ListArg, ptrcallWithRIDListArg
+// KANAMA-IOS-GAP NavigationPathQueryResult2D waits on: ptrcallNoArgsRetRIDList,
+//   ptrcallWithPackedInt32ListArg, ptrcallWithPackedInt64ListArg, ptrcallWithPackedVector2ListArg,
+//   ptrcallWithRIDListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -68,28 +68,11 @@ fun NavigationPathQueryResult2D.setPathOwnerIds(pathOwnerIds: List<Long>) {
     ObjectCalls.ptrcallWithPackedInt64ListArg(setPathOwnerIdsBind, handle, pathOwnerIds)
 }
 
-/**
- * The `ObjectID`s of the `Object`s which manage the regions and links each point of the path goes
- * through.
- *
- * Generated from Godot docs: NavigationPathQueryResult2D.get_path_owner_ids
- */
-fun NavigationPathQueryResult2D.getPathOwnerIds(): List<Long> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPathOwnerIdsBind, handle)
-}
-
 var NavigationPathQueryResult2D.pathRids: List<RID>
     @JvmName("pathRidsProperty")
     get() = getPathRids()
     @JvmName("setPathRidsProperty")
     set(value) = setPathRids(value)
-
-var NavigationPathQueryResult2D.pathOwnerIds: List<Long>
-    @JvmName("pathOwnerIdsProperty")
-    get() = getPathOwnerIds()
-    @JvmName("setPathOwnerIdsProperty")
-    set(value) = setPathOwnerIds(value)
 
 private const val SET_PATH_HASH = 1509147220L
 private val setPathBind by lazy {
@@ -114,9 +97,4 @@ private val getPathRidsBind by lazy {
 private const val SET_PATH_OWNER_IDS_HASH = 3709968205L
 private val setPathOwnerIdsBind by lazy {
     ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "set_path_owner_ids", SET_PATH_OWNER_IDS_HASH)
-}
-
-private const val GET_PATH_OWNER_IDS_HASH = 235988956L
-private val getPathOwnerIdsBind by lazy {
-    ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "get_path_owner_ids", GET_PATH_OWNER_IDS_HASH)
 }

@@ -11,12 +11,10 @@ import net.multigesture.kanama.types.Rect2
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP RenderingDevice waits on: ptrcallWithByteArrayAndRIDArgRetRID,
-//   ptrcallWithLongByteArrayUInt32Args, ptrcallWithObjectAndStringArgRetByteArray,
-//   ptrcallWithObjectListArgRetLong, ptrcallWithObjectListLongArgsRetRID,
-//   ptrcallWithObjectListRIDUInt32ArgsRetRID, ptrcallWithObjectListUInt32ArgsRetLong,
-//   ptrcallWithRIDAndObjectListArgsRetLong, ptrcallWithRIDAndTwoUInt32ArgsRetByteArray,
-//   ptrcallWithRIDAndUInt32ArgRetByteArray, ptrcallWithRIDListLongUInt32ArgsRetRID,
-//   ptrcallWithRIDListObjectListLongUInt32ArgsRetRID,
+//   ptrcallWithLongByteArrayUInt32Args, ptrcallWithObjectListArgRetLong,
+//   ptrcallWithObjectListLongArgsRetRID, ptrcallWithObjectListRIDUInt32ArgsRetRID,
+//   ptrcallWithObjectListUInt32ArgsRetLong, ptrcallWithRIDAndObjectListArgsRetLong,
+//   ptrcallWithRIDListLongUInt32ArgsRetRID, ptrcallWithRIDListObjectListLongUInt32ArgsRetRID,
 //   ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong,
 //   ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong, ptrcallWithRIDObjectListArgsRetRID,
 //   ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID,
@@ -24,8 +22,7 @@ import net.multigesture.kanama.types.Rect2
 //   ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List,
 //   ptrcallWithThreeObjectListUInt32ArgsRetRID, ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs,
 //   ptrcallWithTwoObjectByteArrayListArgsRetRID, ptrcallWithTwoObjectListUInt32ArgsRetLong,
-//   ptrcallWithUInt32ArgRetPackedInt64List, ptrcallWithUInt32ByteArrayLongArgsRetRID,
-//   ptrcallWithUInt32LongByteArrayArgsRetRID,
+//   ptrcallWithUInt32ByteArrayLongArgsRetRID, ptrcallWithUInt32LongByteArrayArgsRetRID,
 //   ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID,
 //   ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID,
 //   ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID
@@ -62,23 +59,6 @@ fun RenderingDevice.textureCreate(format: RDTextureFormat?, view: RDTextureView?
  */
 fun RenderingDevice.textureUpdate(texture: RID, layer: Long, data: ByteArray): Long {
     return ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(textureUpdateBind, handle, texture, layer, data)
-}
-
-/**
- * Returns the `texture` data for the specified `layer` as raw binary data. For 2D textures (which
- * only have one layer), `layer` must be `0`. Note: `texture` can't be retrieved while a draw list
- * that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and
- * that the color/depth texture using it is not set to `FINAL_ACTION_CONTINUE`) to retrieve this
- * texture. Otherwise, an error is printed and an empty `PackedByteArray` is returned. Note:
- * `texture` requires the `TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be retrieved. Otherwise, an error is
- * printed and an empty `PackedByteArray` is returned. Note: This method will block the GPU from
- * working until the data is retrieved. Refer to `texture_get_data_async` for an alternative that
- * returns the data in more performant way.
- *
- * Generated from Godot docs: RenderingDevice.texture_get_data
- */
-fun RenderingDevice.textureGetData(texture: RID, layer: Long): ByteArray {
-    return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetByteArray(textureGetDataBind, handle, texture, layer)
 }
 
 /**
@@ -170,19 +150,6 @@ fun RenderingDevice.indexBufferCreate(sizeIndices: Long, format: Long, data: Byt
 }
 
 /**
- * Compiles a binary shader from `spirv_data` and returns the compiled binary data as a
- * `PackedByteArray`. This compiled shader is specific to the GPU model and driver version used; it
- * will not work on different GPU models or even different driver versions. See also
- * `shader_compile_spirv_from_source`. `name` is an optional human-readable name that can be given
- * to the compiled shader for organizational purposes.
- *
- * Generated from Godot docs: RenderingDevice.shader_compile_binary_from_spirv
- */
-fun RenderingDevice.shaderCompileBinaryFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): ByteArray {
-    return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(shaderCompileBinaryFromSpirvBind, handle, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
-}
-
-/**
  * Creates a new shader instance from a binary compiled shader. It can be accessed with the RID
  * that is returned. Once finished with your RID, you will want to free the RID using the
  * RenderingDevice's `free_rid` method. See also `shader_compile_binary_from_spirv` and
@@ -246,18 +213,6 @@ fun RenderingDevice.uniformSetCreate(uniforms: List<RDUniform>, shader: RID, sha
  */
 fun RenderingDevice.bufferUpdate(buffer: RID, offset: Long, sizeBytes: Long, data: ByteArray): Long {
     return ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(bufferUpdateBind, handle, buffer, offset, sizeBytes, data)
-}
-
-/**
- * Returns a copy of the data of the specified `buffer`, optionally `offset_bytes` and `size_bytes`
- * can be set to copy only a portion of the buffer. Note: This method will block the GPU from
- * working until the data is retrieved. Refer to `buffer_get_data_async` for an alternative that
- * returns the data in more performant way.
- *
- * Generated from Godot docs: RenderingDevice.buffer_get_data
- */
-fun RenderingDevice.bufferGetData(buffer: RID, offsetBytes: Long = 0L, sizeBytes: Long = 0L): ByteArray {
-    return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(bufferGetDataBind, handle, buffer, offsetBytes, sizeBytes)
 }
 
 /**
@@ -376,15 +331,6 @@ fun RenderingDevice.drawListSetPushConstant(drawList: Long, buffer: ByteArray, s
 }
 
 /**
- * This method does nothing and always returns an empty `PackedInt64Array`.
- *
- * Generated from Godot docs: RenderingDevice.draw_list_switch_to_next_pass_split
- */
-fun RenderingDevice.drawListSwitchToNextPassSplit(splits: Long): List<Long> {
-    return ObjectCalls.ptrcallWithUInt32ArgRetPackedInt64List(drawListSwitchToNextPassSplitBind, handle, splits)
-}
-
-/**
  * Sets the push constant data to `buffer` for the specified `compute_list`. The shader determines
  * how this binary data is used. The buffer's size in bytes must also be specified in `size_bytes`
  * (this can be obtained by calling the `PackedByteArray.size` method on the passed `buffer`).
@@ -415,11 +361,6 @@ private val textureCreateBind by lazy {
 private const val TEXTURE_UPDATE_HASH = 1349464008L
 private val textureUpdateBind by lazy {
     ObjectCalls.getMethodBind("RenderingDevice", "texture_update", TEXTURE_UPDATE_HASH)
-}
-
-private const val TEXTURE_GET_DATA_HASH = 1859412099L
-private val textureGetDataBind by lazy {
-    ObjectCalls.getMethodBind("RenderingDevice", "texture_get_data", TEXTURE_GET_DATA_HASH)
 }
 
 private const val FRAMEBUFFER_FORMAT_CREATE_HASH = 697032759L
@@ -462,11 +403,6 @@ private val indexBufferCreateBind by lazy {
     ObjectCalls.getMethodBind("RenderingDevice", "index_buffer_create", INDEX_BUFFER_CREATE_HASH)
 }
 
-private const val SHADER_COMPILE_BINARY_FROM_SPIRV_HASH = 134910450L
-private val shaderCompileBinaryFromSpirvBind by lazy {
-    ObjectCalls.getMethodBind("RenderingDevice", "shader_compile_binary_from_spirv", SHADER_COMPILE_BINARY_FROM_SPIRV_HASH)
-}
-
 private const val SHADER_CREATE_FROM_BYTECODE_HASH = 1687031350L
 private val shaderCreateFromBytecodeBind by lazy {
     ObjectCalls.getMethodBind("RenderingDevice", "shader_create_from_bytecode", SHADER_CREATE_FROM_BYTECODE_HASH)
@@ -495,11 +431,6 @@ private val uniformSetCreateBind by lazy {
 private const val BUFFER_UPDATE_HASH = 3454956949L
 private val bufferUpdateBind by lazy {
     ObjectCalls.getMethodBind("RenderingDevice", "buffer_update", BUFFER_UPDATE_HASH)
-}
-
-private const val BUFFER_GET_DATA_HASH = 3101830688L
-private val bufferGetDataBind by lazy {
-    ObjectCalls.getMethodBind("RenderingDevice", "buffer_get_data", BUFFER_GET_DATA_HASH)
 }
 
 private const val RENDER_PIPELINE_CREATE_HASH = 2385451958L
@@ -550,11 +481,6 @@ private val drawListBindVertexBuffersFormatBind by lazy {
 private const val DRAW_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L
 private val drawListSetPushConstantBind by lazy {
     ObjectCalls.getMethodBind("RenderingDevice", "draw_list_set_push_constant", DRAW_LIST_SET_PUSH_CONSTANT_HASH)
-}
-
-private const val DRAW_LIST_SWITCH_TO_NEXT_PASS_SPLIT_HASH = 2865087369L
-private val drawListSwitchToNextPassSplitBind by lazy {
-    ObjectCalls.getMethodBind("RenderingDevice", "draw_list_switch_to_next_pass_split", DRAW_LIST_SWITCH_TO_NEXT_PASS_SPLIT_HASH)
 }
 
 private const val COMPUTE_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L

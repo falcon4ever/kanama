@@ -26,6 +26,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
+import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
@@ -56,6 +57,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_byte_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8
@@ -64,6 +66,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
@@ -124,6 +127,16 @@ object ObjectCalls {
   // Godot Variant type tags (returned by kanama_ios_godot_object_call, for decoding
   // a scalar return). Must match the KANAMA_IOS_VARIANT_TYPE_* enum in the C shim.
   private const val VT_BOOL = 1
+  // Packed*Array Variant types (KANAMA_IOS_VARIANT_TYPE_PACKED_* in the C shim), the kind selector
+  // of kanama_ios_godot_ptrcall_ret_packed (task 100, parcel 3).
+  internal const val VT_PACKED_BYTE_ARRAY = 29
+  internal const val VT_PACKED_INT32_ARRAY = 30
+  internal const val VT_PACKED_INT64_ARRAY = 31
+  internal const val VT_PACKED_FLOAT32_ARRAY = 32
+  internal const val VT_PACKED_FLOAT64_ARRAY = 33
+  internal const val VT_PACKED_VECTOR2_ARRAY = 35
+  internal const val VT_PACKED_VECTOR3_ARRAY = 36
+  internal const val VT_PACKED_COLOR_ARRAY = 37
   private const val VT_INT = 2
   private const val VT_FLOAT = 3
   private const val VT_STRING = 4
@@ -504,6 +517,221 @@ object ObjectCalls {
         outStrLen.ptr,
       )
     decodeVariantScalarReturn(retType, outInt, outDouble, outStr, strBufSize, outStrLen, null)
+  }
+
+  // task 100 (parcel 3) — Packed*Array returns on any audited arg shape. Same arg cells as
+  // kanama_ios_godot_ptrcall; the C entry ptrcalls into a packed-array cell, reads the element
+  // count and copies the contiguous elements out in ONE memcpy (the Android ART lesson applied
+  // C-side). An array longer than the inline capacity is parked C-side and drained whole by the
+  // second call, so the method runs once and nothing is truncated. The kind selects the element
+  // layout: byte 1, int32 4, int64 8, float32 4, float64 8, Vector2 2×real, Vector3 3×real,
+  // Color 4×float32 — the same encodings the no-arg read-backs use.
+  private fun MemScope.ptrcallPackedElements(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    packedKind: Int,
+    elemBytes: Int,
+  ): Pair<CPointer<ByteVar>, Int> {
+    val inlineCap = 256L
+    val inline = allocArray<ByteVar>(inlineCap * elemBytes)
+    val count =
+      kanama_ios_godot_ptrcall_ret_packed(
+        methodBind.address(),
+        instance.address(),
+        argTypes,
+        argPtrs,
+        argCount,
+        packedKind,
+        inline,
+        inlineCap,
+      )
+    return when {
+      count <= 0L -> Pair(inline, 0)
+      count <= inlineCap -> Pair(inline, count.toInt())
+      else -> {
+        val full = allocArray<ByteVar>(count * elemBytes)
+        val got = kanama_ios_godot_take_pending_packed(packedKind, full, count)
+        Pair(full, if (got <= 0L) 0 else minOf(got, count).toInt())
+      }
+    }
+  }
+
+  fun ptrcallRetByteArray(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): ByteArray = memScoped {
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_BYTE_ARRAY,
+        1,
+      )
+    if (n == 0) ByteArray(0) else buf.readBytes(n)
+  }
+
+  fun ptrcallRetPackedInt32List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Int> = memScoped {
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_INT32_ARRAY,
+        4,
+      )
+    val p = buf.reinterpret<IntVar>()
+    List(n) { p[it] }
+  }
+
+  fun ptrcallRetPackedInt64List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Long> = memScoped {
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_INT64_ARRAY,
+        8,
+      )
+    val p = buf.reinterpret<LongVar>()
+    List(n) { p[it] }
+  }
+
+  fun ptrcallRetPackedFloat32List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Float> = memScoped {
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_FLOAT32_ARRAY,
+        4,
+      )
+    val p = buf.reinterpret<FloatVar>()
+    List(n) { p[it] }
+  }
+
+  fun ptrcallRetPackedFloat64List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Double> = memScoped {
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_FLOAT64_ARRAY,
+        8,
+      )
+    val p = buf.reinterpret<DoubleVar>()
+    List(n) { p[it] }
+  }
+
+  fun ptrcallRetPackedVector2List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Vector2> = memScoped {
+    val real = sizeOf<GodotRealVar>().toInt()
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_VECTOR2_ARRAY,
+        2 * real,
+      )
+    val p = buf.reinterpret<GodotRealVar>()
+    List(n) { Vector2(GodotReal.fromC(p[it * 2]), GodotReal.fromC(p[it * 2 + 1])) }
+  }
+
+  fun ptrcallRetPackedVector3List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Vector3> = memScoped {
+    val real = sizeOf<GodotRealVar>().toInt()
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_VECTOR3_ARRAY,
+        3 * real,
+      )
+    val p = buf.reinterpret<GodotRealVar>()
+    List(n) {
+      Vector3(
+        GodotReal.fromC(p[it * 3]),
+        GodotReal.fromC(p[it * 3 + 1]),
+        GodotReal.fromC(p[it * 3 + 2]),
+      )
+    }
+  }
+
+  fun ptrcallRetPackedColorList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Color> = memScoped {
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        VT_PACKED_COLOR_ARRAY,
+        16,
+      )
+    val p = buf.reinterpret<FloatVar>()
+    List(n) { Color(p[it * 4], p[it * 4 + 1], p[it * 4 + 2], p[it * 4 + 3]) }
   }
 
   // NodePath return: GDExtension has no NodePath->utf8, so the dedicated C helper converts
@@ -3063,6 +3291,101 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   )
   check("variant-ret(pending slot drained)", kanama_ios_godot_take_pending_utf8(null, 0L) == -1L)
   check("variant-ret(get_var null==null)", variantRoundTrip(null) == null)
+
+  // task 100 (parcel 3) — Packed*Array returns on arg-bearing shapes through the generated
+  // read-back (ptrcallRet<Kind> over kanama_ios_godot_ptrcall_ret_packed). AStar2D with two
+  // connected points: get_point_ids() (PackedInt64Array, no-arg — previously unwired),
+  // get_point_connections(1) (int64 arg), get_point_path(1, 2, false) (PackedVector2Array).
+  // Crypto.generate_random_bytes(3000): PackedByteArray longer than the 256-element inline
+  // capacity, parked C-side and drained whole. Curve3D: get_baked_points() (PackedVector3Array).
+  val packedAstar = ObjectCalls.constructObject("AStar2D")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("AStar2D", "add_point", 4074201818L),
+    packedAstar,
+    listOf(1L, Vector2(0f, 0f), 1.0),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("AStar2D", "add_point", 4074201818L),
+    packedAstar,
+    listOf(2L, Vector2(3f, 4f), 1.0),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("AStar2D", "connect_points", 3710494224L),
+    packedAstar,
+    listOf(1L, 2L, true),
+  )
+  val packedIds =
+    ObjectCalls.ptrcallNoArgsRetPackedInt64List(
+      ObjectCalls.getMethodBind("AStar2D", "get_point_ids", 3851388692L),
+      packedAstar,
+    )
+  check("packed-ret(AStar2D.get_point_ids==[1,2])", packedIds.sorted() == listOf(1L, 2L))
+  val packedConn =
+    ObjectCalls.ptrcallWithLongArgRetPackedInt64List(
+      ObjectCalls.getMethodBind("AStar2D", "get_point_connections", 2865087369L),
+      packedAstar,
+      1L,
+    )
+  check("packed-ret(AStar2D.get_point_connections(1)==[2])", packedConn == listOf(2L))
+  val packedPath =
+    ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(
+      ObjectCalls.getMethodBind("AStar2D", "get_point_path", 3427490392L),
+      packedAstar,
+      1L,
+      2L,
+      false,
+    )
+  check(
+    "packed-ret(AStar2D.get_point_path(1,2)==[(0,0),(3,4)])",
+    packedPath == listOf(Vector2(0f, 0f), Vector2(3f, 4f)),
+  )
+  ObjectCalls.destroyObject(packedAstar)
+
+  val packedCrypto = ObjectCalls.constructObject("Crypto")
+  val packedBytes =
+    ObjectCalls.ptrcallWithIntArgRetByteArray(
+      ObjectCalls.getMethodBind("Crypto", "generate_random_bytes", 47165747L),
+      packedCrypto,
+      3000,
+    )
+  check(
+    "packed-ret(Crypto.generate_random_bytes(3000).size==3000, pending slot)",
+    packedBytes.size == 3000,
+  )
+  check("packed-ret(random bytes not all zero)", packedBytes.any { it != 0.toByte() })
+  check(
+    "packed-ret(pending packed slot drained)",
+    kanama_ios_godot_take_pending_packed(ObjectCalls.VT_PACKED_BYTE_ARRAY, null, 0L) == -1L,
+  )
+  ObjectCalls.destroyObject(packedCrypto)
+
+  val packedCurve = ObjectCalls.constructObject("Curve3D")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Curve3D", "add_point", 2931053748L),
+    packedCurve,
+    listOf(Vector3(0f, 0f, 0f), Vector3(0f, 0f, 0f), Vector3(0f, 0f, 0f), -1),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Curve3D", "add_point", 2931053748L),
+    packedCurve,
+    listOf(Vector3(1f, 2f, 3f), Vector3(0f, 0f, 0f), Vector3(0f, 0f, 0f), -1),
+  )
+  val packedBaked =
+    ObjectCalls.ptrcallNoArgsRetPackedVector3List(
+      ObjectCalls.getMethodBind("Curve3D", "get_baked_points", 497664490L),
+      packedCurve,
+    )
+  fun near(a: Vector3, b: Vector3): Boolean =
+    kotlin.math.abs(a.x - b.x) < 1e-3f &&
+      kotlin.math.abs(a.y - b.y) < 1e-3f &&
+      kotlin.math.abs(a.z - b.z) < 1e-3f
+  check(
+    "packed-ret(Curve3D.get_baked_points first==(0,0,0), last==(1,2,3))",
+    packedBaked.size >= 2 &&
+      near(packedBaked.first(), Vector3(0f, 0f, 0f)) &&
+      near(packedBaked.last(), Vector3(1f, 2f, 3f)),
+  )
+  ObjectCalls.destroyObject(packedCurve)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

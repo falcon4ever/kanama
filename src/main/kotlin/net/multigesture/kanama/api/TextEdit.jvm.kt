@@ -8,9 +8,8 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TextEdit waits on: ptrcallWithArrayArg, ptrcallWithBoolArgRetPackedInt32List,
-//   ptrcallWithIntArgRetPackedStringList, ptrcallWithTwoBoolArgsRetVector2iList,
-//   ptrcallWithTwoIntAndVariantArg
+// KANAMA-IOS-GAP TextEdit waits on: ptrcallWithArrayArg, ptrcallWithIntArgRetPackedStringList,
+//   ptrcallWithTwoBoolArgsRetVector2iList, ptrcallWithTwoIntAndVariantArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -20,17 +19,6 @@ import net.multigesture.kanama.types.Vector2i
  */
 fun TextEdit.setStructuredTextBidiOverrideOptions(args: List<Any?>) {
     ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
-}
-
-/**
- * Returns the carets sorted by selection beginning from lowest line and column to highest (from
- * top to bottom of text). If `include_ignored_carets` is `false`, carets from
- * `multicaret_edit_ignore_caret` will be ignored.
- *
- * Generated from Godot docs: TextEdit.get_sorted_carets
- */
-fun TextEdit.getSortedCarets(includeIgnoredCarets: Boolean = false): List<Int> {
-    return ObjectCalls.ptrcallWithBoolArgRetPackedInt32List(getSortedCaretsBind, handle, includeIgnoredCarets)
 }
 
 /**
@@ -68,11 +56,6 @@ fun TextEdit.setLineGutterMetadata(line: Int, gutter: Int, metadata: Any?) {
 private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
 private val setStructuredTextBidiOverrideOptionsBind by lazy {
     ObjectCalls.getMethodBind("TextEdit", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-}
-
-private const val GET_SORTED_CARETS_HASH = 2131714034L
-private val getSortedCaretsBind by lazy {
-    ObjectCalls.getMethodBind("TextEdit", "get_sorted_carets", GET_SORTED_CARETS_HASH)
 }
 
 private const val GET_LINE_RANGES_FROM_CARETS_HASH = 2393089247L

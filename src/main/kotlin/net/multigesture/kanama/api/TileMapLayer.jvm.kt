@@ -1,7 +1,6 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Vector2i
 
@@ -9,10 +8,9 @@ import net.multigesture.kanama.types.Vector2i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TileMapLayer waits on: ptrcallNoArgsRetByteArray, ptrcallNoArgsRetVector2iList,
-//   ptrcallWithByteArrayArg, ptrcallWithIntVector2iAndIntArgsRetVector2iList,
-//   ptrcallWithVector2iArgRetVector2iList, ptrcallWithVector2iListArgRetObject,
-//   ptrcallWithVector2iListTwoIntAndBoolArgs
+// KANAMA-IOS-GAP TileMapLayer waits on: ptrcallNoArgsRetVector2iList, ptrcallWithByteArrayArg,
+//   ptrcallWithIntVector2iAndIntArgsRetVector2iList, ptrcallWithVector2iArgRetVector2iList,
+//   ptrcallWithVector2iListArgRetObject, ptrcallWithVector2iListTwoIntAndBoolArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -102,21 +100,6 @@ fun TileMapLayer.setTileMapDataFromArray(tileMapLayerData: ByteArray) {
     ObjectCalls.ptrcallWithByteArrayArg(setTileMapDataFromArrayBind, handle, tileMapLayerData)
 }
 
-/**
- * The raw tile map data as a byte array.
- *
- * Generated from Godot docs: TileMapLayer.get_tile_map_data_as_array
- */
-fun TileMapLayer.getTileMapDataAsArray(): ByteArray {
-    return ObjectCalls.ptrcallNoArgsRetByteArray(getTileMapDataAsArrayBind, handle)
-}
-
-var TileMapLayer.tileMapData: ByteArray
-    @JvmName("tileMapDataProperty")
-    get() = getTileMapDataAsArray()
-    @JvmName("setTileMapDataProperty")
-    set(value) = setTileMapDataFromArray(value)
-
 private const val GET_USED_CELLS_HASH = 3995934104L
 private val getUsedCellsBind by lazy {
     ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells", GET_USED_CELLS_HASH)
@@ -150,9 +133,4 @@ private val getSurroundingCellsBind by lazy {
 private const val SET_TILE_MAP_DATA_FROM_ARRAY_HASH = 2971499966L
 private val setTileMapDataFromArrayBind by lazy {
     ObjectCalls.getMethodBind("TileMapLayer", "set_tile_map_data_from_array", SET_TILE_MAP_DATA_FROM_ARRAY_HASH)
-}
-
-private const val GET_TILE_MAP_DATA_AS_ARRAY_HASH = 2362200018L
-private val getTileMapDataAsArrayBind by lazy {
-    ObjectCalls.getMethodBind("TileMapLayer", "get_tile_map_data_as_array", GET_TILE_MAP_DATA_AS_ARRAY_HASH)
 }

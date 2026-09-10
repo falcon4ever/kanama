@@ -32,6 +32,16 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Gets a raw packet.
+     *
+     * Generated from Godot docs: PacketPeer.get_packet
+     */
+    fun getPacket(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getPacketBind, handle)
+    }
+
+    /**
      * Returns the error state of the last packet received (via `get_packet` and `get_var`).
      *
      * Generated from Godot docs: PacketPeer.get_packet_error
@@ -88,6 +98,11 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_VAR_HASH = 3442865206L
         private val getVarBind by lazy {
             ObjectCalls.getMethodBind("PacketPeer", "get_var", GET_VAR_HASH)
+        }
+
+        private const val GET_PACKET_HASH = 2115431945L
+        private val getPacketBind by lazy {
+            ObjectCalls.getMethodBind("PacketPeer", "get_packet", GET_PACKET_HASH)
         }
 
         private const val GET_PACKET_ERROR_HASH = 3185525595L

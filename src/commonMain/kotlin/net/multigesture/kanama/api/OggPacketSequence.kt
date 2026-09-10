@@ -10,11 +10,20 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: OggPacketSequence
  */
 class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
+    val granulePositions: List<Long>
+        @JvmName("granulePositionsProperty")
+        get() = getPacketGranulePositions()
+
     var samplingRate: Double
         @JvmName("samplingRateProperty")
         get() = getSamplingRate()
         @JvmName("setSamplingRateProperty")
         set(value) = setSamplingRate(value)
+
+    fun getPacketGranulePositions(): List<Long> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPacketGranulePositionsBind, handle)
+    }
 
     fun setSamplingRate(samplingRate: Double) {
         checkOpen()
@@ -38,6 +47,11 @@ class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): OggPacketSequence? =
             if (handle.address() == 0L) null else OggPacketSequence(handle)
+
+        private const val GET_PACKET_GRANULE_POSITIONS_HASH = 235988956L
+        private val getPacketGranulePositionsBind by lazy {
+            ObjectCalls.getMethodBind("OggPacketSequence", "get_packet_granule_positions", GET_PACKET_GRANULE_POSITIONS_HASH)
+        }
 
         private const val SET_SAMPLING_RATE_HASH = 373806689L
         private val setSamplingRateBind by lazy {

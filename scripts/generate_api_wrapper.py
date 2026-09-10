@@ -508,6 +508,10 @@ IOS_HANDWRITTEN_HELPERS = {
     "ptrcallNoArgsRetPackedVector2List",
     "ptrcallNoArgsRetPackedColorList",
     "ptrcallNoArgsRetPackedStringList",
+    # task 100 parcel 3 admits PackedByteArray returns; these two keep their hand-written bodies
+    # (the retByteArray sizeHint path; the static FileAccess entry).
+    "ptrcallNoArgsRetByteArray",
+    "ptrcallStaticWithStringArgRetByteArray",
     "ptrcallWithPackedFloat32ListArg",
     "ptrcallWithPackedVector2ListColorDoubleAndBoolArgs",
     "ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs",
@@ -1767,11 +1771,21 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # kinds and the generic TypedObjectArray::X form), not by the kotlin_return token. Mirrors the
     # per-helper Packed*Array gates.
     typed_array_element = typed_object_array_element_any(method.logical_return_kind(object_types))
+    # Packed*Array returns (task 100, parcel 3): every audited arg shape is admitted — the generated
+    # helper reads the array back through kanama_ios_godot_ptrcall_ret_packed (one memcpy, parked
+    # C-side when longer than the inline capacity). Detected by the Godot return type, because the
+    # kotlin_return tokens are shared with typed Array[...] returns that keep their own gates.
+    packed_return = (
+        method.return_type in IOS_PACKED_RETURNS
+        and IOS_PACKED_RETURNS[method.return_type][1] == shape.kotlin_return
+    )
     if typed_array_element is not None:
         if shape.function not in IOS_WIRED_TYPED_OBJECT_LIST_HELPERS:
             return False
         if IOS_EMIT_CLASSES is not None and typed_array_element != "Object" and typed_array_element not in IOS_EMIT_CLASSES:
             return False
+    elif packed_return:
+        pass
     elif shape.kotlin_return not in IOS_RET_KOTLIN:
         return False
     # String / StringName / NodePath returns (kotlin_return "String" / "NodePath"): every audited
@@ -1787,15 +1801,15 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # (ptrcallNoArgsRetPackedInt32List → List<Int> via the size + operator_index_const C
     # helper, two-call length protocol). Other shapes share the "List<Int>" return token
     # (arg-bearing PackedInt32 returns) but route through helpers not audited yet.
-    if shape.kotlin_return == "List<Int>" and shape.function != "ptrcallNoArgsRetPackedInt32List":
+    if not packed_return and shape.kotlin_return == "List<Int>" and shape.function != "ptrcallNoArgsRetPackedInt32List":
         return False
     # PackedFloat32Array read-back: same gate, only the no-arg getter is wired.
-    if shape.kotlin_return == "List<Float>" and shape.function != "ptrcallNoArgsRetPackedFloat32List":
+    if not packed_return and shape.kotlin_return == "List<Float>" and shape.function != "ptrcallNoArgsRetPackedFloat32List":
         return False
     # PackedVector2Array / PackedColorArray read-back: same gate, no-arg getter only.
-    if shape.kotlin_return == "List<Vector2>" and shape.function != "ptrcallNoArgsRetPackedVector2List":
+    if not packed_return and shape.kotlin_return == "List<Vector2>" and shape.function != "ptrcallNoArgsRetPackedVector2List":
         return False
-    if shape.kotlin_return == "List<Color>" and shape.function != "ptrcallNoArgsRetPackedColorList":
+    if not packed_return and shape.kotlin_return == "List<Color>" and shape.function != "ptrcallNoArgsRetPackedColorList":
         return False
     # PackedStringArray read-back (variable-length blob): "List<String>" is shared with the typed
     # string-array shapes, so gate on the concrete wired helpers — the no-arg PackedString getter and
@@ -1808,7 +1822,7 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # Typed Array[NodePath] / Array[int] read-back (2.7g blob helpers) — only the no-arg getters.
     if shape.kotlin_return == "List<NodePath>" and shape.function != "ptrcallNoArgsRetNodePathList":
         return False
-    if shape.kotlin_return == "List<Long>" and shape.function != "ptrcallNoArgsRetLongList":
+    if not packed_return and shape.kotlin_return == "List<Long>" and shape.function != "ptrcallNoArgsRetLongList":
         return False
     # Typed Array[Plane] read-back (2.7i blob helper, 16-byte float32 records) — no-arg getter only.
     if shape.kotlin_return == "List<Plane>" and shape.function != "ptrcallNoArgsRetPlaneList":
@@ -3314,8 +3328,9 @@ import net.multigesture.kanama.types.Vector4
  * C-side). String / StringName / NodePath returns hand the same arg cells to
  * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
  * read-back, no truncation); Variant-scalar returns to `ObjectCalls.ptrcallRetVariantScalar`
- * (kanama_ios_godot_ptrcall_ret_variant_scalar). Helpers already hand-written in
- * ObjectCalls.kt are the override set and are NOT regenerated here.
+ * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
+ * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed). Helpers
+ * already hand-written in ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 '''
 
@@ -3626,6 +3641,19 @@ IOS_UTF8_RETURNS = {
     "NodePath": ("PT_NODE_PATH", "NodePath({})"),
 }
 
+# Packed*Array returns the iOS helpers read back through kanama_ios_godot_ptrcall_ret_packed
+# (task 100, parcel 3): Godot return type -> (Kotlin helper on ObjectCalls, kotlin_return token).
+IOS_PACKED_RETURNS = {
+    "PackedByteArray": ("ptrcallRetByteArray", "ByteArray"),
+    "PackedInt32Array": ("ptrcallRetPackedInt32List", "List<Int>"),
+    "PackedInt64Array": ("ptrcallRetPackedInt64List", "List<Long>"),
+    "PackedFloat32Array": ("ptrcallRetPackedFloat32List", "List<Float>"),
+    "PackedFloat64Array": ("ptrcallRetPackedFloat64List", "List<Double>"),
+    "PackedVector2Array": ("ptrcallRetPackedVector2List", "List<Vector2>"),
+    "PackedVector3Array": ("ptrcallRetPackedVector3List", "List<Vector3>"),
+    "PackedColorArray": ("ptrcallRetPackedColorList", "List<Color>"),
+}
+
 
 def render_ios_helper(
     function: str,
@@ -3636,7 +3664,11 @@ def render_ios_helper(
 ) -> str:
     utf8_return = kotlin_return in ("String", "NodePath")
     variant_return = kotlin_return == "Any?"
-    if utf8_return:
+    packed_return = return_type in IOS_PACKED_RETURNS and IOS_PACKED_RETURNS[return_type][1] == kotlin_return
+    if packed_return:
+        # Packed*Array return (task 100, parcel 3): the C entry owns the array cell and the copy.
+        ret_type, ret_tag, ret_decl, ret_ptr, read_expr = kotlin_return, None, [], "null", None
+    elif utf8_return:
         if return_type not in IOS_UTF8_RETURNS:
             raise ValueError(f"iOS UTF-8 return kind not audited: {return_type} ({function})")
         ret_tag, utf8_wrap = IOS_UTF8_RETURNS[return_type]
@@ -3694,6 +3726,8 @@ def render_ios_helper(
         )
     elif variant_return:
         body.append(f"ptrcallRetVariantScalar(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
+    elif packed_return:
+        body.append(f"{IOS_PACKED_RETURNS[return_type][0]}(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
     else:
         body.append(
             f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "

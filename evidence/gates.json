@@ -164,6 +164,16 @@
       "where": "macOS arm64, 4.7.2 binary: scripts/local_ci.sh end to end (runtime, @Tool, hot-reload, in-process hot-reload smokes) + demos desktop_smoke_all.sh nine-demo matrix",
       "result": "PASS",
       "source": "docs/reference/version-support.md:50,55-58"
+    },
+    {
+      "gate": "ios-device-gate",
+      "claim": "iOS Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "7cef06cd42ff6c9af46fce1247ce43843bd83a37",
+      "date": "2026-09-10",
+      "where": "iPhone 12, iOS 26.6",
+      "result": "PASS",
+      "source": "scripts/ios_device_gate.sh"
     }
   ]
 }

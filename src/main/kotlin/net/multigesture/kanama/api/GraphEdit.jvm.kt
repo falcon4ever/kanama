@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
 // KANAMA-IOS-GAP GraphEdit waits on: ptrcallNoArgsRetDictionary, ptrcallNoArgsRetDictionaryList,
 //   ptrcallWithDictionaryArg, ptrcallWithDictionaryListArg, ptrcallWithRect2ArgRetDictionaryList,
 //   ptrcallWithStringNameArgRetDictionaryList, ptrcallWithStringNameArgRetStringNameList,
-//   ptrcallWithTwoVector2ArgsRetPackedVector2List, ptrcallWithVector2AndDoubleArgRetDictionary
+//   ptrcallWithVector2AndDoubleArgRetDictionary
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -65,15 +65,6 @@ fun GraphEdit.getConnectionListFromNode(node: String): List<Map<String, Any?>> {
  */
 fun GraphEdit.getConnectionsIntersectingWithRect(rect: Rect2): List<Map<String, Any?>> {
     return ObjectCalls.ptrcallWithRect2ArgRetDictionaryList(getConnectionsIntersectingWithRectBind, handle, rect)
-}
-
-/**
- * Returns the points which would make up a connection between `from_node` and `to_node`.
- *
- * Generated from Godot docs: GraphEdit.get_connection_line
- */
-fun GraphEdit.getConnectionLine(fromNode: Vector2, toNode: Vector2): List<Vector2> {
-    return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getConnectionLineBind, handle, fromNode, toNode)
 }
 
 /**
@@ -138,11 +129,6 @@ private val getConnectionListFromNodeBind by lazy {
 private const val GET_CONNECTIONS_INTERSECTING_WITH_RECT_HASH = 2709748719L
 private val getConnectionsIntersectingWithRectBind by lazy {
     ObjectCalls.getMethodBind("GraphEdit", "get_connections_intersecting_with_rect", GET_CONNECTIONS_INTERSECTING_WITH_RECT_HASH)
-}
-
-private const val GET_CONNECTION_LINE_HASH = 3932192302L
-private val getConnectionLineBind by lazy {
-    ObjectCalls.getMethodBind("GraphEdit", "get_connection_line", GET_CONNECTION_LINE_HASH)
 }
 
 private const val GET_ATTACHED_NODES_OF_FRAME_HASH = 689397652L

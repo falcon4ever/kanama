@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP AudioStreamWAV waits on: ptrcallNoArgsRetByteArray, ptrcallNoArgsRetDictionary,
+// KANAMA-IOS-GAP AudioStreamWAV waits on: ptrcallNoArgsRetDictionary,
 //   ptrcallWithByteArrayAndDictionaryArgRetObject, ptrcallWithByteArrayArg,
 //   ptrcallWithDictionaryArg, ptrcallWithStringAndDictionaryArgRetObject
 // Index: docs/reference/generated/ios-shape-gap.md
@@ -47,18 +47,6 @@ fun AudioStreamWAV.setData(data: ByteArray) {
 }
 
 /**
- * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
- * expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from each byte.
- * Note: If `format` is set to `FORMAT_QOA`, this property expects data from a full QOA file.
- *
- * Generated from Godot docs: AudioStreamWAV.get_data
- */
-fun AudioStreamWAV.getData(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
-}
-
-/**
  * Contains user-defined tags if found in the WAV data. Commonly used tags include `title`,
  * `artist`, `album`, `tracknumber`, and `date` (`date` does not have a standard date format).
  * Note: No tag is guaranteed to be present in every file, so make sure to account for the keys not
@@ -86,12 +74,6 @@ fun AudioStreamWAV.getTags(): Map<String, Any?> {
     return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, handle)
 }
 
-var AudioStreamWAV.data: ByteArray
-    @JvmName("dataProperty")
-    get() = getData()
-    @JvmName("setDataProperty")
-    set(value) = setData(value)
-
 var AudioStreamWAV.tags: Map<String, Any?>
     @JvmName("tagsProperty")
     get() = getTags()
@@ -111,11 +93,6 @@ private val loadFromFileBind by lazy {
 private const val SET_DATA_HASH = 2971499966L
 private val setDataBind by lazy {
     ObjectCalls.getMethodBind("AudioStreamWAV", "set_data", SET_DATA_HASH)
-}
-
-private const val GET_DATA_HASH = 2362200018L
-private val getDataBind by lazy {
-    ObjectCalls.getMethodBind("AudioStreamWAV", "get_data", GET_DATA_HASH)
 }
 
 private const val SET_TAGS_HASH = 4155329257L

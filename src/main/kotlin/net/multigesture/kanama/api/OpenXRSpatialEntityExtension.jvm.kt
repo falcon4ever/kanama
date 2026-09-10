@@ -3,18 +3,13 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
-import net.multigesture.kanama.types.Vector2
-import net.multigesture.kanama.types.Vector3
 
 // GENERATED desktop/Android companion for OpenXRSpatialEntityExtension (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP OpenXRSpatialEntityExtension waits on: ptrcallWithObjectListObjectCallableArgsRetObject,
-//   ptrcallWithRIDAndLongArgRetByteArray, ptrcallWithRIDAndLongArgRetPackedFloat32List,
-//   ptrcallWithRIDAndLongArgRetPackedInt32List, ptrcallWithRIDAndLongArgRetPackedVector2List,
-//   ptrcallWithRIDAndLongArgRetPackedVector3List, ptrcallWithRIDObjectListObjectArgsRetBool,
-//   ptrcallWithRIDObjectListObjectCallableArgsRetObject,
+//   ptrcallWithRIDObjectListObjectArgsRetBool, ptrcallWithRIDObjectListObjectCallableArgsRetObject,
 //   ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject,
 //   ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID
 // Index: docs/reference/generated/ios-shape-gap.md
@@ -37,30 +32,6 @@ fun OpenXRSpatialEntityExtension.updateSpatialEntities(spatialContext: RID, enti
 
 fun OpenXRSpatialEntityExtension.querySnapshot(spatialSnapshot: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?): Boolean {
     return ObjectCalls.ptrcallWithRIDObjectListObjectArgsRetBool(querySnapshotBind, handle, spatialSnapshot, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL)
-}
-
-fun OpenXRSpatialEntityExtension.getUint8Buffer(spatialSnapshot: RID, bufferId: Long): ByteArray {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetByteArray(getUint8BufferBind, handle, spatialSnapshot, bufferId)
-}
-
-fun OpenXRSpatialEntityExtension.getUint16Buffer(spatialSnapshot: RID, bufferId: Long): List<Int> {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getUint16BufferBind, handle, spatialSnapshot, bufferId)
-}
-
-fun OpenXRSpatialEntityExtension.getUint32Buffer(spatialSnapshot: RID, bufferId: Long): List<Int> {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getUint32BufferBind, handle, spatialSnapshot, bufferId)
-}
-
-fun OpenXRSpatialEntityExtension.getFloatBuffer(spatialSnapshot: RID, bufferId: Long): List<Float> {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedFloat32List(getFloatBufferBind, handle, spatialSnapshot, bufferId)
-}
-
-fun OpenXRSpatialEntityExtension.getVector2Buffer(spatialSnapshot: RID, bufferId: Long): List<Vector2> {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(getVector2BufferBind, handle, spatialSnapshot, bufferId)
-}
-
-fun OpenXRSpatialEntityExtension.getVector3Buffer(spatialSnapshot: RID, bufferId: Long): List<Vector3> {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector3List(getVector3BufferBind, handle, spatialSnapshot, bufferId)
 }
 
 private const val CREATE_SPATIAL_CONTEXT_HASH = 1874506473L
@@ -86,34 +57,4 @@ private val updateSpatialEntitiesBind by lazy {
 private const val QUERY_SNAPSHOT_HASH = 641015484L
 private val querySnapshotBind by lazy {
     ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "query_snapshot", QUERY_SNAPSHOT_HASH)
-}
-
-private const val GET_UINT8_BUFFER_HASH = 3570600051L
-private val getUint8BufferBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_uint8_buffer", GET_UINT8_BUFFER_HASH)
-}
-
-private const val GET_UINT16_BUFFER_HASH = 3393655756L
-private val getUint16BufferBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_uint16_buffer", GET_UINT16_BUFFER_HASH)
-}
-
-private const val GET_UINT32_BUFFER_HASH = 3393655756L
-private val getUint32BufferBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_uint32_buffer", GET_UINT32_BUFFER_HASH)
-}
-
-private const val GET_FLOAT_BUFFER_HASH = 2313216651L
-private val getFloatBufferBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_float_buffer", GET_FLOAT_BUFFER_HASH)
-}
-
-private const val GET_VECTOR2_BUFFER_HASH = 110850971L
-private val getVector2BufferBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_vector2_buffer", GET_VECTOR2_BUFFER_HASH)
-}
-
-private const val GET_VECTOR3_BUFFER_HASH = 1166453791L
-private val getVector3BufferBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_vector3_buffer", GET_VECTOR3_BUFFER_HASH)
 }
