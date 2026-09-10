@@ -442,6 +442,15 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the metadata value that was set for the given column using `set_metadata`.
+     *
+     * Generated from Godot docs: TreeItem.get_metadata
+     */
+    fun getMetadata(column: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getMetadataBind, handle, column)
+    }
+
+    /**
      * Sets the given column's custom draw callback to the `callback` method on `object`. The method
      * named `callback` should accept two arguments: the `TreeItem` that is drawn and its position and
      * size as a `Rect2`.
@@ -1396,6 +1405,11 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
         private const val SET_RANGE_CONFIG_HASH = 1547181014L
         private val setRangeConfigBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "set_range_config", SET_RANGE_CONFIG_HASH)
+        }
+
+        private const val GET_METADATA_HASH = 4227898402L
+        private val getMetadataBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_metadata", GET_METADATA_HASH)
         }
 
         private const val SET_CUSTOM_DRAW_HASH = 272420368L

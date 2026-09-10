@@ -197,6 +197,18 @@ object PhysicsServer2D {
     }
 
     /**
+     * Returns the shape data that defines the configuration of the shape, such as the half-extents of
+     * a rectangle or the segments of a concave shape. See `shape_set_data` for the precise format of
+     * this data in each case.
+     *
+     * Generated from Godot docs: PhysicsServer2D.shape_get_data
+     */
+    @JvmStatic
+    fun shapeGetData(shape: RID): Any? {
+        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(shapeGetDataBind, singleton, shape)
+    }
+
+    /**
      * Creates a 2D space in the physics server, and returns the `RID` that identifies it. A space
      * contains bodies and areas, and controls the stepping of the physics simulation of the objects in
      * it.
@@ -444,6 +456,16 @@ object PhysicsServer2D {
     @JvmStatic
     fun areaSetTransform(area: RID, transform: Transform2D) {
         ObjectCalls.ptrcallWithRIDAndTransform2DArg(areaSetTransformBind, singleton, area, transform)
+    }
+
+    /**
+     * Returns the value of the given area parameter.
+     *
+     * Generated from Godot docs: PhysicsServer2D.area_get_param
+     */
+    @JvmStatic
+    fun areaGetParam(area: RID, param: Long): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param)
     }
 
     /**
@@ -851,6 +873,16 @@ object PhysicsServer2D {
     }
 
     /**
+     * Returns the value of the given body parameter.
+     *
+     * Generated from Godot docs: PhysicsServer2D.body_get_param
+     */
+    @JvmStatic
+    fun bodyGetParam(body: RID, param: Long): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param)
+    }
+
+    /**
      * Restores the default inertia and center of mass of the body based on its shapes. This undoes any
      * custom values previously set using `body_set_param`.
      *
@@ -859,6 +891,16 @@ object PhysicsServer2D {
     @JvmStatic
     fun bodyResetMassProperties(body: RID) {
         ObjectCalls.ptrcallWithRIDArg(bodyResetMassPropertiesBind, singleton, body)
+    }
+
+    /**
+     * Returns the value of the given state of the body.
+     *
+     * Generated from Godot docs: PhysicsServer2D.body_get_state
+     */
+    @JvmStatic
+    fun bodyGetState(body: RID, state: Long): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state)
     }
 
     /**
@@ -1391,6 +1433,11 @@ object PhysicsServer2D {
         ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_type", SHAPE_GET_TYPE_HASH)
     }
 
+    private const val SHAPE_GET_DATA_HASH = 4171304767L
+    private val shapeGetDataBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_data", SHAPE_GET_DATA_HASH)
+    }
+
     private const val SPACE_CREATE_HASH = 529393457L
     private val spaceCreateBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "space_create", SPACE_CREATE_HASH)
@@ -1504,6 +1551,11 @@ object PhysicsServer2D {
     private const val AREA_SET_TRANSFORM_HASH = 1246044741L
     private val areaSetTransformBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_transform", AREA_SET_TRANSFORM_HASH)
+    }
+
+    private const val AREA_GET_PARAM_HASH = 3047435120L
+    private val areaGetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_param", AREA_GET_PARAM_HASH)
     }
 
     private const val AREA_GET_TRANSFORM_HASH = 213527486L
@@ -1681,9 +1733,19 @@ object PhysicsServer2D {
         ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_priority", BODY_GET_COLLISION_PRIORITY_HASH)
     }
 
+    private const val BODY_GET_PARAM_HASH = 3208033526L
+    private val bodyGetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_param", BODY_GET_PARAM_HASH)
+    }
+
     private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
     private val bodyResetMassPropertiesBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
+    }
+
+    private const val BODY_GET_STATE_HASH = 4036367961L
+    private val bodyGetStateBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_state", BODY_GET_STATE_HASH)
     }
 
     private const val BODY_APPLY_CENTRAL_IMPULSE_HASH = 3201125042L

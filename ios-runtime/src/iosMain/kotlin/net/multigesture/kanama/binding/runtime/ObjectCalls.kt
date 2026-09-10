@@ -60,6 +60,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_scalar
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
@@ -471,6 +472,38 @@ object ObjectCalls {
         if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
       }
     }
+  }
+
+  // task 100 (parcel 2) — Variant-scalar return on any audited arg shape. Same arg cells as
+  // kanama_ios_godot_ptrcall; the C entry ptrcalls into a Variant cell and decodes the scalar
+  // payload exactly like the Object-call path (borrowed Object decode, like desktop's
+  // RetVariantScalar). Long String-family payloads come back whole through the pending slot.
+  fun ptrcallRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): Any? = memScoped {
+    val outInt = alloc<LongVar>()
+    val outDouble = alloc<DoubleVar>()
+    val strBufSize = 1024L
+    val outStr = allocArray<ByteVar>(strBufSize)
+    val outStrLen = alloc<LongVar>()
+    val retType =
+      kanama_ios_godot_ptrcall_ret_variant_scalar(
+        methodBind.address(),
+        instance.address(),
+        argTypes,
+        argPtrs,
+        argCount,
+        outInt.ptr,
+        outDouble.ptr,
+        outStr,
+        strBufSize,
+        outStrLen.ptr,
+      )
+    decodeVariantScalarReturn(retType, outInt, outDouble, outStr, strBufSize, outStrLen, null)
   }
 
   // NodePath return: GDExtension has no NodePath->utf8, so the dedicated C helper converts
@@ -1800,14 +1833,84 @@ object ObjectCalls {
     status to progress.value
   }
 
+  // Shared scalar decode for a Variant return delivered through the (out_int, out_double,
+  // out_str) triple — by kanama_ios_godot_object_call ([callWithVariantArgs]) and by
+  // kanama_ios_godot_ptrcall_ret_variant_scalar ([ptrcallRetVariantScalar], task 100 parcel 2).
+  private fun MemScope.decodeVariantScalarReturn(
+    retType: Int,
+    outInt: LongVar,
+    outDouble: DoubleVar,
+    outStr: CPointer<ByteVar>,
+    strBufSize: Long,
+    outStrLen: LongVar,
+    outIsRefCounted: IntVar?,
+  ): Any? =
+    when (retType) {
+      VT_BOOL -> outInt.value != 0L
+      VT_INT -> outInt.value
+      VT_FLOAT -> outDouble.value
+      VT_STRING,
+      VT_STRING_NAME,
+      VT_NODE_PATH -> {
+        // StringName/NodePath decode to utf8 in out_str (the C side builds String(from:…));
+        // a String surfaces here. NodePath-returning callers re-wrap in NodePath. A value longer
+        // than the buffer was parked C-side (kanama_ios_emit_utf8_return): drain it whole.
+        val len = outStrLen.value
+        when {
+          len <= 0L -> ""
+          len <= strBufSize -> outStr.readBytes(len.toInt()).decodeToString()
+          else -> {
+            val full = allocArray<ByteVar>(len)
+            val got = kanama_ios_godot_take_pending_utf8(full, len)
+            if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
+          }
+        }
+      }
+      VT_OBJECT ->
+        if (outInt.value != 0L) {
+          val handle = MemorySegment.ofAddress(outInt.value)
+          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(handle) else handle
+        } else {
+          null
+        }
+      // Small fixed-size returns arrive as raw component bytes in out_str (see
+      // kanama_ios_godot_object_call); zero length = the C side could not decode.
+      VT_VECTOR2 ->
+        if (outStrLen.value >= 8L) {
+          val b = outStr.readBytes(8)
+          Vector2(realLE(b, 0), realLE(b, 4))
+        } else null
+      VT_VECTOR2I ->
+        if (outStrLen.value >= 8L) {
+          val b = outStr.readBytes(8)
+          Vector2i(i32LE(b, 0), i32LE(b, 4))
+        } else null
+      VT_VECTOR3 ->
+        if (outStrLen.value >= 12L) {
+          val b = outStr.readBytes(12)
+          Vector3(realLE(b, 0), realLE(b, 4), realLE(b, 8))
+        } else null
+      VT_COLOR ->
+        if (outStrLen.value >= 16L) {
+          val b = outStr.readBytes(16)
+          Color(
+            Float.fromBits(i32LE(b, 0)),
+            Float.fromBits(i32LE(b, 4)),
+            Float.fromBits(i32LE(b, 8)),
+            Float.fromBits(i32LE(b, 12)),
+          )
+        } else null
+      else -> null
+    }
+
   // Generic Variant Object.call dispatch (mirrors desktop ObjectCalls.callWithVariantArgs):
   // boxes each arg into a Variant C-side and invokes [methodBind] via the Variant path,
   // for the varargs / dynamic methods ptrcall can't express (Object.call, set_deferred,
   // set_custom_mouse_cursor). Returns the decoded result — scalar (Boolean/Long/Double/
   // String/object MemorySegment) or small fixed-size (Vector2/Vector2i/Vector3/Color,
   // raw component bytes via out_str) — or null (nil / un-decoded return, e.g. Dictionary/
-  // Array/Transform). String returns over 1 KiB are truncated (the value is captured
-  // once — the call is not re-issued).
+  // Array/Transform). A String-family return longer than the 1 KiB inline buffer is parked
+  // C-side and drained whole (task 100) — the value is captured once, the call is not re-issued.
   // Build the tagged-entry blob consumed by the C shim's PT_ARRAY boxer. Object.set uses this
   // path for List<Enum> values after callers map the enum entries to integer ordinals. Keep this
   // deliberately narrow: other List element families need their own audited Variant encoding.
@@ -2036,54 +2139,15 @@ object ObjectCalls {
         outStrLen.ptr,
         outIsRefCounted?.ptr,
       )
-    when (retType) {
-      VT_BOOL -> outInt.value != 0L
-      VT_INT -> outInt.value
-      VT_FLOAT -> outDouble.value
-      VT_STRING,
-      VT_STRING_NAME,
-      VT_NODE_PATH -> {
-        // StringName/NodePath decode to utf8 in out_str (the C side builds String(from:…));
-        // a String surfaces here. NodePath-returning callers re-wrap in NodePath.
-        val len = minOf(outStrLen.value, strBufSize).toInt().coerceAtLeast(0)
-        outStr.readBytes(len).decodeToString()
-      }
-      VT_OBJECT ->
-        if (outInt.value != 0L) {
-          val handle = MemorySegment.ofAddress(outInt.value)
-          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(handle) else handle
-        } else {
-          null
-        }
-      // Small fixed-size returns arrive as raw component bytes in out_str (see
-      // kanama_ios_godot_object_call); zero length = the C side could not decode.
-      VT_VECTOR2 ->
-        if (outStrLen.value >= 8L) {
-          val b = outStr.readBytes(8)
-          Vector2(realLE(b, 0), realLE(b, 4))
-        } else null
-      VT_VECTOR2I ->
-        if (outStrLen.value >= 8L) {
-          val b = outStr.readBytes(8)
-          Vector2i(i32LE(b, 0), i32LE(b, 4))
-        } else null
-      VT_VECTOR3 ->
-        if (outStrLen.value >= 12L) {
-          val b = outStr.readBytes(12)
-          Vector3(realLE(b, 0), realLE(b, 4), realLE(b, 8))
-        } else null
-      VT_COLOR ->
-        if (outStrLen.value >= 16L) {
-          val b = outStr.readBytes(16)
-          Color(
-            Float.fromBits(i32LE(b, 0)),
-            Float.fromBits(i32LE(b, 4)),
-            Float.fromBits(i32LE(b, 8)),
-            Float.fromBits(i32LE(b, 12)),
-          )
-        } else null
-      else -> null
-    }
+    decodeVariantScalarReturn(
+      retType,
+      outInt,
+      outDouble,
+      outStr,
+      strBufSize,
+      outStrLen,
+      outIsRefCounted,
+    )
   }
 
   /**
@@ -2956,6 +3020,49 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     utf8Path == NodePath("KTrack:position"),
   )
   ObjectCalls.destroyObject(utf8Anim)
+
+  // task 100 (parcel 2) — Variant-scalar returns on arg-bearing shapes through the generated
+  // ptrcall route (ptrcallRetVariantScalar over kanama_ios_godot_ptrcall_ret_variant_scalar).
+  // StreamPeerBuffer.put_var / get_var(allow_objects) round-trips one Variant per row: int, float,
+  // bool, a short String and a 3000-byte String (parked C-side, drained whole), then null. Each
+  // get_var consumes the stream, so a re-issued call would read nothing.
+  fun variantRoundTrip(value: Any?): Any? {
+    val peer = ObjectCalls.constructObject("StreamPeerBuffer")
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("StreamPeer", "put_var", 738511890L),
+      peer,
+      listOf(value, false),
+    )
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("StreamPeerBuffer", "seek", 1286410249L),
+      peer,
+      listOf(0),
+    )
+    val back =
+      ObjectCalls.ptrcallWithBoolArgRetVariantScalar(
+        ObjectCalls.getMethodBind("StreamPeer", "get_var", 3442865206L),
+        peer,
+        false,
+      )
+    ObjectCalls.destroyObject(peer)
+    return back
+  }
+  check("variant-ret(get_var int==42)", variantRoundTrip(42L) == 42L)
+  check("variant-ret(get_var float==2.5)", variantRoundTrip(2.5) == 2.5)
+  check("variant-ret(get_var bool==true)", variantRoundTrip(true) == true)
+  check(
+    "variant-ret(get_var short string)",
+    variantRoundTrip("KanamaVar \u00e9") == "KanamaVar \u00e9",
+  )
+  val variantLong = buildString {
+    repeat(300) { append("KVar").append(it.toString().padStart(6, '0')) }
+  }
+  check(
+    "variant-ret(get_var 3000B string, pending slot)",
+    variantRoundTrip(variantLong) == variantLong,
+  )
+  check("variant-ret(pending slot drained)", kanama_ios_godot_take_pending_utf8(null, 0L) == -1L)
+  check("variant-ret(get_var null==null)", variantRoundTrip(null) == null)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

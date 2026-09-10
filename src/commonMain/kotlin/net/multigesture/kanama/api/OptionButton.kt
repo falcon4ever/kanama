@@ -252,6 +252,16 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
     }
 
     /**
+     * Retrieves the metadata of an item. Metadata may be any type and can be used to store extra
+     * information about an item, such as an external string ID.
+     *
+     * Generated from Godot docs: OptionButton.get_item_metadata
+     */
+    fun getItemMetadata(idx: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
+    }
+
+    /**
      * Returns the tooltip of the item at index `idx`.
      *
      * Generated from Godot docs: OptionButton.get_item_tooltip
@@ -581,6 +591,11 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         private const val GET_ITEM_INDEX_HASH = 923996154L
         private val getItemIndexBind by lazy {
             ObjectCalls.getMethodBind("OptionButton", "get_item_index", GET_ITEM_INDEX_HASH)
+        }
+
+        private const val GET_ITEM_METADATA_HASH = 4227898402L
+        private val getItemMetadataBind by lazy {
+            ObjectCalls.getMethodBind("OptionButton", "get_item_metadata", GET_ITEM_METADATA_HASH)
         }
 
         private const val GET_ITEM_TOOLTIP_HASH = 844755477L

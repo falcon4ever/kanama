@@ -523,12 +523,31 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the custom data value for custom data layer named `layer_name`. To check if a custom
+     * data layer exists, use `has_custom_data`.
+     *
+     * Generated from Godot docs: TileData.get_custom_data
+     */
+    fun getCustomData(layerName: String): Any? {
+        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getCustomDataBind, handle, layerName)
+    }
+
+    /**
      * Returns whether there exists a custom data layer named `layer_name`.
      *
      * Generated from Godot docs: TileData.has_custom_data
      */
     fun hasCustomData(layerName: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataBind, handle, layerName)
+    }
+
+    /**
+     * Returns the custom data value for custom data layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.get_custom_data_by_layer_id
+     */
+    fun getCustomDataByLayerId(layerId: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getCustomDataByLayerIdBind, handle, layerId)
     }
 
     object Signals {
@@ -778,9 +797,19 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("TileData", "get_probability", GET_PROBABILITY_HASH)
         }
 
+        private const val GET_CUSTOM_DATA_HASH = 1868160156L
+        private val getCustomDataBind by lazy {
+            ObjectCalls.getMethodBind("TileData", "get_custom_data", GET_CUSTOM_DATA_HASH)
+        }
+
         private const val HAS_CUSTOM_DATA_HASH = 3927539163L
         private val hasCustomDataBind by lazy {
             ObjectCalls.getMethodBind("TileData", "has_custom_data", HAS_CUSTOM_DATA_HASH)
+        }
+
+        private const val GET_CUSTOM_DATA_BY_LAYER_ID_HASH = 4227898402L
+        private val getCustomDataByLayerIdBind by lazy {
+            ObjectCalls.getMethodBind("TileData", "get_custom_data_by_layer_id", GET_CUSTOM_DATA_BY_LAYER_ID_HASH)
         }
     }
 }

@@ -23,12 +23,11 @@ import net.multigesture.kanama.types.Vector3i
 //   ptrcallWithRIDAndDictionaryArg, ptrcallWithRIDAndIntArgRetArray,
 //   ptrcallWithRIDAndIntArgRetArrayList, ptrcallWithRIDAndIntArgRetDictionary,
 //   ptrcallWithRIDAndObjectListArgs, ptrcallWithRIDAndPackedFloat32ListArg,
-//   ptrcallWithRIDAndRIDListArgs, ptrcallWithRIDAndStringNameArgRetVariantScalar,
-//   ptrcallWithRIDAndTransform3DListArgs, ptrcallWithRIDAndTwoPackedFloat32ListArgs,
-//   ptrcallWithRIDArgRetByteArray, ptrcallWithRIDArgRetDictionaryList,
-//   ptrcallWithRIDArgRetPackedColorList, ptrcallWithRIDArgRetPackedFloat32List,
-//   ptrcallWithRIDArgRetPackedInt32List, ptrcallWithRIDArgRetPackedVector3List,
-//   ptrcallWithRIDArgRetTypedObjectList,
+//   ptrcallWithRIDAndRIDListArgs, ptrcallWithRIDAndTransform3DListArgs,
+//   ptrcallWithRIDAndTwoPackedFloat32ListArgs, ptrcallWithRIDArgRetByteArray,
+//   ptrcallWithRIDArgRetDictionaryList, ptrcallWithRIDArgRetPackedColorList,
+//   ptrcallWithRIDArgRetPackedFloat32List, ptrcallWithRIDArgRetPackedInt32List,
+//   ptrcallWithRIDArgRetPackedVector3List, ptrcallWithRIDArgRetTypedObjectList,
 //   ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs,
 //   ptrcallWithRIDIntIntAndByteArrayArgs, ptrcallWithRIDListRect2iRIDColorRIDListIntArgs,
 //   ptrcallWithRIDLongTwoArrayDictionaryLongArgs,
@@ -109,31 +108,12 @@ fun RenderingServer.getShaderParameterList(shader: RID): List<Map<String, Any?>>
 }
 
 /**
- * Returns the default value for the specified shader uniform. This is usually the value written in
- * the shader source code.
- *
- * Generated from Godot docs: RenderingServer.shader_get_parameter_default
- */
-fun RenderingServer.shaderGetParameterDefault(shader: RID, name: String): Any? {
-    return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(shaderGetParameterDefaultBind, renderingServerSingleton, shader, name)
-}
-
-/**
  * Sets a material's parameter.
  *
  * Generated from Godot docs: RenderingServer.material_set_param
  */
 fun RenderingServer.materialSetParam(material: RID, parameter: String, value: Any?) {
     ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(materialSetParamBind, renderingServerSingleton, material, parameter, value)
-}
-
-/**
- * Returns the value of a certain material's parameter.
- *
- * Generated from Godot docs: RenderingServer.material_get_param
- */
-fun RenderingServer.materialGetParam(material: RID, parameter: String): Any? {
-    return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(materialGetParamBind, renderingServerSingleton, material, parameter)
 }
 
 /**
@@ -480,27 +460,6 @@ fun RenderingServer.instanceGeometrySetShaderParameter(instance: RID, parameter:
 }
 
 /**
- * Returns the value of the per-instance shader uniform from the specified 3D geometry instance.
- * Equivalent to `GeometryInstance3D.get_instance_shader_parameter`. Note: Per-instance shader
- * parameter names are case-sensitive.
- *
- * Generated from Godot docs: RenderingServer.instance_geometry_get_shader_parameter
- */
-fun RenderingServer.instanceGeometryGetShaderParameter(instance: RID, parameter: String): Any? {
-    return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(instanceGeometryGetShaderParameterBind, renderingServerSingleton, instance, parameter)
-}
-
-/**
- * Returns the default value of the per-instance shader uniform from the specified 3D geometry
- * instance. Equivalent to `GeometryInstance3D.get_instance_shader_parameter`.
- *
- * Generated from Godot docs: RenderingServer.instance_geometry_get_shader_parameter_default_value
- */
-fun RenderingServer.instanceGeometryGetShaderParameterDefaultValue(instance: RID, parameter: String): Any? {
-    return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(instanceGeometryGetShaderParameterDefaultValueBind, renderingServerSingleton, instance, parameter)
-}
-
-/**
  * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
  * from the specified 3D geometry instance. The returned dictionary is in PropertyInfo format, with
  * the keys `name`, `class_name`, `type`, `hint`, `hint_string` and `usage`. Equivalent to
@@ -633,26 +592,6 @@ fun RenderingServer.canvasItemSetInstanceShaderParameter(instance: RID, paramete
 }
 
 /**
- * Returns the value of the per-instance shader uniform from the specified canvas item instance.
- * Equivalent to `CanvasItem.get_instance_shader_parameter`.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_get_instance_shader_parameter
- */
-fun RenderingServer.canvasItemGetInstanceShaderParameter(instance: RID, parameter: String): Any? {
-    return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(canvasItemGetInstanceShaderParameterBind, renderingServerSingleton, instance, parameter)
-}
-
-/**
- * Returns the default value of the per-instance shader uniform from the specified canvas item
- * instance. Equivalent to `CanvasItem.get_instance_shader_parameter`.
- *
- * Generated from Godot docs: RenderingServer.canvas_item_get_instance_shader_parameter_default_value
- */
-fun RenderingServer.canvasItemGetInstanceShaderParameterDefaultValue(instance: RID, parameter: String): Any? {
-    return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(canvasItemGetInstanceShaderParameterDefaultValueBind, renderingServerSingleton, instance, parameter)
-}
-
-/**
  * Returns a dictionary of per-instance shader uniform names of the per-instance shader uniform
  * from the specified canvas item instance. The returned dictionary is in PropertyInfo format, with
  * the keys `name`, `class_name`, `type`, `hint`, `hint_string`, and `usage`.
@@ -734,19 +673,9 @@ private val getShaderParameterListBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "get_shader_parameter_list", GET_SHADER_PARAMETER_LIST_HASH)
 }
 
-private const val SHADER_GET_PARAMETER_DEFAULT_HASH = 2621281810L
-private val shaderGetParameterDefaultBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "shader_get_parameter_default", SHADER_GET_PARAMETER_DEFAULT_HASH)
-}
-
 private const val MATERIAL_SET_PARAM_HASH = 3477296213L
 private val materialSetParamBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "material_set_param", MATERIAL_SET_PARAM_HASH)
-}
-
-private const val MATERIAL_GET_PARAM_HASH = 2621281810L
-private val materialGetParamBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "material_get_param", MATERIAL_GET_PARAM_HASH)
 }
 
 private const val MESH_CREATE_FROM_SURFACES_HASH = 4291747531L
@@ -889,16 +818,6 @@ private val instanceGeometrySetShaderParameterBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_shader_parameter", INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH)
 }
 
-private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH = 2621281810L
-private val instanceGeometryGetShaderParameterBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH)
-}
-
-private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
-private val instanceGeometryGetShaderParameterDefaultValueBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_default_value", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
-}
-
 private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
 private val instanceGeometryGetShaderParameterListBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_list", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH)
@@ -952,16 +871,6 @@ private val canvasItemAddTriangleArrayBind by lazy {
 private const val CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH = 3477296213L
 private val canvasItemSetInstanceShaderParameterBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_instance_shader_parameter", CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH)
-}
-
-private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH = 2621281810L
-private val canvasItemGetInstanceShaderParameterBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH)
-}
-
-private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
-private val canvasItemGetInstanceShaderParameterDefaultValueBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_default_value", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
 }
 
 private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH = 2684255073L

@@ -8,8 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Theme waits on: ptrcallWithLongAndStringArgRetPackedStringList,
-//   ptrcallWithLongAndTwoStringNameAndVariantArg,
-//   ptrcallWithLongAndTwoStringNameArgsRetVariantScalar, ptrcallWithLongArgRetPackedStringList,
+//   ptrcallWithLongAndTwoStringNameAndVariantArg, ptrcallWithLongArgRetPackedStringList,
 //   ptrcallWithStringArgRetPackedStringList, ptrcallWithStringNameArgRetPackedStringList
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -93,19 +92,6 @@ fun Theme.setThemeItem(dataType: Long, name: String, themeType: String, value: A
 }
 
 /**
- * Returns the theme property of `data_type` defined by `name` and `theme_type`, if it exists.
- * Returns the engine fallback value if the property doesn't exist (see `ThemeDB`). Use
- * `has_theme_item` to check for existence. Note: This method is analogous to calling the
- * corresponding data type specific method, but can be used for more generalized logic.
- *
- * Generated from Godot docs: Theme.get_theme_item
- */
-fun Theme.getThemeItem(dataType: Long, name: String, themeType: String): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, handle, dataType, name, themeType)
-}
-
-/**
  * Returns a list of names for properties of `data_type` defined with `theme_type`. Use
  * `get_theme_item_type_list` to get a list of possible theme type names. Note: This method is
  * analogous to calling the corresponding data type specific method, but can be used for more
@@ -173,11 +159,6 @@ private val getConstantListBind by lazy {
 private const val SET_THEME_ITEM_HASH = 2492983623L
 private val setThemeItemBind by lazy {
     ObjectCalls.getMethodBind("Theme", "set_theme_item", SET_THEME_ITEM_HASH)
-}
-
-private const val GET_THEME_ITEM_HASH = 2191024021L
-private val getThemeItemBind by lazy {
-    ObjectCalls.getMethodBind("Theme", "get_theme_item", GET_THEME_ITEM_HASH)
 }
 
 private const val GET_THEME_ITEM_LIST_HASH = 3726716710L

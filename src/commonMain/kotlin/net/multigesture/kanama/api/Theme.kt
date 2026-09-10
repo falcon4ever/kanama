@@ -556,6 +556,19 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the theme property of `data_type` defined by `name` and `theme_type`, if it exists.
+     * Returns the engine fallback value if the property doesn't exist (see `ThemeDB`). Use
+     * `has_theme_item` to check for existence. Note: This method is analogous to calling the
+     * corresponding data type specific method, but can be used for more generalized logic.
+     *
+     * Generated from Godot docs: Theme.get_theme_item
+     */
+    fun getThemeItem(dataType: Long, name: String, themeType: String): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, handle, dataType, name, themeType)
+    }
+
+    /**
      * Returns `true` if the theme property of `data_type` defined by `name` and `theme_type` exists.
      * Returns `false` if it doesn't exist. Use `set_theme_item` to define it. Note: This method is
      * analogous to calling the corresponding data type specific method, but can be used for more
@@ -951,6 +964,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         private const val HAS_DEFAULT_FONT_SIZE_HASH = 36873697L
         private val hasDefaultFontSizeBind by lazy {
             ObjectCalls.getMethodBind("Theme", "has_default_font_size", HAS_DEFAULT_FONT_SIZE_HASH)
+        }
+
+        private const val GET_THEME_ITEM_HASH = 2191024021L
+        private val getThemeItemBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_theme_item", GET_THEME_ITEM_HASH)
         }
 
         private const val HAS_THEME_ITEM_HASH = 1739311056L

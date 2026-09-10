@@ -330,6 +330,15 @@ class ItemList(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the metadata value of the specified index.
+     *
+     * Generated from Godot docs: ItemList.get_item_metadata
+     */
+    fun getItemMetadata(idx: Int): Any? {
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
+    }
+
+    /**
      * Sets the background color of the item specified by `idx` index to the specified `Color`.
      *
      * Generated from Godot docs: ItemList.set_item_custom_bg_color
@@ -1049,6 +1058,11 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         private const val IS_ITEM_DISABLED_HASH = 1116898809L
         private val isItemDisabledBind by lazy {
             ObjectCalls.getMethodBind("ItemList", "is_item_disabled", IS_ITEM_DISABLED_HASH)
+        }
+
+        private const val GET_ITEM_METADATA_HASH = 4227898402L
+        private val getItemMetadataBind by lazy {
+            ObjectCalls.getMethodBind("ItemList", "get_item_metadata", GET_ITEM_METADATA_HASH)
         }
 
         private const val SET_ITEM_CUSTOM_BG_COLOR_HASH = 2878471219L

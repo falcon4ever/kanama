@@ -235,6 +235,16 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns export option value or value of environment variable if it is set.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_or_env
+     */
+    fun getOrEnv(name: String, envVar: String): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, handle, name, envVar)
+    }
+
+    /**
      * Returns the preset's version number, or fall back to the
      * `ProjectSettings.application/config/version` project setting if set to an empty string. If
      * `windows_version` is `true`, formats the returned version number to be compatible with Windows
@@ -376,6 +386,11 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_SCRIPT_EXPORT_MODE_HASH = 2835358398L
         private val getScriptExportModeBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPreset", "get_script_export_mode", GET_SCRIPT_EXPORT_MODE_HASH)
+        }
+
+        private const val GET_OR_ENV_HASH = 389838787L
+        private val getOrEnvBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPreset", "get_or_env", GET_OR_ENV_HASH)
         }
 
         private const val GET_VERSION_HASH = 1132184663L

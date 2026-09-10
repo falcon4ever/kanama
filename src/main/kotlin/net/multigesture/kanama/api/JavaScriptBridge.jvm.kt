@@ -8,20 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP JavaScriptBridge waits on: ptrcallWithByteArrayTwoStringArgs,
-//   ptrcallWithObjectArgRetByteArray, ptrcallWithStringAndBoolArgRetVariantScalar
+//   ptrcallWithObjectArgRetByteArray
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Execute the string `code` as JavaScript code within the browser window. This is a call to the
- * actual global JavaScript function `eval()`. If `use_global_execution_context` is `true`, the
- * code will be evaluated in the global execution context. Otherwise, it is evaluated in the
- * execution context of a function within the engine's runtime environment.
- *
- * Generated from Godot docs: JavaScriptBridge.eval
- */
-fun JavaScriptBridge.eval(code: String, useGlobalExecutionContext: Boolean = false): Any? {
-    return ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(evalBind, javaScriptBridgeSingleton, code, useGlobalExecutionContext)
-}
 
 /**
  * Returns a copy of `javascript_buffer`'s contents as a `PackedByteArray`. See also
@@ -49,11 +37,6 @@ fun JavaScriptBridge.downloadBuffer(buffer: ByteArray, name: String, mime: Strin
 
 private val javaScriptBridgeSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("JavaScriptBridge")
-}
-
-private const val EVAL_HASH = 218087648L
-private val evalBind by lazy {
-    ObjectCalls.getMethodBind("JavaScriptBridge", "eval", EVAL_HASH)
 }
 
 private const val JS_BUFFER_TO_PACKED_BYTE_ARRAY_HASH = 64409880L

@@ -8,8 +8,7 @@ import net.multigesture.kanama.types.RID
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP PhysicsServer2D waits on: ptrcallWithRIDAndLongArgRetVariantScalar,
-//   ptrcallWithRIDAndVariantArg, ptrcallWithRIDArgRetVariantScalar,
+// KANAMA-IOS-GAP PhysicsServer2D waits on: ptrcallWithRIDAndVariantArg,
 //   ptrcallWithRIDCallableVariantArgs, ptrcallWithRIDLongAndVariantArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -39,32 +38,12 @@ fun PhysicsServer2D.shapeSetData(shape: RID, data: Any?) {
 }
 
 /**
- * Returns the shape data that defines the configuration of the shape, such as the half-extents of
- * a rectangle or the segments of a concave shape. See `shape_set_data` for the precise format of
- * this data in each case.
- *
- * Generated from Godot docs: PhysicsServer2D.shape_get_data
- */
-fun PhysicsServer2D.shapeGetData(shape: RID): Any? {
-    return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(shapeGetDataBind, physicsServer2DSingleton, shape)
-}
-
-/**
  * Sets the value of the given area parameter.
  *
  * Generated from Godot docs: PhysicsServer2D.area_set_param
  */
 fun PhysicsServer2D.areaSetParam(area: RID, param: Long, value: Any?) {
     ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, physicsServer2DSingleton, area, param, value)
-}
-
-/**
- * Returns the value of the given area parameter.
- *
- * Generated from Godot docs: PhysicsServer2D.area_get_param
- */
-fun PhysicsServer2D.areaGetParam(area: RID, param: Long): Any? {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, physicsServer2DSingleton, area, param)
 }
 
 /**
@@ -77,15 +56,6 @@ fun PhysicsServer2D.bodySetParam(body: RID, param: Long, value: Any?) {
 }
 
 /**
- * Returns the value of the given body parameter.
- *
- * Generated from Godot docs: PhysicsServer2D.body_get_param
- */
-fun PhysicsServer2D.bodyGetParam(body: RID, param: Long): Any? {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, physicsServer2DSingleton, body, param)
-}
-
-/**
  * Sets the value of a body's state. Note: The state change doesn't take effect immediately. The
  * state will change on the next physics frame.
  *
@@ -93,15 +63,6 @@ fun PhysicsServer2D.bodyGetParam(body: RID, param: Long): Any? {
  */
 fun PhysicsServer2D.bodySetState(body: RID, state: Long, value: Any?) {
     ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, physicsServer2DSingleton, body, state, value)
-}
-
-/**
- * Returns the value of the given state of the body.
- *
- * Generated from Godot docs: PhysicsServer2D.body_get_state
- */
-fun PhysicsServer2D.bodyGetState(body: RID, state: Long): Any? {
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, physicsServer2DSingleton, body, state)
 }
 
 /**
@@ -130,19 +91,9 @@ private val shapeSetDataBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer2D", "shape_set_data", SHAPE_SET_DATA_HASH)
 }
 
-private const val SHAPE_GET_DATA_HASH = 4171304767L
-private val shapeGetDataBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_data", SHAPE_GET_DATA_HASH)
-}
-
 private const val AREA_SET_PARAM_HASH = 1257146028L
 private val areaSetParamBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_param", AREA_SET_PARAM_HASH)
-}
-
-private const val AREA_GET_PARAM_HASH = 3047435120L
-private val areaGetParamBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_param", AREA_GET_PARAM_HASH)
 }
 
 private const val BODY_SET_PARAM_HASH = 2715630609L
@@ -150,19 +101,9 @@ private val bodySetParamBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_param", BODY_SET_PARAM_HASH)
 }
 
-private const val BODY_GET_PARAM_HASH = 3208033526L
-private val bodyGetParamBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_param", BODY_GET_PARAM_HASH)
-}
-
 private const val BODY_SET_STATE_HASH = 1706355209L
 private val bodySetStateBind by lazy {
     ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_state", BODY_SET_STATE_HASH)
-}
-
-private const val BODY_GET_STATE_HASH = 4036367961L
-private val bodyGetStateBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_state", BODY_GET_STATE_HASH)
 }
 
 private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L

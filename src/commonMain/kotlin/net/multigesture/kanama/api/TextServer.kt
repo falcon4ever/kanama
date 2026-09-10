@@ -1556,6 +1556,26 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns text span metadata.
+     *
+     * Generated from Godot docs: TextServer.shaped_get_span_meta
+     */
+    fun shapedGetSpanMeta(shaped: RID, index: Long): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanMetaBind, handle, shaped, index)
+    }
+
+    /**
+     * Returns text embedded object key.
+     *
+     * Generated from Godot docs: TextServer.shaped_get_span_embedded_object
+     */
+    fun shapedGetSpanEmbeddedObject(shaped: RID, index: Long): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanEmbeddedObjectBind, handle, shaped, index)
+    }
+
+    /**
      * Returns the text span source text.
      *
      * Generated from Godot docs: TextServer.shaped_get_span_text
@@ -1563,6 +1583,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedGetSpanText(shaped: RID, index: Long): String {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetSpanTextBind, handle, shaped, index)
+    }
+
+    /**
+     * Returns the text span embedded object key.
+     *
+     * Generated from Godot docs: TextServer.shaped_get_span_object
+     */
+    fun shapedGetSpanObject(shaped: RID, index: Long): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanObjectBind, handle, shaped, index)
     }
 
     /**
@@ -1643,6 +1673,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedGetRunDirection(shaped: RID, index: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedGetRunDirectionBind, handle, shaped, index)
+    }
+
+    /**
+     * Returns the embedded object of the `index` text run (in visual order).
+     *
+     * Generated from Godot docs: TextServer.shaped_get_run_object
+     */
+    fun shapedGetRunObject(shaped: RID, index: Long): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetRunObjectBind, handle, shaped, index)
     }
 
     /**
@@ -2926,9 +2966,24 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_get_span_count", SHAPED_GET_SPAN_COUNT_HASH)
         }
 
+        private const val SHAPED_GET_SPAN_META_HASH = 4069510997L
+        private val shapedGetSpanMetaBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_span_meta", SHAPED_GET_SPAN_META_HASH)
+        }
+
+        private const val SHAPED_GET_SPAN_EMBEDDED_OBJECT_HASH = 4069510997L
+        private val shapedGetSpanEmbeddedObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_span_embedded_object", SHAPED_GET_SPAN_EMBEDDED_OBJECT_HASH)
+        }
+
         private const val SHAPED_GET_SPAN_TEXT_HASH = 1464764419L
         private val shapedGetSpanTextBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_get_span_text", SHAPED_GET_SPAN_TEXT_HASH)
+        }
+
+        private const val SHAPED_GET_SPAN_OBJECT_HASH = 4069510997L
+        private val shapedGetSpanObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_span_object", SHAPED_GET_SPAN_OBJECT_HASH)
         }
 
         private const val SHAPED_GET_RUN_COUNT_HASH = 2198884583L
@@ -2969,6 +3024,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_GET_RUN_DIRECTION_HASH = 2413896864L
         private val shapedGetRunDirectionBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_get_run_direction", SHAPED_GET_RUN_DIRECTION_HASH)
+        }
+
+        private const val SHAPED_GET_RUN_OBJECT_HASH = 4069510997L
+        private val shapedGetRunObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_get_run_object", SHAPED_GET_RUN_OBJECT_HASH)
         }
 
         private const val SHAPED_TEXT_SUBSTR_HASH = 1937682086L

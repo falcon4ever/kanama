@@ -389,6 +389,18 @@ object DisplayServer {
     }
 
     /**
+     * Returns the metadata of the specified item, which might be of any type. You can set it with
+     * `global_menu_set_item_tag`, which provides a simple way of assigning context data to items.
+     * Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_item_tag
+     */
+    @JvmStatic
+    fun globalMenuGetItemTag(menuRoot: String, idx: Int): Any? {
+        return ObjectCalls.ptrcallWithStringAndIntArgRetVariantScalar(globalMenuGetItemTagBind, singleton, menuRoot, idx)
+    }
+
+    /**
      * Returns the text of the item at index `idx`. Note: This method is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_get_item_text
@@ -2106,6 +2118,16 @@ object DisplayServer {
     }
 
     /**
+     * Returns the metadata of the accessibility element `id`.
+     *
+     * Generated from Godot docs: DisplayServer.accessibility_element_get_meta
+     */
+    @JvmStatic
+    fun accessibilityElementGetMeta(id: RID): Any? {
+        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(accessibilityElementGetMetaBind, singleton, id)
+    }
+
+    /**
      * Sets window outer (with decorations) and inner (without decorations) bounds for assistive apps.
      * Note: This method is implemented on Linux, macOS, and Windows. Note: Advanced users only!
      * `Window` objects call this method automatically.
@@ -3368,6 +3390,11 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_is_item_radio_checkable", GLOBAL_MENU_IS_ITEM_RADIO_CHECKABLE_HASH)
     }
 
+    private const val GLOBAL_MENU_GET_ITEM_TAG_HASH = 330672633L
+    private val globalMenuGetItemTagBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_tag", GLOBAL_MENU_GET_ITEM_TAG_HASH)
+    }
+
     private const val GLOBAL_MENU_GET_ITEM_TEXT_HASH = 591067909L
     private val globalMenuGetItemTextBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_text", GLOBAL_MENU_GET_ITEM_TEXT_HASH)
@@ -4076,6 +4103,11 @@ object DisplayServer {
     private const val ACCESSIBILITY_FREE_ELEMENT_HASH = 2722037293L
     private val accessibilityFreeElementBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "accessibility_free_element", ACCESSIBILITY_FREE_ELEMENT_HASH)
+    }
+
+    private const val ACCESSIBILITY_ELEMENT_GET_META_HASH = 4171304767L
+    private val accessibilityElementGetMetaBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "accessibility_element_get_meta", ACCESSIBILITY_ELEMENT_GET_META_HASH)
     }
 
     private const val ACCESSIBILITY_SET_WINDOW_RECT_HASH = 2386961724L

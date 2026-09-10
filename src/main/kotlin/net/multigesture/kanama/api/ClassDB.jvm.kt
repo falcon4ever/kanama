@@ -8,11 +8,10 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP ClassDB waits on: ptrcallWithObjectStringNameAndVariantArgRetLong,
-//   ptrcallWithObjectStringNameArgRetVariantScalar,
 //   ptrcallWithStringNameAndBoolArgRetDictionaryList,
 //   ptrcallWithStringNameAndBoolArgRetPackedStringList, ptrcallWithStringNameArgRetPackedStringList,
 //   ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList,
-//   ptrcallWithTwoStringNameArgsRetDictionary, ptrcallWithTwoStringNameArgsRetVariantScalar
+//   ptrcallWithTwoStringNameArgsRetDictionary
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -56,30 +55,12 @@ fun ClassDB.classGetPropertyList(classValue: String, noInheritance: Boolean = fa
 }
 
 /**
- * Returns the value of `property` of `object` or its ancestry.
- *
- * Generated from Godot docs: ClassDB.class_get_property
- */
-fun ClassDB.classGetProperty(objectValue: GodotObject, property: String): Any? {
-    return ObjectCalls.ptrcallWithObjectStringNameArgRetVariantScalar(classGetPropertyBind, classDBSingleton, objectValue.handle, property)
-}
-
-/**
  * Sets `property` value of `object` to `value`.
  *
  * Generated from Godot docs: ClassDB.class_set_property
  */
 fun ClassDB.classSetProperty(objectValue: GodotObject, property: String, value: Any?): Long {
     return ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(classSetPropertyBind, classDBSingleton, objectValue.handle, property, value)
-}
-
-/**
- * Returns the default value of `property` of `class` or its ancestor classes.
- *
- * Generated from Godot docs: ClassDB.class_get_property_default_value
- */
-fun ClassDB.classGetPropertyDefaultValue(classValue: String, property: String): Any? {
-    return ObjectCalls.ptrcallWithTwoStringNameArgsRetVariantScalar(classGetPropertyDefaultValueBind, classDBSingleton, classValue, property)
 }
 
 /**
@@ -146,19 +127,9 @@ private val classGetPropertyListBind by lazy {
     ObjectCalls.getMethodBind("ClassDB", "class_get_property_list", CLASS_GET_PROPERTY_LIST_HASH)
 }
 
-private const val CLASS_GET_PROPERTY_HASH = 2498641674L
-private val classGetPropertyBind by lazy {
-    ObjectCalls.getMethodBind("ClassDB", "class_get_property", CLASS_GET_PROPERTY_HASH)
-}
-
 private const val CLASS_SET_PROPERTY_HASH = 1690314931L
 private val classSetPropertyBind by lazy {
     ObjectCalls.getMethodBind("ClassDB", "class_set_property", CLASS_SET_PROPERTY_HASH)
-}
-
-private const val CLASS_GET_PROPERTY_DEFAULT_VALUE_HASH = 2718203076L
-private val classGetPropertyDefaultValueBind by lazy {
-    ObjectCalls.getMethodBind("ClassDB", "class_get_property_default_value", CLASS_GET_PROPERTY_DEFAULT_VALUE_HASH)
 }
 
 private const val CLASS_GET_METHOD_LIST_HASH = 3504980660L

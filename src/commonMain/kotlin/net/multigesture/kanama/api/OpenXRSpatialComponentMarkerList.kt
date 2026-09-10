@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 
 /**
  * Generated from Godot docs: OpenXRSpatialComponentMarkerList
@@ -17,6 +18,11 @@ class OpenXRSpatialComponentMarkerList(handle: MemorySegment) : OpenXRSpatialCom
     fun getMarkerId(index: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetUInt32(getMarkerIdBind, handle, index)
+    }
+
+    fun getMarkerData(snapshot: RID, index: Long): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(getMarkerDataBind, handle, snapshot, index)
     }
 
     companion object {
@@ -42,6 +48,11 @@ class OpenXRSpatialComponentMarkerList(handle: MemorySegment) : OpenXRSpatialCom
         private const val GET_MARKER_ID_HASH = 923996154L
         private val getMarkerIdBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialComponentMarkerList", "get_marker_id", GET_MARKER_ID_HASH)
+        }
+
+        private const val GET_MARKER_DATA_HASH = 4069510997L
+        private val getMarkerDataBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialComponentMarkerList", "get_marker_data", GET_MARKER_DATA_HASH)
         }
     }
 }

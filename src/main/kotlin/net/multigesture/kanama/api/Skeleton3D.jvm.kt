@@ -7,19 +7,10 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Skeleton3D waits on: ptrcallWithIntAndStringNameArgRetVariantScalar,
-//   ptrcallWithIntArgRetPackedInt32List, ptrcallWithIntArgRetStringNameList,
-//   ptrcallWithIntStringNameAndVariantArg, ptrcallWithStringNameListArg
+// KANAMA-IOS-GAP Skeleton3D waits on: ptrcallWithIntArgRetPackedInt32List,
+//   ptrcallWithIntArgRetStringNameList, ptrcallWithIntStringNameAndVariantArg,
+//   ptrcallWithStringNameListArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns the metadata with the given `key` for the bone at index `bone_idx`.
- *
- * Generated from Godot docs: Skeleton3D.get_bone_meta
- */
-fun Skeleton3D.getBoneMeta(boneIdx: Int, key: String): Any? {
-    return ObjectCalls.ptrcallWithIntAndStringNameArgRetVariantScalar(getBoneMetaBind, handle, boneIdx, key)
-}
 
 /**
  * Returns the list of all metadata keys for the bone at index `bone_idx`.
@@ -58,11 +49,6 @@ fun Skeleton3D.getBoneChildren(boneIdx: Int): List<Int> {
  */
 fun Skeleton3D.physicalBonesStartSimulation(bones: List<String>) {
     ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, handle, bones)
-}
-
-private const val GET_BONE_META_HASH = 203112058L
-private val getBoneMetaBind by lazy {
-    ObjectCalls.getMethodBind("Skeleton3D", "get_bone_meta", GET_BONE_META_HASH)
 }
 
 private const val GET_BONE_META_LIST_HASH = 663333327L

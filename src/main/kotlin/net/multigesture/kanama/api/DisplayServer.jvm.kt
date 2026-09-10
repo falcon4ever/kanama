@@ -15,8 +15,7 @@ import net.multigesture.kanama.types.Vector2
 //   ptrcallNoArgsRetRect2List,
 //   ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong,
 //   ptrcallWithIntAndRect2iArg, ptrcallWithPackedVector2ListAndIntArgs, ptrcallWithRIDAndVariantArg,
-//   ptrcallWithRIDArgRetVariantScalar, ptrcallWithRect2iArgRetObject,
-//   ptrcallWithStringAndIntArgRetVariantScalar, ptrcallWithStringAndVariantArgRetInt,
+//   ptrcallWithRect2iArgRetObject, ptrcallWithStringAndVariantArgRetInt,
 //   ptrcallWithStringArgRetPackedStringList, ptrcallWithStringIntAndVariantArg,
 //   ptrcallWithStringIntArgsRetCallable,
 //   ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt,
@@ -177,17 +176,6 @@ fun DisplayServer.globalMenuGetItemKeyCallback(menuRoot: String, idx: Int): Godo
 }
 
 /**
- * Returns the metadata of the specified item, which might be of any type. You can set it with
- * `global_menu_set_item_tag`, which provides a simple way of assigning context data to items.
- * Note: This method is implemented only on macOS.
- *
- * Generated from Godot docs: DisplayServer.global_menu_get_item_tag
- */
-fun DisplayServer.globalMenuGetItemTag(menuRoot: String, idx: Int): Any? {
-    return ObjectCalls.ptrcallWithStringAndIntArgRetVariantScalar(globalMenuGetItemTagBind, displayServerSingleton, menuRoot, idx)
-}
-
-/**
  * Sets the metadata of an item, which may be of any type. You can later get it with
  * `global_menu_get_item_tag`, which provides a simple way of assigning context data to items.
  * Note: This method is implemented only on macOS.
@@ -290,15 +278,6 @@ fun DisplayServer.windowSetMousePassthrough(region: List<Vector2>, windowId: Int
  */
 fun DisplayServer.accessibilityElementSetMeta(id: RID, meta: Any?) {
     ObjectCalls.ptrcallWithRIDAndVariantArg(accessibilityElementSetMetaBind, displayServerSingleton, id, meta)
-}
-
-/**
- * Returns the metadata of the accessibility element `id`.
- *
- * Generated from Godot docs: DisplayServer.accessibility_element_get_meta
- */
-fun DisplayServer.accessibilityElementGetMeta(id: RID): Any? {
-    return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(accessibilityElementGetMetaBind, displayServerSingleton, id)
 }
 
 /**
@@ -420,11 +399,6 @@ private val globalMenuGetItemKeyCallbackBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_key_callback", GLOBAL_MENU_GET_ITEM_KEY_CALLBACK_HASH)
 }
 
-private const val GLOBAL_MENU_GET_ITEM_TAG_HASH = 330672633L
-private val globalMenuGetItemTagBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_tag", GLOBAL_MENU_GET_ITEM_TAG_HASH)
-}
-
 private const val GLOBAL_MENU_SET_ITEM_TAG_HASH = 453659863L
 private val globalMenuSetItemTagBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "global_menu_set_item_tag", GLOBAL_MENU_SET_ITEM_TAG_HASH)
@@ -468,11 +442,6 @@ private val windowSetMousePassthroughBind by lazy {
 private const val ACCESSIBILITY_ELEMENT_SET_META_HASH = 3175752987L
 private val accessibilityElementSetMetaBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "accessibility_element_set_meta", ACCESSIBILITY_ELEMENT_SET_META_HASH)
-}
-
-private const val ACCESSIBILITY_ELEMENT_GET_META_HASH = 4171304767L
-private val accessibilityElementGetMetaBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "accessibility_element_get_meta", ACCESSIBILITY_ELEMENT_GET_META_HASH)
 }
 
 private const val DIALOG_SHOW_HASH = 4115553226L

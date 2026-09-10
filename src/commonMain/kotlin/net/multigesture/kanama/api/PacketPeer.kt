@@ -19,6 +19,19 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setEncodeBufferMaxSize(value)
 
     /**
+     * Gets a Variant. If `allow_objects` is `true`, decoding objects is allowed. Internally, this uses
+     * the same decoding mechanism as the `@GlobalScope.bytes_to_var` method. Warning: Deserialized
+     * objects can contain code which gets executed. Do not use this option if the serialized object
+     * comes from untrusted sources to avoid potential security threats such as remote code execution.
+     *
+     * Generated from Godot docs: PacketPeer.get_var
+     */
+    fun getVar(allowObjects: Boolean = false): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
+    }
+
+    /**
      * Returns the error state of the last packet received (via `get_packet` and `get_var`).
      *
      * Generated from Godot docs: PacketPeer.get_packet_error
@@ -71,6 +84,11 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): PacketPeer? =
             if (handle.address() == 0L) null else PacketPeer(handle)
+
+        private const val GET_VAR_HASH = 3442865206L
+        private val getVarBind by lazy {
+            ObjectCalls.getMethodBind("PacketPeer", "get_var", GET_VAR_HASH)
+        }
 
         private const val GET_PACKET_ERROR_HASH = 3185525595L
         private val getPacketErrorBind by lazy {

@@ -53,6 +53,29 @@ object Geometry3D {
         return ObjectCalls.ptrcallWithFourVector3ArgsRetVector3(getTriangleBarycentricCoordsBind, singleton, point, a, b, c)
     }
 
+    /**
+     * Tests if the 3D ray starting at `from` with the direction of `dir` intersects the triangle
+     * specified by `a`, `b` and `c`. If yes, returns the point of intersection as `Vector3`. If no
+     * intersection takes place, returns `null`.
+     *
+     * Generated from Godot docs: Geometry3D.ray_intersects_triangle
+     */
+    @JvmStatic
+    fun rayIntersectsTriangle(from: Vector3, dir: Vector3, a: Vector3, b: Vector3, c: Vector3): Any? {
+        return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(rayIntersectsTriangleBind, singleton, from, dir, a, b, c)
+    }
+
+    /**
+     * Tests if the segment (`from`, `to`) intersects the triangle `a`, `b`, `c`. If yes, returns the
+     * point of intersection as `Vector3`. If no intersection takes place, returns `null`.
+     *
+     * Generated from Godot docs: Geometry3D.segment_intersects_triangle
+     */
+    @JvmStatic
+    fun segmentIntersectsTriangle(from: Vector3, to: Vector3, a: Vector3, b: Vector3, c: Vector3): Any? {
+        return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(segmentIntersectsTriangleBind, singleton, from, to, a, b, c)
+    }
+
     @JvmStatic
     fun fromHandle(handle: MemorySegment): Geometry3D? =
         wrap(handle)
@@ -73,5 +96,15 @@ object Geometry3D {
     private const val GET_TRIANGLE_BARYCENTRIC_COORDS_HASH = 1362048029L
     private val getTriangleBarycentricCoordsBind by lazy {
         ObjectCalls.getMethodBind("Geometry3D", "get_triangle_barycentric_coords", GET_TRIANGLE_BARYCENTRIC_COORDS_HASH)
+    }
+
+    private const val RAY_INTERSECTS_TRIANGLE_HASH = 1718655448L
+    private val rayIntersectsTriangleBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "ray_intersects_triangle", RAY_INTERSECTS_TRIANGLE_HASH)
+    }
+
+    private const val SEGMENT_INTERSECTS_TRIANGLE_HASH = 1718655448L
+    private val segmentIntersectsTriangleBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_triangle", SEGMENT_INTERSECTS_TRIANGLE_HASH)
     }
 }

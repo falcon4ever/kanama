@@ -5510,6 +5510,222 @@ static void kanama_ios_pt_return_to_variant(int32_t tag, const void *ret_buf, ui
     (void)cell_kind;
 }
 
+// UTF-8 encode a decoded Godot String return into the caller's buffer, or park it (task 100).
+// Writes the FULL byte length to out_str_len. A value that fits out_str_size is written and the
+// String destroyed; a longer one is parked in the pending UTF-8 slot (see
+// kanama_ios_godot_ptrcall_ret_utf8) for kanama_ios_godot_take_pending_utf8 — the Kotlin decoders
+// drain it when out_str_len exceeds their buffer, so String-family Variant returns are no longer
+// truncated at the caller's buffer size. Takes ownership of *string_storage either way.
+static void kanama_ios_emit_utf8_return(
+    uint64_t *string_storage,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len
+) {
+    int64_t len = 0;
+    if (g_string_to_utf8_chars != NULL) {
+        len = (int64_t)g_string_to_utf8_chars(
+            (GDExtensionConstStringPtr)string_storage,
+            (out_str != NULL && out_str_size > 0) ? out_str : NULL,
+            (out_str != NULL && out_str_size > 0) ? out_str_size : 0);
+    }
+    if (out_str_len != NULL) *out_str_len = len;
+    if (len > out_str_size) {
+        kanama_ios_drop_pending_utf8();
+        g_pending_utf8_string = *string_storage;
+        g_pending_utf8_valid = 1;
+        *string_storage = 0;
+    } else {
+        kanama_ios_destroy_string(string_storage);
+    }
+}
+
+// Decode a return Variant's scalar payload into the (out_int, out_double, out_str) triple the
+// Kotlin decoders read (ObjectCalls.decodeVariantScalarReturn): bool/int -> out_int, float ->
+// out_double, String/StringName/NodePath -> utf8 in out_str (or parked, see above), Object ->
+// handle in out_int (retained + reported when out_is_refcounted is non-NULL, the owned decode),
+// Vector2/Vector2i/Vector3/Color -> raw component bytes in out_str. Anything else leaves the outs
+// zero and Kotlin surfaces null, matching desktop's RetVariantScalar. Returns the Variant type.
+// Shared by kanama_ios_godot_object_call and kanama_ios_godot_ptrcall_ret_variant_scalar; the
+// caller destroys ret_variant afterwards.
+static int32_t kanama_ios_decode_variant_scalar(
+    uint8_t *ret_variant,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+) {
+    int32_t ret_type = (int32_t)g_variant_get_type(ret_variant);
+    switch (ret_type) {
+        case KANAMA_IOS_VARIANT_TYPE_BOOL: {
+            uint8_t b = 0;
+            g_variant_to_bool(&b, ret_variant);
+            if (out_int != NULL) *out_int = b ? 1 : 0;
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_INT: {
+            int64_t v = 0;
+            g_variant_to_int(&v, ret_variant);
+            if (out_int != NULL) *out_int = v;
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_FLOAT: {
+            double v = 0.0;
+            g_variant_to_float(&v, ret_variant);
+            if (out_double != NULL) *out_double = v;
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_STRING: {
+            uint64_t str_storage = 0;
+            g_variant_to_string(&str_storage, ret_variant);
+            kanama_ios_emit_utf8_return(&str_storage, out_str, out_str_size, out_str_len);
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_STRING_NAME: {
+            // No GDExtension StringName->utf8: build String(from: StringName) then encode.
+            // ret_type stays STRING_NAME (21) so Kotlin reads out_str as the decoded String.
+            uint64_t sn_storage = 0;
+            g_variant_to_string_name(&sn_storage, ret_variant);
+            uint64_t str_storage = 0;
+            const GDExtensionConstTypePtr ctor_args[1] = { (GDExtensionConstTypePtr)&sn_storage };
+            g_string_from_string_name_constructor(
+                (GDExtensionUninitializedTypePtr)&str_storage, ctor_args);
+            kanama_ios_emit_utf8_return(&str_storage, out_str, out_str_size, out_str_len);
+            kanama_ios_destroy_string_name(&sn_storage);
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_NODE_PATH: {
+            // No GDExtension NodePath->utf8: build String(from: NodePath) then encode.
+            // ret_type stays NODE_PATH (22) so Kotlin reads out_str + wraps in NodePath.
+            uint64_t np_storage = 0;
+            g_variant_to_node_path(&np_storage, ret_variant);
+            uint64_t str_storage = 0;
+            const GDExtensionConstTypePtr ctor_args[1] = { (GDExtensionConstTypePtr)&np_storage };
+            g_string_from_node_path_constructor(
+                (GDExtensionUninitializedTypePtr)&str_storage, ctor_args);
+            kanama_ios_emit_utf8_return(&str_storage, out_str, out_str_size, out_str_len);
+            kanama_ios_destroy_node_path(&np_storage);
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_OBJECT: {
+            GDExtensionObjectPtr obj = NULL;
+            g_variant_to_object(&obj, ret_variant);
+            // Owned decode (out_is_refcounted != NULL): the return Variant may hold the
+            // sole reference to a freshly minted object (e.g. ClassDB.class_call_static
+            // returning a new Resource). The g_variant_destroy below would then free a
+            // RefCounted before Kotlin sees it (use-after-free). Retain it here and report
+            // the retain so the Kotlin side hands ownership to a RefCounted wrapper —
+            // mirrors kanama_ios_classdb_instantiate_owned (task-31 return-ownership).
+            // Borrowed callers pass NULL and are unaffected.
+            if (obj != NULL && out_is_refcounted != NULL &&
+                kanama_ios_godot_object_is_class((int64_t)(intptr_t)obj, "RefCounted")) {
+                GDExtensionMethodBindPtr reference_bind = kanama_ios_get_method_bind_cached(
+                    &g_ref_counted_reference_bind,
+                    "RefCounted",
+                    "reference",
+                    KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
+                if (reference_bind != NULL) {
+                    GDExtensionBool referenced = 0;
+                    g_object_method_bind_ptrcall(reference_bind, obj, NULL, &referenced);
+                    *out_is_refcounted = 1;
+                } else {
+                    // No retain possible: the Variant destroy below frees the instance, so
+                    // surface null instead of a dangling handle.
+                    obj = NULL;
+                }
+            }
+            if (out_int != NULL) *out_int = (int64_t)(intptr_t)obj;
+            break;
+        }
+        // Small fixed-size types ship their raw component bytes via out_str/out_str_len
+        // (float32 components; Vector2i is 2x int32), same convention as the array-blob
+        // payloads. Kotlin decodes by ret_type + byte count; out_str_len 0 surfaces null.
+        case KANAMA_IOS_VARIANT_TYPE_VECTOR2: {
+            float v2[2] = { 0.0f, 0.0f };
+            if (g_variant_to_vector2 != NULL && out_str != NULL && out_str_size >= 8) {
+                g_variant_to_vector2((GDExtensionUninitializedTypePtr)v2, ret_variant);
+                memcpy(out_str, v2, 8);
+                if (out_str_len != NULL) *out_str_len = 8;
+            }
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_VECTOR2I: {
+            int32_t v2i[2] = { 0, 0 };
+            if (g_variant_to_vector2i != NULL && out_str != NULL && out_str_size >= 8) {
+                g_variant_to_vector2i((GDExtensionUninitializedTypePtr)v2i, ret_variant);
+                memcpy(out_str, v2i, 8);
+                if (out_str_len != NULL) *out_str_len = 8;
+            }
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_VECTOR3: {
+            float v3[3] = { 0.0f, 0.0f, 0.0f };
+            if (g_variant_to_vector3 != NULL && out_str != NULL && out_str_size >= 12) {
+                g_variant_to_vector3((GDExtensionUninitializedTypePtr)v3, ret_variant);
+                memcpy(out_str, v3, 12);
+                if (out_str_len != NULL) *out_str_len = 12;
+            }
+            break;
+        }
+        case KANAMA_IOS_VARIANT_TYPE_COLOR: {
+            float c4[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+            if (g_variant_to_color != NULL && out_str != NULL && out_str_size >= 16) {
+                g_variant_to_color((GDExtensionUninitializedTypePtr)c4, ret_variant);
+                memcpy(out_str, c4, 16);
+                if (out_str_len != NULL) *out_str_len = 16;
+            }
+            break;
+        }
+        default:
+            // NIL / un-decoded type: leave outs zero; Kotlin surfaces null.
+            break;
+    }
+    return ret_type;
+}
+
+// Internal ret_type marker for kanama_ios_godot_ptrcall_dispatch: ret_out is a 24-byte Variant
+// cell (the ptrcall return of a Variant-typed method). Never crosses the Kotlin boundary, so it
+// is deliberately outside the KANAMA_IOS_PT_* enum the generator mirrors.
+enum { KANAMA_IOS_RET_VARIANT_CELL = -1 };
+
+// task 100 (parcel 2) — Variant-scalar return on every audited arg shape. Same arg cells as
+// kanama_ios_godot_ptrcall; the method's ptrcall writes its Variant return into a zeroed 24-byte
+// cell, the scalar payload is decoded exactly as for kanama_ios_godot_object_call (borrowed Object
+// decode, like desktop's RetVariantScalar), and the Variant is destroyed. Returns the Variant
+// type, or -1 on a null method/instance or an unavailable API.
+int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len
+) {
+    if (out_int != NULL) *out_int = 0;
+    if (out_double != NULL) *out_double = 0.0;
+    if (out_str_len != NULL) *out_str_len = 0;
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+        return -1;
+    }
+    if (g_object_method_bind_ptrcall == NULL || g_variant_get_type == NULL || g_variant_destroy == NULL) {
+        return -1;
+    }
+    uint8_t ret_variant[24];
+    memset(ret_variant, 0, sizeof(ret_variant));
+    kanama_ios_godot_ptrcall_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_RET_VARIANT_CELL, ret_variant);
+    int32_t ret_type = kanama_ios_decode_variant_scalar(
+        ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, NULL);
+    g_variant_destroy((GDExtensionVariantPtr)ret_variant);
+    return ret_type;
+}
+
 // Generic Variant Object.call dispatch. Boxes each PT-tagged arg into a Variant,
 // invokes method_bind via object_method_bind_call (the Variant path, for varargs /
 // dynamic dispatch the ptrcall path can't express — Object::call, set_deferred,
@@ -5576,152 +5792,8 @@ int32_t kanama_ios_godot_object_call(
 
     int32_t ret_type = KANAMA_IOS_VARIANT_TYPE_NIL;
     if (call_ok) {
-        ret_type = (int32_t)g_variant_get_type(ret_variant);
-        switch (ret_type) {
-            case KANAMA_IOS_VARIANT_TYPE_BOOL: {
-                uint8_t b = 0;
-                g_variant_to_bool(&b, ret_variant);
-                if (out_int != NULL) *out_int = b ? 1 : 0;
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_INT: {
-                int64_t v = 0;
-                g_variant_to_int(&v, ret_variant);
-                if (out_int != NULL) *out_int = v;
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_FLOAT: {
-                double v = 0.0;
-                g_variant_to_float(&v, ret_variant);
-                if (out_double != NULL) *out_double = v;
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_STRING: {
-                uint64_t str_storage = 0;
-                g_variant_to_string(&str_storage, ret_variant);
-                if (g_string_to_utf8_chars != NULL) {
-                    int64_t len = (int64_t)g_string_to_utf8_chars(
-                        (GDExtensionConstStringPtr)&str_storage,
-                        (out_str != NULL && out_str_size > 0) ? out_str : NULL,
-                        (out_str != NULL && out_str_size > 0) ? out_str_size : 0);
-                    if (out_str_len != NULL) *out_str_len = len;
-                }
-                kanama_ios_destroy_string(&str_storage);
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_STRING_NAME: {
-                // No GDExtension StringName->utf8: build String(from: StringName) then encode.
-                // ret_type stays STRING_NAME (21) so Kotlin reads out_str as the decoded String.
-                uint64_t sn_storage = 0;
-                g_variant_to_string_name(&sn_storage, ret_variant);
-                uint64_t str_storage = 0;
-                const GDExtensionConstTypePtr ctor_args[1] = { (GDExtensionConstTypePtr)&sn_storage };
-                g_string_from_string_name_constructor(
-                    (GDExtensionUninitializedTypePtr)&str_storage, ctor_args);
-                if (g_string_to_utf8_chars != NULL) {
-                    int64_t len = (int64_t)g_string_to_utf8_chars(
-                        (GDExtensionConstStringPtr)&str_storage,
-                        (out_str != NULL && out_str_size > 0) ? out_str : NULL,
-                        (out_str != NULL && out_str_size > 0) ? out_str_size : 0);
-                    if (out_str_len != NULL) *out_str_len = len;
-                }
-                kanama_ios_destroy_string(&str_storage);
-                kanama_ios_destroy_string_name(&sn_storage);
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_NODE_PATH: {
-                // No GDExtension NodePath->utf8: build String(from: NodePath) then encode.
-                // ret_type stays NODE_PATH (22) so Kotlin reads out_str + wraps in NodePath.
-                uint64_t np_storage = 0;
-                g_variant_to_node_path(&np_storage, ret_variant);
-                uint64_t str_storage = 0;
-                const GDExtensionConstTypePtr ctor_args[1] = { (GDExtensionConstTypePtr)&np_storage };
-                g_string_from_node_path_constructor(
-                    (GDExtensionUninitializedTypePtr)&str_storage, ctor_args);
-                if (g_string_to_utf8_chars != NULL) {
-                    int64_t len = (int64_t)g_string_to_utf8_chars(
-                        (GDExtensionConstStringPtr)&str_storage,
-                        (out_str != NULL && out_str_size > 0) ? out_str : NULL,
-                        (out_str != NULL && out_str_size > 0) ? out_str_size : 0);
-                    if (out_str_len != NULL) *out_str_len = len;
-                }
-                kanama_ios_destroy_string(&str_storage);
-                kanama_ios_destroy_node_path(&np_storage);
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_OBJECT: {
-                GDExtensionObjectPtr obj = NULL;
-                g_variant_to_object(&obj, ret_variant);
-                // Owned decode (out_is_refcounted != NULL): the return Variant may hold the
-                // sole reference to a freshly minted object (e.g. ClassDB.class_call_static
-                // returning a new Resource). The g_variant_destroy below would then free a
-                // RefCounted before Kotlin sees it (use-after-free). Retain it here and report
-                // the retain so the Kotlin side hands ownership to a RefCounted wrapper —
-                // mirrors kanama_ios_classdb_instantiate_owned (task-31 return-ownership).
-                // Borrowed callers pass NULL and are unaffected.
-                if (obj != NULL && out_is_refcounted != NULL &&
-                    kanama_ios_godot_object_is_class((int64_t)(intptr_t)obj, "RefCounted")) {
-                    GDExtensionMethodBindPtr reference_bind = kanama_ios_get_method_bind_cached(
-                        &g_ref_counted_reference_bind,
-                        "RefCounted",
-                        "reference",
-                        KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
-                    if (reference_bind != NULL) {
-                        GDExtensionBool referenced = 0;
-                        g_object_method_bind_ptrcall(reference_bind, obj, NULL, &referenced);
-                        *out_is_refcounted = 1;
-                    } else {
-                        // No retain possible: the Variant destroy below frees the instance, so
-                        // surface null instead of a dangling handle.
-                        obj = NULL;
-                    }
-                }
-                if (out_int != NULL) *out_int = (int64_t)(intptr_t)obj;
-                break;
-            }
-            // Small fixed-size types ship their raw component bytes via out_str/out_str_len
-            // (float32 components; Vector2i is 2x int32), same convention as the array-blob
-            // payloads. Kotlin decodes by ret_type + byte count; out_str_len 0 surfaces null.
-            case KANAMA_IOS_VARIANT_TYPE_VECTOR2: {
-                float v2[2] = { 0.0f, 0.0f };
-                if (g_variant_to_vector2 != NULL && out_str != NULL && out_str_size >= 8) {
-                    g_variant_to_vector2((GDExtensionUninitializedTypePtr)v2, ret_variant);
-                    memcpy(out_str, v2, 8);
-                    if (out_str_len != NULL) *out_str_len = 8;
-                }
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_VECTOR2I: {
-                int32_t v2i[2] = { 0, 0 };
-                if (g_variant_to_vector2i != NULL && out_str != NULL && out_str_size >= 8) {
-                    g_variant_to_vector2i((GDExtensionUninitializedTypePtr)v2i, ret_variant);
-                    memcpy(out_str, v2i, 8);
-                    if (out_str_len != NULL) *out_str_len = 8;
-                }
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_VECTOR3: {
-                float v3[3] = { 0.0f, 0.0f, 0.0f };
-                if (g_variant_to_vector3 != NULL && out_str != NULL && out_str_size >= 12) {
-                    g_variant_to_vector3((GDExtensionUninitializedTypePtr)v3, ret_variant);
-                    memcpy(out_str, v3, 12);
-                    if (out_str_len != NULL) *out_str_len = 12;
-                }
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_COLOR: {
-                float c4[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-                if (g_variant_to_color != NULL && out_str != NULL && out_str_size >= 16) {
-                    g_variant_to_color((GDExtensionUninitializedTypePtr)c4, ret_variant);
-                    memcpy(out_str, c4, 16);
-                    if (out_str_len != NULL) *out_str_len = 16;
-                }
-                break;
-            }
-            default:
-                // NIL / un-decoded type: leave outs zero; Kotlin surfaces null.
-                break;
-        }
+        ret_type = kanama_ios_decode_variant_scalar(
+            ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, out_is_refcounted);
     }
 
     g_variant_destroy(ret_variant);

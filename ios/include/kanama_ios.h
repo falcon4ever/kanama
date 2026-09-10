@@ -163,6 +163,28 @@ int64_t kanama_ios_godot_take_pending_utf8(
 );
 
 /*
+ * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a Variant,
+ * decoded as a scalar the way kanama_ios_godot_object_call decodes its return (task 100,
+ * parcel 2): bool/int/Object handle -> out_int, float -> out_double, String/StringName/NodePath
+ * -> UTF-8 in out_str with the full length in out_str_len (parked for
+ * kanama_ios_godot_take_pending_utf8 when longer than out_str_size), Vector2/Vector2i/Vector3/
+ * Color -> raw component bytes in out_str. Object results are borrowed. Returns the Variant type
+ * (KANAMA_IOS_VARIANT_TYPE_*), or -1 on a null method/instance or an unavailable API.
+ */
+int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len
+);
+
+/*
  * No-arg ptrcall returning a Godot PackedInt32Array, read back into int32 elements.
  *
  * ptrcall writes the returned array; its element count comes from the "size" builtin

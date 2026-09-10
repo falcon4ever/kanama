@@ -8,8 +8,7 @@ import net.multigesture.kanama.types.Vector2
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TileData waits on: ptrcallWithIntAndVariantArg, ptrcallWithIntArgRetVariantScalar,
-//   ptrcallWithStringAndVariantArg, ptrcallWithStringArgRetVariantScalar,
+// KANAMA-IOS-GAP TileData waits on: ptrcallWithIntAndVariantArg, ptrcallWithStringAndVariantArg,
 //   ptrcallWithTwoIntAndPackedVector2ListArg, ptrcallWithTwoIntArgsRetPackedVector2List
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -43,31 +42,12 @@ fun TileData.setCustomData(layerName: String, value: Any?) {
 }
 
 /**
- * Returns the custom data value for custom data layer named `layer_name`. To check if a custom
- * data layer exists, use `has_custom_data`.
- *
- * Generated from Godot docs: TileData.get_custom_data
- */
-fun TileData.getCustomData(layerName: String): Any? {
-    return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getCustomDataBind, handle, layerName)
-}
-
-/**
  * Sets the tile's custom data value for the TileSet custom data layer with index `layer_id`.
  *
  * Generated from Godot docs: TileData.set_custom_data_by_layer_id
  */
 fun TileData.setCustomDataByLayerId(layerId: Int, value: Any?) {
     ObjectCalls.ptrcallWithIntAndVariantArg(setCustomDataByLayerIdBind, handle, layerId, value)
-}
-
-/**
- * Returns the custom data value for custom data layer with index `layer_id`.
- *
- * Generated from Godot docs: TileData.get_custom_data_by_layer_id
- */
-fun TileData.getCustomDataByLayerId(layerId: Int): Any? {
-    return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getCustomDataByLayerIdBind, handle, layerId)
 }
 
 private const val SET_COLLISION_POLYGON_POINTS_HASH = 3230546541L
@@ -85,17 +65,7 @@ private val setCustomDataBind by lazy {
     ObjectCalls.getMethodBind("TileData", "set_custom_data", SET_CUSTOM_DATA_HASH)
 }
 
-private const val GET_CUSTOM_DATA_HASH = 1868160156L
-private val getCustomDataBind by lazy {
-    ObjectCalls.getMethodBind("TileData", "get_custom_data", GET_CUSTOM_DATA_HASH)
-}
-
 private const val SET_CUSTOM_DATA_BY_LAYER_ID_HASH = 2152698145L
 private val setCustomDataByLayerIdBind by lazy {
     ObjectCalls.getMethodBind("TileData", "set_custom_data_by_layer_id", SET_CUSTOM_DATA_BY_LAYER_ID_HASH)
-}
-
-private const val GET_CUSTOM_DATA_BY_LAYER_ID_HASH = 4227898402L
-private val getCustomDataByLayerIdBind by lazy {
-    ObjectCalls.getMethodBind("TileData", "get_custom_data_by_layer_id", GET_CUSTOM_DATA_BY_LAYER_ID_HASH)
 }

@@ -10,8 +10,8 @@ import net.multigesture.kanama.types.Vector2i
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Geometry2D waits on: ptrcallWithFourVector2ArgsRetPackedVector2List,
-//   ptrcallWithFourVector2ArgsRetVariantScalar, ptrcallWithPackedVector2ListArgRetBool,
-//   ptrcallWithPackedVector2ListArgRetDictionary, ptrcallWithPackedVector2ListArgRetPackedInt32List,
+//   ptrcallWithPackedVector2ListArgRetBool, ptrcallWithPackedVector2ListArgRetDictionary,
+//   ptrcallWithPackedVector2ListArgRetPackedInt32List,
 //   ptrcallWithPackedVector2ListArgRetPackedVector2List,
 //   ptrcallWithPackedVector2ListArgRetPackedVector2ListList,
 //   ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList,
@@ -19,29 +19,6 @@ import net.multigesture.kanama.types.Vector2i
 //   ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList,
 //   ptrcallWithTwoVector2iArgsRetVector2iList, ptrcallWithVector2PackedVector2ListArgsRetBool
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Checks if two line segments intersect, with line `a` between `from_a` and `to_a` and line `b`
- * between `from_b` and `to_b`. If the line segments intersect, the point of intersection is
- * returned as a `Vector2`. If no intersection takes place, `null` is returned.
- *
- * Generated from Godot docs: Geometry2D.segment_intersects_segment
- */
-fun Geometry2D.segmentIntersectsSegment(fromA: Vector2, toA: Vector2, fromB: Vector2, toB: Vector2): Any? {
-    return ObjectCalls.ptrcallWithFourVector2ArgsRetVariantScalar(segmentIntersectsSegmentBind, geometry2DSingleton, fromA, toA, fromB, toB)
-}
-
-/**
- * Returns the point of intersection between the two lines (`from_a`, `dir_a`) and (`from_b`,
- * `dir_b`). Returns a `Vector2`, or `null` if the lines are parallel. `from` and `dir` are not
- * endpoints of a line segment or ray but the slope (`dir`) and a known point (`from`) on that
- * line. To get the intersection between two line segments, use `segment_intersects_segment`.
- *
- * Generated from Godot docs: Geometry2D.line_intersects_line
- */
-fun Geometry2D.lineIntersectsLine(fromA: Vector2, dirA: Vector2, fromB: Vector2, dirB: Vector2): Any? {
-    return ObjectCalls.ptrcallWithFourVector2ArgsRetVariantScalar(lineIntersectsLineBind, geometry2DSingleton, fromA, dirA, fromB, dirB)
-}
 
 /**
  * Given the two 2D segments (`p1`, `q1`) and (`p2`, `q2`), finds those two points on the two
@@ -251,16 +228,6 @@ fun Geometry2D.bresenhamLine(from: Vector2i, to: Vector2i): List<Vector2i> {
 
 private val geometry2DSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("Geometry2D")
-}
-
-private const val SEGMENT_INTERSECTS_SEGMENT_HASH = 2058025344L
-private val segmentIntersectsSegmentBind by lazy {
-    ObjectCalls.getMethodBind("Geometry2D", "segment_intersects_segment", SEGMENT_INTERSECTS_SEGMENT_HASH)
-}
-
-private const val LINE_INTERSECTS_LINE_HASH = 2058025344L
-private val lineIntersectsLineBind by lazy {
-    ObjectCalls.getMethodBind("Geometry2D", "line_intersects_line", LINE_INTERSECTS_LINE_HASH)
 }
 
 private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 3344690961L

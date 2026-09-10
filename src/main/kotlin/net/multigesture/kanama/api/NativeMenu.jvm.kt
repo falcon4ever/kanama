@@ -8,9 +8,8 @@ import net.multigesture.kanama.types.RID
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP NativeMenu waits on: ptrcallWithRIDAndIntArgRetVariantScalar,
-//   ptrcallWithRIDAndVariantArgRetInt, ptrcallWithRIDArgRetCallable,
-//   ptrcallWithRIDIntAndVariantArgs, ptrcallWithRIDIntArgsRetCallable,
+// KANAMA-IOS-GAP NativeMenu waits on: ptrcallWithRIDAndVariantArgRetInt,
+//   ptrcallWithRIDArgRetCallable, ptrcallWithRIDIntAndVariantArgs, ptrcallWithRIDIntArgsRetCallable,
 //   ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithRIDStringRIDVariantIntArgsRetInt,
 //   ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt,
@@ -203,17 +202,6 @@ fun NativeMenu.getItemKeyCallback(rid: RID, idx: Int): GodotCallable? {
 }
 
 /**
- * Returns the metadata of the specified item, which might be of any type. You can set it with
- * `set_item_tag`, which provides a simple way of assigning context data to items. Note: This
- * method is implemented on macOS and Windows.
- *
- * Generated from Godot docs: NativeMenu.get_item_tag
- */
-fun NativeMenu.getItemTag(rid: RID, idx: Int): Any? {
-    return ObjectCalls.ptrcallWithRIDAndIntArgRetVariantScalar(getItemTagBind, nativeMenuSingleton, rid, idx)
-}
-
-/**
  * Sets the metadata of an item, which may be of any type. You can later get it with
  * `get_item_tag`, which provides a simple way of assigning context data to items. Note: This
  * method is implemented on macOS and Windows.
@@ -291,11 +279,6 @@ private val getItemCallbackBind by lazy {
 private const val GET_ITEM_KEY_CALLBACK_HASH = 1639989698L
 private val getItemKeyCallbackBind by lazy {
     ObjectCalls.getMethodBind("NativeMenu", "get_item_key_callback", GET_ITEM_KEY_CALLBACK_HASH)
-}
-
-private const val GET_ITEM_TAG_HASH = 4069510997L
-private val getItemTagBind by lazy {
-    ObjectCalls.getMethodBind("NativeMenu", "get_item_tag", GET_ITEM_TAG_HASH)
 }
 
 private const val SET_ITEM_TAG_HASH = 2706844827L

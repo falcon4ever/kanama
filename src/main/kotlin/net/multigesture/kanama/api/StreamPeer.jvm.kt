@@ -7,9 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP StreamPeer waits on: ptrcallWithBoolArgRetVariantScalar,
-//   ptrcallWithByteArrayArgRetArray, ptrcallWithByteArrayArgRetLong, ptrcallWithIntArgRetArray,
-//   ptrcallWithVariantAndBoolArg
+// KANAMA-IOS-GAP StreamPeer waits on: ptrcallWithByteArrayArgRetArray,
+//   ptrcallWithByteArrayArgRetLong, ptrcallWithIntArgRetArray, ptrcallWithVariantAndBoolArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -71,20 +70,6 @@ fun StreamPeer.putVar(value: Any?, fullObjects: Boolean = false) {
     ObjectCalls.ptrcallWithVariantAndBoolArg(putVarBind, handle, value, fullObjects)
 }
 
-/**
- * Gets a Variant from the stream. If `allow_objects` is `true`, decoding objects is allowed.
- * Internally, this uses the same decoding mechanism as the `@GlobalScope.bytes_to_var` method.
- * Warning: Deserialized objects can contain code which gets executed. Do not use this option if
- * the serialized object comes from untrusted sources to avoid potential security threats such as
- * remote code execution.
- *
- * Generated from Godot docs: StreamPeer.get_var
- */
-fun StreamPeer.getVar(allowObjects: Boolean = false): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
-}
-
 private const val PUT_DATA_HASH = 680677267L
 private val putDataBind by lazy {
     ObjectCalls.getMethodBind("StreamPeer", "put_data", PUT_DATA_HASH)
@@ -108,9 +93,4 @@ private val getPartialDataBind by lazy {
 private const val PUT_VAR_HASH = 738511890L
 private val putVarBind by lazy {
     ObjectCalls.getMethodBind("StreamPeer", "put_var", PUT_VAR_HASH)
-}
-
-private const val GET_VAR_HASH = 3442865206L
-private val getVarBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "get_var", GET_VAR_HASH)
 }

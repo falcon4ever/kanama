@@ -7,8 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP EditorExportPreset waits on: ptrcallNoArgsRetDictionary,
-//   ptrcallWithStringNameAndStringArgRetVariantScalar
+// KANAMA-IOS-GAP EditorExportPreset waits on: ptrcallNoArgsRetDictionary
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -23,22 +22,7 @@ fun EditorExportPreset.getCustomizedFiles(): Map<String, Any?> {
     return ObjectCalls.ptrcallNoArgsRetDictionary(getCustomizedFilesBind, handle)
 }
 
-/**
- * Returns export option value or value of environment variable if it is set.
- *
- * Generated from Godot docs: EditorExportPreset.get_or_env
- */
-fun EditorExportPreset.getOrEnv(name: String, envVar: String): Any? {
-    checkOpen()
-    return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, handle, name, envVar)
-}
-
 private const val GET_CUSTOMIZED_FILES_HASH = 3102165223L
 private val getCustomizedFilesBind by lazy {
     ObjectCalls.getMethodBind("EditorExportPreset", "get_customized_files", GET_CUSTOMIZED_FILES_HASH)
-}
-
-private const val GET_OR_ENV_HASH = 389838787L
-private val getOrEnvBind by lazy {
-    ObjectCalls.getMethodBind("EditorExportPreset", "get_or_env", GET_OR_ENV_HASH)
 }

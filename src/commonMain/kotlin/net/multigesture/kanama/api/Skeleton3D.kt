@@ -79,6 +79,15 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     /**
+     * Returns the metadata with the given `key` for the bone at index `bone_idx`.
+     *
+     * Generated from Godot docs: Skeleton3D.get_bone_meta
+     */
+    fun getBoneMeta(boneIdx: Int, key: String): Any? {
+        return ObjectCalls.ptrcallWithIntAndStringNameArgRetVariantScalar(getBoneMetaBind, handle, boneIdx, key)
+    }
+
+    /**
      * Returns `true` if the bone at index `bone_idx` has metadata with the given `key`.
      *
      * Generated from Godot docs: Skeleton3D.has_bone_meta
@@ -580,6 +589,11 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
         private const val SET_BONE_NAME_HASH = 501894301L
         private val setBoneNameBind by lazy {
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_name", SET_BONE_NAME_HASH)
+        }
+
+        private const val GET_BONE_META_HASH = 203112058L
+        private val getBoneMetaBind by lazy {
+            ObjectCalls.getMethodBind("Skeleton3D", "get_bone_meta", GET_BONE_META_HASH)
         }
 
         private const val HAS_BONE_META_HASH = 921227809L

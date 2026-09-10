@@ -22,6 +22,17 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the value of the setting specified by `name`. This is equivalent to using `Object.get`
+     * on the EditorSettings instance.
+     *
+     * Generated from Godot docs: EditorSettings.get_setting
+     */
+    fun getSetting(name: String): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getSettingBind, handle, name)
+    }
+
+    /**
      * Erases the setting whose name is specified by `property`.
      *
      * Generated from Godot docs: EditorSettings.erase
@@ -174,6 +185,11 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
         private const val HAS_SETTING_HASH = 3927539163L
         private val hasSettingBind by lazy {
             ObjectCalls.getMethodBind("EditorSettings", "has_setting", HAS_SETTING_HASH)
+        }
+
+        private const val GET_SETTING_HASH = 1868160156L
+        private val getSettingBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "get_setting", GET_SETTING_HASH)
         }
 
         private const val ERASE_HASH = 83702148L
