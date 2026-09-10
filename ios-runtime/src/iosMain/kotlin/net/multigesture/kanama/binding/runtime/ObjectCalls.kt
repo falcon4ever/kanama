@@ -4232,20 +4232,29 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   check("array-ret(Geometry3D.build_box_planes has 6 planes)", arrayPlanes.size == 6)
 
+  // GridMap is the only class returning Array[Vector3i] without an Array argument, but
+  // set_cell_item creates the cell's octant with PhysicsServer3D bodies, and the physics servers
+  // do not exist yet at scene-level extension init (iPhone 12, 2026-09-10: SIGSEGV at address 0 in
+  // GridMap::set_cell_item). Reads on an EMPTY GridMap create no octant: they exercise the
+  // Array[Vector3i] encoder (count 0) and the Vector3i ARGUMENT cell without touching physics. The
+  // Vector3i element decode itself is 3 x i32LE, the same stride logic as the Vector2i row above.
   val arrayGrid = ObjectCalls.constructObject("GridMap")
-  ObjectCalls.ptrcallWithVector3iIntIntArgs(
-    ObjectCalls.getMethodBind("GridMap", "set_cell_item", 3449088946L),
-    arrayGrid,
-    Vector3i(1, 2, 3),
-    0,
-    0,
-  )
   val arrayCells =
     ObjectCalls.ptrcallNoArgsRetVector3iList(
       ObjectCalls.getMethodBind("GridMap", "get_used_cells", 3995934104L),
       arrayGrid,
     )
-  check("array-ret(GridMap.get_used_cells==[(1,2,3)])", arrayCells == listOf(Vector3i(1, 2, 3)))
+  check("array-ret(empty GridMap.get_used_cells==[])", arrayCells.isEmpty())
+  val arrayOctantCells =
+    ObjectCalls.ptrcallWithVector3iArgRetVector3iList(
+      ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", 2658725580L),
+      arrayGrid,
+      Vector3i(0, 0, 0),
+    )
+  check(
+    "array-ret(empty GridMap.get_used_cells_in_octant((0,0,0))==[])",
+    arrayOctantCells.isEmpty(),
+  )
   ObjectCalls.destroyObject(arrayGrid)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
