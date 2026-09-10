@@ -137,6 +137,15 @@ open class IterateIK3D(handle: MemorySegment) : ChainIK3D(handle) {
     }
 
     /**
+     * Returns the target node that the end bone is trying to reach.
+     *
+     * Generated from Godot docs: IterateIK3D.get_target_node
+     */
+    fun getTargetNode(index: Int): NodePath {
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getTargetNodeBind, handle, index)
+    }
+
+    /**
      * Sets the rotation axis at `joint` in the bone chain's joint list. The axes are based on the
      * reference pose's space, if `axis` is `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify
      * any axis. In here, the reference pose is the bone pose immediately before processing IK. Note:
@@ -321,6 +330,11 @@ open class IterateIK3D(handle: MemorySegment) : ChainIK3D(handle) {
         private const val SET_TARGET_NODE_HASH = 2761262315L
         private val setTargetNodeBind by lazy {
             ObjectCalls.getMethodBind("IterateIK3D", "set_target_node", SET_TARGET_NODE_HASH)
+        }
+
+        private const val GET_TARGET_NODE_HASH = 408788394L
+        private val getTargetNodeBind by lazy {
+            ObjectCalls.getMethodBind("IterateIK3D", "get_target_node", GET_TARGET_NODE_HASH)
         }
 
         private const val SET_JOINT_ROTATION_AXIS_HASH = 1391134969L

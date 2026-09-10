@@ -42,6 +42,10 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
         return ObjectCalls.ptrcallWithRIDArgRetRID(getSpatialSnapshotContextBind, handle, spatialSnapshot)
     }
 
+    fun getString(spatialSnapshot: RID, bufferId: Long): String {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(getStringBind, handle, spatialSnapshot, bufferId)
+    }
+
     fun findSpatialEntity(entityId: Long): RID {
         return ObjectCalls.ptrcallWithLongArgRetRID(findSpatialEntityBind, handle, entityId)
     }
@@ -134,6 +138,11 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
         private const val GET_SPATIAL_SNAPSHOT_CONTEXT_HASH = 3814569979L
         private val getSpatialSnapshotContextBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_spatial_snapshot_context", GET_SPATIAL_SNAPSHOT_CONTEXT_HASH)
+        }
+
+        private const val GET_STRING_HASH = 1464764419L
+        private val getStringBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "get_string", GET_STRING_HASH)
         }
 
         private const val FIND_SPATIAL_ENTITY_HASH = 937000113L

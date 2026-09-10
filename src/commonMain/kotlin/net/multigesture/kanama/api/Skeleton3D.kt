@@ -61,6 +61,15 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     /**
+     * Returns the name of the bone at index `bone_idx`.
+     *
+     * Generated from Godot docs: Skeleton3D.get_bone_name
+     */
+    fun getBoneName(boneIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getBoneNameBind, handle, boneIdx)
+    }
+
+    /**
      * Sets the bone name, `name`, for the bone at `bone_idx`.
      *
      * Generated from Godot docs: Skeleton3D.set_bone_name
@@ -561,6 +570,11 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
         private const val FIND_BONE_HASH = 1321353865L
         private val findBoneBind by lazy {
             ObjectCalls.getMethodBind("Skeleton3D", "find_bone", FIND_BONE_HASH)
+        }
+
+        private const val GET_BONE_NAME_HASH = 844755477L
+        private val getBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("Skeleton3D", "get_bone_name", GET_BONE_NAME_HASH)
         }
 
         private const val SET_BONE_NAME_HASH = 501894301L

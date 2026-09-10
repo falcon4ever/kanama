@@ -22,6 +22,15 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
     }
 
     /**
+     * Returns the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: ChainIK3D.get_root_bone_name
+     */
+    fun getRootBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+    }
+
+    /**
      * Sets the root bone index of the bone chain.
      *
      * Generated from Godot docs: ChainIK3D.set_root_bone
@@ -48,6 +57,15 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      */
     fun setEndBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+    }
+
+    /**
+     * Returns the end bone name of the bone chain.
+     *
+     * Generated from Godot docs: ChainIK3D.get_end_bone_name
+     */
+    fun getEndBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
     }
 
     /**
@@ -126,6 +144,15 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
     }
 
     /**
+     * Returns the bone name at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: ChainIK3D.get_joint_bone_name
+     */
+    fun getJointBoneName(index: Int, joint: Int): String {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, handle, index, joint)
+    }
+
+    /**
      * Returns the bone index at `joint` in the bone chain's joint list.
      *
      * Generated from Godot docs: ChainIK3D.get_joint_bone
@@ -156,6 +183,11 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
             ObjectCalls.getMethodBind("ChainIK3D", "set_root_bone_name", SET_ROOT_BONE_NAME_HASH)
         }
 
+        private const val GET_ROOT_BONE_NAME_HASH = 844755477L
+        private val getRootBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("ChainIK3D", "get_root_bone_name", GET_ROOT_BONE_NAME_HASH)
+        }
+
         private const val SET_ROOT_BONE_HASH = 3937882851L
         private val setRootBoneBind by lazy {
             ObjectCalls.getMethodBind("ChainIK3D", "set_root_bone", SET_ROOT_BONE_HASH)
@@ -169,6 +201,11 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
         private const val SET_END_BONE_NAME_HASH = 501894301L
         private val setEndBoneNameBind by lazy {
             ObjectCalls.getMethodBind("ChainIK3D", "set_end_bone_name", SET_END_BONE_NAME_HASH)
+        }
+
+        private const val GET_END_BONE_NAME_HASH = 844755477L
+        private val getEndBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("ChainIK3D", "get_end_bone_name", GET_END_BONE_NAME_HASH)
         }
 
         private const val SET_END_BONE_HASH = 3937882851L
@@ -209,6 +246,11 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
         private const val GET_END_BONE_LENGTH_HASH = 2339986948L
         private val getEndBoneLengthBind by lazy {
             ObjectCalls.getMethodBind("ChainIK3D", "get_end_bone_length", GET_END_BONE_LENGTH_HASH)
+        }
+
+        private const val GET_JOINT_BONE_NAME_HASH = 1391810591L
+        private val getJointBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("ChainIK3D", "get_joint_bone_name", GET_JOINT_BONE_NAME_HASH)
         }
 
         private const val GET_JOINT_BONE_HASH = 3175239445L

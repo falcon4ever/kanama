@@ -45,6 +45,11 @@ class Skin(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBindNameBind, handle, bindIndex, name)
     }
 
+    fun getBindName(bindIndex: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBindNameBind, handle, bindIndex)
+    }
+
     fun setBindBone(bindIndex: Int, bone: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(setBindBoneBind, handle, bindIndex, bone)
@@ -101,6 +106,11 @@ class Skin(handle: MemorySegment) : Resource(handle) {
         private const val SET_BIND_NAME_HASH = 3780747571L
         private val setBindNameBind by lazy {
             ObjectCalls.getMethodBind("Skin", "set_bind_name", SET_BIND_NAME_HASH)
+        }
+
+        private const val GET_BIND_NAME_HASH = 659327637L
+        private val getBindNameBind by lazy {
+            ObjectCalls.getMethodBind("Skin", "get_bind_name", GET_BIND_NAME_HASH)
         }
 
         private const val SET_BIND_BONE_HASH = 3937882851L

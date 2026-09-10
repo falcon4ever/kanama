@@ -80,6 +80,16 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Gets the path of a track. For more information on the path format, see `track_set_path`.
+     *
+     * Generated from Godot docs: Animation.track_get_path
+     */
+    fun trackGetPath(trackIdx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(trackGetPathBind, handle, trackIdx)
+    }
+
+    /**
      * Sets the path of a track. Paths must be valid scene-tree paths to a node and must be specified
      * starting from the `AnimationMixer.root_node` that will reproduce the animation. Tracks that
      * control properties or bones must append their name after the path, separated by `":"`. For
@@ -425,6 +435,16 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the method name of a method track.
+     *
+     * Generated from Godot docs: Animation.method_track_get_name
+     */
+    fun methodTrackGetName(trackIdx: Int, keyIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(methodTrackGetNameBind, handle, trackIdx, keyIdx)
+    }
+
+    /**
      * Inserts a Bezier Track key at the given `time` in seconds. The `track_idx` must be the index of
      * a Bezier Track. `in_handle` is the left-side weight of the added Bezier curve point,
      * `out_handle` is the right-side one, while `value` is the actual value at this point.
@@ -641,6 +661,17 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the animation name at the key identified by `key_idx`. The `track_idx` must be the index
+     * of an Animation Track.
+     *
+     * Generated from Godot docs: Animation.animation_track_get_key_animation
+     */
+    fun animationTrackGetKeyAnimation(trackIdx: Int, keyIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(animationTrackGetKeyAnimationBind, handle, trackIdx, keyIdx)
+    }
+
+    /**
      * Adds a marker to this Animation.
      *
      * Generated from Godot docs: Animation.add_marker
@@ -668,6 +699,38 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     fun hasMarker(name: String): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetBool(hasMarkerBind, handle, name)
+    }
+
+    /**
+     * Returns the name of the marker located at the given time.
+     *
+     * Generated from Godot docs: Animation.get_marker_at_time
+     */
+    fun getMarkerAtTime(time: Double): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(getMarkerAtTimeBind, handle, time)
+    }
+
+    /**
+     * Returns the closest marker that comes after the given time. If no such marker exists, an empty
+     * string is returned.
+     *
+     * Generated from Godot docs: Animation.get_next_marker
+     */
+    fun getNextMarker(time: Double): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(getNextMarkerBind, handle, time)
+    }
+
+    /**
+     * Returns the closest marker that comes before the given time. If no such marker exists, an empty
+     * string is returned.
+     *
+     * Generated from Godot docs: Animation.get_prev_marker
+     */
+    fun getPrevMarker(time: Double): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(getPrevMarkerBind, handle, time)
     }
 
     /**
@@ -888,6 +951,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Animation", "track_get_type", TRACK_GET_TYPE_HASH)
         }
 
+        private const val TRACK_GET_PATH_HASH = 408788394L
+        private val trackGetPathBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "track_get_path", TRACK_GET_PATH_HASH)
+        }
+
         private const val TRACK_SET_PATH_HASH = 2761262315L
         private val trackSetPathBind by lazy {
             ObjectCalls.getMethodBind("Animation", "track_set_path", TRACK_SET_PATH_HASH)
@@ -1053,6 +1121,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Animation", "value_track_get_update_mode", VALUE_TRACK_GET_UPDATE_MODE_HASH)
         }
 
+        private const val METHOD_TRACK_GET_NAME_HASH = 351665558L
+        private val methodTrackGetNameBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "method_track_get_name", METHOD_TRACK_GET_NAME_HASH)
+        }
+
         private const val BEZIER_TRACK_INSERT_KEY_HASH = 3656773645L
         private val bezierTrackInsertKeyBind by lazy {
             ObjectCalls.getMethodBind("Animation", "bezier_track_insert_key", BEZIER_TRACK_INSERT_KEY_HASH)
@@ -1148,6 +1221,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Animation", "animation_track_set_key_animation", ANIMATION_TRACK_SET_KEY_ANIMATION_HASH)
         }
 
+        private const val ANIMATION_TRACK_GET_KEY_ANIMATION_HASH = 351665558L
+        private val animationTrackGetKeyAnimationBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "animation_track_get_key_animation", ANIMATION_TRACK_GET_KEY_ANIMATION_HASH)
+        }
+
         private const val ADD_MARKER_HASH = 4135858297L
         private val addMarkerBind by lazy {
             ObjectCalls.getMethodBind("Animation", "add_marker", ADD_MARKER_HASH)
@@ -1161,6 +1239,21 @@ class Animation(handle: MemorySegment) : Resource(handle) {
         private const val HAS_MARKER_HASH = 2619796661L
         private val hasMarkerBind by lazy {
             ObjectCalls.getMethodBind("Animation", "has_marker", HAS_MARKER_HASH)
+        }
+
+        private const val GET_MARKER_AT_TIME_HASH = 4079494655L
+        private val getMarkerAtTimeBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "get_marker_at_time", GET_MARKER_AT_TIME_HASH)
+        }
+
+        private const val GET_NEXT_MARKER_HASH = 4079494655L
+        private val getNextMarkerBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "get_next_marker", GET_NEXT_MARKER_HASH)
+        }
+
+        private const val GET_PREV_MARKER_HASH = 4079494655L
+        private val getPrevMarkerBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "get_prev_marker", GET_PREV_MARKER_HASH)
         }
 
         private const val GET_MARKER_TIME_HASH = 2349060816L

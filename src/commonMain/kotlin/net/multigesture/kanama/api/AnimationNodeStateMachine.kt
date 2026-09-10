@@ -97,6 +97,16 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
     }
 
     /**
+     * Returns the given animation node's name.
+     *
+     * Generated from Godot docs: AnimationNodeStateMachine.get_node_name
+     */
+    fun getNodeName(node: AnimationNode?): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
+    /**
      * Returns a list containing the names of all animation nodes in this state machine.
      *
      * Generated from Godot docs: AnimationNodeStateMachine.get_node_list
@@ -154,6 +164,26 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
     fun getTransition(idx: Int): AnimationNodeStateMachineTransition? {
         checkOpen()
         return AnimationNodeStateMachineTransition.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, handle, idx))
+    }
+
+    /**
+     * Returns the given transition's start node.
+     *
+     * Generated from Godot docs: AnimationNodeStateMachine.get_transition_from
+     */
+    fun getTransitionFrom(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionFromBind, handle, idx)
+    }
+
+    /**
+     * Returns the given transition's end node.
+     *
+     * Generated from Godot docs: AnimationNodeStateMachine.get_transition_to
+     */
+    fun getTransitionTo(idx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionToBind, handle, idx)
     }
 
     /**
@@ -320,6 +350,11 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "has_node", HAS_NODE_HASH)
         }
 
+        private const val GET_NODE_NAME_HASH = 739213945L
+        private val getNodeNameBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_node_name", GET_NODE_NAME_HASH)
+        }
+
         private const val GET_NODE_LIST_HASH = 3995934104L
         private val getNodeListBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_node_list", GET_NODE_LIST_HASH)
@@ -348,6 +383,16 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
         private const val GET_TRANSITION_HASH = 4192381260L
         private val getTransitionBind by lazy {
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_transition", GET_TRANSITION_HASH)
+        }
+
+        private const val GET_TRANSITION_FROM_HASH = 659327637L
+        private val getTransitionFromBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_transition_from", GET_TRANSITION_FROM_HASH)
+        }
+
+        private const val GET_TRANSITION_TO_HASH = 659327637L
+        private val getTransitionToBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_transition_to", GET_TRANSITION_TO_HASH)
         }
 
         private const val GET_TRANSITION_COUNT_HASH = 3905245786L

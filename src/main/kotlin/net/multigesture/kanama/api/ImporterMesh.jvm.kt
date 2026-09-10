@@ -8,7 +8,7 @@ import net.multigesture.kanama.types.Transform3D
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithIntArgRetArray, ptrcallWithIntArgRetString,
+// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithIntArgRetArray,
 //   ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
 //   ptrcallWithObjectListTransform3DListBoolArgsRetObject, ptrcallWithTwoDoubleArrayArgs,
 //   ptrcallWithTwoIntArgsRetArray, ptrcallWithTwoIntArgsRetPackedInt32List
@@ -31,16 +31,6 @@ import net.multigesture.kanama.types.Transform3D
  */
 fun ImporterMesh.Companion.mergeImporterMeshes(importerMeshes: List<ImporterMesh>, relativeTransforms: List<Transform3D>, deduplicateSurfaces: Boolean = true): ImporterMesh? {
     return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, MemorySegment.NULL, importerMeshes, relativeTransforms, deduplicateSurfaces))
-}
-
-/**
- * Returns the name of the blend shape at this index.
- *
- * Generated from Godot docs: ImporterMesh.get_blend_shape_name
- */
-fun ImporterMesh.getBlendShapeName(blendShapeIdx: Int): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetString(getBlendShapeNameBind, handle, blendShapeIdx)
 }
 
 /**
@@ -74,16 +64,6 @@ fun ImporterMesh.getBlendShapeName(blendShapeIdx: Int): String {
 fun ImporterMesh.addSurface(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
     checkOpen()
     ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, handle, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
-}
-
-/**
- * Gets the name assigned to this surface.
- *
- * Generated from Godot docs: ImporterMesh.get_surface_name
- */
-fun ImporterMesh.getSurfaceName(surfaceIdx: Int): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetString(getSurfaceNameBind, handle, surfaceIdx)
 }
 
 /**
@@ -139,19 +119,9 @@ private val mergeImporterMeshesBind by lazy {
     ObjectCalls.getMethodBind("ImporterMesh", "merge_importer_meshes", MERGE_IMPORTER_MESHES_HASH)
 }
 
-private const val GET_BLEND_SHAPE_NAME_HASH = 844755477L
-private val getBlendShapeNameBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "get_blend_shape_name", GET_BLEND_SHAPE_NAME_HASH)
-}
-
 private const val ADD_SURFACE_HASH = 1740448849L
 private val addSurfaceBind by lazy {
     ObjectCalls.getMethodBind("ImporterMesh", "add_surface", ADD_SURFACE_HASH)
-}
-
-private const val GET_SURFACE_NAME_HASH = 844755477L
-private val getSurfaceNameBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "get_surface_name", GET_SURFACE_NAME_HASH)
 }
 
 private const val GET_SURFACE_ARRAYS_HASH = 663333327L

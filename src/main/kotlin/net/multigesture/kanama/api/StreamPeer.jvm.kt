@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP StreamPeer waits on: ptrcallWithBoolArgRetVariantScalar,
 //   ptrcallWithByteArrayArgRetArray, ptrcallWithByteArrayArgRetLong, ptrcallWithIntArgRetArray,
-//   ptrcallWithIntArgRetString, ptrcallWithVariantAndBoolArg
+//   ptrcallWithVariantAndBoolArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -72,29 +72,6 @@ fun StreamPeer.putVar(value: Any?, fullObjects: Boolean = false) {
 }
 
 /**
- * Gets an ASCII string with byte-length `bytes` from the stream. If `bytes` is negative (default)
- * the length will be read from the stream using the reverse process of `put_string`.
- *
- * Generated from Godot docs: StreamPeer.get_string
- */
-fun StreamPeer.getString(bytes: Int = -1): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetString(getStringBind, handle, bytes)
-}
-
-/**
- * Gets a UTF-8 string with byte-length `bytes` from the stream (this decodes the string sent as
- * UTF-8). If `bytes` is negative (default) the length will be read from the stream using the
- * reverse process of `put_utf8_string`.
- *
- * Generated from Godot docs: StreamPeer.get_utf8_string
- */
-fun StreamPeer.getUtf8String(bytes: Int = -1): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetString(getUtf8StringBind, handle, bytes)
-}
-
-/**
  * Gets a Variant from the stream. If `allow_objects` is `true`, decoding objects is allowed.
  * Internally, this uses the same decoding mechanism as the `@GlobalScope.bytes_to_var` method.
  * Warning: Deserialized objects can contain code which gets executed. Do not use this option if
@@ -131,16 +108,6 @@ private val getPartialDataBind by lazy {
 private const val PUT_VAR_HASH = 738511890L
 private val putVarBind by lazy {
     ObjectCalls.getMethodBind("StreamPeer", "put_var", PUT_VAR_HASH)
-}
-
-private const val GET_STRING_HASH = 2309358862L
-private val getStringBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "get_string", GET_STRING_HASH)
-}
-
-private const val GET_UTF8_STRING_HASH = 2309358862L
-private val getUtf8StringBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "get_utf8_string", GET_UTF8_STRING_HASH)
 }
 
 private const val GET_VAR_HASH = 3442865206L

@@ -234,6 +234,19 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, handle)
     }
 
+    /**
+     * Returns the preset's version number, or fall back to the
+     * `ProjectSettings.application/config/version` project setting if set to an empty string. If
+     * `windows_version` is `true`, formats the returned version number to be compatible with Windows
+     * executable metadata.
+     *
+     * Generated from Godot docs: EditorExportPreset.get_version
+     */
+    fun getVersion(name: String, windowsVersion: Boolean): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, handle, name, windowsVersion)
+    }
+
     companion object {
         const val EXPORT_ALL_RESOURCES: Long = 0L
         const val EXPORT_SELECTED_SCENES: Long = 1L
@@ -363,6 +376,11 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_SCRIPT_EXPORT_MODE_HASH = 2835358398L
         private val getScriptExportModeBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPreset", "get_script_export_mode", GET_SCRIPT_EXPORT_MODE_HASH)
+        }
+
+        private const val GET_VERSION_HASH = 1132184663L
+        private val getVersionBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPreset", "get_version", GET_VERSION_HASH)
         }
     }
 }

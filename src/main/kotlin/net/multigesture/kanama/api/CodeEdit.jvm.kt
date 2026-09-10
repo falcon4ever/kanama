@@ -11,8 +11,8 @@ import net.multigesture.kanama.types.Color
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP CodeEdit waits on: ptrcallNoArgsRetDictionary, ptrcallNoArgsRetDictionaryList,
 //   ptrcallNoArgsRetTypedStringList, ptrcallWithDictionaryArg, ptrcallWithIntArgRetDictionary,
-//   ptrcallWithIntArgRetString, ptrcallWithLongTwoStringColorObjectVariantIntArgs,
-//   ptrcallWithTwoIntArgsRetString, ptrcallWithTypedIntListArg, ptrcallWithTypedStringListArg
+//   ptrcallWithLongTwoStringColorObjectVariantIntArgs, ptrcallWithTypedIntListArg,
+//   ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -92,24 +92,6 @@ fun CodeEdit.getCommentDelimiters(): List<String> {
 }
 
 /**
- * Gets the start key for a string or comment region index.
- *
- * Generated from Godot docs: CodeEdit.get_delimiter_start_key
- */
-fun CodeEdit.getDelimiterStartKey(delimiterIndex: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterStartKeyBind, handle, delimiterIndex)
-}
-
-/**
- * Gets the end key for a string or comment region index.
- *
- * Generated from Godot docs: CodeEdit.get_delimiter_end_key
- */
-fun CodeEdit.getDelimiterEndKey(delimiterIndex: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterEndKeyBind, handle, delimiterIndex)
-}
-
-/**
  * Submits an item to the queue of potential candidates for the autocomplete menu. Call
  * `update_code_completion_options` to update the list. `location` indicates location of the option
  * relative to the location of the code completion query. See `CodeEdit.CodeCompletionLocation` for
@@ -169,15 +151,6 @@ fun CodeEdit.getCodeCompletionPrefixes(): List<String> {
  */
 fun CodeEdit.setLineLengthGuidelines(guidelineColumns: List<Long>) {
     ObjectCalls.ptrcallWithTypedIntListArg(setLineLengthGuidelinesBind, handle, guidelineColumns)
-}
-
-/**
- * Returns the full text with char `0xFFFF` at the specified location.
- *
- * Generated from Godot docs: CodeEdit.get_text_with_cursor_char
- */
-fun CodeEdit.getTextWithCursorChar(line: Int, column: Int): String {
-    return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTextWithCursorCharBind, handle, line, column)
 }
 
 var CodeEdit.delimiterStrings: List<String>
@@ -250,16 +223,6 @@ private val getCommentDelimitersBind by lazy {
     ObjectCalls.getMethodBind("CodeEdit", "get_comment_delimiters", GET_COMMENT_DELIMITERS_HASH)
 }
 
-private const val GET_DELIMITER_START_KEY_HASH = 844755477L
-private val getDelimiterStartKeyBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "get_delimiter_start_key", GET_DELIMITER_START_KEY_HASH)
-}
-
-private const val GET_DELIMITER_END_KEY_HASH = 844755477L
-private val getDelimiterEndKeyBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "get_delimiter_end_key", GET_DELIMITER_END_KEY_HASH)
-}
-
 private const val ADD_CODE_COMPLETION_OPTION_HASH = 3944379502L
 private val addCodeCompletionOptionBind by lazy {
     ObjectCalls.getMethodBind("CodeEdit", "add_code_completion_option", ADD_CODE_COMPLETION_OPTION_HASH)
@@ -288,9 +251,4 @@ private val getCodeCompletionPrefixesBind by lazy {
 private const val SET_LINE_LENGTH_GUIDELINES_HASH = 381264803L
 private val setLineLengthGuidelinesBind by lazy {
     ObjectCalls.getMethodBind("CodeEdit", "set_line_length_guidelines", SET_LINE_LENGTH_GUIDELINES_HASH)
-}
-
-private const val GET_TEXT_WITH_CURSOR_CHAR_HASH = 1391810591L
-private val getTextWithCursorCharBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "get_text_with_cursor_char", GET_TEXT_WITH_CURSOR_CHAR_HASH)
 }

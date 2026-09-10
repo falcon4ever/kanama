@@ -577,6 +577,20 @@ fun ObjectCalls.ptrcallWithBoolArgRetRID(
   RID(ret.value)
 }
 
+fun ObjectCalls.ptrcallWithBoolArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Boolean,
+): String = memScoped {
+  val c0 = alloc<ByteVar>()
+  c0.value = if (a0) 1 else 0
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithBoolObjectArgsRetObject(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -1300,6 +1314,20 @@ fun ObjectCalls.ptrcallWithFloatArgRetFloat(
   ret.value
 }
 
+fun ObjectCalls.ptrcallWithFloatArgRetStringName(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Double,
+): String = memScoped {
+  val c0 = alloc<DoubleVar>()
+  c0.value = a0
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_FLOAT64
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING_NAME)
+}
+
 fun ObjectCalls.ptrcallWithFourDoubleArgs(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -1628,6 +1656,25 @@ fun ObjectCalls.ptrcallWithFourVector3ArgsRetVector3(
     ret,
   )
   Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+}
+
+fun ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+  a1: Boolean,
+): NodePath = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.toLong()
+  val c1 = alloc<ByteVar>()
+  c1.value = if (a1) 1 else 0
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_INT64
+  types[1] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  NodePath(ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_NODE_PATH))
 }
 
 fun ObjectCalls.ptrcallWithIntAndBoolArgRetRect2(
@@ -2742,6 +2789,20 @@ fun ObjectCalls.ptrcallWithIntArgRetLong(
   ret.value
 }
 
+fun ObjectCalls.ptrcallWithIntArgRetNodePath(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+): NodePath = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.toLong()
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  NodePath(ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_NODE_PATH))
+}
+
 fun ObjectCalls.ptrcallWithIntArgRetObject(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -2854,6 +2915,34 @@ fun ObjectCalls.ptrcallWithIntArgRetRect2i(
   ptrs[0] = c0.ptr.reinterpret<CPointed>()
   kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2I, ret)
   Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
+}
+
+fun ObjectCalls.ptrcallWithIntArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.toLong()
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
+}
+
+fun ObjectCalls.ptrcallWithIntArgRetStringName(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.toLong()
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING_NAME)
 }
 
 fun ObjectCalls.ptrcallWithIntArgRetTransform2D(
@@ -4791,6 +4880,25 @@ fun ObjectCalls.ptrcallWithIntVector3ArgsRetDouble(
   ret.value
 }
 
+fun ObjectCalls.ptrcallWithLongAndBoolArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Long,
+  a1: Boolean,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0
+  val c1 = alloc<ByteVar>()
+  c1.value = if (a1) 1 else 0
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_INT64
+  types[1] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithLongAndBoolArgs(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -5734,6 +5842,20 @@ fun ObjectCalls.ptrcallWithLongArgRetRID(
     ret.ptr,
   )
   RID(ret.value)
+}
+
+fun ObjectCalls.ptrcallWithLongArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Long,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithLongArgRetTransform3D(
@@ -7180,6 +7302,20 @@ fun ObjectCalls.ptrcallWithObjectArgRetRID(
     ret.ptr,
   )
   RID(ret.value)
+}
+
+fun ObjectCalls.ptrcallWithObjectArgRetStringName(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: MemorySegment,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.address()
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_OBJECT
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING_NAME)
 }
 
 fun ObjectCalls.ptrcallWithObjectArgRetTransform2D(
@@ -9526,6 +9662,25 @@ fun ObjectCalls.ptrcallWithRIDAndIntArgRetRID(
   RID(ret.value)
 }
 
+fun ObjectCalls.ptrcallWithRIDAndIntArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: RID,
+  a1: Int,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.value
+  val c1 = alloc<LongVar>()
+  c1.value = a1.toLong()
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_RID
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -9817,6 +9972,25 @@ fun ObjectCalls.ptrcallWithRIDAndLongArgRetRID(
     ret.ptr,
   )
   RID(ret.value)
+}
+
+fun ObjectCalls.ptrcallWithRIDAndLongArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: RID,
+  a1: Long,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.value
+  val c1 = alloc<LongVar>()
+  c1.value = a1
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_RID
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithRIDAndLongArgRetVector2(
@@ -10690,6 +10864,25 @@ fun ObjectCalls.ptrcallWithRIDAndUInt32ArgRetRID(
   RID(ret.value)
 }
 
+fun ObjectCalls.ptrcallWithRIDAndUInt32ArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: RID,
+  a1: Long,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.value
+  val c1 = alloc<LongVar>()
+  c1.value = a1
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_RID
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithRIDAndUInt32ArgRetTransform3D(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -11207,6 +11400,20 @@ fun ObjectCalls.ptrcallWithRIDArgRetRect2(
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
     Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
   )
+}
+
+fun ObjectCalls.ptrcallWithRIDArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: RID,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.value
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_RID
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithRIDArgRetTransform2D(
@@ -15632,6 +15839,23 @@ fun ObjectCalls.ptrcallWithStringAndBoolArgRetObject(
   MemorySegment.ofAddress(ret.value)
 }
 
+fun ObjectCalls.ptrcallWithStringAndBoolArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: Boolean,
+): String = memScoped {
+  val c1 = alloc<ByteVar>()
+  c1.value = if (a1) 1 else 0
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_STRING
+  types[1] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithStringAndColorArg(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -15854,6 +16078,23 @@ fun ObjectCalls.ptrcallWithStringAndIntArgRetObject(
   MemorySegment.ofAddress(ret.value)
 }
 
+fun ObjectCalls.ptrcallWithStringAndIntArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: Int,
+): String = memScoped {
+  val c1 = alloc<LongVar>()
+  c1.value = a1.toLong()
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_STRING
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithStringAndIntArgRetVector2i(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -15933,6 +16174,23 @@ fun ObjectCalls.ptrcallWithStringAndLongArgRetLong(
     ret.ptr,
   )
   ret.value
+}
+
+fun ObjectCalls.ptrcallWithStringAndLongArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: Long,
+): String = memScoped {
+  val c1 = alloc<LongVar>()
+  c1.value = a1
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_STRING
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithStringAndObjectArg(
@@ -17036,6 +17294,23 @@ fun ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(
   ret.value
 }
 
+fun ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: Boolean,
+): String = memScoped {
+  val c1 = alloc<ByteVar>()
+  c1.value = if (a1) 1 else 0
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_STRING_NAME
+  types[1] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithStringNameAndCallableArgs(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -17500,6 +17775,18 @@ fun ObjectCalls.ptrcallWithStringNameArgRetObject(
     ret.ptr,
   )
   MemorySegment.ofAddress(ret.value)
+}
+
+fun ObjectCalls.ptrcallWithStringNameArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+): String = memScoped {
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_STRING_NAME
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithStringNameArgRetVector2(
@@ -18569,6 +18856,33 @@ fun ObjectCalls.ptrcallWithStringTwoCallableArgs(
   ptrs[2] = c2.ptr.reinterpret<CPointed>()
   kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
   Unit
+}
+
+fun ObjectCalls.ptrcallWithStringTwoIntBoolArgsRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: Int,
+  a2: Int,
+  a3: Boolean,
+): String = memScoped {
+  val c1 = alloc<LongVar>()
+  c1.value = a1.toLong()
+  val c2 = alloc<LongVar>()
+  c2.value = a2.toLong()
+  val c3 = alloc<ByteVar>()
+  c3.value = if (a3) 1 else 0
+  val types = allocArray<IntVar>(4)
+  types[0] = PT_STRING
+  types[1] = PT_INT64
+  types[2] = PT_INT64
+  types[3] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(4)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrs[2] = c2.ptr.reinterpret<CPointed>()
+  ptrs[3] = c3.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 4, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithStringTwoIntTwoBoolArgs(
@@ -20251,6 +20565,25 @@ fun ObjectCalls.ptrcallWithTwoBoolArgsRetObject(
   MemorySegment.ofAddress(ret.value)
 }
 
+fun ObjectCalls.ptrcallWithTwoBoolArgsRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Boolean,
+  a1: Boolean,
+): String = memScoped {
+  val c0 = alloc<ByteVar>()
+  c0.value = if (a0) 1 else 0
+  val c1 = alloc<ByteVar>()
+  c1.value = if (a1) 1 else 0
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_BOOL
+  types[1] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithTwoCallableArgs(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -20889,6 +21222,25 @@ fun ObjectCalls.ptrcallWithTwoIntArgsRetLong(
   ret.value
 }
 
+fun ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+  a1: Int,
+): NodePath = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.toLong()
+  val c1 = alloc<LongVar>()
+  c1.value = a1.toLong()
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_INT64
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  NodePath(ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_NODE_PATH))
+}
+
 fun ObjectCalls.ptrcallWithTwoIntArgsRetObject(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -20972,6 +21324,44 @@ fun ObjectCalls.ptrcallWithTwoIntArgsRetRect2i(
   ptrs[1] = c1.ptr.reinterpret<CPointed>()
   kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2I, ret)
   Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
+}
+
+fun ObjectCalls.ptrcallWithTwoIntArgsRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+  a1: Int,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.toLong()
+  val c1 = alloc<LongVar>()
+  c1.value = a1.toLong()
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_INT64
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
+fun ObjectCalls.ptrcallWithTwoIntArgsRetStringName(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+  a1: Int,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0.toLong()
+  val c1 = alloc<LongVar>()
+  c1.value = a1.toLong()
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_INT64
+  types[1] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrs[1] = c1.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING_NAME)
 }
 
 fun ObjectCalls.ptrcallWithTwoIntArgsRetVector2(
@@ -23166,6 +23556,21 @@ fun ObjectCalls.ptrcallWithTwoStringArgsRetLong(
   ret.value
 }
 
+fun ObjectCalls.ptrcallWithTwoStringArgsRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: String,
+): String = memScoped {
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_STRING
+  types[1] = PT_STRING
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+}
+
 fun ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -23194,6 +23599,36 @@ fun ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(
     ret.ptr,
   )
   ret.value
+}
+
+fun ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: String,
+  a2: Boolean,
+  a3: Int,
+  a4: Int,
+): String = memScoped {
+  val c2 = alloc<ByteVar>()
+  c2.value = if (a2) 1 else 0
+  val c3 = alloc<LongVar>()
+  c3.value = a3.toLong()
+  val c4 = alloc<LongVar>()
+  c4.value = a4.toLong()
+  val types = allocArray<IntVar>(5)
+  types[0] = PT_STRING
+  types[1] = PT_STRING
+  types[2] = PT_BOOL
+  types[3] = PT_INT64
+  types[4] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(5)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
+  ptrs[2] = c2.ptr.reinterpret<CPointed>()
+  ptrs[3] = c3.ptr.reinterpret<CPointed>()
+  ptrs[4] = c4.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 5, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithTwoStringCallableStringArgs(
@@ -23371,6 +23806,26 @@ fun ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetInt(
     ret.ptr,
   )
   ret.value.toInt()
+}
+
+fun ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetStringName(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: String,
+  a2: Boolean,
+): String = memScoped {
+  val c2 = alloc<ByteVar>()
+  c2.value = if (a2) 1 else 0
+  val types = allocArray<IntVar>(3)
+  types[0] = PT_STRING_NAME
+  types[1] = PT_STRING_NAME
+  types[2] = PT_BOOL
+  val ptrs = allocArray<COpaquePointerVar>(3)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
+  ptrs[2] = c2.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 3, PT_STRING_NAME)
 }
 
 fun ObjectCalls.ptrcallWithTwoStringNameAndColorArg(
@@ -23645,6 +24100,21 @@ fun ObjectCalls.ptrcallWithTwoStringNameArgsRetRID(
   RID(ret.value)
 }
 
+fun ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: String,
+): String = memScoped {
+  val types = allocArray<IntVar>(2)
+  types[0] = PT_STRING_NAME
+  types[1] = PT_STRING_NAME
+  val ptrs = allocArray<COpaquePointerVar>(2)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING_NAME)
+}
+
 fun ObjectCalls.ptrcallWithTwoStringNameFourUInt32ArgsRetRID(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -23740,6 +24210,29 @@ fun ObjectCalls.ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(
     ret.ptr,
   )
   RID(ret.value)
+}
+
+fun ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: String,
+  a2: Int,
+  a3: String,
+): String = memScoped {
+  val c2 = alloc<LongVar>()
+  c2.value = a2.toLong()
+  val types = allocArray<IntVar>(4)
+  types[0] = PT_STRING_NAME
+  types[1] = PT_STRING_NAME
+  types[2] = PT_INT64
+  types[3] = PT_STRING_NAME
+  val ptrs = allocArray<COpaquePointerVar>(4)
+  ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+  ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
+  ptrs[2] = c2.ptr.reinterpret<CPointed>()
+  ptrs[3] = a3.cstr.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 4, PT_STRING_NAME)
 }
 
 fun ObjectCalls.ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(
@@ -24764,6 +25257,20 @@ fun ObjectCalls.ptrcallWithUInt32ArgRetProjection(
       GodotReal.fromC(ret[15]),
     ),
   )
+}
+
+fun ObjectCalls.ptrcallWithUInt32ArgRetString(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Long,
+): String = memScoped {
+  val c0 = alloc<LongVar>()
+  c0.value = a0
+  val types = allocArray<IntVar>(1)
+  types[0] = PT_INT64
+  val ptrs = allocArray<COpaquePointerVar>(1)
+  ptrs[0] = c0.ptr.reinterpret<CPointed>()
+  ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
 }
 
 fun ObjectCalls.ptrcallWithUInt32ArgRetTransform2D(

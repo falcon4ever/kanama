@@ -7,7 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP OptionButton waits on: ptrcallWithIntAndVariantArg, ptrcallWithIntArgRetString,
+// KANAMA-IOS-GAP OptionButton waits on: ptrcallWithIntAndVariantArg,
 //   ptrcallWithIntArgRetVariantScalar
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -22,15 +22,6 @@ fun OptionButton.setItemMetadata(idx: Int, metadata: Any?) {
 }
 
 /**
- * Returns the text of the item at index `idx`.
- *
- * Generated from Godot docs: OptionButton.get_item_text
- */
-fun OptionButton.getItemText(idx: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
-}
-
-/**
  * Retrieves the metadata of an item. Metadata may be any type and can be used to store extra
  * information about an item, such as an external string ID.
  *
@@ -40,31 +31,12 @@ fun OptionButton.getItemMetadata(idx: Int): Any? {
     return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
 }
 
-/**
- * Returns the tooltip of the item at index `idx`.
- *
- * Generated from Godot docs: OptionButton.get_item_tooltip
- */
-fun OptionButton.getItemTooltip(idx: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
-}
-
 private const val SET_ITEM_METADATA_HASH = 2152698145L
 private val setItemMetadataBind by lazy {
     ObjectCalls.getMethodBind("OptionButton", "set_item_metadata", SET_ITEM_METADATA_HASH)
 }
 
-private const val GET_ITEM_TEXT_HASH = 844755477L
-private val getItemTextBind by lazy {
-    ObjectCalls.getMethodBind("OptionButton", "get_item_text", GET_ITEM_TEXT_HASH)
-}
-
 private const val GET_ITEM_METADATA_HASH = 4227898402L
 private val getItemMetadataBind by lazy {
     ObjectCalls.getMethodBind("OptionButton", "get_item_metadata", GET_ITEM_METADATA_HASH)
-}
-
-private const val GET_ITEM_TOOLTIP_HASH = 844755477L
-private val getItemTooltipBind by lazy {
-    ObjectCalls.getMethodBind("OptionButton", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
 }

@@ -55,6 +55,11 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, handle, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    fun getItemName(id: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, handle, id)
+    }
+
     fun getItemMesh(id: Int): Mesh? {
         checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, handle, id))
@@ -171,6 +176,11 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
         private const val SET_ITEM_PREVIEW_HASH = 666127730L
         private val setItemPreviewBind by lazy {
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_preview", SET_ITEM_PREVIEW_HASH)
+        }
+
+        private const val GET_ITEM_NAME_HASH = 844755477L
+        private val getItemNameBind by lazy {
+            ObjectCalls.getMethodBind("MeshLibrary", "get_item_name", GET_ITEM_NAME_HASH)
         }
 
         private const val GET_ITEM_MESH_HASH = 1576363275L

@@ -104,6 +104,16 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the specified `feature`'s human-readable name.
+     *
+     * Generated from Godot docs: EditorFeatureProfile.get_feature_name
+     */
+    fun getFeatureName(feature: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(getFeatureNameBind, handle, feature)
+    }
+
+    /**
      * Saves the editor feature profile to a file in JSON format. It can then be imported using the
      * feature profile manager's Import button or the `load_from_file` method. Note: Feature profiles
      * created via the user interface are saved in the `feature_profiles` directory, as a file with the
@@ -190,6 +200,11 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
         private const val IS_FEATURE_DISABLED_HASH = 2974403161L
         private val isFeatureDisabledBind by lazy {
             ObjectCalls.getMethodBind("EditorFeatureProfile", "is_feature_disabled", IS_FEATURE_DISABLED_HASH)
+        }
+
+        private const val GET_FEATURE_NAME_HASH = 3401335809L
+        private val getFeatureNameBind by lazy {
+            ObjectCalls.getMethodBind("EditorFeatureProfile", "get_feature_name", GET_FEATURE_NAME_HASH)
         }
 
         private const val SAVE_TO_FILE_HASH = 166001499L

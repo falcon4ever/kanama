@@ -2065,6 +2065,107 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
     return length;
 }
 
+// task 100 (parcel 1) — String / StringName / NodePath returns on every audited arg shape.
+// The generated ObjectCalls helpers lay out the arg cells exactly as for kanama_ios_godot_ptrcall;
+// the return rides its own 8-byte cell (all three builtins are a single pointer on 64-bit), is
+// converted to a Godot String and UTF-8 encoded. The method runs ONCE: an encoding that fits the
+// caller's buffer is written and the String destroyed; a longer one is parked in this single
+// pending slot for kanama_ios_godot_take_pending_utf8, so nothing is truncated (the Object-call
+// decode caps at its fixed buffer) and nothing is re-issued (the no-arg helpers' two-call length
+// protocol is only safe for pure getters). Single-threaded like every other scratch cell here.
+static uint64_t g_pending_utf8_string = 0;
+static int g_pending_utf8_valid = 0;
+
+static void kanama_ios_drop_pending_utf8(void) {
+    if (g_pending_utf8_valid) {
+        kanama_ios_destroy_string(&g_pending_utf8_string);
+        g_pending_utf8_string = 0;
+        g_pending_utf8_valid = 0;
+    }
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_utf8(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_type,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+        return -1;
+    }
+    if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
+        return -1;
+    }
+    if (ret_type == KANAMA_IOS_PT_STRING_NAME && g_string_from_string_name_constructor == NULL) {
+        return -1;
+    }
+    if (ret_type == KANAMA_IOS_PT_NODE_PATH && g_string_from_node_path_constructor == NULL) {
+        return -1;
+    }
+    if (ret_type != KANAMA_IOS_PT_STRING && ret_type != KANAMA_IOS_PT_STRING_NAME &&
+        ret_type != KANAMA_IOS_PT_NODE_PATH) {
+        return -1;
+    }
+    kanama_ios_drop_pending_utf8();
+
+    // ptrcall writes the returned builtin (String CowData pointer, interned StringName
+    // pointer, or NodePath CowData pointer; 0 for empty) into this cell.
+    uint64_t ret_storage = 0;
+    kanama_ios_godot_ptrcall_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, ret_type, &ret_storage);
+
+    uint64_t string_storage = 0;
+    if (ret_type == KANAMA_IOS_PT_STRING) {
+        string_storage = ret_storage;
+    } else {
+        const GDExtensionConstTypePtr ctor_args[1] = {
+            (GDExtensionConstTypePtr)&ret_storage,
+        };
+        if (ret_type == KANAMA_IOS_PT_STRING_NAME) {
+            g_string_from_string_name_constructor(
+                (GDExtensionUninitializedTypePtr)&string_storage, ctor_args);
+            kanama_ios_destroy_string_name(&ret_storage);
+        } else {
+            g_string_from_node_path_constructor(
+                (GDExtensionUninitializedTypePtr)&string_storage, ctor_args);
+            kanama_ios_destroy_node_path(&ret_storage);
+        }
+    }
+
+    int64_t length = (int64_t)g_string_to_utf8_chars(
+        (GDExtensionConstStringPtr)&string_storage,
+        (out_buf != NULL && buf_size > 0) ? out_buf : NULL,
+        (out_buf != NULL && buf_size > 0) ? buf_size : 0
+    );
+    if (length <= buf_size) {
+        kanama_ios_destroy_string(&string_storage);
+    } else {
+        g_pending_utf8_string = string_storage;
+        g_pending_utf8_valid = 1;
+    }
+    return length;
+}
+
+int64_t kanama_ios_godot_take_pending_utf8(
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (!g_pending_utf8_valid || g_string_to_utf8_chars == NULL) {
+        return -1;
+    }
+    int64_t length = (int64_t)g_string_to_utf8_chars(
+        (GDExtensionConstStringPtr)&g_pending_utf8_string,
+        (out_buf != NULL && buf_size > 0) ? out_buf : NULL,
+        (out_buf != NULL && buf_size > 0) ? buf_size : 0
+    );
+    kanama_ios_drop_pending_utf8();
+    return length;
+}
+
 // Lazily resolve the PackedInt32Array read-back trio (destructor + "size" builtin
 // method + operator_index_const). Must be called after kanama_ios_resolve_godot_api().
 static void kanama_ios_cache_packed_int32_methods(void) {

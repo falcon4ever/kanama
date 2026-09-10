@@ -36,8 +36,71 @@ object Time {
     const val WEEKDAY_SATURDAY: Long = 6L
 
     @JvmStatic
+    fun getDateTimeStringFromUnixTime(unixTime: Long, useSpace: Boolean = false): String {
+        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getDateTimeStringFromUnixTimeBind, singleton, unixTime, useSpace)
+    }
+
+    /**
+     * Converts the given Unix timestamp to an ISO 8601 date string (YYYY-MM-DD).
+     *
+     * Generated from Godot docs: Time.get_date_string_from_unix_time
+     */
+    @JvmStatic
+    fun getDateStringFromUnixTime(unixTime: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getDateStringFromUnixTimeBind, singleton, unixTime)
+    }
+
+    /**
+     * Converts the given Unix timestamp to an ISO 8601 time string (HH:MM:SS).
+     *
+     * Generated from Godot docs: Time.get_time_string_from_unix_time
+     */
+    @JvmStatic
+    fun getTimeStringFromUnixTime(unixTime: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getTimeStringFromUnixTimeBind, singleton, unixTime)
+    }
+
+    @JvmStatic
     fun getUnixTimeFromDateTimeString(value: String): Long {
         return ObjectCalls.ptrcallWithStringArgRetLong(getUnixTimeFromDateTimeStringBind, singleton, value)
+    }
+
+    /**
+     * Converts the given timezone offset in minutes to a timezone offset string. For example, -480
+     * returns "-08:00", 345 returns "+05:45", and 0 returns "+00:00".
+     *
+     * Generated from Godot docs: Time.get_offset_string_from_offset_minutes
+     */
+    @JvmStatic
+    fun getOffsetStringFromOffsetMinutes(minutes: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getOffsetStringFromOffsetMinutesBind, singleton, minutes)
+    }
+
+    @JvmStatic
+    fun getDateTimeStringFromSystem(utc: Boolean = false, useSpace: Boolean = false): String {
+        return ObjectCalls.ptrcallWithTwoBoolArgsRetString(getDateTimeStringFromSystemBind, singleton, utc, useSpace)
+    }
+
+    /**
+     * Returns the current date as an ISO 8601 date string (YYYY-MM-DD). The returned values are in the
+     * system's local time when `utc` is `false`, otherwise they are in UTC.
+     *
+     * Generated from Godot docs: Time.get_date_string_from_system
+     */
+    @JvmStatic
+    fun getDateStringFromSystem(utc: Boolean = false): String {
+        return ObjectCalls.ptrcallWithBoolArgRetString(getDateStringFromSystemBind, singleton, utc)
+    }
+
+    /**
+     * Returns the current time as an ISO 8601 time string (HH:MM:SS). The returned values are in the
+     * system's local time when `utc` is `false`, otherwise they are in UTC.
+     *
+     * Generated from Godot docs: Time.get_time_string_from_system
+     */
+    @JvmStatic
+    fun getTimeStringFromSystem(utc: Boolean = false): String {
+        return ObjectCalls.ptrcallWithBoolArgRetString(getTimeStringFromSystemBind, singleton, utc)
     }
 
     /**
@@ -83,9 +146,44 @@ object Time {
     internal fun wrap(handle: MemorySegment): Time? =
         if (handle.address() == 0L) null else this
 
+    private const val GET_DATETIME_STRING_FROM_UNIX_TIME_HASH = 2311239925L
+    private val getDateTimeStringFromUnixTimeBind by lazy {
+        ObjectCalls.getMethodBind("Time", "get_datetime_string_from_unix_time", GET_DATETIME_STRING_FROM_UNIX_TIME_HASH)
+    }
+
+    private const val GET_DATE_STRING_FROM_UNIX_TIME_HASH = 844755477L
+    private val getDateStringFromUnixTimeBind by lazy {
+        ObjectCalls.getMethodBind("Time", "get_date_string_from_unix_time", GET_DATE_STRING_FROM_UNIX_TIME_HASH)
+    }
+
+    private const val GET_TIME_STRING_FROM_UNIX_TIME_HASH = 844755477L
+    private val getTimeStringFromUnixTimeBind by lazy {
+        ObjectCalls.getMethodBind("Time", "get_time_string_from_unix_time", GET_TIME_STRING_FROM_UNIX_TIME_HASH)
+    }
+
     private const val GET_UNIX_TIME_FROM_DATETIME_STRING_HASH = 1321353865L
     private val getUnixTimeFromDateTimeStringBind by lazy {
         ObjectCalls.getMethodBind("Time", "get_unix_time_from_datetime_string", GET_UNIX_TIME_FROM_DATETIME_STRING_HASH)
+    }
+
+    private const val GET_OFFSET_STRING_FROM_OFFSET_MINUTES_HASH = 844755477L
+    private val getOffsetStringFromOffsetMinutesBind by lazy {
+        ObjectCalls.getMethodBind("Time", "get_offset_string_from_offset_minutes", GET_OFFSET_STRING_FROM_OFFSET_MINUTES_HASH)
+    }
+
+    private const val GET_DATETIME_STRING_FROM_SYSTEM_HASH = 1136425492L
+    private val getDateTimeStringFromSystemBind by lazy {
+        ObjectCalls.getMethodBind("Time", "get_datetime_string_from_system", GET_DATETIME_STRING_FROM_SYSTEM_HASH)
+    }
+
+    private const val GET_DATE_STRING_FROM_SYSTEM_HASH = 1162154673L
+    private val getDateStringFromSystemBind by lazy {
+        ObjectCalls.getMethodBind("Time", "get_date_string_from_system", GET_DATE_STRING_FROM_SYSTEM_HASH)
+    }
+
+    private const val GET_TIME_STRING_FROM_SYSTEM_HASH = 1162154673L
+    private val getTimeStringFromSystemBind by lazy {
+        ObjectCalls.getMethodBind("Time", "get_time_string_from_system", GET_TIME_STRING_FROM_SYSTEM_HASH)
     }
 
     private const val GET_UNIX_TIME_FROM_SYSTEM_HASH = 1740695150L

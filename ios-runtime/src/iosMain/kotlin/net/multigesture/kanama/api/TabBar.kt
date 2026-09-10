@@ -128,8 +128,16 @@ class TabBar(handle: MemorySegment) : Control(handle) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, handle, tabIdx, title)
     }
 
+    fun getTabTitle(tabIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, handle, tabIdx)
+    }
+
     fun setTabTooltip(tabIdx: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, handle, tabIdx, tooltip)
+    }
+
+    fun getTabTooltip(tabIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, handle, tabIdx)
     }
 
     fun setTabTextDirection(tabIdx: Int, direction: Long) {
@@ -142,6 +150,10 @@ class TabBar(handle: MemorySegment) : Control(handle) {
 
     fun setTabLanguage(tabIdx: Int, language: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTabLanguageBind, handle, tabIdx, language)
+    }
+
+    fun getTabLanguage(tabIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabLanguageBind, handle, tabIdx)
     }
 
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
@@ -384,9 +396,19 @@ class TabBar(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("TabBar", "set_tab_title", SET_TAB_TITLE_HASH)
         }
 
+        private const val GET_TAB_TITLE_HASH = 844755477L
+        private val getTabTitleBind by lazy {
+            ObjectCalls.getMethodBind("TabBar", "get_tab_title", GET_TAB_TITLE_HASH)
+        }
+
         private const val SET_TAB_TOOLTIP_HASH = 501894301L
         private val setTabTooltipBind by lazy {
             ObjectCalls.getMethodBind("TabBar", "set_tab_tooltip", SET_TAB_TOOLTIP_HASH)
+        }
+
+        private const val GET_TAB_TOOLTIP_HASH = 844755477L
+        private val getTabTooltipBind by lazy {
+            ObjectCalls.getMethodBind("TabBar", "get_tab_tooltip", GET_TAB_TOOLTIP_HASH)
         }
 
         private const val SET_TAB_TEXT_DIRECTION_HASH = 1707680378L
@@ -402,6 +424,11 @@ class TabBar(handle: MemorySegment) : Control(handle) {
         private const val SET_TAB_LANGUAGE_HASH = 501894301L
         private val setTabLanguageBind by lazy {
             ObjectCalls.getMethodBind("TabBar", "set_tab_language", SET_TAB_LANGUAGE_HASH)
+        }
+
+        private const val GET_TAB_LANGUAGE_HASH = 844755477L
+        private val getTabLanguageBind by lazy {
+            ObjectCalls.getMethodBind("TabBar", "get_tab_language", GET_TAB_LANGUAGE_HASH)
         }
 
         private const val SET_TAB_ICON_HASH = 666127730L

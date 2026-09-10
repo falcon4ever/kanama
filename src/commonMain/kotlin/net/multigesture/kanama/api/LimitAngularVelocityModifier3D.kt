@@ -40,6 +40,15 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
     }
 
     /**
+     * Returns the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_root_bone_name
+     */
+    fun getRootBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+    }
+
+    /**
      * Sets the root bone index of the bone chain.
      *
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_root_bone
@@ -65,6 +74,15 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      */
     fun setEndBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+    }
+
+    /**
+     * Returns the end bone name of the bone chain.
+     *
+     * Generated from Godot docs: LimitAngularVelocityModifier3D.get_end_bone_name
+     */
+    fun getEndBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
     }
 
     /**
@@ -174,6 +192,11 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
             ObjectCalls.getMethodBind("LimitAngularVelocityModifier3D", "set_root_bone_name", SET_ROOT_BONE_NAME_HASH)
         }
 
+        private const val GET_ROOT_BONE_NAME_HASH = 844755477L
+        private val getRootBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("LimitAngularVelocityModifier3D", "get_root_bone_name", GET_ROOT_BONE_NAME_HASH)
+        }
+
         private const val SET_ROOT_BONE_HASH = 3937882851L
         private val setRootBoneBind by lazy {
             ObjectCalls.getMethodBind("LimitAngularVelocityModifier3D", "set_root_bone", SET_ROOT_BONE_HASH)
@@ -187,6 +210,11 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
         private const val SET_END_BONE_NAME_HASH = 501894301L
         private val setEndBoneNameBind by lazy {
             ObjectCalls.getMethodBind("LimitAngularVelocityModifier3D", "set_end_bone_name", SET_END_BONE_NAME_HASH)
+        }
+
+        private const val GET_END_BONE_NAME_HASH = 844755477L
+        private val getEndBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("LimitAngularVelocityModifier3D", "get_end_bone_name", GET_END_BONE_NAME_HASH)
         }
 
         private const val SET_END_BONE_HASH = 3937882851L

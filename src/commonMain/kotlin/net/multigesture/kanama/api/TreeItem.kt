@@ -157,12 +157,30 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the given column's text.
+     *
+     * Generated from Godot docs: TreeItem.get_text
+     */
+    fun getText(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getTextBind, handle, column)
+    }
+
+    /**
      * Sets the given column's description for assistive apps.
      *
      * Generated from Godot docs: TreeItem.set_description
      */
     fun setDescription(column: Int, description: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setDescriptionBind, handle, column, description)
+    }
+
+    /**
+     * Returns the given column's description for assistive apps.
+     *
+     * Generated from Godot docs: TreeItem.get_description
+     */
+    fun getDescription(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getDescriptionBind, handle, column)
     }
 
     /**
@@ -273,12 +291,30 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns item's text language code.
+     *
+     * Generated from Godot docs: TreeItem.get_language
+     */
+    fun getLanguage(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getLanguageBind, handle, column)
+    }
+
+    /**
      * Sets a string to be shown after a column's value (for example, a unit abbreviation).
      *
      * Generated from Godot docs: TreeItem.set_suffix
      */
     fun setSuffix(column: Int, text: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setSuffixBind, handle, column, text)
+    }
+
+    /**
+     * Gets the suffix string shown after the column value.
+     *
+     * Generated from Godot docs: TreeItem.get_suffix
+     */
+    fun getSuffix(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getSuffixBind, handle, column)
     }
 
     /**
@@ -747,6 +783,15 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the tooltip text for the button at index `button_index` in column `column`.
+     *
+     * Generated from Godot docs: TreeItem.get_button_tooltip_text
+     */
+    fun getButtonTooltipText(column: Int, buttonIndex: Int): String {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getButtonTooltipTextBind, handle, column, buttonIndex)
+    }
+
+    /**
      * Returns the ID for the button at index `button_index` in column `column`.
      *
      * Generated from Godot docs: TreeItem.get_button_id
@@ -854,6 +899,15 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
      */
     fun setTooltipText(column: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setTooltipTextBind, handle, column, tooltip)
+    }
+
+    /**
+     * Returns the given column's tooltip text.
+     *
+     * Generated from Godot docs: TreeItem.get_tooltip_text
+     */
+    fun getTooltipText(column: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getTooltipTextBind, handle, column)
     }
 
     /**
@@ -1194,9 +1248,19 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("TreeItem", "set_text", SET_TEXT_HASH)
         }
 
+        private const val GET_TEXT_HASH = 844755477L
+        private val getTextBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_text", GET_TEXT_HASH)
+        }
+
         private const val SET_DESCRIPTION_HASH = 501894301L
         private val setDescriptionBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "set_description", SET_DESCRIPTION_HASH)
+        }
+
+        private const val GET_DESCRIPTION_HASH = 844755477L
+        private val getDescriptionBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_description", GET_DESCRIPTION_HASH)
         }
 
         private const val SET_TEXT_DIRECTION_HASH = 1707680378L
@@ -1254,9 +1318,19 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("TreeItem", "set_language", SET_LANGUAGE_HASH)
         }
 
+        private const val GET_LANGUAGE_HASH = 844755477L
+        private val getLanguageBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_language", GET_LANGUAGE_HASH)
+        }
+
         private const val SET_SUFFIX_HASH = 501894301L
         private val setSuffixBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "set_suffix", SET_SUFFIX_HASH)
+        }
+
+        private const val GET_SUFFIX_HASH = 844755477L
+        private val getSuffixBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_suffix", GET_SUFFIX_HASH)
         }
 
         private const val SET_ICON_HASH = 666127730L
@@ -1504,6 +1578,11 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("TreeItem", "get_button_count", GET_BUTTON_COUNT_HASH)
         }
 
+        private const val GET_BUTTON_TOOLTIP_TEXT_HASH = 1391810591L
+        private val getButtonTooltipTextBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_button_tooltip_text", GET_BUTTON_TOOLTIP_TEXT_HASH)
+        }
+
         private const val GET_BUTTON_ID_HASH = 3175239445L
         private val getButtonIdBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "get_button_id", GET_BUTTON_ID_HASH)
@@ -1562,6 +1641,11 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
         private const val SET_TOOLTIP_TEXT_HASH = 501894301L
         private val setTooltipTextBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "set_tooltip_text", SET_TOOLTIP_TEXT_HASH)
+        }
+
+        private const val GET_TOOLTIP_TEXT_HASH = 844755477L
+        private val getTooltipTextBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_tooltip_text", GET_TOOLTIP_TEXT_HASH)
         }
 
         private const val SET_TEXT_ALIGNMENT_HASH = 3276431499L

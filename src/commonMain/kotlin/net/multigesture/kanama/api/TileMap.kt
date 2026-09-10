@@ -173,6 +173,16 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Returns a TileMap layer's name. If `layer` is negative, the layers are accessed from the last
+     * one.
+     *
+     * Generated from Godot docs: TileMap.get_layer_name
+     */
+    fun getLayerName(layer: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getLayerNameBind, handle, layer)
+    }
+
+    /**
      * Enables or disables the layer `layer`. A disabled layer is not processed at all (no rendering,
      * no physics, etc.). If `layer` is negative, the layers are accessed from the last one.
      *
@@ -709,6 +719,11 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
         private const val SET_LAYER_NAME_HASH = 501894301L
         private val setLayerNameBind by lazy {
             ObjectCalls.getMethodBind("TileMap", "set_layer_name", SET_LAYER_NAME_HASH)
+        }
+
+        private const val GET_LAYER_NAME_HASH = 844755477L
+        private val getLayerNameBind by lazy {
+            ObjectCalls.getMethodBind("TileMap", "get_layer_name", GET_LAYER_NAME_HASH)
         }
 
         private const val SET_LAYER_ENABLED_HASH = 300928843L

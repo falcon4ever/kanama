@@ -42,6 +42,15 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
     }
 
     /**
+     * Returns the root bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_root_bone_name
+     */
+    fun getRootBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+    }
+
+    /**
      * Sets the root bone index of the bone chain.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_root_bone
@@ -68,6 +77,15 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      */
     fun setEndBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+    }
+
+    /**
+     * Returns the end bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_name
+     */
+    fun getEndBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
     }
 
     /**
@@ -177,12 +195,30 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
     }
 
     /**
+     * Returns the center node path of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_center_node
+     */
+    fun getCenterNode(index: Int): NodePath {
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getCenterNodeBind, handle, index)
+    }
+
+    /**
      * Sets the center bone name of the bone chain.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_center_bone_name
      */
     fun setCenterBoneName(index: Int, boneName: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setCenterBoneNameBind, handle, index, boneName)
+    }
+
+    /**
+     * Returns the center bone name of the bone chain.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_center_bone_name
+     */
+    fun getCenterBoneName(index: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getCenterBoneNameBind, handle, index)
     }
 
     /**
@@ -469,6 +505,15 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
     }
 
     /**
+     * Returns the bone name at `joint` in the bone chain's joint list.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_joint_bone_name
+     */
+    fun getJointBoneName(index: Int, joint: Int): String {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, handle, index, joint)
+    }
+
+    /**
      * Returns the bone index at `joint` in the bone chain's joint list.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_bone
@@ -661,6 +706,16 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
     }
 
     /**
+     * Returns the node path of the `SpringBoneCollision3D` at `collision` in the bone chain's exclude
+     * collision list when `are_all_child_collisions_enabled` is `true`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_exclude_collision_path
+     */
+    fun getExcludeCollisionPath(index: Int, collision: Int): NodePath {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getExcludeCollisionPathBind, handle, index, collision)
+    }
+
+    /**
      * Sets the number of exclude collisions in the exclude collision list at `index` in the settings
      * when `are_all_child_collisions_enabled` is `true`.
      *
@@ -698,6 +753,16 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      */
     fun setCollisionPath(index: Int, collision: Int, nodePath: NodePath) {
         ObjectCalls.ptrcallWithTwoIntAndNodePathArg(setCollisionPathBind, handle, index, collision, nodePath)
+    }
+
+    /**
+     * Returns the node path of the `SpringBoneCollision3D` at `collision` in the bone chain's
+     * collision list when `are_all_child_collisions_enabled` is `false`.
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.get_collision_path
+     */
+    fun getCollisionPath(index: Int, collision: Int): NodePath {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getCollisionPathBind, handle, index, collision)
     }
 
     /**
@@ -805,6 +870,11 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_root_bone_name", SET_ROOT_BONE_NAME_HASH)
         }
 
+        private const val GET_ROOT_BONE_NAME_HASH = 844755477L
+        private val getRootBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_root_bone_name", GET_ROOT_BONE_NAME_HASH)
+        }
+
         private const val SET_ROOT_BONE_HASH = 3937882851L
         private val setRootBoneBind by lazy {
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_root_bone", SET_ROOT_BONE_HASH)
@@ -818,6 +888,11 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
         private const val SET_END_BONE_NAME_HASH = 501894301L
         private val setEndBoneNameBind by lazy {
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_end_bone_name", SET_END_BONE_NAME_HASH)
+        }
+
+        private const val GET_END_BONE_NAME_HASH = 844755477L
+        private val getEndBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_end_bone_name", GET_END_BONE_NAME_HASH)
         }
 
         private const val SET_END_BONE_HASH = 3937882851L
@@ -875,9 +950,19 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_center_node", SET_CENTER_NODE_HASH)
         }
 
+        private const val GET_CENTER_NODE_HASH = 408788394L
+        private val getCenterNodeBind by lazy {
+            ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_center_node", GET_CENTER_NODE_HASH)
+        }
+
         private const val SET_CENTER_BONE_NAME_HASH = 501894301L
         private val setCenterBoneNameBind by lazy {
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_center_bone_name", SET_CENTER_BONE_NAME_HASH)
+        }
+
+        private const val GET_CENTER_BONE_NAME_HASH = 844755477L
+        private val getCenterBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_center_bone_name", GET_CENTER_BONE_NAME_HASH)
         }
 
         private const val SET_CENTER_BONE_HASH = 3937882851L
@@ -1025,6 +1110,11 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "is_config_individual", IS_CONFIG_INDIVIDUAL_HASH)
         }
 
+        private const val GET_JOINT_BONE_NAME_HASH = 1391810591L
+        private val getJointBoneNameBind by lazy {
+            ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_joint_bone_name", GET_JOINT_BONE_NAME_HASH)
+        }
+
         private const val GET_JOINT_BONE_HASH = 3175239445L
         private val getJointBoneBind by lazy {
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_joint_bone", GET_JOINT_BONE_HASH)
@@ -1120,6 +1210,11 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_exclude_collision_path", SET_EXCLUDE_COLLISION_PATH_HASH)
         }
 
+        private const val GET_EXCLUDE_COLLISION_PATH_HASH = 464924783L
+        private val getExcludeCollisionPathBind by lazy {
+            ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_exclude_collision_path", GET_EXCLUDE_COLLISION_PATH_HASH)
+        }
+
         private const val SET_EXCLUDE_COLLISION_COUNT_HASH = 3937882851L
         private val setExcludeCollisionCountBind by lazy {
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_exclude_collision_count", SET_EXCLUDE_COLLISION_COUNT_HASH)
@@ -1138,6 +1233,11 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
         private const val SET_COLLISION_PATH_HASH = 132481804L
         private val setCollisionPathBind by lazy {
             ObjectCalls.getMethodBind("SpringBoneSimulator3D", "set_collision_path", SET_COLLISION_PATH_HASH)
+        }
+
+        private const val GET_COLLISION_PATH_HASH = 464924783L
+        private val getCollisionPathBind by lazy {
+            ObjectCalls.getMethodBind("SpringBoneSimulator3D", "get_collision_path", GET_COLLISION_PATH_HASH)
         }
 
         private const val SET_COLLISION_COUNT_HASH = 3937882851L

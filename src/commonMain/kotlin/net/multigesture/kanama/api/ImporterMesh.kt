@@ -34,6 +34,16 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the name of the blend shape at this index.
+     *
+     * Generated from Godot docs: ImporterMesh.get_blend_shape_name
+     */
+    fun getBlendShapeName(blendShapeIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getBlendShapeNameBind, handle, blendShapeIdx)
+    }
+
+    /**
      * Sets the blend shape mode.
      *
      * Generated from Godot docs: ImporterMesh.set_blend_shape_mode
@@ -71,6 +81,16 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
     fun getSurfacePrimitiveType(surfaceIdx: Int): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, handle, surfaceIdx)
+    }
+
+    /**
+     * Gets the name assigned to this surface.
+     *
+     * Generated from Godot docs: ImporterMesh.get_surface_name
+     */
+    fun getSurfaceName(surfaceIdx: Int): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetString(getSurfaceNameBind, handle, surfaceIdx)
     }
 
     /**
@@ -203,6 +223,11 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("ImporterMesh", "get_blend_shape_count", GET_BLEND_SHAPE_COUNT_HASH)
         }
 
+        private const val GET_BLEND_SHAPE_NAME_HASH = 844755477L
+        private val getBlendShapeNameBind by lazy {
+            ObjectCalls.getMethodBind("ImporterMesh", "get_blend_shape_name", GET_BLEND_SHAPE_NAME_HASH)
+        }
+
         private const val SET_BLEND_SHAPE_MODE_HASH = 227983991L
         private val setBlendShapeModeBind by lazy {
             ObjectCalls.getMethodBind("ImporterMesh", "set_blend_shape_mode", SET_BLEND_SHAPE_MODE_HASH)
@@ -221,6 +246,11 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
         private const val GET_SURFACE_PRIMITIVE_TYPE_HASH = 3552571330L
         private val getSurfacePrimitiveTypeBind by lazy {
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_primitive_type", GET_SURFACE_PRIMITIVE_TYPE_HASH)
+        }
+
+        private const val GET_SURFACE_NAME_HASH = 844755477L
+        private val getSurfaceNameBind by lazy {
+            ObjectCalls.getMethodBind("ImporterMesh", "get_surface_name", GET_SURFACE_NAME_HASH)
         }
 
         private const val GET_SURFACE_LOD_COUNT_HASH = 923996154L

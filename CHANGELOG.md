@@ -7,6 +7,23 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: String, StringName and NodePath returns on every audited argument shape (task 100, parcel 1)
+
+- The iOS backend used to call a String-, StringName- or NodePath-returning method only when
+  its exact shape had a hand-written helper (the no-arg getters plus a handful of arg-bearing
+  ones on the Object-call decode). Every such method whose arguments are already audited now
+  gets a generated helper: one new C entry, `kanama_ios_godot_ptrcall_ret_utf8`, runs the
+  method once through the generic ptrcall dispatch and UTF-8 encodes the return, parking a
+  value longer than the inline buffer C-side so the caller drains it whole
+  (`kanama_ios_godot_take_pending_utf8`). Nothing is truncated (the Object-call decode caps at
+  1 KiB) and nothing is re-issued (the no-arg helpers' two-call length protocol is only safe for
+  pure getters; `StreamPeer.get_utf8_string` consumes the stream). 29 helpers, 212 members on
+  26 classes move from the desktop companions into the shared tree — `TextEdit.get_line`,
+  `ItemList.get_item_text`, `Skeleton3D.get_bone_name`, `Animation.track_get_path`,
+  `RenderingServer.shader_get_code` among them; the generated gap index goes from 1274 to 1062
+  desktop-only members (277 → 252 companion files). Four self-test rows cover the three return
+  builtins and a 3000-byte String through the pending slot.
+
 ### Fixed — root `build` / `publishToMavenLocal` no longer compile ios-runtime metadata
 
 - `ios-runtime` ships as a static xcframework and is not a Maven/KMP library, but the

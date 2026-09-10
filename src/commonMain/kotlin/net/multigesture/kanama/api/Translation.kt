@@ -56,6 +56,29 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a message's translation.
+     *
+     * Generated from Godot docs: Translation.get_message
+     */
+    fun getMessage(srcMessage: String, context: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(getMessageBind, handle, srcMessage, context)
+    }
+
+    /**
+     * Returns a message's translation involving plurals. The number `n` is the number or quantity of
+     * the plural object. It will be used to guide the translation system to fetch the correct plural
+     * form for the selected language. Note: Plurals are only supported in gettext-based translations
+     * (PO) ($DOCS_URL/tutorials/i18n/localization_using_gettext.html), not CSV.
+     *
+     * Generated from Godot docs: Translation.get_plural_message
+     */
+    fun getPluralMessage(srcMessage: String, srcPluralMessage: String, n: Int, context: String = ""): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(getPluralMessageBind, handle, srcMessage, srcPluralMessage, n, context)
+    }
+
+    /**
      * Erases a message.
      *
      * Generated from Godot docs: Translation.erase_message
@@ -145,6 +168,16 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
         private const val ADD_MESSAGE_HASH = 3898530326L
         private val addMessageBind by lazy {
             ObjectCalls.getMethodBind("Translation", "add_message", ADD_MESSAGE_HASH)
+        }
+
+        private const val GET_MESSAGE_HASH = 1829228469L
+        private val getMessageBind by lazy {
+            ObjectCalls.getMethodBind("Translation", "get_message", GET_MESSAGE_HASH)
+        }
+
+        private const val GET_PLURAL_MESSAGE_HASH = 229954002L
+        private val getPluralMessageBind by lazy {
+            ObjectCalls.getMethodBind("Translation", "get_plural_message", GET_PLURAL_MESSAGE_HASH)
         }
 
         private const val ERASE_MESSAGE_HASH = 3959009644L

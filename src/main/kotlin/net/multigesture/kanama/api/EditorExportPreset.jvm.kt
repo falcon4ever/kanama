@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP EditorExportPreset waits on: ptrcallNoArgsRetDictionary,
-//   ptrcallWithStringNameAndBoolArgRetString, ptrcallWithStringNameAndStringArgRetVariantScalar
+//   ptrcallWithStringNameAndStringArgRetVariantScalar
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -33,19 +33,6 @@ fun EditorExportPreset.getOrEnv(name: String, envVar: String): Any? {
     return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, handle, name, envVar)
 }
 
-/**
- * Returns the preset's version number, or fall back to the
- * `ProjectSettings.application/config/version` project setting if set to an empty string. If
- * `windows_version` is `true`, formats the returned version number to be compatible with Windows
- * executable metadata.
- *
- * Generated from Godot docs: EditorExportPreset.get_version
- */
-fun EditorExportPreset.getVersion(name: String, windowsVersion: Boolean): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, handle, name, windowsVersion)
-}
-
 private const val GET_CUSTOMIZED_FILES_HASH = 3102165223L
 private val getCustomizedFilesBind by lazy {
     ObjectCalls.getMethodBind("EditorExportPreset", "get_customized_files", GET_CUSTOMIZED_FILES_HASH)
@@ -54,9 +41,4 @@ private val getCustomizedFilesBind by lazy {
 private const val GET_OR_ENV_HASH = 389838787L
 private val getOrEnvBind by lazy {
     ObjectCalls.getMethodBind("EditorExportPreset", "get_or_env", GET_OR_ENV_HASH)
-}
-
-private const val GET_VERSION_HASH = 1132184663L
-private val getVersionBind by lazy {
-    ObjectCalls.getMethodBind("EditorExportPreset", "get_version", GET_VERSION_HASH)
 }

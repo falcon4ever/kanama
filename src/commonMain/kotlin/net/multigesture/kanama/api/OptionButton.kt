@@ -216,6 +216,15 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
     }
 
     /**
+     * Returns the text of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_text
+     */
+    fun getItemText(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
+    }
+
+    /**
      * Returns the icon of the item at index `idx`.
      *
      * Generated from Godot docs: OptionButton.get_item_icon
@@ -240,6 +249,15 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      */
     fun getItemIndex(id: Int): Int {
         return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, handle, id)
+    }
+
+    /**
+     * Returns the tooltip of the item at index `idx`.
+     *
+     * Generated from Godot docs: OptionButton.get_item_tooltip
+     */
+    fun getItemTooltip(idx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
     }
 
     /**
@@ -545,6 +563,11 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
             ObjectCalls.getMethodBind("OptionButton", "get_search_bar_fuzzy_search_max_misses", GET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH)
         }
 
+        private const val GET_ITEM_TEXT_HASH = 844755477L
+        private val getItemTextBind by lazy {
+            ObjectCalls.getMethodBind("OptionButton", "get_item_text", GET_ITEM_TEXT_HASH)
+        }
+
         private const val GET_ITEM_ICON_HASH = 3536238170L
         private val getItemIconBind by lazy {
             ObjectCalls.getMethodBind("OptionButton", "get_item_icon", GET_ITEM_ICON_HASH)
@@ -558,6 +581,11 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         private const val GET_ITEM_INDEX_HASH = 923996154L
         private val getItemIndexBind by lazy {
             ObjectCalls.getMethodBind("OptionButton", "get_item_index", GET_ITEM_INDEX_HASH)
+        }
+
+        private const val GET_ITEM_TOOLTIP_HASH = 844755477L
+        private val getItemTooltipBind by lazy {
+            ObjectCalls.getMethodBind("OptionButton", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
         }
 
         private const val GET_ITEM_AUTO_TRANSLATE_MODE_HASH = 906302372L

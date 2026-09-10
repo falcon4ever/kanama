@@ -134,6 +134,15 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Gets the action name from its index.
+     *
+     * Generated from Godot docs: UndoRedo.get_action_name
+     */
+    fun getActionName(id: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getActionNameBind, handle, id)
+    }
+
+    /**
      * Clear the undo/redo history and associated references. Passing `false` to `increase_version`
      * will prevent the version number from increasing when the history is cleared.
      *
@@ -290,6 +299,11 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
         private const val GET_CURRENT_ACTION_HASH = 2455072627L
         private val getCurrentActionBind by lazy {
             ObjectCalls.getMethodBind("UndoRedo", "get_current_action", GET_CURRENT_ACTION_HASH)
+        }
+
+        private const val GET_ACTION_NAME_HASH = 990163283L
+        private val getActionNameBind by lazy {
+            ObjectCalls.getMethodBind("UndoRedo", "get_action_name", GET_ACTION_NAME_HASH)
         }
 
         private const val CLEAR_HISTORY_HASH = 3216645846L

@@ -702,6 +702,24 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the text of a specific line.
+     *
+     * Generated from Godot docs: TextEdit.get_line
+     */
+    fun getLine(line: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getLineBind, handle, line)
+    }
+
+    /**
+     * Returns line text as it is currently displayed, including IME composition string.
+     *
+     * Generated from Godot docs: TextEdit.get_line_with_ime
+     */
+    fun getLineWithIme(line: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getLineWithImeBind, handle, line)
+    }
+
+    /**
      * Returns the width in pixels of the `wrap_index` on `line`.
      *
      * Generated from Godot docs: TextEdit.get_line_width
@@ -1467,6 +1485,15 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns a `String` text with the word under the caret's location.
+     *
+     * Generated from Godot docs: TextEdit.get_word_under_caret
+     */
+    fun getWordUnderCaret(caretIndex: Int = -1): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getWordUnderCaretBind, handle, caretIndex)
+    }
+
+    /**
      * If `false`, using Ctrl + Left or Ctrl + Right (Cmd + Left or Cmd + Right on macOS) bindings will
      * stop moving caret only if a space or punctuation is detected. If `true`, it will also stop the
      * caret if a character is part of `!"#$%&'()*+,-./:;<=>?@[\]^`{|}~`, the Unicode General
@@ -1668,6 +1695,16 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      */
     fun hasSelection(caretIndex: Int = -1): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(hasSelectionBind, handle, caretIndex)
+    }
+
+    /**
+     * Returns the text inside the selection of a caret, or all the carets if `caret_index` is its
+     * default value `-1`.
+     *
+     * Generated from Godot docs: TextEdit.get_selected_text
+     */
+    fun getSelectedText(caretIndex: Int = -1): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getSelectedTextBind, handle, caretIndex)
     }
 
     /**
@@ -2216,6 +2253,15 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the name of the gutter at the given index.
+     *
+     * Generated from Godot docs: TextEdit.get_gutter_name
+     */
+    fun getGutterName(gutter: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getGutterNameBind, handle, gutter)
+    }
+
+    /**
      * Sets the type of gutter at the given index. Gutters can contain icons, text, or custom visuals.
      *
      * Generated from Godot docs: TextEdit.set_gutter_type
@@ -2348,6 +2394,16 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      */
     fun setLineGutterText(line: Int, gutter: Int, text: String) {
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(setLineGutterTextBind, handle, line, gutter, text)
+    }
+
+    /**
+     * Returns the text currently in `gutter` at `line`. This only works when the gutter type is
+     * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
+     *
+     * Generated from Godot docs: TextEdit.get_line_gutter_text
+     */
+    fun getLineGutterText(line: Int, gutter: Int): String {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLineGutterTextBind, handle, line, gutter)
     }
 
     /**
@@ -2892,6 +2948,16 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("TextEdit", "set_line", SET_LINE_HASH)
         }
 
+        private const val GET_LINE_HASH = 844755477L
+        private val getLineBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_line", GET_LINE_HASH)
+        }
+
+        private const val GET_LINE_WITH_IME_HASH = 844755477L
+        private val getLineWithImeBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_line_with_ime", GET_LINE_WITH_IME_HASH)
+        }
+
         private const val GET_LINE_WIDTH_HASH = 688195400L
         private val getLineWidthBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "get_line_width", GET_LINE_WIDTH_HASH)
@@ -3272,6 +3338,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("TextEdit", "get_caret_wrap_index", GET_CARET_WRAP_INDEX_HASH)
         }
 
+        private const val GET_WORD_UNDER_CARET_HASH = 3929349208L
+        private val getWordUnderCaretBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_word_under_caret", GET_WORD_UNDER_CARET_HASH)
+        }
+
         private const val SET_USE_DEFAULT_WORD_SEPARATORS_HASH = 2586408642L
         private val setUseDefaultWordSeparatorsBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "set_use_default_word_separators", SET_USE_DEFAULT_WORD_SEPARATORS_HASH)
@@ -3370,6 +3441,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val HAS_SELECTION_HASH = 2824505868L
         private val hasSelectionBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "has_selection", HAS_SELECTION_HASH)
+        }
+
+        private const val GET_SELECTED_TEXT_HASH = 2309358862L
+        private val getSelectedTextBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_selected_text", GET_SELECTED_TEXT_HASH)
         }
 
         private const val GET_SELECTION_AT_LINE_COLUMN_HASH = 1810224333L
@@ -3657,6 +3733,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_name", SET_GUTTER_NAME_HASH)
         }
 
+        private const val GET_GUTTER_NAME_HASH = 844755477L
+        private val getGutterNameBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_gutter_name", GET_GUTTER_NAME_HASH)
+        }
+
         private const val SET_GUTTER_TYPE_HASH = 1088959071L
         private val setGutterTypeBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_type", SET_GUTTER_TYPE_HASH)
@@ -3725,6 +3806,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val SET_LINE_GUTTER_TEXT_HASH = 2285447957L
         private val setLineGutterTextBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "set_line_gutter_text", SET_LINE_GUTTER_TEXT_HASH)
+        }
+
+        private const val GET_LINE_GUTTER_TEXT_HASH = 1391810591L
+        private val getLineGutterTextBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_line_gutter_text", GET_LINE_GUTTER_TEXT_HASH)
         }
 
         private const val SET_LINE_GUTTER_ICON_HASH = 176101966L

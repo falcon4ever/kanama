@@ -9,8 +9,7 @@ import net.multigesture.kanama.types.RID
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP OpenXRRenderModelExtension waits on: ptrcallNoArgsRetRIDList,
-//   ptrcallWithRIDAndUInt32ArgRetString, ptrcallWithRIDArgRetPackedStringList,
-//   ptrcallWithRIDArgRetString
+//   ptrcallWithRIDArgRetPackedStringList
 // Index: docs/reference/generated/ios-shape-gap.md
 
 fun OpenXRRenderModelExtension.renderModelGetAll(): List<RID> {
@@ -21,14 +20,6 @@ fun OpenXRRenderModelExtension.renderModelGetSubactionPaths(renderModel: RID): L
     return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(renderModelGetSubactionPathsBind, handle, renderModel)
 }
 
-fun OpenXRRenderModelExtension.renderModelGetTopLevelPath(renderModel: RID): String {
-    return ObjectCalls.ptrcallWithRIDArgRetString(renderModelGetTopLevelPathBind, handle, renderModel)
-}
-
-fun OpenXRRenderModelExtension.renderModelGetAnimatableNodeName(renderModel: RID, index: Long): String {
-    return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetString(renderModelGetAnimatableNodeNameBind, handle, renderModel, index)
-}
-
 private const val RENDER_MODEL_GET_ALL_HASH = 2915620761L
 private val renderModelGetAllBind by lazy {
     ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_all", RENDER_MODEL_GET_ALL_HASH)
@@ -37,14 +28,4 @@ private val renderModelGetAllBind by lazy {
 private const val RENDER_MODEL_GET_SUBACTION_PATHS_HASH = 2801473409L
 private val renderModelGetSubactionPathsBind by lazy {
     ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_subaction_paths", RENDER_MODEL_GET_SUBACTION_PATHS_HASH)
-}
-
-private const val RENDER_MODEL_GET_TOP_LEVEL_PATH_HASH = 642473191L
-private val renderModelGetTopLevelPathBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_top_level_path", RENDER_MODEL_GET_TOP_LEVEL_PATH_HASH)
-}
-
-private const val RENDER_MODEL_GET_ANIMATABLE_NODE_NAME_HASH = 1464764419L
-private val renderModelGetAnimatableNodeNameBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRRenderModelExtension", "render_model_get_animatable_node_name", RENDER_MODEL_GET_ANIMATABLE_NODE_NAME_HASH)
 }

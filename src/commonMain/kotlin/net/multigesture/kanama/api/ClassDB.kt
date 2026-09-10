@@ -105,6 +105,26 @@ object ClassDB {
     }
 
     /**
+     * Returns the getter method name of `property` of `class`.
+     *
+     * Generated from Godot docs: ClassDB.class_get_property_getter
+     */
+    @JvmStatic
+    fun classGetPropertyGetter(classValue: String, property: String): String {
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(classGetPropertyGetterBind, singleton, classValue, property)
+    }
+
+    /**
+     * Returns the setter method name of `property` of `class`.
+     *
+     * Generated from Godot docs: ClassDB.class_get_property_setter
+     */
+    @JvmStatic
+    fun classGetPropertySetter(classValue: String, property: String): String {
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(classGetPropertySetterBind, singleton, classValue, property)
+    }
+
+    /**
      * Returns whether `class` (or its ancestry if `no_inheritance` is `false`) has a method called
      * `method` or not.
      *
@@ -165,6 +185,16 @@ object ClassDB {
     @JvmStatic
     fun classHasEnum(classValue: String, name: String, noInheritance: Boolean = false): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetBool(classHasEnumBind, singleton, classValue, name, noInheritance)
+    }
+
+    /**
+     * Returns which enum the integer constant `name` of `class` or its ancestry belongs to.
+     *
+     * Generated from Godot docs: ClassDB.class_get_integer_constant_enum
+     */
+    @JvmStatic
+    fun classGetIntegerConstantEnum(classValue: String, name: String, noInheritance: Boolean = false): String {
+        return ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetStringName(classGetIntegerConstantEnumBind, singleton, classValue, name, noInheritance)
     }
 
     /**
@@ -235,6 +265,16 @@ object ClassDB {
         ObjectCalls.getMethodBind("ClassDB", "class_has_signal", CLASS_HAS_SIGNAL_HASH)
     }
 
+    private const val CLASS_GET_PROPERTY_GETTER_HASH = 3770832642L
+    private val classGetPropertyGetterBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_property_getter", CLASS_GET_PROPERTY_GETTER_HASH)
+    }
+
+    private const val CLASS_GET_PROPERTY_SETTER_HASH = 3770832642L
+    private val classGetPropertySetterBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_property_setter", CLASS_GET_PROPERTY_SETTER_HASH)
+    }
+
     private const val CLASS_HAS_METHOD_HASH = 3860701026L
     private val classHasMethodBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_has_method", CLASS_HAS_METHOD_HASH)
@@ -263,6 +303,11 @@ object ClassDB {
     private const val CLASS_HAS_ENUM_HASH = 3860701026L
     private val classHasEnumBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_has_enum", CLASS_HAS_ENUM_HASH)
+    }
+
+    private const val CLASS_GET_INTEGER_CONSTANT_ENUM_HASH = 2457504236L
+    private val classGetIntegerConstantEnumBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_integer_constant_enum", CLASS_GET_INTEGER_CONSTANT_ENUM_HASH)
     }
 
     private const val IS_CLASS_ENUM_BITFIELD_HASH = 3860701026L

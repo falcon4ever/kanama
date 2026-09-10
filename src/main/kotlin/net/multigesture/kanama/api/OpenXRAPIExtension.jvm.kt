@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Transform3D
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP OpenXRAPIExtension waits on: ptrcallNoArgsRetPackedInt64List,
 //   ptrcallWithConstVoidPtrArg, ptrcallWithConstVoidPtrArgRetTransform3D,
-//   ptrcallWithLongArgRetString, ptrcallWithLongStringArrayArgsRetBool, ptrcallWithRect2iArg
+//   ptrcallWithLongStringArrayArgsRetBool, ptrcallWithRect2iArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
@@ -22,16 +22,6 @@ fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
 fun OpenXRAPIExtension.xrResult(result: Long, format: String, args: List<Any?>): Boolean {
     checkOpen()
     return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(xrResultBind, handle, result, format, args)
-}
-
-fun OpenXRAPIExtension.getErrorString(result: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithLongArgRetString(getErrorStringBind, handle, result)
-}
-
-fun OpenXRAPIExtension.getSwapchainFormatName(swapchainFormat: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithLongArgRetString(getSwapchainFormatNameBind, handle, swapchainFormat)
 }
 
 fun OpenXRAPIExtension.setCustomPlaySpace(space: MemorySegment) {
@@ -57,16 +47,6 @@ private val transformFromPoseBind by lazy {
 private const val XR_RESULT_HASH = 3886436197L
 private val xrResultBind by lazy {
     ObjectCalls.getMethodBind("OpenXRAPIExtension", "xr_result", XR_RESULT_HASH)
-}
-
-private const val GET_ERROR_STRING_HASH = 990163283L
-private val getErrorStringBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_error_string", GET_ERROR_STRING_HASH)
-}
-
-private const val GET_SWAPCHAIN_FORMAT_NAME_HASH = 990163283L
-private val getSwapchainFormatNameBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_swapchain_format_name", GET_SWAPCHAIN_FORMAT_NAME_HASH)
 }
 
 private const val SET_CUSTOM_PLAY_SPACE_HASH = 1286410249L

@@ -352,6 +352,32 @@ object Input {
     }
 
     /**
+     * Returns the name of the joypad at the specified device index, e.g. `PS4 Controller`. Godot uses
+     * the SDL2 game controller database (https://github.com/gabomdq/SDL_GameControllerDB) to determine
+     * gamepad names.
+     *
+     * Generated from Godot docs: Input.get_joy_name
+     */
+    @JvmStatic
+    fun getJoyName(device: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getJoyNameBind, singleton, device)
+    }
+
+    /**
+     * Returns an SDL-compatible device GUID on platforms that use gamepad remapping, e.g.
+     * `030000004c050000c405000000010000`. Returns an empty string if it cannot be found. Godot uses
+     * SDL's internal mappings, supplemented by community-contributed mappings, to determine gamepad
+     * names and mappings based on this GUID. On Windows, all XInput joypad GUIDs will be overridden by
+     * Godot to `__XINPUT_DEVICE__`, because their mappings are the same.
+     *
+     * Generated from Godot docs: Input.get_joy_guid
+     */
+    @JvmStatic
+    fun getJoyGuid(device: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getJoyGuidBind, singleton, device)
+    }
+
+    /**
      * Queries whether an input device should be ignored or not. Devices can be ignored by setting the
      * environment variable `SDL_GAMECONTROLLER_IGNORE_DEVICES`. Read the SDL documentation
      * (https://wiki.libsdl.org/SDL2) for more information. Note: Some 3rd party tools can contribute
@@ -1148,6 +1174,16 @@ object Input {
     private const val GET_JOY_AXIS_HASH = 4063175957L
     private val getJoyAxisBind by lazy {
         ObjectCalls.getMethodBind("Input", "get_joy_axis", GET_JOY_AXIS_HASH)
+    }
+
+    private const val GET_JOY_NAME_HASH = 990163283L
+    private val getJoyNameBind by lazy {
+        ObjectCalls.getMethodBind("Input", "get_joy_name", GET_JOY_NAME_HASH)
+    }
+
+    private const val GET_JOY_GUID_HASH = 844755477L
+    private val getJoyGuidBind by lazy {
+        ObjectCalls.getMethodBind("Input", "get_joy_guid", GET_JOY_GUID_HASH)
     }
 
     private const val SHOULD_IGNORE_DEVICE_HASH = 2522259332L

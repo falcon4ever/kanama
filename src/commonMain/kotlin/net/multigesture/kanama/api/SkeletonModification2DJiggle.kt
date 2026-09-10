@@ -270,6 +270,16 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
     }
 
     /**
+     * Returns the `Bone2D` node assigned to the Jiggle joint at `joint_idx`.
+     *
+     * Generated from Godot docs: SkeletonModification2DJiggle.get_jiggle_joint_bone2d_node
+     */
+    fun getJiggleJointBone2dNode(jointIdx: Int): NodePath {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getJiggleJointBone2dNodeBind, handle, jointIdx)
+    }
+
+    /**
      * Sets the bone index, `bone_idx`, of the Jiggle joint at `joint_idx`. When possible, this will
      * also update the `bone2d_node` of the Jiggle joint based on data provided by the linked skeleton.
      *
@@ -520,6 +530,11 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
         private const val SET_JIGGLE_JOINT_BONE2D_NODE_HASH = 2761262315L
         private val setJiggleJointBone2dNodeBind by lazy {
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_bone2d_node", SET_JIGGLE_JOINT_BONE2D_NODE_HASH)
+        }
+
+        private const val GET_JIGGLE_JOINT_BONE2D_NODE_HASH = 408788394L
+        private val getJiggleJointBone2dNodeBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_bone2d_node", GET_JIGGLE_JOINT_BONE2D_NODE_HASH)
         }
 
         private const val SET_JIGGLE_JOINT_BONE_INDEX_HASH = 3937882851L

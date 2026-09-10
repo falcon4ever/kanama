@@ -837,6 +837,16 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the timestamp's name for the rendering step specified by `index`. See also
+     * `capture_timestamp`.
+     *
+     * Generated from Godot docs: RenderingDevice.get_captured_timestamp_name
+     */
+    fun getCapturedTimestampName(index: Long): String {
+        return ObjectCalls.ptrcallWithUInt32ArgRetString(getCapturedTimestampNameBind, handle, index)
+    }
+
+    /**
      * Returns `true` if the `feature` is supported by the GPU.
      *
      * Generated from Godot docs: RenderingDevice.has_feature
@@ -1041,6 +1051,25 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun getDriverAndDeviceMemoryReport(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getDriverAndDeviceMemoryReportBind, handle)
+    }
+
+    /**
+     * Returns the name of the type of object for the given `type_index`. This value must be in range
+     * `[0; get_tracked_object_type_count - 1]`. If `get_tracked_object_type_count` is 0, then type
+     * argument is ignored and always returns the same string. The return value is important because it
+     * gives meaning to the types passed to `get_driver_memory_by_object_type`,
+     * `get_driver_allocs_by_object_type`, `get_device_memory_by_object_type`, and
+     * `get_device_allocs_by_object_type`. Examples of strings it can return (not exhaustive): -
+     * DEVICE_MEMORY - PIPELINE_CACHE - SWAPCHAIN_KHR - COMMAND_POOL Thus if e.g.
+     * `get_tracked_object_name(5)` returns "COMMAND_POOL", then `get_device_memory_by_object_type(5)`
+     * returns the bytes used by the GPU for command pools. This is only used by Vulkan in debug
+     * builds. Godot must also be started with the `--extra-gpu-memory-tracking` command line argument
+     * ($DOCS_URL/tutorials/editor/command_line_tutorial.html).
+     *
+     * Generated from Godot docs: RenderingDevice.get_tracked_object_name
+     */
+    fun getTrackedObjectName(typeIndex: Long): String {
+        return ObjectCalls.ptrcallWithUInt32ArgRetString(getTrackedObjectNameBind, handle, typeIndex)
     }
 
     /**
@@ -2091,6 +2120,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "get_captured_timestamp_cpu_time", GET_CAPTURED_TIMESTAMP_CPU_TIME_HASH)
         }
 
+        private const val GET_CAPTURED_TIMESTAMP_NAME_HASH = 844755477L
+        private val getCapturedTimestampNameBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "get_captured_timestamp_name", GET_CAPTURED_TIMESTAMP_NAME_HASH)
+        }
+
         private const val HAS_FEATURE_HASH = 1772728326L
         private val hasFeatureBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "has_feature", HAS_FEATURE_HASH)
@@ -2184,6 +2218,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val GET_DRIVER_AND_DEVICE_MEMORY_REPORT_HASH = 201670096L
         private val getDriverAndDeviceMemoryReportBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "get_driver_and_device_memory_report", GET_DRIVER_AND_DEVICE_MEMORY_REPORT_HASH)
+        }
+
+        private const val GET_TRACKED_OBJECT_NAME_HASH = 844755477L
+        private val getTrackedObjectNameBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "get_tracked_object_name", GET_TRACKED_OBJECT_NAME_HASH)
         }
 
         private const val GET_TRACKED_OBJECT_TYPE_COUNT_HASH = 3905245786L

@@ -207,12 +207,30 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns menu item title.
+     *
+     * Generated from Godot docs: MenuBar.get_menu_title
+     */
+    fun getMenuTitle(menu: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getMenuTitleBind, handle, menu)
+    }
+
+    /**
      * Sets menu item tooltip.
      *
      * Generated from Godot docs: MenuBar.set_menu_tooltip
      */
     fun setMenuTooltip(menu: Int, tooltip: String) {
         ObjectCalls.ptrcallWithIntAndStringArg(setMenuTooltipBind, handle, menu, tooltip)
+    }
+
+    /**
+     * Returns menu item tooltip.
+     *
+     * Generated from Godot docs: MenuBar.get_menu_tooltip
+     */
+    fun getMenuTooltip(menu: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getMenuTooltipBind, handle, menu)
     }
 
     /**
@@ -348,9 +366,19 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("MenuBar", "set_menu_title", SET_MENU_TITLE_HASH)
         }
 
+        private const val GET_MENU_TITLE_HASH = 844755477L
+        private val getMenuTitleBind by lazy {
+            ObjectCalls.getMethodBind("MenuBar", "get_menu_title", GET_MENU_TITLE_HASH)
+        }
+
         private const val SET_MENU_TOOLTIP_HASH = 501894301L
         private val setMenuTooltipBind by lazy {
             ObjectCalls.getMethodBind("MenuBar", "set_menu_tooltip", SET_MENU_TOOLTIP_HASH)
+        }
+
+        private const val GET_MENU_TOOLTIP_HASH = 844755477L
+        private val getMenuTooltipBind by lazy {
+            ObjectCalls.getMethodBind("MenuBar", "get_menu_tooltip", GET_MENU_TOOLTIP_HASH)
         }
 
         private const val SET_MENU_DISABLED_HASH = 300928843L

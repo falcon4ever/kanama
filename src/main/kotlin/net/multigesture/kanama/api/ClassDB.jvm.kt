@@ -12,8 +12,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 //   ptrcallWithStringNameAndBoolArgRetDictionaryList,
 //   ptrcallWithStringNameAndBoolArgRetPackedStringList, ptrcallWithStringNameArgRetPackedStringList,
 //   ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList,
-//   ptrcallWithTwoStringNameAndBoolArgsRetStringName, ptrcallWithTwoStringNameArgsRetDictionary,
-//   ptrcallWithTwoStringNameArgsRetStringName, ptrcallWithTwoStringNameArgsRetVariantScalar
+//   ptrcallWithTwoStringNameArgsRetDictionary, ptrcallWithTwoStringNameArgsRetVariantScalar
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -54,24 +53,6 @@ fun ClassDB.classGetSignalList(classValue: String, noInheritance: Boolean = fals
  */
 fun ClassDB.classGetPropertyList(classValue: String, noInheritance: Boolean = false): List<Map<String, Any?>> {
     return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDictionaryList(classGetPropertyListBind, classDBSingleton, classValue, noInheritance)
-}
-
-/**
- * Returns the getter method name of `property` of `class`.
- *
- * Generated from Godot docs: ClassDB.class_get_property_getter
- */
-fun ClassDB.classGetPropertyGetter(classValue: String, property: String): String {
-    return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(classGetPropertyGetterBind, classDBSingleton, classValue, property)
-}
-
-/**
- * Returns the setter method name of `property` of `class`.
- *
- * Generated from Godot docs: ClassDB.class_get_property_setter
- */
-fun ClassDB.classGetPropertySetter(classValue: String, property: String): String {
-    return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(classGetPropertySetterBind, classDBSingleton, classValue, property)
 }
 
 /**
@@ -141,15 +122,6 @@ fun ClassDB.classGetEnumConstants(classValue: String, enum: String, noInheritanc
     return ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList(classGetEnumConstantsBind, classDBSingleton, classValue, enum, noInheritance)
 }
 
-/**
- * Returns which enum the integer constant `name` of `class` or its ancestry belongs to.
- *
- * Generated from Godot docs: ClassDB.class_get_integer_constant_enum
- */
-fun ClassDB.classGetIntegerConstantEnum(classValue: String, name: String, noInheritance: Boolean = false): String {
-    return ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetStringName(classGetIntegerConstantEnumBind, classDBSingleton, classValue, name, noInheritance)
-}
-
 private val classDBSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("ClassDB")
 }
@@ -172,16 +144,6 @@ private val classGetSignalListBind by lazy {
 private const val CLASS_GET_PROPERTY_LIST_HASH = 3504980660L
 private val classGetPropertyListBind by lazy {
     ObjectCalls.getMethodBind("ClassDB", "class_get_property_list", CLASS_GET_PROPERTY_LIST_HASH)
-}
-
-private const val CLASS_GET_PROPERTY_GETTER_HASH = 3770832642L
-private val classGetPropertyGetterBind by lazy {
-    ObjectCalls.getMethodBind("ClassDB", "class_get_property_getter", CLASS_GET_PROPERTY_GETTER_HASH)
-}
-
-private const val CLASS_GET_PROPERTY_SETTER_HASH = 3770832642L
-private val classGetPropertySetterBind by lazy {
-    ObjectCalls.getMethodBind("ClassDB", "class_get_property_setter", CLASS_GET_PROPERTY_SETTER_HASH)
 }
 
 private const val CLASS_GET_PROPERTY_HASH = 2498641674L
@@ -217,9 +179,4 @@ private val classGetEnumListBind by lazy {
 private const val CLASS_GET_ENUM_CONSTANTS_HASH = 661528303L
 private val classGetEnumConstantsBind by lazy {
     ObjectCalls.getMethodBind("ClassDB", "class_get_enum_constants", CLASS_GET_ENUM_CONSTANTS_HASH)
-}
-
-private const val CLASS_GET_INTEGER_CONSTANT_ENUM_HASH = 2457504236L
-private val classGetIntegerConstantEnumBind by lazy {
-    ObjectCalls.getMethodBind("ClassDB", "class_get_integer_constant_enum", CLASS_GET_INTEGER_CONSTANT_ENUM_HASH)
 }

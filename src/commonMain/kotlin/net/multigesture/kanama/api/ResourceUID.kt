@@ -18,6 +18,16 @@ object ResourceUID {
     const val INVALID_ID: Long = -1L
 
     /**
+     * Converts the given UID to a `uid://` string value.
+     *
+     * Generated from Godot docs: ResourceUID.id_to_text
+     */
+    @JvmStatic
+    fun idToText(id: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(idToTextBind, singleton, id)
+    }
+
+    /**
      * Extracts the UID value from the given `uid://` string.
      *
      * Generated from Godot docs: ResourceUID.text_to_id
@@ -82,6 +92,17 @@ object ResourceUID {
     }
 
     /**
+     * Returns the path that the given UID value refers to. Fails with an error if the UID does not
+     * exist, so be sure to check `has_id` beforehand.
+     *
+     * Generated from Godot docs: ResourceUID.get_id_path
+     */
+    @JvmStatic
+    fun getIdPath(id: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getIdPathBind, singleton, id)
+    }
+
+    /**
      * Removes a loaded UID value from the cache. Fails with an error if the UID does not exist, so be
      * sure to check `has_id` beforehand.
      *
@@ -131,6 +152,11 @@ object ResourceUID {
     internal fun wrap(handle: MemorySegment): ResourceUID? =
         if (handle.address() == 0L) null else this
 
+    private const val ID_TO_TEXT_HASH = 844755477L
+    private val idToTextBind by lazy {
+        ObjectCalls.getMethodBind("ResourceUID", "id_to_text", ID_TO_TEXT_HASH)
+    }
+
     private const val TEXT_TO_ID_HASH = 1321353865L
     private val textToIdBind by lazy {
         ObjectCalls.getMethodBind("ResourceUID", "text_to_id", TEXT_TO_ID_HASH)
@@ -159,6 +185,11 @@ object ResourceUID {
     private const val SET_ID_HASH = 501894301L
     private val setIdBind by lazy {
         ObjectCalls.getMethodBind("ResourceUID", "set_id", SET_ID_HASH)
+    }
+
+    private const val GET_ID_PATH_HASH = 844755477L
+    private val getIdPathBind by lazy {
+        ObjectCalls.getMethodBind("ResourceUID", "get_id_path", GET_ID_PATH_HASH)
     }
 
     private const val REMOVE_ID_HASH = 1286410249L

@@ -8,32 +8,14 @@ import net.multigesture.kanama.types.RID
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP NativeMenu waits on: ptrcallWithLongArgRetString, ptrcallWithRIDAndIntArgRetString,
-//   ptrcallWithRIDAndIntArgRetVariantScalar, ptrcallWithRIDAndVariantArgRetInt,
-//   ptrcallWithRIDArgRetCallable, ptrcallWithRIDIntAndVariantArgs, ptrcallWithRIDIntArgsRetCallable,
+// KANAMA-IOS-GAP NativeMenu waits on: ptrcallWithRIDAndIntArgRetVariantScalar,
+//   ptrcallWithRIDAndVariantArgRetInt, ptrcallWithRIDArgRetCallable,
+//   ptrcallWithRIDIntAndVariantArgs, ptrcallWithRIDIntArgsRetCallable,
 //   ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithRIDStringRIDVariantIntArgsRetInt,
 //   ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns readable name of a special system menu. Note: This method is implemented only on macOS.
- *
- * Generated from Godot docs: NativeMenu.get_system_menu_name
- */
-fun NativeMenu.getSystemMenuName(menuId: Long): String {
-    return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuNameBind, nativeMenuSingleton, menuId)
-}
-
-/**
- * Returns the text of the system menu item. Note: This method is implemented on macOS.
- *
- * Generated from Godot docs: NativeMenu.get_system_menu_text
- */
-fun NativeMenu.getSystemMenuText(menuId: Long): String {
-    return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuTextBind, nativeMenuSingleton, menuId)
-}
 
 /**
  * Returns global menu open callback. Note: This method is implemented only on macOS.
@@ -232,26 +214,6 @@ fun NativeMenu.getItemTag(rid: RID, idx: Int): Any? {
 }
 
 /**
- * Returns the text of the item at index `idx`. Note: This method is implemented on macOS and
- * Windows.
- *
- * Generated from Godot docs: NativeMenu.get_item_text
- */
-fun NativeMenu.getItemText(rid: RID, idx: Int): String {
-    return ObjectCalls.ptrcallWithRIDAndIntArgRetString(getItemTextBind, nativeMenuSingleton, rid, idx)
-}
-
-/**
- * Returns the tooltip associated with the specified index `idx`. Note: This method is implemented
- * only on macOS.
- *
- * Generated from Godot docs: NativeMenu.get_item_tooltip
- */
-fun NativeMenu.getItemTooltip(rid: RID, idx: Int): String {
-    return ObjectCalls.ptrcallWithRIDAndIntArgRetString(getItemTooltipBind, nativeMenuSingleton, rid, idx)
-}
-
-/**
  * Sets the metadata of an item, which may be of any type. You can later get it with
  * `get_item_tag`, which provides a simple way of assigning context data to items. Note: This
  * method is implemented on macOS and Windows.
@@ -264,16 +226,6 @@ fun NativeMenu.setItemTag(rid: RID, idx: Int, tag: Any?) {
 
 private val nativeMenuSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("NativeMenu")
-}
-
-private const val GET_SYSTEM_MENU_NAME_HASH = 1281499290L
-private val getSystemMenuNameBind by lazy {
-    ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_name", GET_SYSTEM_MENU_NAME_HASH)
-}
-
-private const val GET_SYSTEM_MENU_TEXT_HASH = 1281499290L
-private val getSystemMenuTextBind by lazy {
-    ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_text", GET_SYSTEM_MENU_TEXT_HASH)
 }
 
 private const val GET_POPUP_OPEN_CALLBACK_HASH = 3170603026L
@@ -344,16 +296,6 @@ private val getItemKeyCallbackBind by lazy {
 private const val GET_ITEM_TAG_HASH = 4069510997L
 private val getItemTagBind by lazy {
     ObjectCalls.getMethodBind("NativeMenu", "get_item_tag", GET_ITEM_TAG_HASH)
-}
-
-private const val GET_ITEM_TEXT_HASH = 1464764419L
-private val getItemTextBind by lazy {
-    ObjectCalls.getMethodBind("NativeMenu", "get_item_text", GET_ITEM_TEXT_HASH)
-}
-
-private const val GET_ITEM_TOOLTIP_HASH = 1464764419L
-private val getItemTooltipBind by lazy {
-    ObjectCalls.getMethodBind("NativeMenu", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
 }
 
 private const val SET_ITEM_TAG_HASH = 2706844827L

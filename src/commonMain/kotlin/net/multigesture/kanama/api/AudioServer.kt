@@ -110,6 +110,16 @@ object AudioServer {
     }
 
     /**
+     * Returns the name of the bus with the index `bus_idx`.
+     *
+     * Generated from Godot docs: AudioServer.get_bus_name
+     */
+    @JvmStatic
+    fun getBusName(busIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetString(getBusNameBind, singleton, busIdx)
+    }
+
+    /**
      * Returns the index of the bus with the name `bus_name`. Returns `-1` if no bus with the specified
      * name exist.
      *
@@ -181,6 +191,16 @@ object AudioServer {
     @JvmStatic
     fun setBusSend(busIdx: Int, send: String) {
         ObjectCalls.ptrcallWithIntAndStringNameArg(setBusSendBind, singleton, busIdx, send)
+    }
+
+    /**
+     * Returns the name of the bus that the bus at index `bus_idx` sends to.
+     *
+     * Generated from Godot docs: AudioServer.get_bus_send
+     */
+    @JvmStatic
+    fun getBusSend(busIdx: Int): String {
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBusSendBind, singleton, busIdx)
     }
 
     /**
@@ -676,6 +696,11 @@ object AudioServer {
         ObjectCalls.getMethodBind("AudioServer", "set_bus_name", SET_BUS_NAME_HASH)
     }
 
+    private const val GET_BUS_NAME_HASH = 844755477L
+    private val getBusNameBind by lazy {
+        ObjectCalls.getMethodBind("AudioServer", "get_bus_name", GET_BUS_NAME_HASH)
+    }
+
     private const val GET_BUS_INDEX_HASH = 2458036349L
     private val getBusIndexBind by lazy {
         ObjectCalls.getMethodBind("AudioServer", "get_bus_index", GET_BUS_INDEX_HASH)
@@ -709,6 +734,11 @@ object AudioServer {
     private const val SET_BUS_SEND_HASH = 3780747571L
     private val setBusSendBind by lazy {
         ObjectCalls.getMethodBind("AudioServer", "set_bus_send", SET_BUS_SEND_HASH)
+    }
+
+    private const val GET_BUS_SEND_HASH = 659327637L
+    private val getBusSendBind by lazy {
+        ObjectCalls.getMethodBind("AudioServer", "get_bus_send", GET_BUS_SEND_HASH)
     }
 
     private const val SET_BUS_SOLO_HASH = 300928843L

@@ -13,30 +13,27 @@ import net.multigesture.kanama.types.Vector3i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TextServer waits on: ptrcallNoArgsRetByteArray, ptrcallWithLongArgRetString,
+// KANAMA-IOS-GAP TextServer waits on: ptrcallNoArgsRetByteArray,
 //   ptrcallWithLongArrayStringArgsRetVector3iList, ptrcallWithRIDAndArrayArg,
 //   ptrcallWithRIDAndByteArrayArg, ptrcallWithRIDAndDictionaryArg,
 //   ptrcallWithRIDAndLongArgRetDictionary, ptrcallWithRIDAndLongArgRetPackedColorList,
-//   ptrcallWithRIDAndLongArgRetString, ptrcallWithRIDAndLongArgRetVariantScalar,
-//   ptrcallWithRIDAndLongArgRetVector2iList, ptrcallWithRIDAndPackedColorListArgs,
-//   ptrcallWithRIDAndPackedFloat32ListArgRetDouble, ptrcallWithRIDAndTwoLongArgsRetDictionary,
-//   ptrcallWithRIDAndTwoLongArgsRetPackedInt32List,
+//   ptrcallWithRIDAndLongArgRetVariantScalar, ptrcallWithRIDAndLongArgRetVector2iList,
+//   ptrcallWithRIDAndPackedColorListArgs, ptrcallWithRIDAndPackedFloat32ListArgRetDouble,
+//   ptrcallWithRIDAndTwoLongArgsRetDictionary, ptrcallWithRIDAndTwoLongArgsRetPackedInt32List,
 //   ptrcallWithRIDAndTwoLongArgsRetPackedVector2List, ptrcallWithRIDAndVariantArgRetBool,
 //   ptrcallWithRIDAndVariantArgRetLong, ptrcallWithRIDAndVariantArgRetRect2,
 //   ptrcallWithRIDAndVariantArgRetVector2i, ptrcallWithRIDAndVector2iArgRetPackedInt32List,
 //   ptrcallWithRIDArgRetArray, ptrcallWithRIDArgRetDictionary, ptrcallWithRIDArgRetDictionaryList,
 //   ptrcallWithRIDArgRetPackedColorList, ptrcallWithRIDArgRetPackedInt32List,
-//   ptrcallWithRIDArgRetPackedStringList, ptrcallWithRIDArgRetString,
-//   ptrcallWithRIDArgRetVector2iList, ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List,
-//   ptrcallWithRIDLongRIDListLongDictionaryArgs,
+//   ptrcallWithRIDArgRetPackedStringList, ptrcallWithRIDArgRetVector2iList,
+//   ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List, ptrcallWithRIDLongRIDListLongDictionaryArgs,
 //   ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List,
 //   ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool,
 //   ptrcallWithRIDVariantVector2LongDoubleArgsRetBool,
 //   ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool,
 //   ptrcallWithRIDVector2iLongArgsRetPackedInt32List, ptrcallWithRIDVector2iLongPackedInt32ListArgs,
 //   ptrcallWithStringAndPackedStringListArgRetLong,
-//   ptrcallWithTwoStringAndLongArgRetPackedInt32List, ptrcallWithTwoStringArgsRetPackedInt32List,
-//   ptrcallWithTwoStringArgsRetString
+//   ptrcallWithTwoStringAndLongArgRetPackedInt32List, ptrcallWithTwoStringArgsRetPackedInt32List
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -50,17 +47,6 @@ fun TextServer.getSupportData(): ByteArray {
 }
 
 /**
- * Converts the given OpenType tag to the readable name of a feature, variation, script, or
- * language.
- *
- * Generated from Godot docs: TextServer.tag_to_name
- */
-fun TextServer.tagToName(tag: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithLongArgRetString(tagToNameBind, handle, tag)
-}
-
-/**
  * Sets font source data, e.g contents of the dynamic font source file.
  *
  * Generated from Godot docs: TextServer.font_set_data
@@ -68,16 +54,6 @@ fun TextServer.tagToName(tag: Long): String {
 fun TextServer.fontSetData(fontRid: RID, data: ByteArray) {
     checkOpen()
     ObjectCalls.ptrcallWithRIDAndByteArrayArg(fontSetDataBind, handle, fontRid, data)
-}
-
-/**
- * Returns font family name.
- *
- * Generated from Godot docs: TextServer.font_get_name
- */
-fun TextServer.fontGetName(fontRid: RID): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetString(fontGetNameBind, handle, fontRid)
 }
 
 /**
@@ -89,27 +65,6 @@ fun TextServer.fontGetName(fontRid: RID): String {
 fun TextServer.fontGetOtNameStrings(fontRid: RID): Map<String, Any?> {
     checkOpen()
     return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOtNameStringsBind, handle, fontRid)
-}
-
-/**
- * Returns font style name.
- *
- * Generated from Godot docs: TextServer.font_get_style_name
- */
-fun TextServer.fontGetStyleName(fontRid: RID): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetString(fontGetStyleNameBind, handle, fontRid)
-}
-
-/**
- * Returns the name of the predefined color palette at `index`. Palette contains all colors used to
- * render font glyphs. Each palette has the same number of colors.
- *
- * Generated from Godot docs: TextServer.font_get_palette_name
- */
-fun TextServer.fontGetPaletteName(fontRid: RID, index: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetString(fontGetPaletteNameBind, handle, fontRid, index)
 }
 
 /**
@@ -253,16 +208,6 @@ fun TextServer.fontGetKerningList(fontRid: RID, size: Long): List<Vector2i> {
 }
 
 /**
- * Returns a string containing all the characters available in the font.
- *
- * Generated from Godot docs: TextServer.font_get_supported_chars
- */
-fun TextServer.fontGetSupportedChars(fontRid: RID): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetString(fontGetSupportedCharsBind, handle, fontRid)
-}
-
-/**
  * Returns an array containing all glyph indices in the font.
  *
  * Generated from Godot docs: TextServer.font_get_supported_glyphs
@@ -344,17 +289,6 @@ fun TextServer.shapedTextSetBidiOverride(shaped: RID, override: List<Any?>) {
 }
 
 /**
- * Returns custom punctuation character list, used for word breaking. If set to empty string,
- * server defaults are used.
- *
- * Generated from Godot docs: TextServer.shaped_text_get_custom_punctuation
- */
-fun TextServer.shapedTextGetCustomPunctuation(shaped: RID): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetString(shapedTextGetCustomPunctuationBind, handle, shaped)
-}
-
-/**
  * Adds text span and font to draw it to the text buffer.
  *
  * Generated from Godot docs: TextServer.shaped_text_add_string
@@ -396,16 +330,6 @@ fun TextServer.shapedTextHasObject(shaped: RID, key: Any?): Boolean {
 }
 
 /**
- * Returns the text buffer source text, including object replacement characters.
- *
- * Generated from Godot docs: TextServer.shaped_get_text
- */
-fun TextServer.shapedGetText(shaped: RID): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetString(shapedGetTextBind, handle, shaped)
-}
-
-/**
  * Returns text span metadata.
  *
  * Generated from Godot docs: TextServer.shaped_get_span_meta
@@ -426,16 +350,6 @@ fun TextServer.shapedGetSpanEmbeddedObject(shaped: RID, index: Long): Any? {
 }
 
 /**
- * Returns the text span source text.
- *
- * Generated from Godot docs: TextServer.shaped_get_span_text
- */
-fun TextServer.shapedGetSpanText(shaped: RID, index: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetSpanTextBind, handle, shaped, index)
-}
-
-/**
  * Returns the text span embedded object key.
  *
  * Generated from Godot docs: TextServer.shaped_get_span_object
@@ -453,26 +367,6 @@ fun TextServer.shapedGetSpanObject(shaped: RID, index: Long): Any? {
 fun TextServer.shapedSetSpanUpdateFont(shaped: RID, index: Long, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap()) {
     checkOpen()
     ObjectCalls.ptrcallWithRIDLongRIDListLongDictionaryArgs(shapedSetSpanUpdateFontBind, handle, shaped, index, fonts, size, opentypeFeatures)
-}
-
-/**
- * Returns the source text of the `index` text run (in visual order).
- *
- * Generated from Godot docs: TextServer.shaped_get_run_text
- */
-fun TextServer.shapedGetRunText(shaped: RID, index: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunTextBind, handle, shaped, index)
-}
-
-/**
- * Returns the language of the `index` text run (in visual order).
- *
- * Generated from Godot docs: TextServer.shaped_get_run_language
- */
-fun TextServer.shapedGetRunLanguage(shaped: RID, index: Long): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunLanguageBind, handle, shaped, index)
 }
 
 /**
@@ -628,28 +522,6 @@ fun TextServer.shapedTextGetCharacterBreaks(shaped: RID): List<Int> {
 }
 
 /**
- * Converts a number from Western Arabic (0..9) to the numeral system used in the given `language`.
- * If `language` is an empty string, the active locale will be used.
- *
- * Generated from Godot docs: TextServer.format_number
- */
-fun TextServer.formatNumber(number: String, language: String = ""): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoStringArgsRetString(formatNumberBind, handle, number, language)
-}
-
-/**
- * Converts `number` from the numeral system used in the given `language` to Western Arabic (0..9).
- * If `language` is an empty string, the active locale will be used.
- *
- * Generated from Godot docs: TextServer.parse_number
- */
-fun TextServer.parseNumber(number: String, language: String = ""): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoStringArgsRetString(parseNumberBind, handle, number, language)
-}
-
-/**
  * Returns an array of the word break boundaries. Elements in the returned array are the offsets of
  * the start and end of words. Therefore the length of the array is always even. When
  * `chars_per_line` is greater than zero, line break boundaries are returned instead.
@@ -685,42 +557,6 @@ fun TextServer.isConfusable(string: String, dict: List<String>): Long {
 }
 
 /**
- * Returns the string converted to `UPPERCASE`. Note: Casing is locale dependent and context
- * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
- * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
- *
- * Generated from Godot docs: TextServer.string_to_upper
- */
-fun TextServer.stringToUpper(string: String, language: String = ""): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToUpperBind, handle, string, language)
-}
-
-/**
- * Returns the string converted to `lowercase`. Note: Casing is locale dependent and context
- * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
- * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
- *
- * Generated from Godot docs: TextServer.string_to_lower
- */
-fun TextServer.stringToLower(string: String, language: String = ""): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToLowerBind, handle, string, language)
-}
-
-/**
- * Returns the string converted to `Title Case`. Note: Casing is locale dependent and context
- * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
- * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
- *
- * Generated from Godot docs: TextServer.string_to_title
- */
-fun TextServer.stringToTitle(string: String, language: String = ""): String {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToTitleBind, handle, string, language)
-}
-
-/**
  * Default implementation of the BiDi algorithm override function.
  *
  * Generated from Godot docs: TextServer.parse_structured_text
@@ -735,34 +571,14 @@ private val getSupportDataBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "get_support_data", GET_SUPPORT_DATA_HASH)
 }
 
-private const val TAG_TO_NAME_HASH = 844755477L
-private val tagToNameBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "tag_to_name", TAG_TO_NAME_HASH)
-}
-
 private const val FONT_SET_DATA_HASH = 1355495400L
 private val fontSetDataBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_set_data", FONT_SET_DATA_HASH)
 }
 
-private const val FONT_GET_NAME_HASH = 642473191L
-private val fontGetNameBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_name", FONT_GET_NAME_HASH)
-}
-
 private const val FONT_GET_OT_NAME_STRINGS_HASH = 1882737106L
 private val fontGetOtNameStringsBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_get_ot_name_strings", FONT_GET_OT_NAME_STRINGS_HASH)
-}
-
-private const val FONT_GET_STYLE_NAME_HASH = 642473191L
-private val fontGetStyleNameBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_style_name", FONT_GET_STYLE_NAME_HASH)
-}
-
-private const val FONT_GET_PALETTE_NAME_HASH = 1464764419L
-private val fontGetPaletteNameBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_palette_name", FONT_GET_PALETTE_NAME_HASH)
 }
 
 private const val FONT_GET_PALETTE_COLORS_HASH = 1595517857L
@@ -825,11 +641,6 @@ private val fontGetKerningListBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_get_kerning_list", FONT_GET_KERNING_LIST_HASH)
 }
 
-private const val FONT_GET_SUPPORTED_CHARS_HASH = 642473191L
-private val fontGetSupportedCharsBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_supported_chars", FONT_GET_SUPPORTED_CHARS_HASH)
-}
-
 private const val FONT_GET_SUPPORTED_GLYPHS_HASH = 788230395L
 private val fontGetSupportedGlyphsBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_get_supported_glyphs", FONT_GET_SUPPORTED_GLYPHS_HASH)
@@ -870,11 +681,6 @@ private val shapedTextSetBidiOverrideBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_set_bidi_override", SHAPED_TEXT_SET_BIDI_OVERRIDE_HASH)
 }
 
-private const val SHAPED_TEXT_GET_CUSTOM_PUNCTUATION_HASH = 642473191L
-private val shapedTextGetCustomPunctuationBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_text_get_custom_punctuation", SHAPED_TEXT_GET_CUSTOM_PUNCTUATION_HASH)
-}
-
 private const val SHAPED_TEXT_ADD_STRING_HASH = 623473029L
 private val shapedTextAddStringBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_add_string", SHAPED_TEXT_ADD_STRING_HASH)
@@ -895,11 +701,6 @@ private val shapedTextHasObjectBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_has_object", SHAPED_TEXT_HAS_OBJECT_HASH)
 }
 
-private const val SHAPED_GET_TEXT_HASH = 642473191L
-private val shapedGetTextBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_text", SHAPED_GET_TEXT_HASH)
-}
-
 private const val SHAPED_GET_SPAN_META_HASH = 4069510997L
 private val shapedGetSpanMetaBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_get_span_meta", SHAPED_GET_SPAN_META_HASH)
@@ -910,11 +711,6 @@ private val shapedGetSpanEmbeddedObjectBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_get_span_embedded_object", SHAPED_GET_SPAN_EMBEDDED_OBJECT_HASH)
 }
 
-private const val SHAPED_GET_SPAN_TEXT_HASH = 1464764419L
-private val shapedGetSpanTextBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_span_text", SHAPED_GET_SPAN_TEXT_HASH)
-}
-
 private const val SHAPED_GET_SPAN_OBJECT_HASH = 4069510997L
 private val shapedGetSpanObjectBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_get_span_object", SHAPED_GET_SPAN_OBJECT_HASH)
@@ -923,16 +719,6 @@ private val shapedGetSpanObjectBind by lazy {
 private const val SHAPED_SET_SPAN_UPDATE_FONT_HASH = 2022725822L
 private val shapedSetSpanUpdateFontBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_set_span_update_font", SHAPED_SET_SPAN_UPDATE_FONT_HASH)
-}
-
-private const val SHAPED_GET_RUN_TEXT_HASH = 1464764419L
-private val shapedGetRunTextBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_run_text", SHAPED_GET_RUN_TEXT_HASH)
-}
-
-private const val SHAPED_GET_RUN_LANGUAGE_HASH = 1464764419L
-private val shapedGetRunLanguageBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_get_run_language", SHAPED_GET_RUN_LANGUAGE_HASH)
 }
 
 private const val SHAPED_GET_RUN_OBJECT_HASH = 4069510997L
@@ -1010,16 +796,6 @@ private val shapedTextGetCharacterBreaksBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_get_character_breaks", SHAPED_TEXT_GET_CHARACTER_BREAKS_HASH)
 }
 
-private const val FORMAT_NUMBER_HASH = 2664628024L
-private val formatNumberBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "format_number", FORMAT_NUMBER_HASH)
-}
-
-private const val PARSE_NUMBER_HASH = 2664628024L
-private val parseNumberBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "parse_number", PARSE_NUMBER_HASH)
-}
-
 private const val STRING_GET_WORD_BREAKS_HASH = 581857818L
 private val stringGetWordBreaksBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "string_get_word_breaks", STRING_GET_WORD_BREAKS_HASH)
@@ -1033,21 +809,6 @@ private val stringGetCharacterBreaksBind by lazy {
 private const val IS_CONFUSABLE_HASH = 1433197768L
 private val isConfusableBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "is_confusable", IS_CONFUSABLE_HASH)
-}
-
-private const val STRING_TO_UPPER_HASH = 2664628024L
-private val stringToUpperBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "string_to_upper", STRING_TO_UPPER_HASH)
-}
-
-private const val STRING_TO_LOWER_HASH = 2664628024L
-private val stringToLowerBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "string_to_lower", STRING_TO_LOWER_HASH)
-}
-
-private const val STRING_TO_TITLE_HASH = 2664628024L
-private val stringToTitleBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "string_to_title", STRING_TO_TITLE_HASH)
 }
 
 private const val PARSE_STRUCTURED_TEXT_HASH = 3310685015L

@@ -7,27 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP ItemList waits on: ptrcallWithIntAndVariantArg, ptrcallWithIntArgRetString,
-//   ptrcallWithIntArgRetVariantScalar
+// KANAMA-IOS-GAP ItemList waits on: ptrcallWithIntAndVariantArg, ptrcallWithIntArgRetVariantScalar
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns the text associated with the specified index.
- *
- * Generated from Godot docs: ItemList.get_item_text
- */
-fun ItemList.getItemText(idx: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
-}
-
-/**
- * Returns item's text language code.
- *
- * Generated from Godot docs: ItemList.get_item_language
- */
-fun ItemList.getItemLanguage(idx: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, handle, idx)
-}
 
 /**
  * Sets a value (of any type) to be stored with the item associated with the specified index.
@@ -47,25 +28,6 @@ fun ItemList.getItemMetadata(idx: Int): Any? {
     return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
 }
 
-/**
- * Returns the tooltip hint associated with the specified index.
- *
- * Generated from Godot docs: ItemList.get_item_tooltip
- */
-fun ItemList.getItemTooltip(idx: Int): String {
-    return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
-}
-
-private const val GET_ITEM_TEXT_HASH = 844755477L
-private val getItemTextBind by lazy {
-    ObjectCalls.getMethodBind("ItemList", "get_item_text", GET_ITEM_TEXT_HASH)
-}
-
-private const val GET_ITEM_LANGUAGE_HASH = 844755477L
-private val getItemLanguageBind by lazy {
-    ObjectCalls.getMethodBind("ItemList", "get_item_language", GET_ITEM_LANGUAGE_HASH)
-}
-
 private const val SET_ITEM_METADATA_HASH = 2152698145L
 private val setItemMetadataBind by lazy {
     ObjectCalls.getMethodBind("ItemList", "set_item_metadata", SET_ITEM_METADATA_HASH)
@@ -74,9 +36,4 @@ private val setItemMetadataBind by lazy {
 private const val GET_ITEM_METADATA_HASH = 4227898402L
 private val getItemMetadataBind by lazy {
     ObjectCalls.getMethodBind("ItemList", "get_item_metadata", GET_ITEM_METADATA_HASH)
-}
-
-private const val GET_ITEM_TOOLTIP_HASH = 844755477L
-private val getItemTooltipBind by lazy {
-    ObjectCalls.getMethodBind("ItemList", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
 }

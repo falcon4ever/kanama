@@ -63,6 +63,26 @@ object NativeMenu {
     }
 
     /**
+     * Returns readable name of a special system menu. Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: NativeMenu.get_system_menu_name
+     */
+    @JvmStatic
+    fun getSystemMenuName(menuId: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuNameBind, singleton, menuId)
+    }
+
+    /**
+     * Returns the text of the system menu item. Note: This method is implemented on macOS.
+     *
+     * Generated from Godot docs: NativeMenu.get_system_menu_text
+     */
+    @JvmStatic
+    fun getSystemMenuText(menuId: Long): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuTextBind, singleton, menuId)
+    }
+
+    /**
      * Sets the text of the system menu item. Note: This method is implemented on macOS.
      *
      * Generated from Godot docs: NativeMenu.set_system_menu_text
@@ -260,6 +280,17 @@ object NativeMenu {
     }
 
     /**
+     * Returns the text of the item at index `idx`. Note: This method is implemented on macOS and
+     * Windows.
+     *
+     * Generated from Godot docs: NativeMenu.get_item_text
+     */
+    @JvmStatic
+    fun getItemText(rid: RID, idx: Int): String {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetString(getItemTextBind, singleton, rid, idx)
+    }
+
+    /**
      * Returns the submenu ID of the item at index `idx`. See `add_submenu_item` for more info on how
      * to add a submenu. Note: This method is implemented on macOS and Windows.
      *
@@ -303,6 +334,17 @@ object NativeMenu {
     @JvmStatic
     fun isItemHidden(rid: RID, idx: Int): Boolean {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(isItemHiddenBind, singleton, rid, idx)
+    }
+
+    /**
+     * Returns the tooltip associated with the specified index `idx`. Note: This method is implemented
+     * only on macOS.
+     *
+     * Generated from Godot docs: NativeMenu.get_item_tooltip
+     */
+    @JvmStatic
+    fun getItemTooltip(rid: RID, idx: Int): String {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetString(getItemTooltipBind, singleton, rid, idx)
     }
 
     /**
@@ -612,6 +654,16 @@ object NativeMenu {
         ObjectCalls.getMethodBind("NativeMenu", "get_system_menu", GET_SYSTEM_MENU_HASH)
     }
 
+    private const val GET_SYSTEM_MENU_NAME_HASH = 1281499290L
+    private val getSystemMenuNameBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_name", GET_SYSTEM_MENU_NAME_HASH)
+    }
+
+    private const val GET_SYSTEM_MENU_TEXT_HASH = 1281499290L
+    private val getSystemMenuTextBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_text", GET_SYSTEM_MENU_TEXT_HASH)
+    }
+
     private const val SET_SYSTEM_MENU_TEXT_HASH = 3925225603L
     private val setSystemMenuTextBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "set_system_menu_text", SET_SYSTEM_MENU_TEXT_HASH)
@@ -702,6 +754,11 @@ object NativeMenu {
         ObjectCalls.getMethodBind("NativeMenu", "is_item_radio_checkable", IS_ITEM_RADIO_CHECKABLE_HASH)
     }
 
+    private const val GET_ITEM_TEXT_HASH = 1464764419L
+    private val getItemTextBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_item_text", GET_ITEM_TEXT_HASH)
+    }
+
     private const val GET_ITEM_SUBMENU_HASH = 1066463050L
     private val getItemSubmenuBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "get_item_submenu", GET_ITEM_SUBMENU_HASH)
@@ -720,6 +777,11 @@ object NativeMenu {
     private const val IS_ITEM_HIDDEN_HASH = 3120086654L
     private val isItemHiddenBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "is_item_hidden", IS_ITEM_HIDDEN_HASH)
+    }
+
+    private const val GET_ITEM_TOOLTIP_HASH = 1464764419L
+    private val getItemTooltipBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
     }
 
     private const val GET_ITEM_STATE_HASH = 1120910005L
