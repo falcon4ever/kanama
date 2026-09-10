@@ -53,6 +53,19 @@ object OS {
         set(value) = setDeltaSmoothing(value)
 
     /**
+     * Generates a `PackedByteArray` of cryptographically secure random bytes with given `size`. Note:
+     * Generating large quantities of bytes using this method can result in locking and entropy of
+     * lower quality on most platforms. Using `Crypto.generate_random_bytes` is preferred in most
+     * cases.
+     *
+     * Generated from Godot docs: OS.get_entropy
+     */
+    @JvmStatic
+    fun getEntropy(size: Int): ByteArray {
+        return ObjectCalls.ptrcallWithIntArgRetByteArray(getEntropyBind, singleton, size)
+    }
+
+    /**
      * Returns the list of certification authorities trusted by the operating system as a string of
      * concatenated certificates in PEM format.
      *
@@ -288,6 +301,27 @@ object OS {
     @JvmStatic
     fun readStringFromStdin(bufferSize: Long = 1024L): String {
         return ObjectCalls.ptrcallWithLongArgRetString(readStringFromStdinBind, singleton, bufferSize)
+    }
+
+    /**
+     * Reads a user input as raw data from the standard input. This operation can be blocking, which
+     * causes the window to freeze if `read_buffer_from_stdin` is called on the main thread. - If
+     * standard input is console, this method will block until the program receives a line break in
+     * standard input (usually by the user pressing Enter). - If standard input is pipe, this method
+     * will block until a specific amount of data is read or pipe is closed. - If standard input is a
+     * file, this method will read a specific amount of data (or less if end-of-file is reached) and
+     * return immediately. Note: This method is implemented on Linux, macOS, and Windows. Note: On
+     * exported Windows builds, run the console wrapper executable to access the terminal. If standard
+     * input is console, calling this method without console wrapped will freeze permanently. If
+     * standard input is pipe or file, it can be used without console wrapper. If you need a single
+     * executable with full console support, use a custom build compiled with the
+     * `windows_subsystem=console` flag.
+     *
+     * Generated from Godot docs: OS.read_buffer_from_stdin
+     */
+    @JvmStatic
+    fun readBufferFromStdin(bufferSize: Long = 1024L): ByteArray {
+        return ObjectCalls.ptrcallWithLongArgRetByteArray(readBufferFromStdinBind, singleton, bufferSize)
     }
 
     /**
@@ -1048,6 +1082,11 @@ object OS {
     internal fun wrap(handle: MemorySegment): OS? =
         if (handle.address() == 0L) null else this
 
+    private const val GET_ENTROPY_HASH = 47165747L
+    private val getEntropyBind by lazy {
+        ObjectCalls.getMethodBind("OS", "get_entropy", GET_ENTROPY_HASH)
+    }
+
     private const val GET_SYSTEM_CA_CERTIFICATES_HASH = 2841200299L
     private val getSystemCaCertificatesBind by lazy {
         ObjectCalls.getMethodBind("OS", "get_system_ca_certificates", GET_SYSTEM_CA_CERTIFICATES_HASH)
@@ -1136,6 +1175,11 @@ object OS {
     private const val READ_STRING_FROM_STDIN_HASH = 723587915L
     private val readStringFromStdinBind by lazy {
         ObjectCalls.getMethodBind("OS", "read_string_from_stdin", READ_STRING_FROM_STDIN_HASH)
+    }
+
+    private const val READ_BUFFER_FROM_STDIN_HASH = 3249455752L
+    private val readBufferFromStdinBind by lazy {
+        ObjectCalls.getMethodBind("OS", "read_buffer_from_stdin", READ_BUFFER_FROM_STDIN_HASH)
     }
 
     private const val GET_STDIN_TYPE_HASH = 1704816237L

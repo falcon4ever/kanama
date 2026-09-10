@@ -53,8 +53,9 @@ import net.multigesture.kanama.types.Vector4
  * C-side). String / StringName / NodePath returns hand the same arg cells to
  * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
  * read-back, no truncation); Variant-scalar returns to `ObjectCalls.ptrcallRetVariantScalar`
- * (kanama_ios_godot_ptrcall_ret_variant_scalar). Helpers already hand-written in
- * ObjectCalls.kt are the override set and are NOT regenerated here.
+ * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
+ * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed). Helpers
+ * already hand-written in ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 
 private const val PT_VOID = 0

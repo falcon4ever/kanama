@@ -7,21 +7,10 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Crypto waits on: ptrcallWithIntArgRetByteArray,
-//   ptrcallWithLongAndTwoByteArrayArgsRetByteArray, ptrcallWithLongByteArrayObjectArgsRetByteArray,
-//   ptrcallWithLongTwoByteArrayObjectArgsRetBool, ptrcallWithObjectAndByteArrayArgRetByteArray,
-//   ptrcallWithTwoByteArrayArgsRetBool
+// KANAMA-IOS-GAP Crypto waits on: ptrcallWithLongAndTwoByteArrayArgsRetByteArray,
+//   ptrcallWithLongByteArrayObjectArgsRetByteArray, ptrcallWithLongTwoByteArrayObjectArgsRetBool,
+//   ptrcallWithObjectAndByteArrayArgRetByteArray, ptrcallWithTwoByteArrayArgsRetBool
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Generates a `PackedByteArray` of cryptographically secure random bytes with given `size`.
- *
- * Generated from Godot docs: Crypto.generate_random_bytes
- */
-fun Crypto.generateRandomBytes(size: Int): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetByteArray(generateRandomBytesBind, handle, size)
-}
 
 /**
  * Sign a given `hash` of type `hash_type` with the provided private `key`.
@@ -89,11 +78,6 @@ fun Crypto.hmacDigest(hashType: Long, key: ByteArray, msg: ByteArray): ByteArray
 fun Crypto.constantTimeCompare(trusted: ByteArray, received: ByteArray): Boolean {
     checkOpen()
     return ObjectCalls.ptrcallWithTwoByteArrayArgsRetBool(constantTimeCompareBind, handle, trusted, received)
-}
-
-private const val GENERATE_RANDOM_BYTES_HASH = 47165747L
-private val generateRandomBytesBind by lazy {
-    ObjectCalls.getMethodBind("Crypto", "generate_random_bytes", GENERATE_RANDOM_BYTES_HASH)
 }
 
 private const val SIGN_HASH = 1673662703L

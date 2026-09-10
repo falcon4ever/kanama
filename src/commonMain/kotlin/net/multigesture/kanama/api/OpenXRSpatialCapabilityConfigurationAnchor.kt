@@ -9,7 +9,10 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAnchor
  */
 class OpenXRSpatialCapabilityConfigurationAnchor(handle: MemorySegment) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
-    // No conservative instance methods emitted yet.
+    fun getEnabledComponents(): List<Long> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+    }
 
     companion object {
         @JvmStatic
@@ -19,6 +22,9 @@ class OpenXRSpatialCapabilityConfigurationAnchor(handle: MemorySegment) : OpenXR
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAnchor? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAnchor(handle)
 
-        // No MethodBinds emitted yet.
+        private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
+        private val getEnabledComponentsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAnchor", "get_enabled_components", GET_ENABLED_COMPONENTS_HASH)
+        }
     }
 }

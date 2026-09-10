@@ -11,8 +11,7 @@ import net.multigesture.kanama.types.Vector3
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP NavigationServer3D waits on: ptrcallNoArgsRetRIDList,
 //   ptrcallWithPackedVector3ListAndDoubleArgRetPackedVector3List,
-//   ptrcallWithRIDAndPackedVector3ListArg, ptrcallWithRIDArgRetPackedVector3List,
-//   ptrcallWithRIDArgRetRIDList, ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List
+//   ptrcallWithRIDAndPackedVector3ListArg, ptrcallWithRIDArgRetRIDList
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -23,16 +22,6 @@ import net.multigesture.kanama.types.Vector3
  */
 fun NavigationServer3D.getMaps(): List<RID> {
     return ObjectCalls.ptrcallNoArgsRetRIDList(getMapsBind, navigationServer3DSingleton)
-}
-
-/**
- * Returns the navigation path to reach the destination from the origin. `navigation_layers` is a
- * bitmask of all region navigation layers that are allowed to be in the path.
- *
- * Generated from Godot docs: NavigationServer3D.map_get_path
- */
-fun NavigationServer3D.mapGetPath(map: RID, origin: Vector3, destination: Vector3, optimize: Boolean, navigationLayers: Long = 1L): List<Vector3> {
-    return ObjectCalls.ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List(mapGetPathBind, navigationServer3DSingleton, map, origin, destination, optimize, navigationLayers)
 }
 
 /**
@@ -86,15 +75,6 @@ fun NavigationServer3D.obstacleSetVertices(obstacle: RID, vertices: List<Vector3
 }
 
 /**
- * Returns the outline vertices for the specified `obstacle`.
- *
- * Generated from Godot docs: NavigationServer3D.obstacle_get_vertices
- */
-fun NavigationServer3D.obstacleGetVertices(obstacle: RID): List<Vector3> {
-    return ObjectCalls.ptrcallWithRIDArgRetPackedVector3List(obstacleGetVerticesBind, navigationServer3DSingleton, obstacle)
-}
-
-/**
  * Returns a simplified version of `path` with less critical path points removed. The
  * simplification amount is in worlds units and controlled by `epsilon`. The simplification uses a
  * variant of Ramer-Douglas-Peucker algorithm for curve point decimation. Path simplification can
@@ -114,11 +94,6 @@ private val navigationServer3DSingleton: MemorySegment by lazy {
 private const val GET_MAPS_HASH = 3995934104L
 private val getMapsBind by lazy {
     ObjectCalls.getMethodBind("NavigationServer3D", "get_maps", GET_MAPS_HASH)
-}
-
-private const val MAP_GET_PATH_HASH = 276783190L
-private val mapGetPathBind by lazy {
-    ObjectCalls.getMethodBind("NavigationServer3D", "map_get_path", MAP_GET_PATH_HASH)
 }
 
 private const val MAP_GET_LINKS_HASH = 2684255073L
@@ -144,11 +119,6 @@ private val mapGetObstaclesBind by lazy {
 private const val OBSTACLE_SET_VERTICES_HASH = 4030257846L
 private val obstacleSetVerticesBind by lazy {
     ObjectCalls.getMethodBind("NavigationServer3D", "obstacle_set_vertices", OBSTACLE_SET_VERTICES_HASH)
-}
-
-private const val OBSTACLE_GET_VERTICES_HASH = 808965560L
-private val obstacleGetVerticesBind by lazy {
-    ObjectCalls.getMethodBind("NavigationServer3D", "obstacle_get_vertices", OBSTACLE_GET_VERTICES_HASH)
 }
 
 private const val SIMPLIFY_PATH_HASH = 2344122170L

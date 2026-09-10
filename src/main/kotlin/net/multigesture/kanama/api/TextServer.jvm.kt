@@ -13,38 +13,22 @@ import net.multigesture.kanama.types.Vector3i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP TextServer waits on: ptrcallNoArgsRetByteArray,
-//   ptrcallWithLongArrayStringArgsRetVector3iList, ptrcallWithRIDAndArrayArg,
-//   ptrcallWithRIDAndByteArrayArg, ptrcallWithRIDAndDictionaryArg,
-//   ptrcallWithRIDAndLongArgRetDictionary, ptrcallWithRIDAndLongArgRetPackedColorList,
-//   ptrcallWithRIDAndLongArgRetVector2iList, ptrcallWithRIDAndPackedColorListArgs,
-//   ptrcallWithRIDAndPackedFloat32ListArgRetDouble, ptrcallWithRIDAndTwoLongArgsRetDictionary,
-//   ptrcallWithRIDAndTwoLongArgsRetPackedInt32List,
-//   ptrcallWithRIDAndTwoLongArgsRetPackedVector2List, ptrcallWithRIDAndVariantArgRetBool,
+// KANAMA-IOS-GAP TextServer waits on: ptrcallWithLongArrayStringArgsRetVector3iList,
+//   ptrcallWithRIDAndArrayArg, ptrcallWithRIDAndByteArrayArg, ptrcallWithRIDAndDictionaryArg,
+//   ptrcallWithRIDAndLongArgRetDictionary, ptrcallWithRIDAndLongArgRetVector2iList,
+//   ptrcallWithRIDAndPackedColorListArgs, ptrcallWithRIDAndPackedFloat32ListArgRetDouble,
+//   ptrcallWithRIDAndTwoLongArgsRetDictionary, ptrcallWithRIDAndVariantArgRetBool,
 //   ptrcallWithRIDAndVariantArgRetLong, ptrcallWithRIDAndVariantArgRetRect2,
-//   ptrcallWithRIDAndVariantArgRetVector2i, ptrcallWithRIDAndVector2iArgRetPackedInt32List,
-//   ptrcallWithRIDArgRetArray, ptrcallWithRIDArgRetDictionary, ptrcallWithRIDArgRetDictionaryList,
-//   ptrcallWithRIDArgRetPackedColorList, ptrcallWithRIDArgRetPackedInt32List,
+//   ptrcallWithRIDAndVariantArgRetVector2i, ptrcallWithRIDArgRetArray,
+//   ptrcallWithRIDArgRetDictionary, ptrcallWithRIDArgRetDictionaryList,
 //   ptrcallWithRIDArgRetPackedStringList, ptrcallWithRIDArgRetVector2iList,
-//   ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List, ptrcallWithRIDLongRIDListLongDictionaryArgs,
+//   ptrcallWithRIDLongRIDListLongDictionaryArgs,
 //   ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List,
 //   ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool,
 //   ptrcallWithRIDVariantVector2LongDoubleArgsRetBool,
 //   ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool,
-//   ptrcallWithRIDVector2iLongArgsRetPackedInt32List, ptrcallWithRIDVector2iLongPackedInt32ListArgs,
-//   ptrcallWithStringAndPackedStringListArgRetLong,
-//   ptrcallWithTwoStringAndLongArgRetPackedInt32List, ptrcallWithTwoStringArgsRetPackedInt32List
+//   ptrcallWithRIDVector2iLongPackedInt32ListArgs, ptrcallWithStringAndPackedStringListArgRetLong
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns default TextServer database (e.g. ICU break iterators and dictionaries).
- *
- * Generated from Godot docs: TextServer.get_support_data
- */
-fun TextServer.getSupportData(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(getSupportDataBind, handle)
-}
 
 /**
  * Sets font source data, e.g contents of the dynamic font source file.
@@ -68,18 +52,6 @@ fun TextServer.fontGetOtNameStrings(fontRid: RID): Map<String, Any?> {
 }
 
 /**
- * Returns the array in the predefined color palette at `index`. Palette contains all colors used
- * to render font glyphs. Each palette has the same number of colors. Colors can be overridden
- * using `font_set_palette_custom_colors`.
- *
- * Generated from Godot docs: TextServer.font_get_palette_colors
- */
-fun TextServer.fontGetPaletteColors(fontRid: RID, index: Long): List<Color> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedColorList(fontGetPaletteColorsBind, handle, fontRid, index)
-}
-
-/**
  * Sets array of custom colors to override predefined palette. Set to empty array to reset
  * overrides. Use `Color(0, 0, 0, 0)`, to keep predefined palette color at specific position.
  *
@@ -88,16 +60,6 @@ fun TextServer.fontGetPaletteColors(fontRid: RID, index: Long): List<Color> {
 fun TextServer.fontSetPaletteCustomColors(fontRid: RID, colors: List<Color>) {
     checkOpen()
     ObjectCalls.ptrcallWithRIDAndPackedColorListArgs(fontSetPaletteCustomColorsBind, handle, fontRid, colors)
-}
-
-/**
- * Returns array of custom colors to override predefined palette.
- *
- * Generated from Godot docs: TextServer.font_get_palette_custom_colors
- */
-fun TextServer.fontGetPaletteCustomColors(fontRid: RID): List<Color> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(fontGetPaletteCustomColorsBind, handle, fontRid)
 }
 
 /**
@@ -157,26 +119,6 @@ fun TextServer.fontSetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex:
 }
 
 /**
- * Returns array containing glyph packing data.
- *
- * Generated from Godot docs: TextServer.font_get_texture_offsets
- */
-fun TextServer.fontGetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetPackedInt32List(fontGetTextureOffsetsBind, handle, fontRid, size, textureIndex)
-}
-
-/**
- * Returns list of rendered glyphs in the cache entry.
- *
- * Generated from Godot docs: TextServer.font_get_glyph_list
- */
-fun TextServer.fontGetGlyphList(fontRid: RID, size: Vector2i): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndVector2iArgRetPackedInt32List(fontGetGlyphListBind, handle, fontRid, size)
-}
-
-/**
  * Returns outline contours of the glyph as a `Dictionary` with the following contents: `points` -
  * `PackedVector3Array`, containing outline points. `x` and `y` are point coordinates. `z` is the
  * type of the point, using the `ContourPointTag` values. `contours` - `PackedInt32Array`,
@@ -205,16 +147,6 @@ fun TextServer.fontGetGlyphContours(font: RID, size: Long, index: Long): Map<Str
 fun TextServer.fontGetKerningList(fontRid: RID, size: Long): List<Vector2i> {
     checkOpen()
     return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(fontGetKerningListBind, handle, fontRid, size)
-}
-
-/**
- * Returns an array containing all glyph indices in the font.
- *
- * Generated from Godot docs: TextServer.font_get_supported_glyphs
- */
-fun TextServer.fontGetSupportedGlyphs(fontRid: RID): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(fontGetSupportedGlyphsBind, handle, fontRid)
 }
 
 /**
@@ -380,27 +312,6 @@ fun TextServer.shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start
 }
 
 /**
- * Breaks text to the lines and returns character ranges for each line.
- *
- * Generated from Godot docs: TextServer.shaped_text_get_line_breaks
- */
-fun TextServer.shapedTextGetLineBreaks(shaped: RID, width: Double, start: Long = 0L, breakFlags: Long = 3L): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(shapedTextGetLineBreaksBind, handle, shaped, width, start, breakFlags)
-}
-
-/**
- * Breaks text into words and returns array of character ranges. Use `grapheme_flags` to set what
- * characters are used for breaking.
- *
- * Generated from Godot docs: TextServer.shaped_text_get_word_breaks
- */
-fun TextServer.shapedTextGetWordBreaks(shaped: RID, graphemeFlags: Long = 264L, skipGraphemeFlags: Long = 4L): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(shapedTextGetWordBreaksBind, handle, shaped, graphemeFlags, skipGraphemeFlags)
-}
-
-/**
  * Returns array of the glyphs in the ellipsis.
  *
  * Generated from Godot docs: TextServer.shaped_text_get_ellipsis_glyphs
@@ -462,48 +373,6 @@ fun TextServer.shapedTextGetCarets(shaped: RID, position: Long): Map<String, Any
 }
 
 /**
- * Returns selection rectangles for the specified character range.
- *
- * Generated from Godot docs: TextServer.shaped_text_get_selection
- */
-fun TextServer.shapedTextGetSelection(shaped: RID, start: Long, end: Long): List<Vector2> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(shapedTextGetSelectionBind, handle, shaped, start, end)
-}
-
-/**
- * Returns array of the composite character boundaries.
- *
- * Generated from Godot docs: TextServer.shaped_text_get_character_breaks
- */
-fun TextServer.shapedTextGetCharacterBreaks(shaped: RID): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(shapedTextGetCharacterBreaksBind, handle, shaped)
-}
-
-/**
- * Returns an array of the word break boundaries. Elements in the returned array are the offsets of
- * the start and end of words. Therefore the length of the array is always even. When
- * `chars_per_line` is greater than zero, line break boundaries are returned instead.
- *
- * Generated from Godot docs: TextServer.string_get_word_breaks
- */
-fun TextServer.stringGetWordBreaks(string: String, language: String = "", charsPerLine: Long = 0L): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoStringAndLongArgRetPackedInt32List(stringGetWordBreaksBind, handle, string, language, charsPerLine)
-}
-
-/**
- * Returns array of the composite character boundaries.
- *
- * Generated from Godot docs: TextServer.string_get_character_breaks
- */
-fun TextServer.stringGetCharacterBreaks(string: String, language: String = ""): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoStringArgsRetPackedInt32List(stringGetCharacterBreaksBind, handle, string, language)
-}
-
-/**
  * Returns index of the first string in `dict` which is visually confusable with the `string`, or
  * `-1` if none is found. Note: This method doesn't detect invisible characters, for spoof
  * detection use it in combination with `spoof_check`. Note: Always returns `-1` if the server does
@@ -526,11 +395,6 @@ fun TextServer.parseStructuredText(parserType: Long, args: List<Any?>, text: Str
     return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, handle, parserType, args, text)
 }
 
-private const val GET_SUPPORT_DATA_HASH = 2362200018L
-private val getSupportDataBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "get_support_data", GET_SUPPORT_DATA_HASH)
-}
-
 private const val FONT_SET_DATA_HASH = 1355495400L
 private val fontSetDataBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_set_data", FONT_SET_DATA_HASH)
@@ -541,19 +405,9 @@ private val fontGetOtNameStringsBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_get_ot_name_strings", FONT_GET_OT_NAME_STRINGS_HASH)
 }
 
-private const val FONT_GET_PALETTE_COLORS_HASH = 1595517857L
-private val fontGetPaletteColorsBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_palette_colors", FONT_GET_PALETTE_COLORS_HASH)
-}
-
 private const val FONT_SET_PALETTE_CUSTOM_COLORS_HASH = 4037098590L
 private val fontSetPaletteCustomColorsBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_set_palette_custom_colors", FONT_SET_PALETTE_CUSTOM_COLORS_HASH)
-}
-
-private const val FONT_GET_PALETTE_CUSTOM_COLORS_HASH = 1569415609L
-private val fontGetPaletteCustomColorsBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_palette_custom_colors", FONT_GET_PALETTE_CUSTOM_COLORS_HASH)
 }
 
 private const val FONT_SET_VARIATION_COORDINATES_HASH = 1217542888L
@@ -581,16 +435,6 @@ private val fontSetTextureOffsetsBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_set_texture_offsets", FONT_SET_TEXTURE_OFFSETS_HASH)
 }
 
-private const val FONT_GET_TEXTURE_OFFSETS_HASH = 3420028887L
-private val fontGetTextureOffsetsBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_texture_offsets", FONT_GET_TEXTURE_OFFSETS_HASH)
-}
-
-private const val FONT_GET_GLYPH_LIST_HASH = 46086620L
-private val fontGetGlyphListBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_glyph_list", FONT_GET_GLYPH_LIST_HASH)
-}
-
 private const val FONT_GET_GLYPH_CONTOURS_HASH = 2903964473L
 private val fontGetGlyphContoursBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_get_glyph_contours", FONT_GET_GLYPH_CONTOURS_HASH)
@@ -599,11 +443,6 @@ private val fontGetGlyphContoursBind by lazy {
 private const val FONT_GET_KERNING_LIST_HASH = 1778388067L
 private val fontGetKerningListBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_get_kerning_list", FONT_GET_KERNING_LIST_HASH)
-}
-
-private const val FONT_GET_SUPPORTED_GLYPHS_HASH = 788230395L
-private val fontGetSupportedGlyphsBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_supported_glyphs", FONT_GET_SUPPORTED_GLYPHS_HASH)
 }
 
 private const val FONT_GET_LANGUAGE_SUPPORT_OVERRIDES_HASH = 2801473409L
@@ -686,16 +525,6 @@ private val shapedTextGetLineBreaksAdvBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_get_line_breaks_adv", SHAPED_TEXT_GET_LINE_BREAKS_ADV_HASH)
 }
 
-private const val SHAPED_TEXT_GET_LINE_BREAKS_HASH = 2651359741L
-private val shapedTextGetLineBreaksBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_text_get_line_breaks", SHAPED_TEXT_GET_LINE_BREAKS_HASH)
-}
-
-private const val SHAPED_TEXT_GET_WORD_BREAKS_HASH = 4099476853L
-private val shapedTextGetWordBreaksBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_text_get_word_breaks", SHAPED_TEXT_GET_WORD_BREAKS_HASH)
-}
-
 private const val SHAPED_TEXT_GET_ELLIPSIS_GLYPHS_HASH = 2684255073L
 private val shapedTextGetEllipsisGlyphsBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_get_ellipsis_glyphs", SHAPED_TEXT_GET_ELLIPSIS_GLYPHS_HASH)
@@ -724,26 +553,6 @@ private val shapedTextGetObjectGlyphBind by lazy {
 private const val SHAPED_TEXT_GET_CARETS_HASH = 1574219346L
 private val shapedTextGetCaretsBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_get_carets", SHAPED_TEXT_GET_CARETS_HASH)
-}
-
-private const val SHAPED_TEXT_GET_SELECTION_HASH = 3714187733L
-private val shapedTextGetSelectionBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_text_get_selection", SHAPED_TEXT_GET_SELECTION_HASH)
-}
-
-private const val SHAPED_TEXT_GET_CHARACTER_BREAKS_HASH = 788230395L
-private val shapedTextGetCharacterBreaksBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_text_get_character_breaks", SHAPED_TEXT_GET_CHARACTER_BREAKS_HASH)
-}
-
-private const val STRING_GET_WORD_BREAKS_HASH = 581857818L
-private val stringGetWordBreaksBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "string_get_word_breaks", STRING_GET_WORD_BREAKS_HASH)
-}
-
-private const val STRING_GET_CHARACTER_BREAKS_HASH = 2333794773L
-private val stringGetCharacterBreaksBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "string_get_character_breaks", STRING_GET_CHARACTER_BREAKS_HASH)
 }
 
 private const val IS_CONFUSABLE_HASH = 1433197768L

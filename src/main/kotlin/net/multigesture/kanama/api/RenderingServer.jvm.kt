@@ -17,17 +17,14 @@ import net.multigesture.kanama.types.Vector3i
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP RenderingServer waits on: ptrcallWithAABBRIDArgsRetPackedInt64List,
-//   ptrcallWithDictionaryListIntArgsRetRID, ptrcallWithLongThreeIntBoolObjectListArgsRetRID,
-//   ptrcallWithObjectListLongArgsRetRID, ptrcallWithPlaneListAndRIDArgsRetPackedInt64List,
-//   ptrcallWithRIDAndDictionaryArg, ptrcallWithRIDAndIntArgRetArray,
-//   ptrcallWithRIDAndIntArgRetArrayList, ptrcallWithRIDAndIntArgRetDictionary,
-//   ptrcallWithRIDAndObjectListArgs, ptrcallWithRIDAndPackedFloat32ListArg,
-//   ptrcallWithRIDAndRIDListArgs, ptrcallWithRIDAndTransform3DListArgs,
-//   ptrcallWithRIDAndTwoPackedFloat32ListArgs, ptrcallWithRIDArgRetByteArray,
-//   ptrcallWithRIDArgRetDictionaryList, ptrcallWithRIDArgRetPackedColorList,
-//   ptrcallWithRIDArgRetPackedFloat32List, ptrcallWithRIDArgRetPackedInt32List,
-//   ptrcallWithRIDArgRetPackedVector3List, ptrcallWithRIDArgRetTypedObjectList,
+// KANAMA-IOS-GAP RenderingServer waits on: ptrcallWithDictionaryListIntArgsRetRID,
+//   ptrcallWithLongThreeIntBoolObjectListArgsRetRID, ptrcallWithObjectListLongArgsRetRID,
+//   ptrcallWithPlaneListAndRIDArgsRetPackedInt64List, ptrcallWithRIDAndDictionaryArg,
+//   ptrcallWithRIDAndIntArgRetArray, ptrcallWithRIDAndIntArgRetArrayList,
+//   ptrcallWithRIDAndIntArgRetDictionary, ptrcallWithRIDAndObjectListArgs,
+//   ptrcallWithRIDAndPackedFloat32ListArg, ptrcallWithRIDAndRIDListArgs,
+//   ptrcallWithRIDAndTransform3DListArgs, ptrcallWithRIDAndTwoPackedFloat32ListArgs,
+//   ptrcallWithRIDArgRetDictionaryList, ptrcallWithRIDArgRetTypedObjectList,
 //   ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs,
 //   ptrcallWithRIDIntIntAndByteArrayArgs, ptrcallWithRIDListRect2iRIDColorRIDListIntArgs,
 //   ptrcallWithRIDLongTwoArrayDictionaryLongArgs,
@@ -39,8 +36,7 @@ import net.multigesture.kanama.types.Vector3i
 //   ptrcallWithRIDPackedVector3ListPackedInt32ListArgs,
 //   ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList, ptrcallWithRIDStringNameAndVariantArgs,
 //   ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs,
-//   ptrcallWithStringNameAndVariantArg, ptrcallWithStringNameLongVariantArgs,
-//   ptrcallWithTwoVector3RIDArgsRetPackedInt64List
+//   ptrcallWithStringNameAndVariantArg, ptrcallWithStringNameLongVariantArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -274,18 +270,6 @@ fun RenderingServer.multimeshSetBuffer(multimesh: RID, buffer: List<Float>) {
 }
 
 /**
- * Returns the MultiMesh data (such as instance transforms, colors, etc.). See
- * `multimesh_set_buffer` for details on the returned data. Note: If the buffer is in the engine's
- * internal cache, it will have to be fetched from GPU memory and possibly decompressed. This means
- * `multimesh_get_buffer` is potentially a slow operation and should be avoided whenever possible.
- *
- * Generated from Godot docs: RenderingServer.multimesh_get_buffer
- */
-fun RenderingServer.multimeshGetBuffer(multimesh: RID): List<Float> {
-    return ObjectCalls.ptrcallWithRIDArgRetPackedFloat32List(multimeshGetBufferBind, renderingServerSingleton, multimesh)
-}
-
-/**
  * Alternative version of `multimesh_set_buffer` for use with physics interpolation. Takes both an
  * array of current data and an array of data for the previous physics tick.
  *
@@ -307,46 +291,6 @@ fun RenderingServer.voxelGiAllocateData(voxelGi: RID, toCellXform: Transform3D, 
 }
 
 /**
- * Returns the octree cell data for the specified voxel GI data instance. See also
- * `voxel_gi_allocate_data`.
- *
- * Generated from Godot docs: RenderingServer.voxel_gi_get_octree_cells
- */
-fun RenderingServer.voxelGiGetOctreeCells(voxelGi: RID): ByteArray {
-    return ObjectCalls.ptrcallWithRIDArgRetByteArray(voxelGiGetOctreeCellsBind, renderingServerSingleton, voxelGi)
-}
-
-/**
- * Returns the data cells for the specified voxel GI data instance. See also
- * `voxel_gi_allocate_data`.
- *
- * Generated from Godot docs: RenderingServer.voxel_gi_get_data_cells
- */
-fun RenderingServer.voxelGiGetDataCells(voxelGi: RID): ByteArray {
-    return ObjectCalls.ptrcallWithRIDArgRetByteArray(voxelGiGetDataCellsBind, renderingServerSingleton, voxelGi)
-}
-
-/**
- * Returns the distance field data for the specified voxel GI data instance. See also
- * `voxel_gi_allocate_data`.
- *
- * Generated from Godot docs: RenderingServer.voxel_gi_get_distance_field
- */
-fun RenderingServer.voxelGiGetDistanceField(voxelGi: RID): ByteArray {
-    return ObjectCalls.ptrcallWithRIDArgRetByteArray(voxelGiGetDistanceFieldBind, renderingServerSingleton, voxelGi)
-}
-
-/**
- * Returns the level counts for the specified voxel GI data instance. See also
- * `voxel_gi_allocate_data`.
- *
- * Generated from Godot docs: RenderingServer.voxel_gi_get_level_counts
- */
-fun RenderingServer.voxelGiGetLevelCounts(voxelGi: RID): List<Int> {
-    return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(voxelGiGetLevelCountsBind, renderingServerSingleton, voxelGi)
-}
-
-/**
  * Sets the probe capture data for the given lightmap instance. See
  * `lightmap_get_probe_capture_points`, `lightmap_get_probe_capture_sh`,
  * `lightmap_get_probe_capture_tetrahedra`, and `lightmap_get_probe_capture_bsp_tree` for the
@@ -356,54 +300,6 @@ fun RenderingServer.voxelGiGetLevelCounts(voxelGi: RID): List<Int> {
  */
 fun RenderingServer.lightmapSetProbeCaptureData(lightmap: RID, points: List<Vector3>, pointSh: List<Color>, tetrahedra: List<Int>, bspTree: List<Int>) {
     ObjectCalls.ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs(lightmapSetProbeCaptureDataBind, renderingServerSingleton, lightmap, points, pointSh, tetrahedra, bspTree)
-}
-
-/**
- * Returns the local space positions of each lightmap probe capture point. Keep in mind the
- * lightmap instance may have a non-zero transform, which will affect the position of the probe
- * capture points. See also `lightmap_set_probe_capture_data`.
- *
- * Generated from Godot docs: RenderingServer.lightmap_get_probe_capture_points
- */
-fun RenderingServer.lightmapGetProbeCapturePoints(lightmap: RID): List<Vector3> {
-    return ObjectCalls.ptrcallWithRIDArgRetPackedVector3List(lightmapGetProbeCapturePointsBind, renderingServerSingleton, lightmap)
-}
-
-/**
- * Returns the L0, L1, and L2 spherical harmonics
- * (https://en.wikipedia.org/wiki/Spherical_harmonics) data for each lightmap probe capture point.
- * This is specified as 9 `Color` values per probe, which means the size of the returned data is
- * always 9 times the number of probe points. See also `lightmap_set_probe_capture_data`.
- *
- * Generated from Godot docs: RenderingServer.lightmap_get_probe_capture_sh
- */
-fun RenderingServer.lightmapGetProbeCaptureSh(lightmap: RID): List<Color> {
-    return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(lightmapGetProbeCaptureShBind, renderingServerSingleton, lightmap)
-}
-
-/**
- * Returns the tetrahedralization data used for interpolating between lightmap probe capture
- * points. Each tetrahedron is specified as a series of 4 numbers, each being an index into the
- * probe capture points array returned by `lightmap_get_probe_capture_points`. See also
- * `lightmap_set_probe_capture_data`.
- *
- * Generated from Godot docs: RenderingServer.lightmap_get_probe_capture_tetrahedra
- */
-fun RenderingServer.lightmapGetProbeCaptureTetrahedra(lightmap: RID): List<Int> {
-    return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(lightmapGetProbeCaptureTetrahedraBind, renderingServerSingleton, lightmap)
-}
-
-/**
- * Returns the BSP tree data used for accelerating probe lookups. The BSP data is structured as a
- * series of six signed 32-bit values per BSP node in this order: `float plane_x`, `float plane_y`,
- * `float plane_z`, `float plane_distance`, `int32_t over`, `int32_t under`. An empty leaf is
- * denoted by the value `-2147483648` (the minimum 32-bit signed integer). See also
- * `lightmap_set_probe_capture_data`.
- *
- * Generated from Godot docs: RenderingServer.lightmap_get_probe_capture_bsp_tree
- */
-fun RenderingServer.lightmapGetProbeCaptureBspTree(lightmap: RID): List<Int> {
-    return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(lightmapGetProbeCaptureBspTreeBind, renderingServerSingleton, lightmap)
 }
 
 /**
@@ -469,34 +365,6 @@ fun RenderingServer.instanceGeometrySetShaderParameter(instance: RID, parameter:
  */
 fun RenderingServer.instanceGeometryGetShaderParameterList(instance: RID): List<Map<String, Any?>> {
     return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(instanceGeometryGetShaderParameterListBind, renderingServerSingleton, instance)
-}
-
-/**
- * Returns an array of object IDs intersecting with the provided AABB. Only 3D nodes that inherit
- * from `VisualInstance3D` are considered, such as `MeshInstance3D` or `DirectionalLight3D`. Use
- * `@GlobalScope.instance_from_id` to obtain the actual nodes. A scenario RID must be provided,
- * which is available in the `World3D` you want to query. This forces an update for all resources
- * queued to update. Warning: This function is primarily intended for editor usage. For in-game use
- * cases, prefer physics collision.
- *
- * Generated from Godot docs: RenderingServer.instances_cull_aabb
- */
-fun RenderingServer.instancesCullAabb(aabb: AABB, scenario: RID): List<Long> {
-    return ObjectCalls.ptrcallWithAABBRIDArgsRetPackedInt64List(instancesCullAabbBind, renderingServerSingleton, aabb, scenario)
-}
-
-/**
- * Returns an array of object IDs intersecting with the provided 3D ray. Only 3D nodes that inherit
- * from `VisualInstance3D` are considered, such as `MeshInstance3D` or `DirectionalLight3D`. Use
- * `@GlobalScope.instance_from_id` to obtain the actual nodes. A scenario RID must be provided,
- * which is available in the `World3D` you want to query. This forces an update for all resources
- * queued to update. Warning: This function is primarily intended for editor usage. For in-game use
- * cases, prefer physics collision.
- *
- * Generated from Godot docs: RenderingServer.instances_cull_ray
- */
-fun RenderingServer.instancesCullRay(from: Vector3, to: Vector3, scenario: RID): List<Long> {
-    return ObjectCalls.ptrcallWithTwoVector3RIDArgsRetPackedInt64List(instancesCullRayBind, renderingServerSingleton, from, to, scenario)
 }
 
 /**
@@ -733,11 +601,6 @@ private val multimeshSetBufferBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer", MULTIMESH_SET_BUFFER_HASH)
 }
 
-private const val MULTIMESH_GET_BUFFER_HASH = 3964669176L
-private val multimeshGetBufferBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_buffer", MULTIMESH_GET_BUFFER_HASH)
-}
-
 private const val MULTIMESH_SET_BUFFER_INTERPOLATED_HASH = 659844711L
 private val multimeshSetBufferInterpolatedBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer_interpolated", MULTIMESH_SET_BUFFER_INTERPOLATED_HASH)
@@ -748,49 +611,9 @@ private val voxelGiAllocateDataBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_allocate_data", VOXEL_GI_ALLOCATE_DATA_HASH)
 }
 
-private const val VOXEL_GI_GET_OCTREE_CELLS_HASH = 3348040486L
-private val voxelGiGetOctreeCellsBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_octree_cells", VOXEL_GI_GET_OCTREE_CELLS_HASH)
-}
-
-private const val VOXEL_GI_GET_DATA_CELLS_HASH = 3348040486L
-private val voxelGiGetDataCellsBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_data_cells", VOXEL_GI_GET_DATA_CELLS_HASH)
-}
-
-private const val VOXEL_GI_GET_DISTANCE_FIELD_HASH = 3348040486L
-private val voxelGiGetDistanceFieldBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_distance_field", VOXEL_GI_GET_DISTANCE_FIELD_HASH)
-}
-
-private const val VOXEL_GI_GET_LEVEL_COUNTS_HASH = 788230395L
-private val voxelGiGetLevelCountsBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_level_counts", VOXEL_GI_GET_LEVEL_COUNTS_HASH)
-}
-
 private const val LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH = 3217845880L
 private val lightmapSetProbeCaptureDataBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_capture_data", LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH)
-}
-
-private const val LIGHTMAP_GET_PROBE_CAPTURE_POINTS_HASH = 808965560L
-private val lightmapGetProbeCapturePointsBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_points", LIGHTMAP_GET_PROBE_CAPTURE_POINTS_HASH)
-}
-
-private const val LIGHTMAP_GET_PROBE_CAPTURE_SH_HASH = 1569415609L
-private val lightmapGetProbeCaptureShBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_sh", LIGHTMAP_GET_PROBE_CAPTURE_SH_HASH)
-}
-
-private const val LIGHTMAP_GET_PROBE_CAPTURE_TETRAHEDRA_HASH = 788230395L
-private val lightmapGetProbeCaptureTetrahedraBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_tetrahedra", LIGHTMAP_GET_PROBE_CAPTURE_TETRAHEDRA_HASH)
-}
-
-private const val LIGHTMAP_GET_PROBE_CAPTURE_BSP_TREE_HASH = 788230395L
-private val lightmapGetProbeCaptureBspTreeBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_bsp_tree", LIGHTMAP_GET_PROBE_CAPTURE_BSP_TREE_HASH)
 }
 
 private const val PARTICLES_SET_TRAIL_BIND_POSES_HASH = 684822712L
@@ -821,16 +644,6 @@ private val instanceGeometrySetShaderParameterBind by lazy {
 private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
 private val instanceGeometryGetShaderParameterListBind by lazy {
     ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_list", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH)
-}
-
-private const val INSTANCES_CULL_AABB_HASH = 2570105777L
-private val instancesCullAabbBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "instances_cull_aabb", INSTANCES_CULL_AABB_HASH)
-}
-
-private const val INSTANCES_CULL_RAY_HASH = 2208759584L
-private val instancesCullRayBind by lazy {
-    ObjectCalls.getMethodBind("RenderingServer", "instances_cull_ray", INSTANCES_CULL_RAY_HASH)
 }
 
 private const val INSTANCES_CULL_CONVEX_HASH = 2488539944L

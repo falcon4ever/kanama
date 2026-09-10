@@ -8,6 +8,7 @@ import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Base class for an XR interface implementation.
@@ -193,6 +194,19 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
     fun setPlayAreaMode(mode: Long): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, handle, mode)
+    }
+
+    /**
+     * Returns an array of vectors that represent the physical play area mapped to the virtual space
+     * around the `XROrigin3D` point. The points form a convex polygon that can be used to react to or
+     * visualize the play area. This returns an empty array if this feature is not supported or if the
+     * information is not yet available.
+     *
+     * Generated from Godot docs: XRInterface.get_play_area
+     */
+    fun getPlayArea(): List<Vector3> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPlayAreaBind, handle)
     }
 
     /**
@@ -427,6 +441,11 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
         private const val SET_PLAY_AREA_MODE_HASH = 3429955281L
         private val setPlayAreaModeBind by lazy {
             ObjectCalls.getMethodBind("XRInterface", "set_play_area_mode", SET_PLAY_AREA_MODE_HASH)
+        }
+
+        private const val GET_PLAY_AREA_HASH = 497664490L
+        private val getPlayAreaBind by lazy {
+            ObjectCalls.getMethodBind("XRInterface", "get_play_area", GET_PLAY_AREA_HASH)
         }
 
         private const val GET_ANCHOR_DETECTION_IS_ENABLED_HASH = 36873697L

@@ -28,6 +28,10 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("setCopyrightProperty")
         set(value) = setCopyright(value)
 
+    val glbData: ByteArray
+        @JvmName("glbDataProperty")
+        get() = getGlbData()
+
     var useNamedSkinBinds: Boolean
         @JvmName("useNamedSkinBindsProperty")
         get() = getUseNamedSkinBinds()
@@ -176,6 +180,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun setCopyright(copyright: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(setCopyrightBind, handle, copyright)
+    }
+
+    fun getGlbData(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getGlbDataBind, handle)
     }
 
     fun getUseNamedSkinBinds(): Boolean {
@@ -418,6 +427,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val SET_COPYRIGHT_HASH = 83702148L
         private val setCopyrightBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "set_copyright", SET_COPYRIGHT_HASH)
+        }
+
+        private const val GET_GLB_DATA_HASH = 2362200018L
+        private val getGlbDataBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "get_glb_data", GET_GLB_DATA_HASH)
         }
 
         private const val GET_USE_NAMED_SKIN_BINDS_HASH = 36873697L

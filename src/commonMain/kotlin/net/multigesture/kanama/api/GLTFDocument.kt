@@ -138,6 +138,11 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
         return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(generateSceneBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL, bakeFps, trimming, removeImmutableTracks))
     }
 
+    fun generateBuffer(state: GLTFState?): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
     fun writeToFilesystem(state: GLTFState?, path: String): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL, path)
@@ -267,6 +272,11 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
         private const val GENERATE_SCENE_HASH = 596118388L
         private val generateSceneBind by lazy {
             ObjectCalls.getMethodBind("GLTFDocument", "generate_scene", GENERATE_SCENE_HASH)
+        }
+
+        private const val GENERATE_BUFFER_HASH = 741783455L
+        private val generateBufferBind by lazy {
+            ObjectCalls.getMethodBind("GLTFDocument", "generate_buffer", GENERATE_BUFFER_HASH)
         }
 
         private const val WRITE_TO_FILESYSTEM_HASH = 1784551478L

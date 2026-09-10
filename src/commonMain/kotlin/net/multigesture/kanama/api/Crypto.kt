@@ -12,6 +12,16 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class Crypto(handle: MemorySegment) : RefCounted(handle) {
     /**
+     * Generates a `PackedByteArray` of cryptographically secure random bytes with given `size`.
+     *
+     * Generated from Godot docs: Crypto.generate_random_bytes
+     */
+    fun generateRandomBytes(size: Int): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetByteArray(generateRandomBytesBind, handle, size)
+    }
+
+    /**
      * Generates an RSA `CryptoKey` that can be used for creating self-signed certificates and passed
      * to `StreamPeerTLS.accept_stream`.
      *
@@ -44,6 +54,11 @@ class Crypto(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): Crypto? =
             if (handle.address() == 0L) null else Crypto(handle)
+
+        private const val GENERATE_RANDOM_BYTES_HASH = 47165747L
+        private val generateRandomBytesBind by lazy {
+            ObjectCalls.getMethodBind("Crypto", "generate_random_bytes", GENERATE_RANDOM_BYTES_HASH)
+        }
 
         private const val GENERATE_RSA_HASH = 1237515462L
         private val generateRsaBind by lazy {

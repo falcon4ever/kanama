@@ -157,6 +157,16 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     /**
+     * Returns an array containing the bone indexes of all the child node of the passed in bone,
+     * `bone_idx`.
+     *
+     * Generated from Godot docs: Skeleton3D.get_bone_children
+     */
+    fun getBoneChildren(boneIdx: Int): List<Int> {
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getBoneChildrenBind, handle, boneIdx)
+    }
+
+    /**
      * Returns an array with all of the bones that are parentless. Another way to look at this is that
      * it returns the indexes of all the bones that are not dependent or modified by other bones in the
      * Skeleton.
@@ -629,6 +639,11 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
         private const val UNPARENT_BONE_AND_REST_HASH = 1286410249L
         private val unparentBoneAndRestBind by lazy {
             ObjectCalls.getMethodBind("Skeleton3D", "unparent_bone_and_rest", UNPARENT_BONE_AND_REST_HASH)
+        }
+
+        private const val GET_BONE_CHILDREN_HASH = 1706082319L
+        private val getBoneChildrenBind by lazy {
+            ObjectCalls.getMethodBind("Skeleton3D", "get_bone_children", GET_BONE_CHILDREN_HASH)
         }
 
         private const val GET_PARENTLESS_BONES_HASH = 1930428628L

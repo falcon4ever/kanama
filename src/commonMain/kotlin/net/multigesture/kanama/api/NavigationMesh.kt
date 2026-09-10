@@ -14,6 +14,10 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: NavigationMesh
  */
 class NavigationMesh(handle: MemorySegment) : Resource(handle) {
+    val vertices: List<Vector3>
+        @JvmName("verticesProperty")
+        get() = getVertices()
+
     var samplePartitionType: Long
         @JvmName("samplePartitionTypeProperty")
         get() = getSamplePartitionType()
@@ -715,6 +719,16 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a `PackedVector3Array` containing all the vertices being used to create the polygons.
+     *
+     * Generated from Godot docs: NavigationMesh.get_vertices
+     */
+    fun getVertices(): List<Vector3> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
+    }
+
+    /**
      * Returns the number of polygons in the navigation mesh.
      *
      * Generated from Godot docs: NavigationMesh.get_polygon_count
@@ -722,6 +736,16 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
     fun getPolygonCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
+    }
+
+    /**
+     * Returns a `PackedInt32Array` containing the indices of the vertices of a created polygon.
+     *
+     * Generated from Godot docs: NavigationMesh.get_polygon
+     */
+    fun getPolygon(idx: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
     }
 
     /**
@@ -1026,9 +1050,19 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("NavigationMesh", "get_filter_baking_aabb_offset", GET_FILTER_BAKING_AABB_OFFSET_HASH)
         }
 
+        private const val GET_VERTICES_HASH = 497664490L
+        private val getVerticesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMesh", "get_vertices", GET_VERTICES_HASH)
+        }
+
         private const val GET_POLYGON_COUNT_HASH = 3905245786L
         private val getPolygonCountBind by lazy {
             ObjectCalls.getMethodBind("NavigationMesh", "get_polygon_count", GET_POLYGON_COUNT_HASH)
+        }
+
+        private const val GET_POLYGON_HASH = 3668444399L
+        private val getPolygonBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMesh", "get_polygon", GET_POLYGON_HASH)
         }
 
         private const val CLEAR_POLYGONS_HASH = 3218959716L

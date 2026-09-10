@@ -7,8 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP AESContext waits on: ptrcallNoArgsRetByteArray,
-//   ptrcallWithByteArrayArgRetByteArray, ptrcallWithLongAndTwoByteArrayArgsRetLong
+// KANAMA-IOS-GAP AESContext waits on: ptrcallWithByteArrayArgRetByteArray,
+//   ptrcallWithLongAndTwoByteArrayArgsRetLong
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -35,18 +35,6 @@ fun AESContext.update(src: ByteArray): ByteArray {
     return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(updateBind, handle, src)
 }
 
-/**
- * Get the current IV state for this context (IV gets updated when calling `update`). You normally
- * don't need this function. Note: This function only makes sense when the context is started with
- * `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
- *
- * Generated from Godot docs: AESContext.get_iv_state
- */
-fun AESContext.getIvState(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(getIvStateBind, handle)
-}
-
 private const val START_HASH = 3122411423L
 private val startBind by lazy {
     ObjectCalls.getMethodBind("AESContext", "start", START_HASH)
@@ -55,9 +43,4 @@ private val startBind by lazy {
 private const val UPDATE_HASH = 527836100L
 private val updateBind by lazy {
     ObjectCalls.getMethodBind("AESContext", "update", UPDATE_HASH)
-}
-
-private const val GET_IV_STATE_HASH = 2115431945L
-private val getIvStateBind by lazy {
-    ObjectCalls.getMethodBind("AESContext", "get_iv_state", GET_IV_STATE_HASH)
 }

@@ -16,6 +16,11 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: MemorySegment) : Open
         @JvmName("setAprilDictProperty")
         set(value) = setAprilDict(value)
 
+    fun getEnabledComponents(): List<Long> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+    }
+
     fun setAprilDict(aprilDict: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(setAprilDictBind, handle, aprilDict)
@@ -38,6 +43,11 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: MemorySegment) : Open
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAprilTag(handle)
+
+        private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
+        private val getEnabledComponentsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAprilTag", "get_enabled_components", GET_ENABLED_COMPONENTS_HASH)
+        }
 
         private const val SET_APRIL_DICT_HASH = 3902905799L
         private val setAprilDictBind by lazy {

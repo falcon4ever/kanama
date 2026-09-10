@@ -99,6 +99,16 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a `PackedInt32Array` containing the indices of the vertices of a created polygon.
+     *
+     * Generated from Godot docs: NavigationPolygon.get_polygon
+     */
+    fun getPolygon(idx: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
+    }
+
+    /**
      * Clears the array of polygons, but it doesn't clear the array of outlines and vertices.
      *
      * Generated from Godot docs: NavigationPolygon.clear_polygons
@@ -128,6 +138,17 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
     fun getOutlineCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, handle)
+    }
+
+    /**
+     * Returns a `PackedVector2Array` containing the vertices of an outline that was created in the
+     * editor or by script.
+     *
+     * Generated from Godot docs: NavigationPolygon.get_outline
+     */
+    fun getOutline(idx: Int): List<Vector2> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getOutlineBind, handle, idx)
     }
 
     /**
@@ -446,6 +467,11 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("NavigationPolygon", "get_polygon_count", GET_POLYGON_COUNT_HASH)
         }
 
+        private const val GET_POLYGON_HASH = 3668444399L
+        private val getPolygonBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPolygon", "get_polygon", GET_POLYGON_HASH)
+        }
+
         private const val CLEAR_POLYGONS_HASH = 3218959716L
         private val clearPolygonsBind by lazy {
             ObjectCalls.getMethodBind("NavigationPolygon", "clear_polygons", CLEAR_POLYGONS_HASH)
@@ -459,6 +485,11 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
         private const val GET_OUTLINE_COUNT_HASH = 3905245786L
         private val getOutlineCountBind by lazy {
             ObjectCalls.getMethodBind("NavigationPolygon", "get_outline_count", GET_OUTLINE_COUNT_HASH)
+        }
+
+        private const val GET_OUTLINE_HASH = 3946907486L
+        private val getOutlineBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPolygon", "get_outline", GET_OUTLINE_HASH)
         }
 
         private const val REMOVE_OUTLINE_HASH = 1286410249L

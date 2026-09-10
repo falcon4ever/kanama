@@ -16,6 +16,11 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: MemorySegment) : OpenXRS
         @JvmName("setArucoDictProperty")
         set(value) = setArucoDict(value)
 
+    fun getEnabledComponents(): List<Long> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+    }
+
     fun setArucoDict(arucoDict: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(setArucoDictBind, handle, arucoDict)
@@ -50,6 +55,11 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: MemorySegment) : OpenXRS
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAruco? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAruco(handle)
+
+        private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
+        private val getEnabledComponentsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAruco", "get_enabled_components", GET_ENABLED_COMPONENTS_HASH)
+        }
 
         private const val SET_ARUCO_DICT_HASH = 2268055963L
         private val setArucoDictBind by lazy {

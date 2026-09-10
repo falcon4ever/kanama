@@ -7,9 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Skeleton3D waits on: ptrcallWithIntArgRetPackedInt32List,
-//   ptrcallWithIntArgRetStringNameList, ptrcallWithIntStringNameAndVariantArg,
-//   ptrcallWithStringNameListArg
+// KANAMA-IOS-GAP Skeleton3D waits on: ptrcallWithIntArgRetStringNameList,
+//   ptrcallWithIntStringNameAndVariantArg, ptrcallWithStringNameListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -31,16 +30,6 @@ fun Skeleton3D.setBoneMeta(boneIdx: Int, key: String, value: Any?) {
 }
 
 /**
- * Returns an array containing the bone indexes of all the child node of the passed in bone,
- * `bone_idx`.
- *
- * Generated from Godot docs: Skeleton3D.get_bone_children
- */
-fun Skeleton3D.getBoneChildren(boneIdx: Int): List<Int> {
-    return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getBoneChildrenBind, handle, boneIdx)
-}
-
-/**
  * Tells the `PhysicalBone3D` nodes in the Skeleton to start simulating and reacting to the physics
  * world. Optionally, a list of bone names can be passed-in, allowing only the passed-in bones to
  * be simulated.
@@ -59,11 +48,6 @@ private val getBoneMetaListBind by lazy {
 private const val SET_BONE_META_HASH = 702482756L
 private val setBoneMetaBind by lazy {
     ObjectCalls.getMethodBind("Skeleton3D", "set_bone_meta", SET_BONE_META_HASH)
-}
-
-private const val GET_BONE_CHILDREN_HASH = 1706082319L
-private val getBoneChildrenBind by lazy {
-    ObjectCalls.getMethodBind("Skeleton3D", "get_bone_children", GET_BONE_CHILDREN_HASH)
 }
 
 private const val PHYSICAL_BONES_START_SIMULATION_HASH = 2787316981L

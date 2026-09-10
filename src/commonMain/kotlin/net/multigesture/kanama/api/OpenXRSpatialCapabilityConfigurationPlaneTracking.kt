@@ -24,6 +24,11 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: MemorySegment) :
         return ObjectCalls.ptrcallNoArgsRetBool(supportsLabelsBind, handle)
     }
 
+    fun getEnabledComponents(): List<Long> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
@@ -45,6 +50,11 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: MemorySegment) :
         private const val SUPPORTS_LABELS_HASH = 2240911060L
         private val supportsLabelsBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationPlaneTracking", "supports_labels", SUPPORTS_LABELS_HASH)
+        }
+
+        private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
+        private val getEnabledComponentsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationPlaneTracking", "get_enabled_components", GET_ENABLED_COMPONENTS_HASH)
         }
     }
 }

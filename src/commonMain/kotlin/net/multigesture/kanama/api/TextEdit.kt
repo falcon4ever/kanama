@@ -1308,6 +1308,17 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns the carets sorted by selection beginning from lowest line and column to highest (from
+     * top to bottom of text). If `include_ignored_carets` is `false`, carets from
+     * `multicaret_edit_ignore_caret` will be ignored.
+     *
+     * Generated from Godot docs: TextEdit.get_sorted_carets
+     */
+    fun getSortedCarets(includeIgnoredCarets: Boolean = false): List<Int> {
+        return ObjectCalls.ptrcallWithBoolArgRetPackedInt32List(getSortedCaretsBind, handle, includeIgnoredCarets)
+    }
+
+    /**
      * Collapse all carets in the given range to the `from_line` and `from_column` position.
      * `inclusive` applies to both ends. If `is_in_mulitcaret_edit` is `true`, carets that are
      * collapsed will be `true` for `multicaret_edit_ignore_caret`. `merge_overlapping_carets` will be
@@ -3270,6 +3281,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val ADD_CARET_AT_CARETS_HASH = 2586408642L
         private val addCaretAtCaretsBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "add_caret_at_carets", ADD_CARET_AT_CARETS_HASH)
+        }
+
+        private const val GET_SORTED_CARETS_HASH = 2131714034L
+        private val getSortedCaretsBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_sorted_carets", GET_SORTED_CARETS_HASH)
         }
 
         private const val COLLAPSE_CARETS_HASH = 228654177L

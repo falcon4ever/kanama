@@ -21,6 +21,10 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("pathTypesProperty")
         get() = getPathTypes()
 
+    val pathOwnerIds: List<Long>
+        @JvmName("pathOwnerIdsProperty")
+        get() = getPathOwnerIds()
+
     var pathLength: Double
         @JvmName("pathLengthProperty")
         get() = getPathLength()
@@ -47,6 +51,17 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
     fun getPathTypes(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
+    }
+
+    /**
+     * The `ObjectID`s of the `Object`s which manage the regions and links each point of the path goes
+     * through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult2D.get_path_owner_ids
+     */
+    fun getPathOwnerIds(): List<Long> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPathOwnerIdsBind, handle)
     }
 
     /**
@@ -99,6 +114,11 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_PATH_TYPES_HASH = 1930428628L
         private val getPathTypesBind by lazy {
             ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "get_path_types", GET_PATH_TYPES_HASH)
+        }
+
+        private const val GET_PATH_OWNER_IDS_HASH = 235988956L
+        private val getPathOwnerIdsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "get_path_owner_ids", GET_PATH_OWNER_IDS_HASH)
         }
 
         private const val SET_PATH_LENGTH_HASH = 373806689L

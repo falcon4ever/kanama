@@ -329,6 +329,16 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the cache of points as a `PackedVector3Array`.
+     *
+     * Generated from Godot docs: Curve3D.get_baked_points
+     */
+    fun getBakedPoints(): List<Vector3> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedPointsBind, handle)
+    }
+
+    /**
      * Returns the cache of tilts as a `PackedFloat32Array`.
      *
      * Generated from Godot docs: Curve3D.get_baked_tilts
@@ -336,6 +346,17 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
     fun getBakedTilts(): List<Float> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBakedTiltsBind, handle)
+    }
+
+    /**
+     * Returns the cache of up vectors as a `PackedVector3Array`. If `up_vector_enabled` is `false`,
+     * the cache will be empty.
+     *
+     * Generated from Godot docs: Curve3D.get_baked_up_vectors
+     */
+    fun getBakedUpVectors(): List<Vector3> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedUpVectorsBind, handle)
     }
 
     /**
@@ -358,6 +379,37 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
     fun getClosestOffset(toPoint: Vector3): Double {
         checkOpen()
         return ObjectCalls.ptrcallWithVector3ArgRetDouble(getClosestOffsetBind, handle, toPoint)
+    }
+
+    /**
+     * Returns a list of points along the curve, with a curvature controlled point density. That is,
+     * the curvier parts will have more points than the straighter parts. This approximation makes
+     * straight segments between each point, then subdivides those segments until the resulting shape
+     * is similar enough. `max_stages` controls how many subdivisions a curve segment may face before
+     * it is considered approximate enough. Each subdivision splits the segment in half, so the default
+     * 5 stages may mean up to 32 subdivisions per curve segment. Increase with care!
+     * `tolerance_degrees` controls how many degrees the midpoint of a segment may deviate from the
+     * real curve, before the segment has to be subdivided.
+     *
+     * Generated from Godot docs: Curve3D.tessellate
+     */
+    fun tessellate(maxStages: Int = 5, toleranceDegrees: Double = 4.0): List<Vector3> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateBind, handle, maxStages, toleranceDegrees)
+    }
+
+    /**
+     * Returns a list of points along the curve, with almost uniform density. `max_stages` controls how
+     * many subdivisions a curve segment may face before it is considered approximate enough. Each
+     * subdivision splits the segment in half, so the default 5 stages may mean up to 32 subdivisions
+     * per curve segment. Increase with care! `tolerance_length` controls the maximal distance between
+     * two neighboring points, before the segment has to be subdivided.
+     *
+     * Generated from Godot docs: Curve3D.tessellate_even_length
+     */
+    fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 0.2): List<Vector3> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateEvenLengthBind, handle, maxStages, toleranceLength)
     }
 
     companion object {
@@ -493,9 +545,19 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Curve3D", "sample_baked_up_vector", SAMPLE_BAKED_UP_VECTOR_HASH)
         }
 
+        private const val GET_BAKED_POINTS_HASH = 497664490L
+        private val getBakedPointsBind by lazy {
+            ObjectCalls.getMethodBind("Curve3D", "get_baked_points", GET_BAKED_POINTS_HASH)
+        }
+
         private const val GET_BAKED_TILTS_HASH = 675695659L
         private val getBakedTiltsBind by lazy {
             ObjectCalls.getMethodBind("Curve3D", "get_baked_tilts", GET_BAKED_TILTS_HASH)
+        }
+
+        private const val GET_BAKED_UP_VECTORS_HASH = 497664490L
+        private val getBakedUpVectorsBind by lazy {
+            ObjectCalls.getMethodBind("Curve3D", "get_baked_up_vectors", GET_BAKED_UP_VECTORS_HASH)
         }
 
         private const val GET_CLOSEST_POINT_HASH = 192990374L
@@ -506,6 +568,16 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
         private const val GET_CLOSEST_OFFSET_HASH = 1109078154L
         private val getClosestOffsetBind by lazy {
             ObjectCalls.getMethodBind("Curve3D", "get_closest_offset", GET_CLOSEST_OFFSET_HASH)
+        }
+
+        private const val TESSELLATE_HASH = 1519759391L
+        private val tessellateBind by lazy {
+            ObjectCalls.getMethodBind("Curve3D", "tessellate", TESSELLATE_HASH)
+        }
+
+        private const val TESSELLATE_EVEN_LENGTH_HASH = 133237049L
+        private val tessellateEvenLengthBind by lazy {
+            ObjectCalls.getMethodBind("Curve3D", "tessellate_even_length", TESSELLATE_EVEN_LENGTH_HASH)
         }
     }
 }

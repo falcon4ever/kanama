@@ -16,6 +16,10 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: FontFile
  */
 class FontFile(handle: MemorySegment) : Font(handle) {
+    val data: ByteArray
+        @JvmName("dataProperty")
+        get() = getData()
+
     var generateMipmaps: Boolean
         @JvmName("generateMipmapsProperty")
         get() = getGenerateMipmaps()
@@ -129,6 +133,16 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     fun loadDynamicFont(path: String): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, handle, path)
+    }
+
+    /**
+     * Contents of the dynamic font source file.
+     *
+     * Generated from Godot docs: FontFile.get_data
+     */
+    fun getData(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
     }
 
     /**
@@ -841,6 +855,26 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     }
 
     /**
+     * Returns a copy of the array containing glyph packing data.
+     *
+     * Generated from Godot docs: FontFile.get_texture_offsets
+     */
+    fun getTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(getTextureOffsetsBind, handle, cacheIndex, size, textureIndex)
+    }
+
+    /**
+     * Returns list of rendered glyphs in the cache entry.
+     *
+     * Generated from Godot docs: FontFile.get_glyph_list
+     */
+    fun getGlyphList(cacheIndex: Int, size: Vector2i): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(getGlyphListBind, handle, cacheIndex, size)
+    }
+
+    /**
      * Removes all rendered glyph information from the cache entry. Note: This function will not remove
      * textures associated with the glyphs, use `remove_texture` to remove them manually.
      *
@@ -1141,6 +1175,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         private const val LOAD_DYNAMIC_FONT_HASH = 166001499L
         private val loadDynamicFontBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "load_dynamic_font", LOAD_DYNAMIC_FONT_HASH)
+        }
+
+        private const val GET_DATA_HASH = 2362200018L
+        private val getDataBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "get_data", GET_DATA_HASH)
         }
 
         private const val SET_FONT_NAME_HASH = 83702148L
@@ -1466,6 +1505,16 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         private const val GET_TEXTURE_IMAGE_HASH = 3878418953L
         private val getTextureImageBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "get_texture_image", GET_TEXTURE_IMAGE_HASH)
+        }
+
+        private const val GET_TEXTURE_OFFSETS_HASH = 3703444828L
+        private val getTextureOffsetsBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "get_texture_offsets", GET_TEXTURE_OFFSETS_HASH)
+        }
+
+        private const val GET_GLYPH_LIST_HASH = 681709689L
+        private val getGlyphListBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "get_glyph_list", GET_GLYPH_LIST_HASH)
         }
 
         private const val CLEAR_GLYPHS_HASH = 2311374912L

@@ -186,6 +186,11 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithVector2iArg(setVelocityTargetSizeBind, handle, targetSize)
     }
 
+    fun getSupportedSwapchainFormats(): List<Long> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getSupportedSwapchainFormatsBind, handle)
+    }
+
     fun openxrSwapchainCreate(createFlags: Long, usageFlags: Long, swapchainFormat: Long, width: Long, height: Long, sampleCount: Long, arraySize: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(openxrSwapchainCreateBind, handle, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
@@ -430,6 +435,11 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         private const val SET_VELOCITY_TARGET_SIZE_HASH = 1130785943L
         private val setVelocityTargetSizeBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_velocity_target_size", SET_VELOCITY_TARGET_SIZE_HASH)
+        }
+
+        private const val GET_SUPPORTED_SWAPCHAIN_FORMATS_HASH = 3851388692L
+        private val getSupportedSwapchainFormatsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_supported_swapchain_formats", GET_SUPPORTED_SWAPCHAIN_FORMATS_HASH)
         }
 
         private const val OPENXR_SWAPCHAIN_CREATE_HASH = 2162228999L

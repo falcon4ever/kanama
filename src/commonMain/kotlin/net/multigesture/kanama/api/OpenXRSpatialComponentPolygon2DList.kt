@@ -4,7 +4,9 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Generated from Godot docs: OpenXRSpatialComponentPolygon2DList
@@ -13,6 +15,11 @@ class OpenXRSpatialComponentPolygon2DList(handle: MemorySegment) : OpenXRSpatial
     fun getTransform(index: Long): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, handle, index)
+    }
+
+    fun getVertices(snapshot: RID, index: Long): List<Vector2> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(getVerticesBind, handle, snapshot, index)
     }
 
     companion object {
@@ -26,6 +33,11 @@ class OpenXRSpatialComponentPolygon2DList(handle: MemorySegment) : OpenXRSpatial
         private const val GET_TRANSFORM_HASH = 1965739696L
         private val getTransformBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialComponentPolygon2DList", "get_transform", GET_TRANSFORM_HASH)
+        }
+
+        private const val GET_VERTICES_HASH = 110850971L
+        private val getVerticesBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialComponentPolygon2DList", "get_vertices", GET_VERTICES_HASH)
         }
     }
 }

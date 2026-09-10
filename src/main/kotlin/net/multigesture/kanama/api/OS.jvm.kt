@@ -8,25 +8,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP OS waits on: ptrcallNoArgsRetDictionary, ptrcallWithBoolAndPackedStringArrayArgs,
-//   ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList, ptrcallWithIntArgRetByteArray,
-//   ptrcallWithLongArgRetByteArray, ptrcallWithPackedStringListArgRetInt,
+//   ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList, ptrcallWithPackedStringListArgRetInt,
 //   ptrcallWithStringAndPackedStringListArgRetLong,
 //   ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt,
 //   ptrcallWithStringPackedStringListBoolArgsRetDictionary,
 //   ptrcallWithStringPackedStringListBoolArgsRetInt
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Generates a `PackedByteArray` of cryptographically secure random bytes with given `size`. Note:
- * Generating large quantities of bytes using this method can result in locking and entropy of
- * lower quality on most platforms. Using `Crypto.generate_random_bytes` is preferred in most
- * cases.
- *
- * Generated from Godot docs: OS.get_entropy
- */
-fun OS.getEntropy(size: Int): ByteArray {
-    return ObjectCalls.ptrcallWithIntArgRetByteArray(getEntropyBind, oSSingleton, size)
-}
 
 /**
  * Returns an array of the system substitute font file paths, which are similar to the font with
@@ -43,26 +30,6 @@ fun OS.getEntropy(size: Int): ByteArray {
  */
 fun OS.getSystemFontPathForText(fontName: String, text: String, locale: String = "", script: String = "", weight: Int = 400, stretch: Int = 100, italic: Boolean = false): List<String> {
     return ObjectCalls.ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(getSystemFontPathForTextBind, oSSingleton, fontName, text, locale, script, weight, stretch, italic)
-}
-
-/**
- * Reads a user input as raw data from the standard input. This operation can be blocking, which
- * causes the window to freeze if `read_buffer_from_stdin` is called on the main thread. - If
- * standard input is console, this method will block until the program receives a line break in
- * standard input (usually by the user pressing Enter). - If standard input is pipe, this method
- * will block until a specific amount of data is read or pipe is closed. - If standard input is a
- * file, this method will read a specific amount of data (or less if end-of-file is reached) and
- * return immediately. Note: This method is implemented on Linux, macOS, and Windows. Note: On
- * exported Windows builds, run the console wrapper executable to access the terminal. If standard
- * input is console, calling this method without console wrapped will freeze permanently. If
- * standard input is pipe or file, it can be used without console wrapper. If you need a single
- * executable with full console support, use a custom build compiled with the
- * `windows_subsystem=console` flag.
- *
- * Generated from Godot docs: OS.read_buffer_from_stdin
- */
-fun OS.readBufferFromStdin(bufferSize: Long = 1024L): ByteArray {
-    return ObjectCalls.ptrcallWithLongArgRetByteArray(readBufferFromStdinBind, oSSingleton, bufferSize)
 }
 
 /**
@@ -192,19 +159,9 @@ private val oSSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("OS")
 }
 
-private const val GET_ENTROPY_HASH = 47165747L
-private val getEntropyBind by lazy {
-    ObjectCalls.getMethodBind("OS", "get_entropy", GET_ENTROPY_HASH)
-}
-
 private const val GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH = 197317981L
 private val getSystemFontPathForTextBind by lazy {
     ObjectCalls.getMethodBind("OS", "get_system_font_path_for_text", GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH)
-}
-
-private const val READ_BUFFER_FROM_STDIN_HASH = 3249455752L
-private val readBufferFromStdinBind by lazy {
-    ObjectCalls.getMethodBind("OS", "read_buffer_from_stdin", READ_BUFFER_FROM_STDIN_HASH)
 }
 
 private const val EXECUTE_HASH = 1488299882L

@@ -53,6 +53,23 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the `texture` data for the specified `layer` as raw binary data. For 2D textures (which
+     * only have one layer), `layer` must be `0`. Note: `texture` can't be retrieved while a draw list
+     * that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and
+     * that the color/depth texture using it is not set to `FINAL_ACTION_CONTINUE`) to retrieve this
+     * texture. Otherwise, an error is printed and an empty `PackedByteArray` is returned. Note:
+     * `texture` requires the `TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be retrieved. Otherwise, an error is
+     * printed and an empty `PackedByteArray` is returned. Note: This method will block the GPU from
+     * working until the data is retrieved. Refer to `texture_get_data_async` for an alternative that
+     * returns the data in more performant way.
+     *
+     * Generated from Godot docs: RenderingDevice.texture_get_data
+     */
+    fun textureGetData(texture: RID, layer: Long): ByteArray {
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetByteArray(textureGetDataBind, handle, texture, layer)
+    }
+
+    /**
      * Asynchronous version of `texture_get_data`. RenderingDevice will call `callback` in a certain
      * amount of frames with the data the texture had at the time of the request. Note: At the moment,
      * the delay corresponds to the amount of frames specified by
@@ -298,6 +315,19 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Compiles a binary shader from `spirv_data` and returns the compiled binary data as a
+     * `PackedByteArray`. This compiled shader is specific to the GPU model and driver version used; it
+     * will not work on different GPU models or even different driver versions. See also
+     * `shader_compile_spirv_from_source`. `name` is an optional human-readable name that can be given
+     * to the compiled shader for organizational purposes.
+     *
+     * Generated from Godot docs: RenderingDevice.shader_compile_binary_from_spirv
+     */
+    fun shaderCompileBinaryFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): ByteArray {
+        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(shaderCompileBinaryFromSpirvBind, handle, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
+    }
+
+    /**
      * Creates a new shader instance from SPIR-V intermediate code. It can be accessed with the RID
      * that is returned. Once finished with your RID, you will want to free the RID using the
      * RenderingDevice's `free_rid` method. See also `shader_compile_spirv_from_source` and
@@ -362,6 +392,18 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun bufferClear(buffer: RID, offset: Long, sizeBytes: Long): Long {
         return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetLong(bufferClearBind, handle, buffer, offset, sizeBytes)
+    }
+
+    /**
+     * Returns a copy of the data of the specified `buffer`, optionally `offset_bytes` and `size_bytes`
+     * can be set to copy only a portion of the buffer. Note: This method will block the GPU from
+     * working until the data is retrieved. Refer to `buffer_get_data_async` for an alternative that
+     * returns the data in more performant way.
+     *
+     * Generated from Godot docs: RenderingDevice.buffer_get_data
+     */
+    fun bufferGetData(buffer: RID, offsetBytes: Long = 0L, sizeBytes: Long = 0L): ByteArray {
+        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(bufferGetDataBind, handle, buffer, offsetBytes, sizeBytes)
     }
 
     /**
@@ -640,6 +682,15 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun drawListSwitchToNextPass(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(drawListSwitchToNextPassBind, handle)
+    }
+
+    /**
+     * This method does nothing and always returns an empty `PackedInt64Array`.
+     *
+     * Generated from Godot docs: RenderingDevice.draw_list_switch_to_next_pass_split
+     */
+    fun drawListSwitchToNextPassSplit(splits: Long): List<Long> {
+        return ObjectCalls.ptrcallWithUInt32ArgRetPackedInt64List(drawListSwitchToNextPassSplitBind, handle, splits)
     }
 
     /**
@@ -1770,6 +1821,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create_from_extension", TEXTURE_CREATE_FROM_EXTENSION_HASH)
         }
 
+        private const val TEXTURE_GET_DATA_HASH = 1859412099L
+        private val textureGetDataBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "texture_get_data", TEXTURE_GET_DATA_HASH)
+        }
+
         private const val TEXTURE_GET_DATA_ASYNC_HASH = 498832090L
         private val textureGetDataAsyncBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_data_async", TEXTURE_GET_DATA_ASYNC_HASH)
@@ -1870,6 +1926,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "shader_compile_spirv_from_source", SHADER_COMPILE_SPIRV_FROM_SOURCE_HASH)
         }
 
+        private const val SHADER_COMPILE_BINARY_FROM_SPIRV_HASH = 134910450L
+        private val shaderCompileBinaryFromSpirvBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "shader_compile_binary_from_spirv", SHADER_COMPILE_BINARY_FROM_SPIRV_HASH)
+        }
+
         private const val SHADER_CREATE_FROM_SPIRV_HASH = 342949005L
         private val shaderCreateFromSpirvBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "shader_create_from_spirv", SHADER_CREATE_FROM_SPIRV_HASH)
@@ -1898,6 +1959,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val BUFFER_CLEAR_HASH = 2452320800L
         private val bufferClearBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_clear", BUFFER_CLEAR_HASH)
+        }
+
+        private const val BUFFER_GET_DATA_HASH = 3101830688L
+        private val bufferGetDataBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "buffer_get_data", BUFFER_GET_DATA_HASH)
         }
 
         private const val BUFFER_GET_DATA_ASYNC_HASH = 2370287848L
@@ -2023,6 +2089,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val DRAW_LIST_SWITCH_TO_NEXT_PASS_HASH = 2455072627L
         private val drawListSwitchToNextPassBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_switch_to_next_pass", DRAW_LIST_SWITCH_TO_NEXT_PASS_HASH)
+        }
+
+        private const val DRAW_LIST_SWITCH_TO_NEXT_PASS_SPLIT_HASH = 2865087369L
+        private val drawListSwitchToNextPassSplitBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "draw_list_switch_to_next_pass_split", DRAW_LIST_SWITCH_TO_NEXT_PASS_SPLIT_HASH)
         }
 
         private const val DRAW_LIST_END_HASH = 3218959716L

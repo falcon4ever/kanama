@@ -5685,6 +5685,174 @@ static int32_t kanama_ios_decode_variant_scalar(
     return ret_type;
 }
 
+// task 100 (parcel 3) — Packed*Array returns on every audited arg shape, one entry for the eight
+// numeric / vector kinds (byte, int32, int64, float32, float64, Vector2, Vector3, Color). The
+// method's ptrcall writes its array into a packed-array cell; the element count comes from the
+// kind's cached "size" builtin and the elements are ONE contiguous memcpy from element 0
+// (Godot packed arrays are contiguous; the per-element loop is the slow shape). An array longer
+// than the caller's capacity is parked in the single pending slot for
+// kanama_ios_godot_take_pending_packed, so the method runs once and nothing is truncated.
+enum { KANAMA_IOS_RET_PACKED_CELL = -2 };
+
+typedef struct {
+    GDExtensionPtrDestructor destructor;
+    GDExtensionPtrBuiltInMethod size_method;
+    const void *(*index_const)(GDExtensionConstTypePtr, GDExtensionInt);
+    int64_t elem_bytes;
+} KanamaIosPackedKind;
+
+// Resolve the kind's cached accessors; returns 0 when the kind is not one of the eight or a
+// pointer failed to resolve (the caller then reports -1).
+static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out) {
+    memset(out, 0, sizeof(*out));
+    switch (packed_kind) {
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_BYTE_ARRAY:
+            kanama_ios_cache_packed_byte_methods();
+            out->destructor = g_packed_byte_array_destructor;
+            out->size_method = g_packed_byte_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_byte_array_operator_index_const;
+            out->elem_bytes = 1;
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_INT32_ARRAY:
+            kanama_ios_cache_packed_int32_methods();
+            out->destructor = g_packed_int32_array_destructor;
+            out->size_method = g_packed_int32_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_int32_array_operator_index_const;
+            out->elem_bytes = 4;
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_INT64_ARRAY:
+            kanama_ios_cache_packed_int64_methods();
+            out->destructor = g_packed_int64_array_destructor;
+            out->size_method = g_packed_int64_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_int64_array_operator_index_const;
+            out->elem_bytes = 8;
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT32_ARRAY:
+            kanama_ios_cache_packed_float32_methods();
+            out->destructor = g_packed_float32_array_destructor;
+            out->size_method = g_packed_float32_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_float32_array_operator_index_const;
+            out->elem_bytes = 4;
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT64_ARRAY:
+            kanama_ios_cache_packed_float64_methods();
+            out->destructor = g_packed_float64_array_destructor;
+            out->size_method = g_packed_float64_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_float64_array_operator_index_const;
+            out->elem_bytes = 8;
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
+            kanama_ios_cache_packed_vector2_methods();
+            out->destructor = g_packed_vector2_array_destructor;
+            out->size_method = g_packed_vector2_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_vector2_array_operator_index_const;
+            out->elem_bytes = 2 * (int64_t)sizeof(float);   // 2x real_t (single-precision engine)
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
+            kanama_ios_cache_packed_vector3_methods();
+            out->destructor = g_packed_vector3_array_destructor;
+            out->size_method = g_packed_vector3_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_vector3_array_operator_index_const;
+            out->elem_bytes = 3 * (int64_t)sizeof(float);   // 3x real_t
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
+            kanama_ios_cache_packed_color_methods();
+            out->destructor = g_packed_color_array_destructor;
+            out->size_method = g_packed_color_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_color_array_operator_index_const;
+            out->elem_bytes = 4 * (int64_t)sizeof(float);   // 4x float32, never real_t
+            break;
+        default:
+            return 0;
+    }
+    return out->destructor != NULL && out->size_method != NULL && out->index_const != NULL;
+}
+
+// Copy up to buf_cap elements of `storage` into out_buf; returns the array's full element count.
+static int64_t kanama_ios_packed_copy(const KanamaIosPackedKind *kind, void *storage, void *out_buf, int64_t buf_cap) {
+    int64_t count = 0;
+    kind->size_method(storage, NULL, &count, 0);
+    if (out_buf != NULL && buf_cap > 0 && count > 0) {
+        int64_t n = (count < buf_cap) ? count : buf_cap;
+        const void *base = kind->index_const(storage, (GDExtensionInt)0);
+        if (base != NULL) {
+            memcpy(out_buf, base, (size_t)(n * kind->elem_bytes));
+        }
+    }
+    return count;
+}
+
+static int32_t g_pending_packed_kind = 0;
+static int g_pending_packed_valid = 0;
+KANAMA_IOS_PACKED_ARRAY_STORAGE(g_pending_packed_storage);
+
+static void kanama_ios_drop_pending_packed(void) {
+    if (g_pending_packed_valid) {
+        KanamaIosPackedKind kind;
+        if (kanama_ios_packed_kind(g_pending_packed_kind, &kind)) {
+            kind.destructor(g_pending_packed_storage);
+        }
+        memset(g_pending_packed_storage, 0, sizeof(g_pending_packed_storage));
+        g_pending_packed_kind = 0;
+        g_pending_packed_valid = 0;
+    }
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_packed(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t packed_kind,
+    void *out_buf,
+    int64_t buf_cap
+) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+        return -1;
+    }
+    if (g_object_method_bind_ptrcall == NULL) {
+        return -1;
+    }
+    KanamaIosPackedKind kind;
+    if (!kanama_ios_packed_kind(packed_kind, &kind)) {
+        return -1;
+    }
+    kanama_ios_drop_pending_packed();
+
+    KANAMA_IOS_PACKED_ARRAY_STORAGE(array_storage);
+    kanama_ios_godot_ptrcall_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_RET_PACKED_CELL, array_storage);
+
+    int64_t count = kanama_ios_packed_copy(&kind, array_storage, out_buf, buf_cap);
+    if (count <= buf_cap) {
+        kind.destructor(array_storage);
+    } else {
+        memcpy(g_pending_packed_storage, array_storage, sizeof(g_pending_packed_storage));
+        g_pending_packed_kind = packed_kind;
+        g_pending_packed_valid = 1;
+    }
+    return count;
+}
+
+int64_t kanama_ios_godot_take_pending_packed(
+    int32_t packed_kind,
+    void *out_buf,
+    int64_t buf_cap
+) {
+    if (!g_pending_packed_valid || packed_kind != g_pending_packed_kind) {
+        return -1;
+    }
+    KanamaIosPackedKind kind;
+    if (!kanama_ios_packed_kind(packed_kind, &kind)) {
+        kanama_ios_drop_pending_packed();
+        return -1;
+    }
+    int64_t count = kanama_ios_packed_copy(&kind, g_pending_packed_storage, out_buf, buf_cap);
+    kanama_ios_drop_pending_packed();
+    return count;
+}
+
 // Internal ret_type marker for kanama_ios_godot_ptrcall_dispatch: ret_out is a 24-byte Variant
 // cell (the ptrcall return of a Variant-typed method). Never crosses the Kotlin boundary, so it
 // is deliberately outside the KANAMA_IOS_PT_* enum the generator mirrors.

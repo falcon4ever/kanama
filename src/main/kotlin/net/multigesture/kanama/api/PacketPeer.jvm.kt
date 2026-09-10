@@ -7,7 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP PacketPeer waits on: ptrcallNoArgsRetByteArray, ptrcallWithByteArrayArgRetLong,
+// KANAMA-IOS-GAP PacketPeer waits on: ptrcallWithByteArrayArgRetLong,
 //   ptrcallWithVariantAndBoolArgRetLong
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -24,16 +24,6 @@ fun PacketPeer.putVar(varValue: Any?, fullObjects: Boolean = false): Long {
 }
 
 /**
- * Gets a raw packet.
- *
- * Generated from Godot docs: PacketPeer.get_packet
- */
-fun PacketPeer.getPacket(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(getPacketBind, handle)
-}
-
-/**
  * Sends a raw packet.
  *
  * Generated from Godot docs: PacketPeer.put_packet
@@ -46,11 +36,6 @@ fun PacketPeer.putPacket(buffer: ByteArray): Long {
 private const val PUT_VAR_HASH = 2436251611L
 private val putVarBind by lazy {
     ObjectCalls.getMethodBind("PacketPeer", "put_var", PUT_VAR_HASH)
-}
-
-private const val GET_PACKET_HASH = 2115431945L
-private val getPacketBind by lazy {
-    ObjectCalls.getMethodBind("PacketPeer", "get_packet", GET_PACKET_HASH)
 }
 
 private const val PUT_PACKET_HASH = 680677267L

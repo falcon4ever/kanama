@@ -91,6 +91,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns default TextServer database (e.g. ICU break iterators and dictionaries).
+     *
+     * Generated from Godot docs: TextServer.get_support_data
+     */
+    fun getSupportData(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getSupportDataBind, handle)
+    }
+
+    /**
      * Returns `true` if the locale requires text server support data for line/word breaking.
      *
      * Generated from Godot docs: TextServer.is_locale_using_support_data
@@ -582,6 +592,28 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the array in the predefined color palette at `index`. Palette contains all colors used
+     * to render font glyphs. Each palette has the same number of colors. Colors can be overridden
+     * using `font_set_palette_custom_colors`.
+     *
+     * Generated from Godot docs: TextServer.font_get_palette_colors
+     */
+    fun fontGetPaletteColors(fontRid: RID, index: Long): List<Color> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedColorList(fontGetPaletteColorsBind, handle, fontRid, index)
+    }
+
+    /**
+     * Returns array of custom colors to override predefined palette.
+     *
+     * Generated from Godot docs: TextServer.font_get_palette_custom_colors
+     */
+    fun fontGetPaletteCustomColors(fontRid: RID): List<Color> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(fontGetPaletteCustomColorsBind, handle, fontRid)
+    }
+
+    /**
      * Returns used palette index.
      *
      * Generated from Godot docs: TextServer.font_get_used_palette
@@ -945,6 +977,26 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns array containing glyph packing data.
+     *
+     * Generated from Godot docs: TextServer.font_get_texture_offsets
+     */
+    fun fontGetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetPackedInt32List(fontGetTextureOffsetsBind, handle, fontRid, size, textureIndex)
+    }
+
+    /**
+     * Returns list of rendered glyphs in the cache entry.
+     *
+     * Generated from Godot docs: TextServer.font_get_glyph_list
+     */
+    fun fontGetGlyphList(fontRid: RID, size: Vector2i): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndVector2iArgRetPackedInt32List(fontGetGlyphListBind, handle, fontRid, size)
+    }
+
+    /**
      * Removes all rendered glyph information from the cache entry. Note: This function will not remove
      * textures associated with the glyphs, use `font_remove_texture` to remove them manually.
      *
@@ -1170,6 +1222,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun fontGetSupportedChars(fontRid: RID): String {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetString(fontGetSupportedCharsBind, handle, fontRid)
+    }
+
+    /**
+     * Returns an array containing all glyph indices in the font.
+     *
+     * Generated from Godot docs: TextServer.font_get_supported_glyphs
+     */
+    fun fontGetSupportedGlyphs(fontRid: RID): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(fontGetSupportedGlyphsBind, handle, fontRid)
     }
 
     /**
@@ -1769,6 +1831,27 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Breaks text to the lines and returns character ranges for each line.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_line_breaks
+     */
+    fun shapedTextGetLineBreaks(shaped: RID, width: Double, start: Long = 0L, breakFlags: Long = 3L): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(shapedTextGetLineBreaksBind, handle, shaped, width, start, breakFlags)
+    }
+
+    /**
+     * Breaks text into words and returns array of character ranges. Use `grapheme_flags` to set what
+     * characters are used for breaking.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_word_breaks
+     */
+    fun shapedTextGetWordBreaks(shaped: RID, graphemeFlags: Long = 264L, skipGraphemeFlags: Long = 4L): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(shapedTextGetWordBreaksBind, handle, shaped, graphemeFlags, skipGraphemeFlags)
+    }
+
+    /**
      * Returns the position of the overrun trim.
      *
      * Generated from Godot docs: TextServer.shaped_text_get_trim_pos
@@ -1873,6 +1956,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns selection rectangles for the specified character range.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_selection
+     */
+    fun shapedTextGetSelection(shaped: RID, start: Long, end: Long): List<Vector2> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(shapedTextGetSelectionBind, handle, shaped, start, end)
+    }
+
+    /**
      * Returns grapheme index at the specified pixel offset at the baseline, or `-1` if none is found.
      *
      * Generated from Godot docs: TextServer.shaped_text_hit_test_grapheme
@@ -1921,6 +2014,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedTextPrevGraphemePos(shaped: RID, pos: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevGraphemePosBind, handle, shaped, pos)
+    }
+
+    /**
+     * Returns array of the composite character boundaries.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_character_breaks
+     */
+    fun shapedTextGetCharacterBreaks(shaped: RID): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(shapedTextGetCharacterBreaksBind, handle, shaped)
     }
 
     /**
@@ -2026,6 +2129,28 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun percentSign(language: String = ""): String {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(percentSignBind, handle, language)
+    }
+
+    /**
+     * Returns an array of the word break boundaries. Elements in the returned array are the offsets of
+     * the start and end of words. Therefore the length of the array is always even. When
+     * `chars_per_line` is greater than zero, line break boundaries are returned instead.
+     *
+     * Generated from Godot docs: TextServer.string_get_word_breaks
+     */
+    fun stringGetWordBreaks(string: String, language: String = "", charsPerLine: Long = 0L): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringAndLongArgRetPackedInt32List(stringGetWordBreaksBind, handle, string, language, charsPerLine)
+    }
+
+    /**
+     * Returns array of the composite character boundaries.
+     *
+     * Generated from Godot docs: TextServer.string_get_character_breaks
+     */
+    fun stringGetCharacterBreaks(string: String, language: String = ""): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringArgsRetPackedInt32List(stringGetCharacterBreaksBind, handle, string, language)
     }
 
     /**
@@ -2271,6 +2396,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "save_support_data", SAVE_SUPPORT_DATA_HASH)
         }
 
+        private const val GET_SUPPORT_DATA_HASH = 2362200018L
+        private val getSupportDataBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "get_support_data", GET_SUPPORT_DATA_HASH)
+        }
+
         private const val IS_LOCALE_USING_SUPPORT_DATA_HASH = 3927539163L
         private val isLocaleUsingSupportDataBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "is_locale_using_support_data", IS_LOCALE_USING_SUPPORT_DATA_HASH)
@@ -2501,6 +2631,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_palette_name", FONT_GET_PALETTE_NAME_HASH)
         }
 
+        private const val FONT_GET_PALETTE_COLORS_HASH = 1595517857L
+        private val fontGetPaletteColorsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_palette_colors", FONT_GET_PALETTE_COLORS_HASH)
+        }
+
+        private const val FONT_GET_PALETTE_CUSTOM_COLORS_HASH = 1569415609L
+        private val fontGetPaletteCustomColorsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_palette_custom_colors", FONT_GET_PALETTE_CUSTOM_COLORS_HASH)
+        }
+
         private const val FONT_GET_USED_PALETTE_HASH = 2198884583L
         private val fontGetUsedPaletteBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_get_used_palette", FONT_GET_USED_PALETTE_HASH)
@@ -2676,6 +2816,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_texture_image", FONT_GET_TEXTURE_IMAGE_HASH)
         }
 
+        private const val FONT_GET_TEXTURE_OFFSETS_HASH = 3420028887L
+        private val fontGetTextureOffsetsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_texture_offsets", FONT_GET_TEXTURE_OFFSETS_HASH)
+        }
+
+        private const val FONT_GET_GLYPH_LIST_HASH = 46086620L
+        private val fontGetGlyphListBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_glyph_list", FONT_GET_GLYPH_LIST_HASH)
+        }
+
         private const val FONT_CLEAR_GLYPHS_HASH = 2450610377L
         private val fontClearGlyphsBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_clear_glyphs", FONT_CLEAR_GLYPHS_HASH)
@@ -2784,6 +2934,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val FONT_GET_SUPPORTED_CHARS_HASH = 642473191L
         private val fontGetSupportedCharsBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_get_supported_chars", FONT_GET_SUPPORTED_CHARS_HASH)
+        }
+
+        private const val FONT_GET_SUPPORTED_GLYPHS_HASH = 788230395L
+        private val fontGetSupportedGlyphsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_supported_glyphs", FONT_GET_SUPPORTED_GLYPHS_HASH)
         }
 
         private const val FONT_RENDER_RANGE_HASH = 4254580980L
@@ -3071,6 +3226,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_range", SHAPED_TEXT_GET_RANGE_HASH)
         }
 
+        private const val SHAPED_TEXT_GET_LINE_BREAKS_HASH = 2651359741L
+        private val shapedTextGetLineBreaksBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_line_breaks", SHAPED_TEXT_GET_LINE_BREAKS_HASH)
+        }
+
+        private const val SHAPED_TEXT_GET_WORD_BREAKS_HASH = 4099476853L
+        private val shapedTextGetWordBreaksBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_word_breaks", SHAPED_TEXT_GET_WORD_BREAKS_HASH)
+        }
+
         private const val SHAPED_TEXT_GET_TRIM_POS_HASH = 2198884583L
         private val shapedTextGetTrimPosBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_trim_pos", SHAPED_TEXT_GET_TRIM_POS_HASH)
@@ -3121,6 +3286,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_underline_thickness", SHAPED_TEXT_GET_UNDERLINE_THICKNESS_HASH)
         }
 
+        private const val SHAPED_TEXT_GET_SELECTION_HASH = 3714187733L
+        private val shapedTextGetSelectionBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_selection", SHAPED_TEXT_GET_SELECTION_HASH)
+        }
+
         private const val SHAPED_TEXT_HIT_TEST_GRAPHEME_HASH = 3149310417L
         private val shapedTextHitTestGraphemeBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_hit_test_grapheme", SHAPED_TEXT_HIT_TEST_GRAPHEME_HASH)
@@ -3144,6 +3314,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_TEXT_PREV_GRAPHEME_POS_HASH = 1120910005L
         private val shapedTextPrevGraphemePosBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_prev_grapheme_pos", SHAPED_TEXT_PREV_GRAPHEME_POS_HASH)
+        }
+
+        private const val SHAPED_TEXT_GET_CHARACTER_BREAKS_HASH = 788230395L
+        private val shapedTextGetCharacterBreaksBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_character_breaks", SHAPED_TEXT_GET_CHARACTER_BREAKS_HASH)
         }
 
         private const val SHAPED_TEXT_NEXT_CHARACTER_POS_HASH = 1120910005L
@@ -3189,6 +3364,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val PERCENT_SIGN_HASH = 993269549L
         private val percentSignBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "percent_sign", PERCENT_SIGN_HASH)
+        }
+
+        private const val STRING_GET_WORD_BREAKS_HASH = 581857818L
+        private val stringGetWordBreaksBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "string_get_word_breaks", STRING_GET_WORD_BREAKS_HASH)
+        }
+
+        private const val STRING_GET_CHARACTER_BREAKS_HASH = 2333794773L
+        private val stringGetCharacterBreaksBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "string_get_character_breaks", STRING_GET_CHARACTER_BREAKS_HASH)
         }
 
         private const val SPOOF_CHECK_HASH = 3927539163L

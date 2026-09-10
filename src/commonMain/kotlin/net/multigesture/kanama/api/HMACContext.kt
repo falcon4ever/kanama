@@ -11,7 +11,15 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: HMACContext
  */
 class HMACContext(handle: MemorySegment) : RefCounted(handle) {
-    // No conservative instance methods emitted yet.
+    /**
+     * Returns the resulting HMAC. If the HMAC failed, an empty `PackedByteArray` is returned.
+     *
+     * Generated from Godot docs: HMACContext.finish
+     */
+    fun finish(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
+    }
 
     companion object {
         @JvmStatic
@@ -21,6 +29,9 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
         internal fun wrap(handle: MemorySegment): HMACContext? =
             if (handle.address() == 0L) null else HMACContext(handle)
 
-        // No MethodBinds emitted yet.
+        private const val FINISH_HASH = 2115431945L
+        private val finishBind by lazy {
+            ObjectCalls.getMethodBind("HMACContext", "finish", FINISH_HASH)
+        }
     }
 }

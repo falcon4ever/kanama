@@ -16,6 +16,10 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: TileMapLayer
  */
 class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
+    val tileMapData: ByteArray
+        @JvmName("tileMapDataProperty")
+        get() = getTileMapDataAsArray()
+
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = isEnabled()
@@ -313,6 +317,15 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      */
     fun localToMap(localPosition: Vector2): Vector2i {
         return ObjectCalls.ptrcallWithVector2ArgRetVector2i(localToMapBind, handle, localPosition)
+    }
+
+    /**
+     * The raw tile map data as a byte array.
+     *
+     * Generated from Godot docs: TileMapLayer.get_tile_map_data_as_array
+     */
+    fun getTileMapDataAsArray(): ByteArray {
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getTileMapDataAsArrayBind, handle)
     }
 
     /**
@@ -713,6 +726,11 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
         private const val LOCAL_TO_MAP_HASH = 837806996L
         private val localToMapBind by lazy {
             ObjectCalls.getMethodBind("TileMapLayer", "local_to_map", LOCAL_TO_MAP_HASH)
+        }
+
+        private const val GET_TILE_MAP_DATA_AS_ARRAY_HASH = 2362200018L
+        private val getTileMapDataAsArrayBind by lazy {
+            ObjectCalls.getMethodBind("TileMapLayer", "get_tile_map_data_as_array", GET_TILE_MAP_DATA_AS_ARRAY_HASH)
         }
 
         private const val SET_ENABLED_HASH = 2586408642L

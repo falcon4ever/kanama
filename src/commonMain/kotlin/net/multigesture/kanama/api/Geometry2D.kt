@@ -80,6 +80,18 @@ object Geometry2D {
     }
 
     /**
+     * Given the two 2D segments (`p1`, `q1`) and (`p2`, `q2`), finds those two points on the two
+     * segments that are closest to each other. Returns a `PackedVector2Array` that contains this point
+     * on (`p1`, `q1`) as well the accompanying point on (`p2`, `q2`).
+     *
+     * Generated from Godot docs: Geometry2D.get_closest_points_between_segments
+     */
+    @JvmStatic
+    fun getClosestPointsBetweenSegments(p1: Vector2, q1: Vector2, p2: Vector2, q2: Vector2): List<Vector2> {
+        return ObjectCalls.ptrcallWithFourVector2ArgsRetPackedVector2List(getClosestPointsBetweenSegmentsBind, singleton, p1, q1, p2, q2)
+    }
+
+    /**
      * Returns the 2D point on the 2D segment (`s1`, `s2`) that is closest to `point`. The returned
      * point will always be inside the specified segment.
      *
@@ -137,6 +149,11 @@ object Geometry2D {
     private const val LINE_INTERSECTS_LINE_HASH = 2058025344L
     private val lineIntersectsLineBind by lazy {
         ObjectCalls.getMethodBind("Geometry2D", "line_intersects_line", LINE_INTERSECTS_LINE_HASH)
+    }
+
+    private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 3344690961L
+    private val getClosestPointsBetweenSegmentsBind by lazy {
+        ObjectCalls.getMethodBind("Geometry2D", "get_closest_points_between_segments", GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH)
     }
 
     private const val GET_CLOSEST_POINT_TO_SEGMENT_HASH = 4172901909L

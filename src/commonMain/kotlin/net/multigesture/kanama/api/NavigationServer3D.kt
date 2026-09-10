@@ -209,6 +209,17 @@ object NavigationServer3D {
     }
 
     /**
+     * Returns the navigation path to reach the destination from the origin. `navigation_layers` is a
+     * bitmask of all region navigation layers that are allowed to be in the path.
+     *
+     * Generated from Godot docs: NavigationServer3D.map_get_path
+     */
+    @JvmStatic
+    fun mapGetPath(map: RID, origin: Vector3, destination: Vector3, optimize: Boolean, navigationLayers: Long = 1L): List<Vector3> {
+        return ObjectCalls.ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List(mapGetPathBind, singleton, map, origin, destination, optimize, navigationLayers)
+    }
+
+    /**
      * Returns the navigation mesh surface point closest to the provided `start` and `end` segment on
      * the navigation `map`. If `use_collision` is `true`, a closest point test is only done when the
      * segment intersects with the navigation mesh surface.
@@ -1464,6 +1475,16 @@ object NavigationServer3D {
     }
 
     /**
+     * Returns the outline vertices for the specified `obstacle`.
+     *
+     * Generated from Godot docs: NavigationServer3D.obstacle_get_vertices
+     */
+    @JvmStatic
+    fun obstacleGetVertices(obstacle: RID): List<Vector3> {
+        return ObjectCalls.ptrcallWithRIDArgRetPackedVector3List(obstacleGetVerticesBind, singleton, obstacle)
+    }
+
+    /**
      * Set the obstacles's `avoidance_layers` bitmask.
      *
      * Generated from Godot docs: NavigationServer3D.obstacle_set_avoidance_layers
@@ -1706,6 +1727,11 @@ object NavigationServer3D {
     private const val MAP_GET_LINK_CONNECTION_RADIUS_HASH = 866169185L
     private val mapGetLinkConnectionRadiusBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer3D", "map_get_link_connection_radius", MAP_GET_LINK_CONNECTION_RADIUS_HASH)
+    }
+
+    private const val MAP_GET_PATH_HASH = 276783190L
+    private val mapGetPathBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer3D", "map_get_path", MAP_GET_PATH_HASH)
     }
 
     private const val MAP_GET_CLOSEST_POINT_TO_SEGMENT_HASH = 3830095642L
@@ -2281,6 +2307,11 @@ object NavigationServer3D {
     private const val OBSTACLE_GET_POSITION_HASH = 531438156L
     private val obstacleGetPositionBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer3D", "obstacle_get_position", OBSTACLE_GET_POSITION_HASH)
+    }
+
+    private const val OBSTACLE_GET_VERTICES_HASH = 808965560L
+    private val obstacleGetVerticesBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer3D", "obstacle_get_vertices", OBSTACLE_GET_VERTICES_HASH)
     }
 
     private const val OBSTACLE_SET_AVOIDANCE_LAYERS_HASH = 3411492887L

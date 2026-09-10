@@ -30,6 +30,16 @@ object Marshalls {
     }
 
     /**
+     * Returns a decoded `PackedByteArray` corresponding to the Base64-encoded string `base64_str`.
+     *
+     * Generated from Godot docs: Marshalls.base64_to_raw
+     */
+    @JvmStatic
+    fun base64ToRaw(base64Str: String): ByteArray {
+        return ObjectCalls.ptrcallWithStringArgRetByteArray(base64ToRawBind, singleton, base64Str)
+    }
+
+    /**
      * Returns a Base64-encoded string of the UTF-8 string `utf8_str`.
      *
      * Generated from Godot docs: Marshalls.utf8_to_base64
@@ -59,6 +69,11 @@ object Marshalls {
     private const val BASE64_TO_VARIANT_HASH = 218087648L
     private val base64ToVariantBind by lazy {
         ObjectCalls.getMethodBind("Marshalls", "base64_to_variant", BASE64_TO_VARIANT_HASH)
+    }
+
+    private const val BASE64_TO_RAW_HASH = 659035735L
+    private val base64ToRawBind by lazy {
+        ObjectCalls.getMethodBind("Marshalls", "base64_to_raw", BASE64_TO_RAW_HASH)
     }
 
     private const val UTF8_TO_BASE64_HASH = 1703090593L

@@ -9,9 +9,9 @@ import net.multigesture.kanama.types.Transform3D
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP OpenXRAPIExtension waits on: ptrcallNoArgsRetPackedInt64List,
-//   ptrcallWithConstVoidPtrArg, ptrcallWithConstVoidPtrArgRetTransform3D,
-//   ptrcallWithLongStringArrayArgsRetBool, ptrcallWithRect2iArg
+// KANAMA-IOS-GAP OpenXRAPIExtension waits on: ptrcallWithConstVoidPtrArg,
+//   ptrcallWithConstVoidPtrArgRetTransform3D, ptrcallWithLongStringArrayArgsRetBool,
+//   ptrcallWithRect2iArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
@@ -27,11 +27,6 @@ fun OpenXRAPIExtension.xrResult(result: Long, format: String, args: List<Any?>):
 fun OpenXRAPIExtension.setCustomPlaySpace(space: MemorySegment) {
     checkOpen()
     ObjectCalls.ptrcallWithConstVoidPtrArg(setCustomPlaySpaceBind, handle, space)
-}
-
-fun OpenXRAPIExtension.getSupportedSwapchainFormats(): List<Long> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getSupportedSwapchainFormatsBind, handle)
 }
 
 fun OpenXRAPIExtension.setRenderRegion(renderRegion: Rect2i) {
@@ -52,11 +47,6 @@ private val xrResultBind by lazy {
 private const val SET_CUSTOM_PLAY_SPACE_HASH = 1286410249L
 private val setCustomPlaySpaceBind by lazy {
     ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_custom_play_space", SET_CUSTOM_PLAY_SPACE_HASH)
-}
-
-private const val GET_SUPPORTED_SWAPCHAIN_FORMATS_HASH = 3851388692L
-private val getSupportedSwapchainFormatsBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_supported_swapchain_formats", GET_SUPPORTED_SWAPCHAIN_FORMATS_HASH)
 }
 
 private const val SET_RENDER_REGION_HASH = 1763793166L

@@ -7,6 +7,26 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: Packed*Array returns on every audited argument shape (task 100, parcel 3)
+
+- A method returning a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,
+  PackedFloat64Array, PackedVector2Array, PackedVector3Array or PackedColorArray was called on iOS
+  only through the hand-written no-arg read-backs (and only for the four kinds that had one).
+  Every such method whose arguments are already audited now gets a generated helper: the new C
+  entry `kanama_ios_godot_ptrcall_ret_packed` ptrcalls into a packed-array cell, reads the element
+  count from the kind's `size` builtin and copies the contiguous elements out in one `memcpy`;
+  an array longer than the caller's capacity is parked C-side and drained whole
+  (`kanama_ios_godot_take_pending_packed`), so the method runs once and nothing is truncated.
+  66 helpers, 154 members on 71 classes move into the shared tree — `AStar2D.get_point_path`,
+  `AStar3D.get_id_path`, `Curve3D.get_baked_points`, `Curve2D.tessellate`, `FontFile.get_data`,
+  `AudioStreamWAV.get_data`, `RenderingDevice.texture_get_data`,
+  `RenderingServer.instances_cull_ray`, `NavigationServer2D.map_get_path`,
+  `Geometry3D.segment_intersects_sphere`, `ConvexPolygonShape3D.get_points`,
+  `CPUParticles3D.get_emission_points` among them; the gap index goes from 1006 to 852
+  desktop-only members (250 → 230 companion files). Seven self-test rows cover int64, Vector2,
+  byte (3000 elements through the pending slot) and Vector3 arrays via AStar2D, Crypto and
+  Curve3D.
+
 ### Added — iOS: Variant-scalar returns on every audited argument shape (task 100, parcel 2)
 
 - A Variant-returning method with arguments was called on iOS only through three hand-written

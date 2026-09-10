@@ -11,6 +11,16 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: PolygonPathFinder
  */
 class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
+    fun findPath(from: Vector2, to: Vector2): List<Vector2> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(findPathBind, handle, from, to)
+    }
+
+    fun getIntersections(from: Vector2, to: Vector2): List<Vector2> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getIntersectionsBind, handle, from, to)
+    }
+
     fun getClosestPoint(point: Vector2): Vector2 {
         checkOpen()
         return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, point)
@@ -48,6 +58,16 @@ class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): PolygonPathFinder? =
             if (handle.address() == 0L) null else PolygonPathFinder(handle)
+
+        private const val FIND_PATH_HASH = 1562168077L
+        private val findPathBind by lazy {
+            ObjectCalls.getMethodBind("PolygonPathFinder", "find_path", FIND_PATH_HASH)
+        }
+
+        private const val GET_INTERSECTIONS_HASH = 3932192302L
+        private val getIntersectionsBind by lazy {
+            ObjectCalls.getMethodBind("PolygonPathFinder", "get_intersections", GET_INTERSECTIONS_HASH)
+        }
 
         private const val GET_CLOSEST_POINT_HASH = 2656412154L
         private val getClosestPointBind by lazy {

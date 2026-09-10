@@ -24,6 +24,11 @@ class ZIPReader(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesBind, handle)
     }
 
+    fun readFile(path: String, caseSensitive: Boolean = true): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetByteArray(readFileBind, handle, path, caseSensitive)
+    }
+
     fun fileExists(path: String, caseSensitive: Boolean = true): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(fileExistsBind, handle, path, caseSensitive)
@@ -55,6 +60,11 @@ class ZIPReader(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_FILES_HASH = 2981934095L
         private val getFilesBind by lazy {
             ObjectCalls.getMethodBind("ZIPReader", "get_files", GET_FILES_HASH)
+        }
+
+        private const val READ_FILE_HASH = 740857591L
+        private val readFileBind by lazy {
+            ObjectCalls.getMethodBind("ZIPReader", "read_file", READ_FILE_HASH)
         }
 
         private const val FILE_EXISTS_HASH = 35364943L

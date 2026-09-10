@@ -71,6 +71,17 @@ object JavaScriptBridge {
     }
 
     /**
+     * Returns a copy of `javascript_buffer`'s contents as a `PackedByteArray`. See also
+     * `is_js_buffer`.
+     *
+     * Generated from Godot docs: JavaScriptBridge.js_buffer_to_packed_byte_array
+     */
+    @JvmStatic
+    fun jsBufferToPackedByteArray(javascriptBuffer: JavaScriptObject?): ByteArray {
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(jsBufferToPackedByteArrayBind, singleton, javascriptBuffer?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
+    /**
      * Creates a new JavaScript object using the `new` constructor. The `object` must a valid property
      * of the JavaScript `window`. See `JavaScriptObject` for usage.
      *
@@ -144,6 +155,11 @@ object JavaScriptBridge {
     private const val IS_JS_BUFFER_HASH = 821968997L
     private val isJsBufferBind by lazy {
         ObjectCalls.getMethodBind("JavaScriptBridge", "is_js_buffer", IS_JS_BUFFER_HASH)
+    }
+
+    private const val JS_BUFFER_TO_PACKED_BYTE_ARRAY_HASH = 64409880L
+    private val jsBufferToPackedByteArrayBind by lazy {
+        ObjectCalls.getMethodBind("JavaScriptBridge", "js_buffer_to_packed_byte_array", JS_BUFFER_TO_PACKED_BYTE_ARRAY_HASH)
     }
 
     private const val CREATE_OBJECT_HASH = 3093893586L

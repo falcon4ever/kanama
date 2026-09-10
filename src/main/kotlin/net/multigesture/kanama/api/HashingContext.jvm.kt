@@ -7,7 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP HashingContext waits on: ptrcallNoArgsRetByteArray, ptrcallWithByteArrayArgRetLong
+// KANAMA-IOS-GAP HashingContext waits on: ptrcallWithByteArrayArgRetLong
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -20,22 +20,7 @@ fun HashingContext.update(chunk: ByteArray): Long {
     return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, handle, chunk)
 }
 
-/**
- * Closes the current context, and return the computed hash.
- *
- * Generated from Godot docs: HashingContext.finish
- */
-fun HashingContext.finish(): ByteArray {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
-}
-
 private const val UPDATE_HASH = 680677267L
 private val updateBind by lazy {
     ObjectCalls.getMethodBind("HashingContext", "update", UPDATE_HASH)
-}
-
-private const val FINISH_HASH = 2115431945L
-private val finishBind by lazy {
-    ObjectCalls.getMethodBind("HashingContext", "finish", FINISH_HASH)
 }

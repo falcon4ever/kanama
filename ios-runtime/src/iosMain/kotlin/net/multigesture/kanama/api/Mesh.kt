@@ -7,6 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector2i
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Generated from Godot docs: Mesh
@@ -31,6 +32,11 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
     fun getAabb(): AABB {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
+    }
+
+    fun getFaces(): List<Vector3> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
     }
 
     fun getSurfaceCount(): Int {
@@ -162,6 +168,11 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
         private const val GET_AABB_HASH = 1068685055L
         private val getAabbBind by lazy {
             ObjectCalls.getMethodBind("Mesh", "get_aabb", GET_AABB_HASH)
+        }
+
+        private const val GET_FACES_HASH = 497664490L
+        private val getFacesBind by lazy {
+            ObjectCalls.getMethodBind("Mesh", "get_faces", GET_FACES_HASH)
         }
 
         private const val GET_SURFACE_COUNT_HASH = 3905245786L

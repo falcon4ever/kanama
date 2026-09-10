@@ -52,6 +52,14 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         @JvmName("setTypeProperty")
         set(value) = setType(value)
 
+    val min: List<Double>
+        @JvmName("minProperty")
+        get() = getMin()
+
+    val max: List<Double>
+        @JvmName("maxProperty")
+        get() = getMax()
+
     var sparseCount: Long
         @JvmName("sparseCountProperty")
         get() = getSparseCount()
@@ -156,6 +164,16 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
     fun setType(type: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(setTypeBind, handle, type)
+    }
+
+    fun getMin(): List<Double> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMinBind, handle)
+    }
+
+    fun getMax(): List<Double> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMaxBind, handle)
     }
 
     fun getSparseCount(): Long {
@@ -314,6 +332,16 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         private const val SET_TYPE_HASH = 1286410249L
         private val setTypeBind by lazy {
             ObjectCalls.getMethodBind("GLTFAccessor", "set_type", SET_TYPE_HASH)
+        }
+
+        private const val GET_MIN_HASH = 547233126L
+        private val getMinBind by lazy {
+            ObjectCalls.getMethodBind("GLTFAccessor", "get_min", GET_MIN_HASH)
+        }
+
+        private const val GET_MAX_HASH = 547233126L
+        private val getMaxBind by lazy {
+            ObjectCalls.getMethodBind("GLTFAccessor", "get_max", GET_MAX_HASH)
         }
 
         private const val GET_SPARSE_COUNT_HASH = 3905245786L

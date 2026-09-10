@@ -123,6 +123,16 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Reads one chunk from the response.
+     *
+     * Generated from Godot docs: HTTPClient.read_response_body_chunk
+     */
+    fun readResponseBodyChunk(): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArray(readResponseBodyChunkBind, handle)
+    }
+
+    /**
      * The size of the buffer used and maximum bytes to read per iteration. See
      * `read_response_body_chunk`.
      *
@@ -339,6 +349,11 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_RESPONSE_BODY_LENGTH_HASH = 3905245786L
         private val getResponseBodyLengthBind by lazy {
             ObjectCalls.getMethodBind("HTTPClient", "get_response_body_length", GET_RESPONSE_BODY_LENGTH_HASH)
+        }
+
+        private const val READ_RESPONSE_BODY_CHUNK_HASH = 2115431945L
+        private val readResponseBodyChunkBind by lazy {
+            ObjectCalls.getMethodBind("HTTPClient", "read_response_body_chunk", READ_RESPONSE_BODY_CHUNK_HASH)
         }
 
         private const val SET_READ_CHUNK_SIZE_HASH = 1286410249L
