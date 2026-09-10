@@ -84,6 +84,18 @@ versioning once public releases begin.
   inline buffer with nested records, the drained pending slot, and a two-StringName-argument
   Dictionary.
 
+### Added — Web Curve.sample (task 64, Curve + Resource-typed hydration parcel)
+
+- **Web protocol 22 → 23.** The Kotlin/Wasm backend admits `Curve.sample(offset: Double):
+  Double` (opcode 306, `DOUBLE_RET_DOUBLE` shape), generating a Web `Curve` wrapper class for
+  the first time. This is the one method call third-person's shared `Bullet.kt` needs once its
+  `scaleDecay: Curve?` `@ScriptProperty` hydrates — the Resource-typed property push itself
+  already rode the existing generic OBJECT property arm (`objectWrapperFqName`), so no processor
+  change was needed there. The in-repo `web3d` fixture proves the family delivers a VALUE, not
+  merely a dispatch (`Main.curve_sample_probe`, required by the smoke gate, must return 3).
+  **Existing Web exports must be rebuilt**: a protocol-22 export refuses to load against a
+  protocol-23 bridge, and vice versa.
+
 ### Added — iOS: Packed*Array returns on every audited argument shape (task 100, parcel 3)
 
 - A method returning a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,

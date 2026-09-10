@@ -348,6 +348,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     303: {},
     304: {},
     305: {},
+    306: {},
 }
 
 

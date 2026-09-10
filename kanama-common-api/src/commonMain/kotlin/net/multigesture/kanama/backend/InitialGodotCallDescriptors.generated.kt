@@ -3359,6 +3359,17 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val CURVE_SAMPLE =
+    GodotCallDescriptor(
+      opcode = 306,
+      className = "Curve",
+      methodName = "sample",
+      hash = 3919130443L,
+      shape = GodotCallShape.DOUBLE_RET_DOUBLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 305
+  const val MAX_OPCODE = 306
 }

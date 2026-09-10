@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 22"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 23"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -684,7 +684,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 22"))
+    assertTrue(protocol.contains("\"protocolVersion\": 23"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -1705,7 +1705,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 22"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 23"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
