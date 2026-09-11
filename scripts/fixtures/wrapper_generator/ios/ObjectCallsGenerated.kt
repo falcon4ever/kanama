@@ -66,7 +66,8 @@ import net.multigesture.kanama.types.Vector4
  * array from; Variant / Dictionary / Array ARGS by `packVariantDesc` / `packDictionaryBlob` /
  * `packArrayBlob` (a KanamaIosVariantArgDesc or the task-29 entry blob the dispatch boxes for the
  * call); typed-Array ARGS by the `ObjectCalls.packTyped<Kind>ArrayDesc` helpers into a
- * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements). Helpers already hand-written in
+ * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements; Dictionary / Array / packed
+ * elements travel as nested blobs the boxer rebuilds). Helpers already hand-written in
  * ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 

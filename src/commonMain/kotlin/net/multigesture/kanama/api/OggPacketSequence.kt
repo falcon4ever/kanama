@@ -10,6 +10,12 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: OggPacketSequence
  */
 class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
+    var packetData: List<List<Any?>>
+        @JvmName("packetDataProperty")
+        get() = getPacketData()
+        @JvmName("setPacketDataProperty")
+        set(value) = setPacketData(value)
+
     var granulePositions: List<Long>
         @JvmName("granulePositionsProperty")
         get() = getPacketGranulePositions()
@@ -21,6 +27,16 @@ class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
         get() = getSamplingRate()
         @JvmName("setSamplingRateProperty")
         set(value) = setSamplingRate(value)
+
+    fun setPacketData(packetData: List<List<Any?>>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayListArg(setPacketDataBind, handle, packetData)
+    }
+
+    fun getPacketData(): List<List<Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetArrayList(getPacketDataBind, handle)
+    }
 
     fun setPacketGranulePositions(granulePositions: List<Long>) {
         checkOpen()
@@ -54,6 +70,16 @@ class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): OggPacketSequence? =
             if (handle.address() == 0L) null else OggPacketSequence(handle)
+
+        private const val SET_PACKET_DATA_HASH = 381264803L
+        private val setPacketDataBind by lazy {
+            ObjectCalls.getMethodBind("OggPacketSequence", "set_packet_data", SET_PACKET_DATA_HASH)
+        }
+
+        private const val GET_PACKET_DATA_HASH = 3995934104L
+        private val getPacketDataBind by lazy {
+            ObjectCalls.getMethodBind("OggPacketSequence", "get_packet_data", GET_PACKET_DATA_HASH)
+        }
 
         private const val SET_PACKET_GRANULE_POSITIONS_HASH = 3709968205L
         private val setPacketGranulePositionsBind by lazy {
