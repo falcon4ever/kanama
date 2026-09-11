@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
@@ -260,6 +261,38 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
+    fun getUsedCells(): List<Vector3i> {
+        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedCellsBind, handle)
+    }
+
+    fun getUsedCellsByItem(item: Int): List<Vector3i> {
+        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedCellsByItemBind, handle, item)
+    }
+
+    fun getUsedOctants(): List<Vector3i> {
+        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedOctantsBind, handle)
+    }
+
+    fun getUsedOctantsByItem(item: Int): List<Vector3i> {
+        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedOctantsByItemBind, handle, item)
+    }
+
+    fun getUsedCellsInOctant(octantCoords: Vector3i): List<Vector3i> {
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3iList(getUsedCellsInOctantBind, handle, octantCoords)
+    }
+
+    fun getUsedCellsInOctantByItem(octantCoords: Vector3i, item: Int): List<Vector3i> {
+        return ObjectCalls.ptrcallWithVector3iAndIntArgRetVector3iList(getUsedCellsInOctantByItemBind, handle, octantCoords, item)
+    }
+
+    fun getOctantsInBounds(bounds: AABB): List<Vector3i> {
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getOctantsInBoundsBind, handle, bounds)
+    }
+
+    fun getUsedOctantsInBounds(bounds: AABB): List<Vector3i> {
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getUsedOctantsInBoundsBind, handle, bounds)
+    }
+
     fun getOctantCoordsFromCellCoords(cellCoords: Vector3i): Vector3i {
         return ObjectCalls.ptrcallWithVector3iArgRetVector3i(getOctantCoordsFromCellCoordsBind, handle, cellCoords)
     }
@@ -510,6 +543,46 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {
             ObjectCalls.getMethodBind("GridMap", "clear", CLEAR_HASH)
+        }
+
+        private const val GET_USED_CELLS_HASH = 3995934104L
+        private val getUsedCellsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_cells", GET_USED_CELLS_HASH)
+        }
+
+        private const val GET_USED_CELLS_BY_ITEM_HASH = 663333327L
+        private val getUsedCellsByItemBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_cells_by_item", GET_USED_CELLS_BY_ITEM_HASH)
+        }
+
+        private const val GET_USED_OCTANTS_HASH = 3995934104L
+        private val getUsedOctantsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_octants", GET_USED_OCTANTS_HASH)
+        }
+
+        private const val GET_USED_OCTANTS_BY_ITEM_HASH = 663333327L
+        private val getUsedOctantsByItemBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_octants_by_item", GET_USED_OCTANTS_BY_ITEM_HASH)
+        }
+
+        private const val GET_USED_CELLS_IN_OCTANT_HASH = 2658725580L
+        private val getUsedCellsInOctantBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", GET_USED_CELLS_IN_OCTANT_HASH)
+        }
+
+        private const val GET_USED_CELLS_IN_OCTANT_BY_ITEM_HASH = 2384667821L
+        private val getUsedCellsInOctantByItemBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant_by_item", GET_USED_CELLS_IN_OCTANT_BY_ITEM_HASH)
+        }
+
+        private const val GET_OCTANTS_IN_BOUNDS_HASH = 2489849902L
+        private val getOctantsInBoundsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_octants_in_bounds", GET_OCTANTS_IN_BOUNDS_HASH)
+        }
+
+        private const val GET_USED_OCTANTS_IN_BOUNDS_HASH = 2489849902L
+        private val getUsedOctantsInBoundsBind by lazy {
+            ObjectCalls.getMethodBind("GridMap", "get_used_octants_in_bounds", GET_USED_OCTANTS_IN_BOUNDS_HASH)
         }
 
         private const val GET_OCTANT_COORDS_FROM_CELL_COORDS_HASH = 2075501597L

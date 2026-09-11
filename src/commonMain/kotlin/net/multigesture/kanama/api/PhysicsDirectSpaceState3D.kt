@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Provides direct access to a physics space in the `PhysicsServer3D`.
@@ -75,6 +76,21 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
 
     /**
      * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters3D` object,
+     * against the space. The resulting array contains a list of points where the shape intersects
+     * another. Like with `intersect_shape`, the number of returned results can be limited to save
+     * processing time. Returned points are a list of pairs of contact points. For each pair the first
+     * one is in the shape passed in `PhysicsShapeQueryParameters3D` object, second one is in the
+     * collided shape from the physics space. Note: This method does not take into account the `motion`
+     * property of the object.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.collide_shape
+     */
+    fun collideShape(parameters: PhysicsShapeQueryParameters3D, maxResults: Int = 32): List<Vector3> {
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector3List(collideShapeBind, handle, parameters.requireOpenHandle(), maxResults)
+    }
+
+    /**
+     * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters3D` object,
      * against the space. If it collides with more than one shape, the nearest one is selected. The
      * returned object is a dictionary containing the following fields: `collider_id`: The colliding
      * object's ID. `linear_velocity`: The colliding object's velocity `Vector3`. If the object is an
@@ -116,6 +132,11 @@ open class PhysicsDirectSpaceState3D(handle: MemorySegment) : GodotObject(handle
         private const val CAST_MOTION_HASH = 1778757334L
         private val castMotionBind by lazy {
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "cast_motion", CAST_MOTION_HASH)
+        }
+
+        private const val COLLIDE_SHAPE_HASH = 3762137681L
+        private val collideShapeBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "collide_shape", COLLIDE_SHAPE_HASH)
         }
 
         private const val GET_REST_INFO_HASH = 1376751592L

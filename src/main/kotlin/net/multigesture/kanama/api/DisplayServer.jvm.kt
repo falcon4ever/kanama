@@ -3,18 +3,16 @@ package net.multigesture.kanama.api
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
-import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Rect2i
 
 // GENERATED desktop/Android companion for DisplayServer (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP DisplayServer waits on: ptrcallNoArgsRetRect2List,
-//   ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong,
+// KANAMA-IOS-GAP DisplayServer waits on: ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong,
 //   ptrcallWithIntAndRect2iArg, ptrcallWithRIDAndVariantArg, ptrcallWithRect2iArgRetObject,
-//   ptrcallWithStringAndVariantArgRetInt, ptrcallWithStringArgRetPackedStringList,
-//   ptrcallWithStringIntAndVariantArg, ptrcallWithStringIntArgsRetCallable,
+//   ptrcallWithStringAndVariantArgRetInt, ptrcallWithStringIntAndVariantArg,
+//   ptrcallWithStringIntArgsRetCallable,
 //   ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt
@@ -182,29 +180,6 @@ fun DisplayServer.globalMenuSetItemTag(menuRoot: String, idx: Int, tag: Any?) {
 }
 
 /**
- * Returns a `PackedStringArray` of voice identifiers for the `language`. Note: This method is
- * implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
- *
- * Generated from Godot docs: DisplayServer.tts_get_voices_for_language
- */
-fun DisplayServer.ttsGetVoicesForLanguage(language: String): List<String> {
-    return ObjectCalls.ptrcallWithStringArgRetPackedStringList(ttsGetVoicesForLanguageBind, displayServerSingleton, language)
-}
-
-/**
- * Returns an `Array` of `Rect2`, each of which is the bounding rectangle for a display cutout or
- * notch. These are non-functional areas on edge-to-edge screens used by cameras and sensors.
- * Returns an empty array if the device does not have cutouts. See also `get_display_safe_area`.
- * Note: Currently only implemented on Android. Other platforms will return an empty array even if
- * they do have display cutouts or notches.
- *
- * Generated from Godot docs: DisplayServer.get_display_cutouts
- */
-fun DisplayServer.getDisplayCutouts(): List<Rect2> {
-    return ObjectCalls.ptrcallNoArgsRetRect2List(getDisplayCutoutsBind, displayServerSingleton)
-}
-
-/**
  * Returns a screenshot of the screen region defined by `rect`. Returns `null` if `rect` is outside
  * screen bounds or the `DisplayServer` fails to capture screenshot. Note: This method is
  * implemented on macOS and Windows. On other platforms, this method always returns `null`. Note:
@@ -319,16 +294,6 @@ private val globalMenuGetItemKeyCallbackBind by lazy {
 private const val GLOBAL_MENU_SET_ITEM_TAG_HASH = 453659863L
 private val globalMenuSetItemTagBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "global_menu_set_item_tag", GLOBAL_MENU_SET_ITEM_TAG_HASH)
-}
-
-private const val TTS_GET_VOICES_FOR_LANGUAGE_HASH = 4291131558L
-private val ttsGetVoicesForLanguageBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "tts_get_voices_for_language", TTS_GET_VOICES_FOR_LANGUAGE_HASH)
-}
-
-private const val GET_DISPLAY_CUTOUTS_HASH = 3995934104L
-private val getDisplayCutoutsBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "get_display_cutouts", GET_DISPLAY_CUTOUTS_HASH)
 }
 
 private const val SCREEN_GET_IMAGE_RECT_HASH = 2601441065L

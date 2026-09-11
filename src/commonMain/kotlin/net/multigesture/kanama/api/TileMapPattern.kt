@@ -73,6 +73,16 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the list of used cell coordinates in the pattern.
+     *
+     * Generated from Godot docs: TileMapPattern.get_used_cells
+     */
+    fun getUsedCells(): List<Vector2i> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, handle)
+    }
+
+    /**
      * Returns the size, in cells, of the pattern.
      *
      * Generated from Godot docs: TileMapPattern.get_size
@@ -138,6 +148,11 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
         private const val GET_CELL_ALTERNATIVE_TILE_HASH = 2485466453L
         private val getCellAlternativeTileBind by lazy {
             ObjectCalls.getMethodBind("TileMapPattern", "get_cell_alternative_tile", GET_CELL_ALTERNATIVE_TILE_HASH)
+        }
+
+        private const val GET_USED_CELLS_HASH = 3995934104L
+        private val getUsedCellsBind by lazy {
+            ObjectCalls.getMethodBind("TileMapPattern", "get_used_cells", GET_USED_CELLS_HASH)
         }
 
         private const val GET_SIZE_HASH = 3690982128L

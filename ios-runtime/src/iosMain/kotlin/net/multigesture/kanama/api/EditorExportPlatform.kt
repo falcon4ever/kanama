@@ -49,6 +49,11 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
+    fun genExportFlags(flags: Long): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(genExportFlagsBind, handle, flags)
+    }
+
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, saveCb.target.handle, saveCb.method, sharedCb.target.handle, sharedCb.method)
@@ -130,6 +135,10 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
     }
 
     companion object {
+        fun getForcedExportFiles(preset: EditorExportPreset?): List<String> {
+            return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getForcedExportFilesBind, MemorySegment.NULL, preset?.requireOpenHandle() ?: MemorySegment.NULL)
+        }
+
         const val EXPORT_MESSAGE_NONE: Long = 0L
         const val EXPORT_MESSAGE_INFO: Long = 1L
         const val EXPORT_MESSAGE_WARNING: Long = 2L
@@ -185,6 +194,11 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         private const val SAVE_ZIP_PATCH_HASH = 1485052307L
         private val saveZipPatchBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "save_zip_patch", SAVE_ZIP_PATCH_HASH)
+        }
+
+        private const val GEN_EXPORT_FLAGS_HASH = 2976483270L
+        private val genExportFlagsBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "gen_export_flags", GEN_EXPORT_FLAGS_HASH)
         }
 
         private const val EXPORT_PROJECT_FILES_HASH = 1063735070L
@@ -265,6 +279,11 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_INTERNAL_EXPORT_FILES_HASH = 89550086L
         private val getInternalExportFilesBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_internal_export_files", GET_INTERNAL_EXPORT_FILES_HASH)
+        }
+
+        private const val GET_FORCED_EXPORT_FILES_HASH = 1939331020L
+        private val getForcedExportFilesBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "get_forced_export_files", GET_FORCED_EXPORT_FILES_HASH)
         }
     }
 }

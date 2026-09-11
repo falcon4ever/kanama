@@ -7,26 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP OS waits on: ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList,
-//   ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt
+// KANAMA-IOS-GAP OS waits on: ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Returns an array of the system substitute font file paths, which are similar to the font with
- * `font_name` and style for the specified text, locale, and script. Returns an empty array if no
- * matching fonts found. The following aliases can be used to request default fonts: "sans-serif",
- * "serif", "monospace", "cursive", and "fantasy". Note: Depending on OS, it's not guaranteed that
- * any of the returned fonts will be suitable for rendering specified text. Fonts should be loaded
- * and checked in the order they are returned, and the first suitable one used. Note: Returned
- * fonts might have different style if the requested style is not available or belong to a
- * different font family. Note: This method is implemented on Android, iOS, Linux, macOS and
- * Windows.
- *
- * Generated from Godot docs: OS.get_system_font_path_for_text
- */
-fun OS.getSystemFontPathForText(fontName: String, text: String, locale: String = "", script: String = "", weight: Int = 400, stretch: Int = 100, italic: Boolean = false): List<String> {
-    return ObjectCalls.ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(getSystemFontPathForTextBind, oSSingleton, fontName, text, locale, script, weight, stretch, italic)
-}
 
 /**
  * Executes the given process in a blocking way. The file specified in `path` must exist and be
@@ -49,11 +31,6 @@ fun OS.execute(path: String, arguments: List<String>, output: List<Any?> = empty
 
 private val oSSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("OS")
-}
-
-private const val GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH = 197317981L
-private val getSystemFontPathForTextBind by lazy {
-    ObjectCalls.getMethodBind("OS", "get_system_font_path_for_text", GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH)
 }
 
 private const val EXECUTE_HASH = 1488299882L

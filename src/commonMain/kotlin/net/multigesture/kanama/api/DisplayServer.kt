@@ -778,6 +778,17 @@ object DisplayServer {
     }
 
     /**
+     * Returns a `PackedStringArray` of voice identifiers for the `language`. Note: This method is
+     * implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
+     *
+     * Generated from Godot docs: DisplayServer.tts_get_voices_for_language
+     */
+    @JvmStatic
+    fun ttsGetVoicesForLanguage(language: String): List<String> {
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(ttsGetVoicesForLanguageBind, singleton, language)
+    }
+
+    /**
      * Adds an utterance to the queue. If `interrupt` is `true`, the queue is cleared first. - `voice`
      * identifier is one of the `"id"` values returned by `tts_get_voices` or one of the values
      * returned by `tts_get_voices_for_language`. - `volume` ranges from `0` (lowest) to `100`
@@ -1035,6 +1046,20 @@ object DisplayServer {
     @JvmStatic
     fun clipboardGetPrimary(): String {
         return ObjectCalls.ptrcallNoArgsRetString(clipboardGetPrimaryBind, singleton)
+    }
+
+    /**
+     * Returns an `Array` of `Rect2`, each of which is the bounding rectangle for a display cutout or
+     * notch. These are non-functional areas on edge-to-edge screens used by cameras and sensors.
+     * Returns an empty array if the device does not have cutouts. See also `get_display_safe_area`.
+     * Note: Currently only implemented on Android. Other platforms will return an empty array even if
+     * they do have display cutouts or notches.
+     *
+     * Generated from Godot docs: DisplayServer.get_display_cutouts
+     */
+    @JvmStatic
+    fun getDisplayCutouts(): List<Rect2> {
+        return ObjectCalls.ptrcallNoArgsRetRect2List(getDisplayCutoutsBind, singleton)
     }
 
     /**
@@ -3643,6 +3668,11 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "tts_get_voices", TTS_GET_VOICES_HASH)
     }
 
+    private const val TTS_GET_VOICES_FOR_LANGUAGE_HASH = 4291131558L
+    private val ttsGetVoicesForLanguageBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "tts_get_voices_for_language", TTS_GET_VOICES_FOR_LANGUAGE_HASH)
+    }
+
     private const val TTS_SPEAK_HASH = 903992738L
     private val ttsSpeakBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "tts_speak", TTS_SPEAK_HASH)
@@ -3751,6 +3781,11 @@ object DisplayServer {
     private const val CLIPBOARD_GET_PRIMARY_HASH = 201670096L
     private val clipboardGetPrimaryBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "clipboard_get_primary", CLIPBOARD_GET_PRIMARY_HASH)
+    }
+
+    private const val GET_DISPLAY_CUTOUTS_HASH = 3995934104L
+    private val getDisplayCutoutsBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "get_display_cutouts", GET_DISPLAY_CUTOUTS_HASH)
     }
 
     private const val GET_DISPLAY_SAFE_AREA_HASH = 410525958L

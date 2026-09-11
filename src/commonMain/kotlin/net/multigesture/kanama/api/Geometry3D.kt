@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -14,6 +15,45 @@ import net.multigesture.kanama.types.Vector3
 object Geometry3D {
     private val singleton: MemorySegment by lazy {
         ObjectCalls.getSingleton("Geometry3D")
+    }
+
+    /**
+     * Returns an array with 6 `Plane`s that describe the sides of a box centered at the origin. The
+     * box size is defined by `extents`, which represents one (positive) corner of the box (i.e. half
+     * its actual size).
+     *
+     * Generated from Godot docs: Geometry3D.build_box_planes
+     */
+    @JvmStatic
+    fun buildBoxPlanes(extents: Vector3): List<Plane> {
+        return ObjectCalls.ptrcallWithVector3ArgRetPlaneList(buildBoxPlanesBind, singleton, extents)
+    }
+
+    /**
+     * Returns an array of `Plane`s closely bounding a faceted cylinder centered at the origin with
+     * radius `radius` and height `height`. The parameter `sides` defines how many planes will be
+     * generated for the round part of the cylinder. The parameter `axis` describes the axis along
+     * which the cylinder is oriented (0 for X, 1 for Y, 2 for Z).
+     *
+     * Generated from Godot docs: Geometry3D.build_cylinder_planes
+     */
+    @JvmStatic
+    fun buildCylinderPlanes(radius: Double, height: Double, sides: Int, axis: Long = 2L): List<Plane> {
+        return ObjectCalls.ptrcallWithTwoDoubleIntLongArgsRetPlaneList(buildCylinderPlanesBind, singleton, radius, height, sides, axis)
+    }
+
+    /**
+     * Returns an array of `Plane`s closely bounding a faceted capsule centered at the origin with
+     * radius `radius` and height `height`. The parameter `sides` defines how many planes will be
+     * generated for the side part of the capsule, whereas `lats` gives the number of latitudinal steps
+     * at the bottom and top of the capsule. The parameter `axis` describes the axis along which the
+     * capsule is oriented (0 for X, 1 for Y, 2 for Z).
+     *
+     * Generated from Godot docs: Geometry3D.build_capsule_planes
+     */
+    @JvmStatic
+    fun buildCapsulePlanes(radius: Double, height: Double, sides: Int, lats: Int, axis: Long = 2L): List<Plane> {
+        return ObjectCalls.ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(buildCapsulePlanesBind, singleton, radius, height, sides, lats, axis)
     }
 
     /**
@@ -135,6 +175,21 @@ object Geometry3D {
 
     internal fun wrap(handle: MemorySegment): Geometry3D? =
         if (handle.address() == 0L) null else this
+
+    private const val BUILD_BOX_PLANES_HASH = 3622277145L
+    private val buildBoxPlanesBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "build_box_planes", BUILD_BOX_PLANES_HASH)
+    }
+
+    private const val BUILD_CYLINDER_PLANES_HASH = 449920067L
+    private val buildCylinderPlanesBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "build_cylinder_planes", BUILD_CYLINDER_PLANES_HASH)
+    }
+
+    private const val BUILD_CAPSULE_PLANES_HASH = 2113592876L
+    private val buildCapsulePlanesBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "build_capsule_planes", BUILD_CAPSULE_PLANES_HASH)
+    }
 
     private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 1056373962L
     private val getClosestPointsBetweenSegmentsBind by lazy {

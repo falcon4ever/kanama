@@ -848,6 +848,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns list of the font sizes in the cache. Each size is `Vector2i` with font size and outline
+     * size.
+     *
+     * Generated from Godot docs: TextServer.font_get_size_cache_list
+     */
+    fun fontGetSizeCacheList(fontRid: RID): List<Vector2i> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetVector2iList(fontGetSizeCacheListBind, handle, fontRid)
+    }
+
+    /**
      * Removes all font sizes from the cache entry.
      *
      * Generated from Godot docs: TextServer.font_clear_size_cache
@@ -1230,6 +1241,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns list of the kerning overrides.
+     *
+     * Generated from Godot docs: TextServer.font_get_kerning_list
+     */
+    fun fontGetKerningList(fontRid: RID, size: Long): List<Vector2i> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(fontGetKerningListBind, handle, fontRid, size)
+    }
+
+    /**
      * Removes all kerning overrides.
      *
      * Generated from Godot docs: TextServer.font_clear_kerning_map
@@ -1412,6 +1433,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns list of language support overrides.
+     *
+     * Generated from Godot docs: TextServer.font_get_language_support_overrides
+     */
+    fun fontGetLanguageSupportOverrides(fontRid: RID): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetLanguageSupportOverridesBind, handle, fontRid)
+    }
+
+    /**
      * Returns `true` if the font supports the given script (as a ISO 15924
      * (https://en.wikipedia.org/wiki/ISO_15924) code).
      *
@@ -1450,6 +1481,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun fontRemoveScriptSupportOverride(fontRid: RID, script: String) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveScriptSupportOverrideBind, handle, fontRid, script)
+    }
+
+    /**
+     * Returns list of script support overrides.
+     *
+     * Generated from Godot docs: TextServer.font_get_script_support_overrides
+     */
+    fun fontGetScriptSupportOverrides(fontRid: RID): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetScriptSupportOverridesBind, handle, fontRid)
     }
 
     /**
@@ -2952,6 +2993,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_oversampling", FONT_GET_OVERSAMPLING_HASH)
         }
 
+        private const val FONT_GET_SIZE_CACHE_LIST_HASH = 2684255073L
+        private val fontGetSizeCacheListBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_size_cache_list", FONT_GET_SIZE_CACHE_LIST_HASH)
+        }
+
         private const val FONT_CLEAR_SIZE_CACHE_HASH = 2722037293L
         private val fontClearSizeCacheBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_clear_size_cache", FONT_CLEAR_SIZE_CACHE_HASH)
@@ -3132,6 +3178,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_glyph_contours", FONT_GET_GLYPH_CONTOURS_HASH)
         }
 
+        private const val FONT_GET_KERNING_LIST_HASH = 1778388067L
+        private val fontGetKerningListBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_kerning_list", FONT_GET_KERNING_LIST_HASH)
+        }
+
         private const val FONT_CLEAR_KERNING_MAP_HASH = 3411492887L
         private val fontClearKerningMapBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_clear_kerning_map", FONT_CLEAR_KERNING_MAP_HASH)
@@ -3217,6 +3268,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_remove_language_support_override", FONT_REMOVE_LANGUAGE_SUPPORT_OVERRIDE_HASH)
         }
 
+        private const val FONT_GET_LANGUAGE_SUPPORT_OVERRIDES_HASH = 2801473409L
+        private val fontGetLanguageSupportOverridesBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_language_support_overrides", FONT_GET_LANGUAGE_SUPPORT_OVERRIDES_HASH)
+        }
+
         private const val FONT_IS_SCRIPT_SUPPORTED_HASH = 3199320846L
         private val fontIsScriptSupportedBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_is_script_supported", FONT_IS_SCRIPT_SUPPORTED_HASH)
@@ -3235,6 +3291,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val FONT_REMOVE_SCRIPT_SUPPORT_OVERRIDE_HASH = 2726140452L
         private val fontRemoveScriptSupportOverrideBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_remove_script_support_override", FONT_REMOVE_SCRIPT_SUPPORT_OVERRIDE_HASH)
+        }
+
+        private const val FONT_GET_SCRIPT_SUPPORT_OVERRIDES_HASH = 2801473409L
+        private val fontGetScriptSupportOverridesBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_get_script_support_overrides", FONT_GET_SCRIPT_SUPPORT_OVERRIDES_HASH)
         }
 
         private const val FONT_GET_OPENTYPE_FEATURE_OVERRIDES_HASH = 1882737106L

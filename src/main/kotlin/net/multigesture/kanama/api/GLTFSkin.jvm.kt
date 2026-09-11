@@ -1,7 +1,6 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
 
@@ -9,14 +8,8 @@ import net.multigesture.kanama.types.Transform3D
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP GLTFSkin waits on: ptrcallNoArgsRetTransform3DList, ptrcallWithDictionaryArg,
-//   ptrcallWithTransform3DListArg
+// KANAMA-IOS-GAP GLTFSkin waits on: ptrcallWithDictionaryArg, ptrcallWithTransform3DListArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-fun GLTFSkin.getInverseBinds(): List<Transform3D> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetTransform3DList(getInverseBindsBind, handle)
-}
 
 fun GLTFSkin.setInverseBinds(inverseBinds: List<Transform3D>) {
     checkOpen()
@@ -31,17 +24,6 @@ fun GLTFSkin.setJointIToBoneI(jointIToBoneI: Map<String, Any?>) {
 fun GLTFSkin.setJointIToName(jointIToName: Map<String, Any?>) {
     checkOpen()
     ObjectCalls.ptrcallWithDictionaryArg(setJointIToNameBind, handle, jointIToName)
-}
-
-var GLTFSkin.inverseBinds: List<Transform3D>
-    @JvmName("inverseBindsProperty")
-    get() = getInverseBinds()
-    @JvmName("setInverseBindsProperty")
-    set(value) = setInverseBinds(value)
-
-private const val GET_INVERSE_BINDS_HASH = 2915620761L
-private val getInverseBindsBind by lazy {
-    ObjectCalls.getMethodBind("GLTFSkin", "get_inverse_binds", GET_INVERSE_BINDS_HASH)
 }
 
 private const val SET_INVERSE_BINDS_HASH = 381264803L

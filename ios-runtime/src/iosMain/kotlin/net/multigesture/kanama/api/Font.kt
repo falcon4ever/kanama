@@ -22,6 +22,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, handle, Font::fromHandle)
     }
 
+    fun getRids(): List<RID> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getRidsBind, handle)
+    }
+
     fun getHeight(fontSize: Int = 16): Double {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(getHeightBind, handle, fontSize)
@@ -198,6 +203,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         private const val GET_FALLBACKS_HASH = 3995934104L
         private val getFallbacksBind by lazy {
             ObjectCalls.getMethodBind("Font", "get_fallbacks", GET_FALLBACKS_HASH)
+        }
+
+        private const val GET_RIDS_HASH = 3995934104L
+        private val getRidsBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_rids", GET_RIDS_HASH)
         }
 
         private const val GET_HEIGHT_HASH = 378113874L

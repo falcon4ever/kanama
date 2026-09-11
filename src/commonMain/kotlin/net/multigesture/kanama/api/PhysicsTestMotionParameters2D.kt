@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
 
@@ -37,6 +38,10 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
         get() = isCollideSeparationRayEnabled()
         @JvmName("setCollideSeparationRayProperty")
         set(value) = setCollideSeparationRayEnabled(value)
+
+    val excludeBodies: List<RID>
+        @JvmName("excludeBodiesProperty")
+        get() = getExcludeBodies()
 
     val excludeObjects: List<Long>
         @JvmName("excludeObjectsProperty")
@@ -137,6 +142,17 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
     }
 
     /**
+     * Optional array of body `RID` to exclude from collision. Use `CollisionObject2D.get_rid` to get
+     * the `RID` associated with a `CollisionObject2D`-derived node.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters2D.get_exclude_bodies
+     */
+    fun getExcludeBodies(): List<RID> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, handle)
+    }
+
+    /**
      * Optional array of object unique instance ID to exclude from collision. See
      * `Object.get_instance_id`.
      *
@@ -219,6 +235,11 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
         private const val SET_COLLIDE_SEPARATION_RAY_ENABLED_HASH = 2586408642L
         private val setCollideSeparationRayEnabledBind by lazy {
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_collide_separation_ray_enabled", SET_COLLIDE_SEPARATION_RAY_ENABLED_HASH)
+        }
+
+        private const val GET_EXCLUDE_BODIES_HASH = 3995934104L
+        private val getExcludeBodiesBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "get_exclude_bodies", GET_EXCLUDE_BODIES_HASH)
         }
 
         private const val GET_EXCLUDE_OBJECTS_HASH = 3995934104L
