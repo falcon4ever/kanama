@@ -513,6 +513,15 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the custom callback of column `column`.
+     *
+     * Generated from Godot docs: TreeItem.get_custom_draw_callback
+     */
+    fun getCustomDrawCallback(column: Int): GodotCallable? {
+        return ObjectCalls.ptrcallWithIntArgRetCallable(getCustomDrawCallbackBind, handle, column)
+    }
+
+    /**
      * Sets the given column's custom `StyleBox` used to draw the background. Note: If a custom
      * background color is set, the `StyleBox` will be drawn in front of it.
      *
@@ -1478,6 +1487,11 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
         private const val SET_CUSTOM_DRAW_CALLBACK_HASH = 957362965L
         private val setCustomDrawCallbackBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "set_custom_draw_callback", SET_CUSTOM_DRAW_CALLBACK_HASH)
+        }
+
+        private const val GET_CUSTOM_DRAW_CALLBACK_HASH = 1317077508L
+        private val getCustomDrawCallbackBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_custom_draw_callback", GET_CUSTOM_DRAW_CALLBACK_HASH)
         }
 
         private const val SET_CUSTOM_STYLEBOX_HASH = 1433009359L
