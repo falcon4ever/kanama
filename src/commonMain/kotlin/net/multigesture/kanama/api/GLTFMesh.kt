@@ -28,9 +28,11 @@ class GLTFMesh(handle: MemorySegment) : Resource(handle) {
         @JvmName("setBlendWeightsProperty")
         set(value) = setBlendWeights(value)
 
-    val instanceMaterials: List<Material>
+    var instanceMaterials: List<Material>
         @JvmName("instanceMaterialsProperty")
         get() = getInstanceMaterials()
+        @JvmName("setInstanceMaterialsProperty")
+        set(value) = setInstanceMaterials(value)
 
     fun getOriginalName(): String {
         checkOpen()
@@ -65,6 +67,11 @@ class GLTFMesh(handle: MemorySegment) : Resource(handle) {
     fun getInstanceMaterials(): List<Material> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getInstanceMaterialsBind, handle, Material::fromHandle)
+    }
+
+    fun setInstanceMaterials(instanceMaterials: List<Material>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTypedMaterialListArg(setInstanceMaterialsBind, handle, instanceMaterials)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
@@ -118,6 +125,11 @@ class GLTFMesh(handle: MemorySegment) : Resource(handle) {
         private const val GET_INSTANCE_MATERIALS_HASH = 2915620761L
         private val getInstanceMaterialsBind by lazy {
             ObjectCalls.getMethodBind("GLTFMesh", "get_instance_materials", GET_INSTANCE_MATERIALS_HASH)
+        }
+
+        private const val SET_INSTANCE_MATERIALS_HASH = 381264803L
+        private val setInstanceMaterialsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFMesh", "set_instance_materials", SET_INSTANCE_MATERIALS_HASH)
         }
 
         private const val GET_ADDITIONAL_DATA_HASH = 2138907829L

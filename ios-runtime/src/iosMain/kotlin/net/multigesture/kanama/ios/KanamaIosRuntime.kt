@@ -926,6 +926,10 @@ private const val IOS_PT_NODE_PATH = 17
 // side (kanama_ios_pt_return_to_variant) rebuilds a Godot PackedStringArray from it. Value 28 must
 // match KANAMA_IOS_PT_PACKED_STRING_ARRAY appended at the end of the C PT enum.
 private const val IOS_PT_PACKED_STRING_ARRAY = 28
+// task 100 parcel 8: BUILD-tagged typed-Array ARGUMENT descriptor (KanamaIosTypedArrayArgDesc);
+// value mirrors KANAMA_IOS_PT_TYPED_ARRAY_BLOB in the shim and PT_TYPED_ARRAY_BLOB in the
+// generator.
+@Suppress("unused") private const val IOS_PT_TYPED_ARRAY_BLOB = 39 // 38 is IOS_PT_VARIANT (parcel 7)
 
 // Return-only (task 29): remaining virtual-return families; values must match the C PT enum.
 // RID reuses the C arg-side tag 14 (a single uint64 inline in retBuf).

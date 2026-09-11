@@ -22,9 +22,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         @JvmName("setRootsProperty")
         set(value) = setRoots(value)
 
-    val uniqueNames: List<String>
+    var uniqueNames: List<String>
         @JvmName("uniqueNamesProperty")
         get() = getUniqueNames()
+        @JvmName("setUniqueNamesProperty")
+        set(value) = setUniqueNames(value)
 
     var godotBoneNode: Map<String, Any?>
         @JvmName("godotBoneNodeProperty")
@@ -60,6 +62,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
     fun getUniqueNames(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
+    }
+
+    fun setUniqueNames(uniqueNames: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, handle, uniqueNames)
     }
 
     fun getGodotBoneNode(): Map<String, Any?> {
@@ -118,6 +125,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         private const val GET_UNIQUE_NAMES_HASH = 2915620761L
         private val getUniqueNamesBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkeleton", "get_unique_names", GET_UNIQUE_NAMES_HASH)
+        }
+
+        private const val SET_UNIQUE_NAMES_HASH = 381264803L
+        private val setUniqueNamesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkeleton", "set_unique_names", SET_UNIQUE_NAMES_HASH)
         }
 
         private const val GET_GODOT_BONE_NODE_HASH = 2382534195L

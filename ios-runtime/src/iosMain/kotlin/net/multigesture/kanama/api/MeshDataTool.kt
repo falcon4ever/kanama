@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
@@ -65,6 +66,16 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
     fun getVertexNormal(idx: Int): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexNormalBind, handle, idx)
+    }
+
+    fun setVertexTangent(idx: Int, tangent: Plane) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndPlaneArg(setVertexTangentBind, handle, idx, tangent)
+    }
+
+    fun getVertexTangent(idx: Int): Plane {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPlane(getVertexTangentBind, handle, idx)
     }
 
     fun setVertexUv(idx: Int, uv: Vector2) {
@@ -257,6 +268,16 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_VERTEX_NORMAL_HASH = 711720468L
         private val getVertexNormalBind by lazy {
             ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_normal", GET_VERTEX_NORMAL_HASH)
+        }
+
+        private const val SET_VERTEX_TANGENT_HASH = 1104099133L
+        private val setVertexTangentBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "set_vertex_tangent", SET_VERTEX_TANGENT_HASH)
+        }
+
+        private const val GET_VERTEX_TANGENT_HASH = 1372055458L
+        private val getVertexTangentBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_tangent", GET_VERTEX_TANGENT_HASH)
         }
 
         private const val SET_VERTEX_UV_HASH = 163021252L

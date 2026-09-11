@@ -27,9 +27,11 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
         @JvmName("setVrsStrengthProperty")
         set(value) = setVrsStrength(value)
 
-    val vrsRenderRegion: Rect2i
+    var vrsRenderRegion: Rect2i
         @JvmName("vrsRenderRegionProperty")
         get() = getVrsRenderRegion()
+        @JvmName("setVrsRenderRegionProperty")
+        set(value) = setVrsRenderRegion(value)
 
     /**
      * The minimum radius around the focal point where full quality is guaranteed if VRS is used as a
@@ -81,6 +83,15 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * The render region that the VRS texture will be scaled to when generated.
+     *
+     * Generated from Godot docs: XRVRS.set_vrs_render_region
+     */
+    fun setVrsRenderRegion(renderRegion: Rect2i) {
+        ObjectCalls.ptrcallWithRect2iArg(setVrsRenderRegionBind, handle, renderRegion)
+    }
+
+    /**
      * Generates the VRS texture based on a render `target_size` adjusted by our VRS tile size. For
      * each eyes focal point passed in `eye_foci` a layer is created. Focal point should be in NDC. The
      * result will be cached, requesting a VRS texture with unchanged parameters and settings will
@@ -123,6 +134,11 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
         private const val GET_VRS_RENDER_REGION_HASH = 410525958L
         private val getVrsRenderRegionBind by lazy {
             ObjectCalls.getMethodBind("XRVRS", "get_vrs_render_region", GET_VRS_RENDER_REGION_HASH)
+        }
+
+        private const val SET_VRS_RENDER_REGION_HASH = 1763793166L
+        private val setVrsRenderRegionBind by lazy {
+            ObjectCalls.getMethodBind("XRVRS", "set_vrs_render_region", SET_VRS_RENDER_REGION_HASH)
         }
 
         private const val MAKE_VRS_TEXTURE_HASH = 3647044786L

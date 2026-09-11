@@ -2,34 +2,14 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Transform3D
 
 // GENERATED desktop/Android companion for ImporterMesh (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
-//   ptrcallWithObjectListTransform3DListBoolArgsRetObject
+//   ptrcallWithTwoDoubleArrayArgs
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Merges multiple `ImporterMesh`es into a single `ImporterMesh`. Each input mesh is transformed by
- * the corresponding `Transform3D` in the `relative_transforms` array, which must be the same size
- * as `importer_meshes`. Negative scales are supported, and the winding order in the mesh data will
- * be corrected to account for this. If `deduplicate_surfaces` is `true` and multiple meshes have
- * surfaces with the same names and formats, the surfaces will be merged together when the meshes
- * are merged, and will use the material from the first matching surface. This is useful for
- * reducing the number of surfaces in the resulting mesh, and avoids duplicating materials.
- * Surfaces with bone weights will never be deduplicated. If `deduplicate_surfaces` is `false`, the
- * surfaces will always be kept separate, and will be given unique names. Warning: Blend shapes and
- * LODs are not supported and will be discarded. Do not use this function to discard blend shapes
- * and LODs, as support for these may be added in the future.
- *
- * Generated from Godot docs: ImporterMesh.merge_importer_meshes
- */
-fun ImporterMesh.Companion.mergeImporterMeshes(importerMeshes: List<ImporterMesh>, relativeTransforms: List<Transform3D>, deduplicateSurfaces: Boolean = true): ImporterMesh? {
-    return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, MemorySegment.NULL, importerMeshes, relativeTransforms, deduplicateSurfaces))
-}
 
 /**
  * Creates a new surface. `Mesh.get_surface_count` will become the `surf_idx` for this new surface.
@@ -64,12 +44,29 @@ fun ImporterMesh.addSurface(primitive: Long, arrays: List<Any?>, blendShapes: Li
     ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, handle, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
 }
 
-private const val MERGE_IMPORTER_MESHES_HASH = 1030647649L
-private val mergeImporterMeshesBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "merge_importer_meshes", MERGE_IMPORTER_MESHES_HASH)
+/**
+ * Generates all lods for this ImporterMesh. `normal_merge_angle` is in degrees and used in the
+ * same way as the importer settings in `lods`. `normal_split_angle` is not used and only remains
+ * for compatibility with older versions of the API. The number of generated lods can be accessed
+ * using `get_surface_lod_count`, and each LOD is available in `get_surface_lod_size` and
+ * `get_surface_lod_indices`. `bone_transform_array` is an `Array` which can be either empty or
+ * contain `Transform3D`s which, for each of the mesh's bone IDs, will apply mesh skinning when
+ * generating the LOD mesh variations. This is usually used to account for discrepancies in scale
+ * between the mesh itself and its skinning data.
+ *
+ * Generated from Godot docs: ImporterMesh.generate_lods
+ */
+fun ImporterMesh.generateLods(normalMergeAngle: Double, normalSplitAngle: Double, boneTransformArray: List<Any?>) {
+    checkOpen()
+    ObjectCalls.ptrcallWithTwoDoubleArrayArgs(generateLodsBind, handle, normalMergeAngle, normalSplitAngle, boneTransformArray)
 }
 
 private const val ADD_SURFACE_HASH = 1740448849L
 private val addSurfaceBind by lazy {
     ObjectCalls.getMethodBind("ImporterMesh", "add_surface", ADD_SURFACE_HASH)
+}
+
+private const val GENERATE_LODS_HASH = 2491878677L
+private val generateLodsBind by lazy {
+    ObjectCalls.getMethodBind("ImporterMesh", "generate_lods", GENERATE_LODS_HASH)
 }

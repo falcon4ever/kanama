@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 
 /**
  * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability
@@ -23,6 +24,14 @@ class OpenXRSpatialMarkerTrackingCapability(handle: MemorySegment) : OpenXRExten
 
     fun isAprilTagSupported(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAprilTagSupportedBind, handle)
+    }
+
+    fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(startEntityDiscoveryBind, handle, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
+    }
+
+    fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?) {
+        ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(doEntityUpdateBind, handle, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     companion object {
@@ -51,6 +60,16 @@ class OpenXRSpatialMarkerTrackingCapability(handle: MemorySegment) : OpenXRExten
         private const val IS_APRIL_TAG_SUPPORTED_HASH = 2240911060L
         private val isAprilTagSupportedBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialMarkerTrackingCapability", "is_april_tag_supported", IS_APRIL_TAG_SUPPORTED_HASH)
+        }
+
+        private const val START_ENTITY_DISCOVERY_HASH = 3452714169L
+        private val startEntityDiscoveryBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialMarkerTrackingCapability", "start_entity_discovery", START_ENTITY_DISCOVERY_HASH)
+        }
+
+        private const val DO_ENTITY_UPDATE_HASH = 3138044275L
+        private val doEntityUpdateBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialMarkerTrackingCapability", "do_entity_update", DO_ENTITY_UPDATE_HASH)
         }
     }
 }

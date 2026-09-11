@@ -512,6 +512,11 @@ static GDExtensionVariantFromTypeConstructorFunc g_variant_from_color = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_node_path = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_float = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_object = NULL;
+// task 100 parcel 8 — typed-Array arguments: Transform3D / Plane element boxing and the
+// GDExtension array_set_typed interface (Array.set_typed is not a script-visible builtin).
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_transform3d = NULL;
+static GDExtensionVariantFromTypeConstructorFunc g_variant_from_plane = NULL;
+static GDExtensionInterfaceArraySetTyped g_array_set_typed = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_string_name = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_int = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_bool = NULL;
@@ -697,6 +702,13 @@ enum {
     // (30) double as BUILD-tagged args in the same parcel: the arg ptr is the task-29 entry blob.
     // Value (38) must match IOS_PT_VARIANT in KanamaIosRuntime.kt and PT_VARIANT in the generator.
     KANAMA_IOS_PT_VARIANT,              // 38
+
+    // BUILD-tagged typed-Array arg (task 100, parcel 8): the arg ptr is a
+    // KanamaIosTypedArrayArgDesc {variant_type, class_name, blob}; the dispatch builds an empty
+    // Array, makes it typed (array_set_typed), pushes the blob's tagged elements and destroys the
+    // Array after the call. Value (39) must match IOS_PT_TAG_VALUES / KanamaIosRuntime.kt
+    // (38 is PT_VARIANT, parcel 7; both were appended the same day).
+    KANAMA_IOS_PT_TYPED_ARRAY_BLOB,     // 39
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -706,6 +718,16 @@ typedef struct {
     int64_t count;
     const void *data;
 } KanamaIosPackedArgDesc;
+
+// Descriptor for a BUILD-tagged typed-Array arg (mirrors KanamaIosTypedArrayArgDesc in
+// ios/include/kanama_ios.h). `blob` is the task-29 tagged element blob
+// [int32 count]([int32 elem_tag][int32 elem_len][bytes])*; `variant_type` is the element's
+// Variant.Type for array_set_typed and `class_name` its class for TYPE_OBJECT (else NULL).
+typedef struct {
+    int32_t variant_type;
+    const char *class_name;
+    const uint8_t *blob;
+} KanamaIosTypedArrayArgDesc;
 
 // Descriptor for a CONSTRUCT-tagged Callable arg (mirrors KanamaIosCallableArgDesc in
 // ios/include/kanama_ios.h — the shim does not include that header). `object_handle` is the
@@ -899,6 +921,7 @@ static int kanama_ios_resolve_godot_api(void) {
         "get_variant_to_type_constructor"
     );
     g_variant_destroy = (GDExtensionInterfaceVariantDestroy)kanama_ios_lookup("variant_destroy");
+    g_array_set_typed = (GDExtensionInterfaceArraySetTyped)kanama_ios_lookup("array_set_typed");
     g_variant_get_type = (GDExtensionInterfaceVariantGetType)kanama_ios_lookup("variant_get_type");
     // Optional: lambda/bound signal callbacks need this. Not added to the required
     // resolution check below so older runtimes still load; connect_callable NULL-checks it.
@@ -1031,6 +1054,8 @@ static int kanama_ios_resolve_godot_api(void) {
     g_variant_from_node_path = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_NODE_PATH);
     g_variant_from_float = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_FLOAT);
     g_variant_from_object = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_OBJECT);
+    g_variant_from_transform3d = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_TRANSFORM3D);
+    g_variant_from_plane = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_PLANE);
     g_variant_from_string_name = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_STRING_NAME);
     g_variant_from_int = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_INT);
     g_variant_from_bool = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_BOOL);
@@ -1664,6 +1689,9 @@ static void kanama_ios_cache_return_family_converters(void);
 static void kanama_ios_build_dictionary_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
 static void kanama_ios_build_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
 static void kanama_ios_pt_arg_to_variant(int32_t tag, const void *p, uint8_t out_variant[24], uint64_t *out_cell, int *out_cell_kind);
+
+static int kanama_ios_build_typed_array_arg(const KanamaIosTypedArrayArgDesc *desc, uint64_t *cell);
+static int32_t kanama_ios_blob_read_int32(const uint8_t *p);
 static void kanama_ios_destroy_packed_arg(int32_t tag, uint64_t *cell);
 static void kanama_ios_cache_packed_byte_methods(void);
 // PackedStringArray BUILD-tagged arg (task 100, parcel 4): built from the string blob by the task-13
@@ -1805,6 +1833,19 @@ static void kanama_ios_godot_ptrcall_dispatch(
                 constructed[i] = tag;
                 break;
             }
+            case KANAMA_IOS_PT_TYPED_ARRAY_BLOB: {
+                // task 100 parcel 8: arg ptr is a KanamaIosTypedArrayArgDesc; build the typed Array
+                // into the 16-byte cell (an Array is one 8-byte pointer) and destroy it after the call.
+                const KanamaIosTypedArrayArgDesc *tdesc =
+                    (arg_ptrs != NULL) ? (const KanamaIosTypedArrayArgDesc *)arg_ptrs[i] : NULL;
+                packed_cells[i][0] = 0;
+                packed_cells[i][1] = 0;
+                if (kanama_ios_build_typed_array_arg(tdesc, packed_cells[i])) {
+                    constructed[i] = tag;
+                }
+                args[i] = (const void *)packed_cells[i];
+                break;
+            }
             case KANAMA_IOS_PT_CALLABLE: {
                 // arg ptr is a KanamaIosCallableArgDesc {object_handle, method}; build an
                 // object+method Callable (constructor index 2, resolved in resolve_godot_api) into
@@ -1883,6 +1924,11 @@ static void kanama_ios_godot_ptrcall_dispatch(
                         if (g_dictionary_destructor != NULL) g_dictionary_destructor((GDExtensionTypePtr)variant_inner_cells[i]);
                         break;
                     default: break;
+                }
+                break;
+            case KANAMA_IOS_PT_TYPED_ARRAY_BLOB:
+                if (g_array_destructor != NULL) {
+                    g_array_destructor((GDExtensionTypePtr)packed_cells[i]);
                 }
                 break;
             case KANAMA_IOS_PT_CALLABLE:
@@ -6002,10 +6048,130 @@ static void kanama_ios_pt_blob_value_to_variant(
             g_variant_from_color(out_variant, v);
             return;
         }
+        // task 100 parcel 8 — element kinds of typed-Array ARGUMENTS (Array[StringName] /
+        // [NodePath] / [Object] / [Transform3D] / [Plane] / [PackedVector2Array]).
+        case KANAMA_IOS_PT_STRING_NAME:
+        case KANAMA_IOS_PT_NODE_PATH: {
+            char stackbuf[256];
+            int32_t n = (len < 0) ? 0 : len;
+            char *tmp = ((size_t)n + 1 <= sizeof(stackbuf)) ? stackbuf : (char *)malloc((size_t)n + 1);
+            if (tmp == NULL) break;
+            if (n > 0 && bytes != NULL) memcpy(tmp, bytes, (size_t)n);
+            tmp[n] = '\0';
+            uint64_t cell = 0;
+            if (tag == KANAMA_IOS_PT_STRING_NAME) {
+                kanama_ios_init_string_name(&cell, tmp);
+                g_variant_from_string_name(out_variant, &cell);
+                kanama_ios_destroy_string_name(&cell);
+            } else {
+                kanama_ios_init_node_path(&cell, tmp);
+                g_variant_from_node_path(out_variant, &cell);
+                kanama_ios_destroy_node_path(&cell);
+            }
+            if (tmp != stackbuf) free(tmp);
+            return;
+        }
+        case KANAMA_IOS_PT_OBJECT: {
+            // int64 object handle; 0 boxes as a nil Object. Borrowed: the Array takes its own ref.
+            int64_t h = 0;
+            if (len >= 8 && bytes != NULL) memcpy(&h, bytes, sizeof(h));
+            GDExtensionObjectPtr obj = (GDExtensionObjectPtr)(intptr_t)h;
+            g_variant_from_object(out_variant, &obj);
+            return;
+        }
+        case KANAMA_IOS_PT_TRANSFORM3D: {
+            if (g_variant_from_transform3d == NULL) break;
+            float v[12] = { 0 };   // 9 basis (column-major) + 3 origin, real_t = float32
+            if (len >= 48 && bytes != NULL) memcpy(v, bytes, sizeof(v));
+            g_variant_from_transform3d(out_variant, v);
+            return;
+        }
+        case KANAMA_IOS_PT_PLANE: {
+            if (g_variant_from_plane == NULL) break;
+            float v[4] = { 0 };    // normal xyz + d
+            if (len >= 16 && bytes != NULL) memcpy(v, bytes, sizeof(v));
+            g_variant_from_plane(out_variant, v);
+            return;
+        }
+        case KANAMA_IOS_PT_PACKED_VECTOR2_ARRAY: {
+            // payload [int32 count][2 x float32]*: build the PackedVector2Array the packed-arg way.
+            if (len < 4 || bytes == NULL || g_variant_from_packed_vector2_array == NULL) break;
+            int32_t count = kanama_ios_blob_read_int32(bytes);
+            if (count < 0 || (int64_t)len < 4 + (int64_t)count * 8) break;
+            KanamaIosPackedArgDesc pdesc = { count, bytes + 4 };
+            uint64_t pcell[2] = { 0, 0 };
+            if (!kanama_ios_build_packed_arg(KANAMA_IOS_PT_PACKED_VECTOR2_ARRAY, &pdesc, pcell)) break;
+            g_variant_from_packed_vector2_array(out_variant, pcell);
+            kanama_ios_destroy_packed_arg(KANAMA_IOS_PT_PACKED_VECTOR2_ARRAY, pcell);
+            return;
+        }
         default:
             break;
     }
     g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
+}
+
+// task 100 parcel 8 — build a TYPED Godot Array argument from a KanamaIosTypedArrayArgDesc: an
+// empty Array, array_set_typed with the element's Variant.Type (+ class name for objects), then
+// the blob's tagged elements pushed one by one (Array.push_back validates each against the type,
+// converting String -> StringName etc. where the engine allows). set_typed must precede the
+// pushes: the engine only accepts it on an empty array. Returns 1 when the cell holds an Array
+// the caller must destroy (g_array_destructor), 0 when nothing was constructed.
+static int kanama_ios_build_typed_array_arg(const KanamaIosTypedArrayArgDesc *desc, uint64_t *cell) {
+    if (g_array_constructor == NULL || g_variant_destroy == NULL) {
+        return 0;
+    }
+    g_array_constructor((GDExtensionUninitializedTypePtr)cell, NULL);
+    if (desc == NULL) {
+        return 1;
+    }
+    if (g_array_set_typed != NULL && desc->variant_type != KANAMA_IOS_VARIANT_TYPE_NIL) {
+        uint64_t class_name = 0;
+        kanama_ios_init_string_name(&class_name, desc->class_name != NULL ? desc->class_name : "");
+        uint8_t script[24];
+        memset(script, 0, sizeof(script));
+        g_variant_new_nil((GDExtensionUninitializedVariantPtr)script);
+        g_array_set_typed(
+            (GDExtensionTypePtr)cell,
+            (GDExtensionVariantType)desc->variant_type,
+            (GDExtensionConstStringNamePtr)&class_name,
+            (GDExtensionConstVariantPtr)script);
+        g_variant_destroy(script);
+        kanama_ios_destroy_string_name(&class_name);
+    }
+    if (desc->blob == NULL) {
+        return 1;
+    }
+    if (g_array_push_back == NULL && g_variant_get_ptr_builtin_method != NULL) {
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, "push_back");
+        g_array_push_back = g_variant_get_ptr_builtin_method(
+            KANAMA_IOS_VARIANT_TYPE_ARRAY,
+            (GDExtensionConstStringNamePtr)&name_storage,
+            (GDExtensionInt)KANAMA_IOS_ARRAY_PUSH_BACK_HASH
+        );
+        kanama_ios_destroy_string_name(&name_storage);
+    }
+    if (g_array_push_back == NULL) {
+        return 1;
+    }
+    const uint8_t *p = desc->blob;
+    int32_t count = kanama_ios_blob_read_int32(p);
+    p += 4;
+    for (int32_t i = 0; i < count; i++) {
+        int32_t elem_tag = kanama_ios_blob_read_int32(p);
+        p += 4;
+        int32_t elem_len = kanama_ios_blob_read_int32(p);
+        p += 4;
+        if (elem_len < 0) elem_len = 0;
+        uint8_t elem_variant[24];
+        kanama_ios_pt_blob_value_to_variant(elem_tag, p, elem_len, elem_variant);
+        p += elem_len;
+        const GDExtensionConstTypePtr push_args[1] = { (GDExtensionConstTypePtr)elem_variant };
+        g_array_push_back((GDExtensionTypePtr)cell, push_args, NULL, 1);
+        g_variant_destroy(elem_variant);
+    }
+    return 1;
 }
 
 // task 29 — read one int32 out of an unaligned blob position.

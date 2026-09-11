@@ -15,9 +15,11 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: AStarGrid2D
  */
 class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
-    val region: Rect2i
+    var region: Rect2i
         @JvmName("regionProperty")
         get() = getRegion()
+        @JvmName("setRegionProperty")
+        set(value) = setRegion(value)
 
     var size: Vector2i
         @JvmName("sizeProperty")
@@ -66,6 +68,17 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         get() = getDiagonalMode()
         @JvmName("setDiagonalModeProperty")
         set(value) = setDiagonalMode(value)
+
+    /**
+     * The region of grid cells available for pathfinding. If changed, `update` needs to be called
+     * before finding the next path.
+     *
+     * Generated from Godot docs: AStarGrid2D.set_region
+     */
+    fun setRegion(region: Rect2i) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRect2iArg(setRegionBind, handle, region)
+    }
 
     /**
      * The region of grid cells available for pathfinding. If changed, `update` needs to be called
@@ -349,6 +362,28 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Fills the given `region` on the grid with the specified value for the solid flag. Note: Calling
+     * `update` is not needed after the call of this function.
+     *
+     * Generated from Godot docs: AStarGrid2D.fill_solid_region
+     */
+    fun fillSolidRegion(region: Rect2i, solid: Boolean = true) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRect2iAndBoolArg(fillSolidRegionBind, handle, region, solid)
+    }
+
+    /**
+     * Fills the given `region` on the grid with the specified value for the weight scale. Note:
+     * Calling `update` is not needed after the call of this function.
+     *
+     * Generated from Godot docs: AStarGrid2D.fill_weight_scale_region
+     */
+    fun fillWeightScaleRegion(region: Rect2i, weightScale: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRect2iAndDoubleArg(fillWeightScaleRegionBind, handle, region, weightScale)
+    }
+
+    /**
      * Clears the grid and sets the `region` to `Rect2i(0, 0, 0, 0)`.
      *
      * Generated from Godot docs: AStarGrid2D.clear
@@ -366,6 +401,17 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
     fun getPointPosition(id: Vector2i): Vector2 {
         checkOpen()
         return ObjectCalls.ptrcallWithVector2iArgRetVector2(getPointPositionBind, handle, id)
+    }
+
+    /**
+     * Returns an array of dictionaries with point data (`id`: `Vector2i`, `position`: `Vector2`,
+     * `solid`: `bool`, `weight_scale`: `float`) within a `region`.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_point_data_in_region
+     */
+    fun getPointDataInRegion(region: Rect2i): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(getPointDataInRegionBind, handle, region)
     }
 
     /**
@@ -424,6 +470,11 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): AStarGrid2D? =
             if (handle.address() == 0L) null else AStarGrid2D(handle)
+
+        private const val SET_REGION_HASH = 1763793166L
+        private val setRegionBind by lazy {
+            ObjectCalls.getMethodBind("AStarGrid2D", "set_region", SET_REGION_HASH)
+        }
 
         private const val GET_REGION_HASH = 410525958L
         private val getRegionBind by lazy {
@@ -550,6 +601,16 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("AStarGrid2D", "get_point_weight_scale", GET_POINT_WEIGHT_SCALE_HASH)
         }
 
+        private const val FILL_SOLID_REGION_HASH = 2261970063L
+        private val fillSolidRegionBind by lazy {
+            ObjectCalls.getMethodBind("AStarGrid2D", "fill_solid_region", FILL_SOLID_REGION_HASH)
+        }
+
+        private const val FILL_WEIGHT_SCALE_REGION_HASH = 2793244083L
+        private val fillWeightScaleRegionBind by lazy {
+            ObjectCalls.getMethodBind("AStarGrid2D", "fill_weight_scale_region", FILL_WEIGHT_SCALE_REGION_HASH)
+        }
+
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {
             ObjectCalls.getMethodBind("AStarGrid2D", "clear", CLEAR_HASH)
@@ -558,6 +619,11 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_POINT_POSITION_HASH = 108438297L
         private val getPointPositionBind by lazy {
             ObjectCalls.getMethodBind("AStarGrid2D", "get_point_position", GET_POINT_POSITION_HASH)
+        }
+
+        private const val GET_POINT_DATA_IN_REGION_HASH = 3893818462L
+        private val getPointDataInRegionBind by lazy {
+            ObjectCalls.getMethodBind("AStarGrid2D", "get_point_data_in_region", GET_POINT_DATA_IN_REGION_HASH)
         }
 
         private const val GET_POINT_PATH_HASH = 1641925693L

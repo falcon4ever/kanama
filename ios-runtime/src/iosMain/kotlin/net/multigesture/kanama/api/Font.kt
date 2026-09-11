@@ -14,9 +14,16 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: Font
  */
 open class Font(handle: MemorySegment) : Resource(handle) {
-    val fallbacks: List<Font>
+    var fallbacks: List<Font>
         @JvmName("fallbacksProperty")
         get() = getFallbacks()
+        @JvmName("setFallbacksProperty")
+        set(value) = setFallbacks(value)
+
+    fun setFallbacks(fallbacks: List<Font>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setFallbacksBind, handle, fallbacks)
+    }
 
     fun getFallbacks(): List<Font> {
         checkOpen()
@@ -205,6 +212,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): Font? =
             if (handle.address() == 0L) null else Font(handle)
+
+        private const val SET_FALLBACKS_HASH = 381264803L
+        private val setFallbacksBind by lazy {
+            ObjectCalls.getMethodBind("Font", "set_fallbacks", SET_FALLBACKS_HASH)
+        }
 
         private const val GET_FALLBACKS_HASH = 3995934104L
         private val getFallbacksBind by lazy {

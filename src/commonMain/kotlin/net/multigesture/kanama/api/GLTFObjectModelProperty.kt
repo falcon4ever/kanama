@@ -23,9 +23,11 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setGodotToGltfExpressionProperty")
         set(value) = setGodotToGltfExpression(value)
 
-    val nodePaths: List<NodePath>
+    var nodePaths: List<NodePath>
         @JvmName("nodePathsProperty")
         get() = getNodePaths()
+        @JvmName("setNodePathsProperty")
+        set(value) = setNodePaths(value)
 
     var objectModelType: Long
         @JvmName("objectModelTypeProperty")
@@ -86,6 +88,11 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
     fun hasNodePaths(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasNodePathsBind, handle)
+    }
+
+    fun setNodePaths(nodePaths: List<NodePath>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithNodePathListArg(setNodePathsBind, handle, nodePaths)
     }
 
     fun getObjectModelType(): Long {
@@ -186,6 +193,11 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
         private const val HAS_NODE_PATHS_HASH = 36873697L
         private val hasNodePathsBind by lazy {
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "has_node_paths", HAS_NODE_PATHS_HASH)
+        }
+
+        private const val SET_NODE_PATHS_HASH = 381264803L
+        private val setNodePathsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_node_paths", SET_NODE_PATHS_HASH)
         }
 
         private const val GET_OBJECT_MODEL_TYPE_HASH = 1094778507L

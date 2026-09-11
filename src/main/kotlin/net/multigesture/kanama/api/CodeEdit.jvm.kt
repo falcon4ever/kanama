@@ -2,81 +2,45 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.types.Color
 
 // GENERATED desktop/Android companion for CodeEdit (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP CodeEdit waits on: ptrcallWithTypedIntListArg, ptrcallWithTypedStringListArg
+// KANAMA-IOS-GAP CodeEdit waits on: ptrcallWithDictionaryArg,
+//   ptrcallWithLongTwoStringColorObjectVariantIntArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
- * Prefixes to trigger an automatic indent. Used when `indent_automatic` is set to `true`.
+ * Sets the brace pairs to be autocompleted. For each entry in the dictionary, the key is the
+ * opening brace and the value is the closing brace that matches it. A brace is a `String` made of
+ * symbols. See `auto_brace_completion_enabled` and `auto_brace_completion_highlight_matching`.
  *
- * Generated from Godot docs: CodeEdit.set_auto_indent_prefixes
+ * Generated from Godot docs: CodeEdit.set_auto_brace_completion_pairs
  */
-fun CodeEdit.setAutoIndentPrefixes(prefixes: List<String>) {
-    ObjectCalls.ptrcallWithTypedStringListArg(setAutoIndentPrefixesBind, handle, prefixes)
+fun CodeEdit.setAutoBraceCompletionPairs(pairs: Map<String, Any?>) {
+    ObjectCalls.ptrcallWithDictionaryArg(setAutoBraceCompletionPairsBind, handle, pairs)
 }
 
 /**
- * Sets the string delimiters. All existing string delimiters will be removed.
+ * Submits an item to the queue of potential candidates for the autocomplete menu. Call
+ * `update_code_completion_options` to update the list. `location` indicates location of the option
+ * relative to the location of the code completion query. See `CodeEdit.CodeCompletionLocation` for
+ * how to set this value. Note: This list will replace all current candidates.
  *
- * Generated from Godot docs: CodeEdit.set_string_delimiters
+ * Generated from Godot docs: CodeEdit.add_code_completion_option
  */
-fun CodeEdit.setStringDelimiters(stringDelimiters: List<String>) {
-    ObjectCalls.ptrcallWithTypedStringListArg(setStringDelimitersBind, handle, stringDelimiters)
+fun CodeEdit.addCodeCompletionOption(type: Long, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
+    ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, handle, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: MemorySegment.NULL, value, location)
 }
 
-/**
- * Sets the comment delimiters. All existing comment delimiters will be removed.
- *
- * Generated from Godot docs: CodeEdit.set_comment_delimiters
- */
-fun CodeEdit.setCommentDelimiters(commentDelimiters: List<String>) {
-    ObjectCalls.ptrcallWithTypedStringListArg(setCommentDelimitersBind, handle, commentDelimiters)
+private const val SET_AUTO_BRACE_COMPLETION_PAIRS_HASH = 4155329257L
+private val setAutoBraceCompletionPairsBind by lazy {
+    ObjectCalls.getMethodBind("CodeEdit", "set_auto_brace_completion_pairs", SET_AUTO_BRACE_COMPLETION_PAIRS_HASH)
 }
 
-/**
- * Sets prefixes that will trigger code completion.
- *
- * Generated from Godot docs: CodeEdit.set_code_completion_prefixes
- */
-fun CodeEdit.setCodeCompletionPrefixes(prefixes: List<String>) {
-    ObjectCalls.ptrcallWithTypedStringListArg(setCodeCompletionPrefixesBind, handle, prefixes)
-}
-
-/**
- * Draws vertical lines at the provided columns. The first entry is considered a main hard
- * guideline and is drawn more prominently.
- *
- * Generated from Godot docs: CodeEdit.set_line_length_guidelines
- */
-fun CodeEdit.setLineLengthGuidelines(guidelineColumns: List<Long>) {
-    ObjectCalls.ptrcallWithTypedIntListArg(setLineLengthGuidelinesBind, handle, guidelineColumns)
-}
-
-private const val SET_AUTO_INDENT_PREFIXES_HASH = 381264803L
-private val setAutoIndentPrefixesBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "set_auto_indent_prefixes", SET_AUTO_INDENT_PREFIXES_HASH)
-}
-
-private const val SET_STRING_DELIMITERS_HASH = 381264803L
-private val setStringDelimitersBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "set_string_delimiters", SET_STRING_DELIMITERS_HASH)
-}
-
-private const val SET_COMMENT_DELIMITERS_HASH = 381264803L
-private val setCommentDelimitersBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "set_comment_delimiters", SET_COMMENT_DELIMITERS_HASH)
-}
-
-private const val SET_CODE_COMPLETION_PREFIXES_HASH = 381264803L
-private val setCodeCompletionPrefixesBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "set_code_completion_prefixes", SET_CODE_COMPLETION_PREFIXES_HASH)
-}
-
-private const val SET_LINE_LENGTH_GUIDELINES_HASH = 381264803L
-private val setLineLengthGuidelinesBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "set_line_length_guidelines", SET_LINE_LENGTH_GUIDELINES_HASH)
+private const val ADD_CODE_COMPLETION_OPTION_HASH = 3944379502L
+private val addCodeCompletionOptionBind by lazy {
+    ObjectCalls.getMethodBind("CodeEdit", "add_code_completion_option", ADD_CODE_COMPLETION_OPTION_HASH)
 }

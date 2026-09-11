@@ -26,9 +26,11 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setPathTypesProperty")
         set(value) = setPathTypes(value)
 
-    val pathRids: List<RID>
+    var pathRids: List<RID>
         @JvmName("pathRidsProperty")
         get() = getPathRids()
+        @JvmName("setPathRidsProperty")
+        set(value) = setPathRids(value)
 
     var pathOwnerIds: List<Long>
         @JvmName("pathOwnerIdsProperty")
@@ -84,6 +86,16 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
     fun getPathTypes(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
+    }
+
+    /**
+     * The `RID`s of the regions and links that each point of the path goes through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult2D.set_path_rids
+     */
+    fun setPathRids(pathRids: List<RID>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDListArg(setPathRidsBind, handle, pathRids)
     }
 
     /**
@@ -178,6 +190,11 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_PATH_TYPES_HASH = 1930428628L
         private val getPathTypesBind by lazy {
             ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "get_path_types", GET_PATH_TYPES_HASH)
+        }
+
+        private const val SET_PATH_RIDS_HASH = 381264803L
+        private val setPathRidsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "set_path_rids", SET_PATH_RIDS_HASH)
         }
 
         private const val GET_PATH_RIDS_HASH = 3995934104L

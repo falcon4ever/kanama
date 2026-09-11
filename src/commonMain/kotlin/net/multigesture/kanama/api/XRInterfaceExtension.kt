@@ -5,6 +5,9 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Base class for XR interface extensions (plugins).
@@ -25,6 +28,17 @@ class XRInterfaceExtension(handle: MemorySegment) : XRInterface(handle) {
     fun getVelocityTexture(): RID {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getVelocityTextureBind, handle)
+    }
+
+    /**
+     * Blits our render results to screen optionally applying lens distortion. This can only be called
+     * while processing `_commit_views`.
+     *
+     * Generated from Godot docs: XRInterfaceExtension.add_blit
+     */
+    fun addBlit(renderTarget: RID, srcRect: Rect2, dstRect: Rect2i, useLayer: Boolean, layer: Long, applyLensDistortion: Boolean, eyeCenter: Vector2, k1: Double, k2: Double, upscale: Double, aspectRatio: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs(addBlitBind, handle, renderTarget, srcRect, dstRect, useLayer, layer, applyLensDistortion, eyeCenter, k1, k2, upscale, aspectRatio)
     }
 
     /**
@@ -59,6 +73,11 @@ class XRInterfaceExtension(handle: MemorySegment) : XRInterface(handle) {
         private const val GET_VELOCITY_TEXTURE_HASH = 529393457L
         private val getVelocityTextureBind by lazy {
             ObjectCalls.getMethodBind("XRInterfaceExtension", "get_velocity_texture", GET_VELOCITY_TEXTURE_HASH)
+        }
+
+        private const val ADD_BLIT_HASH = 258596971L
+        private val addBlitBind by lazy {
+            ObjectCalls.getMethodBind("XRInterfaceExtension", "add_blit", ADD_BLIT_HASH)
         }
 
         private const val GET_RENDER_TARGET_TEXTURE_HASH = 41030802L

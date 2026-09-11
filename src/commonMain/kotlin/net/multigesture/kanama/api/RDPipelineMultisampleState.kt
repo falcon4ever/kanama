@@ -42,9 +42,11 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setEnableAlphaToOneProperty")
         set(value) = setEnableAlphaToOne(value)
 
-    val sampleMasks: List<Long>
+    var sampleMasks: List<Long>
         @JvmName("sampleMasksProperty")
         get() = getSampleMasks()
+        @JvmName("setSampleMasksProperty")
+        set(value) = setSampleMasks(value)
 
     /**
      * The number of MSAA samples (or SSAA samples if `enable_sample_shading` is `true`) to perform.
@@ -175,6 +177,18 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-samplemask)
      * for more details.
      *
+     * Generated from Godot docs: RDPipelineMultisampleState.set_sample_masks
+     */
+    fun setSampleMasks(masks: List<Long>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTypedIntListArg(setSampleMasksBind, handle, masks)
+    }
+
+    /**
+     * The sample mask array. See the sample mask Vulkan documentation
+     * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-samplemask)
+     * for more details.
+     *
      * Generated from Godot docs: RDPipelineMultisampleState.get_sample_masks
      */
     fun getSampleMasks(): List<Long> {
@@ -238,6 +252,11 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_ENABLE_ALPHA_TO_ONE_HASH = 36873697L
         private val getEnableAlphaToOneBind by lazy {
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_enable_alpha_to_one", GET_ENABLE_ALPHA_TO_ONE_HASH)
+        }
+
+        private const val SET_SAMPLE_MASKS_HASH = 381264803L
+        private val setSampleMasksBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_sample_masks", SET_SAMPLE_MASKS_HASH)
         }
 
         private const val GET_SAMPLE_MASKS_HASH = 3995934104L
