@@ -14,6 +14,7 @@ import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.CanvasLayer
 import net.multigesture.kanama.api.Curve
+import net.multigesture.kanama.api.Control
 import net.multigesture.kanama.api.DirectionalLight3D
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -534,6 +535,48 @@ class Main(godotObject: GodotHandle) :
     if (curve != null && abs(curve.sample(0.5) - 0.5) < 1e-3) mask = mask or 2L
     return mask
   }
+
+  /**
+   * Task-64 DemoPage-set conformance probe (driver method after `curve_sample_probe`, protocol 24):
+   * bit 1 = `SceneTree.is_paused` (opcode 307) reads back the pause the probe sets and clears
+   * again, bit 2 = `Input.get_connected_joypads` (312, the new Long-list singleton shape on the
+   * string channel) answered (empty on a headless runner), bit 4 = the WorldEnvironment's
+   * Environment took `set_ssil_enabled` / `set_sdfgi_enabled` (309/310; queued, a Compatibility
+   * no-op), bit 8 = `Control.release_focus` (308) was issued on the probe Label, bit 16 = a
+   * `MainThread.postAfterFrames(3)` hop chain was scheduled (its arrival is read back through
+   * [demoPageProbeAfter]). A healthy run returns 31 and [demoPageProbeAfter] returns 1 later.
+   */
+  @RegisterFunction("demo_page_probe")
+  fun demoPageProbe(value: Long): Long {
+    var mask = 0L
+    val tree = self.getTree()
+    val pausedBefore = tree.isPaused()
+    tree.setPaused(true)
+    val pausedNow = tree.isPaused()
+    tree.setPaused(pausedBefore)
+    if (pausedNow && tree.isPaused() == pausedBefore) mask = mask or 1L
+    if (Input.getConnectedJoypads().isEmpty()) mask = mask or 2L
+    val environment = self.getAsOrNull("Environment", ::WorldEnvironment)?.environment
+    if (environment != null) {
+      environment.setSsilEnabled(false)
+      environment.setSdfgiEnabled(false)
+      mask = mask or 4L
+    }
+    val probeLabel = self.getAsOrNull("MobileControls/ProbeLabel", ::Control)
+    if (probeLabel != null) {
+      probeLabel.releaseFocus()
+      mask = mask or 8L
+    }
+    MainThread.postAfterFrames(3) { demoPageAfterFrames = true }
+    mask = mask or 16L
+    return mask
+  }
+
+  private var demoPageAfterFrames = false
+
+  /** Task-64 DemoPage-set readback: 1 once the `postAfterFrames(3)` hop chain has run. */
+  @RegisterFunction("demo_page_probe_after")
+  fun demoPageProbeAfter(value: Long): Long = if (demoPageAfterFrames) 1L else 0L
 
   // ---------- Task 80 slice 2: dispatch-shape conformance probe ----------
   //

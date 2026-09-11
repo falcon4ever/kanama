@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 23;
+  const KANAMA_WEB_PROTOCOL_VERSION = 24;
 
   function commandWordCount(opcode) {
     if (
@@ -19,6 +19,9 @@
       opcode === 59 ||
       opcode === 63 ||
       opcode === 64 ||
+      // Task 64 DemoPage set: Control.release_focus, SceneTree.unload_current_scene (no payload).
+      opcode === 308 ||
+      opcode === 311 ||
       opcode === 147 ||
       opcode === 251 ||
       opcode === 283 ||
@@ -75,6 +78,9 @@
       opcode === 50 ||
       opcode === 53 ||
       opcode === 54 ||
+      // Task 64 DemoPage set: Environment.set_ssil_enabled / set_sdfgi_enabled (one bool word).
+      opcode === 309 ||
+      opcode === 310 ||
       opcode === 55 ||
       opcode === 56 ||
       opcode === 60 ||

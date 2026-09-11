@@ -7,6 +7,21 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — Web: the DemoPage set (task 64, parcel 3)
+
+- **Web protocol 23 → 24.** The Kotlin/Wasm backend admits `SceneTree.is_paused` (307),
+  `Control.release_focus` (308), `Environment.set_ssil_enabled` / `set_sdfgi_enabled` (309/310),
+  `SceneTree.unload_current_scene` (311) and `Input.get_connected_joypads` (312, a new
+  `NOARGS_RET_LONG_LIST_SINGLETON` shape: comma-joined ids on the string channel). The Web
+  `MainThread` gains `postAfterFrames(frames) { }` (one scheduler post per frame) and `SceneTree`
+  the companion `quit()` / `unloadCurrentScene()` calls through the executing script's tree, so
+  third-person's shared `DemoPage.kt` compiles and runs on Web without an override (the browser
+  branches — Exit resumes instead of quitting, the deferred-lighting upgrade is skipped on the
+  Compatibility renderer — are `OS.hasFeature("web")` gates in the shared file). The in-repo
+  `web3d` fixture proves the set (`Main.demo_page_probe` = 31, `demo_page_probe_after` = 1).
+  **Existing Web exports must be rebuilt**: a protocol-23 export refuses to load against a
+  protocol-24 bridge, and vice versa.
+
 ### Changed — iOS shape gap page: desktop-only-by-design members recorded (task 100 close-out)
 
 - The generated gap page (`docs/reference/generated/ios-shape-gap.md`) now separates members that
