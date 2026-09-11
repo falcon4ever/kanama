@@ -137,6 +137,10 @@ transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0,
 
 [node name="MobileControls" type="CanvasLayer" parent="."]
 
+[node name="ProbeLabel" type="Label" parent="MobileControls"]
+text = "probe"
+focus_mode = 2
+
 [node name="SmokeQuit" type="Node" parent="."]
 script = ExtResource("2_smoke")
 

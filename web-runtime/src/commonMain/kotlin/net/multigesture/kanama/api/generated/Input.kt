@@ -75,6 +75,9 @@ object Input {
     return GodotBackendCalls.invokeStringNameRetDoubleSingleton(D.INPUT_GET_ACTION_STRENGTH, action)
   }
 
+  fun getConnectedJoypads(): List<Long> =
+    GodotBackendCalls.invokeNoArgsRetLongListSingleton(D.INPUT_GET_CONNECTED_JOYPADS)
+
   var mouseMode: Long
     get() = getMouseMode()
     set(newValue) = setMouseMode(newValue)
@@ -141,6 +144,9 @@ fun Input.isActionJustReleased(action: String, exactMatch: Boolean = false): Boo
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Input.getActionStrength(action: String, exactMatch: Boolean = false): Double = getActionStrength(action, exactMatch)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Input.getConnectedJoypads(): List<Long> = getConnectedJoypads()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Input.mouseMode: Long

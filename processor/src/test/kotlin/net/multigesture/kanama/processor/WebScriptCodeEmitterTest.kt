@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 23"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 24"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -426,6 +426,19 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.contains("result = int((value as InputEventKey).physical_keycode)"))
     assertTrue(proxy.contains("elif opcode == 299 and value is InputEvent:"))
     assertTrue(proxy.contains("result = int((value as InputEvent).is_echo())"))
+    // Task 64 DemoPage set (protocol 24): the pause read-back, the focus release command, the
+    // Environment toggles, the unload command and the joypad enumeration on the string channel.
+    assertTrue(proxy.contains("elif opcode == 307 and value is SceneTree:"))
+    assertTrue(proxy.contains("result = int((value as SceneTree).paused)"))
+    assertTrue(proxy.contains("elif opcode == 308 and target_object is Control:"))
+    assertTrue(proxy.contains("elif opcode == 309 and target_object is Environment:"))
+    assertTrue(
+      proxy.contains(
+        "(target_object as Environment).ssil_enabled = bytes.decode_s32(offset + 8) != 0"
+      )
+    )
+    assertTrue(proxy.contains("elif opcode == 311 and target_object is SceneTree:"))
+    assertTrue(proxy.contains("for joypad_id in Input.get_connected_joypads():"))
     assertTrue(proxy.contains("elif opcode == 305 and value is InputEvent:"))
     assertTrue(
       proxy.contains("result = int((value as InputEvent).is_action(StringName(String(args[2]))))")
@@ -684,7 +697,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 23"))
+    assertTrue(protocol.contains("\"protocolVersion\": 24"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -695,7 +708,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=23\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=24\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1705,7 +1718,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 23"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 24"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(

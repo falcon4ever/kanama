@@ -60,6 +60,20 @@ object MainThread {
   fun post(block: () -> Unit) {
     WebFrameScheduler.post(block)
   }
+
+  /**
+   * Runs [block] after [frames] frame pumps, like desktop's `MainThread.postAfterFrames` (task 64,
+   * the DemoPage set): each hop is one scheduler post, so `frames = 0` is a plain [post]. Must be
+   * called from a script callback (the scheduler binds the work to the current owner).
+   */
+  fun postAfterFrames(frames: Int, block: () -> Unit) {
+    require(frames >= 0) { "MainThread.postAfterFrames requires a non-negative frame count" }
+    if (frames <= 1) {
+      post(block)
+    } else {
+      post { postAfterFrames(frames - 1, block) }
+    }
+  }
 }
 
 /** Frame-deferred work; the Web scheduler already runs posts on the next frame. */

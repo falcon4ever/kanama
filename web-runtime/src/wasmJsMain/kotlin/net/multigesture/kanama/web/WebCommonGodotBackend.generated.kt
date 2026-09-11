@@ -117,6 +117,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           254,
           256,
           261,
+          309,
+          310,
         )
     )
     val objectId = receiver.webId()
@@ -1429,6 +1431,21 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
         val parts = triple.split(',')
         GodotVector3i(parts[0].toInt(), parts[1].toInt(), parts[2].toInt())
       }
+  }
+
+  override fun invokeNoArgsRetLongListSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): List<Long> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 312)
+    commands.flush()
+    // The applier joins the ids with commas on the string channel; an empty string is no joypad.
+    return immediateWebStringQuery(descriptor.opcode, requireActiveWebScriptHandle(), "")
+      .split(',')
+      .filter { it.isNotEmpty() }
+      .map { it.toLong() }
   }
 
   override fun invokeLongObjectArg(

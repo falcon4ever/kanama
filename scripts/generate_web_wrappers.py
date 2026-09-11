@@ -231,6 +231,8 @@ def api_return(tree: Tree, godot_type: str, meta: str, spi_ret: str) -> tuple[st
         return "Long", ""
     if spi_ret == "List<String>":
         return "List<String>", ""
+    if spi_ret == "List<Long>":
+        return "List<Long>", ""
     if spi_ret == "List<GodotVector3i>":
         return "List<Vector3i>", ".map { it.toApi() }"
     if spi_ret in SPI_TO_API:
@@ -968,6 +970,20 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
         continuation.invokeOnCancellation { WebFrameScheduler.cancelTask(taskId) }
       }
     }
+
+    /**
+     * Desktop parity (task 64, the DemoPage set): the static `SceneTree.quit()` /
+     * `unloadCurrentScene()` calls reach the tree through the script that is currently executing
+     * (the scheduler's owner), so they must be called from a script callback -- which is where
+     * the shared demo scripts call them. The shared DemoPage takes its browser branch before
+     * reaching them (a page has no app to quit); the members exist so it compiles on Web.
+     */
+    fun quit(exitCode: Long = 0L) = currentOwnerTree().quit(exitCode)
+
+    fun unloadCurrentScene() = currentOwnerTree().unloadCurrentScene()
+
+    private fun currentOwnerTree(): SceneTree =
+      Node(GodotHandle(WebFrameScheduler.requireCurrentOwner())).getTree()
 """,
         "top_level": """
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

@@ -22,6 +22,10 @@ open class Control(godotObject: GodotHandle) : CanvasItem(godotObject) {
   fun getSize(): Vector2 =
     GodotBackendCalls.invokeNoArgsRetVector2(D.CONTROL_GET_SIZE, requireOpenHandle()).toApi()
 
+  fun releaseFocus() {
+    GodotBackendCalls.invokeNoArgsVoid(D.CONTROL_RELEASE_FOCUS, requireOpenHandle())
+  }
+
   val position: Vector2
     get() = getPosition()
 
@@ -37,6 +41,9 @@ fun Control.getPosition(): Vector2 = getPosition()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Control.getSize(): Vector2 = getSize()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Control.releaseFocus() = releaseFocus()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 val Control.position: Vector2

@@ -142,6 +142,19 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`curveProbe: mask=${curveProbe}`);
 
+  // Task 64 DemoPage set (protocol 24): Main.demo_page_probe (Int->Int) returns a mask -- bit 1 =
+  // SceneTree.is_paused read the pause back, bit 2 = Input.get_connected_joypads answered (the new
+  // Long-list singleton shape; empty on a headless runner), bit 4 = Environment SSIL/SDFGI toggles
+  // were queued, bit 8 = Control.release_focus was queued, bit 16 = a postAfterFrames(3) chain was
+  // scheduled; demo_page_probe_after reads 1 once that chain ran (checked after the coroutine
+  // section pumped frames). A healthy run returns 31 then 1.
+  const demoPageProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("demo_page_probe")}, 0)`,
+    ),
+  );
+  trace(`demoPageProbe: mask=${demoPageProbe}`);
+
   // Task 80 slice 4: signal-shape conformance (see Main.signal_probe).
   const signalProbe = Number(
     await evaluate(
@@ -288,6 +301,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
 
   // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the scene root, draining handles.
+  const demoPageProbeAfter = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("demo_page_probe_after")}, 0)`,
+    ),
+  );
+  trace(`demoPageProbeAfter: ${demoPageProbeAfter}`);
+
   trace("smoke_teardown");
   await evaluate(
     "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dSmokeQuitHandle, 1); true",
@@ -331,6 +351,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // non-null and Curve.sample reads back the VALUE the linear probe curve predicts, not
     // merely a successful call.
     curveResourceHydrationDeliversValue: curveProbe === 3,
+    // Task 64 DemoPage set: pause read-back, joypad enumeration, Environment toggles, focus release
+    // and the postAfterFrames hop chain (the readback runs after the coroutine section's pumps).
+    demoPageSetDelivers: demoPageProbe === 31 && demoPageProbeAfter === 1,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

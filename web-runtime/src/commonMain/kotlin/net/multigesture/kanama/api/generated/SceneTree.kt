@@ -45,8 +45,15 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
     return checkNotNull(returned) { "SceneTree has no root window" }
   }
 
+  fun isPaused(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(D.SCENETREE_IS_PAUSED, requireOpenHandle())
+
+  fun unloadCurrentScene() {
+    GodotBackendCalls.invokeNoArgsVoid(D.SCENETREE_UNLOAD_CURRENT_SCENE, requireOpenHandle())
+  }
+
   var paused: Boolean
-    get() = unsupportedWebGameplayFamily("SceneTree.is_paused")
+    get() = isPaused()
     set(newValue) = setPause(newValue)
 
   /** The root window as its Viewport face (the tps corpus's `getTree().root`). */
@@ -69,6 +76,20 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
         continuation.invokeOnCancellation { WebFrameScheduler.cancelTask(taskId) }
       }
     }
+
+    /**
+     * Desktop parity (task 64, the DemoPage set): the static `SceneTree.quit()` /
+     * `unloadCurrentScene()` calls reach the tree through the script that is currently executing
+     * (the scheduler's owner), so they must be called from a script callback -- which is where
+     * the shared demo scripts call them. The shared DemoPage takes its browser branch before
+     * reaching them (a page has no app to quit); the members exist so it compiles on Web.
+     */
+    fun quit(exitCode: Long = 0L) = currentOwnerTree().quit(exitCode)
+
+    fun unloadCurrentScene() = currentOwnerTree().unloadCurrentScene()
+
+    private fun currentOwnerTree(): SceneTree =
+      Node(GodotHandle(WebFrameScheduler.requireCurrentOwner())).getTree()
   }
 }
 
@@ -89,6 +110,12 @@ fun SceneTree.setPaused(enable: Boolean) = setPaused(enable)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun SceneTree.getRoot(): GodotHandle = getRoot()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun SceneTree.isPaused(): Boolean = isPaused()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun SceneTree.unloadCurrentScene() = unloadCurrentScene()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var SceneTree.paused: Boolean

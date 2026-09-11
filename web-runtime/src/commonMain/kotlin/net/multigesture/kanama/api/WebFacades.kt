@@ -279,19 +279,13 @@ fun RenderingServer.environmentSetSsilQuality(
 fun Viewport.setInputAsHandled() = Unit
 
 /**
- * Global-illumination and screen-space effect toggles. The Web export runs the compatibility
- * renderer, which has no SDFGI, VoxelGI, SSAO, SSIL, or volumetric fog: these stay inert rather
- * than pretending to apply.
+ * Screen-space effect toggles the compatibility renderer has no implementation for (SSAO,
+ * volumetric fog): these stay inert rather than pretending to apply. `ssilEnabled` and
+ * `sdfgiEnabled` are real (queued) members since protocol 24 — the engine ignores them on the
+ * Compatibility renderer — so the shared DemoPage compiles; their getters are the setter-only
+ * coverage markers of the generated wrapper.
  */
-var Environment.sdfgiEnabled: Boolean
-  get() = false
-  set(@Suppress("UNUSED_PARAMETER") value) = Unit
-
 var Environment.ssaoEnabled: Boolean
-  get() = false
-  set(@Suppress("UNUSED_PARAMETER") value) = Unit
-
-var Environment.ssilEnabled: Boolean
   get() = false
   set(@Suppress("UNUSED_PARAMETER") value) = Unit
 

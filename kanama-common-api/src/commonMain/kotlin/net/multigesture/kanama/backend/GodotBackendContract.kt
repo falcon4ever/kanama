@@ -88,6 +88,7 @@ enum class GodotCallShape {
   VECTOR3I_RET_LONG,
   BASIS_RET_LONG,
   NOARGS_RET_VECTOR3I_LIST,
+  NOARGS_RET_LONG_LIST_SINGLETON,
   LONG_OBJECT_ARG,
   LONG_TRANSFORM3D_ARG,
   LONG_RET_STRING,
@@ -575,6 +576,12 @@ interface GodotBackendSpi {
 
   /** Singleton no-args Long query (no receiver): e.g. Input.get_mouse_mode. */
   fun invokeNoArgsRetLongSingleton(descriptor: GodotCallDescriptor, callSite: GodotCallSite): Long
+
+  /** Singleton no-args Long-list query (no receiver): e.g. Input.get_connected_joypads. */
+  fun invokeNoArgsRetLongListSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): List<Long>
 
   /** Signal emission carrying one Godot-object argument. */
   fun invokeStringNameObjectRetInt(
@@ -1473,6 +1480,12 @@ object GodotBackendCalls {
     requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG_SINGLETON)
     val selected = requireBackend()
     return selected.invokeNoArgsRetLongSingleton(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeNoArgsRetLongListSingleton(descriptor: GodotCallDescriptor): List<Long> {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG_LIST_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeNoArgsRetLongListSingleton(descriptor, resolve(selected, descriptor))
   }
 
   fun invokeStringNameObjectRetInt(
