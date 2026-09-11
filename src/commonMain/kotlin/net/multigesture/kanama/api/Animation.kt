@@ -277,6 +277,16 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Inserts a generic key in a given track. Returns the key index.
+     *
+     * Generated from Godot docs: Animation.track_insert_key
+     */
+    fun trackInsertKey(trackIdx: Int, time: Double, key: Any?, transition: Double = 1.0): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(trackInsertKeyBind, handle, trackIdx, time, key, transition)
+    }
+
+    /**
      * Removes a key by index in a given track.
      *
      * Generated from Godot docs: Animation.track_remove_key
@@ -294,6 +304,16 @@ class Animation(handle: MemorySegment) : Resource(handle) {
     fun trackRemoveKeyAtTime(trackIdx: Int, time: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(trackRemoveKeyAtTimeBind, handle, trackIdx, time)
+    }
+
+    /**
+     * Sets the value of an existing key.
+     *
+     * Generated from Godot docs: Animation.track_set_key_value
+     */
+    fun trackSetKeyValue(trackIdx: Int, key: Int, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoIntAndVariantArg(trackSetKeyValueBind, handle, trackIdx, key, value)
     }
 
     /**
@@ -1080,6 +1100,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Animation", "blend_shape_track_interpolate", BLEND_SHAPE_TRACK_INTERPOLATE_HASH)
         }
 
+        private const val TRACK_INSERT_KEY_HASH = 808952278L
+        private val trackInsertKeyBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "track_insert_key", TRACK_INSERT_KEY_HASH)
+        }
+
         private const val TRACK_REMOVE_KEY_HASH = 3937882851L
         private val trackRemoveKeyBind by lazy {
             ObjectCalls.getMethodBind("Animation", "track_remove_key", TRACK_REMOVE_KEY_HASH)
@@ -1088,6 +1113,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
         private const val TRACK_REMOVE_KEY_AT_TIME_HASH = 1602489585L
         private val trackRemoveKeyAtTimeBind by lazy {
             ObjectCalls.getMethodBind("Animation", "track_remove_key_at_time", TRACK_REMOVE_KEY_AT_TIME_HASH)
+        }
+
+        private const val TRACK_SET_KEY_VALUE_HASH = 2060538656L
+        private val trackSetKeyValueBind by lazy {
+            ObjectCalls.getMethodBind("Animation", "track_set_key_value", TRACK_SET_KEY_VALUE_HASH)
         }
 
         private const val TRACK_SET_KEY_TRANSITION_HASH = 3506521499L

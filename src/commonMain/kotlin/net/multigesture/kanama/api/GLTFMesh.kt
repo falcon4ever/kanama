@@ -72,6 +72,11 @@ class GLTFMesh(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
+    fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GLTFMesh? =
@@ -118,6 +123,11 @@ class GLTFMesh(handle: MemorySegment) : Resource(handle) {
         private const val GET_ADDITIONAL_DATA_HASH = 2138907829L
         private val getAdditionalDataBind by lazy {
             ObjectCalls.getMethodBind("GLTFMesh", "get_additional_data", GET_ADDITIONAL_DATA_HASH)
+        }
+
+        private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
+        private val setAdditionalDataBind by lazy {
+            ObjectCalls.getMethodBind("GLTFMesh", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
         }
     }
 }

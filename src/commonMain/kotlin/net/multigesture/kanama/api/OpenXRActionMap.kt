@@ -10,13 +10,22 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: OpenXRActionMap
  */
 class OpenXRActionMap(handle: MemorySegment) : Resource(handle) {
-    val actionSets: List<Any?>
+    var actionSets: List<Any?>
         @JvmName("actionSetsProperty")
         get() = getActionSets()
+        @JvmName("setActionSetsProperty")
+        set(value) = setActionSets(value)
 
-    val interactionProfiles: List<Any?>
+    var interactionProfiles: List<Any?>
         @JvmName("interactionProfilesProperty")
         get() = getInteractionProfiles()
+        @JvmName("setInteractionProfilesProperty")
+        set(value) = setInteractionProfiles(value)
+
+    fun setActionSets(actionSets: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setActionSetsBind, handle, actionSets)
+    }
 
     fun getActionSets(): List<Any?> {
         checkOpen()
@@ -46,6 +55,11 @@ class OpenXRActionMap(handle: MemorySegment) : Resource(handle) {
     fun removeActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(removeActionSetBind, handle, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
+    }
+
+    fun setInteractionProfiles(interactionProfiles: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setInteractionProfilesBind, handle, interactionProfiles)
     }
 
     fun getInteractionProfiles(): List<Any?> {
@@ -91,6 +105,11 @@ class OpenXRActionMap(handle: MemorySegment) : Resource(handle) {
         internal fun wrap(handle: MemorySegment): OpenXRActionMap? =
             if (handle.address() == 0L) null else OpenXRActionMap(handle)
 
+        private const val SET_ACTION_SETS_HASH = 381264803L
+        private val setActionSetsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRActionMap", "set_action_sets", SET_ACTION_SETS_HASH)
+        }
+
         private const val GET_ACTION_SETS_HASH = 3995934104L
         private val getActionSetsBind by lazy {
             ObjectCalls.getMethodBind("OpenXRActionMap", "get_action_sets", GET_ACTION_SETS_HASH)
@@ -119,6 +138,11 @@ class OpenXRActionMap(handle: MemorySegment) : Resource(handle) {
         private const val REMOVE_ACTION_SET_HASH = 2093310581L
         private val removeActionSetBind by lazy {
             ObjectCalls.getMethodBind("OpenXRActionMap", "remove_action_set", REMOVE_ACTION_SET_HASH)
+        }
+
+        private const val SET_INTERACTION_PROFILES_HASH = 381264803L
+        private val setInteractionProfilesBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRActionMap", "set_interaction_profiles", SET_INTERACTION_PROFILES_HASH)
         }
 
         private const val GET_INTERACTION_PROFILES_HASH = 3995934104L

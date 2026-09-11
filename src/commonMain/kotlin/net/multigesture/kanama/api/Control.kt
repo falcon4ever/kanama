@@ -1948,6 +1948,18 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
     }
 
     /**
+     * Forces drag and bypasses `_get_drag_data` and `set_drag_preview` by passing `data` and
+     * `preview`. Drag will start even if the mouse is neither over nor pressed on this control. The
+     * methods `_can_drop_data` and `_drop_data` must be implemented on controls that want to receive
+     * drop data.
+     *
+     * Generated from Godot docs: Control.force_drag
+     */
+    fun forceDrag(data: Any?, preview: Control) {
+        ObjectCalls.ptrcallWithVariantAndObjectArg(forceDragBind, handle, data, preview.handle)
+    }
+
+    /**
      * Starts drag-and-drop operation without using a mouse.
      *
      * Generated from Godot docs: Control.accessibility_drag
@@ -3139,6 +3151,11 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         private const val GET_FOCUS_PREVIOUS_HASH = 4075236667L
         private val getFocusPreviousBind by lazy {
             ObjectCalls.getMethodBind("Control", "get_focus_previous", GET_FOCUS_PREVIOUS_HASH)
+        }
+
+        private const val FORCE_DRAG_HASH = 3191844692L
+        private val forceDragBind by lazy {
+            ObjectCalls.getMethodBind("Control", "force_drag", FORCE_DRAG_HASH)
         }
 
         private const val ACCESSIBILITY_DRAG_HASH = 3218959716L

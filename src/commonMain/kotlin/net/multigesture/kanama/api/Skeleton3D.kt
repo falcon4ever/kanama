@@ -106,6 +106,15 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     /**
+     * Sets the metadata with the given `key` to `value` for the bone at index `bone_idx`.
+     *
+     * Generated from Godot docs: Skeleton3D.set_bone_meta
+     */
+    fun setBoneMeta(boneIdx: Int, key: String, value: Any?) {
+        ObjectCalls.ptrcallWithIntStringNameAndVariantArg(setBoneMetaBind, handle, boneIdx, key, value)
+    }
+
+    /**
      * Returns all bone names concatenated with commas (`,`) as a single `StringName`. It is useful to
      * set it as a hint for the enum property.
      *
@@ -623,6 +632,11 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
         private const val HAS_BONE_META_HASH = 921227809L
         private val hasBoneMetaBind by lazy {
             ObjectCalls.getMethodBind("Skeleton3D", "has_bone_meta", HAS_BONE_META_HASH)
+        }
+
+        private const val SET_BONE_META_HASH = 702482756L
+        private val setBoneMetaBind by lazy {
+            ObjectCalls.getMethodBind("Skeleton3D", "set_bone_meta", SET_BONE_META_HASH)
         }
 
         private const val GET_CONCATENATED_BONE_NAMES_HASH = 2002593661L

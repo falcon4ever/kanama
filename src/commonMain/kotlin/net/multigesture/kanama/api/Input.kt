@@ -769,6 +769,19 @@ object Input {
     }
 
     /**
+     * Sets the specified joypad's calibration information. See also
+     * `get_joy_motion_sensors_calibration`. See `start_joy_motion_sensors_calibration` for an example
+     * on how to use joypad motion sensors and calibration in your games. Note: This feature is only
+     * supported on Windows, Linux, macOS, and iOS.
+     *
+     * Generated from Godot docs: Input.set_joy_motion_sensors_calibration
+     */
+    @JvmStatic
+    fun setJoyMotionSensorsCalibration(device: Int, calibrationInfo: Map<String, Any?>) {
+        ObjectCalls.ptrcallWithIntAndDictionaryArg(setJoyMotionSensorsCalibrationBind, singleton, device, calibrationInfo)
+    }
+
+    /**
      * Returns `true` if the joypad's motion sensors have been calibrated. See
      * `start_joy_motion_sensors_calibration` for an example on how to use joypad motion sensors and
      * calibration in your games. Note: This feature is only supported on Windows, Linux, macOS, and
@@ -1359,6 +1372,11 @@ object Input {
     private const val GET_JOY_MOTION_SENSORS_CALIBRATION_HASH = 3485342025L
     private val getJoyMotionSensorsCalibrationBind by lazy {
         ObjectCalls.getMethodBind("Input", "get_joy_motion_sensors_calibration", GET_JOY_MOTION_SENSORS_CALIBRATION_HASH)
+    }
+
+    private const val SET_JOY_MOTION_SENSORS_CALIBRATION_HASH = 64545446L
+    private val setJoyMotionSensorsCalibrationBind by lazy {
+        ObjectCalls.getMethodBind("Input", "set_joy_motion_sensors_calibration", SET_JOY_MOTION_SENSORS_CALIBRATION_HASH)
     }
 
     private const val IS_JOY_MOTION_SENSORS_CALIBRATED_HASH = 1116898809L

@@ -622,6 +622,19 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Creates or changes the value of the theme property of `data_type` defined by `name` and
+     * `theme_type`. Use `clear_theme_item` to remove the property. Fails if the `value` type is not
+     * accepted by `data_type`. Note: This method is analogous to calling the corresponding data type
+     * specific method, but can be used for more generalized logic.
+     *
+     * Generated from Godot docs: Theme.set_theme_item
+     */
+    fun setThemeItem(dataType: Long, name: String, themeType: String, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(setThemeItemBind, handle, dataType, name, themeType, value)
+    }
+
+    /**
      * Returns the theme property of `data_type` defined by `name` and `theme_type`, if it exists.
      * Returns the engine fallback value if the property doesn't exist (see `ThemeDB`). Use
      * `has_theme_item` to check for existence. Note: This method is analogous to calling the
@@ -1095,6 +1108,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         private const val HAS_DEFAULT_FONT_SIZE_HASH = 36873697L
         private val hasDefaultFontSizeBind by lazy {
             ObjectCalls.getMethodBind("Theme", "has_default_font_size", HAS_DEFAULT_FONT_SIZE_HASH)
+        }
+
+        private const val SET_THEME_ITEM_HASH = 2492983623L
+        private val setThemeItemBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "set_theme_item", SET_THEME_ITEM_HASH)
         }
 
         private const val GET_THEME_ITEM_HASH = 2191024021L

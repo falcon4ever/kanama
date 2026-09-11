@@ -206,9 +206,11 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         @JvmName("setStructuredTextBidiOverrideProperty")
         set(value) = setStructuredTextBidiOverride(value)
 
-    val structuredTextBidiOverrideOptions: List<Any?>
+    var structuredTextBidiOverrideOptions: List<Any?>
         @JvmName("structuredTextBidiOverrideOptionsProperty")
         get() = getStructuredTextBidiOverrideOptions()
+        @JvmName("setStructuredTextBidiOverrideOptionsProperty")
+        set(value) = setStructuredTextBidiOverrideOptions(value)
 
     /**
      * Controls the text's horizontal alignment. Supports left, center, right, and fill (also known as
@@ -356,6 +358,15 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+    }
+
+    /**
+     * Set additional options for BiDi override.
+     *
+     * Generated from Godot docs: Label3D.set_structured_text_bidi_override_options
+     */
+    fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
     /**
@@ -881,6 +892,11 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
         private val getStructuredTextBidiOverrideBind by lazy {
             ObjectCalls.getMethodBind("Label3D", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
+        }
+
+        private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
+        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+            ObjectCalls.getMethodBind("Label3D", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
         }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L

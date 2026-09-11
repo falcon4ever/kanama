@@ -190,6 +190,20 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetArray(getFormatsBind, handle)
     }
 
+    /**
+     * Sets the feed format parameters for the given `index` in the `formats` array. Returns `true` on
+     * success. By default, the YUYV encoded stream is transformed to `FEED_RGB`. The YUYV encoded
+     * stream output format can be changed by setting `parameters`'s `output` entry to one of the
+     * following: - `"separate"` will result in `FEED_YCBCR_SEP`; - `"grayscale"` will result in
+     * desaturated `FEED_RGB`; - `"copy"` will result in `FEED_YCBCR`.
+     *
+     * Generated from Godot docs: CameraFeed.set_format
+     */
+    fun setFormat(index: Int, parameters: Map<String, Any?>): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(setFormatBind, handle, index, parameters)
+    }
+
     object Signals {
         const val frameChanged: String = "frame_changed"
         const val formatChanged: String = "format_changed"
@@ -290,6 +304,11 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_FORMATS_HASH = 3995934104L
         private val getFormatsBind by lazy {
             ObjectCalls.getMethodBind("CameraFeed", "get_formats", GET_FORMATS_HASH)
+        }
+
+        private const val SET_FORMAT_HASH = 31872775L
+        private val setFormatBind by lazy {
+            ObjectCalls.getMethodBind("CameraFeed", "set_format", SET_FORMAT_HASH)
         }
     }
 }

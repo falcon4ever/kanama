@@ -59,6 +59,11 @@ class OpenXRMarkerTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
         return ObjectCalls.ptrcallNoArgsRetUInt32(getMarkerIdBind, handle)
     }
 
+    fun setMarkerData(markerData: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithVariantArg(setMarkerDataBind, handle, markerData)
+    }
+
     fun getMarkerData(): Any? {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getMarkerDataBind, handle)
@@ -100,6 +105,11 @@ class OpenXRMarkerTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
         private const val GET_MARKER_ID_HASH = 3905245786L
         private val getMarkerIdBind by lazy {
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "get_marker_id", GET_MARKER_ID_HASH)
+        }
+
+        private const val SET_MARKER_DATA_HASH = 1114965689L
+        private val setMarkerDataBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRMarkerTracker", "set_marker_data", SET_MARKER_DATA_HASH)
         }
 
         private const val GET_MARKER_DATA_HASH = 1214101251L

@@ -31,6 +31,11 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getSessionBind, handle)
     }
 
+    fun xrResult(result: Long, format: String, args: List<Any?>): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(xrResultBind, handle, result, format, args)
+    }
+
     fun getInstanceProcAddr(name: String): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(getInstanceProcAddrBind, handle, name)
@@ -275,6 +280,11 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_SESSION_HASH = 2455072627L
         private val getSessionBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_session", GET_SESSION_HASH)
+        }
+
+        private const val XR_RESULT_HASH = 3886436197L
+        private val xrResultBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "xr_result", XR_RESULT_HASH)
         }
 
         private const val OPENXR_IS_ENABLED_HASH = 2703660260L

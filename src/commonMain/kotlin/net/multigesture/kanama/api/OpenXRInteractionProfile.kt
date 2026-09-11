@@ -16,13 +16,17 @@ class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
         @JvmName("setInteractionProfilePathProperty")
         set(value) = setInteractionProfilePath(value)
 
-    val bindings: List<Any?>
+    var bindings: List<Any?>
         @JvmName("bindingsProperty")
         get() = getBindings()
+        @JvmName("setBindingsProperty")
+        set(value) = setBindings(value)
 
-    val bindingModifiers: List<Any?>
+    var bindingModifiers: List<Any?>
         @JvmName("bindingModifiersProperty")
         get() = getBindingModifiers()
+        @JvmName("setBindingModifiersProperty")
+        set(value) = setBindingModifiers(value)
 
     fun setInteractionProfilePath(interactionProfilePath: String) {
         checkOpen()
@@ -44,6 +48,11 @@ class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
         return OpenXRIPBinding.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingBind, handle, index))
     }
 
+    fun setBindings(bindings: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setBindingsBind, handle, bindings)
+    }
+
     fun getBindings(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getBindingsBind, handle)
@@ -57,6 +66,11 @@ class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
     fun getBindingModifier(index: Int): OpenXRIPBindingModifier? {
         checkOpen()
         return OpenXRIPBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, handle, index))
+    }
+
+    fun setBindingModifiers(bindingModifiers: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setBindingModifiersBind, handle, bindingModifiers)
     }
 
     fun getBindingModifiers(): List<Any?> {
@@ -92,6 +106,11 @@ class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_binding", GET_BINDING_HASH)
         }
 
+        private const val SET_BINDINGS_HASH = 381264803L
+        private val setBindingsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRInteractionProfile", "set_bindings", SET_BINDINGS_HASH)
+        }
+
         private const val GET_BINDINGS_HASH = 3995934104L
         private val getBindingsBind by lazy {
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_bindings", GET_BINDINGS_HASH)
@@ -105,6 +124,11 @@ class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
         private const val GET_BINDING_MODIFIER_HASH = 2419896583L
         private val getBindingModifierBind by lazy {
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_binding_modifier", GET_BINDING_MODIFIER_HASH)
+        }
+
+        private const val SET_BINDING_MODIFIERS_HASH = 381264803L
+        private val setBindingModifiersBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRInteractionProfile", "set_binding_modifiers", SET_BINDING_MODIFIERS_HASH)
         }
 
         private const val GET_BINDING_MODIFIERS_HASH = 3995934104L

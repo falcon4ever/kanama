@@ -477,6 +477,22 @@ typedef struct {
 } KanamaIosCallableArgDesc;
 
 /*
+ * Descriptor for a Variant argument passed through the generic ptrcall dispatcher (task 100,
+ * parcel 7; KANAMA_IOS_PT_VARIANT tag). `tag` is the KANAMA_IOS_PT_* kind of the value `ptr`
+ * points at, laid out exactly as the Object-call boxer reads it: VOID (nil, ptr unused),
+ * BOOL (1 byte), INT64 (8), FLOAT64 (8), STRING / STRING_NAME / NODE_PATH (a C string), OBJECT
+ * (an int64 handle), RID (a uint64), VECTOR2 / VECTOR3 (float32 components), VECTOR2I (int32
+ * components), COLOR (4 float32), DICTIONARY / ARRAY (a task-29 entry blob). The dispatch boxes
+ * it into a Variant cell for the call and destroys the cell afterwards; nothing outlives the call.
+ * Dictionary and Array ARGUMENTS use the DICTIONARY / ARRAY tags directly: the arg pointer is the
+ * entry blob and the dispatch rebuilds the container into a cell for the call.
+ */
+typedef struct {
+    int32_t tag;
+    const void *ptr;
+} KanamaIosVariantArgDesc;
+
+/*
  * Typed-object-array (Array[Object]) ptrcall return -> object handles. Drives the call through
  * the generic dispatcher (arg_types/arg_ptrs/arg_count laid out as for kanama_ios_godot_ptrcall),
  * returning an Array whose elements' object pointers are written into out_handles. Two-call length

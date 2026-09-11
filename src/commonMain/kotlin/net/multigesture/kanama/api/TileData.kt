@@ -543,6 +543,15 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Sets the tile's custom data value for the TileSet custom data layer with name `layer_name`.
+     *
+     * Generated from Godot docs: TileData.set_custom_data
+     */
+    fun setCustomData(layerName: String, value: Any?) {
+        ObjectCalls.ptrcallWithStringAndVariantArg(setCustomDataBind, handle, layerName, value)
+    }
+
+    /**
      * Returns the custom data value for custom data layer named `layer_name`. To check if a custom
      * data layer exists, use `has_custom_data`.
      *
@@ -559,6 +568,15 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      */
     fun hasCustomData(layerName: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataBind, handle, layerName)
+    }
+
+    /**
+     * Sets the tile's custom data value for the TileSet custom data layer with index `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_custom_data_by_layer_id
+     */
+    fun setCustomDataByLayerId(layerId: Int, value: Any?) {
+        ObjectCalls.ptrcallWithIntAndVariantArg(setCustomDataByLayerIdBind, handle, layerId, value)
     }
 
     /**
@@ -827,6 +845,11 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("TileData", "get_probability", GET_PROBABILITY_HASH)
         }
 
+        private const val SET_CUSTOM_DATA_HASH = 402577236L
+        private val setCustomDataBind by lazy {
+            ObjectCalls.getMethodBind("TileData", "set_custom_data", SET_CUSTOM_DATA_HASH)
+        }
+
         private const val GET_CUSTOM_DATA_HASH = 1868160156L
         private val getCustomDataBind by lazy {
             ObjectCalls.getMethodBind("TileData", "get_custom_data", GET_CUSTOM_DATA_HASH)
@@ -835,6 +858,11 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
         private const val HAS_CUSTOM_DATA_HASH = 3927539163L
         private val hasCustomDataBind by lazy {
             ObjectCalls.getMethodBind("TileData", "has_custom_data", HAS_CUSTOM_DATA_HASH)
+        }
+
+        private const val SET_CUSTOM_DATA_BY_LAYER_ID_HASH = 2152698145L
+        private val setCustomDataByLayerIdBind by lazy {
+            ObjectCalls.getMethodBind("TileData", "set_custom_data_by_layer_id", SET_CUSTOM_DATA_BY_LAYER_ID_HASH)
         }
 
         private const val GET_CUSTOM_DATA_BY_LAYER_ID_HASH = 4227898402L

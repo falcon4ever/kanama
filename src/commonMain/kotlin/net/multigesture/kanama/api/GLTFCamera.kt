@@ -105,6 +105,10 @@ class GLTFCamera(handle: MemorySegment) : Resource(handle) {
             return GLTFCamera.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, cameraNode.handle))
         }
 
+        fun fromDictionary(dictionary: Map<String, Any?>): GLTFCamera? {
+            return GLTFCamera.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
+        }
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): GLTFCamera? =
             wrap(handle)
@@ -120,6 +124,11 @@ class GLTFCamera(handle: MemorySegment) : Resource(handle) {
         private const val TO_NODE_HASH = 2285090890L
         private val toNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFCamera", "to_node", TO_NODE_HASH)
+        }
+
+        private const val FROM_DICTIONARY_HASH = 2495512509L
+        private val fromDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFCamera", "from_dictionary", FROM_DICTIONARY_HASH)
         }
 
         private const val TO_DICTIONARY_HASH = 3102165223L

@@ -144,6 +144,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithObjectAndIntArg(createFromBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
+    fun createFromArrays(arrays: List<Any?>, primitiveType: Long = 3L) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, handle, arrays, primitiveType)
+    }
+
     fun createFromBlendShape(existing: Mesh?, surface: Int, blendShape: String) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectIntStringArgs(createFromBlendShapeBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, blendShape)
@@ -320,6 +325,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         private const val CREATE_FROM_HASH = 1767024570L
         private val createFromBind by lazy {
             ObjectCalls.getMethodBind("SurfaceTool", "create_from", CREATE_FROM_HASH)
+        }
+
+        private const val CREATE_FROM_ARRAYS_HASH = 1894639680L
+        private val createFromArraysBind by lazy {
+            ObjectCalls.getMethodBind("SurfaceTool", "create_from_arrays", CREATE_FROM_ARRAYS_HASH)
         }
 
         private const val CREATE_FROM_BLEND_SHAPE_HASH = 1306185582L

@@ -1009,6 +1009,21 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
     }
 
     /**
+     * Set the value of a shader uniform for this instance only (per-instance uniform
+     * ($DOCS_URL/tutorials/shaders/shader_reference/shading_language.html#per-instance-uniforms)). See
+     * also `ShaderMaterial.set_shader_parameter` to assign a uniform on all instances using the same
+     * `ShaderMaterial`. Note: For a shader uniform to be assignable on a per-instance basis, it must
+     * be defined with `instance uniform ...` rather than `uniform ...` in the shader code. Note:
+     * `name` is case-sensitive and must match the name of the uniform in the code exactly (not the
+     * capitalized name in the inspector).
+     *
+     * Generated from Godot docs: CanvasItem.set_instance_shader_parameter
+     */
+    fun setInstanceShaderParameter(name: String, value: Any?) {
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, handle, name, value)
+    }
+
+    /**
      * Get the value of a shader parameter as set on this instance.
      *
      * Generated from Godot docs: CanvasItem.get_instance_shader_parameter
@@ -1641,6 +1656,11 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
         private const val GET_MATERIAL_HASH = 5934680L
         private val getMaterialBind by lazy {
             ObjectCalls.getMethodBind("CanvasItem", "get_material", GET_MATERIAL_HASH)
+        }
+
+        private const val SET_INSTANCE_SHADER_PARAMETER_HASH = 3776071444L
+        private val setInstanceShaderParameterBind by lazy {
+            ObjectCalls.getMethodBind("CanvasItem", "set_instance_shader_parameter", SET_INSTANCE_SHADER_PARAMETER_HASH)
         }
 
         private const val GET_INSTANCE_SHADER_PARAMETER_HASH = 2760726917L

@@ -7,6 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -185,6 +186,58 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Overrides BiDi for the structured text. Override ranges should cover full source text without
+     * overlaps. BiDi algorithm will be used on each range separately.
+     *
+     * Generated from Godot docs: TextLine.set_bidi_override
+     */
+    fun setBidiOverride(override: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, handle, override)
+    }
+
+    /**
+     * Adds text span and font to draw it.
+     *
+     * Generated from Godot docs: TextLine.add_string
+     */
+    fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
+    }
+
+    /**
+     * Adds inline object to the text buffer, `key` must be unique. In the text, object is represented
+     * as `length` object replacement characters.
+     *
+     * Generated from Godot docs: TextLine.add_object
+     */
+    fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, handle, key, size, inlineAlign, length, baseline)
+    }
+
+    /**
+     * Sets new size and alignment of embedded object.
+     *
+     * Generated from Godot docs: TextLine.resize_object
+     */
+    fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, handle, key, size, inlineAlign, baseline)
+    }
+
+    /**
+     * Returns `true` if an object with `key` is embedded in this line.
+     *
+     * Generated from Godot docs: TextLine.has_object
+     */
+    fun hasObject(key: Any?): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, handle, key)
+    }
+
+    /**
      * Text line width.
      *
      * Generated from Godot docs: TextLine.set_width
@@ -302,6 +355,16 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
     fun getObjects(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getObjectsBind, handle)
+    }
+
+    /**
+     * Returns bounding rectangle of the inline object.
+     *
+     * Generated from Godot docs: TextLine.get_object_rect
+     */
+    fun getObjectRect(key: Any?): Rect2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantArgRetRect2(getObjectRectBind, handle, key)
     }
 
     /**
@@ -474,6 +537,31 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextLine", "get_preserve_control", GET_PRESERVE_CONTROL_HASH)
         }
 
+        private const val SET_BIDI_OVERRIDE_HASH = 381264803L
+        private val setBidiOverrideBind by lazy {
+            ObjectCalls.getMethodBind("TextLine", "set_bidi_override", SET_BIDI_OVERRIDE_HASH)
+        }
+
+        private const val ADD_STRING_HASH = 621426851L
+        private val addStringBind by lazy {
+            ObjectCalls.getMethodBind("TextLine", "add_string", ADD_STRING_HASH)
+        }
+
+        private const val ADD_OBJECT_HASH = 1316529304L
+        private val addObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextLine", "add_object", ADD_OBJECT_HASH)
+        }
+
+        private const val RESIZE_OBJECT_HASH = 2095776372L
+        private val resizeObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextLine", "resize_object", RESIZE_OBJECT_HASH)
+        }
+
+        private const val HAS_OBJECT_HASH = 77467830L
+        private val hasObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextLine", "has_object", HAS_OBJECT_HASH)
+        }
+
         private const val SET_WIDTH_HASH = 373806689L
         private val setWidthBind by lazy {
             ObjectCalls.getMethodBind("TextLine", "set_width", SET_WIDTH_HASH)
@@ -532,6 +620,11 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_OBJECTS_HASH = 3995934104L
         private val getObjectsBind by lazy {
             ObjectCalls.getMethodBind("TextLine", "get_objects", GET_OBJECTS_HASH)
+        }
+
+        private const val GET_OBJECT_RECT_HASH = 1742700391L
+        private val getObjectRectBind by lazy {
+            ObjectCalls.getMethodBind("TextLine", "get_object_rect", GET_OBJECT_RECT_HASH)
         }
 
         private const val GET_SIZE_HASH = 3341600327L

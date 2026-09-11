@@ -22,9 +22,11 @@ class OpenXRActionSet(handle: MemorySegment) : Resource(handle) {
         @JvmName("setPriorityProperty")
         set(value) = setPriority(value)
 
-    val actions: List<Any?>
+    var actions: List<Any?>
         @JvmName("actionsProperty")
         get() = getActions()
+        @JvmName("setActionsProperty")
+        set(value) = setActions(value)
 
     fun setLocalizedName(localizedName: String) {
         checkOpen()
@@ -49,6 +51,11 @@ class OpenXRActionSet(handle: MemorySegment) : Resource(handle) {
     fun getActionCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getActionCountBind, handle)
+    }
+
+    fun setActions(actions: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setActionsBind, handle, actions)
     }
 
     fun getActions(): List<Any?> {
@@ -97,6 +104,11 @@ class OpenXRActionSet(handle: MemorySegment) : Resource(handle) {
         private const val GET_ACTION_COUNT_HASH = 3905245786L
         private val getActionCountBind by lazy {
             ObjectCalls.getMethodBind("OpenXRActionSet", "get_action_count", GET_ACTION_COUNT_HASH)
+        }
+
+        private const val SET_ACTIONS_HASH = 381264803L
+        private val setActionsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRActionSet", "set_actions", SET_ACTIONS_HASH)
         }
 
         private const val GET_ACTIONS_HASH = 3995934104L

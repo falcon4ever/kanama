@@ -179,6 +179,16 @@ object ClassDB {
     }
 
     /**
+     * Sets `property` value of `object` to `value`.
+     *
+     * Generated from Godot docs: ClassDB.class_set_property
+     */
+    @JvmStatic
+    fun classSetProperty(objectValue: GodotObject, property: String, value: Any?): Long {
+        return ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(classSetPropertyBind, singleton, objectValue.handle, property, value)
+    }
+
+    /**
      * Returns the default value of `property` of `class` or its ancestor classes.
      *
      * Generated from Godot docs: ClassDB.class_get_property_default_value
@@ -406,6 +416,11 @@ object ClassDB {
     private const val CLASS_GET_PROPERTY_HASH = 2498641674L
     private val classGetPropertyBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_get_property", CLASS_GET_PROPERTY_HASH)
+    }
+
+    private const val CLASS_SET_PROPERTY_HASH = 1690314931L
+    private val classSetPropertyBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_set_property", CLASS_SET_PROPERTY_HASH)
     }
 
     private const val CLASS_GET_PROPERTY_DEFAULT_VALUE_HASH = 2718203076L

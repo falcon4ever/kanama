@@ -331,6 +331,133 @@ object DisplayServer {
     }
 
     /**
+     * Adds a new item with text `label` to the global menu with ID `menu_root`. Returns index of the
+     * inserted item, it's not guaranteed to be the same as `index` value. An `accelerator` can
+     * optionally be defined, which is a keyboard shortcut that can be pressed to trigger the menu
+     * button even if it's not currently open. The `accelerator` is generally a combination of
+     * `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). Note:
+     * The `callback` and `key_callback` Callables need to accept exactly one Variant parameter, the
+     * parameter passed to the Callables will be the value passed to `tag`. Note: This method is
+     * implemented only on macOS. Supported system menu IDs:
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_add_item
+     */
+    @JvmStatic
+    fun globalMenuAddItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddItemBind, singleton, menuRoot, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new checkable item with text `label` to the global menu with ID `menu_root`. Returns
+     * index of the inserted item, it's not guaranteed to be the same as `index` value. An
+     * `accelerator` can optionally be defined, which is a keyboard shortcut that can be pressed to
+     * trigger the menu button even if it's not currently open. The `accelerator` is generally a
+     * combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A`
+     * (Ctrl + A). Note: The `callback` and `key_callback` Callables need to accept exactly one Variant
+     * parameter, the parameter passed to the Callables will be the value passed to `tag`. Note: This
+     * method is implemented only on macOS. Supported system menu IDs:
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_add_check_item
+     */
+    @JvmStatic
+    fun globalMenuAddCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddCheckItemBind, singleton, menuRoot, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new item with text `label` and icon `icon` to the global menu with ID `menu_root`.
+     * Returns index of the inserted item, it's not guaranteed to be the same as `index` value. An
+     * `accelerator` can optionally be defined, which is a keyboard shortcut that can be pressed to
+     * trigger the menu button even if it's not currently open. The `accelerator` is generally a
+     * combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A`
+     * (Ctrl + A). Note: The `callback` and `key_callback` Callables need to accept exactly one Variant
+     * parameter, the parameter passed to the Callables will be the value passed to `tag`. Note: This
+     * method is implemented only on macOS. Supported system menu IDs:
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_add_icon_item
+     */
+    @JvmStatic
+    fun globalMenuAddIconItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new checkable item with text `label` and icon `icon` to the global menu with ID
+     * `menu_root`. Returns index of the inserted item, it's not guaranteed to be the same as `index`
+     * value. An `accelerator` can optionally be defined, which is a keyboard shortcut that can be
+     * pressed to trigger the menu button even if it's not currently open. The `accelerator` is
+     * generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL
+     * | KEY_A` (Ctrl + A). Note: The `callback` and `key_callback` Callables need to accept exactly
+     * one Variant parameter, the parameter passed to the Callables will be the value passed to `tag`.
+     * Note: This method is implemented only on macOS. Supported system menu IDs:
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_add_icon_check_item
+     */
+    @JvmStatic
+    fun globalMenuAddIconCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new radio-checkable item with text `label` to the global menu with ID `menu_root`.
+     * Returns index of the inserted item, it's not guaranteed to be the same as `index` value. An
+     * `accelerator` can optionally be defined, which is a keyboard shortcut that can be pressed to
+     * trigger the menu button even if it's not currently open. The `accelerator` is generally a
+     * combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A`
+     * (Ctrl + A). Note: Radio-checkable items just display a checkmark, but don't have any built-in
+     * checking behavior and must be checked/unchecked manually. See `global_menu_set_item_checked` for
+     * more info on how to control it. Note: The `callback` and `key_callback` Callables need to accept
+     * exactly one Variant parameter, the parameter passed to the Callables will be the value passed to
+     * `tag`. Note: This method is implemented only on macOS. Supported system menu IDs:
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_add_radio_check_item
+     */
+    @JvmStatic
+    fun globalMenuAddRadioCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddRadioCheckItemBind, singleton, menuRoot, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new radio-checkable item with text `label` and icon `icon` to the global menu with ID
+     * `menu_root`. Returns index of the inserted item, it's not guaranteed to be the same as `index`
+     * value. An `accelerator` can optionally be defined, which is a keyboard shortcut that can be
+     * pressed to trigger the menu button even if it's not currently open. The `accelerator` is
+     * generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL
+     * | KEY_A` (Ctrl + A). Note: Radio-checkable items just display a checkmark, but don't have any
+     * built-in checking behavior and must be checked/unchecked manually. See
+     * `global_menu_set_item_checked` for more info on how to control it. Note: The `callback` and
+     * `key_callback` Callables need to accept exactly one Variant parameter, the parameter passed to
+     * the Callables will be the value passed to `tag`. Note: This method is implemented only on macOS.
+     * Supported system menu IDs:
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_add_icon_radio_check_item
+     */
+    @JvmStatic
+    fun globalMenuAddIconRadioCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
+     * Adds a new item with text `label` to the global menu with ID `menu_root`. Contrarily to normal
+     * binary items, multistate items can have more than two states, as defined by `max_states`. Each
+     * press or activate of the item will increase the state by one. The default value is defined by
+     * `default_state`. Returns index of the inserted item, it's not guaranteed to be the same as
+     * `index` value. An `accelerator` can optionally be defined, which is a keyboard shortcut that can
+     * be pressed to trigger the menu button even if it's not currently open. The `accelerator` is
+     * generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL
+     * | KEY_A` (Ctrl + A). Note: By default, there's no indication of the current item state, it
+     * should be changed manually. Note: The `callback` and `key_callback` Callables need to accept
+     * exactly one Variant parameter, the parameter passed to the Callables will be the value passed to
+     * `tag`. Note: This method is implemented only on macOS. Supported system menu IDs:
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_add_multistate_item
+     */
+    @JvmStatic
+    fun globalMenuAddMultistateItem(menuRoot: String, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(globalMenuAddMultistateItemBind, singleton, menuRoot, label, maxStates, defaultState, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+    }
+
+    /**
      * Adds a separator between items to the global menu with ID `menu_root`. Separators also occupy an
      * index. Returns index of the inserted item, it's not guaranteed to be the same as `index` value.
      * Note: This method is implemented only on macOS. Supported system menu IDs:
@@ -352,6 +479,18 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuGetItemIndexFromText(menuRoot: String, text: String): Int {
         return ObjectCalls.ptrcallWithTwoStringArgsRetInt(globalMenuGetItemIndexFromTextBind, singleton, menuRoot, text)
+    }
+
+    /**
+     * Returns the index of the item with the specified `tag`. Indices are automatically assigned to
+     * each item by the engine, and cannot be set manually. Note: This method is implemented only on
+     * macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_item_index_from_tag
+     */
+    @JvmStatic
+    fun globalMenuGetItemIndexFromTag(menuRoot: String, tag: Any?): Int {
+        return ObjectCalls.ptrcallWithStringAndVariantArgRetInt(globalMenuGetItemIndexFromTagBind, singleton, menuRoot, tag)
     }
 
     /**
@@ -581,6 +720,18 @@ object DisplayServer {
     @JvmStatic
     fun globalMenuSetItemKeyCallback(menuRoot: String, idx: Int, keyCallback: GodotCallable) {
         ObjectCalls.ptrcallWithStringIntCallableArgs(globalMenuSetItemKeyCallbackBind, singleton, menuRoot, idx, keyCallback.target.handle, keyCallback.method)
+    }
+
+    /**
+     * Sets the metadata of an item, which may be of any type. You can later get it with
+     * `global_menu_get_item_tag`, which provides a simple way of assigning context data to items.
+     * Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_set_item_tag
+     */
+    @JvmStatic
+    fun globalMenuSetItemTag(menuRoot: String, idx: Int, tag: Any?) {
+        ObjectCalls.ptrcallWithStringIntAndVariantArg(globalMenuSetItemTagBind, singleton, menuRoot, idx, tag)
     }
 
     /**
@@ -2184,6 +2335,16 @@ object DisplayServer {
     }
 
     /**
+     * Sets the metadata of the accessibility element `id` to `meta`.
+     *
+     * Generated from Godot docs: DisplayServer.accessibility_element_set_meta
+     */
+    @JvmStatic
+    fun accessibilityElementSetMeta(id: RID, meta: Any?) {
+        ObjectCalls.ptrcallWithRIDAndVariantArg(accessibilityElementSetMetaBind, singleton, id, meta)
+    }
+
+    /**
      * Returns the metadata of the accessibility element `id`.
      *
      * Generated from Godot docs: DisplayServer.accessibility_element_get_meta
@@ -3473,6 +3634,41 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_submenu_item", GLOBAL_MENU_ADD_SUBMENU_ITEM_HASH)
     }
 
+    private const val GLOBAL_MENU_ADD_ITEM_HASH = 3616842746L
+    private val globalMenuAddItemBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_item", GLOBAL_MENU_ADD_ITEM_HASH)
+    }
+
+    private const val GLOBAL_MENU_ADD_CHECK_ITEM_HASH = 3616842746L
+    private val globalMenuAddCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_check_item", GLOBAL_MENU_ADD_CHECK_ITEM_HASH)
+    }
+
+    private const val GLOBAL_MENU_ADD_ICON_ITEM_HASH = 3867083847L
+    private val globalMenuAddIconItemBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_icon_item", GLOBAL_MENU_ADD_ICON_ITEM_HASH)
+    }
+
+    private const val GLOBAL_MENU_ADD_ICON_CHECK_ITEM_HASH = 3867083847L
+    private val globalMenuAddIconCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_icon_check_item", GLOBAL_MENU_ADD_ICON_CHECK_ITEM_HASH)
+    }
+
+    private const val GLOBAL_MENU_ADD_RADIO_CHECK_ITEM_HASH = 3616842746L
+    private val globalMenuAddRadioCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_radio_check_item", GLOBAL_MENU_ADD_RADIO_CHECK_ITEM_HASH)
+    }
+
+    private const val GLOBAL_MENU_ADD_ICON_RADIO_CHECK_ITEM_HASH = 3867083847L
+    private val globalMenuAddIconRadioCheckItemBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_icon_radio_check_item", GLOBAL_MENU_ADD_ICON_RADIO_CHECK_ITEM_HASH)
+    }
+
+    private const val GLOBAL_MENU_ADD_MULTISTATE_ITEM_HASH = 3297554655L
+    private val globalMenuAddMultistateItemBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_multistate_item", GLOBAL_MENU_ADD_MULTISTATE_ITEM_HASH)
+    }
+
     private const val GLOBAL_MENU_ADD_SEPARATOR_HASH = 3214812433L
     private val globalMenuAddSeparatorBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_add_separator", GLOBAL_MENU_ADD_SEPARATOR_HASH)
@@ -3481,6 +3677,11 @@ object DisplayServer {
     private const val GLOBAL_MENU_GET_ITEM_INDEX_FROM_TEXT_HASH = 2878152881L
     private val globalMenuGetItemIndexFromTextBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_index_from_text", GLOBAL_MENU_GET_ITEM_INDEX_FROM_TEXT_HASH)
+    }
+
+    private const val GLOBAL_MENU_GET_ITEM_INDEX_FROM_TAG_HASH = 2941063483L
+    private val globalMenuGetItemIndexFromTagBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_index_from_tag", GLOBAL_MENU_GET_ITEM_INDEX_FROM_TAG_HASH)
     }
 
     private const val GLOBAL_MENU_IS_ITEM_CHECKED_HASH = 3511468594L
@@ -3581,6 +3782,11 @@ object DisplayServer {
     private const val GLOBAL_MENU_SET_ITEM_KEY_CALLBACK_HASH = 3809915389L
     private val globalMenuSetItemKeyCallbackBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_set_item_key_callback", GLOBAL_MENU_SET_ITEM_KEY_CALLBACK_HASH)
+    }
+
+    private const val GLOBAL_MENU_SET_ITEM_TAG_HASH = 453659863L
+    private val globalMenuSetItemTagBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_set_item_tag", GLOBAL_MENU_SET_ITEM_TAG_HASH)
     }
 
     private const val GLOBAL_MENU_SET_ITEM_TEXT_HASH = 965966136L
@@ -4236,6 +4442,11 @@ object DisplayServer {
     private const val ACCESSIBILITY_FREE_ELEMENT_HASH = 2722037293L
     private val accessibilityFreeElementBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "accessibility_free_element", ACCESSIBILITY_FREE_ELEMENT_HASH)
+    }
+
+    private const val ACCESSIBILITY_ELEMENT_SET_META_HASH = 3175752987L
+    private val accessibilityElementSetMetaBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "accessibility_element_set_meta", ACCESSIBILITY_ELEMENT_SET_META_HASH)
     }
 
     private const val ACCESSIBILITY_ELEMENT_GET_META_HASH = 4171304767L

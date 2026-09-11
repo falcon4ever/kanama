@@ -346,6 +346,22 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
     }
 
     /**
+     * Set the value of a shader uniform for this instance only (per-instance uniform
+     * ($DOCS_URL/tutorials/shaders/shader_reference/shading_language.html#per-instance-uniforms)). See
+     * also `ShaderMaterial.set_shader_parameter` to assign a uniform on all instances using the same
+     * `ShaderMaterial`. Note: For a shader uniform to be assignable on a per-instance basis, it must
+     * be defined with `instance uniform ...` rather than `uniform ...` in the shader code. Note:
+     * `name` is case-sensitive and must match the name of the uniform in the code exactly (not the
+     * capitalized name in the inspector). Note: Per-instance shader uniforms are only available in
+     * Spatial and CanvasItem shaders, but not for Fog, Sky, or Particles shaders.
+     *
+     * Generated from Godot docs: GeometryInstance3D.set_instance_shader_parameter
+     */
+    fun setInstanceShaderParameter(name: String, value: Any?) {
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, handle, name, value)
+    }
+
+    /**
      * Get the value of a shader parameter as set on this instance.
      *
      * Generated from Godot docs: GeometryInstance3D.get_instance_shader_parameter
@@ -624,6 +640,11 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
         private const val GET_VISIBILITY_RANGE_FADE_MODE_HASH = 2067221882L
         private val getVisibilityRangeFadeModeBind by lazy {
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_visibility_range_fade_mode", GET_VISIBILITY_RANGE_FADE_MODE_HASH)
+        }
+
+        private const val SET_INSTANCE_SHADER_PARAMETER_HASH = 3776071444L
+        private val setInstanceShaderParameterBind by lazy {
+            ObjectCalls.getMethodBind("GeometryInstance3D", "set_instance_shader_parameter", SET_INSTANCE_SHADER_PARAMETER_HASH)
         }
 
         private const val GET_INSTANCE_SHADER_PARAMETER_HASH = 2760726917L

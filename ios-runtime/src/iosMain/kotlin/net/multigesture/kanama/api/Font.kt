@@ -7,6 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -20,6 +21,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
     fun getFallbacks(): List<Font> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, handle, Font::fromHandle)
+    }
+
+    fun findVariation(variationCoordinates: Map<String, Any?>, faceIndex: Int = 0, strength: Double = 0.0, transform: Transform2D, spacingTop: Int = 0, spacingBottom: Int = 0, spacingSpace: Int = 0, spacingGlyph: Int = 0, baselineOffset: Double = 0.0, paletteIndex: Long = 0L, customColors: List<Color>): RID {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(findVariationBind, handle, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
     }
 
     fun getRids(): List<RID> {
@@ -203,6 +209,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         private const val GET_FALLBACKS_HASH = 3995934104L
         private val getFallbacksBind by lazy {
             ObjectCalls.getMethodBind("Font", "get_fallbacks", GET_FALLBACKS_HASH)
+        }
+
+        private const val FIND_VARIATION_HASH = 3275867622L
+        private val findVariationBind by lazy {
+            ObjectCalls.getMethodBind("Font", "find_variation", FIND_VARIATION_HASH)
         }
 
         private const val GET_RIDS_HASH = 3995934104L

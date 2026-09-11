@@ -66,6 +66,27 @@ object EngineDebugger {
     }
 
     /**
+     * Calls the `add` callable of the profiler with given `name` and `data`.
+     *
+     * Generated from Godot docs: EngineDebugger.profiler_add_frame_data
+     */
+    @JvmStatic
+    fun profilerAddFrameData(name: String, data: List<Any?>) {
+        ObjectCalls.ptrcallWithStringNameArrayArgs(profilerAddFrameDataBind, singleton, name, data)
+    }
+
+    /**
+     * Calls the `toggle` callable of the profiler with given `name` and `arguments`. Enables/Disables
+     * the same profiler depending on `enable` argument.
+     *
+     * Generated from Godot docs: EngineDebugger.profiler_enable
+     */
+    @JvmStatic
+    fun profilerEnable(name: String, enable: Boolean, arguments: List<Any?> = emptyList()) {
+        ObjectCalls.ptrcallWithStringNameBoolArrayArgs(profilerEnableBind, singleton, name, enable, arguments)
+    }
+
+    /**
      * Registers a message capture with given `name`. If `name` is "my_message" then messages starting
      * with "my_message:" will be called with the given callable. The callable must accept a message
      * string and a data array as argument. The callable should return `true` if the message is
@@ -109,6 +130,16 @@ object EngineDebugger {
     @JvmStatic
     fun linePoll() {
         ObjectCalls.ptrcallNoArgs(linePollBind, singleton)
+    }
+
+    /**
+     * Sends a message with given `message` and `data` array.
+     *
+     * Generated from Godot docs: EngineDebugger.send_message
+     */
+    @JvmStatic
+    fun sendMessage(message: String, data: List<Any?>) {
+        ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, singleton, message, data)
     }
 
     /**
@@ -255,6 +286,16 @@ object EngineDebugger {
         ObjectCalls.getMethodBind("EngineDebugger", "has_profiler", HAS_PROFILER_HASH)
     }
 
+    private const val PROFILER_ADD_FRAME_DATA_HASH = 1895267858L
+    private val profilerAddFrameDataBind by lazy {
+        ObjectCalls.getMethodBind("EngineDebugger", "profiler_add_frame_data", PROFILER_ADD_FRAME_DATA_HASH)
+    }
+
+    private const val PROFILER_ENABLE_HASH = 3192561009L
+    private val profilerEnableBind by lazy {
+        ObjectCalls.getMethodBind("EngineDebugger", "profiler_enable", PROFILER_ENABLE_HASH)
+    }
+
     private const val REGISTER_MESSAGE_CAPTURE_HASH = 1874754934L
     private val registerMessageCaptureBind by lazy {
         ObjectCalls.getMethodBind("EngineDebugger", "register_message_capture", REGISTER_MESSAGE_CAPTURE_HASH)
@@ -273,6 +314,11 @@ object EngineDebugger {
     private const val LINE_POLL_HASH = 3218959716L
     private val linePollBind by lazy {
         ObjectCalls.getMethodBind("EngineDebugger", "line_poll", LINE_POLL_HASH)
+    }
+
+    private const val SEND_MESSAGE_HASH = 1209351045L
+    private val sendMessageBind by lazy {
+        ObjectCalls.getMethodBind("EngineDebugger", "send_message", SEND_MESSAGE_HASH)
     }
 
     private const val DEBUG_HASH = 2751962654L

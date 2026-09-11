@@ -56,9 +56,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         @JvmName("setRightDisconnectsProperty")
         set(value) = setRightDisconnects(value)
 
-    val typeNames: Map<String, Any?>
+    var typeNames: Map<String, Any?>
         @JvmName("typeNamesProperty")
         get() = getTypeNames()
+        @JvmName("setTypeNamesProperty")
+        set(value) = setTypeNames(value)
 
     var connectionLinesCurvature: Double
         @JvmName("connectionLinesCurvatureProperty")
@@ -819,6 +821,15 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
     /**
      * `Dictionary` of human-readable port type names.
      *
+     * Generated from Godot docs: GraphEdit.set_type_names
+     */
+    fun setTypeNames(typeNames: Map<String, Any?>) {
+        ObjectCalls.ptrcallWithDictionaryArg(setTypeNamesBind, handle, typeNames)
+    }
+
+    /**
+     * `Dictionary` of human-readable port type names.
+     *
      * Generated from Godot docs: GraphEdit.get_type_names
      */
     fun getTypeNames(): Map<String, Any?> {
@@ -1234,6 +1245,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         private const val IS_RIGHT_DISCONNECTS_ENABLED_HASH = 36873697L
         private val isRightDisconnectsEnabledBind by lazy {
             ObjectCalls.getMethodBind("GraphEdit", "is_right_disconnects_enabled", IS_RIGHT_DISCONNECTS_ENABLED_HASH)
+        }
+
+        private const val SET_TYPE_NAMES_HASH = 4155329257L
+        private val setTypeNamesBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "set_type_names", SET_TYPE_NAMES_HASH)
         }
 
         private const val GET_TYPE_NAMES_HASH = 3102165223L

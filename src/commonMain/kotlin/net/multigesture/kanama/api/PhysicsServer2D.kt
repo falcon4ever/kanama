@@ -187,6 +187,32 @@ object PhysicsServer2D {
     }
 
     /**
+     * Sets the shape data that defines the configuration of the shape. The `data` to be passed depends
+     * on the shape's type (see `shape_get_type`): - `SHAPE_WORLD_BOUNDARY`: an array of length two
+     * containing a `Vector2` `normal` direction and a `float` distance `d`, - `SHAPE_SEPARATION_RAY`:
+     * a dictionary containing the key `length` with a `float` value and the key `slide_on_slope` with
+     * a `bool` value, - `SHAPE_SEGMENT`: a `Rect2` `rect` containing the first point of the segment in
+     * `rect.position` and the second point of the segment in `rect.size`, - `SHAPE_CIRCLE`: a `float`
+     * `radius`, - `SHAPE_RECTANGLE`: a `Vector2` `half_extents`, - `SHAPE_CAPSULE`: an array of length
+     * two (or a `Vector2`) containing a `float` `height` and a `float` `radius`, -
+     * `SHAPE_CONVEX_POLYGON`: either a `PackedVector2Array` of points defining a convex polygon in
+     * counterclockwise order (the clockwise outward normal of each segment formed by consecutive
+     * points is calculated internally), or a `PackedFloat32Array` of length divisible by four so that
+     * every 4-tuple of `float`s contains the coordinates of a point followed by the coordinates of the
+     * clockwise outward normal vector to the segment between the current point and the next point, -
+     * `SHAPE_CONCAVE_POLYGON`: a `PackedVector2Array` of length divisible by two (each pair of points
+     * forms one segment). Warning: In the case of `SHAPE_CONVEX_POLYGON`, this method does not check
+     * if the points supplied actually form a convex polygon (unlike the `CollisionPolygon2D.polygon`
+     * property).
+     *
+     * Generated from Godot docs: PhysicsServer2D.shape_set_data
+     */
+    @JvmStatic
+    fun shapeSetData(shape: RID, data: Any?) {
+        ObjectCalls.ptrcallWithRIDAndVariantArg(shapeSetDataBind, singleton, shape, data)
+    }
+
+    /**
      * Returns the shape's type.
      *
      * Generated from Godot docs: PhysicsServer2D.shape_get_type
@@ -446,6 +472,16 @@ object PhysicsServer2D {
     @JvmStatic
     fun areaGetCollisionMask(area: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionMaskBind, singleton, area)
+    }
+
+    /**
+     * Sets the value of the given area parameter.
+     *
+     * Generated from Godot docs: PhysicsServer2D.area_set_param
+     */
+    @JvmStatic
+    fun areaSetParam(area: RID, param: Long, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param, value)
     }
 
     /**
@@ -873,6 +909,16 @@ object PhysicsServer2D {
     }
 
     /**
+     * Sets the value of the given body parameter.
+     *
+     * Generated from Godot docs: PhysicsServer2D.body_set_param
+     */
+    @JvmStatic
+    fun bodySetParam(body: RID, param: Long, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param, value)
+    }
+
+    /**
      * Returns the value of the given body parameter.
      *
      * Generated from Godot docs: PhysicsServer2D.body_get_param
@@ -891,6 +937,17 @@ object PhysicsServer2D {
     @JvmStatic
     fun bodyResetMassProperties(body: RID) {
         ObjectCalls.ptrcallWithRIDArg(bodyResetMassPropertiesBind, singleton, body)
+    }
+
+    /**
+     * Sets the value of a body's state. Note: The state change doesn't take effect immediately. The
+     * state will change on the next physics frame.
+     *
+     * Generated from Godot docs: PhysicsServer2D.body_set_state
+     */
+    @JvmStatic
+    fun bodySetState(body: RID, state: Long, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state, value)
     }
 
     /**
@@ -1154,6 +1211,24 @@ object PhysicsServer2D {
     @JvmStatic
     fun bodySetStateSyncCallback(body: RID, callable: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(bodySetStateSyncCallbackBind, singleton, body, callable.target.handle, callable.method)
+    }
+
+    /**
+     * Sets the body's custom force integration callback function to `callable`. Use an empty
+     * `Callable` (`Callable()`) to clear the custom callback. The function `callable` will be called
+     * every physics tick, before the standard force integration (see
+     * `body_set_omit_force_integration`). It can be used for example to update the body's linear and
+     * angular velocity based on contact with other bodies. If `userdata` is not `null`, the function
+     * `callable` must take the following two parameters: 1. `state`: a `PhysicsDirectBodyState2D` used
+     * to retrieve and modify the body's state, 2. `userdata`: a `Variant`; its value will be the
+     * `userdata` passed into this method. If `userdata` is `null`, then `callable` must take only the
+     * `state` parameter.
+     *
+     * Generated from Godot docs: PhysicsServer2D.body_set_force_integration_callback
+     */
+    @JvmStatic
+    fun bodySetForceIntegrationCallback(body: RID, callable: GodotCallable, userdata: Any? = null) {
+        ObjectCalls.ptrcallWithRIDCallableVariantArgs(bodySetForceIntegrationCallbackBind, singleton, body, callable.target.handle, callable.method, userdata)
     }
 
     /**
@@ -1428,6 +1503,11 @@ object PhysicsServer2D {
         ObjectCalls.getMethodBind("PhysicsServer2D", "concave_polygon_shape_create", CONCAVE_POLYGON_SHAPE_CREATE_HASH)
     }
 
+    private const val SHAPE_SET_DATA_HASH = 3175752987L
+    private val shapeSetDataBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "shape_set_data", SHAPE_SET_DATA_HASH)
+    }
+
     private const val SHAPE_GET_TYPE_HASH = 1240598777L
     private val shapeGetTypeBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_type", SHAPE_GET_TYPE_HASH)
@@ -1546,6 +1626,11 @@ object PhysicsServer2D {
     private const val AREA_GET_COLLISION_MASK_HASH = 2198884583L
     private val areaGetCollisionMaskBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_collision_mask", AREA_GET_COLLISION_MASK_HASH)
+    }
+
+    private const val AREA_SET_PARAM_HASH = 1257146028L
+    private val areaSetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_param", AREA_SET_PARAM_HASH)
     }
 
     private const val AREA_SET_TRANSFORM_HASH = 1246044741L
@@ -1733,6 +1818,11 @@ object PhysicsServer2D {
         ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_priority", BODY_GET_COLLISION_PRIORITY_HASH)
     }
 
+    private const val BODY_SET_PARAM_HASH = 2715630609L
+    private val bodySetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_param", BODY_SET_PARAM_HASH)
+    }
+
     private const val BODY_GET_PARAM_HASH = 3208033526L
     private val bodyGetParamBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_param", BODY_GET_PARAM_HASH)
@@ -1741,6 +1831,11 @@ object PhysicsServer2D {
     private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
     private val bodyResetMassPropertiesBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
+    }
+
+    private const val BODY_SET_STATE_HASH = 1706355209L
+    private val bodySetStateBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_state", BODY_SET_STATE_HASH)
     }
 
     private const val BODY_GET_STATE_HASH = 4036367961L
@@ -1851,6 +1946,11 @@ object PhysicsServer2D {
     private const val BODY_SET_STATE_SYNC_CALLBACK_HASH = 3379118538L
     private val bodySetStateSyncCallbackBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_state_sync_callback", BODY_SET_STATE_SYNC_CALLBACK_HASH)
+    }
+
+    private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L
+    private val bodySetForceIntegrationCallbackBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_force_integration_callback", BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH)
     }
 
     private const val BODY_TEST_MOTION_HASH = 1699844009L

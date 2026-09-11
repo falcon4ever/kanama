@@ -93,9 +93,11 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setVertexColorsProperty")
         set(value) = setVertexColors(value)
 
-    val polygons: List<Any?>
+    var polygons: List<Any?>
         @JvmName("polygonsProperty")
         get() = getPolygons()
+        @JvmName("setPolygonsProperty")
+        set(value) = setPolygons(value)
 
     var internalVertexCount: Int
         @JvmName("internalVertexCountProperty")
@@ -159,6 +161,18 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      */
     fun getColor(): Color {
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+    }
+
+    /**
+     * The list of polygons, in case more than one is being represented. Every individual polygon is
+     * stored as a `PackedInt32Array` where each `int` is an index to a point in `polygon`. If empty,
+     * this property will be ignored, and the resulting single polygon will be composed of all points
+     * in `polygon`, using the order they are stored in.
+     *
+     * Generated from Godot docs: Polygon2D.set_polygons
+     */
+    fun setPolygons(polygons: List<Any?>) {
+        ObjectCalls.ptrcallWithArrayArg(setPolygonsBind, handle, polygons)
     }
 
     /**
@@ -491,6 +505,11 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         private const val GET_COLOR_HASH = 3444240500L
         private val getColorBind by lazy {
             ObjectCalls.getMethodBind("Polygon2D", "get_color", GET_COLOR_HASH)
+        }
+
+        private const val SET_POLYGONS_HASH = 381264803L
+        private val setPolygonsBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "set_polygons", SET_POLYGONS_HASH)
         }
 
         private const val GET_POLYGONS_HASH = 3995934104L

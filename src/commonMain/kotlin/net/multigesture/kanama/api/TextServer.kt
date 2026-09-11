@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
+import net.multigesture.kanama.types.Vector3i
 
 /**
  * A server interface for font management and text rendering.
@@ -813,6 +814,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Sets variation coordinates for the specified font cache entry. See
+     * `font_supported_variation_list` for more info.
+     *
+     * Generated from Godot docs: TextServer.font_set_variation_coordinates
+     */
+    fun fontSetVariationCoordinates(fontRid: RID, variationCoordinates: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetVariationCoordinatesBind, handle, fontRid, variationCoordinates)
+    }
+
+    /**
      * Returns variation coordinates for the specified font cache entry. See
      * `font_supported_variation_list` for more info.
      *
@@ -1494,6 +1506,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Sets font OpenType feature set override.
+     *
+     * Generated from Godot docs: TextServer.font_set_opentype_feature_overrides
+     */
+    fun fontSetOpentypeFeatureOverrides(fontRid: RID, overrides: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetOpentypeFeatureOverridesBind, handle, fontRid, overrides)
+    }
+
+    /**
      * Returns font OpenType feature set override.
      *
      * Generated from Godot docs: TextServer.font_get_opentype_feature_overrides
@@ -1631,6 +1653,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Overrides BiDi for the structured text. Override ranges should cover full source text without
+     * overlaps. BiDi algorithm will be used on each range separately.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_set_bidi_override
+     */
+    fun shapedTextSetBidiOverride(shaped: RID, override: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDAndArrayArg(shapedTextSetBidiOverrideBind, handle, shaped, override)
+    }
+
+    /**
      * Sets custom punctuation character list, used for word breaking. If set to empty string, server
      * defaults are used.
      *
@@ -1753,6 +1786,37 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedTextGetSpacing(shaped: RID, spacing: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextGetSpacingBind, handle, shaped, spacing)
+    }
+
+    /**
+     * Adds inline object to the text buffer, `key` must be unique. In the text, object is represented
+     * as `length` object replacement characters.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_add_object
+     */
+    fun shapedTextAddObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Long = 1L, baseline: Double = 0.0): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(shapedTextAddObjectBind, handle, shaped, key, size, inlineAlign, length, baseline)
+    }
+
+    /**
+     * Sets new size and alignment of embedded object.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_resize_object
+     */
+    fun shapedTextResizeObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(shapedTextResizeObjectBind, handle, shaped, key, size, inlineAlign, baseline)
+    }
+
+    /**
+     * Returns `true` if an object with `key` is embedded in this shaped text buffer.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_has_object
+     */
+    fun shapedTextHasObject(shaped: RID, key: Any?): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetBool(shapedTextHasObjectBind, handle, shaped, key)
     }
 
     /**
@@ -2107,6 +2171,36 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedTextGetObjects(shaped: RID): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetArray(shapedTextGetObjectsBind, handle, shaped)
+    }
+
+    /**
+     * Returns bounding rectangle of the inline object.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_object_rect
+     */
+    fun shapedTextGetObjectRect(shaped: RID, key: Any?): Rect2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetRect2(shapedTextGetObjectRectBind, handle, shaped, key)
+    }
+
+    /**
+     * Returns the character range of the inline object.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_object_range
+     */
+    fun shapedTextGetObjectRange(shaped: RID, key: Any?): Vector2i {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetVector2i(shapedTextGetObjectRangeBind, handle, shaped, key)
+    }
+
+    /**
+     * Returns the glyph index of the inline object.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_object_glyph
+     */
+    fun shapedTextGetObjectGlyph(shaped: RID, key: Any?): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetLong(shapedTextGetObjectGlyphBind, handle, shaped, key)
     }
 
     /**
@@ -2477,6 +2571,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun stringToTitle(string: String, language: String = ""): String {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToTitleBind, handle, string, language)
+    }
+
+    /**
+     * Default implementation of the BiDi algorithm override function.
+     *
+     * Generated from Godot docs: TextServer.parse_structured_text
+     */
+    fun parseStructuredText(parserType: Long, args: List<Any?>, text: String): List<Vector3i> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, handle, parserType, args, text)
     }
 
     companion object {
@@ -2978,6 +3082,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_transform", FONT_GET_TRANSFORM_HASH)
         }
 
+        private const val FONT_SET_VARIATION_COORDINATES_HASH = 1217542888L
+        private val fontSetVariationCoordinatesBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_set_variation_coordinates", FONT_SET_VARIATION_COORDINATES_HASH)
+        }
+
         private const val FONT_GET_VARIATION_COORDINATES_HASH = 1882737106L
         private val fontGetVariationCoordinatesBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_get_variation_coordinates", FONT_GET_VARIATION_COORDINATES_HASH)
@@ -3298,6 +3407,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_script_support_overrides", FONT_GET_SCRIPT_SUPPORT_OVERRIDES_HASH)
         }
 
+        private const val FONT_SET_OPENTYPE_FEATURE_OVERRIDES_HASH = 1217542888L
+        private val fontSetOpentypeFeatureOverridesBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_set_opentype_feature_overrides", FONT_SET_OPENTYPE_FEATURE_OVERRIDES_HASH)
+        }
+
         private const val FONT_GET_OPENTYPE_FEATURE_OVERRIDES_HASH = 1882737106L
         private val fontGetOpentypeFeatureOverridesBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_get_opentype_feature_overrides", FONT_GET_OPENTYPE_FEATURE_OVERRIDES_HASH)
@@ -3363,6 +3477,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_inferred_direction", SHAPED_TEXT_GET_INFERRED_DIRECTION_HASH)
         }
 
+        private const val SHAPED_TEXT_SET_BIDI_OVERRIDE_HASH = 684822712L
+        private val shapedTextSetBidiOverrideBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_set_bidi_override", SHAPED_TEXT_SET_BIDI_OVERRIDE_HASH)
+        }
+
         private const val SHAPED_TEXT_SET_CUSTOM_PUNCTUATION_HASH = 2726140452L
         private val shapedTextSetCustomPunctuationBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_set_custom_punctuation", SHAPED_TEXT_SET_CUSTOM_PUNCTUATION_HASH)
@@ -3421,6 +3540,21 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_TEXT_GET_SPACING_HASH = 1213653558L
         private val shapedTextGetSpacingBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_spacing", SHAPED_TEXT_GET_SPACING_HASH)
+        }
+
+        private const val SHAPED_TEXT_ADD_OBJECT_HASH = 3664424789L
+        private val shapedTextAddObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_add_object", SHAPED_TEXT_ADD_OBJECT_HASH)
+        }
+
+        private const val SHAPED_TEXT_RESIZE_OBJECT_HASH = 790361552L
+        private val shapedTextResizeObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_resize_object", SHAPED_TEXT_RESIZE_OBJECT_HASH)
+        }
+
+        private const val SHAPED_TEXT_HAS_OBJECT_HASH = 2360964694L
+        private val shapedTextHasObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_has_object", SHAPED_TEXT_HAS_OBJECT_HASH)
         }
 
         private const val SHAPED_GET_TEXT_HASH = 642473191L
@@ -3598,6 +3732,21 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_objects", SHAPED_TEXT_GET_OBJECTS_HASH)
         }
 
+        private const val SHAPED_TEXT_GET_OBJECT_RECT_HASH = 447978354L
+        private val shapedTextGetObjectRectBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_object_rect", SHAPED_TEXT_GET_OBJECT_RECT_HASH)
+        }
+
+        private const val SHAPED_TEXT_GET_OBJECT_RANGE_HASH = 2524675647L
+        private val shapedTextGetObjectRangeBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_object_range", SHAPED_TEXT_GET_OBJECT_RANGE_HASH)
+        }
+
+        private const val SHAPED_TEXT_GET_OBJECT_GLYPH_HASH = 1260085030L
+        private val shapedTextGetObjectGlyphBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_object_glyph", SHAPED_TEXT_GET_OBJECT_GLYPH_HASH)
+        }
+
         private const val SHAPED_TEXT_GET_SIZE_HASH = 2440833711L
         private val shapedTextGetSizeBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_size", SHAPED_TEXT_GET_SIZE_HASH)
@@ -3761,6 +3910,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val STRING_TO_TITLE_HASH = 2664628024L
         private val stringToTitleBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "string_to_title", STRING_TO_TITLE_HASH)
+        }
+
+        private const val PARSE_STRUCTURED_TEXT_HASH = 3310685015L
+        private val parseStructuredTextBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "parse_structured_text", PARSE_STRUCTURED_TEXT_HASH)
         }
     }
 }

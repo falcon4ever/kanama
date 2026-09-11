@@ -42,6 +42,21 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStringsBind, handle)
     }
 
+    fun getString(name: Any?): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantArgRetString(getStringBind, handle, name)
+    }
+
+    fun getStart(name: Any?): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantArgRetInt(getStartBind, handle, name)
+    }
+
+    fun getEnd(name: Any?): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantArgRetInt(getEndBind, handle, name)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): RegExMatch? =
@@ -68,6 +83,21 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_STRINGS_HASH = 1139954409L
         private val getStringsBind by lazy {
             ObjectCalls.getMethodBind("RegExMatch", "get_strings", GET_STRINGS_HASH)
+        }
+
+        private const val GET_STRING_HASH = 687115856L
+        private val getStringBind by lazy {
+            ObjectCalls.getMethodBind("RegExMatch", "get_string", GET_STRING_HASH)
+        }
+
+        private const val GET_START_HASH = 490464691L
+        private val getStartBind by lazy {
+            ObjectCalls.getMethodBind("RegExMatch", "get_start", GET_START_HASH)
+        }
+
+        private const val GET_END_HASH = 490464691L
+        private val getEndBind by lazy {
+            ObjectCalls.getMethodBind("RegExMatch", "get_end", GET_END_HASH)
         }
     }
 }

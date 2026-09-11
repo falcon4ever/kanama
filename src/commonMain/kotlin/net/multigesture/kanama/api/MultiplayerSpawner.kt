@@ -39,6 +39,10 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
         ObjectCalls.ptrcallNoArgs(clearSpawnableScenesBind, handle)
     }
 
+    fun spawn(data: Any? = null): Node? {
+        return Node.wrap(ObjectCalls.ptrcallWithVariantArgRetObject(spawnBind, handle, data))
+    }
+
     fun getSpawnPath(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getSpawnPathBind, handle)
     }
@@ -90,6 +94,11 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
         private const val CLEAR_SPAWNABLE_SCENES_HASH = 3218959716L
         private val clearSpawnableScenesBind by lazy {
             ObjectCalls.getMethodBind("MultiplayerSpawner", "clear_spawnable_scenes", CLEAR_SPAWNABLE_SCENES_HASH)
+        }
+
+        private const val SPAWN_HASH = 1991184589L
+        private val spawnBind by lazy {
+            ObjectCalls.getMethodBind("MultiplayerSpawner", "spawn", SPAWN_HASH)
         }
 
         private const val GET_SPAWN_PATH_HASH = 4075236667L

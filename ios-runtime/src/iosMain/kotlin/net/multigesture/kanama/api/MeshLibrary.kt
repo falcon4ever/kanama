@@ -50,6 +50,11 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, handle, id, navigationLayers)
     }
 
+    fun setItemShapes(id: Int, shapes: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, handle, id, shapes)
+    }
+
     fun setItemPreview(id: Int, texture: Texture2D?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, handle, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
@@ -176,6 +181,11 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
         private const val SET_ITEM_NAVIGATION_LAYERS_HASH = 3937882851L
         private val setItemNavigationLayersBind by lazy {
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_navigation_layers", SET_ITEM_NAVIGATION_LAYERS_HASH)
+        }
+
+        private const val SET_ITEM_SHAPES_HASH = 537221740L
+        private val setItemShapesBind by lazy {
+            ObjectCalls.getMethodBind("MeshLibrary", "set_item_shapes", SET_ITEM_SHAPES_HASH)
         }
 
         private const val SET_ITEM_PREVIEW_HASH = 666127730L

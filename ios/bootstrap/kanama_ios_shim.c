@@ -691,6 +691,12 @@ enum {
     // generic dispatch hands ret_out to the engine untyped, so this tag is
     // documentation + self-test selector only. Append-only — never renumber.
     KANAMA_IOS_PT_RECT2I,               // 37
+    // BUILD-tagged Variant ARG (task 100, parcel 7): the arg ptr is a KanamaIosVariantArgDesc
+    // {tag, ptr}; the dispatch boxes it with kanama_ios_pt_arg_to_variant into a 24-byte Variant
+    // cell, passes the cell to ptrcall and destroys it after the call. DICTIONARY (29) and ARRAY
+    // (30) double as BUILD-tagged args in the same parcel: the arg ptr is the task-29 entry blob.
+    // Value (38) must match IOS_PT_VARIANT in KanamaIosRuntime.kt and PT_VARIANT in the generator.
+    KANAMA_IOS_PT_VARIANT,              // 38
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -708,6 +714,13 @@ typedef struct {
     int64_t object_handle;
     const char *method;
 } KanamaIosCallableArgDesc;
+
+// task 100 parcel 7 — Variant ARG descriptor (mirrors ios/include/kanama_ios.h): `tag` is the
+// KANAMA_IOS_PT_* kind of the value at `ptr`, laid out as kanama_ios_pt_arg_to_variant reads it.
+typedef struct {
+    int32_t tag;
+    const void *ptr;
+} KanamaIosVariantArgDesc;
 
 enum {
     KANAMA_IOS_VARIANT_TYPE_NIL = 0,
@@ -1645,6 +1658,12 @@ int64_t kanama_ios_godot_get_method_bind(
 // Build a Packed*Array arg into a 16-byte cell from a KanamaIosPackedArgDesc; defined after the
 // packed cache functions. Returns 1 on success (so the dispatch destroys only what it built).
 static int kanama_ios_build_packed_arg(int32_t tag, const KanamaIosPackedArgDesc *desc, uint64_t *cell);
+// task 100 parcel 7: container / Variant BUILD-tagged args reuse the task-29 blob builders and the
+// Object-call Variant boxer (all defined after the dispatch).
+static void kanama_ios_cache_return_family_converters(void);
+static void kanama_ios_build_dictionary_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
+static void kanama_ios_build_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
+static void kanama_ios_pt_arg_to_variant(int32_t tag, const void *p, uint8_t out_variant[24], uint64_t *out_cell, int *out_cell_kind);
 static void kanama_ios_destroy_packed_arg(int32_t tag, uint64_t *cell);
 static void kanama_ios_cache_packed_byte_methods(void);
 // PackedStringArray BUILD-tagged arg (task 100, parcel 4): built from the string blob by the task-13
@@ -1693,6 +1712,14 @@ static void kanama_ios_godot_ptrcall_dispatch(
     // arg's builtin_cells[i] slot (a Callable arg uses no other cell in that slot).
     uint8_t callable_cells[KANAMA_IOS_PTRCALL_MAX_ARGS][24];
     int constructed[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    // task 100 parcel 7: BUILD-tagged container args (Dictionary / Array rebuilt from the task-29
+    // entry blob; 8-byte opaque, 16 kept for the audited width) and Variant args (boxed from a
+    // KanamaIosVariantArgDesc into a 24-byte Variant cell; string-family / container payloads keep
+    // their intermediate builtin in variant_inner_cells so the destroy loop can free it).
+    uint64_t container_cells[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
+    uint8_t variant_cells[KANAMA_IOS_PTRCALL_MAX_ARGS][24];
+    uint64_t variant_inner_cells[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
+    int variant_inner_kind[KANAMA_IOS_PTRCALL_MAX_ARGS];
 
     for (int32_t i = 0; i < arg_count; i++) {
         constructed[i] = 0;
@@ -1739,6 +1766,43 @@ static void kanama_ios_godot_ptrcall_dispatch(
                 } else {
                     args[i] = (const void *)packed_cells[i];  // empty/zeroed fallback
                 }
+                break;
+            }
+            case KANAMA_IOS_PT_DICTIONARY:
+            case KANAMA_IOS_PT_ARRAY: {
+                // task 100 parcel 7: arg ptr is the task-29 entry blob ([int32 count] + tagged
+                // records, String keys for Dictionary); rebuild the container into the cell and
+                // pass it by pointer. The engine copies what it keeps; the cell dies after the call.
+                const uint8_t *blob = (arg_ptrs != NULL) ? (const uint8_t *)arg_ptrs[i] : NULL;
+                container_cells[i][0] = 0;
+                container_cells[i][1] = 0;
+                kanama_ios_cache_return_family_converters();
+                if (tag == KANAMA_IOS_PT_DICTIONARY) {
+                    kanama_ios_build_dictionary_from_blob(blob, (GDExtensionTypePtr)container_cells[i]);
+                } else {
+                    kanama_ios_build_array_from_blob(blob, (GDExtensionTypePtr)container_cells[i]);
+                }
+                args[i] = (const void *)container_cells[i];
+                constructed[i] = tag;
+                break;
+            }
+            case KANAMA_IOS_PT_VARIANT: {
+                // task 100 parcel 7: arg ptr is a KanamaIosVariantArgDesc {tag, ptr}; box the
+                // scalar / container it describes into a Variant cell (same boxer as Object.call)
+                // and pass the cell by pointer — a Variant-typed ptrcall parameter expects exactly that.
+                const KanamaIosVariantArgDesc *desc =
+                    (arg_ptrs != NULL) ? (const KanamaIosVariantArgDesc *)arg_ptrs[i] : NULL;
+                variant_inner_cells[i][0] = 0;
+                variant_inner_cells[i][1] = 0;
+                variant_inner_kind[i] = 0;
+                kanama_ios_pt_arg_to_variant(
+                    (desc != NULL) ? desc->tag : KANAMA_IOS_PT_VOID,
+                    (desc != NULL) ? desc->ptr : NULL,
+                    variant_cells[i],
+                    variant_inner_cells[i],
+                    &variant_inner_kind[i]);
+                args[i] = (const void *)variant_cells[i];
+                constructed[i] = tag;
                 break;
             }
             case KANAMA_IOS_PT_CALLABLE: {
@@ -1795,6 +1859,31 @@ static void kanama_ios_godot_ptrcall_dispatch(
             case KANAMA_IOS_PT_PACKED_VECTOR3_ARRAY:
             case KANAMA_IOS_PT_PACKED_STRING_ARRAY:
                 kanama_ios_destroy_packed_arg(constructed[i], packed_cells[i]);
+                break;
+            case KANAMA_IOS_PT_DICTIONARY:
+                if (g_dictionary_destructor != NULL) {
+                    g_dictionary_destructor((GDExtensionTypePtr)container_cells[i]);
+                }
+                break;
+            case KANAMA_IOS_PT_ARRAY:
+                if (g_array_destructor != NULL) {
+                    g_array_destructor((GDExtensionTypePtr)container_cells[i]);
+                }
+                break;
+            case KANAMA_IOS_PT_VARIANT:
+                g_variant_destroy((GDExtensionVariantPtr)variant_cells[i]);
+                switch (variant_inner_kind[i]) {
+                    case KANAMA_IOS_PT_STRING:      kanama_ios_destroy_string(variant_inner_cells[i]); break;
+                    case KANAMA_IOS_PT_STRING_NAME: kanama_ios_destroy_string_name(variant_inner_cells[i]); break;
+                    case KANAMA_IOS_PT_NODE_PATH:   kanama_ios_destroy_node_path(variant_inner_cells[i]); break;
+                    case KANAMA_IOS_PT_ARRAY:
+                        if (g_array_destructor != NULL) g_array_destructor((GDExtensionTypePtr)variant_inner_cells[i]);
+                        break;
+                    case KANAMA_IOS_PT_DICTIONARY:
+                        if (g_dictionary_destructor != NULL) g_dictionary_destructor((GDExtensionTypePtr)variant_inner_cells[i]);
+                        break;
+                    default: break;
+                }
                 break;
             case KANAMA_IOS_PT_CALLABLE:
                 // Destroy the Callable cell and its method-name StringName. The engine
@@ -5695,6 +5784,17 @@ static void kanama_ios_pt_arg_to_variant(
                 g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
             }
             break;
+        case KANAMA_IOS_PT_DICTIONARY:
+            // task 100 parcel 7: a Map inside a Variant arg — the task-29 entry blob -> Dictionary.
+            kanama_ios_cache_return_family_converters();
+            kanama_ios_build_dictionary_from_blob((const uint8_t *)p, (GDExtensionTypePtr)out_cell);
+            if (g_variant_from_dictionary != NULL) {
+                g_variant_from_dictionary(out_variant, (GDExtensionTypePtr)out_cell);
+                *out_cell_kind = KANAMA_IOS_PT_DICTIONARY;
+            } else {
+                g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
+            }
+            break;
         default:
             fprintf(stderr,
                     "[kanama][ios][c] pt_arg_to_variant: unsupported arg tag %d -> nil\n",
@@ -6588,6 +6688,9 @@ int32_t kanama_ios_godot_object_call(
             case KANAMA_IOS_PT_ARRAY:
                 if (g_array_destructor != NULL) g_array_destructor(cells[i]);
                 break;
+            case KANAMA_IOS_PT_DICTIONARY:
+                if (g_dictionary_destructor != NULL) g_dictionary_destructor(cells[i]);
+                break;
             default: break;
         }
     }
@@ -6828,6 +6931,9 @@ static int kanama_ios_build_bound_callable(
             case KANAMA_IOS_PT_NODE_PATH:   kanama_ios_destroy_node_path(arg_cells[i]); break;
             case KANAMA_IOS_PT_ARRAY:
                 if (g_array_destructor != NULL) g_array_destructor(arg_cells[i]);
+                break;
+            case KANAMA_IOS_PT_DICTIONARY:
+                if (g_dictionary_destructor != NULL) g_dictionary_destructor(arg_cells[i]);
                 break;
             default: break;
         }
