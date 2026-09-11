@@ -65,6 +65,11 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
     }
 
+    fun addSurfaceFromArrays(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Long = 0L) {
+        checkOpen()
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, handle, primitive, arrays, blendShapes, lods, flags)
+    }
+
     fun clearSurfaces() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
@@ -205,6 +210,11 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         private const val GET_BLEND_SHAPE_MODE_HASH = 836485024L
         private val getBlendShapeModeBind by lazy {
             ObjectCalls.getMethodBind("ArrayMesh", "get_blend_shape_mode", GET_BLEND_SHAPE_MODE_HASH)
+        }
+
+        private const val ADD_SURFACE_FROM_ARRAYS_HASH = 1796411378L
+        private val addSurfaceFromArraysBind by lazy {
+            ObjectCalls.getMethodBind("ArrayMesh", "add_surface_from_arrays", ADD_SURFACE_FROM_ARRAYS_HASH)
         }
 
         private const val CLEAR_SURFACES_HASH = 3218959716L

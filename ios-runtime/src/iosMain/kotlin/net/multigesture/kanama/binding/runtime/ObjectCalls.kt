@@ -168,6 +168,7 @@ object ObjectCalls {
   // Variant.Type NIL: the descriptor asks for an UNTYPED Array (array_set_typed is skipped).
   internal const val VT_NIL_TYPE = 0
   internal const val VT_PACKED_VECTOR2_ARRAY_TYPE = 35
+  internal const val VT_PACKED_STRING_ARRAY_TYPE = 34
   private const val VT_INT = 2
   private const val VT_FLOAT = 3
   private const val VT_STRING = 4
@@ -829,6 +830,8 @@ object ObjectCalls {
             else null
           VT_ARRAY -> if (len >= 4) ContainerBlob(b, start).array() else null
           VT_DICTIONARY -> if (len >= 4) ContainerBlob(b, start).dictionary() else null
+          // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
+          VT_PACKED_BYTE_ARRAY -> b.copyOfRange(start, end)
           else -> null
         }
       off = end
@@ -922,6 +925,20 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, argTypes, argPtrs, argCount).mapNotNull {
       @Suppress("UNCHECKED_CAST")
       it as? Map<String, Any?>
+    }
+
+  // Array[Array] -> List<List<Any?>> (task 100 parcel 10): non-Array elements are dropped, as
+  // desktop's readArrayArrays does. A PackedByteArray inside decodes to a ByteArray.
+  fun ptrcallRetArrayList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<List<Any?>> =
+    ptrcallRetArray(methodBind, instance, argTypes, argPtrs, argCount).mapNotNull {
+      @Suppress("UNCHECKED_CAST")
+      it as? List<Any?>
     }
 
   // task 100 (parcel 5) — string-list / typed-Array returns on any audited arg shape. Same arg
@@ -2195,6 +2212,66 @@ object ObjectCalls {
       null,
       values.map { Pair(PT_OBJECT, int64Bytes(it.handle.address())) },
     )
+
+  // task 100 (parcel 10) — typed arrays whose ELEMENTS are containers or packed arrays. A
+  // Dictionary / Array element is a whole task-29 blob (scalars and ByteArrays inside, one level:
+  // the strict encoder throws on anything deeper), a PackedByteArray element is its raw bytes and
+  // a PackedStringArray element is the task-13 string blob; the dispatch's blob boxer rebuilds
+  // each element before push_back. One helper per argument layout, never per element content.
+  fun MemScope.packTypedDictionaryArrayDesc(
+    values: List<Map<String, Any?>>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_DICTIONARY,
+      null,
+      values.map {
+        Pair(PT_DICTIONARY, IosReturnContainerScratch.encodeDictionaryBytes(it, strict = true))
+      },
+    )
+
+  fun MemScope.packTypedArrayArrayDesc(
+    values: List<List<Any?>>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_ARRAY,
+      null,
+      values.map { Pair(PT_ARRAY, IosReturnContainerScratch.encodeArrayBytes(it, strict = true)) },
+    )
+
+  fun MemScope.packTypedByteArrayArrayDesc(
+    values: List<ByteArray>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(VT_PACKED_BYTE_ARRAY, null, values.map { Pair(PT_PACKED_BYTE_ARRAY, it) })
+
+  fun MemScope.packTypedPackedStringListArrayDesc(
+    values: List<List<String>>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_PACKED_STRING_ARRAY_TYPE,
+      null,
+      values.map { Pair(PT_PACKED_STRING_ARRAY, packedStringBlob(it)) },
+    )
+
+  // [int32 count]([int32 len][utf8])* — the layout kanama_ios_build_packed_string_array_from_blob
+  // reads (the parcel-4 PackedStringArray argument path).
+  private fun packedStringBlob(strings: List<String>): ByteArray {
+    val parts = strings.map { it.encodeToByteArray() }
+    var total = 4
+    for (part in parts) total += 4 + part.size
+    val out = ByteArray(total)
+    var off = 0
+    fun putInt32(v: Int) {
+      for (k in 0 until 4) out[off + k] = ((v ushr (8 * k)) and 0xFF).toByte()
+      off += 4
+    }
+    putInt32(parts.size)
+    for (part in parts) {
+      putInt32(part.size)
+      part.copyInto(out, off)
+      off += part.size
+    }
+    return out
+  }
 
   private fun MemScope.colorCell(c: Color): CPointer<FloatVar> {
     val cell = allocArray<FloatVar>(4)
@@ -4985,6 +5062,106 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "ret-typed-object-list(TranslationServer.find_translations empty)",
     p9Translations.isEmpty(),
   )
+
+  // task 100 (parcel 10) — typed arrays whose elements are containers / packed arrays, through
+  // the GENERATED helpers (packTyped{Dictionary,Array,ByteArray,PackedStringList}ArrayDesc ->
+  // PT_TYPED_ARRAY_BLOB -> nested blobs the boxer rebuilds). Data holders and the RenderingServer
+  // only — nothing that needs a physics / navigation server, and no Control, at scene-init.
+  // Array[Dictionary]: RenderingServer.mesh_create_from_surfaces (the RenderingServer exists before
+  // extensions initialise). NOT GraphEdit / any Control: constructing a Control at scene-init runs
+  // ThemeDB::update_class_instance_items before the theme contexts exist and segfaults (the 10+11
+  // stack gate caught GraphEdit doing exactly that). The engine rejects an EMPTY surface list
+  // (ERR_FAIL_COND_V(p_surfaces.is_empty(), RID())), so the row asserts the invalid RID: the typed
+  // Array[Dictionary] cell was built, set_typed, handed over and inspected by the engine, and the
+  // call returned — a broken cell would crash or hang, not answer. A non-empty Dictionary element
+  // cannot be exercised here without a Control or a full surface dictionary (AABB values), so the
+  // DICTIONARY boxer case rides on the ARRAY case the OggPacketSequence row proves.
+  val nestedRs = ObjectCalls.getSingleton("RenderingServer")
+  val nestedMesh =
+    ObjectCalls.ptrcallWithDictionaryListIntArgsRetRID(
+      ObjectCalls.getMethodBind("RenderingServer", "mesh_create_from_surfaces", 4291747531L),
+      nestedRs,
+      emptyList(),
+      0,
+    )
+  check(
+    "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> engine rejects it, invalid RID)",
+    nestedMesh == RID(0L),
+  )
+
+  // Array[Array] whose inner Arrays hold PackedByteArrays: OggPacketSequence packet data, stored
+  // as-is by the setter. Proves the nested blob both ways (arg boxer + return encoder), including
+  // a 300-byte packet and a page with two packets.
+  val nestedOgg = ObjectCalls.constructObject("OggPacketSequence")
+  val nestedPackets: List<List<Any?>> =
+    listOf(listOf(byteArrayOf(1, 2, 3), byteArrayOf(4, 5)), listOf(ByteArray(300) { it.toByte() }))
+  ObjectCalls.ptrcallWithArrayListArg(
+    ObjectCalls.getMethodBind("OggPacketSequence", "set_packet_data", 381264803L),
+    nestedOgg,
+    nestedPackets,
+  )
+  val nestedPacketsBack =
+    ObjectCalls.ptrcallNoArgsRetArrayList(
+      ObjectCalls.getMethodBind("OggPacketSequence", "get_packet_data", 3995934104L),
+      nestedOgg,
+    )
+  check(
+    "arg-nested(OggPacketSequence.set_packet_data Array[Array] of PackedByteArray: 2 pages, 2+1 packets)",
+    nestedPacketsBack.size == 2 && nestedPacketsBack[0].size == 2 && nestedPacketsBack[1].size == 1,
+  )
+  check(
+    "ret-nested(OggPacketSequence.get_packet_data packets byte-exact)",
+    nestedPacketsBack.size == 2 &&
+      (nestedPacketsBack[0].getOrNull(0) as? ByteArray)?.contentEquals(byteArrayOf(1, 2, 3)) ==
+        true &&
+      (nestedPacketsBack[0].getOrNull(1) as? ByteArray)?.contentEquals(byteArrayOf(4, 5)) == true &&
+      (nestedPacketsBack[1].getOrNull(0) as? ByteArray)?.contentEquals(
+        ByteArray(300) { it.toByte() }
+      ) == true,
+  )
+  ObjectCalls.destroyObject(nestedOgg)
+
+  // Array[PackedByteArray]: GLTFState.set_buffers / get_buffers, with an empty buffer and a
+  // 5000-byte one (the argument blob has no inline cap; the typed-list read-back parks beyond it).
+  val nestedGltf = ObjectCalls.constructObject("GLTFState")
+  val nestedBuffers =
+    listOf(byteArrayOf(9, 8, 7), ByteArray(0), ByteArray(5000) { (it % 251).toByte() })
+  ObjectCalls.ptrcallWithByteArrayListArg(
+    ObjectCalls.getMethodBind("GLTFState", "set_buffers", 381264803L),
+    nestedGltf,
+    nestedBuffers,
+  )
+  val nestedBuffersBack =
+    ObjectCalls.ptrcallNoArgsRetByteArrayList(
+      ObjectCalls.getMethodBind("GLTFState", "get_buffers", 3995934104L),
+      nestedGltf,
+    )
+  check(
+    "arg-nested(GLTFState.set_buffers Array[PackedByteArray] round-trip, empty + 5000-byte elements)",
+    nestedBuffersBack.size == 3 &&
+      nestedBuffersBack.zip(nestedBuffers).all { (a, b) -> a.contentEquals(b) },
+  )
+  ObjectCalls.destroyObject(nestedGltf)
+
+  // Array[PackedStringArray]: GLTFObjectModelProperty.set_json_pointers / get_json_pointers, with
+  // a non-ASCII element, an empty inner array and an empty string.
+  val nestedOmp = ObjectCalls.constructObject("GLTFObjectModelProperty")
+  val nestedPointers = listOf(listOf("/nodes/0/translation", "b\u00eata"), listOf(), listOf(""))
+  ObjectCalls.ptrcallWithPackedStringListListArg(
+    ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_json_pointers", 381264803L),
+    nestedOmp,
+    nestedPointers,
+  )
+  val nestedPointersBack =
+    ObjectCalls.ptrcallNoArgsRetPackedStringListList(
+      ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_json_pointers", 3995934104L),
+      nestedOmp,
+    )
+  check(
+    "arg-nested(GLTFObjectModelProperty.set_json_pointers Array[PackedStringArray] round-trip)",
+    nestedPointersBack == nestedPointers,
+  )
+  ObjectCalls.destroyObject(nestedOmp)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

@@ -67,6 +67,24 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Helper function to add an array of `diff_hunks` into a `diff_file`.
+     *
+     * Generated from Godot docs: EditorVCSInterface.add_diff_hunks_into_diff_file
+     */
+    fun addDiffHunksIntoDiffFile(diffFile: Map<String, Any?>, diffHunks: List<Map<String, Any?>>): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addDiffHunksIntoDiffFileBind, handle, diffFile, diffHunks)
+    }
+
+    /**
+     * Helper function to add an array of `line_diffs` into a `diff_hunk`.
+     *
+     * Generated from Godot docs: EditorVCSInterface.add_line_diffs_into_diff_hunk
+     */
+    fun addLineDiffsIntoDiffHunk(diffHunk: Map<String, Any?>, lineDiffs: List<Map<String, Any?>>): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addLineDiffsIntoDiffHunkBind, handle, diffHunk, lineDiffs)
+    }
+
+    /**
      * Pops up an error message in the editor which is shown as coming from the underlying VCS. Use
      * this to show VCS specific error messages.
      *
@@ -117,6 +135,16 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
         private const val CREATE_STATUS_FILE_HASH = 1083471673L
         private val createStatusFileBind by lazy {
             ObjectCalls.getMethodBind("EditorVCSInterface", "create_status_file", CREATE_STATUS_FILE_HASH)
+        }
+
+        private const val ADD_DIFF_HUNKS_INTO_DIFF_FILE_HASH = 4015243225L
+        private val addDiffHunksIntoDiffFileBind by lazy {
+            ObjectCalls.getMethodBind("EditorVCSInterface", "add_diff_hunks_into_diff_file", ADD_DIFF_HUNKS_INTO_DIFF_FILE_HASH)
+        }
+
+        private const val ADD_LINE_DIFFS_INTO_DIFF_HUNK_HASH = 4015243225L
+        private val addLineDiffsIntoDiffHunkBind by lazy {
+            ObjectCalls.getMethodBind("EditorVCSInterface", "add_line_diffs_into_diff_hunk", ADD_LINE_DIFFS_INTO_DIFF_HUNK_HASH)
         }
 
         private const val POPUP_ERROR_HASH = 83702148L

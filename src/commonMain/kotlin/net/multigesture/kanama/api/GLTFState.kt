@@ -52,9 +52,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("setNodesProperty")
         set(value) = setNodes(value)
 
-    val buffers: List<ByteArray>
+    var buffers: List<ByteArray>
         @JvmName("buffersProperty")
         get() = getBuffers()
+        @JvmName("setBuffersProperty")
+        set(value) = setBuffers(value)
 
     var bufferViews: List<GLTFBufferView>
         @JvmName("bufferViewsProperty")
@@ -282,6 +284,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun getBuffers(): List<ByteArray> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArrayList(getBuffersBind, handle)
+    }
+
+    fun setBuffers(buffers: List<ByteArray>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithByteArrayListArg(setBuffersBind, handle, buffers)
     }
 
     fun getBufferViews(): List<GLTFBufferView> {
@@ -649,6 +656,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_BUFFERS_HASH = 3995934104L
         private val getBuffersBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_buffers", GET_BUFFERS_HASH)
+        }
+
+        private const val SET_BUFFERS_HASH = 381264803L
+        private val setBuffersBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_buffers", SET_BUFFERS_HASH)
         }
 
         private const val GET_BUFFER_VIEWS_HASH = 3995934104L
