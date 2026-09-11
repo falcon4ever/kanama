@@ -13,23 +13,41 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: NavigationPathQueryResult2D
  */
 class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
-    val path: List<Vector2>
+    var path: List<Vector2>
         @JvmName("pathProperty")
         get() = getPath()
+        @JvmName("setPathProperty")
+        set(value) = setPath(value)
 
-    val pathTypes: List<Int>
+    var pathTypes: List<Int>
         @JvmName("pathTypesProperty")
         get() = getPathTypes()
+        @JvmName("setPathTypesProperty")
+        set(value) = setPathTypes(value)
 
-    val pathOwnerIds: List<Long>
+    var pathOwnerIds: List<Long>
         @JvmName("pathOwnerIdsProperty")
         get() = getPathOwnerIds()
+        @JvmName("setPathOwnerIdsProperty")
+        set(value) = setPathOwnerIds(value)
 
     var pathLength: Double
         @JvmName("pathLengthProperty")
         get() = getPathLength()
         @JvmName("setPathLengthProperty")
         set(value) = setPathLength(value)
+
+    /**
+     * The resulting path array from the navigation query. All path array positions are in global
+     * coordinates. Without customized query parameters this is the same path as returned by
+     * `NavigationServer2D.map_get_path`.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult2D.set_path
+     */
+    fun setPath(path: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPathBind, handle, path)
+    }
 
     /**
      * The resulting path array from the navigation query. All path array positions are in global
@@ -46,11 +64,32 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
     /**
      * The type of navigation primitive (region or link) that each point of the path goes through.
      *
+     * Generated from Godot docs: NavigationPathQueryResult2D.set_path_types
+     */
+    fun setPathTypes(pathTypes: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setPathTypesBind, handle, pathTypes)
+    }
+
+    /**
+     * The type of navigation primitive (region or link) that each point of the path goes through.
+     *
      * Generated from Godot docs: NavigationPathQueryResult2D.get_path_types
      */
     fun getPathTypes(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
+    }
+
+    /**
+     * The `ObjectID`s of the `Object`s which manage the regions and links each point of the path goes
+     * through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult2D.set_path_owner_ids
+     */
+    fun setPathOwnerIds(pathOwnerIds: List<Long>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt64ListArg(setPathOwnerIdsBind, handle, pathOwnerIds)
     }
 
     /**
@@ -106,14 +145,29 @@ class NavigationPathQueryResult2D(handle: MemorySegment) : RefCounted(handle) {
         internal fun wrap(handle: MemorySegment): NavigationPathQueryResult2D? =
             if (handle.address() == 0L) null else NavigationPathQueryResult2D(handle)
 
+        private const val SET_PATH_HASH = 1509147220L
+        private val setPathBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "set_path", SET_PATH_HASH)
+        }
+
         private const val GET_PATH_HASH = 2961356807L
         private val getPathBind by lazy {
             ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "get_path", GET_PATH_HASH)
         }
 
+        private const val SET_PATH_TYPES_HASH = 3614634198L
+        private val setPathTypesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "set_path_types", SET_PATH_TYPES_HASH)
+        }
+
         private const val GET_PATH_TYPES_HASH = 1930428628L
         private val getPathTypesBind by lazy {
             ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "get_path_types", GET_PATH_TYPES_HASH)
+        }
+
+        private const val SET_PATH_OWNER_IDS_HASH = 3709968205L
+        private val setPathOwnerIdsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryResult2D", "set_path_owner_ids", SET_PATH_OWNER_IDS_HASH)
         }
 
         private const val GET_PATH_OWNER_IDS_HASH = 235988956L

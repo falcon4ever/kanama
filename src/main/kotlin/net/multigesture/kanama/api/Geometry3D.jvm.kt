@@ -10,8 +10,8 @@ import net.multigesture.kanama.types.Vector3
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP Geometry3D waits on: ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List,
-//   ptrcallWithPackedVector3ListArgRetPackedInt32List, ptrcallWithPlaneListArgRetPackedVector3List,
-//   ptrcallWithTwoDoubleIntLongArgsRetPlaneList, ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList,
+//   ptrcallWithPlaneListArgRetPackedVector3List, ptrcallWithTwoDoubleIntLongArgsRetPlaneList,
+//   ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList,
 //   ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List, ptrcallWithVector3ArgRetPlaneList
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -82,20 +82,6 @@ fun Geometry3D.clipPolygon(points: List<Vector3>, plane: Plane): List<Vector3> {
     return ObjectCalls.ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List(clipPolygonBind, geometry3DSingleton, points, plane)
 }
 
-/**
- * Tetrahedralizes the volume specified by a discrete set of `points` in 3D space, ensuring that no
- * point lies within the circumsphere of any resulting tetrahedron. The method returns a
- * `PackedInt32Array` where each tetrahedron consists of four consecutive point indices into the
- * `points` array (resulting in an array with `n * 4` elements, where `n` is the number of
- * tetrahedra found). If the tetrahedralization is unsuccessful, an empty `PackedInt32Array` is
- * returned.
- *
- * Generated from Godot docs: Geometry3D.tetrahedralize_delaunay
- */
-fun Geometry3D.tetrahedralizeDelaunay(points: List<Vector3>): List<Int> {
-    return ObjectCalls.ptrcallWithPackedVector3ListArgRetPackedInt32List(tetrahedralizeDelaunayBind, geometry3DSingleton, points)
-}
-
 private val geometry3DSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("Geometry3D")
 }
@@ -128,9 +114,4 @@ private val segmentIntersectsConvexBind by lazy {
 private const val CLIP_POLYGON_HASH = 2603188319L
 private val clipPolygonBind by lazy {
     ObjectCalls.getMethodBind("Geometry3D", "clip_polygon", CLIP_POLYGON_HASH)
-}
-
-private const val TETRAHEDRALIZE_DELAUNAY_HASH = 1230191221L
-private val tetrahedralizeDelaunayBind by lazy {
-    ObjectCalls.getMethodBind("Geometry3D", "tetrahedralize_delaunay", TETRAHEDRALIZE_DELAUNAY_HASH)
 }

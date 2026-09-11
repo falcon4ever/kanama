@@ -36,6 +36,18 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
     }
 
     /**
+     * Pushes several audio data frames to the buffer. This is usually more efficient than `push_frame`
+     * in C# and compiled languages via GDExtension, but `push_buffer` may be less efficient in
+     * GDScript.
+     *
+     * Generated from Godot docs: AudioStreamGeneratorPlayback.push_buffer
+     */
+    fun pushBuffer(frames: List<Vector2>): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(pushBufferBind, handle, frames)
+    }
+
+    /**
      * Returns the number of frames that can be pushed to the audio sample data buffer without
      * overflowing it. If the result is `0`, the buffer is full.
      *
@@ -83,6 +95,11 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
         private const val CAN_PUSH_BUFFER_HASH = 1116898809L
         private val canPushBufferBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "can_push_buffer", CAN_PUSH_BUFFER_HASH)
+        }
+
+        private const val PUSH_BUFFER_HASH = 1361156557L
+        private val pushBufferBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "push_buffer", PUSH_BUFFER_HASH)
         }
 
         private const val GET_FRAMES_AVAILABLE_HASH = 3905245786L

@@ -49,6 +49,11 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithIntArg(channelLimitBind, handle, limit)
     }
 
+    fun broadcast(channel: Int, packet: ByteArray, flags: Int) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntByteArrayIntArgs(broadcastBind, handle, channel, packet, flags)
+    }
+
     fun compress(mode: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(compressBind, handle, mode)
@@ -87,6 +92,11 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
     fun getPeers(): List<ENetPacketPeer> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getPeersBind, handle, ENetPacketPeer::fromHandle)
+    }
+
+    fun socketSend(destinationAddress: String, destinationPort: Int, packet: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringIntByteArrayArgs(socketSendBind, handle, destinationAddress, destinationPort, packet)
     }
 
     companion object {
@@ -152,6 +162,11 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("ENetConnection", "channel_limit", CHANNEL_LIMIT_HASH)
         }
 
+        private const val BROADCAST_HASH = 2772371345L
+        private val broadcastBind by lazy {
+            ObjectCalls.getMethodBind("ENetConnection", "broadcast", BROADCAST_HASH)
+        }
+
         private const val COMPRESS_HASH = 2660215187L
         private val compressBind by lazy {
             ObjectCalls.getMethodBind("ENetConnection", "compress", COMPRESS_HASH)
@@ -190,6 +205,11 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_PEERS_HASH = 2915620761L
         private val getPeersBind by lazy {
             ObjectCalls.getMethodBind("ENetConnection", "get_peers", GET_PEERS_HASH)
+        }
+
+        private const val SOCKET_SEND_HASH = 1100646812L
+        private val socketSendBind by lazy {
+            ObjectCalls.getMethodBind("ENetConnection", "socket_send", SOCKET_SEND_HASH)
         }
     }
 }

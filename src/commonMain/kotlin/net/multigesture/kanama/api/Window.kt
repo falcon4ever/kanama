@@ -56,9 +56,11 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         @JvmName("nonclientAreaProperty")
         get() = getNonclientArea()
 
-    val mousePassthroughPolygon: List<Vector2>
+    var mousePassthroughPolygon: List<Vector2>
         @JvmName("mousePassthroughPolygonProperty")
         get() = getMousePassthroughPolygon()
+        @JvmName("setMousePassthroughPolygonProperty")
+        set(value) = setMousePassthroughPolygon(value)
 
     var visible: Boolean
         @JvmName("visibleProperty")
@@ -945,6 +947,17 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      */
     fun getContentScaleFactor(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getContentScaleFactorBind, handle)
+    }
+
+    /**
+     * Sets a polygonal region of the window which accepts mouse events. Mouse events outside the
+     * region will be passed through. Passing an empty array will disable passthrough support (all
+     * mouse events will be intercepted by the window, which is the default behavior).
+     *
+     * Generated from Godot docs: Window.set_mouse_passthrough_polygon
+     */
+    fun setMousePassthroughPolygon(polygon: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setMousePassthroughPolygonBind, handle, polygon)
     }
 
     /**
@@ -1969,6 +1982,11 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         private const val GET_CONTENT_SCALE_FACTOR_HASH = 1740695150L
         private val getContentScaleFactorBind by lazy {
             ObjectCalls.getMethodBind("Window", "get_content_scale_factor", GET_CONTENT_SCALE_FACTOR_HASH)
+        }
+
+        private const val SET_MOUSE_PASSTHROUGH_POLYGON_HASH = 1509147220L
+        private val setMousePassthroughPolygonBind by lazy {
+            ObjectCalls.getMethodBind("Window", "set_mouse_passthrough_polygon", SET_MOUSE_PASSTHROUGH_POLYGON_HASH)
         }
 
         private const val GET_MOUSE_PASSTHROUGH_POLYGON_HASH = 2961356807L

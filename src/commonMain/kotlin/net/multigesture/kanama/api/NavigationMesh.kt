@@ -14,9 +14,11 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: NavigationMesh
  */
 class NavigationMesh(handle: MemorySegment) : Resource(handle) {
-    val vertices: List<Vector3>
+    var vertices: List<Vector3>
         @JvmName("verticesProperty")
         get() = getVertices()
+        @JvmName("setVerticesProperty")
+        set(value) = setVertices(value)
 
     var samplePartitionType: Long
         @JvmName("samplePartitionTypeProperty")
@@ -719,6 +721,16 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Sets the vertices that can be then indexed to create polygons with the `add_polygon` method.
+     *
+     * Generated from Godot docs: NavigationMesh.set_vertices
+     */
+    fun setVertices(vertices: List<Vector3>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
+    }
+
+    /**
      * Returns a `PackedVector3Array` containing all the vertices being used to create the polygons.
      *
      * Generated from Godot docs: NavigationMesh.get_vertices
@@ -726,6 +738,16 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
     fun getVertices(): List<Vector3> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
+    }
+
+    /**
+     * Adds a polygon using the indices of the vertices you get when calling `get_vertices`.
+     *
+     * Generated from Godot docs: NavigationMesh.add_polygon
+     */
+    fun addPolygon(polygon: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
     }
 
     /**
@@ -1050,9 +1072,19 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("NavigationMesh", "get_filter_baking_aabb_offset", GET_FILTER_BAKING_AABB_OFFSET_HASH)
         }
 
+        private const val SET_VERTICES_HASH = 334873810L
+        private val setVerticesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMesh", "set_vertices", SET_VERTICES_HASH)
+        }
+
         private const val GET_VERTICES_HASH = 497664490L
         private val getVerticesBind by lazy {
             ObjectCalls.getMethodBind("NavigationMesh", "get_vertices", GET_VERTICES_HASH)
+        }
+
+        private const val ADD_POLYGON_HASH = 3614634198L
+        private val addPolygonBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMesh", "add_polygon", ADD_POLYGON_HASH)
         }
 
         private const val GET_POLYGON_COUNT_HASH = 3905245786L

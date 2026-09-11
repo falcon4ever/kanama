@@ -58,6 +58,18 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
         set(value) = setInterior(value)
 
     /**
+     * Initializes this `VoxelGIData` with the specified data. `octree_cells` must be a multiple of 32.
+     * `octree_cells` must be double the size of `data_cells`. The allocated data can be retrieved
+     * later using the various getter methods.
+     *
+     * Generated from Godot docs: VoxelGIData.allocate
+     */
+    fun allocate(toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(allocateBind, handle, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
+    }
+
+    /**
      * Returns the bounds of the baked voxel data as an `AABB`, which should match `VoxelGI.size` after
      * being baked (which only contains the size as a `Vector3`). Note: If the size was modified
      * without baking the VoxelGI data, then the value of `get_bounds` and `VoxelGI.size` will not
@@ -310,6 +322,11 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): VoxelGIData? =
             if (handle.address() == 0L) null else VoxelGIData(handle)
+
+        private const val ALLOCATE_HASH = 4041601946L
+        private val allocateBind by lazy {
+            ObjectCalls.getMethodBind("VoxelGIData", "allocate", ALLOCATE_HASH)
+        }
 
         private const val GET_BOUNDS_HASH = 1068685055L
         private val getBoundsBind by lazy {

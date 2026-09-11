@@ -31,9 +31,11 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
         @JvmName("setOffsetsProperty")
         set(value) = setOffsets(value)
 
-    val colors: List<Color>
+    var colors: List<Color>
         @JvmName("colorsProperty")
         get() = getColors()
+        @JvmName("setColorsProperty")
+        set(value) = setColors(value)
 
     /**
      * Adds the specified color to the gradient, with the specified offset.
@@ -151,6 +153,17 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
     fun getOffsets(): List<Float> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getOffsetsBind, handle)
+    }
+
+    /**
+     * Gradient's colors as a `PackedColorArray`. Note: Setting this property updates all colors at
+     * once. To update any color individually use `set_color`.
+     *
+     * Generated from Godot docs: Gradient.set_colors
+     */
+    fun setColors(colors: List<Color>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, handle, colors)
     }
 
     /**
@@ -276,6 +289,11 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
         private const val GET_OFFSETS_HASH = 675695659L
         private val getOffsetsBind by lazy {
             ObjectCalls.getMethodBind("Gradient", "get_offsets", GET_OFFSETS_HASH)
+        }
+
+        private const val SET_COLORS_HASH = 3546319833L
+        private val setColorsBind by lazy {
+            ObjectCalls.getMethodBind("Gradient", "set_colors", SET_COLORS_HASH)
         }
 
         private const val GET_COLORS_HASH = 1392750486L

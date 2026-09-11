@@ -128,17 +128,23 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setEmissionRectExtentsProperty")
         set(value) = setEmissionRectExtents(value)
 
-    val emissionPoints: List<Vector2>
+    var emissionPoints: List<Vector2>
         @JvmName("emissionPointsProperty")
         get() = getEmissionPoints()
+        @JvmName("setEmissionPointsProperty")
+        set(value) = setEmissionPoints(value)
 
-    val emissionNormals: List<Vector2>
+    var emissionNormals: List<Vector2>
         @JvmName("emissionNormalsProperty")
         get() = getEmissionNormals()
+        @JvmName("setEmissionNormalsProperty")
+        set(value) = setEmissionNormals(value)
 
-    val emissionColors: List<Color>
+    var emissionColors: List<Color>
         @JvmName("emissionColorsProperty")
         get() = getEmissionColors()
+        @JvmName("setEmissionColorsProperty")
+        set(value) = setEmissionColors(value)
 
     var emissionRingInnerRadius: Double
         @JvmName("emissionRingInnerRadiusProperty")
@@ -985,6 +991,16 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
      * `EMISSION_SHAPE_DIRECTED_POINTS`.
      *
+     * Generated from Godot docs: CPUParticles2D.set_emission_points
+     */
+    fun setEmissionPoints(array: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionPointsBind, handle, array)
+    }
+
+    /**
+     * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
+     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
      * Generated from Godot docs: CPUParticles2D.get_emission_points
      */
     fun getEmissionPoints(): List<Vector2> {
@@ -994,10 +1010,29 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
     /**
      * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
      *
+     * Generated from Godot docs: CPUParticles2D.set_emission_normals
+     */
+    fun setEmissionNormals(array: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionNormalsBind, handle, array)
+    }
+
+    /**
+     * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
      * Generated from Godot docs: CPUParticles2D.get_emission_normals
      */
     fun getEmissionNormals(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getEmissionNormalsBind, handle)
+    }
+
+    /**
+     * Sets the `Color`s to modulate particles by when using `EMISSION_SHAPE_POINTS` or
+     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     *
+     * Generated from Godot docs: CPUParticles2D.set_emission_colors
+     */
+    fun setEmissionColors(array: List<Color>) {
+        ObjectCalls.ptrcallWithPackedColorListArg(setEmissionColorsBind, handle, array)
     }
 
     /**
@@ -1464,14 +1499,29 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
             ObjectCalls.getMethodBind("CPUParticles2D", "get_emission_rect_extents", GET_EMISSION_RECT_EXTENTS_HASH)
         }
 
+        private const val SET_EMISSION_POINTS_HASH = 1509147220L
+        private val setEmissionPointsBind by lazy {
+            ObjectCalls.getMethodBind("CPUParticles2D", "set_emission_points", SET_EMISSION_POINTS_HASH)
+        }
+
         private const val GET_EMISSION_POINTS_HASH = 2961356807L
         private val getEmissionPointsBind by lazy {
             ObjectCalls.getMethodBind("CPUParticles2D", "get_emission_points", GET_EMISSION_POINTS_HASH)
         }
 
+        private const val SET_EMISSION_NORMALS_HASH = 1509147220L
+        private val setEmissionNormalsBind by lazy {
+            ObjectCalls.getMethodBind("CPUParticles2D", "set_emission_normals", SET_EMISSION_NORMALS_HASH)
+        }
+
         private const val GET_EMISSION_NORMALS_HASH = 2961356807L
         private val getEmissionNormalsBind by lazy {
             ObjectCalls.getMethodBind("CPUParticles2D", "get_emission_normals", GET_EMISSION_NORMALS_HASH)
+        }
+
+        private const val SET_EMISSION_COLORS_HASH = 3546319833L
+        private val setEmissionColorsBind by lazy {
+            ObjectCalls.getMethodBind("CPUParticles2D", "set_emission_colors", SET_EMISSION_COLORS_HASH)
         }
 
         private const val GET_EMISSION_COLORS_HASH = 1392750486L

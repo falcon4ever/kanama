@@ -13,15 +13,28 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: ConcavePolygonShape3D
  */
 class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
-    val data: List<Vector3>
+    var data: List<Vector3>
         @JvmName("dataProperty")
         get() = getFaces()
+        @JvmName("setDataProperty")
+        set(value) = setFaces(value)
 
     var backfaceCollision: Boolean
         @JvmName("backfaceCollisionProperty")
         get() = isBackfaceCollisionEnabled()
         @JvmName("setBackfaceCollisionProperty")
         set(value) = setBackfaceCollisionEnabled(value)
+
+    /**
+     * Sets the faces of the trimesh shape from an array of vertices. The `faces` array should be
+     * composed of triples such that each triple of vertices defines a triangle.
+     *
+     * Generated from Godot docs: ConcavePolygonShape3D.set_faces
+     */
+    fun setFaces(faces: List<Vector3>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setFacesBind, handle, faces)
+    }
 
     /**
      * Returns the faces of the trimesh shape as an array of vertices. The array (of length divisible
@@ -63,6 +76,11 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
 
         internal fun wrap(handle: MemorySegment): ConcavePolygonShape3D? =
             if (handle.address() == 0L) null else ConcavePolygonShape3D(handle)
+
+        private const val SET_FACES_HASH = 334873810L
+        private val setFacesBind by lazy {
+            ObjectCalls.getMethodBind("ConcavePolygonShape3D", "set_faces", SET_FACES_HASH)
+        }
 
         private const val GET_FACES_HASH = 497664490L
         private val getFacesBind by lazy {

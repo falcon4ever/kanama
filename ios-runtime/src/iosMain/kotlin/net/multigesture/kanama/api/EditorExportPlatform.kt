@@ -69,6 +69,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
     }
 
+    fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
+    }
+
+    fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
+    }
+
     fun clearMessages() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMessagesBind, handle)
@@ -102,6 +112,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
     fun getWorstMessageType(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, handle)
+    }
+
+    fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = -1): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(sshRunOnRemoteNoWaitBind, handle, host, port, sshArgs, cmdArgs, portFwd)
+    }
+
+    fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, handle, host, port, scpArgs, srcFile, dstFile)
     }
 
     fun getInternalExportFiles(preset: EditorExportPreset?, debug: Boolean): Map<String, Any?> {
@@ -187,6 +207,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_zip", EXPORT_ZIP_HASH)
         }
 
+        private const val EXPORT_PACK_PATCH_HASH = 608021658L
+        private val exportPackPatchBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "export_pack_patch", EXPORT_PACK_PATCH_HASH)
+        }
+
+        private const val EXPORT_ZIP_PATCH_HASH = 608021658L
+        private val exportZipPatchBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "export_zip_patch", EXPORT_ZIP_PATCH_HASH)
+        }
+
         private const val CLEAR_MESSAGES_HASH = 3218959716L
         private val clearMessagesBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "clear_messages", CLEAR_MESSAGES_HASH)
@@ -220,6 +250,16 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_WORST_MESSAGE_TYPE_HASH = 2580557466L
         private val getWorstMessageTypeBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_worst_message_type", GET_WORST_MESSAGE_TYPE_HASH)
+        }
+
+        private const val SSH_RUN_ON_REMOTE_NO_WAIT_HASH = 3606362233L
+        private val sshRunOnRemoteNoWaitBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_run_on_remote_no_wait", SSH_RUN_ON_REMOTE_NO_WAIT_HASH)
+        }
+
+        private const val SSH_PUSH_TO_REMOTE_HASH = 218756989L
+        private val sshPushToRemoteBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_push_to_remote", SSH_PUSH_TO_REMOTE_HASH)
         }
 
         private const val GET_INTERNAL_EXPORT_FILES_HASH = 89550086L

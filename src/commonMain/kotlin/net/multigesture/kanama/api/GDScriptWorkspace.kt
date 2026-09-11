@@ -9,6 +9,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: GDScriptWorkspace
  */
 class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
+    fun applyNewSignal(obj: GodotObject, function: String, args: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectStringAndPackedStringListArgs(applyNewSignalBind, handle, obj.handle, function, args)
+    }
+
     fun getFilePath(uri: String): String {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(getFilePathBind, handle, uri)
@@ -46,6 +51,11 @@ class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): GDScriptWorkspace? =
             if (handle.address() == 0L) null else GDScriptWorkspace(handle)
+
+        private const val APPLY_NEW_SIGNAL_HASH = 3682583557L
+        private val applyNewSignalBind by lazy {
+            ObjectCalls.getMethodBind("GDScriptWorkspace", "apply_new_signal", APPLY_NEW_SIGNAL_HASH)
+        }
 
         private const val GET_FILE_PATH_HASH = 1703090593L
         private val getFilePathBind by lazy {

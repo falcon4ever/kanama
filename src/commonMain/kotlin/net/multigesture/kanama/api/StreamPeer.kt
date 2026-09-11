@@ -19,6 +19,29 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setBigEndian(value)
 
     /**
+     * Sends a chunk of data through the connection, blocking if necessary until the data is done
+     * sending. This function returns an `Error` code.
+     *
+     * Generated from Godot docs: StreamPeer.put_data
+     */
+    fun putData(data: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, handle, data)
+    }
+
+    /**
+     * Sends a chunk of data through the connection. If all the data could not be sent at once, only
+     * part of it will. This function returns two values, an `Error` code and an integer, describing
+     * how much data was actually sent.
+     *
+     * Generated from Godot docs: StreamPeer.put_partial_data
+     */
+    fun putPartialData(data: ByteArray): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayArgRetArray(putPartialDataBind, handle, data)
+    }
+
+    /**
      * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
      * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
      * bytes are available, the function will block until the desired amount is received.
@@ -360,6 +383,16 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): StreamPeer? =
             if (handle.address() == 0L) null else StreamPeer(handle)
+
+        private const val PUT_DATA_HASH = 680677267L
+        private val putDataBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "put_data", PUT_DATA_HASH)
+        }
+
+        private const val PUT_PARTIAL_DATA_HASH = 2934048347L
+        private val putPartialDataBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "put_partial_data", PUT_PARTIAL_DATA_HASH)
+        }
 
         private const val GET_DATA_HASH = 1171824711L
         private val getDataBind by lazy {

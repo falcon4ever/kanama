@@ -389,6 +389,21 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBufferBind, handle, buffer)
     }
 
+    /**
+     * An alternative to setting the `buffer` property, which can be used with physics interpolation.
+     * This method takes two arrays, and can set the data for the current and previous tick in one go.
+     * The renderer will automatically interpolate the data at each frame. This is useful for
+     * situations where the order of instances may change from physics tick to tick, such as particle
+     * systems. When the order of instances is coherent, the simpler alternative of setting `buffer`
+     * can still be used with interpolation.
+     *
+     * Generated from Godot docs: MultiMesh.set_buffer_interpolated
+     */
+    fun setBufferInterpolated(bufferCurr: List<Float>, bufferPrev: List<Float>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(setBufferInterpolatedBind, handle, bufferCurr, bufferPrev)
+    }
+
     companion object {
         const val TRANSFORM_2D: Long = 0L
         const val TRANSFORM_3D: Long = 1L
@@ -545,6 +560,11 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
         private const val SET_BUFFER_HASH = 2899603908L
         private val setBufferBind by lazy {
             ObjectCalls.getMethodBind("MultiMesh", "set_buffer", SET_BUFFER_HASH)
+        }
+
+        private const val SET_BUFFER_INTERPOLATED_HASH = 3514430332L
+        private val setBufferInterpolatedBind by lazy {
+            ObjectCalls.getMethodBind("MultiMesh", "set_buffer_interpolated", SET_BUFFER_INTERPOLATED_HASH)
         }
     }
 }

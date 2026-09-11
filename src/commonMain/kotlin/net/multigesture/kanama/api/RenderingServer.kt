@@ -1167,6 +1167,65 @@ object RenderingServer {
     }
 
     /**
+     * Updates the vertex buffer of the mesh surface with the given `data`. The expected data per
+     * vertex is 8 or 12 bytes (4 bytes per float, 2 floats per `Vector2`, and 3 floats per `Vector3`)
+     * depending on if the mesh is using `Vector2` or `Vector3` vertices. This value can be determined
+     * with `mesh_surface_get_format_vertex_stride` instead. The starting point of the updates can be
+     * changed with `offset`. The value of `offset` should be a multiple of 12 bytes in most cases to
+     * align to each vertex. A `PackedVector3Array` of vertex locations can be converted into a
+     * `PackedByteArray` using `PackedVector3Array.to_byte_array` for use in `data`.
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_update_vertex_region
+     */
+    @JvmStatic
+    fun meshSurfaceUpdateVertexRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateVertexRegionBind, singleton, mesh, surface, offset, data)
+    }
+
+    /**
+     * Updates the attribute buffer of the mesh surface with the given `data`. The expected data per
+     * attribute is 8 or 12 bytes (4 bytes per float, 2 floats per `Vector2`, and 3 floats per
+     * `Vector3`) depending on if the mesh is using `Vector2` or `Vector3` vertices. This value can be
+     * determined with `mesh_surface_get_format_attribute_stride` instead. The starting point of the
+     * updates can be changed with `offset`. The value of `offset` should be a multiple of 12 bytes in
+     * most cases to align to each attribute. A `PackedVector3Array` of attribute locations can be
+     * converted into a `PackedByteArray` using `PackedVector3Array.to_byte_array` for use in `data`.
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_update_attribute_region
+     */
+    @JvmStatic
+    fun meshSurfaceUpdateAttributeRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateAttributeRegionBind, singleton, mesh, surface, offset, data)
+    }
+
+    /**
+     * Updates the skin buffer of the mesh surface with the given `data`. The expected data per skin is
+     * 8 or 12 bytes (4 bytes per float, 2 floats per `Vector2`, and 3 floats per `Vector3`) depending
+     * on if the mesh is using `Vector2` or `Vector3` vertices. This value can be determined with
+     * `mesh_surface_get_format_skin_stride` instead. The starting point of the updates can be changed
+     * with `offset`. The value of `offset` should be a multiple of 12 bytes in most cases to align to
+     * each skin. A `PackedVector3Array` of skin locations can be converted into a `PackedByteArray`
+     * using `PackedVector3Array.to_byte_array` for use in `data`.
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_update_skin_region
+     */
+    @JvmStatic
+    fun meshSurfaceUpdateSkinRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateSkinRegionBind, singleton, mesh, surface, offset, data)
+    }
+
+    /**
+     * Updates the index buffer of the mesh surface with the given `data`. The expected data are 16 or
+     * 32-bit unsigned integers, which can be determined with `mesh_surface_get_format_index_stride`.
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_update_index_region
+     */
+    @JvmStatic
+    fun meshSurfaceUpdateIndexRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateIndexRegionBind, singleton, mesh, surface, offset, data)
+    }
+
+    /**
      * Sets an optional second mesh which can be used for rendering shadows and the depth prepass. Can
      * be used to increase performance by supplying a mesh with fused vertices and only vertex position
      * data (without normals, UVs, colors, etc.). Note: This mesh must have exactly the same vertex
@@ -1377,6 +1436,20 @@ object RenderingServer {
     }
 
     /**
+     * Set the entire data to use for drawing the `multimesh` at once to `buffer` (such as instance
+     * transforms and colors). `buffer`'s size must match the number of instances multiplied by the
+     * per-instance data size (which depends on the enabled MultiMesh fields). Otherwise, an error
+     * message is printed and nothing is rendered. See also `multimesh_get_buffer`. The per-instance
+     * data size and expected data order is:
+     *
+     * Generated from Godot docs: RenderingServer.multimesh_set_buffer
+     */
+    @JvmStatic
+    fun multimeshSetBuffer(multimesh: RID, buffer: List<Float>) {
+        ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArg(multimeshSetBufferBind, singleton, multimesh, buffer)
+    }
+
+    /**
      * Returns the `RenderingDevice` `RID` handle of the `MultiMesh` command buffer. This `RID` is only
      * valid if `use_indirect` is set to `true` when allocating data through `multimesh_allocate_data`.
      * It can be used to directly modify the instance count via buffer. The data structure is dependent
@@ -1413,6 +1486,17 @@ object RenderingServer {
     @JvmStatic
     fun multimeshGetBuffer(multimesh: RID): List<Float> {
         return ObjectCalls.ptrcallWithRIDArgRetPackedFloat32List(multimeshGetBufferBind, singleton, multimesh)
+    }
+
+    /**
+     * Alternative version of `multimesh_set_buffer` for use with physics interpolation. Takes both an
+     * array of current data and an array of data for the previous physics tick.
+     *
+     * Generated from Godot docs: RenderingServer.multimesh_set_buffer_interpolated
+     */
+    @JvmStatic
+    fun multimeshSetBufferInterpolated(multimesh: RID, buffer: List<Float>, bufferPrevious: List<Float>) {
+        ObjectCalls.ptrcallWithRIDAndTwoPackedFloat32ListArgs(multimeshSetBufferInterpolatedBind, singleton, multimesh, buffer, bufferPrevious)
     }
 
     /**
@@ -2185,6 +2269,18 @@ object RenderingServer {
     }
 
     /**
+     * Allocates and initializes the voxel GI data for the specified `voxel_gi` RID. `octree_cells`
+     * must be a multiple of 32. `octree_cells` must be double the size of `data_cells`. The allocated
+     * data can be retrieved later using the various `voxel_gi_get_*` methods.
+     *
+     * Generated from Godot docs: RenderingServer.voxel_gi_allocate_data
+     */
+    @JvmStatic
+    fun voxelGiAllocateData(voxelGi: RID, toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3i, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
+        ObjectCalls.ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs(voxelGiAllocateDataBind, singleton, voxelGi, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
+    }
+
+    /**
      * Returns the octree size for the specified voxel GI data instance, which corresponds to the
      * number of subdivisions per axis. This can be viewed in the editor by hovering the Bake VoxelGI
      * button at the top of the 3D editor viewport when a `VoxelGI` node is selected and looking at the
@@ -2391,6 +2487,19 @@ object RenderingServer {
     @JvmStatic
     fun lightmapSetProbeInterior(lightmap: RID, interior: Boolean) {
         ObjectCalls.ptrcallWithRIDAndBoolArg(lightmapSetProbeInteriorBind, singleton, lightmap, interior)
+    }
+
+    /**
+     * Sets the probe capture data for the given lightmap instance. See
+     * `lightmap_get_probe_capture_points`, `lightmap_get_probe_capture_sh`,
+     * `lightmap_get_probe_capture_tetrahedra`, and `lightmap_get_probe_capture_bsp_tree` for the
+     * expected data formats.
+     *
+     * Generated from Godot docs: RenderingServer.lightmap_set_probe_capture_data
+     */
+    @JvmStatic
+    fun lightmapSetProbeCaptureData(lightmap: RID, points: List<Vector3>, pointSh: List<Color>, tetrahedra: List<Int>, bspTree: List<Int>) {
+        ObjectCalls.ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs(lightmapSetProbeCaptureDataBind, singleton, lightmap, points, pointSh, tetrahedra, bspTree)
     }
 
     /**
@@ -3102,6 +3211,17 @@ object RenderingServer {
     @JvmStatic
     fun occluderCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(occluderCreateBind, singleton)
+    }
+
+    /**
+     * Sets the mesh data for the given occluder RID, which controls the shape of the occlusion culling
+     * that will be performed.
+     *
+     * Generated from Godot docs: RenderingServer.occluder_set_mesh
+     */
+    @JvmStatic
+    fun occluderSetMesh(occluder: RID, vertices: List<Vector3>, indices: List<Int>) {
+        ObjectCalls.ptrcallWithRIDPackedVector3ListPackedInt32ListArgs(occluderSetMeshBind, singleton, occluder, vertices, indices)
     }
 
     /**
@@ -4097,6 +4217,17 @@ object RenderingServer {
     @JvmStatic
     fun environmentSetAmbientLight(env: RID, color: Color, ambient: Long = 0L, energy: Double = 1.0, skyContribution: Double = 0.0, reflectionSource: Long = 0L) {
         ObjectCalls.ptrcallWithRIDColorLongTwoDoubleLongArgs(environmentSetAmbientLightBind, singleton, env, color, ambient, energy, skyContribution, reflectionSource)
+    }
+
+    /**
+     * Configures glow for the specified environment RID. See `glow_*` properties in `Environment` for
+     * more information.
+     *
+     * Generated from Godot docs: RenderingServer.environment_set_glow
+     */
+    @JvmStatic
+    fun environmentSetGlow(env: RID, enable: Boolean, levels: List<Float>, intensity: Double, strength: Double, mix: Double, bloomThreshold: Double, blendMode: Long, hdrBleedThreshold: Double, hdrBleedScale: Double, hdrLuminanceCap: Double, glowMapStrength: Double, glowMap: RID) {
+        ObjectCalls.ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(environmentSetGlowBind, singleton, env, enable, levels, intensity, strength, mix, bloomThreshold, blendMode, hdrBleedThreshold, hdrBleedScale, hdrLuminanceCap, glowMapStrength, glowMap)
     }
 
     /**
@@ -5171,6 +5302,28 @@ object RenderingServer {
     }
 
     /**
+     * Draws a 2D polyline on the `CanvasItem` pointed to by the `item` `RID`. See also
+     * `CanvasItem.draw_polyline` and `CanvasItem.draw_polyline_colors`.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_add_polyline
+     */
+    @JvmStatic
+    fun canvasItemAddPolyline(item: RID, points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(canvasItemAddPolylineBind, singleton, item, points, colors, width, antialiased)
+    }
+
+    /**
+     * Draws a 2D multiline on the `CanvasItem` pointed to by the `item` `RID`. See also
+     * `CanvasItem.draw_multiline` and `CanvasItem.draw_multiline_colors`.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_add_multiline
+     */
+    @JvmStatic
+    fun canvasItemAddMultiline(item: RID, points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(canvasItemAddMultilineBind, singleton, item, points, colors, width, antialiased)
+    }
+
+    /**
      * Draws a rectangle on the `CanvasItem` pointed to by the `item` `RID`. See also
      * `CanvasItem.draw_rect`.
      *
@@ -5253,6 +5406,46 @@ object RenderingServer {
     @JvmStatic
     fun canvasItemAddNinePatch(item: RID, rect: Rect2, source: Rect2, texture: RID, topleft: Vector2, bottomright: Vector2, xAxisMode: Long = 0L, yAxisMode: Long = 0L, drawCenter: Boolean = true, modulate: Color) {
         ObjectCalls.ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs(canvasItemAddNinePatchBind, singleton, item, rect, source, texture, topleft, bottomright, xAxisMode, yAxisMode, drawCenter, modulate)
+    }
+
+    /**
+     * Draws a 2D primitive on the `CanvasItem` pointed to by the `item` `RID`. See also
+     * `CanvasItem.draw_primitive`.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_add_primitive
+     */
+    @JvmStatic
+    fun canvasItemAddPrimitive(item: RID, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: RID) {
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(canvasItemAddPrimitiveBind, singleton, item, points, colors, uvs, texture)
+    }
+
+    /**
+     * Draws a 2D polygon on the `CanvasItem` pointed to by the `item` `RID`. If you need more
+     * flexibility (such as being able to use bones), use `canvas_item_add_triangle_array` instead. See
+     * also `CanvasItem.draw_polygon`. Note: If you frequently redraw the same polygon with a large
+     * number of vertices, consider pre-calculating the triangulation with
+     * `Geometry2D.triangulate_polygon` and using `CanvasItem.draw_mesh`, `CanvasItem.draw_multimesh`,
+     * or `canvas_item_add_triangle_array`.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_add_polygon
+     */
+    @JvmStatic
+    fun canvasItemAddPolygon(item: RID, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: RID) {
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(canvasItemAddPolygonBind, singleton, item, points, colors, uvs, texture)
+    }
+
+    /**
+     * Draws a triangle array on the `CanvasItem` pointed to by the `item` `RID`. This is internally
+     * used by `Line2D` and `StyleBoxFlat` for rendering. `canvas_item_add_triangle_array` is highly
+     * flexible, but more complex to use than `canvas_item_add_polygon`. Note: If `count` is set to a
+     * non-negative value, only the first `count * 3` indices (corresponding to `count` triangles) will
+     * be drawn. Otherwise, all indices are drawn.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_item_add_triangle_array
+     */
+    @JvmStatic
+    fun canvasItemAddTriangleArray(item: RID, indices: List<Int>, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, bones: List<Int>, weights: List<Float>, texture: RID, count: Int = -1) {
+        ObjectCalls.ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs(canvasItemAddTriangleArrayBind, singleton, item, indices, points, colors, uvs, bones, weights, texture, count)
     }
 
     /**
@@ -5843,6 +6036,16 @@ object RenderingServer {
     @JvmStatic
     fun canvasOccluderPolygonCreate(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(canvasOccluderPolygonCreateBind, singleton)
+    }
+
+    /**
+     * Sets the shape of the occluder polygon.
+     *
+     * Generated from Godot docs: RenderingServer.canvas_occluder_polygon_set_shape
+     */
+    @JvmStatic
+    fun canvasOccluderPolygonSetShape(occluderPolygon: RID, shape: List<Vector2>, closed: Boolean) {
+        ObjectCalls.ptrcallWithRIDPackedVector2ListAndBoolArg(canvasOccluderPolygonSetShapeBind, singleton, occluderPolygon, shape, closed)
     }
 
     /**
@@ -6570,6 +6773,26 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "mesh_clear", MESH_CLEAR_HASH)
     }
 
+    private const val MESH_SURFACE_UPDATE_VERTEX_REGION_HASH = 2900195149L
+    private val meshSurfaceUpdateVertexRegionBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_vertex_region", MESH_SURFACE_UPDATE_VERTEX_REGION_HASH)
+    }
+
+    private const val MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH = 2900195149L
+    private val meshSurfaceUpdateAttributeRegionBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_attribute_region", MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH)
+    }
+
+    private const val MESH_SURFACE_UPDATE_SKIN_REGION_HASH = 2900195149L
+    private val meshSurfaceUpdateSkinRegionBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_skin_region", MESH_SURFACE_UPDATE_SKIN_REGION_HASH)
+    }
+
+    private const val MESH_SURFACE_UPDATE_INDEX_REGION_HASH = 2900195149L
+    private val meshSurfaceUpdateIndexRegionBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_index_region", MESH_SURFACE_UPDATE_INDEX_REGION_HASH)
+    }
+
     private const val MESH_SET_SHADOW_MESH_HASH = 395945892L
     private val meshSetShadowMeshBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "mesh_set_shadow_mesh", MESH_SET_SHADOW_MESH_HASH)
@@ -6665,6 +6888,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_visible_instances", MULTIMESH_GET_VISIBLE_INSTANCES_HASH)
     }
 
+    private const val MULTIMESH_SET_BUFFER_HASH = 2960552364L
+    private val multimeshSetBufferBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer", MULTIMESH_SET_BUFFER_HASH)
+    }
+
     private const val MULTIMESH_GET_COMMAND_BUFFER_RD_RID_HASH = 3814569979L
     private val multimeshGetCommandBufferRdRidBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_command_buffer_rd_rid", MULTIMESH_GET_COMMAND_BUFFER_RD_RID_HASH)
@@ -6678,6 +6906,11 @@ object RenderingServer {
     private const val MULTIMESH_GET_BUFFER_HASH = 3964669176L
     private val multimeshGetBufferBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_buffer", MULTIMESH_GET_BUFFER_HASH)
+    }
+
+    private const val MULTIMESH_SET_BUFFER_INTERPOLATED_HASH = 659844711L
+    private val multimeshSetBufferInterpolatedBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer_interpolated", MULTIMESH_SET_BUFFER_INTERPOLATED_HASH)
     }
 
     private const val MULTIMESH_SET_PHYSICS_INTERPOLATED_HASH = 1265174801L
@@ -7020,6 +7253,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_create", VOXEL_GI_CREATE_HASH)
     }
 
+    private const val VOXEL_GI_ALLOCATE_DATA_HASH = 4108223027L
+    private val voxelGiAllocateDataBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_allocate_data", VOXEL_GI_ALLOCATE_DATA_HASH)
+    }
+
     private const val VOXEL_GI_GET_OCTREE_SIZE_HASH = 2607699645L
     private val voxelGiGetOctreeSizeBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_octree_size", VOXEL_GI_GET_OCTREE_SIZE_HASH)
@@ -7113,6 +7351,11 @@ object RenderingServer {
     private const val LIGHTMAP_SET_PROBE_INTERIOR_HASH = 1265174801L
     private val lightmapSetProbeInteriorBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_interior", LIGHTMAP_SET_PROBE_INTERIOR_HASH)
+    }
+
+    private const val LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH = 3217845880L
+    private val lightmapSetProbeCaptureDataBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_capture_data", LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH)
     }
 
     private const val LIGHTMAP_GET_PROBE_CAPTURE_POINTS_HASH = 808965560L
@@ -7423,6 +7666,11 @@ object RenderingServer {
     private const val OCCLUDER_CREATE_HASH = 529393457L
     private val occluderCreateBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "occluder_create", OCCLUDER_CREATE_HASH)
+    }
+
+    private const val OCCLUDER_SET_MESH_HASH = 3854404263L
+    private val occluderSetMeshBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "occluder_set_mesh", OCCLUDER_SET_MESH_HASH)
     }
 
     private const val CAMERA_CREATE_HASH = 529393457L
@@ -7838,6 +8086,11 @@ object RenderingServer {
     private const val ENVIRONMENT_SET_AMBIENT_LIGHT_HASH = 1214961493L
     private val environmentSetAmbientLightBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "environment_set_ambient_light", ENVIRONMENT_SET_AMBIENT_LIGHT_HASH)
+    }
+
+    private const val ENVIRONMENT_SET_GLOW_HASH = 2421724940L
+    private val environmentSetGlowBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "environment_set_glow", ENVIRONMENT_SET_GLOW_HASH)
     }
 
     private const val ENVIRONMENT_SET_TONEMAP_HASH = 2914312638L
@@ -8300,6 +8553,16 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_line", CANVAS_ITEM_ADD_LINE_HASH)
     }
 
+    private const val CANVAS_ITEM_ADD_POLYLINE_HASH = 3098767073L
+    private val canvasItemAddPolylineBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polyline", CANVAS_ITEM_ADD_POLYLINE_HASH)
+    }
+
+    private const val CANVAS_ITEM_ADD_MULTILINE_HASH = 3098767073L
+    private val canvasItemAddMultilineBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_multiline", CANVAS_ITEM_ADD_MULTILINE_HASH)
+    }
+
     private const val CANVAS_ITEM_ADD_RECT_HASH = 3523446176L
     private val canvasItemAddRectBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_rect", CANVAS_ITEM_ADD_RECT_HASH)
@@ -8338,6 +8601,21 @@ object RenderingServer {
     private const val CANVAS_ITEM_ADD_NINE_PATCH_HASH = 389957886L
     private val canvasItemAddNinePatchBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_nine_patch", CANVAS_ITEM_ADD_NINE_PATCH_HASH)
+    }
+
+    private const val CANVAS_ITEM_ADD_PRIMITIVE_HASH = 3731601077L
+    private val canvasItemAddPrimitiveBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_primitive", CANVAS_ITEM_ADD_PRIMITIVE_HASH)
+    }
+
+    private const val CANVAS_ITEM_ADD_POLYGON_HASH = 3580000528L
+    private val canvasItemAddPolygonBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polygon", CANVAS_ITEM_ADD_POLYGON_HASH)
+    }
+
+    private const val CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH = 660261329L
+    private val canvasItemAddTriangleArrayBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_triangle_array", CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH)
     }
 
     private const val CANVAS_ITEM_ADD_MESH_HASH = 316450961L
@@ -8613,6 +8891,11 @@ object RenderingServer {
     private const val CANVAS_OCCLUDER_POLYGON_CREATE_HASH = 529393457L
     private val canvasOccluderPolygonCreateBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_create", CANVAS_OCCLUDER_POLYGON_CREATE_HASH)
+    }
+
+    private const val CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH = 2103882027L
+    private val canvasOccluderPolygonSetShapeBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_set_shape", CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH)
     }
 
     private const val CANVAS_OCCLUDER_POLYGON_SET_CULL_MODE_HASH = 1839404663L

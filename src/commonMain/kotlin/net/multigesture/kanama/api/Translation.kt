@@ -56,6 +56,18 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Adds a message involving plural translation if nonexistent, followed by its translation. An
+     * additional context could be used to specify the translation context or differentiate polysemic
+     * words.
+     *
+     * Generated from Godot docs: Translation.add_plural_message
+     */
+    fun addPluralMessage(srcMessage: String, xlatedMessages: List<String>, context: String = "") {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(addPluralMessageBind, handle, srcMessage, xlatedMessages, context)
+    }
+
+    /**
      * Returns a message's translation.
      *
      * Generated from Godot docs: Translation.get_message
@@ -168,6 +180,11 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
         private const val ADD_MESSAGE_HASH = 3898530326L
         private val addMessageBind by lazy {
             ObjectCalls.getMethodBind("Translation", "add_message", ADD_MESSAGE_HASH)
+        }
+
+        private const val ADD_PLURAL_MESSAGE_HASH = 2356982266L
+        private val addPluralMessageBind by lazy {
+            ObjectCalls.getMethodBind("Translation", "add_plural_message", ADD_PLURAL_MESSAGE_HASH)
         }
 
         private const val GET_MESSAGE_HASH = 1829228469L

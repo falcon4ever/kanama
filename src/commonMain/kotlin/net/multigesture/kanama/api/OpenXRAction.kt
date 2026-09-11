@@ -22,9 +22,11 @@ class OpenXRAction(handle: MemorySegment) : Resource(handle) {
         @JvmName("setActionTypeProperty")
         set(value) = setActionType(value)
 
-    val toplevelPaths: List<String>
+    var toplevelPaths: List<String>
         @JvmName("toplevelPathsProperty")
         get() = getToplevelPaths()
+        @JvmName("setToplevelPathsProperty")
+        set(value) = setToplevelPaths(value)
 
     fun setLocalizedName(localizedName: String) {
         checkOpen()
@@ -44,6 +46,11 @@ class OpenXRAction(handle: MemorySegment) : Resource(handle) {
     fun getActionType(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getActionTypeBind, handle)
+    }
+
+    fun setToplevelPaths(toplevelPaths: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setToplevelPathsBind, handle, toplevelPaths)
     }
 
     fun getToplevelPaths(): List<String> {
@@ -82,6 +89,11 @@ class OpenXRAction(handle: MemorySegment) : Resource(handle) {
         private const val GET_ACTION_TYPE_HASH = 3536542431L
         private val getActionTypeBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAction", "get_action_type", GET_ACTION_TYPE_HASH)
+        }
+
+        private const val SET_TOPLEVEL_PATHS_HASH = 4015028928L
+        private val setToplevelPathsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAction", "set_toplevel_paths", SET_TOPLEVEL_PATHS_HASH)
         }
 
         private const val GET_TOPLEVEL_PATHS_HASH = 1139954409L

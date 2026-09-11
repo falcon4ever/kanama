@@ -13,9 +13,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: SystemFont
  */
 class SystemFont(handle: MemorySegment) : Font(handle) {
-    val fontNames: List<String>
+    var fontNames: List<String>
         @JvmName("fontNamesProperty")
         get() = getFontNames()
+        @JvmName("setFontNamesProperty")
+        set(value) = setFontNames(value)
 
     var fontItalic: Boolean
         @JvmName("fontItalicProperty")
@@ -400,6 +402,16 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
     }
 
     /**
+     * Array of font family names to search, first matching font found is used.
+     *
+     * Generated from Godot docs: SystemFont.set_font_names
+     */
+    fun setFontNames(names: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setFontNamesBind, handle, names)
+    }
+
+    /**
      * If set to `true`, italic or oblique font is preferred.
      *
      * Generated from Godot docs: SystemFont.get_font_italic
@@ -582,6 +594,11 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
         private const val GET_FONT_NAMES_HASH = 1139954409L
         private val getFontNamesBind by lazy {
             ObjectCalls.getMethodBind("SystemFont", "get_font_names", GET_FONT_NAMES_HASH)
+        }
+
+        private const val SET_FONT_NAMES_HASH = 4015028928L
+        private val setFontNamesBind by lazy {
+            ObjectCalls.getMethodBind("SystemFont", "set_font_names", SET_FONT_NAMES_HASH)
         }
 
         private const val GET_FONT_ITALIC_HASH = 36873697L

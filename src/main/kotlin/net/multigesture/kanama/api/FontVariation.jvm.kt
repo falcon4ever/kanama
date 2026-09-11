@@ -2,13 +2,12 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Color
 
 // GENERATED desktop/Android companion for FontVariation (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP FontVariation waits on: ptrcallWithDictionaryArg, ptrcallWithPackedColorListArg
+// KANAMA-IOS-GAP FontVariation waits on: ptrcallWithDictionaryArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -39,17 +38,6 @@ fun FontVariation.setOpentypeFeatures(features: Map<String, Any?>) {
     ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeaturesBind, handle, features)
 }
 
-/**
- * An array of colors to override predefined palette. Use `Color(0, 0, 0, 0)`, to keep predefined
- * palette color at specific position.
- *
- * Generated from Godot docs: FontVariation.set_palette_custom_colors
- */
-fun FontVariation.setPaletteCustomColors(colors: List<Color>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedColorListArg(setPaletteCustomColorsBind, handle, colors)
-}
-
 private const val SET_VARIATION_OPENTYPE_HASH = 4155329257L
 private val setVariationOpentypeBind by lazy {
     ObjectCalls.getMethodBind("FontVariation", "set_variation_opentype", SET_VARIATION_OPENTYPE_HASH)
@@ -58,9 +46,4 @@ private val setVariationOpentypeBind by lazy {
 private const val SET_OPENTYPE_FEATURES_HASH = 4155329257L
 private val setOpentypeFeaturesBind by lazy {
     ObjectCalls.getMethodBind("FontVariation", "set_opentype_features", SET_OPENTYPE_FEATURES_HASH)
-}
-
-private const val SET_PALETTE_CUSTOM_COLORS_HASH = 3546319833L
-private val setPaletteCustomColorsBind by lazy {
-    ObjectCalls.getMethodBind("FontVariation", "set_palette_custom_colors", SET_PALETTE_CUSTOM_COLORS_HASH)
 }

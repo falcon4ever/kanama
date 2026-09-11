@@ -9,18 +9,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP GLTFSkeleton waits on: ptrcallNoArgsRetTypedStringList, ptrcallWithDictionaryArg,
-//   ptrcallWithPackedInt32ListArg, ptrcallWithTypedStringListArg
+//   ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-fun GLTFSkeleton.setJoints(joints: List<Int>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, handle, joints)
-}
-
-fun GLTFSkeleton.setRoots(roots: List<Int>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, handle, roots)
-}
 
 fun GLTFSkeleton.getUniqueNames(): List<String> {
     checkOpen()
@@ -42,16 +32,6 @@ var GLTFSkeleton.uniqueNames: List<String>
     get() = getUniqueNames()
     @JvmName("setUniqueNamesProperty")
     set(value) = setUniqueNames(value)
-
-private const val SET_JOINTS_HASH = 3614634198L
-private val setJointsBind by lazy {
-    ObjectCalls.getMethodBind("GLTFSkeleton", "set_joints", SET_JOINTS_HASH)
-}
-
-private const val SET_ROOTS_HASH = 3614634198L
-private val setRootsBind by lazy {
-    ObjectCalls.getMethodBind("GLTFSkeleton", "set_roots", SET_ROOTS_HASH)
-}
 
 private const val GET_UNIQUE_NAMES_HASH = 2915620761L
 private val getUniqueNamesBind by lazy {

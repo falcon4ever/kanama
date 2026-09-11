@@ -381,6 +381,16 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Sets the points of the polygon at index `polygon_index` for TileSet physics layer with index
+     * `layer_id`.
+     *
+     * Generated from Godot docs: TileData.set_collision_polygon_points
+     */
+    fun setCollisionPolygonPoints(layerId: Int, polygonIndex: Int, polygon: List<Vector2>) {
+        ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(setCollisionPolygonPointsBind, handle, layerId, polygonIndex, polygon)
+    }
+
+    /**
      * Returns the points of the polygon at index `polygon_index` for TileSet physics layer with index
      * `layer_id`.
      *
@@ -730,6 +740,11 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
         private const val REMOVE_COLLISION_POLYGON_HASH = 3937882851L
         private val removeCollisionPolygonBind by lazy {
             ObjectCalls.getMethodBind("TileData", "remove_collision_polygon", REMOVE_COLLISION_POLYGON_HASH)
+        }
+
+        private const val SET_COLLISION_POLYGON_POINTS_HASH = 3230546541L
+        private val setCollisionPolygonPointsBind by lazy {
+            ObjectCalls.getMethodBind("TileData", "set_collision_polygon_points", SET_COLLISION_POLYGON_POINTS_HASH)
         }
 
         private const val GET_COLLISION_POLYGON_POINTS_HASH = 103942801L

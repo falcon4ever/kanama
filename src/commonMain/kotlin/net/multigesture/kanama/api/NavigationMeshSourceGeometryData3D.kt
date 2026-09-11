@@ -7,6 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Transform3D
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Container for parsed source geometry data used in navigation mesh baking.
@@ -20,9 +21,11 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
         @JvmName("setVerticesProperty")
         set(value) = setVertices(value)
 
-    val indices: List<Int>
+    var indices: List<Int>
         @JvmName("indicesProperty")
         get() = getIndices()
+        @JvmName("setIndicesProperty")
+        set(value) = setIndices(value)
 
     val projectedObstructions: List<Any?>
         @JvmName("projectedObstructionsProperty")
@@ -51,6 +54,18 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
     }
 
     /**
+     * Sets the parsed source geometry data indices. The indices need to be matched with appropriated
+     * vertices. Warning: Inappropriate data can crash the baking process of the involved third-party
+     * libraries.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_indices
+     */
+    fun setIndices(indices: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, handle, indices)
+    }
+
+    /**
      * Returns the parsed source geometry data indices array.
      *
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.get_indices
@@ -58,6 +73,17 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
     fun getIndices(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
+    }
+
+    /**
+     * Appends arrays of `vertices` and `indices` at the end of the existing arrays. Adds the existing
+     * index as an offset to the appended indices.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.append_arrays
+     */
+    fun appendArrays(vertices: List<Float>, indices: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(appendArraysBind, handle, vertices, indices)
     }
 
     /**
@@ -93,6 +119,19 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
     }
 
     /**
+     * Adds an array of vertex positions to the geometry data for navigation mesh baking to form
+     * triangulated faces. For each face the array must have three vertex positions in clockwise
+     * winding order. Since `NavigationMesh` resources have no transform, all vertex positions need to
+     * be offset by the node's transform using `xform`.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_faces
+     */
+    fun addFaces(faces: List<Vector3>, xform: Transform3D) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector3ListAndTransform3DArg(addFacesBind, handle, faces, xform)
+    }
+
+    /**
      * Adds the geometry data of another `NavigationMeshSourceGeometryData3D` to the navigation mesh
      * baking data.
      *
@@ -101,6 +140,19 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
     fun merge(otherGeometry: NavigationMeshSourceGeometryData3D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
+    }
+
+    /**
+     * Adds a projected obstruction shape to the source geometry. The `vertices` are considered
+     * projected on an xz-axes plane, placed at the global y-axis `elevation` and extruded by `height`.
+     * If `carve` is `true` the carved shape will not be affected by additional offsets (e.g. agent
+     * radius) of the navigation mesh baking process.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_projected_obstruction
+     */
+    fun addProjectedObstruction(vertices: List<Vector3>, elevation: Double, height: Double, carve: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(addProjectedObstructionBind, handle, vertices, elevation, height, carve)
     }
 
     /**
@@ -158,9 +210,19 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "get_vertices", GET_VERTICES_HASH)
         }
 
+        private const val SET_INDICES_HASH = 3614634198L
+        private val setIndicesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "set_indices", SET_INDICES_HASH)
+        }
+
         private const val GET_INDICES_HASH = 1930428628L
         private val getIndicesBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "get_indices", GET_INDICES_HASH)
+        }
+
+        private const val APPEND_ARRAYS_HASH = 3117535015L
+        private val appendArraysBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "append_arrays", APPEND_ARRAYS_HASH)
         }
 
         private const val CLEAR_HASH = 3218959716L
@@ -178,9 +240,19 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_mesh", ADD_MESH_HASH)
         }
 
+        private const val ADD_FACES_HASH = 1440358797L
+        private val addFacesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_faces", ADD_FACES_HASH)
+        }
+
         private const val MERGE_HASH = 655828145L
         private val mergeBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "merge", MERGE_HASH)
+        }
+
+        private const val ADD_PROJECTED_OBSTRUCTION_HASH = 3351846707L
+        private val addProjectedObstructionBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_projected_obstruction", ADD_PROJECTED_OBSTRUCTION_HASH)
         }
 
         private const val CLEAR_PROJECTED_OBSTRUCTIONS_HASH = 3218959716L

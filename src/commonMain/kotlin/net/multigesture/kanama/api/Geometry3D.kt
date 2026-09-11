@@ -114,6 +114,21 @@ object Geometry3D {
         return ObjectCalls.ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List(segmentIntersectsCylinderBind, singleton, from, to, height, radius)
     }
 
+    /**
+     * Tetrahedralizes the volume specified by a discrete set of `points` in 3D space, ensuring that no
+     * point lies within the circumsphere of any resulting tetrahedron. The method returns a
+     * `PackedInt32Array` where each tetrahedron consists of four consecutive point indices into the
+     * `points` array (resulting in an array with `n * 4` elements, where `n` is the number of
+     * tetrahedra found). If the tetrahedralization is unsuccessful, an empty `PackedInt32Array` is
+     * returned.
+     *
+     * Generated from Godot docs: Geometry3D.tetrahedralize_delaunay
+     */
+    @JvmStatic
+    fun tetrahedralizeDelaunay(points: List<Vector3>): List<Int> {
+        return ObjectCalls.ptrcallWithPackedVector3ListArgRetPackedInt32List(tetrahedralizeDelaunayBind, singleton, points)
+    }
+
     @JvmStatic
     fun fromHandle(handle: MemorySegment): Geometry3D? =
         wrap(handle)
@@ -159,5 +174,10 @@ object Geometry3D {
     private const val SEGMENT_INTERSECTS_CYLINDER_HASH = 2361316491L
     private val segmentIntersectsCylinderBind by lazy {
         ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_cylinder", SEGMENT_INTERSECTS_CYLINDER_HASH)
+    }
+
+    private const val TETRAHEDRALIZE_DELAUNAY_HASH = 1230191221L
+    private val tetrahedralizeDelaunayBind by lazy {
+        ObjectCalls.getMethodBind("Geometry3D", "tetrahedralize_delaunay", TETRAHEDRALIZE_DELAUNAY_HASH)
     }
 }
