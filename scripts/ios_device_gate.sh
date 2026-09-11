@@ -345,9 +345,23 @@ write_summary() {
   } >"$SUMMARY"
 }
 
+# Job worktrees of the parallel build phase (see run_demo_matrix_parallel). Removed on EXIT as
+# well as after the build phase, so a killed or aborted run never leaves them registered: git
+# refuses to re-add a path that is "missing but already registered", which would abort the next
+# run's build phase right after its fresh-starter step.
+PARALLEL_JOB_ROOTS=()
+cleanup_job_worktrees() {
+  local root
+  for root in ${PARALLEL_JOB_ROOTS[@]+"${PARALLEL_JOB_ROOTS[@]}"}; do
+    git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 || rm -rf "$root"
+  done
+  PARALLEL_JOB_ROOTS=()
+  git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 || true
+}
+
 # Always emit the summary, even if a step fails or the run is interrupted, so the
 # partial pass/fail matrix is recoverable for the baselines table.
-trap write_summary EXIT
+trap 'cleanup_job_worktrees; write_summary' EXIT
 
 export KANAMA_IOS_DEVICE="$DEVICE_ID"
 export KANAMA_IOS_TEAM="$DEVELOPMENT_TEAM"
@@ -420,10 +434,17 @@ run_demo_matrix_parallel() {
   local -a job_roots=()
   local k i
   mkdir -p "$roots_dir"
+  # A previous run that was killed mid-build leaves its job worktrees registered (and possibly
+  # their directories behind): prune the registrations and clear the paths before re-adding.
+  git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 || true
   for ((k = 0; k < BUILD_JOBS; k++)); do
     local root="$roots_dir/job$k"
+    if [[ -e "$root" ]]; then
+      git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 || rm -rf "$root"
+    fi
     git -C "$ROOT_DIR" worktree add --detach --quiet "$root" HEAD
     job_roots+=("$root")
+    PARALLEL_JOB_ROOTS+=("$root")
   done
   echo "[ios_device_gate] build phase: ${#demo_names[@]} demos, $BUILD_JOBS job(s), worktrees under $roots_dir"
   local build_started
@@ -478,9 +499,7 @@ run_demo_matrix_parallel() {
   local build_ended
   build_ended="$(date +%s)"
   echo "[ios_device_gate] build phase done in $((build_ended - build_started))s"
-  for ((k = 0; k < BUILD_JOBS; k++)); do
-    git -C "$ROOT_DIR" worktree remove --force "${job_roots[$k]}" >/dev/null 2>&1 || true
-  done
+  cleanup_job_worktrees
   # Phase 2: the device, one demo at a time, in order.
   local idx
   for idx in "${selected[@]}"; do
