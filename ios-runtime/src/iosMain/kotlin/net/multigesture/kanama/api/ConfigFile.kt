@@ -24,6 +24,11 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, handle)
     }
 
+    fun getSectionKeys(section: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getSectionKeysBind, handle, section)
+    }
+
     fun eraseSection(section: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(eraseSectionBind, handle, section)
@@ -114,6 +119,11 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_SECTIONS_HASH = 1139954409L
         private val getSectionsBind by lazy {
             ObjectCalls.getMethodBind("ConfigFile", "get_sections", GET_SECTIONS_HASH)
+        }
+
+        private const val GET_SECTION_KEYS_HASH = 4291131558L
+        private val getSectionKeysBind by lazy {
+            ObjectCalls.getMethodBind("ConfigFile", "get_section_keys", GET_SECTION_KEYS_HASH)
         }
 
         private const val ERASE_SECTION_HASH = 83702148L

@@ -38,6 +38,17 @@ object IP {
     }
 
     /**
+     * Resolves a given hostname in a blocking way. Addresses are returned as an `Array` of IPv4 or
+     * IPv6 addresses depending on `ip_type`.
+     *
+     * Generated from Godot docs: IP.resolve_hostname_addresses
+     */
+    @JvmStatic
+    fun resolveHostnameAddresses(host: String, ipType: Long = 3L): List<String> {
+        return ObjectCalls.ptrcallWithStringAndLongArgRetPackedStringList(resolveHostnameAddressesBind, singleton, host, ipType)
+    }
+
+    /**
      * Creates a queue item to resolve a hostname to an IPv4 or IPv6 address depending on the `Type`
      * constant given as `ip_type`. Returns the queue ID if successful, or `RESOLVER_INVALID_ID` on
      * error.
@@ -133,6 +144,11 @@ object IP {
     private const val RESOLVE_HOSTNAME_HASH = 4283295457L
     private val resolveHostnameBind by lazy {
         ObjectCalls.getMethodBind("IP", "resolve_hostname", RESOLVE_HOSTNAME_HASH)
+    }
+
+    private const val RESOLVE_HOSTNAME_ADDRESSES_HASH = 773767525L
+    private val resolveHostnameAddressesBind by lazy {
+        ObjectCalls.getMethodBind("IP", "resolve_hostname_addresses", RESOLVE_HOSTNAME_ADDRESSES_HASH)
     }
 
     private const val RESOLVE_HOSTNAME_QUEUE_ITEM_HASH = 1749894742L

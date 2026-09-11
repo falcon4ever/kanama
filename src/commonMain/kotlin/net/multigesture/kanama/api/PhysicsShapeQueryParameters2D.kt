@@ -21,6 +21,10 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
         @JvmName("setCollisionMaskProperty")
         set(value) = setCollisionMask(value)
 
+    val exclude: List<RID>
+        @JvmName("excludeProperty")
+        get() = getExclude()
+
     var margin: Double
         @JvmName("marginProperty")
         get() = getMargin()
@@ -196,6 +200,19 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
     }
 
     /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject2D.get_rid`
+     * to get the `RID` associated with a `CollisionObject2D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_exclude
+     */
+    fun getExclude(): List<RID> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
+    }
+
+    /**
      * If `true`, the query will take `PhysicsBody2D`s into account.
      *
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_collide_with_bodies
@@ -301,6 +318,11 @@ class PhysicsShapeQueryParameters2D(handle: MemorySegment) : RefCounted(handle) 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
         private val getCollisionMaskBind by lazy {
             ObjectCalls.getMethodBind("PhysicsShapeQueryParameters2D", "get_collision_mask", GET_COLLISION_MASK_HASH)
+        }
+
+        private const val GET_EXCLUDE_HASH = 3995934104L
+        private val getExcludeBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsShapeQueryParameters2D", "get_exclude", GET_EXCLUDE_HASH)
         }
 
         private const val SET_COLLIDE_WITH_BODIES_HASH = 2586408642L

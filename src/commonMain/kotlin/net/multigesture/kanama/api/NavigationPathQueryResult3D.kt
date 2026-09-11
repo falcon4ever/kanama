@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -24,6 +25,10 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
         get() = getPathTypes()
         @JvmName("setPathTypesProperty")
         set(value) = setPathTypes(value)
+
+    val pathRids: List<RID>
+        @JvmName("pathRidsProperty")
+        get() = getPathRids()
 
     var pathOwnerIds: List<Long>
         @JvmName("pathOwnerIdsProperty")
@@ -79,6 +84,16 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
     fun getPathTypes(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
+    }
+
+    /**
+     * The `RID`s of the regions and links that each point of the path goes through.
+     *
+     * Generated from Godot docs: NavigationPathQueryResult3D.get_path_rids
+     */
+    fun getPathRids(): List<RID> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getPathRidsBind, handle)
     }
 
     /**
@@ -163,6 +178,11 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_PATH_TYPES_HASH = 1930428628L
         private val getPathTypesBind by lazy {
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "get_path_types", GET_PATH_TYPES_HASH)
+        }
+
+        private const val GET_PATH_RIDS_HASH = 3995934104L
+        private val getPathRidsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "get_path_rids", GET_PATH_RIDS_HASH)
         }
 
         private const val SET_PATH_OWNER_IDS_HASH = 3709968205L

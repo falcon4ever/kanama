@@ -14,6 +14,14 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: NavigationMeshSourceGeometryData2D
  */
 class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handle) {
+    val traversableOutlines: List<List<Vector2>>
+        @JvmName("traversableOutlinesProperty")
+        get() = getTraversableOutlines()
+
+    val obstructionOutlines: List<List<Vector2>>
+        @JvmName("obstructionOutlinesProperty")
+        get() = getObstructionOutlines()
+
     val projectedObstructions: List<Any?>
         @JvmName("projectedObstructionsProperty")
         get() = getProjectedObstructions()
@@ -36,6 +44,26 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
     fun hasData(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, handle)
+    }
+
+    /**
+     * Returns all the traversable area outlines arrays.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_traversable_outlines
+     */
+    fun getTraversableOutlines(): List<List<Vector2>> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getTraversableOutlinesBind, handle)
+    }
+
+    /**
+     * Returns all the obstructed area outlines arrays.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_obstruction_outlines
+     */
+    fun getObstructionOutlines(): List<List<Vector2>> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getObstructionOutlinesBind, handle)
     }
 
     /**
@@ -133,6 +161,16 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
         private const val HAS_DATA_HASH = 2240911060L
         private val hasDataBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "has_data", HAS_DATA_HASH)
+        }
+
+        private const val GET_TRAVERSABLE_OUTLINES_HASH = 3995934104L
+        private val getTraversableOutlinesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_traversable_outlines", GET_TRAVERSABLE_OUTLINES_HASH)
+        }
+
+        private const val GET_OBSTRUCTION_OUTLINES_HASH = 3995934104L
+        private val getObstructionOutlinesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_obstruction_outlines", GET_OBSTRUCTION_OUTLINES_HASH)
         }
 
         private const val ADD_TRAVERSABLE_OUTLINE_HASH = 1509147220L

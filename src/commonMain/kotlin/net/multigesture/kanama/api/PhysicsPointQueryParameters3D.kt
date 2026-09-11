@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -24,6 +25,10 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
         get() = getCollisionMask()
         @JvmName("setCollisionMaskProperty")
         set(value) = setCollisionMask(value)
+
+    val exclude: List<RID>
+        @JvmName("excludeProperty")
+        get() = getExclude()
 
     var collideWithBodies: Boolean
         @JvmName("collideWithBodiesProperty")
@@ -81,6 +86,19 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
     fun getCollisionMask(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+    }
+
+    /**
+     * The list of object `RID`s that will be excluded from collisions. Use `CollisionObject3D.get_rid`
+     * to get the `RID` associated with a `CollisionObject3D`-derived node. Note: The returned array is
+     * copied and any changes to it will not update the original property value. To update the value
+     * you need to modify the returned array, and then assign it to the property again.
+     *
+     * Generated from Godot docs: PhysicsPointQueryParameters3D.get_exclude
+     */
+    fun getExclude(): List<RID> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
     }
 
     /**
@@ -149,6 +167,11 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
         private val getCollisionMaskBind by lazy {
             ObjectCalls.getMethodBind("PhysicsPointQueryParameters3D", "get_collision_mask", GET_COLLISION_MASK_HASH)
+        }
+
+        private const val GET_EXCLUDE_HASH = 3995934104L
+        private val getExcludeBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsPointQueryParameters3D", "get_exclude", GET_EXCLUDE_HASH)
         }
 
         private const val SET_COLLIDE_WITH_BODIES_HASH = 2586408642L

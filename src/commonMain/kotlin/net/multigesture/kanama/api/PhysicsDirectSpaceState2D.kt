@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Provides direct access to a physics space in the `PhysicsServer2D`.
@@ -75,6 +76,20 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
 
     /**
      * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters2D` object,
+     * against the space. The resulting array contains a list of points where the shape intersects
+     * another. Like with `intersect_shape`, the number of returned results can be limited to save
+     * processing time. Returned points are a list of pairs of contact points. For each pair the first
+     * one is in the shape passed in `PhysicsShapeQueryParameters2D` object, second one is in the
+     * collided shape from the physics space.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState2D.collide_shape
+     */
+    fun collideShape(parameters: PhysicsShapeQueryParameters2D, maxResults: Int = 32): List<Vector2> {
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector2List(collideShapeBind, handle, parameters.requireOpenHandle(), maxResults)
+    }
+
+    /**
+     * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters2D` object,
      * against the space. If it collides with more than one shape, the nearest one is selected. The
      * returned object is a dictionary containing the following fields: `collider_id`: The colliding
      * object's ID. `linear_velocity`: The colliding object's velocity `Vector2`. If the object is an
@@ -115,6 +130,11 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
         private const val CAST_MOTION_HASH = 711275086L
         private val castMotionBind by lazy {
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState2D", "cast_motion", CAST_MOTION_HASH)
+        }
+
+        private const val COLLIDE_SHAPE_HASH = 2488867228L
+        private val collideShapeBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState2D", "collide_shape", COLLIDE_SHAPE_HASH)
         }
 
         private const val GET_REST_INFO_HASH = 2803666496L

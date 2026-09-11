@@ -7,6 +7,32 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: string-list and typed-array returns on every audited argument shape (task 100, parcel 5)
+
+- A method returning a PackedStringArray or a typed `Array[...]` of RID, Vector2i, Vector3i,
+  String, StringName, NodePath, int, Plane, Vector2, Vector3, Rect2, Transform3D,
+  PackedVector2Array, PackedByteArray or PackedStringArray was callable on iOS only through
+  the hand-written no-arg read-backs, and only for the few element kinds those covered. Every
+  such method whose arguments are already audited now gets a generated helper: the new C entry
+  `kanama_ios_godot_ptrcall_ret_array_blob` ptrcalls once, encodes the array into the same
+  length-prefixed blob the no-arg read-backs use (their element encoders are now one shared
+  set, extended with the new element kinds) and delivers it whole — into the caller's buffer
+  when it fits, otherwise parked C-side and drained by `kanama_ios_godot_take_pending_blob`.
+  Nothing is truncated and the method is never re-invoked (the no-arg entries' two-call length
+  protocol was only safe for pure getters). 43 helpers, 117 members on 44 classes move from the
+  desktop companions into the shared tree — `ClassDB.get_inheriters_from_class`,
+  `ClassDB.class_get_enum_list`, `TileMapLayer.get_used_cells`, `TileMapLayer.get_used_cells_by_id`,
+  `GridMap.get_used_cells_by_item`, `Geometry3D.build_box_planes`, `Theme.get_color_list`,
+  `NavigationServer3D.map_get_regions`, `NavigationPathQueryParameters3D.get_included_regions`,
+  `CodeEdit.get_comment_delimiters`, `TextServer.font_get_kerning_list`,
+  `DisplayServer.get_display_cutouts`, `GLTFState.get_buffers` among them; the gap index goes
+  from 852 to 735 desktop-only members (229 → 224 companion files, 385 → 343 helpers waited
+  on). Left in the gap on purpose: typed `Array[Dictionary]` / `Array[Array]` returns (they
+  need the Dictionary / Array decode) and typed object arrays (their own gate). Eight
+  self-test rows cover a PackedStringArray with an argument (short, and the >4 KiB
+  `get_inheriters_from_class("Object")` through the pending slot), Array[Vector2i] with and
+  without arguments, Array[StringName], Array[Plane] and Array[Vector3i].
+
 ### Added — iOS: Packed*Array arguments on every audited shape (task 100, parcel 4)
 
 - A method taking a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,

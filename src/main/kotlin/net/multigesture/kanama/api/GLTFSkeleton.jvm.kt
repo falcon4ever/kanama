@@ -1,21 +1,14 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 // GENERATED desktop/Android companion for GLTFSkeleton (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP GLTFSkeleton waits on: ptrcallNoArgsRetTypedStringList, ptrcallWithDictionaryArg,
-//   ptrcallWithTypedStringListArg
+// KANAMA-IOS-GAP GLTFSkeleton waits on: ptrcallWithDictionaryArg, ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-fun GLTFSkeleton.getUniqueNames(): List<String> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
-}
 
 fun GLTFSkeleton.setUniqueNames(uniqueNames: List<String>) {
     checkOpen()
@@ -25,17 +18,6 @@ fun GLTFSkeleton.setUniqueNames(uniqueNames: List<String>) {
 fun GLTFSkeleton.setGodotBoneNode(godotBoneNode: Map<String, Any?>) {
     checkOpen()
     ObjectCalls.ptrcallWithDictionaryArg(setGodotBoneNodeBind, handle, godotBoneNode)
-}
-
-var GLTFSkeleton.uniqueNames: List<String>
-    @JvmName("uniqueNamesProperty")
-    get() = getUniqueNames()
-    @JvmName("setUniqueNamesProperty")
-    set(value) = setUniqueNames(value)
-
-private const val GET_UNIQUE_NAMES_HASH = 2915620761L
-private val getUniqueNamesBind by lazy {
-    ObjectCalls.getMethodBind("GLTFSkeleton", "get_unique_names", GET_UNIQUE_NAMES_HASH)
 }
 
 private const val SET_UNIQUE_NAMES_HASH = 381264803L

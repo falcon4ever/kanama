@@ -7,8 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP GraphEdit waits on: ptrcallWithDictionaryArg, ptrcallWithDictionaryListArg,
-//   ptrcallWithStringNameArgRetStringNameList
+// KANAMA-IOS-GAP GraphEdit waits on: ptrcallWithDictionaryArg, ptrcallWithDictionaryListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -19,15 +18,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 fun GraphEdit.setConnections(connections: List<Map<String, Any?>>) {
     ObjectCalls.ptrcallWithDictionaryListArg(setConnectionsBind, handle, connections)
-}
-
-/**
- * Returns an array of node names that are attached to the `GraphFrame` with the given name.
- *
- * Generated from Godot docs: GraphEdit.get_attached_nodes_of_frame
- */
-fun GraphEdit.getAttachedNodesOfFrame(frame: String): List<String> {
-    return ObjectCalls.ptrcallWithStringNameArgRetStringNameList(getAttachedNodesOfFrameBind, handle, frame)
 }
 
 /**
@@ -42,11 +32,6 @@ fun GraphEdit.setTypeNames(typeNames: Map<String, Any?>) {
 private const val SET_CONNECTIONS_HASH = 381264803L
 private val setConnectionsBind by lazy {
     ObjectCalls.getMethodBind("GraphEdit", "set_connections", SET_CONNECTIONS_HASH)
-}
-
-private const val GET_ATTACHED_NODES_OF_FRAME_HASH = 689397652L
-private val getAttachedNodesOfFrameBind by lazy {
-    ObjectCalls.getMethodBind("GraphEdit", "get_attached_nodes_of_frame", GET_ATTACHED_NODES_OF_FRAME_HASH)
 }
 
 private const val SET_TYPE_NAMES_HASH = 4155329257L

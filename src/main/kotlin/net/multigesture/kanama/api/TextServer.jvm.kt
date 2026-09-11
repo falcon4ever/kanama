@@ -13,11 +13,9 @@ import net.multigesture.kanama.types.Vector3i
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TextServer waits on: ptrcallWithLongArrayStringArgsRetVector3iList,
-//   ptrcallWithRIDAndArrayArg, ptrcallWithRIDAndDictionaryArg,
-//   ptrcallWithRIDAndLongArgRetVector2iList, ptrcallWithRIDAndVariantArgRetBool,
+//   ptrcallWithRIDAndArrayArg, ptrcallWithRIDAndDictionaryArg, ptrcallWithRIDAndVariantArgRetBool,
 //   ptrcallWithRIDAndVariantArgRetLong, ptrcallWithRIDAndVariantArgRetRect2,
-//   ptrcallWithRIDAndVariantArgRetVector2i, ptrcallWithRIDArgRetPackedStringList,
-//   ptrcallWithRIDArgRetVector2iList, ptrcallWithRIDLongRIDListLongDictionaryArgs,
+//   ptrcallWithRIDAndVariantArgRetVector2i, ptrcallWithRIDLongRIDListLongDictionaryArgs,
 //   ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool,
 //   ptrcallWithRIDVariantVector2LongDoubleArgsRetBool,
 //   ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool
@@ -32,47 +30,6 @@ import net.multigesture.kanama.types.Vector3i
 fun TextServer.fontSetVariationCoordinates(fontRid: RID, variationCoordinates: Map<String, Any?>) {
     checkOpen()
     ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetVariationCoordinatesBind, handle, fontRid, variationCoordinates)
-}
-
-/**
- * Returns list of the font sizes in the cache. Each size is `Vector2i` with font size and outline
- * size.
- *
- * Generated from Godot docs: TextServer.font_get_size_cache_list
- */
-fun TextServer.fontGetSizeCacheList(fontRid: RID): List<Vector2i> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetVector2iList(fontGetSizeCacheListBind, handle, fontRid)
-}
-
-/**
- * Returns list of the kerning overrides.
- *
- * Generated from Godot docs: TextServer.font_get_kerning_list
- */
-fun TextServer.fontGetKerningList(fontRid: RID, size: Long): List<Vector2i> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(fontGetKerningListBind, handle, fontRid, size)
-}
-
-/**
- * Returns list of language support overrides.
- *
- * Generated from Godot docs: TextServer.font_get_language_support_overrides
- */
-fun TextServer.fontGetLanguageSupportOverrides(fontRid: RID): List<String> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetLanguageSupportOverridesBind, handle, fontRid)
-}
-
-/**
- * Returns list of script support overrides.
- *
- * Generated from Godot docs: TextServer.font_get_script_support_overrides
- */
-fun TextServer.fontGetScriptSupportOverrides(fontRid: RID): List<String> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetScriptSupportOverridesBind, handle, fontRid)
 }
 
 /**
@@ -190,26 +147,6 @@ fun TextServer.parseStructuredText(parserType: Long, args: List<Any?>, text: Str
 private const val FONT_SET_VARIATION_COORDINATES_HASH = 1217542888L
 private val fontSetVariationCoordinatesBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_set_variation_coordinates", FONT_SET_VARIATION_COORDINATES_HASH)
-}
-
-private const val FONT_GET_SIZE_CACHE_LIST_HASH = 2684255073L
-private val fontGetSizeCacheListBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_size_cache_list", FONT_GET_SIZE_CACHE_LIST_HASH)
-}
-
-private const val FONT_GET_KERNING_LIST_HASH = 1778388067L
-private val fontGetKerningListBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_kerning_list", FONT_GET_KERNING_LIST_HASH)
-}
-
-private const val FONT_GET_LANGUAGE_SUPPORT_OVERRIDES_HASH = 2801473409L
-private val fontGetLanguageSupportOverridesBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_language_support_overrides", FONT_GET_LANGUAGE_SUPPORT_OVERRIDES_HASH)
-}
-
-private const val FONT_GET_SCRIPT_SUPPORT_OVERRIDES_HASH = 2801473409L
-private val fontGetScriptSupportOverridesBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_get_script_support_overrides", FONT_GET_SCRIPT_SUPPORT_OVERRIDES_HASH)
 }
 
 private const val FONT_SET_OPENTYPE_FEATURE_OVERRIDES_HASH = 1217542888L

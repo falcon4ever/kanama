@@ -51,6 +51,16 @@ object ResourceSaver {
     }
 
     /**
+     * Returns the list of extensions available for saving a resource of a given type.
+     *
+     * Generated from Godot docs: ResourceSaver.get_recognized_extensions
+     */
+    @JvmStatic
+    fun getRecognizedExtensions(type: Resource): List<String> {
+        return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getRecognizedExtensionsBind, singleton, type.requireOpenHandle())
+    }
+
+    /**
      * Registers a new `ResourceFormatSaver`. The ResourceSaver will use the ResourceFormatSaver as
      * described in `save`. This method is performed implicitly for ResourceFormatSavers written in
      * GDScript (see `ResourceFormatSaver` for more information).
@@ -99,6 +109,11 @@ object ResourceSaver {
     private const val SET_UID_HASH = 993915709L
     private val setUidBind by lazy {
         ObjectCalls.getMethodBind("ResourceSaver", "set_uid", SET_UID_HASH)
+    }
+
+    private const val GET_RECOGNIZED_EXTENSIONS_HASH = 4223597960L
+    private val getRecognizedExtensionsBind by lazy {
+        ObjectCalls.getMethodBind("ResourceSaver", "get_recognized_extensions", GET_RECOGNIZED_EXTENSIONS_HASH)
     }
 
     private const val ADD_RESOURCE_FORMAT_SAVER_HASH = 362894272L

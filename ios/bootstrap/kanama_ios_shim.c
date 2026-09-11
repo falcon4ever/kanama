@@ -411,6 +411,11 @@ static GDExtensionTypeFromVariantConstructorFunc g_variant_to_color = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_node_path = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_string_name = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_plane = NULL;
+// task 100 parcel 5 — typed-Array element converters resolved lazily (kanama_ios_cache_typed_elem_converters).
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_rid = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_vector3i = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_rect2 = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_transform3d = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_packed_string_array = NULL;
 static GDExtensionPtrConstructor g_string_from_node_path_constructor = NULL;
 static GDExtensionPtrBuiltInMethod g_array_size_method = NULL;
@@ -716,6 +721,7 @@ enum {
     KANAMA_IOS_VARIANT_TYPE_VECTOR2I = 6,
     KANAMA_IOS_VARIANT_TYPE_RECT2 = 7,
     KANAMA_IOS_VARIANT_TYPE_VECTOR3 = 9,
+    KANAMA_IOS_VARIANT_TYPE_VECTOR3I = 10,
     KANAMA_IOS_VARIANT_TYPE_PLANE = 14,
     KANAMA_IOS_VARIANT_TYPE_QUATERNION = 15,
     KANAMA_IOS_VARIANT_TYPE_COLOR = 20,
@@ -2975,6 +2981,401 @@ static void kanama_ios_cache_packed_string_methods(void) {
     }
 }
 
+// --- Array-blob encoders (task 100 parcel 5) ------------------------------------------------------
+// Factored out of the two no-arg read-backs below so the generic entry
+// kanama_ios_godot_ptrcall_ret_array_blob shares them. Every encoder writes only the records that
+// fit within buf_size and ALWAYS returns the full byte total, so a NULL/0 call measures. Layouts:
+//   packed-string blob : [int32 count]([int32 len][utf8])*
+//   typed-array blob   : [int32 count]([int32 byteLen][bytes])*, element bytes by elem_kind:
+//     INT32/INT64 -> int64 (8); PLANE -> 4 float32; RID -> uint64 (8); VECTOR2I -> 2 int32;
+//     VECTOR3I -> 3 int32; VECTOR2 -> 2 float32; VECTOR3 -> 3 float32; RECT2 -> 4 float32;
+//     TRANSFORM3D -> 12 float32 (same bytes as the ptrcall return, column-major basis + origin);
+//     PACKED_BYTE_ARRAY -> the bytes; PACKED_VECTOR2_ARRAY -> [int32 n](2 float32)*;
+//     PACKED_STRING_ARRAY -> a nested packed-string blob; STRING/STRING_NAME/NODE_PATH -> utf8.
+
+// Mirrors the KANAMA_IOS_BLOB_* enum in ios/include/kanama_ios.h (the shim does not include it).
+enum {
+    KANAMA_IOS_BLOB_PACKED_STRING_ARRAY = 1,
+    KANAMA_IOS_BLOB_TYPED_ARRAY = 2,
+};
+// Resolves the generic Array size/get/destructor builtins; defined later in the file.
+static void kanama_ios_cache_array_methods(void);
+
+static void kanama_ios_cache_typed_elem_converters(void) {
+    if (g_get_variant_to_type_constructor == NULL) {
+        return;
+    }
+    if (g_variant_to_rid == NULL) {
+        g_variant_to_rid = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_RID);
+    }
+    if (g_variant_to_vector3i == NULL) {
+        g_variant_to_vector3i = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR3I);
+    }
+    if (g_variant_to_rect2 == NULL) {
+        g_variant_to_rect2 = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_RECT2);
+    }
+    if (g_variant_to_transform3d == NULL) {
+        g_variant_to_transform3d = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_TRANSFORM3D);
+    }
+}
+
+// [int32 len][bytes] at out_buf+total when it fits; returns len (the caller adds 4 + len).
+static void kanama_ios_pod_record(const void *payload, int64_t len, char *out_buf, int64_t buf_size, int64_t total) {
+    if (out_buf != NULL && buf_size >= total + 4 + len) {
+        int32_t len32 = (int32_t)len;
+        memcpy(out_buf + total, &len32, 4);
+        if (len > 0 && payload != NULL) {
+            memcpy(out_buf + total + 4, payload, (size_t)len);
+        }
+    }
+}
+
+// [int32 len][utf8] for a Godot String at out_buf+total when it fits; returns the utf8 length.
+static int64_t kanama_ios_utf8_record(const uint64_t *string_storage, char *out_buf, int64_t buf_size, int64_t total) {
+    int64_t len = (g_string_to_utf8_chars != NULL)
+        ? (int64_t)g_string_to_utf8_chars((GDExtensionConstStringPtr)string_storage, NULL, 0)
+        : 0;
+    if (len < 0) {
+        len = 0;
+    }
+    if (out_buf != NULL && buf_size >= total + 4 + len) {
+        int32_t len32 = (int32_t)len;
+        memcpy(out_buf + total, &len32, 4);
+        if (len > 0) {
+            g_string_to_utf8_chars((GDExtensionConstStringPtr)string_storage, out_buf + total + 4, len);
+        }
+    }
+    return len;
+}
+
+// PackedStringArray cell -> packed-string blob. Requires kanama_ios_cache_packed_string_methods().
+static int64_t kanama_ios_encode_packed_string_blob(void *array_storage, char *out_buf, int64_t buf_size) {
+    int64_t count = 0;
+    g_packed_string_array_size_method(array_storage, NULL, &count, 0);
+    if (count < 0) {
+        count = 0;
+    }
+    if (out_buf != NULL && buf_size >= 4) {
+        int32_t count32 = (int32_t)count;
+        memcpy(out_buf, &count32, 4);
+    }
+    int64_t total = 4;
+    for (int64_t i = 0; i < count; i++) {
+        GDExtensionStringPtr str =
+            g_packed_string_array_operator_index_const(array_storage, (GDExtensionInt)i);
+        int64_t len = 0;
+        if (str != NULL) {
+            len = kanama_ios_utf8_record((const uint64_t *)str, out_buf, buf_size, total);
+        } else {
+            kanama_ios_pod_record(NULL, 0, out_buf, buf_size, total);
+        }
+        total += 4 + len;
+    }
+    return total;
+}
+
+// One typed-Array element (a Variant) -> [int32 byteLen][bytes] at out_buf+total when it fits;
+// returns byteLen. Unknown / unresolvable kinds write an empty record (byteLen 0).
+static int64_t kanama_ios_encode_typed_elem(uint8_t *elem_variant, int32_t elem_kind, char *out_buf, int64_t buf_size, int64_t total) {
+    switch (elem_kind) {
+        case KANAMA_IOS_PT_INT32:
+        case KANAMA_IOS_PT_INT64: {
+            int64_t v = 0;
+            if (g_variant_to_int != NULL) g_variant_to_int(&v, elem_variant);
+            kanama_ios_pod_record(&v, 8, out_buf, buf_size, total);
+            return 8;
+        }
+        case KANAMA_IOS_PT_PLANE: {
+            // Plane = 4x float32 (normal.x, normal.y, normal.z, d) — POD, fixed 16-byte record.
+            float plane[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+            if (g_variant_to_plane != NULL) g_variant_to_plane(plane, elem_variant);
+            kanama_ios_pod_record(plane, 16, out_buf, buf_size, total);
+            return 16;
+        }
+        case KANAMA_IOS_PT_RID: {
+            uint64_t rid = 0;
+            kanama_ios_cache_typed_elem_converters();
+            if (g_variant_to_rid != NULL) g_variant_to_rid(&rid, elem_variant);
+            kanama_ios_pod_record(&rid, 8, out_buf, buf_size, total);
+            return 8;
+        }
+        case KANAMA_IOS_PT_VECTOR2I: {
+            int32_t v[2] = { 0, 0 };
+            if (g_variant_to_vector2i != NULL) g_variant_to_vector2i(v, elem_variant);
+            kanama_ios_pod_record(v, 8, out_buf, buf_size, total);
+            return 8;
+        }
+        case KANAMA_IOS_PT_VECTOR3I: {
+            int32_t v[3] = { 0, 0, 0 };
+            kanama_ios_cache_typed_elem_converters();
+            if (g_variant_to_vector3i != NULL) g_variant_to_vector3i(v, elem_variant);
+            kanama_ios_pod_record(v, 12, out_buf, buf_size, total);
+            return 12;
+        }
+        case KANAMA_IOS_PT_VECTOR2: {
+            float v[2] = { 0.0f, 0.0f };
+            if (g_variant_to_vector2 != NULL) g_variant_to_vector2(v, elem_variant);
+            kanama_ios_pod_record(v, 8, out_buf, buf_size, total);
+            return 8;
+        }
+        case KANAMA_IOS_PT_VECTOR3: {
+            float v[3] = { 0.0f, 0.0f, 0.0f };
+            if (g_variant_to_vector3 != NULL) g_variant_to_vector3(v, elem_variant);
+            kanama_ios_pod_record(v, 12, out_buf, buf_size, total);
+            return 12;
+        }
+        case KANAMA_IOS_PT_RECT2: {
+            float v[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+            kanama_ios_cache_typed_elem_converters();
+            if (g_variant_to_rect2 != NULL) g_variant_to_rect2(v, elem_variant);
+            kanama_ios_pod_record(v, 16, out_buf, buf_size, total);
+            return 16;
+        }
+        case KANAMA_IOS_PT_TRANSFORM3D: {
+            float v[12];
+            memset(v, 0, sizeof(v));
+            kanama_ios_cache_typed_elem_converters();
+            if (g_variant_to_transform3d != NULL) g_variant_to_transform3d(v, elem_variant);
+            kanama_ios_pod_record(v, 48, out_buf, buf_size, total);
+            return 48;
+        }
+        case KANAMA_IOS_PT_PACKED_BYTE_ARRAY: {
+            KANAMA_IOS_PACKED_ARRAY_STORAGE(cell);
+            kanama_ios_cache_packed_byte_methods();
+            if (g_variant_to_packed_byte_array == NULL || g_packed_byte_array_size_method == NULL ||
+                g_packed_byte_array_operator_index_const == NULL || g_packed_byte_array_destructor == NULL) {
+                kanama_ios_pod_record(NULL, 0, out_buf, buf_size, total);
+                return 0;
+            }
+            g_variant_to_packed_byte_array(cell, elem_variant);
+            int64_t n = 0;
+            g_packed_byte_array_size_method(cell, NULL, &n, 0);
+            if (n < 0) n = 0;
+            const uint8_t *base = (n > 0) ? g_packed_byte_array_operator_index_const(cell, (GDExtensionInt)0) : NULL;
+            kanama_ios_pod_record(base, (base != NULL) ? n : 0, out_buf, buf_size, total);
+            g_packed_byte_array_destructor(cell);
+            return (base != NULL) ? n : 0;
+        }
+        case KANAMA_IOS_PT_PACKED_VECTOR2_ARRAY: {
+            // Nested: [int32 n](2 float32)* — the record's byteLen is 4 + 8n.
+            KANAMA_IOS_PACKED_ARRAY_STORAGE(cell);
+            kanama_ios_cache_packed_vector2_methods();
+            if (g_variant_to_packed_vector2_array == NULL || g_packed_vector2_array_size_method == NULL ||
+                g_packed_vector2_array_operator_index_const == NULL || g_packed_vector2_array_destructor == NULL) {
+                kanama_ios_pod_record(NULL, 0, out_buf, buf_size, total);
+                return 0;
+            }
+            g_variant_to_packed_vector2_array(cell, elem_variant);
+            int64_t n = 0;
+            g_packed_vector2_array_size_method(cell, NULL, &n, 0);
+            if (n < 0) n = 0;
+            int64_t len = 4 + n * 8;
+            if (out_buf != NULL && buf_size >= total + 4 + len) {
+                int32_t len32 = (int32_t)len;
+                int32_t n32 = (int32_t)n;
+                memcpy(out_buf + total, &len32, 4);
+                memcpy(out_buf + total + 4, &n32, 4);
+                if (n > 0) {
+                    const void *base = g_packed_vector2_array_operator_index_const(cell, (GDExtensionInt)0);
+                    if (base != NULL) {
+                        memcpy(out_buf + total + 8, base, (size_t)(n * 8));
+                    }
+                }
+            }
+            g_packed_vector2_array_destructor(cell);
+            return len;
+        }
+        case KANAMA_IOS_PT_PACKED_STRING_ARRAY: {
+            // Nested: a whole packed-string blob is the record's bytes.
+            KANAMA_IOS_PACKED_ARRAY_STORAGE(cell);
+            kanama_ios_cache_packed_string_methods();
+            if (g_variant_to_packed_string_array == NULL || g_packed_string_array_size_method == NULL ||
+                g_packed_string_array_operator_index_const == NULL || g_packed_string_array_destructor == NULL) {
+                kanama_ios_pod_record(NULL, 0, out_buf, buf_size, total);
+                return 0;
+            }
+            g_variant_to_packed_string_array(cell, elem_variant);
+            int64_t len = kanama_ios_encode_packed_string_blob(cell, NULL, 0);
+            if (out_buf != NULL && buf_size >= total + 4 + len) {
+                int32_t len32 = (int32_t)len;
+                memcpy(out_buf + total, &len32, 4);
+                kanama_ios_encode_packed_string_blob(cell, out_buf + total + 4, len);
+            }
+            g_packed_string_array_destructor(cell);
+            return len;
+        }
+        default: {
+            // STRING_NAME / NODE_PATH / STRING -> Godot String -> utf8.
+            uint64_t string_storage = 0;
+            int have_string = 0;
+            if (elem_kind == KANAMA_IOS_PT_STRING_NAME && g_variant_to_string_name != NULL &&
+                g_string_from_string_name_constructor != NULL) {
+                uint64_t sn = 0;
+                g_variant_to_string_name(&sn, elem_variant);
+                const GDExtensionConstTypePtr ca[1] = { (GDExtensionConstTypePtr)&sn };
+                g_string_from_string_name_constructor((GDExtensionUninitializedTypePtr)&string_storage, ca);
+                kanama_ios_destroy_string_name(&sn);
+                have_string = 1;
+            } else if (elem_kind == KANAMA_IOS_PT_NODE_PATH && g_variant_to_node_path != NULL &&
+                       g_string_from_node_path_constructor != NULL) {
+                uint64_t np = 0;
+                g_variant_to_node_path(&np, elem_variant);
+                const GDExtensionConstTypePtr ca[1] = { (GDExtensionConstTypePtr)&np };
+                g_string_from_node_path_constructor((GDExtensionUninitializedTypePtr)&string_storage, ca);
+                kanama_ios_destroy_node_path(&np);
+                have_string = 1;
+            } else if (g_variant_to_string != NULL) {
+                g_variant_to_string(&string_storage, elem_variant);
+                have_string = 1;
+            }
+            int64_t len = 0;
+            if (have_string) {
+                len = kanama_ios_utf8_record(&string_storage, out_buf, buf_size, total);
+                kanama_ios_destroy_string(&string_storage);
+            } else {
+                kanama_ios_pod_record(NULL, 0, out_buf, buf_size, total);
+            }
+            return len;
+        }
+    }
+}
+
+// Typed Array cell -> typed-array blob. Requires kanama_ios_cache_array_methods().
+static int64_t kanama_ios_encode_typed_array_blob(uint64_t *array_storage, int32_t elem_kind, char *out_buf, int64_t buf_size) {
+    int64_t count = 0;
+    g_array_size_method(array_storage, NULL, &count, 0);
+    if (count < 0) {
+        count = 0;
+    }
+    if (out_buf != NULL && buf_size >= 4) {
+        int32_t count32 = (int32_t)count;
+        memcpy(out_buf, &count32, 4);
+    }
+    int64_t total = 4;
+    for (int64_t i = 0; i < count; i++) {
+        uint8_t elem_variant[24];
+        memset(elem_variant, 0, sizeof(elem_variant));
+        const GDExtensionConstTypePtr get_args[1] = { (GDExtensionConstTypePtr)&i };
+        g_array_get_method(array_storage, get_args, elem_variant, 1);
+        int64_t len = kanama_ios_encode_typed_elem(elem_variant, elem_kind, out_buf, buf_size, total);
+        if (g_variant_destroy != NULL) {
+            g_variant_destroy(elem_variant);
+        }
+        total += 4 + len;
+    }
+    return total;
+}
+
+// task 100 (parcel 5) — string-list / typed-array returns on every audited arg shape. Same arg
+// cells as kanama_ios_godot_ptrcall; the method runs ONCE, the array is encoded into a blob
+// (packed-string or typed-array layout, see above) and delivered whole: into out_buf when it fits
+// buf_size, otherwise into a malloc'd single pending slot that kanama_ios_godot_take_pending_blob
+// drains (the two-call length protocol of the no-arg entries re-invokes the method, which is only
+// safe for pure getters). Returns the full blob size (>= 4), or -1 on a null method/instance, an
+// unknown blob kind or an unavailable API.
+enum { KANAMA_IOS_RET_ARRAY_CELL = -3 };
+static char *g_pending_blob = NULL;
+static int64_t g_pending_blob_len = 0;
+
+static void kanama_ios_drop_pending_blob(void) {
+    if (g_pending_blob != NULL) {
+        free(g_pending_blob);
+        g_pending_blob = NULL;
+    }
+    g_pending_blob_len = 0;
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_array_blob(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t blob_kind,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+        return -1;
+    }
+    if (g_object_method_bind_ptrcall == NULL || g_string_to_utf8_chars == NULL) {
+        return -1;
+    }
+    kanama_ios_drop_pending_blob();
+
+    int64_t total = 0;
+    char *dst = NULL;
+    int parked = 0;
+    if (blob_kind == KANAMA_IOS_BLOB_PACKED_STRING_ARRAY) {
+        kanama_ios_cache_packed_string_methods();
+        if (g_packed_string_array_size_method == NULL ||
+            g_packed_string_array_operator_index_const == NULL) {
+            return -1;
+        }
+        KANAMA_IOS_PACKED_ARRAY_STORAGE(cell);
+        kanama_ios_godot_ptrcall_dispatch(
+            method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_RET_ARRAY_CELL, cell);
+        total = kanama_ios_encode_packed_string_blob(cell, NULL, 0);
+        if (out_buf != NULL && total <= buf_size) {
+            dst = out_buf;
+        } else {
+            dst = (char *)malloc((size_t)total);
+            parked = (dst != NULL);
+        }
+        if (dst != NULL) {
+            kanama_ios_encode_packed_string_blob(cell, dst, total);
+        }
+        if (g_packed_string_array_destructor != NULL) {
+            g_packed_string_array_destructor(cell);
+        }
+    } else if (blob_kind == KANAMA_IOS_BLOB_TYPED_ARRAY) {
+        kanama_ios_cache_array_methods();
+        if (g_array_size_method == NULL || g_array_get_method == NULL) {
+            return -1;
+        }
+        // Array opaque is 8 bytes on 64-bit (OPAQUE_8_BYTE_TYPES).
+        uint64_t array_storage = 0;
+        kanama_ios_godot_ptrcall_dispatch(
+            method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_RET_ARRAY_CELL, &array_storage);
+        total = kanama_ios_encode_typed_array_blob(&array_storage, elem_kind, NULL, 0);
+        if (out_buf != NULL && total <= buf_size) {
+            dst = out_buf;
+        } else {
+            dst = (char *)malloc((size_t)total);
+            parked = (dst != NULL);
+        }
+        if (dst != NULL) {
+            kanama_ios_encode_typed_array_blob(&array_storage, elem_kind, dst, total);
+        }
+        if (g_array_destructor != NULL) {
+            g_array_destructor(&array_storage);
+        }
+    } else {
+        return -1;
+    }
+    if (parked) {
+        g_pending_blob = dst;
+        g_pending_blob_len = total;
+    }
+    return total;
+}
+
+int64_t kanama_ios_godot_take_pending_blob(
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (g_pending_blob == NULL) {
+        return -1;
+    }
+    int64_t len = g_pending_blob_len;
+    if (out_buf != NULL && buf_size > 0) {
+        memcpy(out_buf, g_pending_blob, (size_t)((len < buf_size) ? len : buf_size));
+    }
+    kanama_ios_drop_pending_blob();
+    return len;
+}
+
 // PackedStringArray no-arg getter return — VARIABLE-LENGTH elements (each is a Godot String).
 // Unlike the fixed-width packed types, the result is serialized into out_buf as a length-
 // prefixed blob: [count:int32][len0:int32][utf8_0 bytes][len1:int32][utf8_1]...  Two-call
@@ -3007,40 +3408,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
         array_storage
     );
 
-    int64_t count = 0;
-    g_packed_string_array_size_method(array_storage, NULL, &count, 0);
-    if (count < 0) {
-        count = 0;
-    }
-
-    int can_write = (out_buf != NULL && buf_size >= 4);
-    if (can_write) {
-        int32_t count32 = (int32_t)count;
-        memcpy(out_buf, &count32, 4);
-    }
-    int64_t total = 4;  // leading count header
-
-    for (int64_t i = 0; i < count; i++) {
-        GDExtensionStringPtr str =
-            g_packed_string_array_operator_index_const(array_storage, (GDExtensionInt)i);
-        int64_t len = (str != NULL)
-            ? (int64_t)g_string_to_utf8_chars((GDExtensionConstStringPtr)str, NULL, 0)
-            : 0;
-        if (len < 0) {
-            len = 0;
-        }
-        // Write [len][utf8] only when the whole record fits; otherwise just keep tallying so
-        // the first (measuring) call still returns the correct total.
-        if (can_write && buf_size >= total + 4 + len) {
-            int32_t len32 = (int32_t)len;
-            memcpy(out_buf + total, &len32, 4);
-            if (len > 0) {
-                g_string_to_utf8_chars(
-                    (GDExtensionConstStringPtr)str, out_buf + total + 4, len);
-            }
-        }
-        total += 4 + len;
-    }
+    int64_t total = kanama_ios_encode_packed_string_blob(array_storage, out_buf, buf_size);
 
     if (g_packed_string_array_destructor != NULL) {
         g_packed_string_array_destructor(array_storage);
@@ -3084,98 +3452,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
         &array_storage
     );
 
-    int64_t count = 0;
-    g_array_size_method(&array_storage, NULL, &count, 0);
-    if (count < 0) {
-        count = 0;
-    }
-
-    int can_write = (out_buf != NULL && buf_size >= 4);
-    if (can_write) {
-        int32_t count32 = (int32_t)count;
-        memcpy(out_buf, &count32, 4);
-    }
-    int64_t total = 4;  // leading count header
-
-    for (int64_t i = 0; i < count; i++) {
-        uint8_t elem_variant[24];
-        memset(elem_variant, 0, sizeof(elem_variant));
-        const GDExtensionConstTypePtr get_args[1] = { (GDExtensionConstTypePtr)&i };
-        g_array_get_method(&array_storage, get_args, elem_variant, 1);
-
-        int64_t len = 0;
-        if (elem_kind == KANAMA_IOS_PT_INT32 || elem_kind == KANAMA_IOS_PT_INT64) {
-            int64_t v = 0;
-            if (g_variant_to_int != NULL) {
-                g_variant_to_int(&v, elem_variant);
-            }
-            len = 8;
-            if (can_write && buf_size >= total + 4 + len) {
-                int32_t len32 = (int32_t)len;
-                memcpy(out_buf + total, &len32, 4);
-                memcpy(out_buf + total + 4, &v, 8);
-            }
-        } else if (elem_kind == KANAMA_IOS_PT_PLANE) {
-            // Plane = 4x float32 (normal.x, normal.y, normal.z, d) — POD, fixed 16-byte record.
-            float plane[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-            if (g_variant_to_plane != NULL) {
-                g_variant_to_plane(plane, elem_variant);
-            }
-            len = 16;
-            if (can_write && buf_size >= total + 4 + len) {
-                int32_t len32 = (int32_t)len;
-                memcpy(out_buf + total, &len32, 4);
-                memcpy(out_buf + total + 4, plane, 16);
-            }
-        } else {
-            // STRING_NAME / NODE_PATH / STRING -> Godot String -> utf8.
-            uint64_t string_storage = 0;
-            int have_string = 0;
-            if (elem_kind == KANAMA_IOS_PT_STRING_NAME && g_variant_to_string_name != NULL &&
-                g_string_from_string_name_constructor != NULL) {
-                uint64_t sn = 0;
-                g_variant_to_string_name(&sn, elem_variant);
-                const GDExtensionConstTypePtr ca[1] = { (GDExtensionConstTypePtr)&sn };
-                g_string_from_string_name_constructor((GDExtensionUninitializedTypePtr)&string_storage, ca);
-                kanama_ios_destroy_string_name(&sn);
-                have_string = 1;
-            } else if (elem_kind == KANAMA_IOS_PT_NODE_PATH && g_variant_to_node_path != NULL &&
-                       g_string_from_node_path_constructor != NULL) {
-                uint64_t np = 0;
-                g_variant_to_node_path(&np, elem_variant);
-                const GDExtensionConstTypePtr ca[1] = { (GDExtensionConstTypePtr)&np };
-                g_string_from_node_path_constructor((GDExtensionUninitializedTypePtr)&string_storage, ca);
-                kanama_ios_destroy_node_path(&np);
-                have_string = 1;
-            } else if (g_variant_to_string != NULL) {
-                g_variant_to_string(&string_storage, elem_variant);
-                have_string = 1;
-            }
-            if (have_string && g_string_to_utf8_chars != NULL) {
-                len = (int64_t)g_string_to_utf8_chars(
-                    (GDExtensionConstStringPtr)&string_storage, NULL, 0);
-                if (len < 0) {
-                    len = 0;
-                }
-                if (can_write && buf_size >= total + 4 + len) {
-                    int32_t len32 = (int32_t)len;
-                    memcpy(out_buf + total, &len32, 4);
-                    if (len > 0) {
-                        g_string_to_utf8_chars(
-                            (GDExtensionConstStringPtr)&string_storage, out_buf + total + 4, len);
-                    }
-                }
-            }
-            if (have_string) {
-                kanama_ios_destroy_string(&string_storage);
-            }
-        }
-
-        if (g_variant_destroy != NULL) {
-            g_variant_destroy(elem_variant);
-        }
-        total += 4 + len;
-    }
+    int64_t total = kanama_ios_encode_typed_array_blob(&array_storage, elem_kind, out_buf, buf_size);
 
     if (g_array_destructor != NULL) {
         g_array_destructor(&array_storage);

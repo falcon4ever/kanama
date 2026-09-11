@@ -406,6 +406,15 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns an array of node names that are attached to the `GraphFrame` with the given name.
+     *
+     * Generated from Godot docs: GraphEdit.get_attached_nodes_of_frame
+     */
+    fun getAttachedNodesOfFrame(frame: String): List<String> {
+        return ObjectCalls.ptrcallWithStringNameArgRetStringNameList(getAttachedNodesOfFrameBind, handle, frame)
+    }
+
+    /**
      * Defines the control scheme for panning with mouse wheel.
      *
      * Generated from Godot docs: GraphEdit.set_panning_scheme
@@ -1000,6 +1009,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         private const val GET_ELEMENT_FRAME_HASH = 988084372L
         private val getElementFrameBind by lazy {
             ObjectCalls.getMethodBind("GraphEdit", "get_element_frame", GET_ELEMENT_FRAME_HASH)
+        }
+
+        private const val GET_ATTACHED_NODES_OF_FRAME_HASH = 689397652L
+        private val getAttachedNodesOfFrameBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "get_attached_nodes_of_frame", GET_ATTACHED_NODES_OF_FRAME_HASH)
         }
 
         private const val SET_PANNING_SCHEME_HASH = 18893313L

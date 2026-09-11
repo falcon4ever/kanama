@@ -89,6 +89,17 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a list of names for icon properties defined with `theme_type`. Use `get_icon_type_list`
+     * to get a list of possible theme type names.
+     *
+     * Generated from Godot docs: Theme.get_icon_list
+     */
+    fun getIconList(themeType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getIconListBind, handle, themeType)
+    }
+
+    /**
      * Returns a list of all unique theme type names for icon properties. Use `get_type_list` to get a
      * list of all unique theme types.
      *
@@ -154,6 +165,17 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     fun clearStylebox(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearStyleboxBind, handle, name, themeType)
+    }
+
+    /**
+     * Returns a list of names for `StyleBox` properties defined with `theme_type`. Use
+     * `get_stylebox_type_list` to get a list of possible theme type names.
+     *
+     * Generated from Godot docs: Theme.get_stylebox_list
+     */
+    fun getStyleboxList(themeType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getStyleboxListBind, handle, themeType)
     }
 
     /**
@@ -228,6 +250,17 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a list of names for `Font` properties defined with `theme_type`. Use
+     * `get_font_type_list` to get a list of possible theme type names.
+     *
+     * Generated from Godot docs: Theme.get_font_list
+     */
+    fun getFontList(themeType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontListBind, handle, themeType)
+    }
+
+    /**
      * Returns a list of all unique theme type names for `Font` properties. Use `get_type_list` to get
      * a list of all unique theme types.
      *
@@ -299,6 +332,17 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a list of names for font size properties defined with `theme_type`. Use
+     * `get_font_size_type_list` to get a list of possible theme type names.
+     *
+     * Generated from Godot docs: Theme.get_font_size_list
+     */
+    fun getFontSizeList(themeType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontSizeListBind, handle, themeType)
+    }
+
+    /**
      * Returns a list of all unique theme type names for font size properties. Use `get_type_list` to
      * get a list of all unique theme types.
      *
@@ -366,6 +410,17 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a list of names for `Color` properties defined with `theme_type`. Use
+     * `get_color_type_list` to get a list of possible theme type names.
+     *
+     * Generated from Godot docs: Theme.get_color_list
+     */
+    fun getColorList(themeType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getColorListBind, handle, themeType)
+    }
+
+    /**
      * Returns a list of all unique theme type names for `Color` properties. Use `get_type_list` to get
      * a list of all unique theme types.
      *
@@ -430,6 +485,17 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     fun clearConstant(name: String, themeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoStringNameArgs(clearConstantBind, handle, name, themeType)
+    }
+
+    /**
+     * Returns a list of names for constant properties defined with `theme_type`. Use
+     * `get_constant_type_list` to get a list of possible theme type names.
+     *
+     * Generated from Godot docs: Theme.get_constant_list
+     */
+    fun getConstantList(themeType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getConstantListBind, handle, themeType)
     }
 
     /**
@@ -609,6 +675,31 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns a list of names for properties of `data_type` defined with `theme_type`. Use
+     * `get_theme_item_type_list` to get a list of possible theme type names. Note: This method is
+     * analogous to calling the corresponding data type specific method, but can be used for more
+     * generalized logic.
+     *
+     * Generated from Godot docs: Theme.get_theme_item_list
+     */
+    fun getThemeItemList(dataType: Long, themeType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(getThemeItemListBind, handle, dataType, themeType)
+    }
+
+    /**
+     * Returns a list of all unique theme type names for `data_type` properties. Use `get_type_list` to
+     * get a list of all unique theme types. Note: This method is analogous to calling the
+     * corresponding data type specific method, but can be used for more generalized logic.
+     *
+     * Generated from Godot docs: Theme.get_theme_item_type_list
+     */
+    fun getThemeItemTypeList(dataType: Long): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(getThemeItemTypeListBind, handle, dataType)
+    }
+
+    /**
      * Marks `theme_type` as a variation of `base_type`. This adds `theme_type` as a suggested option
      * for `Control.theme_type_variation` on a `Control` that is of the `base_type` class. Variations
      * can also be nested, i.e. `base_type` can be another variation. If a chain of variations ends
@@ -652,6 +743,16 @@ class Theme(handle: MemorySegment) : Resource(handle) {
     fun getTypeVariationBase(themeType: String): String {
         checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(getTypeVariationBaseBind, handle, themeType)
+    }
+
+    /**
+     * Returns a list of all type variations for the given `base_type`.
+     *
+     * Generated from Godot docs: Theme.get_type_variation_list
+     */
+    fun getTypeVariationList(baseType: String): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(getTypeVariationListBind, handle, baseType)
     }
 
     /**
@@ -766,6 +867,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Theme", "clear_icon", CLEAR_ICON_HASH)
         }
 
+        private const val GET_ICON_LIST_HASH = 4291131558L
+        private val getIconListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_icon_list", GET_ICON_LIST_HASH)
+        }
+
         private const val GET_ICON_TYPE_LIST_HASH = 1139954409L
         private val getIconTypeListBind by lazy {
             ObjectCalls.getMethodBind("Theme", "get_icon_type_list", GET_ICON_TYPE_LIST_HASH)
@@ -794,6 +900,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         private const val CLEAR_STYLEBOX_HASH = 3740211285L
         private val clearStyleboxBind by lazy {
             ObjectCalls.getMethodBind("Theme", "clear_stylebox", CLEAR_STYLEBOX_HASH)
+        }
+
+        private const val GET_STYLEBOX_LIST_HASH = 4291131558L
+        private val getStyleboxListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_stylebox_list", GET_STYLEBOX_LIST_HASH)
         }
 
         private const val GET_STYLEBOX_TYPE_LIST_HASH = 1139954409L
@@ -826,6 +937,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Theme", "clear_font", CLEAR_FONT_HASH)
         }
 
+        private const val GET_FONT_LIST_HASH = 4291131558L
+        private val getFontListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_font_list", GET_FONT_LIST_HASH)
+        }
+
         private const val GET_FONT_TYPE_LIST_HASH = 1139954409L
         private val getFontTypeListBind by lazy {
             ObjectCalls.getMethodBind("Theme", "get_font_type_list", GET_FONT_TYPE_LIST_HASH)
@@ -854,6 +970,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         private const val CLEAR_FONT_SIZE_HASH = 3740211285L
         private val clearFontSizeBind by lazy {
             ObjectCalls.getMethodBind("Theme", "clear_font_size", CLEAR_FONT_SIZE_HASH)
+        }
+
+        private const val GET_FONT_SIZE_LIST_HASH = 4291131558L
+        private val getFontSizeListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_font_size_list", GET_FONT_SIZE_LIST_HASH)
         }
 
         private const val GET_FONT_SIZE_TYPE_LIST_HASH = 1139954409L
@@ -886,6 +1007,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Theme", "clear_color", CLEAR_COLOR_HASH)
         }
 
+        private const val GET_COLOR_LIST_HASH = 4291131558L
+        private val getColorListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_color_list", GET_COLOR_LIST_HASH)
+        }
+
         private const val GET_COLOR_TYPE_LIST_HASH = 1139954409L
         private val getColorTypeListBind by lazy {
             ObjectCalls.getMethodBind("Theme", "get_color_type_list", GET_COLOR_TYPE_LIST_HASH)
@@ -914,6 +1040,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         private const val CLEAR_CONSTANT_HASH = 3740211285L
         private val clearConstantBind by lazy {
             ObjectCalls.getMethodBind("Theme", "clear_constant", CLEAR_CONSTANT_HASH)
+        }
+
+        private const val GET_CONSTANT_LIST_HASH = 4291131558L
+        private val getConstantListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_constant_list", GET_CONSTANT_LIST_HASH)
         }
 
         private const val GET_CONSTANT_TYPE_LIST_HASH = 1139954409L
@@ -986,6 +1117,16 @@ class Theme(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Theme", "clear_theme_item", CLEAR_THEME_ITEM_HASH)
         }
 
+        private const val GET_THEME_ITEM_LIST_HASH = 3726716710L
+        private val getThemeItemListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_theme_item_list", GET_THEME_ITEM_LIST_HASH)
+        }
+
+        private const val GET_THEME_ITEM_TYPE_LIST_HASH = 1316004935L
+        private val getThemeItemTypeListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_theme_item_type_list", GET_THEME_ITEM_TYPE_LIST_HASH)
+        }
+
         private const val SET_TYPE_VARIATION_HASH = 3740211285L
         private val setTypeVariationBind by lazy {
             ObjectCalls.getMethodBind("Theme", "set_type_variation", SET_TYPE_VARIATION_HASH)
@@ -1004,6 +1145,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         private const val GET_TYPE_VARIATION_BASE_HASH = 1965194235L
         private val getTypeVariationBaseBind by lazy {
             ObjectCalls.getMethodBind("Theme", "get_type_variation_base", GET_TYPE_VARIATION_BASE_HASH)
+        }
+
+        private const val GET_TYPE_VARIATION_LIST_HASH = 1761182771L
+        private val getTypeVariationListBind by lazy {
+            ObjectCalls.getMethodBind("Theme", "get_type_variation_list", GET_TYPE_VARIATION_LIST_HASH)
         }
 
         private const val ADD_TYPE_HASH = 3304788590L

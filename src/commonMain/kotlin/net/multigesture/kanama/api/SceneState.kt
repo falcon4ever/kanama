@@ -122,6 +122,16 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the list of group names associated with the node at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_node_groups
+     */
+    fun getNodeGroups(idx: Int): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getNodeGroupsBind, handle, idx)
+    }
+
+    /**
      * Returns the node's index, which is its position relative to its siblings. This is only relevant
      * and saved in scenes for cases where new nodes are added to an instantiated or inherited scene
      * among siblings from the base scene. Despite the name, this index is not related to the `idx`
@@ -310,6 +320,11 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_NODE_INSTANCE_HASH = 511017218L
         private val getNodeInstanceBind by lazy {
             ObjectCalls.getMethodBind("SceneState", "get_node_instance", GET_NODE_INSTANCE_HASH)
+        }
+
+        private const val GET_NODE_GROUPS_HASH = 647634434L
+        private val getNodeGroupsBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_node_groups", GET_NODE_GROUPS_HASH)
         }
 
         private const val GET_NODE_INDEX_HASH = 923996154L

@@ -34,6 +34,16 @@ object ClassDB {
     }
 
     /**
+     * Returns the names of all engine classes that directly or indirectly inherit from `class`.
+     *
+     * Generated from Godot docs: ClassDB.get_inheriters_from_class
+     */
+    @JvmStatic
+    fun getInheritersFromClass(classValue: String): List<String> {
+        return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(getInheritersFromClassBind, singleton, classValue)
+    }
+
+    /**
      * Returns the parent class of `class`.
      *
      * Generated from Godot docs: ClassDB.get_parent_class
@@ -225,6 +235,16 @@ object ClassDB {
     }
 
     /**
+     * Returns an array with the names all the integer constants of `class` or its ancestry.
+     *
+     * Generated from Godot docs: ClassDB.class_get_integer_constant_list
+     */
+    @JvmStatic
+    fun classGetIntegerConstantList(classValue: String, noInheritance: Boolean = false): List<String> {
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetPackedStringList(classGetIntegerConstantListBind, singleton, classValue, noInheritance)
+    }
+
+    /**
      * Returns whether `class` or its ancestry has an integer constant called `name` or not.
      *
      * Generated from Godot docs: ClassDB.class_has_integer_constant
@@ -253,6 +273,26 @@ object ClassDB {
     @JvmStatic
     fun classHasEnum(classValue: String, name: String, noInheritance: Boolean = false): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetBool(classHasEnumBind, singleton, classValue, name, noInheritance)
+    }
+
+    /**
+     * Returns an array with all the enums of `class` or its ancestry.
+     *
+     * Generated from Godot docs: ClassDB.class_get_enum_list
+     */
+    @JvmStatic
+    fun classGetEnumList(classValue: String, noInheritance: Boolean = false): List<String> {
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetPackedStringList(classGetEnumListBind, singleton, classValue, noInheritance)
+    }
+
+    /**
+     * Returns an array with all the keys in `enum` of `class` or its ancestry.
+     *
+     * Generated from Godot docs: ClassDB.class_get_enum_constants
+     */
+    @JvmStatic
+    fun classGetEnumConstants(classValue: String, enum: String, noInheritance: Boolean = false): List<String> {
+        return ObjectCalls.ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList(classGetEnumConstantsBind, singleton, classValue, enum, noInheritance)
     }
 
     /**
@@ -296,6 +336,11 @@ object ClassDB {
     private const val GET_CLASS_LIST_HASH = 1139954409L
     private val getClassListBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "get_class_list", GET_CLASS_LIST_HASH)
+    }
+
+    private const val GET_INHERITERS_FROM_CLASS_HASH = 1761182771L
+    private val getInheritersFromClassBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "get_inheriters_from_class", GET_INHERITERS_FROM_CLASS_HASH)
     }
 
     private const val GET_PARENT_CLASS_HASH = 1965194235L
@@ -388,6 +433,11 @@ object ClassDB {
         ObjectCalls.getMethodBind("ClassDB", "class_call_static", CLASS_CALL_STATIC_HASH)
     }
 
+    private const val CLASS_GET_INTEGER_CONSTANT_LIST_HASH = 3031669221L
+    private val classGetIntegerConstantListBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_integer_constant_list", CLASS_GET_INTEGER_CONSTANT_LIST_HASH)
+    }
+
     private const val CLASS_HAS_INTEGER_CONSTANT_HASH = 471820014L
     private val classHasIntegerConstantBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_has_integer_constant", CLASS_HAS_INTEGER_CONSTANT_HASH)
@@ -401,6 +451,16 @@ object ClassDB {
     private const val CLASS_HAS_ENUM_HASH = 3860701026L
     private val classHasEnumBind by lazy {
         ObjectCalls.getMethodBind("ClassDB", "class_has_enum", CLASS_HAS_ENUM_HASH)
+    }
+
+    private const val CLASS_GET_ENUM_LIST_HASH = 3031669221L
+    private val classGetEnumListBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_enum_list", CLASS_GET_ENUM_LIST_HASH)
+    }
+
+    private const val CLASS_GET_ENUM_CONSTANTS_HASH = 661528303L
+    private val classGetEnumConstantsBind by lazy {
+        ObjectCalls.getMethodBind("ClassDB", "class_get_enum_constants", CLASS_GET_ENUM_CONSTANTS_HASH)
     }
 
     private const val CLASS_GET_INTEGER_CONSTANT_ENUM_HASH = 2457504236L

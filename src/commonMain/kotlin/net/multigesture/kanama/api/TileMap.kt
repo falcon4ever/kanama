@@ -604,6 +604,43 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Returns the list of all neighbourings cells to the one at `coords`.
+     *
+     * Generated from Godot docs: TileMap.get_surrounding_cells
+     */
+    fun getSurroundingCells(coords: Vector2i): List<Vector2i> {
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(getSurroundingCellsBind, handle, coords)
+    }
+
+    /**
+     * Returns a `Vector2i` array with the positions of all cells containing a tile in the given layer.
+     * A cell is considered empty if its source identifier equals -1, its atlas coordinates identifiers
+     * is `Vector2(-1, -1)` and its alternative identifier is -1. If `layer` is negative, the layers
+     * are accessed from the last one.
+     *
+     * Generated from Godot docs: TileMap.get_used_cells
+     */
+    fun getUsedCells(layer: Int): List<Vector2i> {
+        return ObjectCalls.ptrcallWithIntArgRetVector2iList(getUsedCellsBind, handle, layer)
+    }
+
+    /**
+     * Returns a `Vector2i` array with the positions of all cells containing a tile in the given layer.
+     * Tiles may be filtered according to their source (`source_id`), their atlas coordinates
+     * (`atlas_coords`) or alternative id (`alternative_tile`). If a parameter has its value set to the
+     * default one, this parameter is not used to filter a cell. Thus, if all parameters have their
+     * respective default value, this method returns the same result as `get_used_cells`. A cell is
+     * considered empty if its source identifier equals -1, its atlas coordinates identifiers is
+     * `Vector2(-1, -1)` and its alternative identifier is -1. If `layer` is negative, the layers are
+     * accessed from the last one.
+     *
+     * Generated from Godot docs: TileMap.get_used_cells_by_id
+     */
+    fun getUsedCellsById(layer: Int, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1): List<Vector2i> {
+        return ObjectCalls.ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, handle, layer, sourceId, atlasCoords, alternativeTile)
+    }
+
+    /**
      * Returns a rectangle enclosing the used (non-empty) tiles of the map, including all layers.
      *
      * Generated from Godot docs: TileMap.get_used_rect
@@ -914,6 +951,21 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
         private const val NOTIFY_RUNTIME_TILE_DATA_UPDATE_HASH = 1025054187L
         private val notifyRuntimeTileDataUpdateBind by lazy {
             ObjectCalls.getMethodBind("TileMap", "notify_runtime_tile_data_update", NOTIFY_RUNTIME_TILE_DATA_UPDATE_HASH)
+        }
+
+        private const val GET_SURROUNDING_CELLS_HASH = 2673526557L
+        private val getSurroundingCellsBind by lazy {
+            ObjectCalls.getMethodBind("TileMap", "get_surrounding_cells", GET_SURROUNDING_CELLS_HASH)
+        }
+
+        private const val GET_USED_CELLS_HASH = 663333327L
+        private val getUsedCellsBind by lazy {
+            ObjectCalls.getMethodBind("TileMap", "get_used_cells", GET_USED_CELLS_HASH)
+        }
+
+        private const val GET_USED_CELLS_BY_ID_HASH = 2931012785L
+        private val getUsedCellsByIdBind by lazy {
+            ObjectCalls.getMethodBind("TileMap", "get_used_cells_by_id", GET_USED_CELLS_BY_ID_HASH)
         }
 
         private const val GET_USED_RECT_HASH = 410525958L

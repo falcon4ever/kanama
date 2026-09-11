@@ -56,6 +56,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
@@ -67,6 +68,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
@@ -120,6 +122,12 @@ object ObjectCalls {
   private const val PT_STRING = 16
   private const val PT_NODE_PATH = 17
   private const val PT_PLANE = 26
+  private const val PT_RID = 14
+  private const val PT_TRANSFORM3D = 19
+  private const val PT_PACKED_STRING_ARRAY = 28
+  // Blob kinds of kanama_ios_godot_ptrcall_ret_array_blob (KANAMA_IOS_BLOB_* in the C shim).
+  private const val BLOB_PACKED_STRING_ARRAY = 1
+  private const val BLOB_TYPED_ARRAY = 2
   // BUILD-tagged Packed*Array arg tags (the dispatch builds the array from a descriptor).
   private const val PT_PACKED_VECTOR2_ARRAY = 23
   private const val PT_PACKED_COLOR_ARRAY = 24
@@ -894,6 +902,304 @@ object ObjectCalls {
       @Suppress("UNCHECKED_CAST")
       it as? Map<String, Any?>
     }
+
+  // task 100 (parcel 5) — string-list / typed-Array returns on any audited arg shape. Same arg
+  // cells
+  // as kanama_ios_godot_ptrcall; the C entry ptrcalls ONCE into the array cell and encodes the
+  // length-prefixed blob the no-arg read-backs use ([int32 count]([int32 len][bytes])*), delivering
+  // it whole: inline when it fits 4 KiB, otherwise parked C-side and drained by the second call.
+  // One blob read-back + one record parser; the per-kind decoders below only interpret the bytes.
+  private fun MemScope.ptrcallArrayBlob(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    blobKind: Int,
+    elemKind: Int,
+  ): ByteArray {
+    val inlineCap = 4096L
+    val inline = allocArray<ByteVar>(inlineCap)
+    val total =
+      kanama_ios_godot_ptrcall_ret_array_blob(
+        methodBind.address(),
+        instance.address(),
+        argTypes,
+        argPtrs,
+        argCount,
+        blobKind,
+        elemKind,
+        inline,
+        inlineCap,
+      )
+    return when {
+      total < 4L -> ByteArray(0)
+      total <= inlineCap -> inline.readBytes(total.toInt())
+      else -> {
+        val full = allocArray<ByteVar>(total)
+        val got = kanama_ios_godot_take_pending_blob(full, total)
+        if (got < 4L) ByteArray(0) else full.readBytes(minOf(got, total).toInt())
+      }
+    }
+  }
+
+  private fun <T> parseBlobRecords(bytes: ByteArray, parse: (ByteArray, Int, Int) -> T): List<T> {
+    if (bytes.size < 4) return emptyList()
+    val count = i32LE(bytes, 0)
+    var off = 4
+    val out = ArrayList<T>(if (count > 0) count else 0)
+    repeat(count) {
+      val len = i32LE(bytes, off)
+      off += 4
+      out.add(parse(bytes, off, len))
+      off += len
+    }
+    return out
+  }
+
+  private fun i64LE(b: ByteArray, o: Int): Long {
+    var v = 0L
+    for (k in 7 downTo 0) v = (v shl 8) or (b[o + k].toLong() and 0xFF)
+    return v
+  }
+
+  private fun <T> MemScope.typedList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    elemKind: Int,
+    parse: (ByteArray, Int, Int) -> T,
+  ): List<T> =
+    parseBlobRecords(
+      ptrcallArrayBlob(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        BLOB_TYPED_ARRAY,
+        elemKind,
+      ),
+      parse,
+    )
+
+  fun ptrcallRetPackedStringList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<String> = memScoped {
+    parseBlobRecords(
+      ptrcallArrayBlob(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        BLOB_PACKED_STRING_ARRAY,
+        0,
+      )
+    ) { b, o, l ->
+      b.decodeToString(o, o + l)
+    }
+  }
+
+  fun ptrcallRetTypedRIDList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<RID> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_RID) { b, o, _ ->
+      RID(i64LE(b, o))
+    }
+  }
+
+  fun ptrcallRetTypedVector2iList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Vector2i> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_VECTOR2I) { b, o, _ ->
+      Vector2i(i32LE(b, o), i32LE(b, o + 4))
+    }
+  }
+
+  fun ptrcallRetTypedVector3iList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Vector3i> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_VECTOR3I) { b, o, _ ->
+      Vector3i(i32LE(b, o), i32LE(b, o + 4), i32LE(b, o + 8))
+    }
+  }
+
+  fun ptrcallRetTypedStringList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<String> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_STRING) { b, o, l ->
+      b.decodeToString(o, o + l)
+    }
+  }
+
+  fun ptrcallRetTypedStringNameList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<String> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_STRING_NAME) { b, o, l ->
+      b.decodeToString(o, o + l)
+    }
+  }
+
+  fun ptrcallRetTypedNodePathList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<NodePath> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_NODE_PATH) { b, o, l ->
+      NodePath(b.decodeToString(o, o + l))
+    }
+  }
+
+  fun ptrcallRetTypedLongList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Long> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_INT64) { b, o, _ ->
+      i64LE(b, o)
+    }
+  }
+
+  fun ptrcallRetTypedPlaneList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Plane> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_PLANE) { b, o, _ ->
+      Plane(Vector3(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
+    }
+  }
+
+  fun ptrcallRetTypedVector2List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Vector2> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_VECTOR2) { b, o, _ ->
+      Vector2(realLE(b, o), realLE(b, o + 4))
+    }
+  }
+
+  fun ptrcallRetTypedVector3List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Vector3> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_VECTOR3) { b, o, _ ->
+      Vector3(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8))
+    }
+  }
+
+  fun ptrcallRetTypedRect2List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Rect2> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_RECT2) { b, o, _ ->
+      Rect2(Vector2(realLE(b, o), realLE(b, o + 4)), Vector2(realLE(b, o + 8), realLE(b, o + 12)))
+    }
+  }
+
+  // Same 12-float layout as the ptrcall Transform3D return: 9 column-major basis reals + origin.
+  fun ptrcallRetTypedTransform3DList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Transform3D> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_TRANSFORM3D) { b, o, _ ->
+      fun r(i: Int) = realLE(b, o + 4 * i)
+      Transform3D(
+        Basis(Vector3(r(0), r(3), r(6)), Vector3(r(1), r(4), r(7)), Vector3(r(2), r(5), r(8))),
+        Vector3(r(9), r(10), r(11)),
+      )
+    }
+  }
+
+  // Nested record: [int32 n](2 float32)*.
+  fun ptrcallRetTypedPackedVector2ListList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<List<Vector2>> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_PACKED_VECTOR2_ARRAY) { b, o, l
+      ->
+      if (l < 4) {
+        emptyList()
+      } else {
+        val n = i32LE(b, o)
+        List(n) { Vector2(realLE(b, o + 4 + it * 8), realLE(b, o + 8 + it * 8)) }
+      }
+    }
+  }
+
+  fun ptrcallRetTypedByteArrayList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<ByteArray> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_PACKED_BYTE_ARRAY) { b, o, l ->
+      b.copyOfRange(o, o + l)
+    }
+  }
+
+  // Nested record: a whole packed-string blob.
+  fun ptrcallRetTypedPackedStringListList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<List<String>> = memScoped {
+    typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_PACKED_STRING_ARRAY) { b, o, l
+      ->
+      parseBlobRecords(b.copyOfRange(o, o + l)) { bb, oo, ll -> bb.decodeToString(oo, oo + ll) }
+    }
+  }
 
   // NodePath return: GDExtension has no NodePath->utf8, so the dedicated C helper converts
   // the returned NodePath to a String (String(from: NodePath) ctor) and UTF-8 encodes it,
@@ -3839,6 +4145,117 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     argProtosBack == argProtos,
   )
   ObjectCalls.destroyObject(argWs)
+
+  // task 100 (parcel 5) — string-list / typed-Array returns on arg-bearing shapes through the
+  // generated blob read-back (ptrcallRetTyped<Kind>List / ptrcallRetPackedStringList over
+  // kanama_ios_godot_ptrcall_ret_array_blob). ClassDB.get_inheriters_from_class(StringName):
+  // PackedStringArray with an arg (short) and, for "Object", thousands of names — far past the 4
+  // KiB
+  // inline buffer, so it proves the pending-blob drain; TileMapLayer.set_cell + get_used_cells /
+  // get_used_cells_by_id (Array[Vector2i], no-arg and int+Vector2i+int args); Skeleton3D bone meta
+  // (Array[StringName] with an int arg); Geometry3D.build_box_planes (Array[Plane] with a Vector3
+  // arg); GridMap.set_cell_item + get_used_cells (Array[Vector3i]).
+  val arrayClassDb = ObjectCalls.getSingleton("ClassDB")
+  val arrayNode2dHeirs =
+    ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(
+      ObjectCalls.getMethodBind("ClassDB", "get_inheriters_from_class", 1761182771L),
+      arrayClassDb,
+      "Node2D",
+    )
+  check(
+    "array-ret(ClassDB.get_inheriters_from_class(Node2D) has Sprite2D)",
+    "Sprite2D" in arrayNode2dHeirs,
+  )
+  val arrayObjectHeirs =
+    ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(
+      ObjectCalls.getMethodBind("ClassDB", "get_inheriters_from_class", 1761182771L),
+      arrayClassDb,
+      "Object",
+    )
+  check(
+    "array-ret(ClassDB.get_inheriters_from_class(Object) >500 names, pending blob)",
+    arrayObjectHeirs.size > 500 && "Node" in arrayObjectHeirs && "AStar2D" in arrayObjectHeirs,
+  )
+  check("array-ret(pending blob drained)", kanama_ios_godot_take_pending_blob(null, 0L) == -1L)
+
+  val arrayTiles = ObjectCalls.constructObject("TileMapLayer")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("TileMapLayer", "set_cell", 2428518503L),
+    arrayTiles,
+    listOf(Vector2i(2, 3), 0, Vector2i(0, 0), 0),
+  )
+  val arrayUsed =
+    ObjectCalls.ptrcallNoArgsRetVector2iList(
+      ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells", 3995934104L),
+      arrayTiles,
+    )
+  check("array-ret(TileMapLayer.get_used_cells==[(2,3)])", arrayUsed == listOf(Vector2i(2, 3)))
+  val arrayUsedById =
+    ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(
+      ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells_by_id", 4175304538L),
+      arrayTiles,
+      0,
+      Vector2i(0, 0),
+      -1,
+    )
+  check(
+    "array-ret(TileMapLayer.get_used_cells_by_id(0,(0,0),-1)==[(2,3)])",
+    arrayUsedById == listOf(Vector2i(2, 3)),
+  )
+  ObjectCalls.destroyObject(arrayTiles)
+
+  val arraySkel = ObjectCalls.constructObject("Skeleton3D")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Skeleton3D", "add_bone", 1597066294L),
+    arraySkel,
+    listOf("KBone"),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Skeleton3D", "set_bone_meta", 702482756L),
+    arraySkel,
+    listOf(0, "kmeta", 1L),
+  )
+  val arrayMeta =
+    ObjectCalls.ptrcallWithIntArgRetStringNameList(
+      ObjectCalls.getMethodBind("Skeleton3D", "get_bone_meta_list", 663333327L),
+      arraySkel,
+      0,
+    )
+  check("array-ret(Skeleton3D.get_bone_meta_list(0)==[kmeta])", arrayMeta == listOf("kmeta"))
+  ObjectCalls.destroyObject(arraySkel)
+
+  val arrayPlanes =
+    ObjectCalls.ptrcallWithVector3ArgRetPlaneList(
+      ObjectCalls.getMethodBind("Geometry3D", "build_box_planes", 3622277145L),
+      ObjectCalls.getSingleton("Geometry3D"),
+      Vector3(1f, 2f, 3f),
+    )
+  check("array-ret(Geometry3D.build_box_planes has 6 planes)", arrayPlanes.size == 6)
+
+  // GridMap is the only class returning Array[Vector3i] without an Array argument, but
+  // set_cell_item creates the cell's octant with PhysicsServer3D bodies, and the physics servers
+  // do not exist yet at scene-level extension init (iPhone 12, 2026-09-10: SIGSEGV at address 0 in
+  // GridMap::set_cell_item). Reads on an EMPTY GridMap create no octant: they exercise the
+  // Array[Vector3i] encoder (count 0) and the Vector3i ARGUMENT cell without touching physics. The
+  // Vector3i element decode itself is 3 x i32LE, the same stride logic as the Vector2i row above.
+  val arrayGrid = ObjectCalls.constructObject("GridMap")
+  val arrayCells =
+    ObjectCalls.ptrcallNoArgsRetVector3iList(
+      ObjectCalls.getMethodBind("GridMap", "get_used_cells", 3995934104L),
+      arrayGrid,
+    )
+  check("array-ret(empty GridMap.get_used_cells==[])", arrayCells.isEmpty())
+  val arrayOctantCells =
+    ObjectCalls.ptrcallWithVector3iArgRetVector3iList(
+      ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", 2658725580L),
+      arrayGrid,
+      Vector3i(0, 0, 0),
+    )
+  check(
+    "array-ret(empty GridMap.get_used_cells_in_octant((0,0,0))==[])",
+    arrayOctantCells.isEmpty(),
+  )
+  ObjectCalls.destroyObject(arrayGrid)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

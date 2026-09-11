@@ -1730,6 +1730,20 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Returns an `Array` of line ranges where `x` is the first line and `y` is the last line. All
+     * lines within these ranges will have a caret on them or be part of a selection. Each line will
+     * only be part of one line range, even if it has multiple carets on it. If a selection's end
+     * column (`get_selection_to_column`) is at column `0`, that line will not be included. If a
+     * selection begins on the line after another selection ends and `merge_adjacent` is `true`, or
+     * they begin and end on the same line, one line range will include both selections.
+     *
+     * Generated from Godot docs: TextEdit.get_line_ranges_from_carets
+     */
+    fun getLineRangesFromCarets(onlySelections: Boolean = false, mergeAdjacent: Boolean = true): List<Vector2i> {
+        return ObjectCalls.ptrcallWithTwoBoolArgsRetVector2iList(getLineRangesFromCaretsBind, handle, onlySelections, mergeAdjacent)
+    }
+
+    /**
      * Returns the origin line of the selection. This is the opposite end from the caret.
      *
      * Generated from Godot docs: TextEdit.get_selection_origin_line
@@ -1898,6 +1912,15 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      */
     fun getLineWrapIndexAtColumn(line: Int, column: Int): Int {
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWrapIndexAtColumnBind, handle, line, column)
+    }
+
+    /**
+     * Returns an array of `String`s representing each wrapped index.
+     *
+     * Generated from Godot docs: TextEdit.get_line_wrapped_text
+     */
+    fun getLineWrappedText(line: Int): List<String> {
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getLineWrappedTextBind, handle, line)
     }
 
     /**
@@ -3478,6 +3501,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("TextEdit", "get_selection_at_line_column", GET_SELECTION_AT_LINE_COLUMN_HASH)
         }
 
+        private const val GET_LINE_RANGES_FROM_CARETS_HASH = 2393089247L
+        private val getLineRangesFromCaretsBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_line_ranges_from_carets", GET_LINE_RANGES_FROM_CARETS_HASH)
+        }
+
         private const val GET_SELECTION_ORIGIN_LINE_HASH = 1591665591L
         private val getSelectionOriginLineBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "get_selection_origin_line", GET_SELECTION_ORIGIN_LINE_HASH)
@@ -3566,6 +3594,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         private const val GET_LINE_WRAP_INDEX_AT_COLUMN_HASH = 3175239445L
         private val getLineWrapIndexAtColumnBind by lazy {
             ObjectCalls.getMethodBind("TextEdit", "get_line_wrap_index_at_column", GET_LINE_WRAP_INDEX_AT_COLUMN_HASH)
+        }
+
+        private const val GET_LINE_WRAPPED_TEXT_HASH = 647634434L
+        private val getLineWrappedTextBind by lazy {
+            ObjectCalls.getMethodBind("TextEdit", "get_line_wrapped_text", GET_LINE_WRAPPED_TEXT_HASH)
         }
 
         private const val SET_SMOOTH_SCROLL_ENABLED_HASH = 2586408642L

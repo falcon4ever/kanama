@@ -386,6 +386,22 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(getPointPathBind, handle, fromId, toId, allowPartialPath)
     }
 
+    /**
+     * Returns an array with the IDs of the points that form the path found by AStar2D between the
+     * given points. The array is ordered from the starting point to the ending point of the path. If
+     * `from_id` point is disabled, returns an empty array (even if `from_id == to_id`). If `from_id`
+     * point is not disabled, there is no valid path to the target, and `allow_partial_path` is `true`,
+     * returns a path to the point closest to the target that can be reached. Note: When
+     * `allow_partial_path` is `true` and `to_id` is solid the search may take an unusually long time
+     * to finish.
+     *
+     * Generated from Godot docs: AStarGrid2D.get_id_path
+     */
+    fun getIdPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2i> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, handle, fromId, toId, allowPartialPath)
+    }
+
     companion object {
         const val HEURISTIC_EUCLIDEAN: Long = 0L
         const val HEURISTIC_MANHATTAN: Long = 1L
@@ -547,6 +563,11 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_POINT_PATH_HASH = 1641925693L
         private val getPointPathBind by lazy {
             ObjectCalls.getMethodBind("AStarGrid2D", "get_point_path", GET_POINT_PATH_HASH)
+        }
+
+        private const val GET_ID_PATH_HASH = 1918132273L
+        private val getIdPathBind by lazy {
+            ObjectCalls.getMethodBind("AStarGrid2D", "get_id_path", GET_ID_PATH_HASH)
         }
     }
 }

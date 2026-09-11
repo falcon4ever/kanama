@@ -209,6 +209,32 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Returns a `Vector2i` array with the positions of all cells containing a tile. A cell is
+     * considered empty if its source identifier equals `-1`, its atlas coordinate identifier is
+     * `Vector2(-1, -1)` and its alternative identifier is `-1`.
+     *
+     * Generated from Godot docs: TileMapLayer.get_used_cells
+     */
+    fun getUsedCells(): List<Vector2i> {
+        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, handle)
+    }
+
+    /**
+     * Returns a `Vector2i` array with the positions of all cells containing a tile. Tiles may be
+     * filtered according to their source (`source_id`), their atlas coordinates (`atlas_coords`), or
+     * alternative id (`alternative_tile`). If a parameter has its value set to the default one, this
+     * parameter is not used to filter a cell. Thus, if all parameters have their respective default
+     * values, this method returns the same result as `get_used_cells`. A cell is considered empty if
+     * its source identifier equals `-1`, its atlas coordinate identifier is `Vector2(-1, -1)` and its
+     * alternative identifier is `-1`.
+     *
+     * Generated from Godot docs: TileMapLayer.get_used_cells_by_id
+     */
+    fun getUsedCellsById(sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1): List<Vector2i> {
+        return ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, handle, sourceId, atlasCoords, alternativeTile)
+    }
+
+    /**
      * Returns a rectangle enclosing the used (non-empty) tiles of the map.
      *
      * Generated from Godot docs: TileMapLayer.get_used_rect
@@ -286,6 +312,17 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      */
     fun mapPattern(positionInTilemap: Vector2i, coordsInPattern: Vector2i, pattern: TileMapPattern?): Vector2i {
         return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(mapPatternBind, handle, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
+    /**
+     * Returns the list of all neighboring cells to the one at `coords`. Any neighboring cell is one
+     * that is touching edges, so for a square cell 4 cells would be returned, for a hexagon 6 cells
+     * are returned.
+     *
+     * Generated from Godot docs: TileMapLayer.get_surrounding_cells
+     */
+    fun getSurroundingCells(coords: Vector2i): List<Vector2i> {
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(getSurroundingCellsBind, handle, coords)
     }
 
     /**
@@ -689,6 +726,16 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
             ObjectCalls.getMethodBind("TileMapLayer", "is_cell_transposed", IS_CELL_TRANSPOSED_HASH)
         }
 
+        private const val GET_USED_CELLS_HASH = 3995934104L
+        private val getUsedCellsBind by lazy {
+            ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells", GET_USED_CELLS_HASH)
+        }
+
+        private const val GET_USED_CELLS_BY_ID_HASH = 4175304538L
+        private val getUsedCellsByIdBind by lazy {
+            ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells_by_id", GET_USED_CELLS_BY_ID_HASH)
+        }
+
         private const val GET_USED_RECT_HASH = 410525958L
         private val getUsedRectBind by lazy {
             ObjectCalls.getMethodBind("TileMapLayer", "get_used_rect", GET_USED_RECT_HASH)
@@ -722,6 +769,11 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
         private const val MAP_PATTERN_HASH = 1864516957L
         private val mapPatternBind by lazy {
             ObjectCalls.getMethodBind("TileMapLayer", "map_pattern", MAP_PATTERN_HASH)
+        }
+
+        private const val GET_SURROUNDING_CELLS_HASH = 2673526557L
+        private val getSurroundingCellsBind by lazy {
+            ObjectCalls.getMethodBind("TileMapLayer", "get_surrounding_cells", GET_SURROUNDING_CELLS_HASH)
         }
 
         private const val GET_NEIGHBOR_CELL_HASH = 986575103L

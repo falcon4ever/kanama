@@ -240,6 +240,15 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
     }
 
     /**
+     * Returns an array of values of the `OptionButton` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.get_option_values
+     */
+    fun getOptionValues(option: Int): List<String> {
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getOptionValuesBind, handle, option)
+    }
+
+    /**
      * Returns the default value index of the `OptionButton` or `CheckBox` with index `option`.
      *
      * Generated from Godot docs: FileDialog.get_option_default
@@ -738,6 +747,11 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
         private const val GET_OPTION_NAME_HASH = 844755477L
         private val getOptionNameBind by lazy {
             ObjectCalls.getMethodBind("FileDialog", "get_option_name", GET_OPTION_NAME_HASH)
+        }
+
+        private const val GET_OPTION_VALUES_HASH = 647634434L
+        private val getOptionValuesBind by lazy {
+            ObjectCalls.getMethodBind("FileDialog", "get_option_values", GET_OPTION_VALUES_HASH)
         }
 
         private const val GET_OPTION_DEFAULT_HASH = 923996154L

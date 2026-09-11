@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Transform3D
 
 /**
  * Generated from Godot docs: GLTFSkin
@@ -21,6 +22,10 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         get() = getJointsOriginal()
         @JvmName("setJointsOriginalProperty")
         set(value) = setJointsOriginal(value)
+
+    val inverseBinds: List<Transform3D>
+        @JvmName("inverseBindsProperty")
+        get() = getInverseBinds()
 
     var joints: List<Int>
         @JvmName("jointsProperty")
@@ -78,6 +83,11 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
     fun setJointsOriginal(jointsOriginal: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsOriginalBind, handle, jointsOriginal)
+    }
+
+    fun getInverseBinds(): List<Transform3D> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetTransform3DList(getInverseBindsBind, handle)
     }
 
     fun getJoints(): List<Int> {
@@ -166,6 +176,11 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         private const val SET_JOINTS_ORIGINAL_HASH = 3614634198L
         private val setJointsOriginalBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkin", "set_joints_original", SET_JOINTS_ORIGINAL_HASH)
+        }
+
+        private const val GET_INVERSE_BINDS_HASH = 2915620761L
+        private val getInverseBindsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "get_inverse_binds", GET_INVERSE_BINDS_HASH)
         }
 
         private const val GET_JOINTS_HASH = 969006518L

@@ -595,6 +595,17 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     }
 
     /**
+     * Returns list of the font sizes in the cache. Each size is `Vector2i` with font size and outline
+     * size.
+     *
+     * Generated from Godot docs: FontFile.get_size_cache_list
+     */
+    fun getSizeCacheList(cacheIndex: Int): List<Vector2i> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetVector2iList(getSizeCacheListBind, handle, cacheIndex)
+    }
+
+    /**
      * Removes all font sizes from the cache entry.
      *
      * Generated from Godot docs: FontFile.clear_size_cache
@@ -1036,6 +1047,16 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     }
 
     /**
+     * Returns list of the kerning overrides.
+     *
+     * Generated from Godot docs: FontFile.get_kerning_list
+     */
+    fun getKerningList(cacheIndex: Int, size: Int): List<Vector2i> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(getKerningListBind, handle, cacheIndex, size)
+    }
+
+    /**
      * Removes all kerning overrides.
      *
      * Generated from Godot docs: FontFile.clear_kerning_map
@@ -1424,6 +1445,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
             ObjectCalls.getMethodBind("FontFile", "remove_cache", REMOVE_CACHE_HASH)
         }
 
+        private const val GET_SIZE_CACHE_LIST_HASH = 663333327L
+        private val getSizeCacheListBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "get_size_cache_list", GET_SIZE_CACHE_LIST_HASH)
+        }
+
         private const val CLEAR_SIZE_CACHE_HASH = 1286410249L
         private val clearSizeCacheBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "clear_size_cache", CLEAR_SIZE_CACHE_HASH)
@@ -1637,6 +1663,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         private const val GET_GLYPH_TEXTURE_IDX_HASH = 1629411054L
         private val getGlyphTextureIdxBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "get_glyph_texture_idx", GET_GLYPH_TEXTURE_IDX_HASH)
+        }
+
+        private const val GET_KERNING_LIST_HASH = 2345056839L
+        private val getKerningListBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "get_kerning_list", GET_KERNING_LIST_HASH)
         }
 
         private const val CLEAR_KERNING_MAP_HASH = 3937882851L

@@ -48,6 +48,10 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("nodesProperty")
         get() = getNodes()
 
+    val buffers: List<ByteArray>
+        @JvmName("buffersProperty")
+        get() = getBuffers()
+
     val bufferViews: List<GLTFBufferView>
         @JvmName("bufferViewsProperty")
         get() = getBufferViews()
@@ -111,6 +115,14 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     val lights: List<GLTFLight>
         @JvmName("lightsProperty")
         get() = getLights()
+
+    val uniqueNames: List<String>
+        @JvmName("uniqueNamesProperty")
+        get() = getUniqueNames()
+
+    val uniqueAnimationNames: List<String>
+        @JvmName("uniqueAnimationNamesProperty")
+        get() = getUniqueAnimationNames()
 
     val skeletons: List<GLTFSkeleton>
         @JvmName("skeletonsProperty")
@@ -225,6 +237,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getNodesBind, handle, GLTFNode::fromHandle)
     }
 
+    fun getBuffers(): List<ByteArray> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetByteArrayList(getBuffersBind, handle)
+    }
+
     fun getBufferViews(): List<GLTFBufferView> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getBufferViewsBind, handle, GLTFBufferView::fromHandle)
@@ -323,6 +340,16 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun getLights(): List<GLTFLight> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightsBind, handle, GLTFLight::fromHandle)
+    }
+
+    fun getUniqueNames(): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
+    }
+
+    fun getUniqueAnimationNames(): List<String> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueAnimationNamesBind, handle)
     }
 
     fun getSkeletons(): List<GLTFSkeleton> {
@@ -492,6 +519,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "get_nodes", GET_NODES_HASH)
         }
 
+        private const val GET_BUFFERS_HASH = 3995934104L
+        private val getBuffersBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "get_buffers", GET_BUFFERS_HASH)
+        }
+
         private const val GET_BUFFER_VIEWS_HASH = 3995934104L
         private val getBufferViewsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_buffer_views", GET_BUFFER_VIEWS_HASH)
@@ -590,6 +622,16 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_LIGHTS_HASH = 3995934104L
         private val getLightsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_lights", GET_LIGHTS_HASH)
+        }
+
+        private const val GET_UNIQUE_NAMES_HASH = 3995934104L
+        private val getUniqueNamesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "get_unique_names", GET_UNIQUE_NAMES_HASH)
+        }
+
+        private const val GET_UNIQUE_ANIMATION_NAMES_HASH = 3995934104L
+        private val getUniqueAnimationNamesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "get_unique_animation_names", GET_UNIQUE_ANIMATION_NAMES_HASH)
         }
 
         private const val GET_SKELETONS_HASH = 3995934104L
