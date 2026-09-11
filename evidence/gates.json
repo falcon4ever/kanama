@@ -184,6 +184,16 @@
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
       "source": "scripts/ios_device_gate.sh"
+    },
+    {
+      "gate": "macos-exported-game",
+      "claim": "macOS exported games boot from the bundled jlink runtime",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "2ee323ba1659aebd9163116fd60356c83fd9b956",
+      "date": "2026-09-10",
+      "where": "macOS 26.6.2 arm64, Godot 4.7.2.stable, Temurin 25.0.4.1+1: scripts/export_game_smoke.sh twice (host-jlinked image, then the macos-arm64 Temurin-jmods image); the exported .app booted headless with JAVA_HOME unset and PATH stripped, from Contents/Resources/runtime/lib/server/libjvm.dylib",
+      "result": "PASS",
+      "source": "docs/reference/version-support.md:29; docs/exporting/desktop.md"
     }
   ]
 }

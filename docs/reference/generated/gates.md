@@ -113,7 +113,7 @@ Hand-maintained in `scripts/generate_gates_index.py` (`LOCAL_ONLY_GATES`); descr
 | Web fresh-checkout export | fresh-source-checkout Web export gate (Task 60g, W3). | local only (pre-release, pre-promotion) | `scripts/web_fresh_checkout_smoke.sh` | 2026-07-27 |
 | Web package smoke | prove a packaged Web export zip IS the game. | local only (after `packageWebExport`) | `scripts/web_package_smoke.sh` | 2026-08-12 |
 | Fresh-clone source + demo gate | Clones Kanama and kanama-demos into an isolated temporary workspace, uses temporary Gradle and Maven-local state, then runs the source and demo smoke checks a new contributor would depend on. | local only (before a release tag) | `scripts/fresh_clone_smoke.sh` | 2026-05-26 |
-| Exported-game smoke | Task 63 (issue #102) — exported-game smoke: prove the unpack-and-play story. | tag / manual (package.yml `exported-game`); local | `scripts/export_game_smoke.sh` | 2026-08-03 |
+| Exported-game smoke | Task 63 (issue #102) — exported-game smoke: prove the unpack-and-play story. | tag / manual (package.yml `exported-game`); local — host runs ledgered by hand (`macos-exported-game`, `windows-exported-game-hardware`) | `scripts/export_game_smoke.sh` | 2026-08-03 |
 | Package install smoke | Unzips a packaged Kanama desktop kit or store addon into a temporary project, builds the starter Kotlin script without a sibling Kanama source checkout, and optionally launches Godot. | tag / manual (package.yml `desktop-kit`, `store-addon`); local | `scripts/package_install_smoke.sh` | 2026-05-27 |
 | Desktop demo smoke matrix | Nine-demo desktop runtime smoke on a host Godot binary; the demos repo has no CI, so this is the desktop gameplay evidence for every host | local only; ledger by hand per host (`macos-local-ci-desktop-smoke`, `windows-local-revalidation`, `linux-*-full-gate`) | `kanama-demos/scripts/desktop_smoke_all.sh` | — |
 
@@ -151,6 +151,7 @@ python3 scripts/record_gate_evidence.py --gate android-device-matrix --result PA
 | `ios-device-gate` | iOS Supported | 2026-09-10 | `4.7.2.stable` | PASS | — |
 | `linux-arm64-full-gate` | Linux arm64 Supported | 2026-07-14 | `4.7.stable` | PASS | 2026-10-31 |
 | `linux-x86_64-full-gate` | Linux x86_64 Supported | 2026-07-14 | `4.7.stable` | PASS | 2026-10-31 |
+| `macos-exported-game` | macOS exported games boot from the bundled jlink runtime | 2026-09-10 | `4.7.2.stable` | PASS | — |
 | `macos-local-ci-desktop-smoke` | Godot 4.7 stable, macOS arm64 Supported | 2026-09-08 | `4.7.2.stable` | PASS | — |
 | `web-ios-safari-hand-pass` | Web Experimental (iOS/iPadOS hand-checked, not gated) | 2026-08-03 | `4.7.stable` | PARTIAL | 2026-10-31 |
 | `web-safari-local-corpus` | Web Experimental (Safari validated-at, spot-checked not gated) | 2026-08-20 | `4.7.stable` | PASS | 2026-10-31 |

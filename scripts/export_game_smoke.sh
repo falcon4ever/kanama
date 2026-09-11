@@ -351,7 +351,14 @@ else
 fi
 export_dir_regex="$(printf '%s' "$export_dir_native" | sed 's/[.[\*^$()+?{|]/\\&/g')"
 
-# The bundled runtime inside the export booted the JVM...
+# The bundled runtime inside the export booted the JVM. These two path
+# assertions ARE the gate: a clean exit proves nothing on its own. Delete the
+# assembled runtime/ and the same export still launches on any developer
+# machine, because the bootstrap's last resort is a hardcoded per-platform JDK
+# path (measured on macOS 2026-09-10: the .app booted with exit 0 from
+# /Library/Java/JavaVirtualMachines/temurin-25.jdk). `checked JAVA_HOME` below
+# is a weaker signal for the same reason -- the bootstrap only prints it when it
+# found no libjvm anywhere, so it stays absent in exactly that false-pass case.
 check "\\[kanama\\] bundled runtime: $export_dir_regex/.*runtime/"
 check "\\[kanama\\] using libjvm: $export_dir_regex/.*runtime/"
 # ...and kanama.jar was resolved app-relative too, not from the checkout.

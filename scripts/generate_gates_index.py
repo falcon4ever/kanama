@@ -161,7 +161,10 @@ LOCAL_ONLY_GATES = (
     {
         "gate": "Exported-game smoke",
         "proves": None,
-        "where": "tag / manual (package.yml `exported-game`); local",
+        "where": (
+            "tag / manual (package.yml `exported-game`); local — host runs ledgered by hand "
+            "(`macos-exported-game`, `windows-exported-game-hardware`)"
+        ),
         "script": "scripts/export_game_smoke.sh",
     },
     {

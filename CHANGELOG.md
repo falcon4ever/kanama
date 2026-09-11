@@ -102,6 +102,26 @@ versioning once public releases begin.
   accepts any published x1000 integer (0 included), and the generated GDScript applier gained
   the `Curve.sample` arm it was missing.
 
+### Changed — macOS exported games: validated on the bundled runtime, and the signing gap written down (task 63)
+
+- The bundled-jlink-runtime work was proven end to end on Windows and Linux from a macOS host;
+  macOS itself had only the first slice's export and no current evidence. `export_game_smoke.sh`
+  now has a recorded macOS arm64 pass (2026-09-10, Godot `4.7.2.stable`, Temurin 25.0.4.1+1), run
+  twice: against a host-jlinked image and against one linked from the pinned `macos-arm64` Temurin
+  jmods (31.7 MB either way). The exported `.app` boots headless with `JAVA_HOME` unset and `PATH`
+  stripped, from `Contents/Resources/runtime/lib/server/libjvm.dylib`. The logged path is the
+  proof and not the fact that it ran: with the bundled runtime deleted the same `.app` still
+  starts on a developer Mac through the bootstrap's hardcoded Temurin fallback, and only the path
+  assertion catches that.
+- [Desktop and Packaging](docs/exporting/desktop.md) gains a macOS section for what the bundled
+  runtime changes: the `.app` layout with the payload in `Contents/Resources/`, why that is the
+  only location `codesign` will seal, the ad-hoc reseal (and that it replaces a Developer ID
+  signature, so a signed build assembles before it signs), the three hardened-runtime entitlements
+  the embedded JVM needs and what each is for, and an inventory of what signed distribution would
+  additionally require — 16 Mach-O files inside the runtime image that the bundle signature only
+  hashes, inside-out signing, notarize and staple. Signing and notarization remain non-goals; this
+  is documentation of the gap, not an implementation.
+
 ### Added — iOS: Packed*Array returns on every audited argument shape (task 100, parcel 3)
 
 - A method returning a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,

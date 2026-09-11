@@ -150,9 +150,20 @@ Evidence, so you can judge how far it has been taken:
   clean teardown.
 - **Linux** — the same cross-built-on-macOS proof runs on the CI runner with
   `JAVA_HOME` unset. No dedicated real-hardware pass yet.
-- **macOS** — exports boot from their own runtime; **distribution-grade signing
-  and notarization of the bundled runtime is a separate track and is not done.**
-  That caveat is macOS-specific — it does not gate the Windows or Linux path.
+- **macOS** — validated on macOS arm64 (2026-09-10, Godot `4.7.2.stable`,
+  Temurin 25.0.4.1+1): the exported `.app` boots headless with `JAVA_HOME` unset
+  and `PATH` stripped, from
+  `<app>/Contents/Resources/runtime/lib/server/libjvm.dylib`. Proven twice —
+  once against a host-jlinked image and once against one linked from the pinned
+  `macos-arm64` Temurin jmods, 31.7 MB either way. The path in that line is the
+  proof, not the fact that the game ran: with the bundled `runtime/` deleted the
+  same `.app` still starts on a developer Mac, because the bootstrap's last
+  resort is a hardcoded `/Library/Java/…/temurin-25.jdk` fallback. No pass yet on
+  a second Mac with no JDK installed. **Distribution-grade signing and
+  notarization of the bundled runtime is a separate track and is not done** — see
+  [macOS bundle layout, entitlements, and
+  signing](#macos-bundle-layout-entitlements-and-signing). That caveat is
+  macOS-specific — it does not gate the Windows or Linux path.
 
 An exported game needs four pieces next to each other: the platform bootstrap
 library referenced by `kanama.gdextension` (Godot's export copies it),
@@ -225,6 +236,11 @@ with the pinned module set, cross-built from macOS arm64 against Temurin
 
 (Sum of file sizes; `du` reports 1-2 MB more from block rounding.)
 
+In a finished bundle the runtime is not the biggest item. The macOS validation
+export of the example project (universal binary) measured 206 MB in total:
+162 MB of Godot's own universal executable, 31.7 MB of `runtime/`, 12 MB of
+`kanama.jar`, and under 1 MB of scripts jar plus `.pck`.
+
 Plus `kanama.jar` and the project's `kanama-scripts.jar`. That is the accepted
 trade: every shipped commercial Java game bundles its runtime, and a smaller
 download that asks players to install Java is effectively fatal for a game.
@@ -245,13 +261,92 @@ one level up in `runtime\bin`. The bootstrap registers that directory with the
 loader before loading the JVM, so a bundled Windows runtime works on a machine
 with no Visual C++ redistributable installed.
 
-macOS export presets need two things for the embedded JVM: the
-`Import ETC2 ASTC` VRAM compression project setting (any universal/arm64
-export), and the `allow_jit_code_execution`,
-`allow_unsigned_executable_memory`, and `disable_library_validation`
-codesign entitlements — without them the hardened runtime kills the JVM at
-startup. Distribution-grade signing/notarization of the bundled runtime is
-the separate macOS notarization track.
+macOS needs more than a copy step — the payload changes the `.app` layout and
+the embedded JVM needs hardened-runtime entitlements. That is the next section.
+
+### macOS bundle layout, entitlements, and signing
+
+A macOS export is an `.app` bundle, so "next to the executable" is not somewhere
+the payload can go. `export_game_assemble.sh` puts it in `Contents/Resources/`,
+beside the exported `.pck`:
+
+```text
+<Game>.app/Contents
+├── Frameworks/libkanama_bootstrap.dylib   # where Godot's export puts it
+├── MacOS/<Game>                           # the exported Godot binary
+├── Resources
+│   ├── <Game>.pck
+│   ├── kanama.jar
+│   ├── kanama-scripts.jar
+│   └── runtime/                           # the bundled jlink image
+│       ├── bin/{java,keytool}
+│       └── lib/server/libjvm.dylib
+└── _CodeSignature/CodeResources
+```
+
+The bootstrap anchors on its own dylib (`dladdr`) and walks up two parent levels,
+probing a `Resources/` subdirectory at each level, so a library in
+`Contents/Frameworks/` finds `Contents/Resources/runtime`. `Resources/` is the
+only location that works: when `codesign` seals the bundle it rejects jars and
+loose runtime files under `Contents/` or `Contents/Frameworks/` as unsigned
+**nested code**, while everything under `Resources/` is sealed by hash as a plain
+resource.
+
+Adding files after Godot's export invalidates the signature Godot wrote, so the
+assembly script re-seals the bundle ad-hoc:
+
+```sh
+codesign --force --sign - --preserve-metadata=entitlements,flags,identifier <Game>.app
+```
+
+Without it macOS kills the app at launch. That reseal is **ad-hoc**, so it
+replaces a Developer ID signature if the export had one: for a signed build the
+order is export → assemble → sign, never export-and-sign → assemble.
+
+#### Entitlements the embedded JVM needs
+
+A macOS export preset needs the `Import ETC2 ASTC` VRAM compression project
+setting (for any universal/arm64 export) and three hardened-runtime exceptions
+from the preset's codesign entitlements (`allow_jit_code_execution`,
+`allow_unsigned_executable_memory`, `disable_library_validation`):
+
+| Entitlement in the signed bundle | Why the JVM needs it |
+| --- | --- |
+| `com.apple.security.cs.allow-jit` | HotSpot's code cache is `MAP_JIT` memory. Without it `JNI_CreateJavaVM` dies (SIGTRAP in `pthread_jit_write_protect_np`) before the VM exists. |
+| `com.apple.security.cs.allow-unsigned-executable-memory` | HotSpot executes pages it wrote itself, which the hardened runtime otherwise refuses. |
+| `com.apple.security.cs.disable-library-validation` | The runtime image's dylibs are signed by a different team than the game (a Temurin-derived image carries `Developer ID Application: Eclipse Foundation, Inc.`). Library validation loads only nested code signed by the app's own team or Apple, so it would refuse `libjvm.dylib`. |
+
+Check a build with `codesign -dv --entitlements - <Game>.app`. The macOS
+validation export reports `flags=0x10002(adhoc,runtime)` with exactly those three
+entitlements, and `codesign --verify --deep --strict` passes on the assembled
+bundle.
+
+#### What signed distribution additionally requires (not implemented)
+
+Kanama signs nothing with a real identity, and notarizing the bundled runtime is
+an explicit non-goal of this work. What a developer shipping a macOS build has to
+do themselves — recorded here so the size of the gap is known, not because
+Kanama does any of it:
+
+- **Every Mach-O file inside `runtime/` is code and needs its own signature.**
+  The pinned module set produces 16 of them: 13 dylibs (including
+  `lib/server/libjvm.dylib` and `lib/server/libjsig.dylib`) plus `bin/java`,
+  `bin/keytool` and `lib/jspawnhelper`. Signing the `.app` does **not** sign
+  them — files under `Resources/` are only hashed into `CodeResources` and keep
+  whatever signature the JDK vendor shipped.
+- **Sign inside-out**: every nested binary first (`codesign --force --timestamp
+  --options runtime --sign "Developer ID Application: …"`), the bundle last.
+  Signing the bundle and then touching a nested file breaks the seal again.
+- Re-signing the runtime with your own Developer ID is also what would let you
+  drop `disable_library_validation`; keeping the vendor's signatures means
+  keeping that exception.
+- Then the usual distribution steps on top: hardened runtime and a secure
+  timestamp everywhere, `xcrun notarytool submit` on a zipped `.app`, and
+  `xcrun stapler staple`.
+- Until that lands the `.app` is ad-hoc signed: fine for local runs and for an
+  unzipped copy that was never quarantined, but a downloaded build meets
+  Gatekeeper. The `xattr -dr com.apple.quarantine` workaround above is a
+  developer convenience, not something to ask players to do.
 
 ### The gate
 
@@ -265,7 +360,11 @@ The `package` workflow runs it that way on purpose: a macOS job cross-builds
 the Windows and Linux runtimes, uploads them, and the `windows-2025` and
 `ubuntu-24.04` jobs export and boot a game against those exact artifacts. A
 runner that jlinked its own runtime would be green and would still prove
-nothing about exporting from another host.
+nothing about exporting from another host. The matrix carries a `macos-arm64`
+row as well; host and target coincide there, so it proves something narrower —
+that an image linked from the pinned per-platform Temurin jmods (the recipe
+every cross target uses, rather than the build JDK's own run-time image) boots a
+real export.
 
 The desktop kits still validate editor/runtime onboarding only; the export
 smoke is the exported-game gate.
