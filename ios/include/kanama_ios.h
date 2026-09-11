@@ -163,6 +163,28 @@ int64_t kanama_ios_godot_take_pending_utf8(
 );
 
 /*
+ * task 100 parcel 11 — typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return
+ * is a Callable, decoded the way desktop's BuiltinTypes.readCallable does: the method runs ONCE
+ * into a Callable cell, Callable.get_object() and Callable.get_method() are called on it, the
+ * target's Object pointer lands in *out_object_handle (0 for an empty or custom Callable, which
+ * Kotlin surfaces as null, like desktop) and the method name is UTF-8 encoded into out_method the
+ * way kanama_ios_godot_ptrcall_ret_utf8 does: the full byte length is returned, and a name longer
+ * than out_method_size is parked for kanama_ios_godot_take_pending_utf8. The Callable and every
+ * temporary are destroyed before returning (the target handle is borrowed). Returns -1 on a null
+ * method/instance or an unavailable API; a negative return leaves nothing pending and the handle 0.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_callable(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_object_handle,
+    char *out_method,
+    int64_t out_method_size
+);
+
+/*
  * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a Variant,
  * decoded as a scalar the way kanama_ios_godot_object_call decodes its return (task 100,
  * parcel 2): bool/int/Object handle -> out_int, float -> out_double, String/StringName/NodePath

@@ -6489,6 +6489,101 @@ static void kanama_ios_emit_utf8_return(
     }
 }
 
+// task 100 parcel 11 — Callable RETURNS. The Callable builtin methods get_object / get_method
+// (hashes from extension_api.json; desktop's BuiltinTypes.readCallable calls the same two),
+// resolved lazily after kanama_ios_resolve_godot_api() like the other cached builtin methods.
+#define KANAMA_IOS_CALLABLE_GET_OBJECT_HASH 4008621732ULL
+#define KANAMA_IOS_CALLABLE_GET_METHOD_HASH 1825232092ULL
+static GDExtensionPtrBuiltInMethod g_callable_get_object_method = NULL;
+static GDExtensionPtrBuiltInMethod g_callable_get_method_method = NULL;
+
+static void kanama_ios_cache_callable_methods(void) {
+    if (g_callable_destructor == NULL && g_variant_get_ptr_destructor != NULL) {
+        g_callable_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE);
+    }
+    if (g_variant_get_ptr_builtin_method == NULL) {
+        return;
+    }
+    if (g_callable_get_object_method == NULL) {
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, "get_object");
+        g_callable_get_object_method = g_variant_get_ptr_builtin_method(
+            KANAMA_IOS_VARIANT_TYPE_CALLABLE,
+            (GDExtensionConstStringNamePtr)&name_storage,
+            (GDExtensionInt)KANAMA_IOS_CALLABLE_GET_OBJECT_HASH
+        );
+        kanama_ios_destroy_string_name(&name_storage);
+    }
+    if (g_callable_get_method_method == NULL) {
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, "get_method");
+        g_callable_get_method_method = g_variant_get_ptr_builtin_method(
+            KANAMA_IOS_VARIANT_TYPE_CALLABLE,
+            (GDExtensionConstStringNamePtr)&name_storage,
+            (GDExtensionInt)KANAMA_IOS_CALLABLE_GET_METHOD_HASH
+        );
+        kanama_ios_destroy_string_name(&name_storage);
+    }
+}
+
+// Run-once Callable return (task 100, parcel 11): ptrcall into a Callable cell, read the target
+// Object pointer and the method StringName back through the two builtin methods, hand the name to
+// the shared UTF-8 emitter (inline buffer or the single pending slot), destroy everything we built.
+// The target handle is borrowed: the engine keeps its own reference through the Callable's owner,
+// and desktop reads it the same way (GodotObject(handle) over the raw pointer).
+int64_t kanama_ios_godot_ptrcall_ret_callable(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_object_handle,
+    char *out_method,
+    int64_t out_method_size
+) {
+    if (out_object_handle != NULL) {
+        *out_object_handle = 0;
+    }
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+        return -1;
+    }
+    kanama_ios_cache_callable_methods();
+    if (g_callable_get_object_method == NULL || g_callable_get_method_method == NULL ||
+        g_callable_destructor == NULL || g_string_from_string_name_constructor == NULL ||
+        g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
+        return -1;
+    }
+    kanama_ios_drop_pending_utf8();
+
+    // A Callable is 16 bytes on 64-bit; 24 keeps the same margin as the dispatch's arg cells.
+    uint8_t callable_cell[24];
+    memset(callable_cell, 0, sizeof(callable_cell));
+    kanama_ios_godot_ptrcall_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_PT_CALLABLE, callable_cell);
+
+    GDExtensionObjectPtr target = NULL;
+    g_callable_get_object_method((GDExtensionTypePtr)callable_cell, NULL, &target, 0);
+    if (target == NULL) {
+        // Empty (or custom, object-less) Callable: desktop's readCallable returns null here too.
+        g_callable_destructor(callable_cell);
+        return 0;
+    }
+    uint64_t method_name = 0;
+    g_callable_get_method_method((GDExtensionTypePtr)callable_cell, NULL, &method_name, 0);
+    uint64_t string_storage = 0;
+    const GDExtensionConstTypePtr ctor_args[1] = { (GDExtensionConstTypePtr)&method_name };
+    g_string_from_string_name_constructor((GDExtensionUninitializedTypePtr)&string_storage, ctor_args);
+    kanama_ios_destroy_string_name(&method_name);
+    g_callable_destructor(callable_cell);
+
+    if (out_object_handle != NULL) {
+        *out_object_handle = (int64_t)(intptr_t)target;
+    }
+    int64_t length = 0;
+    kanama_ios_emit_utf8_return(&string_storage, out_method, out_method_size, &length);
+    return length;
+}
+
 // Decode a return Variant's scalar payload into the (out_int, out_double, out_str) triple the
 // Kotlin decoders read (ObjectCalls.decodeVariantScalarReturn): bool/int -> out_int, float ->
 // out_double, String/StringName/NodePath -> utf8 in out_str (or parked, see above), Object ->

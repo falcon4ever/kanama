@@ -29,6 +29,7 @@ import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.value
+import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
@@ -61,6 +62,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_callable
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_handles
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
@@ -519,6 +521,48 @@ object ObjectCalls {
         if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
       }
     }
+  }
+
+  // task 100 (parcel 11) — Callable RETURN on any audited arg shape. Same arg cells as
+  // kanama_ios_godot_ptrcall; the C entry runs the method ONCE into a Callable cell, reads the
+  // target Object pointer and the method name back through Callable.get_object / get_method
+  // (exactly what desktop's BuiltinTypes.readCallable does), and UTF-8 encodes the name like
+  // ptrcallRetUtf8 (inline buffer, pending slot beyond it). An empty Callable is null, as on
+  // desktop; the target is a borrowed GodotObject over the raw handle, like every Object return.
+  fun ptrcallRetCallable(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): GodotCallable? = memScoped {
+    val inlineCap = 256L
+    val inline = allocArray<ByteVar>(inlineCap)
+    val handle = alloc<LongVar>()
+    handle.value = 0L
+    val len =
+      kanama_ios_godot_ptrcall_ret_callable(
+        methodBind.address(),
+        instance.address(),
+        argTypes,
+        argPtrs,
+        argCount,
+        handle.ptr,
+        inline,
+        inlineCap,
+      )
+    if (len < 0L || handle.value == 0L) return@memScoped null
+    val method =
+      when {
+        len == 0L -> ""
+        len <= inlineCap -> inline.readBytes(len.toInt()).decodeToString()
+        else -> {
+          val full = allocArray<ByteVar>(len)
+          val got = kanama_ios_godot_take_pending_utf8(full, len)
+          if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
+        }
+      }
+    GodotCallable(GodotObject(handle.value), method)
   }
 
   // task 100 (parcel 2) — Variant-scalar return on any audited arg shape. Same arg cells as
@@ -6029,6 +6073,53 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
     probe.close()
     net.multigesture.kanama.api.InputMap.actionEraseEvents(action)
+  }
+
+  // task 100 (parcel 11) — Callable RETURNS through the GENERATED helpers (ptrcallRetCallable ->
+  // kanama_ios_godot_ptrcall_ret_callable: one ptrcall into a Callable cell, get_object /
+  // get_method, borrowed handle + UTF-8 name back; an empty Callable is null, as on desktop).
+  // MultiplayerSpawner is a plain Node and NativeMenu a singleton: nothing here touches a physics
+  // or navigation server, and no Control is constructed (a Control's _postinitialize runs
+  // ThemeDB::update_class_instance_items before the theme contexts exist and segfaults — the
+  // first version of these rows used Tree/TreeItem and the 10+11 stack gate caught it).
+  run {
+    val spawner = ObjectCalls.constructObject("MultiplayerSpawner")
+    val setBind = ObjectCalls.getMethodBind("MultiplayerSpawner", "set_spawn_function", 1611583062L)
+    val getBind = ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawn_function", 1307783378L)
+    val empty = ObjectCalls.ptrcallNoArgsRetCallable(getBind, spawner)
+    check("ret-callable(MultiplayerSpawner.get_spawn_function empty -> null)", empty == null)
+    ObjectCalls.ptrcallWithCallableArg(setBind, spawner, spawner, "queue_free")
+    val back = ObjectCalls.ptrcallNoArgsRetCallable(getBind, spawner)
+    check(
+      "ret-callable(MultiplayerSpawner.get_spawn_function target handle round-trip)",
+      back != null && back.target.handle.address() == spawner.address(),
+    )
+    check(
+      "ret-callable(MultiplayerSpawner.get_spawn_function method name round-trip)",
+      back?.method == "queue_free",
+    )
+    // A method name longer than the 256-byte inline buffer comes back whole through the pending
+    // slot (402 chars, 602 UTF-8 bytes: the non-ASCII half proves the byte/char accounting).
+    val longName = "m_" + "\u00e9x".repeat(200)
+    ObjectCalls.ptrcallWithCallableArg(setBind, spawner, spawner, longName)
+    val backLong = ObjectCalls.ptrcallNoArgsRetCallable(getBind, spawner)
+    check(
+      "ret-callable(MultiplayerSpawner.get_spawn_function 602-byte method via pending slot)",
+      backLong != null &&
+        backLong.method == longName &&
+        backLong.target.handle.address() == spawner.address(),
+    )
+    ObjectCalls.destroyObject(spawner)
+    // A RID-argument shape on a singleton: NativeMenu has no popup for an invalid RID, so the
+    // returned Callable is empty -> null (the arg cells and the run-once entry are exercised).
+    val nativeMenu = ObjectCalls.getSingleton("NativeMenu")
+    val noPopup =
+      ObjectCalls.ptrcallWithRIDArgRetCallable(
+        ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", 3170603026L),
+        nativeMenu,
+        RID(0L),
+      )
+    check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
   }
 
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")

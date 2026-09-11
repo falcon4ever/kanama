@@ -528,6 +528,27 @@ object DisplayServer {
     }
 
     /**
+     * Returns the callback of the item at index `idx`. Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_item_callback
+     */
+    @JvmStatic
+    fun globalMenuGetItemCallback(menuRoot: String, idx: Int): GodotCallable? {
+        return ObjectCalls.ptrcallWithStringIntArgsRetCallable(globalMenuGetItemCallbackBind, singleton, menuRoot, idx)
+    }
+
+    /**
+     * Returns the callback of the item accelerator at index `idx`. Note: This method is implemented
+     * only on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_item_key_callback
+     */
+    @JvmStatic
+    fun globalMenuGetItemKeyCallback(menuRoot: String, idx: Int): GodotCallable? {
+        return ObjectCalls.ptrcallWithStringIntArgsRetCallable(globalMenuGetItemKeyCallbackBind, singleton, menuRoot, idx)
+    }
+
+    /**
      * Returns the metadata of the specified item, which might be of any type. You can set it with
      * `global_menu_set_item_tag`, which provides a simple way of assigning context data to items.
      * Note: This method is implemented only on macOS.
@@ -3749,6 +3770,16 @@ object DisplayServer {
     private const val GLOBAL_MENU_IS_ITEM_RADIO_CHECKABLE_HASH = 3511468594L
     private val globalMenuIsItemRadioCheckableBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_is_item_radio_checkable", GLOBAL_MENU_IS_ITEM_RADIO_CHECKABLE_HASH)
+    }
+
+    private const val GLOBAL_MENU_GET_ITEM_CALLBACK_HASH = 748666903L
+    private val globalMenuGetItemCallbackBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_callback", GLOBAL_MENU_GET_ITEM_CALLBACK_HASH)
+    }
+
+    private const val GLOBAL_MENU_GET_ITEM_KEY_CALLBACK_HASH = 748666903L
+    private val globalMenuGetItemKeyCallbackBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_item_key_callback", GLOBAL_MENU_GET_ITEM_KEY_CALLBACK_HASH)
     }
 
     private const val GLOBAL_MENU_GET_ITEM_TAG_HASH = 330672633L
