@@ -298,6 +298,14 @@ add helper policy and audits before promoting wider wrappers.
 
 ### Long-tail triage (task 22)
 
+**Desktop-only by design.** A member whose argument types cannot exist on iOS at all (a raw
+`const void*`, a C function pointer) stays in its desktop companion file and is recorded in
+`IOS_DESKTOP_ONLY_BY_DESIGN` in `scripts/generate_api_wrapper.py` with the reason. The gap page
+(`docs/reference/generated/ios-shape-gap.md`) lists those members in their own "Desktop-only by
+design" table and does not count them as waiting on a helper, so "0 desktop-only members waiting"
+is the steady state after task 100. Unlike `BY_DESIGN_METHOD_SKIPS`, this does not remove the
+member from desktop.
+
 Once the class surface is broadly promoted, the remaining skips are a long tail
 of **data-type / shape** gaps, not missing classes. A full triage of the
 non-virtual skips and the skipped properties found:
