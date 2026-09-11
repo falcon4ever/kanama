@@ -9,10 +9,19 @@ extension in the class's `<Class>.jvm.kt` companion, because iOS has no audited 
 helper for its ptrcall shape yet, or does not host a wrapper type it uses. When the helper lands
 on iOS (`IOS_ARG_KINDS` / `IOS_RET_KOTLIN` / the per-helper gates in `ios_method_supported`), the
 next regen moves the member back into the shared file and it disappears from this page.
+Members desktop keeps desktop-only on purpose are listed separately with their reason
+(`IOS_DESKTOP_ONLY_BY_DESIGN`) and are not counted as waiting.
 
-**Gap:** 2 of 979 shared classes carry a desktop companion; 3 desktop-only members; 3 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 0 properties read-only in the shared tree because only their setter is desktop-only.
+**Gap:** 0 of 979 shared classes carry a desktop companion with members waiting on a helper; 0 desktop-only members waiting; 0 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 0 properties read-only in the shared tree because only their setter is desktop-only; 3 desktop-only members by design.
 
 | Class | Desktop-only members | Read-only in shared | Waits on |
 |---|---|---|---|
-| `GDExtensionManager` | `loadExtensionFromFunction` |  | `ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong` |
-| `OpenXRAPIExtension` | `transformFromPose`, `setCustomPlaySpace` |  | `ptrcallWithConstVoidPtrArg`, `ptrcallWithConstVoidPtrArgRetTransform3D` |
+| — | — | — | — |
+
+## Desktop-only by design
+
+| Class | Member | Reason |
+|---|---|---|
+| `GDExtensionManager` | `loadExtensionFromFunction` | by design: takes a GDExtensionInitializationFunction pointer; no Kotlin/Native call shape for a raw function pointer on iOS (desktop passes a MemorySegment) |
+| `OpenXRAPIExtension` | `transformFromPose` | by design: takes a const void* XrPosef; raw pointers have no Kotlin/Native call shape on iOS (desktop passes a MemorySegment) |
+| `OpenXRAPIExtension` | `setCustomPlaySpace` | by design: takes a const void* XrSpace; raw pointers have no Kotlin/Native call shape on iOS (desktop passes a MemorySegment) |

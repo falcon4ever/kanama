@@ -7,6 +7,16 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — iOS shape gap page: desktop-only-by-design members recorded (task 100 close-out)
+
+- The generated gap page (`docs/reference/generated/ios-shape-gap.md`) now separates members that
+  desktop keeps desktop-only on purpose — `GDExtensionManager.load_extension_from_function`
+  (function pointer), `OpenXRAPIExtension.transform_from_pose` / `set_custom_play_space`
+  (`const void*`) — into a "Desktop-only by design" table with the reason
+  (`IOS_DESKTOP_ONLY_BY_DESIGN` in `scripts/generate_api_wrapper.py`), and counts only members
+  that wait on an iOS helper. With parcels 1-11 merged that count is **0**: the shared tree is the
+  whole generated API on both native backends. No wrapper changes; desktop keeps the three members.
+
 ### Added — iOS: Callable returns on every audited argument shape (task 100, parcel 11)
 
 - A method returning a `Callable` — `TreeItem.get_custom_draw_callback`,
