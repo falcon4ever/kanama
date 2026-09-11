@@ -7,6 +7,16 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — iOS device gate: the demo steps watch the device console (task 105)
+
+- `scripts/ios_device_gate.sh --console-seconds N` (default 30) makes every demo step stream the
+  phone's console for N seconds after launch and fail on a crash signature (`App terminated due
+  to signal`, `FATAL`) or when the runtime never reports; the log is kept as
+  `<output-dir>/<App>.console.log`. Until now the nine demo steps only checked that the launch
+  returned, so a crash seconds later read PASS (the third-person demo did exactly that on
+  2026-09-10). Needs a demos checkout whose `ios_device_run.sh` supports
+  `KANAMA_IOS_CONSOLE_SECONDS`; `--console-seconds 0` keeps the launch-only behaviour.
+
 ### Added — Web: the DemoPage set (task 64, parcel 3)
 
 - **Web protocol 23 → 24.** The Kotlin/Wasm backend admits `SceneTree.is_paused` (307),

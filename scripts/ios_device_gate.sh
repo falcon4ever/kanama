@@ -11,6 +11,7 @@ RUN_DEMOS=1
 ALLOW_PROVISIONING_UPDATES=0
 PAUSE_SECONDS=8
 BUILD_JOBS=1
+CONSOLE_SECONDS=30
 DEVICE_LABEL="${KANAMA_IOS_DEVICE_LABEL:-}"
 START_AT=""
 CLEAN_INSTALLED=1
@@ -62,6 +63,11 @@ Options:
                                order. Needs a demos checkout whose ios_device_run.sh supports
                                KANAMA_IOS_RUN_STAGE. The native link of each demo runs on one
                                core, so N=3 or 4 on a 10-core Mac cuts the run roughly N-fold.
+  --console-seconds N          After launching each demo, stream the device console for N
+                               seconds and FAIL the step on a crash signature (task 105; default
+                               30, 0 = launch-only as before). Needs a demos checkout whose
+                               ios_device_run.sh supports KANAMA_IOS_CONSOLE_SECONDS. The log is
+                               kept as <output-dir>/<App>.console.log. Costs 9 x N seconds per run.
   --help, -h                   Show this help.
 
 The script reads private device/signing values only from the environment. Do not
@@ -121,6 +127,10 @@ while [[ $# -gt 0 ]]; do
       BUILD_JOBS="${2:-}"
       shift 2
       ;;
+    --console-seconds)
+      CONSOLE_SECONDS="${2:-}"
+      shift 2
+      ;;
     --help|-h)
       usage
       exit 0
@@ -172,6 +182,16 @@ fi
 if ! [[ "$BUILD_JOBS" =~ ^[1-9][0-9]*$ ]]; then
   echo "[ios_device_gate] --build-jobs must be a positive integer." >&2
   exit 2
+fi
+if [[ ! "$CONSOLE_SECONDS" =~ ^[0-9]+$ ]]; then
+  echo "[ios_device_gate] --console-seconds must be a non-negative integer." >&2
+  exit 2
+fi
+if [[ "$CONSOLE_SECONDS" -gt 0 && "$RUN_DEMOS" -eq 1 ]]; then
+  if ! grep -q "KANAMA_IOS_CONSOLE_SECONDS" "$DEMOS_ROOT/scripts/ios_device_run.sh"; then
+    echo "[ios_device_gate] --console-seconds > 0 needs a demos checkout whose scripts/ios_device_run.sh supports KANAMA_IOS_CONSOLE_SECONDS (pass --console-seconds 0 for the launch-only behaviour)." >&2
+    exit 2
+  fi
 fi
 if [[ "$BUILD_JOBS" -gt 1 && "$RUN_DEMOS" -eq 1 ]]; then
   if ! grep -q "KANAMA_IOS_RUN_STAGE" "$DEMOS_ROOT/scripts/ios_device_run.sh"; then
@@ -247,6 +267,15 @@ warn_before_launch() {
     echo "[ios_device_gate] About to build/install/launch '$label' on the connected iPhone."
     echo "[ios_device_gate] Unlock the device and keep it awake. Continuing in ${PAUSE_SECONDS}s..."
     sleep "$PAUSE_SECONDS"
+  fi
+}
+
+# Task 105: the runner writes the demo's device console to <output-dir>/<App>/console.log; keep a
+# copy beside the step log so the summary's log column and the crash evidence sit together.
+keep_console_log() {
+  local app="$1"
+  if [[ -f "$OUTPUT_DIR/$app/console.log" ]]; then
+    cp "$OUTPUT_DIR/$app/console.log" "$OUTPUT_DIR/$app.console.log"
   fi
 }
 
@@ -336,6 +365,7 @@ write_summary() {
     fi
     echo "- Godot: $GODOT_BIN"
     echo "- Output: $OUTPUT_DIR"
+    echo "- Demo console window: ${CONSOLE_SECONDS}s per demo step (0 = launch-only; task 105)"
     echo
     echo "| Path | Status | Gate elapsed | Log |"
     echo "|---|---:|---:|---|"
@@ -364,6 +394,8 @@ cleanup_job_worktrees() {
 trap 'cleanup_job_worktrees; write_summary' EXIT
 
 export KANAMA_IOS_DEVICE="$DEVICE_ID"
+# Task 105: the demo steps stream the device console for this long and fail on a crash signature.
+export KANAMA_IOS_CONSOLE_SECONDS="$CONSOLE_SECONDS"
 export KANAMA_IOS_TEAM="$DEVELOPMENT_TEAM"
 export DEVELOPER_DIR="$XCODE_DEVELOPER_DIR"
 export KANAMA_ROOT="$ROOT_DIR"
@@ -421,6 +453,7 @@ run_demo_matrix_serial() {
       "$GATE_BUNDLE_ID" \
       "${demo_apps[$i]}" \
       "$OUTPUT_DIR/${demo_apps[$i]}" || true
+    keep_console_log "${demo_apps[$i]}"
   done
 }
 
@@ -518,6 +551,7 @@ run_demo_matrix_parallel() {
       "$GATE_BUNDLE_ID" \
       "$app" \
       "$OUTPUT_DIR/$app" || true
+    keep_console_log "$app"
   done
 }
 
@@ -543,6 +577,11 @@ fi
 
 echo "[ios_device_gate] PASS"
 echo "[ios_device_gate] summary: $SUMMARY"
-# Ledger the run (task 99): the Godot pin + Kanama commit this device gate passed on.
-python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate ios-device-gate --claim "iOS Supported" \
-  --result PASS --where "${DEVICE_LABEL:-$DEVICE_ID}" --source scripts/ios_device_gate.sh
+# Ledger the run (task 99): the Godot pin + Kanama commit this device gate passed on. A partial
+# matrix (--start-at) is not the full gate and must not be ledgered as one (task 105).
+if [[ -n "$START_AT" ]]; then
+  echo "[ios_device_gate] partial run (--start-at $START_AT): not recorded in evidence/gates.json"
+else
+  python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate ios-device-gate --claim "iOS Supported" \
+    --result PASS --where "${DEVICE_LABEL:-$DEVICE_ID}" --source scripts/ios_device_gate.sh
+fi
