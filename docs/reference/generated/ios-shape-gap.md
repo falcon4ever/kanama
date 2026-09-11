@@ -10,13 +10,9 @@ helper for its ptrcall shape yet, or does not host a wrapper type it uses. When 
 on iOS (`IOS_ARG_KINDS` / `IOS_RET_KOTLIN` / the per-helper gates in `ios_method_supported`), the
 next regen moves the member back into the shared file and it disappears from this page.
 
-**Gap:** 6 of 979 shared classes carry a desktop companion; 12 desktop-only members; 8 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 0 properties read-only in the shared tree because only their setter is desktop-only.
+**Gap:** 2 of 979 shared classes carry a desktop companion; 3 desktop-only members; 3 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 0 properties read-only in the shared tree because only their setter is desktop-only.
 
 | Class | Desktop-only members | Read-only in shared | Waits on |
 |---|---|---|---|
-| `DisplayServer` | `globalMenuGetItemCallback`, `globalMenuGetItemKeyCallback` |  | `ptrcallWithStringIntArgsRetCallable` |
 | `GDExtensionManager` | `loadExtensionFromFunction` |  | `ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong` |
-| `MultiplayerSpawner` | `getSpawnFunction`, `spawnFunction` |  | `ptrcallNoArgsRetCallable` |
-| `NativeMenu` | `getPopupOpenCallback`, `getPopupCloseCallback`, `getItemCallback`, `getItemKeyCallback` |  | `ptrcallWithRIDArgRetCallable`, `ptrcallWithRIDIntArgsRetCallable` |
 | `OpenXRAPIExtension` | `transformFromPose`, `setCustomPlaySpace` |  | `ptrcallWithConstVoidPtrArg`, `ptrcallWithConstVoidPtrArgRetTransform3D` |
-| `TreeItem` | `getCustomDrawCallback` |  | `ptrcallWithIntArgRetCallable` |

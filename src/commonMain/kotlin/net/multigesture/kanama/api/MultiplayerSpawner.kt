@@ -23,6 +23,10 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
         @JvmName("setSpawnLimitProperty")
         set(value) = setSpawnLimit(value)
 
+    val spawnFunction: GodotCallable?
+        @JvmName("spawnFunctionProperty")
+        get() = getSpawnFunction()
+
     fun addSpawnableScene(path: String) {
         ObjectCalls.ptrcallWithStringArg(addSpawnableSceneBind, handle, path)
     }
@@ -57,6 +61,10 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
 
     fun setSpawnLimit(limit: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setSpawnLimitBind, handle, limit)
+    }
+
+    fun getSpawnFunction(): GodotCallable? {
+        return ObjectCalls.ptrcallNoArgsRetCallable(getSpawnFunctionBind, handle)
     }
 
     fun setSpawnFunction(spawnFunction: GodotCallable) {
@@ -119,6 +127,11 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
         private const val SET_SPAWN_LIMIT_HASH = 1286410249L
         private val setSpawnLimitBind by lazy {
             ObjectCalls.getMethodBind("MultiplayerSpawner", "set_spawn_limit", SET_SPAWN_LIMIT_HASH)
+        }
+
+        private const val GET_SPAWN_FUNCTION_HASH = 1307783378L
+        private val getSpawnFunctionBind by lazy {
+            ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawn_function", GET_SPAWN_FUNCTION_HASH)
         }
 
         private const val SET_SPAWN_FUNCTION_HASH = 1611583062L

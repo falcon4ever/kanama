@@ -17,6 +17,10 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
         @JvmName("setRootPathProperty")
         set(value) = setRootPath(value)
 
+    val authCallback: GodotCallable?
+        @JvmName("authCallbackProperty")
+        get() = getAuthCallback()
+
     var authTimeout: Double
         @JvmName("authTimeoutProperty")
         get() = getAuthTimeout()
@@ -91,6 +95,11 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
     fun setAuthCallback(callback: GodotCallable) {
         checkOpen()
         ObjectCalls.ptrcallWithCallableArg(setAuthCallbackBind, handle, callback.target.handle, callback.method)
+    }
+
+    fun getAuthCallback(): GodotCallable? {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetCallable(getAuthCallbackBind, handle)
     }
 
     fun setAuthTimeout(timeout: Double) {
@@ -214,6 +223,11 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
         private const val SET_AUTH_CALLBACK_HASH = 1611583062L
         private val setAuthCallbackBind by lazy {
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_auth_callback", SET_AUTH_CALLBACK_HASH)
+        }
+
+        private const val GET_AUTH_CALLBACK_HASH = 1307783378L
+        private val getAuthCallbackBind by lazy {
+            ObjectCalls.getMethodBind("SceneMultiplayer", "get_auth_callback", GET_AUTH_CALLBACK_HASH)
         }
 
         private const val SET_AUTH_TIMEOUT_HASH = 373806689L

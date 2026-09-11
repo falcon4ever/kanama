@@ -168,6 +168,16 @@ object NativeMenu {
     }
 
     /**
+     * Returns global menu open callback. Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: NativeMenu.get_popup_open_callback
+     */
+    @JvmStatic
+    fun getPopupOpenCallback(rid: RID): GodotCallable? {
+        return ObjectCalls.ptrcallWithRIDArgRetCallable(getPopupOpenCallbackBind, singleton, rid)
+    }
+
+    /**
      * Registers callable to emit when the menu is about to show. Note: The OS can simulate menu
      * opening to track menu item changes and global shortcuts, in which case the corresponding close
      * callback is not triggered. Use `is_opened` to check if the menu is currently opened. Note: This
@@ -178,6 +188,16 @@ object NativeMenu {
     @JvmStatic
     fun setPopupCloseCallback(rid: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(setPopupCloseCallbackBind, singleton, rid, callback.target.handle, callback.method)
+    }
+
+    /**
+     * Returns global menu close callback. Note: This method is implemented on macOS and Windows.
+     *
+     * Generated from Godot docs: NativeMenu.get_popup_close_callback
+     */
+    @JvmStatic
+    fun getPopupCloseCallback(rid: RID): GodotCallable? {
+        return ObjectCalls.ptrcallWithRIDArgRetCallable(getPopupCloseCallbackBind, singleton, rid)
     }
 
     /**
@@ -433,6 +453,28 @@ object NativeMenu {
     @JvmStatic
     fun isItemRadioCheckable(rid: RID, idx: Int): Boolean {
         return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(isItemRadioCheckableBind, singleton, rid, idx)
+    }
+
+    /**
+     * Returns the callback of the item at index `idx`. Note: This method is implemented on macOS and
+     * Windows.
+     *
+     * Generated from Godot docs: NativeMenu.get_item_callback
+     */
+    @JvmStatic
+    fun getItemCallback(rid: RID, idx: Int): GodotCallable? {
+        return ObjectCalls.ptrcallWithRIDIntArgsRetCallable(getItemCallbackBind, singleton, rid, idx)
+    }
+
+    /**
+     * Returns the callback of the item accelerator at index `idx`. Note: This method is implemented
+     * only on macOS.
+     *
+     * Generated from Godot docs: NativeMenu.get_item_key_callback
+     */
+    @JvmStatic
+    fun getItemKeyCallback(rid: RID, idx: Int): GodotCallable? {
+        return ObjectCalls.ptrcallWithRIDIntArgsRetCallable(getItemKeyCallbackBind, singleton, rid, idx)
     }
 
     /**
@@ -884,9 +926,19 @@ object NativeMenu {
         ObjectCalls.getMethodBind("NativeMenu", "set_popup_open_callback", SET_POPUP_OPEN_CALLBACK_HASH)
     }
 
+    private const val GET_POPUP_OPEN_CALLBACK_HASH = 3170603026L
+    private val getPopupOpenCallbackBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", GET_POPUP_OPEN_CALLBACK_HASH)
+    }
+
     private const val SET_POPUP_CLOSE_CALLBACK_HASH = 3379118538L
     private val setPopupCloseCallbackBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "set_popup_close_callback", SET_POPUP_CLOSE_CALLBACK_HASH)
+    }
+
+    private const val GET_POPUP_CLOSE_CALLBACK_HASH = 3170603026L
+    private val getPopupCloseCallbackBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_popup_close_callback", GET_POPUP_CLOSE_CALLBACK_HASH)
     }
 
     private const val SET_MINIMUM_WIDTH_HASH = 1794382983L
@@ -977,6 +1029,16 @@ object NativeMenu {
     private const val IS_ITEM_RADIO_CHECKABLE_HASH = 3120086654L
     private val isItemRadioCheckableBind by lazy {
         ObjectCalls.getMethodBind("NativeMenu", "is_item_radio_checkable", IS_ITEM_RADIO_CHECKABLE_HASH)
+    }
+
+    private const val GET_ITEM_CALLBACK_HASH = 1639989698L
+    private val getItemCallbackBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_item_callback", GET_ITEM_CALLBACK_HASH)
+    }
+
+    private const val GET_ITEM_KEY_CALLBACK_HASH = 1639989698L
+    private val getItemKeyCallbackBind by lazy {
+        ObjectCalls.getMethodBind("NativeMenu", "get_item_key_callback", GET_ITEM_KEY_CALLBACK_HASH)
     }
 
     private const val GET_ITEM_TAG_HASH = 4069510997L
