@@ -95,6 +95,12 @@ versioning once public releases begin.
   merely a dispatch (`Main.curve_sample_probe`, required by the smoke gate, must return 3).
   **Existing Web exports must be rebuilt**: a protocol-22 export refuses to load against a
   protocol-23 bridge, and vice versa.
+- **Fixed — Web value-returning double queries.** `Noise.get_noise_1d` (opcode 276) and the new
+  `Curve.sample` rode the bridge's confirm-only double channel, which treats any result other
+  than `1` as "not applied" — so every sample except 0.001 threw a boundary failure. The
+  `DOUBLE_RET_DOUBLE` shape now has its own bridge path (`immediateDoubleRetDouble`) that
+  accepts any published x1000 integer (0 included), and the generated GDScript applier gained
+  the `Curve.sample` arm it was missing.
 
 ### Added — iOS: Packed*Array returns on every audited argument shape (task 100, parcel 3)
 

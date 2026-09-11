@@ -4357,6 +4357,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\telif opcode == 276 and value is Noise:")
     appendLine("\t\t\tresult = int(round((value as Noise).get_noise_1d(float(args[2])) * 1000.0))")
+    appendLine("\t\telif opcode == 306 and value is Curve:")
+    appendLine("\t\t\tresult = int(round((value as Curve).sample(float(args[2])) * 1000.0))")
     appendLine("\t\telif opcode == 278 and value is Node:")
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(String((value as Node).name))")
     appendLine("\t\t\tresult = 1")
