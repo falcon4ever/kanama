@@ -185,6 +185,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Sets font source data, e.g contents of the dynamic font source file.
+     *
+     * Generated from Godot docs: TextServer.font_set_data
+     */
+    fun fontSetData(fontRid: RID, data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDAndByteArrayArg(fontSetDataBind, handle, fontRid, data)
+    }
+
+    /**
      * Sets an active face index in the TrueType / OpenType collection.
      *
      * Generated from Godot docs: TextServer.font_set_face_index
@@ -615,6 +625,17 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Sets array of custom colors to override predefined palette. Set to empty array to reset
+     * overrides. Use `Color(0, 0, 0, 0)`, to keep predefined palette color at specific position.
+     *
+     * Generated from Godot docs: TextServer.font_set_palette_custom_colors
+     */
+    fun fontSetPaletteCustomColors(fontRid: RID, colors: List<Color>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDAndPackedColorListArgs(fontSetPaletteCustomColorsBind, handle, fontRid, colors)
+    }
+
+    /**
      * Returns array of custom colors to override predefined palette.
      *
      * Generated from Godot docs: TextServer.font_get_palette_custom_colors
@@ -1009,6 +1030,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun fontGetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long): Image? {
         checkOpen()
         return Image.wrap(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(fontGetTextureImageBind, handle, fontRid, size, textureIndex))
+    }
+
+    /**
+     * Sets array containing glyph packing data.
+     *
+     * Generated from Godot docs: TextServer.font_set_texture_offsets
+     */
+    fun fontSetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long, offset: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDVector2iLongPackedInt32ListArgs(fontSetTextureOffsetsBind, handle, fontRid, size, textureIndex, offset)
     }
 
     /**
@@ -1865,6 +1896,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Aligns shaped text to the given tab-stops.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_tab_align
+     */
+    fun shapedTextTabAlign(shaped: RID, tabStops: List<Float>): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArgRetDouble(shapedTextTabAlignBind, handle, shaped, tabStops)
+    }
+
+    /**
      * Shapes buffer if it's not shaped. Returns `true` if the string is shaped successfully. Note: It
      * is not necessary to call this function manually, buffer will be shaped automatically as soon as
      * any of its output data is requested.
@@ -1934,6 +1975,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedTextGetRange(shaped: RID): Vector2i {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDArgRetVector2i(shapedTextGetRangeBind, handle, shaped)
+    }
+
+    /**
+     * Breaks text to the lines and columns. Returns character ranges for each segment.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_get_line_breaks_adv
+     */
+    fun shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start: Long = 0L, once: Boolean = true, breakFlags: Long = 3L): List<Int> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(shapedTextGetLineBreaksAdvBind, handle, shaped, width, start, once, breakFlags)
     }
 
     /**
@@ -2291,6 +2342,19 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns index of the first string in `dict` which is visually confusable with the `string`, or
+     * `-1` if none is found. Note: This method doesn't detect invisible characters, for spoof
+     * detection use it in combination with `spoof_check`. Note: Always returns `-1` if the server does
+     * not support the `FEATURE_UNICODE_SECURITY` feature.
+     *
+     * Generated from Godot docs: TextServer.is_confusable
+     */
+    fun isConfusable(string: String, dict: List<String>): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(isConfusableBind, handle, string, dict)
+    }
+
+    /**
      * Returns `true` if `string` is likely to be an attempt at confusing the reader. Note: Always
      * returns `false` if the server does not support the `FEATURE_UNICODE_SECURITY` feature.
      *
@@ -2578,6 +2642,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "create_font_linked_variation", CREATE_FONT_LINKED_VARIATION_HASH)
         }
 
+        private const val FONT_SET_DATA_HASH = 1355495400L
+        private val fontSetDataBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_set_data", FONT_SET_DATA_HASH)
+        }
+
         private const val FONT_SET_FACE_INDEX_HASH = 3411492887L
         private val fontSetFaceIndexBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_set_face_index", FONT_SET_FACE_INDEX_HASH)
@@ -2778,6 +2847,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "font_get_palette_colors", FONT_GET_PALETTE_COLORS_HASH)
         }
 
+        private const val FONT_SET_PALETTE_CUSTOM_COLORS_HASH = 4037098590L
+        private val fontSetPaletteCustomColorsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_set_palette_custom_colors", FONT_SET_PALETTE_CUSTOM_COLORS_HASH)
+        }
+
         private const val FONT_GET_PALETTE_CUSTOM_COLORS_HASH = 1569415609L
         private val fontGetPaletteCustomColorsBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_get_palette_custom_colors", FONT_GET_PALETTE_CUSTOM_COLORS_HASH)
@@ -2966,6 +3040,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val FONT_GET_TEXTURE_IMAGE_HASH = 2451761155L
         private val fontGetTextureImageBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "font_get_texture_image", FONT_GET_TEXTURE_IMAGE_HASH)
+        }
+
+        private const val FONT_SET_TEXTURE_OFFSETS_HASH = 3005398047L
+        private val fontSetTextureOffsetsBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "font_set_texture_offsets", FONT_SET_TEXTURE_OFFSETS_HASH)
         }
 
         private const val FONT_GET_TEXTURE_OFFSETS_HASH = 3420028887L
@@ -3373,6 +3452,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_fit_to_width", SHAPED_TEXT_FIT_TO_WIDTH_HASH)
         }
 
+        private const val SHAPED_TEXT_TAB_ALIGN_HASH = 1283669550L
+        private val shapedTextTabAlignBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_tab_align", SHAPED_TEXT_TAB_ALIGN_HASH)
+        }
+
         private const val SHAPED_TEXT_SHAPE_HASH = 3521089500L
         private val shapedTextShapeBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_shape", SHAPED_TEXT_SHAPE_HASH)
@@ -3406,6 +3490,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_TEXT_GET_RANGE_HASH = 733700038L
         private val shapedTextGetRangeBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_range", SHAPED_TEXT_GET_RANGE_HASH)
+        }
+
+        private const val SHAPED_TEXT_GET_LINE_BREAKS_ADV_HASH = 2376991424L
+        private val shapedTextGetLineBreaksAdvBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_get_line_breaks_adv", SHAPED_TEXT_GET_LINE_BREAKS_ADV_HASH)
         }
 
         private const val SHAPED_TEXT_GET_LINE_BREAKS_HASH = 2651359741L
@@ -3571,6 +3660,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val STRING_GET_CHARACTER_BREAKS_HASH = 2333794773L
         private val stringGetCharacterBreaksBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "string_get_character_breaks", STRING_GET_CHARACTER_BREAKS_HASH)
+        }
+
+        private const val IS_CONFUSABLE_HASH = 1433197768L
+        private val isConfusableBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "is_confusable", IS_CONFUSABLE_HASH)
         }
 
         private const val SPOOF_CHECK_HASH = 3927539163L

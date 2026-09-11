@@ -25,9 +25,11 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
         @JvmName("setCullModeProperty")
         set(value) = setCullMode(value)
 
-    val polygon: List<Vector2>
+    var polygon: List<Vector2>
         @JvmName("polygonProperty")
         get() = getPolygon()
+        @JvmName("setPolygonProperty")
+        set(value) = setPolygon(value)
 
     fun setPolygonClosed(closed: Boolean) {
         checkOpen()
@@ -57,6 +59,16 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
     fun getCullMode(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
+    }
+
+    /**
+     * A `Vector2` array with the index for polygon's vertices positions.
+     *
+     * Generated from Godot docs: OccluderPolygon2D.set_polygon
+     */
+    fun setPolygon(polygon: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
     }
 
     /**
@@ -99,6 +111,11 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
         private const val GET_CULL_MODE_HASH = 33931036L
         private val getCullModeBind by lazy {
             ObjectCalls.getMethodBind("OccluderPolygon2D", "get_cull_mode", GET_CULL_MODE_HASH)
+        }
+
+        private const val SET_POLYGON_HASH = 1509147220L
+        private val setPolygonBind by lazy {
+            ObjectCalls.getMethodBind("OccluderPolygon2D", "set_polygon", SET_POLYGON_HASH)
         }
 
         private const val GET_POLYGON_HASH = 2961356807L

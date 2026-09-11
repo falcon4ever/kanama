@@ -456,6 +456,13 @@ IOS_ARG_KINDS = {
     "PackedFloat32Array",
     "PackedVector2Array",
     "PackedColorArray",
+    # task 100 parcel 4: every Packed*Array kind is a BUILD-tagged arg (IOS_PACKED_ARGS).
+    "PackedByteArray",
+    "PackedInt32Array",
+    "PackedInt64Array",
+    "PackedFloat64Array",
+    "PackedVector3Array",
+    "PackedStringArray",
     # Callable args: object+method form only (GodotCallable). The iOS ptrcall dispatch builds the
     # Callable via constructor index 2 (PT_CALLABLE / KanamaIosCallableArgDesc) and destroys it after
     # the call — no Kotlin-side state outlives the call, so nothing leaks regardless of engine
@@ -1843,21 +1850,9 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     logical_args = method.logical_arg_kinds(object_types)
     if not all(kind in IOS_ARG_KINDS for kind in logical_args):
         return False
-    # PackedFloat32Array arg (build-from-list): only the single-arg void shape is wired.
-    # Multi-arg shapes (e.g. CanvasItem.draw_*) share the kind but route through unbuilt helpers.
-    if "PackedFloat32Array" in logical_args and shape.function != "ptrcallWithPackedFloat32ListArg":
-        return False
-    # PackedVector2Array / PackedColorArray args are wired only for the two no-Object CanvasItem
-    # draw_* shapes (draw_polyline/draw_multiline and the *_colors variants). Other shapes that use
-    # these kinds (single-arg setters on non-emitted classes, RID-prefixed RenderingServer combos,
-    # the Texture2D-arg polygon/primitive shapes) route through helpers not yet built.
-    if ("PackedVector2Array" in logical_args or "PackedColorArray" in logical_args) and shape.function not in (
-        "ptrcallWithPackedVector2ListColorDoubleAndBoolArgs",
-        "ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs",
-        "ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs",
-        "ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs",
-    ):
-        return False
+    # Packed*Array args (task 100, parcel 4): every kind is a BUILD-tagged arg the generic dispatch
+    # constructs from a KanamaIosPackedArgDesc (IOS_PACKED_ARGS); no per-helper gate remains. The
+    # hand-written CanvasItem draw helpers and ptrcallWithPackedFloat32ListArg keep their bodies.
     # Every referenced object wrapper type must also be emitted on iOS (or be the root
     # Object -> GodotObject). Keeps the generated island self-contained / compilable.
     if IOS_EMIT_CLASSES is not None:
@@ -3338,8 +3333,10 @@ import net.multigesture.kanama.types.Vector4
  * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
  * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed); Dictionary /
  * Array returns to `ObjectCalls.ptrcallRetDictionary` / `ptrcallRetArray` /
- * `ptrcallRetDictionaryList` (kanama_ios_godot_ptrcall_ret_container_blob). Helpers already
- * hand-written in ObjectCalls.kt are the override set and are NOT regenerated here.
+ * `ptrcallRetDictionaryList` (kanama_ios_godot_ptrcall_ret_container_blob). Packed*Array ARGS are
+ * laid out by the `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch
+ * builds the Godot array from. Helpers already hand-written in ObjectCalls.kt are the override set
+ * and are NOT regenerated here.
  */
 '''
 
@@ -3378,6 +3375,34 @@ IOS_PT_TAG_VALUES = {
     # engine untyped, so the tag is documentation + self-test selector). Appended at the
     # C enum's end (37) — never renumber existing tags.
     "PT_RECT2I": 37,
+    # Packed*Array BUILD-tagged args (task 100, parcel 4): the arg ptr is a KanamaIosPackedArgDesc
+    # {count, data} (PT_PACKED_STRING_ARRAY: data is the [int32 count]([int32 len][utf8])* blob).
+    # Values match the C enum and KanamaIosRuntime.kt; 23/24 predate the task-29 return tags.
+    "PT_PACKED_VECTOR2_ARRAY": 23,
+    "PT_PACKED_COLOR_ARRAY": 24,
+    "PT_PACKED_STRING_ARRAY": 28,
+    "PT_PACKED_BYTE_ARRAY": 31,
+    "PT_PACKED_INT32_ARRAY": 32,
+    "PT_PACKED_INT64_ARRAY": 33,
+    "PT_PACKED_FLOAT32_ARRAY": 34,
+    "PT_PACKED_FLOAT64_ARRAY": 35,
+    "PT_PACKED_VECTOR3_ARRAY": 36,
+}
+
+# Packed*Array args (task 100, parcel 4): logical kind -> (Kotlin param type, PT tag, ObjectCalls
+# descriptor helper). The helper lays the elements into scratch and returns a
+# CPointer<KanamaIosPackedArgDesc>; the dispatch builds the Godot array from it and destroys it after
+# the call (kanama_ios_build_packed_arg / kanama_ios_destroy_packed_arg).
+IOS_PACKED_ARGS = {
+    "PackedByteArray": ("ByteArray", "PT_PACKED_BYTE_ARRAY", "packByteDesc"),
+    "PackedInt32Array": ("List<Int>", "PT_PACKED_INT32_ARRAY", "packInt32Desc"),
+    "PackedInt64Array": ("List<Long>", "PT_PACKED_INT64_ARRAY", "packInt64Desc"),
+    "PackedFloat32Array": ("List<Float>", "PT_PACKED_FLOAT32_ARRAY", "packFloat32Desc"),
+    "PackedFloat64Array": ("List<Double>", "PT_PACKED_FLOAT64_ARRAY", "packFloat64Desc"),
+    "PackedVector2Array": ("List<Vector2>", "PT_PACKED_VECTOR2_ARRAY", "packVector2Desc"),
+    "PackedVector3Array": ("List<Vector3>", "PT_PACKED_VECTOR3_ARRAY", "packVector3Desc"),
+    "PackedColorArray": ("List<Color>", "PT_PACKED_COLOR_ARRAY", "packColorDesc"),
+    "PackedStringArray": ("List<String>", "PT_PACKED_STRING_ARRAY", "packStringDesc"),
 }
 
 
@@ -3519,6 +3544,9 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
     # Callable is handled directly in render_ios_helper: a Callable arg is expanded at the wrapper
     # call site into (target.handle, method) — a (MemorySegment, String) pair — matching the desktop
     # helper contract, so it maps to TWO helper params, not one. See render_ios_helper.
+    if kind in IOS_PACKED_ARGS:
+        param_type, tag, helper = IOS_PACKED_ARGS[kind]
+        return (param_type, tag, [f"val {c} = {helper}({a})"], f"{c}.reinterpret<CPointed>()")
     raise ValueError(f"iOS arg kind not audited: {kind}")
 
 

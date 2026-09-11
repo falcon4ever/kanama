@@ -181,6 +181,16 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringArgRetLong(openBind, handle, file)
     }
 
+    /**
+     * Opens an XML raw `buffer` for parsing. This method returns an error code.
+     *
+     * Generated from Godot docs: XMLParser.open_buffer
+     */
+    fun openBuffer(buffer: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, handle, buffer)
+    }
+
     companion object {
         const val NODE_NONE: Long = 0L
         const val NODE_ELEMENT: Long = 1L
@@ -275,6 +285,11 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
         private const val OPEN_HASH = 166001499L
         private val openBind by lazy {
             ObjectCalls.getMethodBind("XMLParser", "open", OPEN_HASH)
+        }
+
+        private const val OPEN_BUFFER_HASH = 680677267L
+        private val openBufferBind by lazy {
+            ObjectCalls.getMethodBind("XMLParser", "open_buffer", OPEN_BUFFER_HASH)
         }
     }
 }

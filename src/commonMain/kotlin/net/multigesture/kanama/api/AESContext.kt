@@ -12,6 +12,30 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class AESContext(handle: MemorySegment) : RefCounted(handle) {
     /**
+     * Start the AES context in the given `mode`. A `key` of either 16 or 32 bytes must always be
+     * provided, while an `iv` (initialization vector) of exactly 16 bytes, is only needed when `mode`
+     * is either `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
+     *
+     * Generated from Godot docs: AESContext.start
+     */
+    fun start(mode: Long, key: ByteArray, iv: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, handle, mode, key, iv)
+    }
+
+    /**
+     * Run the desired operation for this AES context. Will return a `PackedByteArray` containing the
+     * result of encrypting (or decrypting) the given `src`. See `start` for mode of operation. Note:
+     * The size of `src` must be a multiple of 16. Apply some padding if needed.
+     *
+     * Generated from Godot docs: AESContext.update
+     */
+    fun update(src: ByteArray): ByteArray {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(updateBind, handle, src)
+    }
+
+    /**
      * Get the current IV state for this context (IV gets updated when calling `update`). You normally
      * don't need this function. Note: This function only makes sense when the context is started with
      * `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
@@ -46,6 +70,16 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): AESContext? =
             if (handle.address() == 0L) null else AESContext(handle)
+
+        private const val START_HASH = 3122411423L
+        private val startBind by lazy {
+            ObjectCalls.getMethodBind("AESContext", "start", START_HASH)
+        }
+
+        private const val UPDATE_HASH = 527836100L
+        private val updateBind by lazy {
+            ObjectCalls.getMethodBind("AESContext", "update", UPDATE_HASH)
+        }
 
         private const val GET_IV_STATE_HASH = 2115431945L
         private val getIvStateBind by lazy {

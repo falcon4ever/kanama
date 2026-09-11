@@ -10,15 +10,22 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: OggPacketSequence
  */
 class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
-    val granulePositions: List<Long>
+    var granulePositions: List<Long>
         @JvmName("granulePositionsProperty")
         get() = getPacketGranulePositions()
+        @JvmName("setGranulePositionsProperty")
+        set(value) = setPacketGranulePositions(value)
 
     var samplingRate: Double
         @JvmName("samplingRateProperty")
         get() = getSamplingRate()
         @JvmName("setSamplingRateProperty")
         set(value) = setSamplingRate(value)
+
+    fun setPacketGranulePositions(granulePositions: List<Long>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt64ListArg(setPacketGranulePositionsBind, handle, granulePositions)
+    }
 
     fun getPacketGranulePositions(): List<Long> {
         checkOpen()
@@ -47,6 +54,11 @@ class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): OggPacketSequence? =
             if (handle.address() == 0L) null else OggPacketSequence(handle)
+
+        private const val SET_PACKET_GRANULE_POSITIONS_HASH = 3709968205L
+        private val setPacketGranulePositionsBind by lazy {
+            ObjectCalls.getMethodBind("OggPacketSequence", "set_packet_granule_positions", SET_PACKET_GRANULE_POSITIONS_HASH)
+        }
 
         private const val GET_PACKET_GRANULE_POSITIONS_HASH = 235988956L
         private val getPacketGranulePositionsBind by lazy {

@@ -13,9 +13,21 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: ConvexPolygonShape3D
  */
 class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
-    val points: List<Vector3>
+    var points: List<Vector3>
         @JvmName("pointsProperty")
         get() = getPoints()
+        @JvmName("setPointsProperty")
+        set(value) = setPoints(value)
+
+    /**
+     * The list of 3D points forming the convex polygon shape.
+     *
+     * Generated from Godot docs: ConvexPolygonShape3D.set_points
+     */
+    fun setPoints(points: List<Vector3>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setPointsBind, handle, points)
+    }
 
     /**
      * The list of 3D points forming the convex polygon shape.
@@ -34,6 +46,11 @@ class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
 
         internal fun wrap(handle: MemorySegment): ConvexPolygonShape3D? =
             if (handle.address() == 0L) null else ConvexPolygonShape3D(handle)
+
+        private const val SET_POINTS_HASH = 334873810L
+        private val setPointsBind by lazy {
+            ObjectCalls.getMethodBind("ConvexPolygonShape3D", "set_points", SET_POINTS_HASH)
+        }
 
         private const val GET_POINTS_HASH = 497664490L
         private val getPointsBind by lazy {

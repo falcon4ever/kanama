@@ -93,6 +93,21 @@ object JavaScriptBridge {
     }
 
     /**
+     * Prompts the user to download a file containing the specified `buffer`. The file will have the
+     * given `name` and `mime` type. Note: The browser may override the MIME type
+     * (https://en.wikipedia.org/wiki/Media_type) provided based on the file `name`'s extension. Note:
+     * Browsers might block the download if `download_buffer` is not being called from a user
+     * interaction (e.g. button click). Note: Browsers might ask the user for permission or block the
+     * download if multiple download requests are made in a quick succession.
+     *
+     * Generated from Godot docs: JavaScriptBridge.download_buffer
+     */
+    @JvmStatic
+    fun downloadBuffer(buffer: ByteArray, name: String, mime: String = "application/octet-stream") {
+        ObjectCalls.ptrcallWithByteArrayTwoStringArgs(downloadBufferBind, singleton, buffer, name, mime)
+    }
+
+    /**
      * Returns `true` if a new version of the progressive web app is waiting to be activated. Note:
      * Only relevant when exported as a Progressive Web App.
      *
@@ -165,6 +180,11 @@ object JavaScriptBridge {
     private const val CREATE_OBJECT_HASH = 3093893586L
     private val createObjectBind by lazy {
         ObjectCalls.getMethodBind("JavaScriptBridge", "create_object", CREATE_OBJECT_HASH)
+    }
+
+    private const val DOWNLOAD_BUFFER_HASH = 3352272093L
+    private val downloadBufferBind by lazy {
+        ObjectCalls.getMethodBind("JavaScriptBridge", "download_buffer", DOWNLOAD_BUFFER_HASH)
     }
 
     private const val PWA_NEEDS_UPDATE_HASH = 36873697L

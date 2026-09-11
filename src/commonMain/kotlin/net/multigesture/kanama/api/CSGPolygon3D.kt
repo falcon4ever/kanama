@@ -12,9 +12,11 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: CSGPolygon3D
  */
 class CSGPolygon3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
-    val polygon: List<Vector2>
+    var polygon: List<Vector2>
         @JvmName("polygonProperty")
         get() = getPolygon()
+        @JvmName("setPolygonProperty")
+        set(value) = setPolygon(value)
 
     var mode: Long
         @JvmName("modeProperty")
@@ -111,6 +113,10 @@ class CSGPolygon3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         get() = getMaterial()
         @JvmName("setMaterialProperty")
         set(value) = setMaterial(value)
+
+    fun setPolygon(polygon: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+    }
 
     fun getPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
@@ -260,6 +266,11 @@ class CSGPolygon3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: MemorySegment): CSGPolygon3D? =
             if (handle.address() == 0L) null else CSGPolygon3D(handle)
+
+        private const val SET_POLYGON_HASH = 1509147220L
+        private val setPolygonBind by lazy {
+            ObjectCalls.getMethodBind("CSGPolygon3D", "set_polygon", SET_POLYGON_HASH)
+        }
 
         private const val GET_POLYGON_HASH = 2961356807L
         private val getPolygonBind by lazy {

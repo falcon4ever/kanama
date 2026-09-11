@@ -13,9 +13,23 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: ConcavePolygonShape2D
  */
 class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
-    val segments: List<Vector2>
+    var segments: List<Vector2>
         @JvmName("segmentsProperty")
         get() = getSegments()
+        @JvmName("setSegmentsProperty")
+        set(value) = setSegments(value)
+
+    /**
+     * The array of points that make up the `ConcavePolygonShape2D`'s line segments. The array (of
+     * length divisible by two) is naturally divided into pairs (one pair for each segment); each pair
+     * consists of the starting point of a segment and the endpoint of a segment.
+     *
+     * Generated from Godot docs: ConcavePolygonShape2D.set_segments
+     */
+    fun setSegments(segments: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setSegmentsBind, handle, segments)
+    }
 
     /**
      * The array of points that make up the `ConcavePolygonShape2D`'s line segments. The array (of
@@ -36,6 +50,11 @@ class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
 
         internal fun wrap(handle: MemorySegment): ConcavePolygonShape2D? =
             if (handle.address() == 0L) null else ConcavePolygonShape2D(handle)
+
+        private const val SET_SEGMENTS_HASH = 1509147220L
+        private val setSegmentsBind by lazy {
+            ObjectCalls.getMethodBind("ConcavePolygonShape2D", "set_segments", SET_SEGMENTS_HASH)
+        }
 
         private const val GET_SEGMENTS_HASH = 2961356807L
         private val getSegmentsBind by lazy {

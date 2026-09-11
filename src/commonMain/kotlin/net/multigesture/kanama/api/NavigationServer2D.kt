@@ -1285,6 +1285,17 @@ object NavigationServer2D {
     }
 
     /**
+     * Sets the outline vertices for the obstacle. If the vertices are winded in clockwise order agents
+     * will be pushed in by the obstacle, else they will be pushed out.
+     *
+     * Generated from Godot docs: NavigationServer2D.obstacle_set_vertices
+     */
+    @JvmStatic
+    fun obstacleSetVertices(obstacle: RID, vertices: List<Vector2>) {
+        ObjectCalls.ptrcallWithRIDAndPackedVector2ListArg(obstacleSetVerticesBind, singleton, obstacle, vertices)
+    }
+
+    /**
      * Returns the outline vertices for the specified `obstacle`.
      *
      * Generated from Godot docs: NavigationServer2D.obstacle_get_vertices
@@ -1389,6 +1400,20 @@ object NavigationServer2D {
     @JvmStatic
     fun sourceGeometryParserSetCallback(parser: RID, callback: GodotCallable) {
         ObjectCalls.ptrcallWithRIDCallableArgs(sourceGeometryParserSetCallbackBind, singleton, parser, callback.target.handle, callback.method)
+    }
+
+    /**
+     * Returns a simplified version of `path` with less critical path points removed. The
+     * simplification amount is in worlds units and controlled by `epsilon`. The simplification uses a
+     * variant of Ramer-Douglas-Peucker algorithm for curve point decimation. Path simplification can
+     * be helpful to mitigate various path following issues that can arise with certain agent types and
+     * script behaviors. E.g. "steering" agents or avoidance in "open fields".
+     *
+     * Generated from Godot docs: NavigationServer2D.simplify_path
+     */
+    @JvmStatic
+    fun simplifyPath(path: List<Vector2>, epsilon: Double): List<Vector2> {
+        return ObjectCalls.ptrcallWithPackedVector2ListAndDoubleArgRetPackedVector2List(simplifyPathBind, singleton, path, epsilon)
     }
 
     /**
@@ -2034,6 +2059,11 @@ object NavigationServer2D {
         ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_position", OBSTACLE_GET_POSITION_HASH)
     }
 
+    private const val OBSTACLE_SET_VERTICES_HASH = 29476483L
+    private val obstacleSetVerticesBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_vertices", OBSTACLE_SET_VERTICES_HASH)
+    }
+
     private const val OBSTACLE_GET_VERTICES_HASH = 2222557395L
     private val obstacleGetVerticesBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_vertices", OBSTACLE_GET_VERTICES_HASH)
@@ -2077,6 +2107,11 @@ object NavigationServer2D {
     private const val SOURCE_GEOMETRY_PARSER_SET_CALLBACK_HASH = 3379118538L
     private val sourceGeometryParserSetCallbackBind by lazy {
         ObjectCalls.getMethodBind("NavigationServer2D", "source_geometry_parser_set_callback", SOURCE_GEOMETRY_PARSER_SET_CALLBACK_HASH)
+    }
+
+    private const val SIMPLIFY_PATH_HASH = 2457191505L
+    private val simplifyPathBind by lazy {
+        ObjectCalls.getMethodBind("NavigationServer2D", "simplify_path", SIMPLIFY_PATH_HASH)
     }
 
     private const val FREE_RID_HASH = 2722037293L

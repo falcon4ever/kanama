@@ -12,9 +12,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: StreamPeerBuffer
  */
 class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
-    val dataArray: ByteArray
+    var dataArray: ByteArray
         @JvmName("dataArrayProperty")
         get() = getDataArray()
+        @JvmName("setDataArrayProperty")
+        set(value) = setDataArray(value)
 
     /**
      * Moves the cursor to the specified position. `position` must be a valid index of `data_array`.
@@ -54,6 +56,16 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
     fun resize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(resizeBind, handle, size)
+    }
+
+    /**
+     * The underlying data buffer. Setting this value resets the cursor.
+     *
+     * Generated from Godot docs: StreamPeerBuffer.set_data_array
+     */
+    fun setDataArray(data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithByteArrayArg(setDataArrayBind, handle, data)
     }
 
     /**
@@ -117,6 +129,11 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
         private const val RESIZE_HASH = 1286410249L
         private val resizeBind by lazy {
             ObjectCalls.getMethodBind("StreamPeerBuffer", "resize", RESIZE_HASH)
+        }
+
+        private const val SET_DATA_ARRAY_HASH = 2971499966L
+        private val setDataArrayBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeerBuffer", "set_data_array", SET_DATA_ARRAY_HASH)
         }
 
         private const val GET_DATA_ARRAY_HASH = 2362200018L

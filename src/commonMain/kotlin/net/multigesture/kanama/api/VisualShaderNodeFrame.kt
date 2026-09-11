@@ -35,9 +35,11 @@ open class VisualShaderNodeFrame(handle: MemorySegment) : VisualShaderNodeResiza
         @JvmName("setAutoshrinkProperty")
         set(value) = setAutoshrinkEnabled(value)
 
-    val attachedNodes: List<Int>
+    var attachedNodes: List<Int>
         @JvmName("attachedNodesProperty")
         get() = getAttachedNodes()
+        @JvmName("setAttachedNodesProperty")
+        set(value) = setAttachedNodes(value)
 
     fun setTitle(title: String) {
         checkOpen()
@@ -87,6 +89,11 @@ open class VisualShaderNodeFrame(handle: MemorySegment) : VisualShaderNodeResiza
     fun removeAttachedNode(node: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeAttachedNodeBind, handle, node)
+    }
+
+    fun setAttachedNodes(attachedNodes: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setAttachedNodesBind, handle, attachedNodes)
     }
 
     fun getAttachedNodes(): List<Int> {
@@ -150,6 +157,11 @@ open class VisualShaderNodeFrame(handle: MemorySegment) : VisualShaderNodeResiza
         private const val REMOVE_ATTACHED_NODE_HASH = 1286410249L
         private val removeAttachedNodeBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeFrame", "remove_attached_node", REMOVE_ATTACHED_NODE_HASH)
+        }
+
+        private const val SET_ATTACHED_NODES_HASH = 3614634198L
+        private val setAttachedNodesBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNodeFrame", "set_attached_nodes", SET_ATTACHED_NODES_HASH)
         }
 
         private const val GET_ATTACHED_NODES_HASH = 1930428628L

@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP AudioStreamWAV waits on: ptrcallWithByteArrayAndDictionaryArgRetObject,
-//   ptrcallWithByteArrayArg, ptrcallWithDictionaryArg, ptrcallWithStringAndDictionaryArgRetObject
+//   ptrcallWithDictionaryArg, ptrcallWithStringAndDictionaryArgRetObject
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -33,18 +33,6 @@ fun AudioStreamWAV.Companion.loadFromFile(path: String, options: Map<String, Any
 }
 
 /**
- * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
- * expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from each byte.
- * Note: If `format` is set to `FORMAT_QOA`, this property expects data from a full QOA file.
- *
- * Generated from Godot docs: AudioStreamWAV.set_data
- */
-fun AudioStreamWAV.setData(data: ByteArray) {
-    checkOpen()
-    ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
-}
-
-/**
  * Contains user-defined tags if found in the WAV data. Commonly used tags include `title`,
  * `artist`, `album`, `tracknumber`, and `date` (`date` does not have a standard date format).
  * Note: No tag is guaranteed to be present in every file, so make sure to account for the keys not
@@ -66,11 +54,6 @@ private val loadFromBufferBind by lazy {
 private const val LOAD_FROM_FILE_HASH = 4015802384L
 private val loadFromFileBind by lazy {
     ObjectCalls.getMethodBind("AudioStreamWAV", "load_from_file", LOAD_FROM_FILE_HASH)
-}
-
-private const val SET_DATA_HASH = 2971499966L
-private val setDataBind by lazy {
-    ObjectCalls.getMethodBind("AudioStreamWAV", "set_data", SET_DATA_HASH)
 }
 
 private const val SET_TAGS_HASH = 4155329257L

@@ -14,9 +14,11 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: NavigationPolygon
  */
 class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
-    val vertices: List<Vector2>
+    var vertices: List<Vector2>
         @JvmName("verticesProperty")
         get() = getVertices()
+        @JvmName("setVerticesProperty")
+        set(value) = setVertices(value)
 
     var samplePartitionType: Long
         @JvmName("samplePartitionTypeProperty")
@@ -79,6 +81,16 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
         set(value) = setBakingRectOffset(value)
 
     /**
+     * Sets the vertices that can be then indexed to create polygons with the `add_polygon` method.
+     *
+     * Generated from Godot docs: NavigationPolygon.set_vertices
+     */
+    fun setVertices(vertices: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, handle, vertices)
+    }
+
+    /**
      * Returns a `PackedVector2Array` containing all the vertices being used to create the polygons.
      *
      * Generated from Godot docs: NavigationPolygon.get_vertices
@@ -86,6 +98,16 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
     fun getVertices(): List<Vector2> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, handle)
+    }
+
+    /**
+     * Adds a polygon using the indices of the vertices you get when calling `get_vertices`.
+     *
+     * Generated from Godot docs: NavigationPolygon.add_polygon
+     */
+    fun addPolygon(polygon: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
     }
 
     /**
@@ -131,6 +153,28 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Appends a `PackedVector2Array` that contains the vertices of an outline to the internal array
+     * that contains all the outlines.
+     *
+     * Generated from Godot docs: NavigationPolygon.add_outline
+     */
+    fun addOutline(outline: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListArg(addOutlineBind, handle, outline)
+    }
+
+    /**
+     * Adds a `PackedVector2Array` that contains the vertices of an outline to the internal array that
+     * contains all the outlines at a fixed position.
+     *
+     * Generated from Godot docs: NavigationPolygon.add_outline_at_index
+     */
+    fun addOutlineAtIndex(outline: List<Vector2>, index: Int) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(addOutlineAtIndexBind, handle, outline, index)
+    }
+
+    /**
      * Returns the number of outlines that were created in the editor or by script.
      *
      * Generated from Godot docs: NavigationPolygon.get_outline_count
@@ -138,6 +182,17 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
     fun getOutlineCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, handle)
+    }
+
+    /**
+     * Changes an outline created in the editor or by script. You have to call
+     * `make_polygons_from_outlines` for the polygons to update.
+     *
+     * Generated from Godot docs: NavigationPolygon.set_outline
+     */
+    fun setOutline(idx: Int, outline: List<Vector2>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(setOutlineBind, handle, idx, outline)
     }
 
     /**
@@ -457,9 +512,19 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
         internal fun wrap(handle: MemorySegment): NavigationPolygon? =
             if (handle.address() == 0L) null else NavigationPolygon(handle)
 
+        private const val SET_VERTICES_HASH = 1509147220L
+        private val setVerticesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPolygon", "set_vertices", SET_VERTICES_HASH)
+        }
+
         private const val GET_VERTICES_HASH = 2961356807L
         private val getVerticesBind by lazy {
             ObjectCalls.getMethodBind("NavigationPolygon", "get_vertices", GET_VERTICES_HASH)
+        }
+
+        private const val ADD_POLYGON_HASH = 3614634198L
+        private val addPolygonBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPolygon", "add_polygon", ADD_POLYGON_HASH)
         }
 
         private const val GET_POLYGON_COUNT_HASH = 3905245786L
@@ -482,9 +547,24 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("NavigationPolygon", "get_navigation_mesh", GET_NAVIGATION_MESH_HASH)
         }
 
+        private const val ADD_OUTLINE_HASH = 1509147220L
+        private val addOutlineBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPolygon", "add_outline", ADD_OUTLINE_HASH)
+        }
+
+        private const val ADD_OUTLINE_AT_INDEX_HASH = 1569738947L
+        private val addOutlineAtIndexBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPolygon", "add_outline_at_index", ADD_OUTLINE_AT_INDEX_HASH)
+        }
+
         private const val GET_OUTLINE_COUNT_HASH = 3905245786L
         private val getOutlineCountBind by lazy {
             ObjectCalls.getMethodBind("NavigationPolygon", "get_outline_count", GET_OUTLINE_COUNT_HASH)
+        }
+
+        private const val SET_OUTLINE_HASH = 1201971903L
+        private val setOutlineBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPolygon", "set_outline", SET_OUTLINE_HASH)
         }
 
         private const val GET_OUTLINE_HASH = 3946907486L

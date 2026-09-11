@@ -27,9 +27,11 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
         @JvmName("setHeightProperty")
         set(value) = setHeight(value)
 
-    val vertices: List<Vector3>
+    var vertices: List<Vector3>
         @JvmName("verticesProperty")
         get() = getVertices()
+        @JvmName("setVerticesProperty")
+        set(value) = setVertices(value)
 
     var affectNavigationMesh: Boolean
         @JvmName("affectNavigationMeshProperty")
@@ -176,6 +178,18 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      */
     fun getVelocity(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityBind, handle)
+    }
+
+    /**
+     * The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will
+     * be pushed in by the obstacle, else they will be pushed out. Outlines can not be crossed or
+     * overlap. Should the vertices using obstacle be warped to a new position agent's can not predict
+     * this movement and may get trapped inside the obstacle.
+     *
+     * Generated from Godot docs: NavigationObstacle3D.set_vertices
+     */
+    fun setVertices(vertices: List<Vector3>) {
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
     }
 
     /**
@@ -357,6 +371,11 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
         private const val GET_VELOCITY_HASH = 3360562783L
         private val getVelocityBind by lazy {
             ObjectCalls.getMethodBind("NavigationObstacle3D", "get_velocity", GET_VELOCITY_HASH)
+        }
+
+        private const val SET_VERTICES_HASH = 334873810L
+        private val setVerticesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationObstacle3D", "set_vertices", SET_VERTICES_HASH)
         }
 
         private const val GET_VERTICES_HASH = 497664490L

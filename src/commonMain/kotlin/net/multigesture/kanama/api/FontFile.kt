@@ -16,9 +16,11 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: FontFile
  */
 class FontFile(handle: MemorySegment) : Font(handle) {
-    val data: ByteArray
+    var data: ByteArray
         @JvmName("dataProperty")
         get() = getData()
+        @JvmName("setDataProperty")
+        set(value) = setData(value)
 
     var generateMipmaps: Boolean
         @JvmName("generateMipmapsProperty")
@@ -137,6 +139,16 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     fun loadDynamicFont(path: String): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, handle, path)
+    }
+
+    /**
+     * Contents of the dynamic font source file.
+     *
+     * Generated from Godot docs: FontFile.set_data
+     */
+    fun setData(data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
     }
 
     /**
@@ -870,6 +882,16 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     }
 
     /**
+     * Sets array containing glyph packing data.
+     *
+     * Generated from Godot docs: FontFile.set_texture_offsets
+     */
+    fun setTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int, offset: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(setTextureOffsetsBind, handle, cacheIndex, size, textureIndex, offset)
+    }
+
+    /**
      * Returns a copy of the array containing glyph packing data.
      *
      * Generated from Godot docs: FontFile.get_texture_offsets
@@ -1200,6 +1222,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         private const val LOAD_DYNAMIC_FONT_HASH = 166001499L
         private val loadDynamicFontBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "load_dynamic_font", LOAD_DYNAMIC_FONT_HASH)
+        }
+
+        private const val SET_DATA_HASH = 2971499966L
+        private val setDataBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "set_data", SET_DATA_HASH)
         }
 
         private const val GET_DATA_HASH = 2362200018L
@@ -1535,6 +1562,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         private const val GET_TEXTURE_IMAGE_HASH = 3878418953L
         private val getTextureImageBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "get_texture_image", GET_TEXTURE_IMAGE_HASH)
+        }
+
+        private const val SET_TEXTURE_OFFSETS_HASH = 2849993437L
+        private val setTextureOffsetsBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "set_texture_offsets", SET_TEXTURE_OFFSETS_HASH)
         }
 
         private const val GET_TEXTURE_OFFSETS_HASH = 3703444828L

@@ -5,7 +5,6 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Rect2i
-import net.multigesture.kanama.types.Vector2
 
 // GENERATED desktop/Android companion for DisplayServer (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
@@ -13,13 +12,10 @@ import net.multigesture.kanama.types.Vector2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP DisplayServer waits on: ptrcallNoArgsRetRect2List,
 //   ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong,
-//   ptrcallWithIntAndRect2iArg, ptrcallWithPackedVector2ListAndIntArgs, ptrcallWithRIDAndVariantArg,
-//   ptrcallWithRect2iArgRetObject, ptrcallWithStringAndVariantArgRetInt,
-//   ptrcallWithStringArgRetPackedStringList, ptrcallWithStringIntAndVariantArg,
-//   ptrcallWithStringIntArgsRetCallable,
+//   ptrcallWithIntAndRect2iArg, ptrcallWithRIDAndVariantArg, ptrcallWithRect2iArgRetObject,
+//   ptrcallWithStringAndVariantArgRetInt, ptrcallWithStringArgRetPackedStringList,
+//   ptrcallWithStringIntAndVariantArg, ptrcallWithStringIntArgsRetCallable,
 //   ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt,
-//   ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong,
-//   ptrcallWithTwoStringPackedStringListCallableArgsRetLong,
 //   ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt,
 //   ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt
 // Index: docs/reference/generated/ios-shape-gap.md
@@ -233,63 +229,12 @@ fun DisplayServer.windowSetPopupSafeRect(window: Int, rect: Rect2i) {
 }
 
 /**
- * Sets a polygonal region of the window which accepts mouse events. Mouse events outside the
- * region will be passed through. Passing an empty array will disable passthrough support (all
- * mouse events will be intercepted by the window, which is the default behavior).
- *
- * Generated from Godot docs: DisplayServer.window_set_mouse_passthrough
- */
-fun DisplayServer.windowSetMousePassthrough(region: List<Vector2>, windowId: Int = 0) {
-    ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(windowSetMousePassthroughBind, displayServerSingleton, region, windowId)
-}
-
-/**
  * Sets the metadata of the accessibility element `id` to `meta`.
  *
  * Generated from Godot docs: DisplayServer.accessibility_element_set_meta
  */
 fun DisplayServer.accessibilityElementSetMeta(id: RID, meta: Any?) {
     ObjectCalls.ptrcallWithRIDAndVariantArg(accessibilityElementSetMetaBind, displayServerSingleton, id, meta)
-}
-
-/**
- * Shows a text dialog which uses the operating system's native look-and-feel. `callback` should
- * accept a single `int` parameter which corresponds to the index of the pressed button. Note: This
- * method is implemented if the display server has the `FEATURE_NATIVE_DIALOG` feature. Supported
- * platforms include macOS, Windows, and Android.
- *
- * Generated from Godot docs: DisplayServer.dialog_show
- */
-fun DisplayServer.dialogShow(title: String, description: String, buttons: List<String>, callback: GodotCallable): Long {
-    return ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(dialogShowBind, displayServerSingleton, title, description, buttons, callback.target.handle, callback.method)
-}
-
-/**
- * Displays OS native dialog for selecting files or directories in the file system. Each filter
- * string in the `filters` array should be formatted like this: `*.png,*.jpg,*.jpeg;Image
- * Files;image/png,image/jpeg`. The description text of the filter is optional and can be omitted.
- * It is recommended to set both file extension and MIME type. See also `FileDialog.filters`.
- * Callbacks have the following arguments: `status: bool, selected_paths: PackedStringArray,
- * selected_filter_index: int`. On Android, the third callback argument (`selected_filter_index`)
- * is always `0`. Note: This method is implemented if the display server has the
- * `FEATURE_NATIVE_DIALOG_FILE` feature. Supported platforms include Linux (X11/Wayland), Windows,
- * macOS, and Android. Note: `current_directory` might be ignored. Note: Embedded file dialogs and
- * Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs
- * also support MIME types. Note: On Android and Linux, `show_hidden` is ignored. Note: On Android
- * and macOS, native file dialogs have no title. Note: On macOS, sandboxed apps will save
- * security-scoped bookmarks to retain access to the opened folders across multiple sessions. Use
- * `OS.get_granted_permissions` to get a list of saved bookmarks. Note: On Android, this method
- * uses the Android Storage Access Framework (SAF). The file picker returns a URI instead of a
- * filesystem path. This URI can be passed directly to `FileAccess` to perform read/write
- * operations. When using `FILE_DIALOG_MODE_OPEN_DIR`, it returns a tree URI that grants full
- * access to the selected directory. File operations inside this directory can be performed by
- * passing a path on the form `treeUri#relative/path/to/file` to `FileAccess`. To avoid opening the
- * file picker again after each app restart, you can take persistable URI permission as follows:
- *
- * Generated from Godot docs: DisplayServer.file_dialog_show
- */
-fun DisplayServer.fileDialogShow(title: String, currentDirectory: String, filename: String, showHidden: Boolean, mode: Long, filters: List<String>, callback: GodotCallable, parentWindowId: Int = 0): Long {
-    return ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(fileDialogShowBind, displayServerSingleton, title, currentDirectory, filename, showHidden, mode, filters, callback.target.handle, callback.method, parentWindowId)
 }
 
 /**
@@ -396,24 +341,9 @@ private val windowSetPopupSafeRectBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "window_set_popup_safe_rect", WINDOW_SET_POPUP_SAFE_RECT_HASH)
 }
 
-private const val WINDOW_SET_MOUSE_PASSTHROUGH_HASH = 1993637420L
-private val windowSetMousePassthroughBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "window_set_mouse_passthrough", WINDOW_SET_MOUSE_PASSTHROUGH_HASH)
-}
-
 private const val ACCESSIBILITY_ELEMENT_SET_META_HASH = 3175752987L
 private val accessibilityElementSetMetaBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "accessibility_element_set_meta", ACCESSIBILITY_ELEMENT_SET_META_HASH)
-}
-
-private const val DIALOG_SHOW_HASH = 4115553226L
-private val dialogShowBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "dialog_show", DIALOG_SHOW_HASH)
-}
-
-private const val FILE_DIALOG_SHOW_HASH = 1386825884L
-private val fileDialogShowBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "file_dialog_show", FILE_DIALOG_SHOW_HASH)
 }
 
 private const val FILE_DIALOG_WITH_OPTIONS_SHOW_HASH = 1448789813L

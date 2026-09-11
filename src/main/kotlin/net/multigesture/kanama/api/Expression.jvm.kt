@@ -7,21 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Expression waits on: ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar,
-//   ptrcallWithStringAndPackedStringListArgRetLong
+// KANAMA-IOS-GAP Expression waits on: ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Parses the expression and returns an `Error` code. You can optionally specify names of variables
- * that may appear in the expression with `input_names`, so that you can bind them when it gets
- * executed.
- *
- * Generated from Godot docs: Expression.parse
- */
-fun Expression.parse(expression: String, inputNames: List<String>): Long {
-    checkOpen()
-    return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, handle, expression, inputNames)
-}
 
 /**
  * Executes the expression that was previously parsed by `parse` and returns the result. Before you
@@ -34,11 +21,6 @@ fun Expression.parse(expression: String, inputNames: List<String>): Long {
 fun Expression.execute(inputs: List<Any?> = emptyList(), baseInstance: GodotObject, showError: Boolean = true, constCallsOnly: Boolean = false): Any? {
     checkOpen()
     return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(executeBind, handle, inputs, baseInstance.handle, showError, constCallsOnly)
-}
-
-private const val PARSE_HASH = 3069722906L
-private val parseBind by lazy {
-    ObjectCalls.getMethodBind("Expression", "parse", PARSE_HASH)
 }
 
 private const val EXECUTE_HASH = 3712471238L

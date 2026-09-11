@@ -53,6 +53,23 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Updates texture data with new data, replacing the previous data in place. The updated texture
+     * data must have the same dimensions and format. For 2D textures (which only have one layer),
+     * `layer` must be `0`. Returns `@GlobalScope.OK` if the update was successful,
+     * `@GlobalScope.ERR_INVALID_PARAMETER` otherwise. Note: Updating textures is forbidden during
+     * creation of a draw or compute list. Note: The existing `texture` can't be updated while a draw
+     * list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized
+     * (and that the color/depth texture using it is not set to `FINAL_ACTION_CONTINUE`) to update this
+     * texture. Note: The existing `texture` requires the `TEXTURE_USAGE_CAN_UPDATE_BIT` to be
+     * updatable.
+     *
+     * Generated from Godot docs: RenderingDevice.texture_update
+     */
+    fun textureUpdate(texture: RID, layer: Long, data: ByteArray): Long {
+        return ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(textureUpdateBind, handle, texture, layer, data)
+    }
+
+    /**
      * Returns the `texture` data for the specified `layer` as raw binary data. For 2D textures (which
      * only have one layer), `layer` must be `0`. Note: `texture` can't be retrieved while a draw list
      * that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and
@@ -289,6 +306,26 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Creates a new vertex buffer. It can be accessed with the RID that is returned. Once finished
+     * with your RID, you will want to free the RID using the RenderingDevice's `free_rid` method.
+     *
+     * Generated from Godot docs: RenderingDevice.vertex_buffer_create
+     */
+    fun vertexBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: Long = 0L): RID {
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(vertexBufferCreateBind, handle, sizeBytes, data, creationBits)
+    }
+
+    /**
+     * Creates a new index buffer. It can be accessed with the RID that is returned. Once finished with
+     * your RID, you will want to free the RID using the RenderingDevice's `free_rid` method.
+     *
+     * Generated from Godot docs: RenderingDevice.index_buffer_create
+     */
+    fun indexBufferCreate(sizeIndices: Long, format: Long, data: ByteArray, useRestartIndices: Boolean = false, creationBits: Long = 0L): RID {
+        return ObjectCalls.ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(indexBufferCreateBind, handle, sizeIndices, format, data, useRestartIndices, creationBits)
+    }
+
+    /**
      * Creates a new index array. It can be accessed with the RID that is returned. Once finished with
      * your RID, you will want to free the RID using the RenderingDevice's `free_rid` method. This will
      * be freed automatically when the `index_buffer` is freed.
@@ -340,6 +377,18 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Creates a new shader instance from a binary compiled shader. It can be accessed with the RID
+     * that is returned. Once finished with your RID, you will want to free the RID using the
+     * RenderingDevice's `free_rid` method. See also `shader_compile_binary_from_spirv` and
+     * `shader_create_from_spirv`.
+     *
+     * Generated from Godot docs: RenderingDevice.shader_create_from_bytecode
+     */
+    fun shaderCreateFromBytecode(binaryData: ByteArray, placeholderRid: RID): RID {
+        return ObjectCalls.ptrcallWithByteArrayAndRIDArgRetRID(shaderCreateFromBytecodeBind, handle, binaryData, placeholderRid)
+    }
+
+    /**
      * Create a placeholder RID by allocating an RID without initializing it for use in
      * `shader_create_from_bytecode`. This allows you to create an RID for a shader and pass it around,
      * but defer compiling the shader to a later time.
@@ -362,6 +411,37 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Creates a new uniform buffer. It can be accessed with the RID that is returned. Once finished
+     * with your RID, you will want to free the RID using the RenderingDevice's `free_rid` method.
+     *
+     * Generated from Godot docs: RenderingDevice.uniform_buffer_create
+     */
+    fun uniformBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: Long = 0L): RID {
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(uniformBufferCreateBind, handle, sizeBytes, data, creationBits)
+    }
+
+    /**
+     * Creates a storage buffer (https://vkguide.dev/docs/chapter-4/storage_buffers/) with the
+     * specified `data` and `usage`. It can be accessed with the RID that is returned. Once finished
+     * with your RID, you will want to free the RID using the RenderingDevice's `free_rid` method.
+     *
+     * Generated from Godot docs: RenderingDevice.storage_buffer_create
+     */
+    fun storageBufferCreate(sizeBytes: Long, data: ByteArray, usage: Long = 0L, creationBits: Long = 0L): RID {
+        return ObjectCalls.ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(storageBufferCreateBind, handle, sizeBytes, data, usage, creationBits)
+    }
+
+    /**
+     * Creates a new texture buffer. It can be accessed with the RID that is returned. Once finished
+     * with your RID, you will want to free the RID using the RenderingDevice's `free_rid` method.
+     *
+     * Generated from Godot docs: RenderingDevice.texture_buffer_create
+     */
+    fun textureBufferCreate(sizeBytes: Long, format: Long, data: ByteArray): RID {
+        return ObjectCalls.ptrcallWithUInt32LongByteArrayArgsRetRID(textureBufferCreateBind, handle, sizeBytes, format, data)
+    }
+
+    /**
      * Checks if the `uniform_set` is valid, i.e. is owned.
      *
      * Generated from Godot docs: RenderingDevice.uniform_set_is_valid
@@ -380,6 +460,18 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun bufferCopy(srcBuffer: RID, dstBuffer: RID, srcOffset: Long, dstOffset: Long, size: Long): Long {
         return ObjectCalls.ptrcallWithTwoRIDThreeUInt32ArgsRetLong(bufferCopyBind, handle, srcBuffer, dstBuffer, srcOffset, dstOffset, size)
+    }
+
+    /**
+     * Updates a region of `size_bytes` bytes, starting at `offset`, in the buffer, with the specified
+     * `data`. Prints an error if: - the region specified by `offset` + `size_bytes` exceeds the buffer
+     * - a draw list is currently active (created by `draw_list_begin`) - a compute list is currently
+     * active (created by `compute_list_begin`)
+     *
+     * Generated from Godot docs: RenderingDevice.buffer_update
+     */
+    fun bufferUpdate(buffer: RID, offset: Long, sizeBytes: Long, data: ByteArray): Long {
+        return ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(bufferUpdateBind, handle, buffer, offset, sizeBytes, data)
     }
 
     /**
@@ -536,6 +628,18 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Updates the contents of a hit SBT range. `hit_group_indices` specifies indices into the hit
+     * group array provided in `raytracing_pipeline_create`. The `offset` parameter specifies where
+     * within the allocated range the writing begins. This allows partial updates of a range. However,
+     * the complete range must be fully initialized before it is used in a raytracing dispatch.
+     *
+     * Generated from Godot docs: RenderingDevice.hit_sbt_range_update
+     */
+    fun hitSbtRangeUpdate(hitSbt: RID, range: Long, offset: Long, hitGroupIndices: List<Int>): Long {
+        return ObjectCalls.ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(hitSbtRangeUpdateBind, handle, hitSbt, range, offset, hitGroupIndices)
+    }
+
+    /**
      * Returns the window width matching the graphics API context for the given window ID (in pixels).
      * Despite the parameter being named `screen`, this returns the window size. See also
      * `screen_get_height`. Note: Only the main `RenderingDevice` returned by
@@ -585,6 +689,18 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Starts a list of raster drawing commands created with the `draw_*` methods. The returned value
+     * should be passed to other `draw_list_*` functions. Multiple draw lists cannot be created at the
+     * same time; you must finish the previous draw list first using `draw_list_end`. A simple drawing
+     * operation might look like this (code is not a complete example):
+     *
+     * Generated from Godot docs: RenderingDevice.draw_list_begin
+     */
+    fun drawListBegin(framebuffer: RID, drawFlags: Long = 0L, clearColorValues: List<Color>, clearDepthValue: Double = 1.0, clearStencilValue: Long = 0L, region: Rect2, breadcrumb: Long = 0L): Long {
+        return ObjectCalls.ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(drawListBeginBind, handle, framebuffer, drawFlags, clearColorValues, clearDepthValue, clearStencilValue, region, breadcrumb)
+    }
+
+    /**
      * Sets blend constants for the specified `draw_list` to `color`. Blend constants are used only if
      * the graphics pipeline is created with `DYNAMIC_STATE_BLEND_CONSTANTS` flag set.
      *
@@ -629,6 +745,17 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun drawListBindIndexArray(drawList: Long, indexArray: RID) {
         ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindIndexArrayBind, handle, drawList, indexArray)
+    }
+
+    /**
+     * Sets the push constant data to `buffer` for the specified `draw_list`. The shader determines how
+     * this binary data is used. The buffer's size in bytes must also be specified in `size_bytes`
+     * (this can be obtained by calling the `PackedByteArray.size` method on the passed `buffer`).
+     *
+     * Generated from Godot docs: RenderingDevice.draw_list_set_push_constant
+     */
+    fun drawListSetPushConstant(drawList: Long, buffer: ByteArray, sizeBytes: Long) {
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(drawListSetPushConstantBind, handle, drawList, buffer, sizeBytes)
     }
 
     /**
@@ -726,6 +853,17 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Sets the push constant data to `buffer` for the specified `compute_list`. The shader determines
+     * how this binary data is used. The buffer's size in bytes must also be specified in `size_bytes`
+     * (this can be obtained by calling the `PackedByteArray.size` method on the passed `buffer`).
+     *
+     * Generated from Godot docs: RenderingDevice.compute_list_set_push_constant
+     */
+    fun computeListSetPushConstant(computeList: Long, buffer: ByteArray, sizeBytes: Long) {
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(computeListSetPushConstantBind, handle, computeList, buffer, sizeBytes)
+    }
+
+    /**
      * Binds the `uniform_set` to this `compute_list`. Godot ensures that all textures in the uniform
      * set have the correct Vulkan access masks. If Godot had to change access masks of textures, it
      * will raise a Vulkan image memory barrier.
@@ -794,6 +932,18 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun raytracingListBindRaytracingPipeline(raytracingList: Long, raytracingPipeline: RID) {
         ObjectCalls.ptrcallWithLongAndRIDArg(raytracingListBindRaytracingPipelineBind, handle, raytracingList, raytracingPipeline)
+    }
+
+    /**
+     * Sets the push constant data to `buffer` for the specified `raytracing_list`. The shader
+     * determines how this binary data is used. The buffer's size in bytes must also be specified in
+     * `size_bytes` (this can be obtained by calling the `PackedByteArray.size` method on the passed
+     * `buffer`).
+     *
+     * Generated from Godot docs: RenderingDevice.raytracing_list_set_push_constant
+     */
+    fun raytracingListSetPushConstant(raytracingList: Long, buffer: ByteArray, sizeBytes: Long) {
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(raytracingListSetPushConstantBind, handle, raytracingList, buffer, sizeBytes)
     }
 
     /**
@@ -1821,6 +1971,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create_from_extension", TEXTURE_CREATE_FROM_EXTENSION_HASH)
         }
 
+        private const val TEXTURE_UPDATE_HASH = 1349464008L
+        private val textureUpdateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "texture_update", TEXTURE_UPDATE_HASH)
+        }
+
         private const val TEXTURE_GET_DATA_HASH = 1859412099L
         private val textureGetDataBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_data", TEXTURE_GET_DATA_HASH)
@@ -1916,6 +2071,16 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "sampler_is_format_supported_for_filter", SAMPLER_IS_FORMAT_SUPPORTED_FOR_FILTER_HASH)
         }
 
+        private const val VERTEX_BUFFER_CREATE_HASH = 2089548973L
+        private val vertexBufferCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "vertex_buffer_create", VERTEX_BUFFER_CREATE_HASH)
+        }
+
+        private const val INDEX_BUFFER_CREATE_HASH = 2368684885L
+        private val indexBufferCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "index_buffer_create", INDEX_BUFFER_CREATE_HASH)
+        }
+
         private const val INDEX_ARRAY_CREATE_HASH = 2256026069L
         private val indexArrayCreateBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "index_array_create", INDEX_ARRAY_CREATE_HASH)
@@ -1936,6 +2101,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "shader_create_from_spirv", SHADER_CREATE_FROM_SPIRV_HASH)
         }
 
+        private const val SHADER_CREATE_FROM_BYTECODE_HASH = 1687031350L
+        private val shaderCreateFromBytecodeBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "shader_create_from_bytecode", SHADER_CREATE_FROM_BYTECODE_HASH)
+        }
+
         private const val SHADER_CREATE_PLACEHOLDER_HASH = 529393457L
         private val shaderCreatePlaceholderBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "shader_create_placeholder", SHADER_CREATE_PLACEHOLDER_HASH)
@@ -1946,6 +2116,21 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "shader_get_vertex_input_attribute_mask", SHADER_GET_VERTEX_INPUT_ATTRIBUTE_MASK_HASH)
         }
 
+        private const val UNIFORM_BUFFER_CREATE_HASH = 2089548973L
+        private val uniformBufferCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "uniform_buffer_create", UNIFORM_BUFFER_CREATE_HASH)
+        }
+
+        private const val STORAGE_BUFFER_CREATE_HASH = 1609052553L
+        private val storageBufferCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "storage_buffer_create", STORAGE_BUFFER_CREATE_HASH)
+        }
+
+        private const val TEXTURE_BUFFER_CREATE_HASH = 1470338698L
+        private val textureBufferCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "texture_buffer_create", TEXTURE_BUFFER_CREATE_HASH)
+        }
+
         private const val UNIFORM_SET_IS_VALID_HASH = 3521089500L
         private val uniformSetIsValidBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "uniform_set_is_valid", UNIFORM_SET_IS_VALID_HASH)
@@ -1954,6 +2139,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val BUFFER_COPY_HASH = 864257779L
         private val bufferCopyBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_copy", BUFFER_COPY_HASH)
+        }
+
+        private const val BUFFER_UPDATE_HASH = 3454956949L
+        private val bufferUpdateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "buffer_update", BUFFER_UPDATE_HASH)
         }
 
         private const val BUFFER_CLEAR_HASH = 2452320800L
@@ -2021,6 +2211,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "hit_sbt_range_free", HIT_SBT_RANGE_FREE_HASH)
         }
 
+        private const val HIT_SBT_RANGE_UPDATE_HASH = 1332346675L
+        private val hitSbtRangeUpdateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "hit_sbt_range_update", HIT_SBT_RANGE_UPDATE_HASH)
+        }
+
         private const val SCREEN_GET_WIDTH_HASH = 1591665591L
         private val screenGetWidthBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "screen_get_width", SCREEN_GET_WIDTH_HASH)
@@ -2039,6 +2234,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val DRAW_LIST_BEGIN_FOR_SCREEN_HASH = 3988079995L
         private val drawListBeginForScreenBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_begin_for_screen", DRAW_LIST_BEGIN_FOR_SCREEN_HASH)
+        }
+
+        private const val DRAW_LIST_BEGIN_HASH = 1317926357L
+        private val drawListBeginBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "draw_list_begin", DRAW_LIST_BEGIN_HASH)
         }
 
         private const val DRAW_LIST_SET_BLEND_CONSTANTS_HASH = 2878471219L
@@ -2064,6 +2264,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val DRAW_LIST_BIND_INDEX_ARRAY_HASH = 4040184819L
         private val drawListBindIndexArrayBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_index_array", DRAW_LIST_BIND_INDEX_ARRAY_HASH)
+        }
+
+        private const val DRAW_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L
+        private val drawListSetPushConstantBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "draw_list_set_push_constant", DRAW_LIST_SET_PUSH_CONSTANT_HASH)
         }
 
         private const val DRAW_LIST_DRAW_HASH = 4230067973L
@@ -2111,6 +2316,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_bind_compute_pipeline", COMPUTE_LIST_BIND_COMPUTE_PIPELINE_HASH)
         }
 
+        private const val COMPUTE_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L
+        private val computeListSetPushConstantBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "compute_list_set_push_constant", COMPUTE_LIST_SET_PUSH_CONSTANT_HASH)
+        }
+
         private const val COMPUTE_LIST_BIND_UNIFORM_SET_HASH = 749655778L
         private val computeListBindUniformSetBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_bind_uniform_set", COMPUTE_LIST_BIND_UNIFORM_SET_HASH)
@@ -2144,6 +2354,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val RAYTRACING_LIST_BIND_RAYTRACING_PIPELINE_HASH = 4040184819L
         private val raytracingListBindRaytracingPipelineBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_bind_raytracing_pipeline", RAYTRACING_LIST_BIND_RAYTRACING_PIPELINE_HASH)
+        }
+
+        private const val RAYTRACING_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L
+        private val raytracingListSetPushConstantBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_set_push_constant", RAYTRACING_LIST_SET_PUSH_CONSTANT_HASH)
         }
 
         private const val RAYTRACING_LIST_BIND_UNIFORM_SET_HASH = 749655778L

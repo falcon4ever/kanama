@@ -78,9 +78,11 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
         @JvmName("setPaletteIndexProperty")
         set(value) = setPaletteIndex(value)
 
-    val paletteCustomColors: List<Color>
+    var paletteCustomColors: List<Color>
         @JvmName("paletteCustomColorsProperty")
         get() = getPaletteCustomColors()
+        @JvmName("setPaletteCustomColorsProperty")
+        set(value) = setPaletteCustomColors(value)
 
     /**
      * Base font used to create a variation. If not set, default `Theme` font is used.
@@ -253,6 +255,17 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPaletteCustomColorsBind, handle)
     }
 
+    /**
+     * An array of colors to override predefined palette. Use `Color(0, 0, 0, 0)`, to keep predefined
+     * palette color at specific position.
+     *
+     * Generated from Godot docs: FontVariation.set_palette_custom_colors
+     */
+    fun setPaletteCustomColors(colors: List<Color>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedColorListArg(setPaletteCustomColorsBind, handle, colors)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): FontVariation? =
@@ -334,6 +347,11 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
         private const val GET_PALETTE_CUSTOM_COLORS_HASH = 1392750486L
         private val getPaletteCustomColorsBind by lazy {
             ObjectCalls.getMethodBind("FontVariation", "get_palette_custom_colors", GET_PALETTE_CUSTOM_COLORS_HASH)
+        }
+
+        private const val SET_PALETTE_CUSTOM_COLORS_HASH = 3546319833L
+        private val setPaletteCustomColorsBind by lazy {
+            ObjectCalls.getMethodBind("FontVariation", "set_palette_custom_colors", SET_PALETTE_CUSTOM_COLORS_HASH)
         }
     }
 }

@@ -60,6 +60,11 @@ class OpenXRPlaneTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(han
         return ObjectCalls.ptrcallNoArgsRetString(getPlaneLabelBind, handle)
     }
 
+    fun setMeshData(origin: Transform3D, vertices: List<Vector2>, indices: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTransform3DPackedVector2ListPackedInt32ListArgs(setMeshDataBind, handle, origin, vertices, indices)
+    }
+
     fun clearMeshData() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearMeshDataBind, handle)
@@ -120,6 +125,11 @@ class OpenXRPlaneTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(han
         private const val GET_PLANE_LABEL_HASH = 201670096L
         private val getPlaneLabelBind by lazy {
             ObjectCalls.getMethodBind("OpenXRPlaneTracker", "get_plane_label", GET_PLANE_LABEL_HASH)
+        }
+
+        private const val SET_MESH_DATA_HASH = 1877193149L
+        private val setMeshDataBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRPlaneTracker", "set_mesh_data", SET_MESH_DATA_HASH)
         }
 
         private const val CLEAR_MESH_DATA_HASH = 3218959716L

@@ -12,45 +12,65 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: RDShaderSPIRV
  */
 class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
-    val bytecodeVertex: ByteArray
+    var bytecodeVertex: ByteArray
         @JvmName("bytecodeVertexProperty")
         get() = getStageBytecode(0L)
+        @JvmName("setBytecodeVertexProperty")
+        set(value) = setStageBytecode(0L, value)
 
-    val bytecodeFragment: ByteArray
+    var bytecodeFragment: ByteArray
         @JvmName("bytecodeFragmentProperty")
         get() = getStageBytecode(1L)
+        @JvmName("setBytecodeFragmentProperty")
+        set(value) = setStageBytecode(1L, value)
 
-    val bytecodeTesselationControl: ByteArray
+    var bytecodeTesselationControl: ByteArray
         @JvmName("bytecodeTesselationControlProperty")
         get() = getStageBytecode(2L)
+        @JvmName("setBytecodeTesselationControlProperty")
+        set(value) = setStageBytecode(2L, value)
 
-    val bytecodeTesselationEvaluation: ByteArray
+    var bytecodeTesselationEvaluation: ByteArray
         @JvmName("bytecodeTesselationEvaluationProperty")
         get() = getStageBytecode(3L)
+        @JvmName("setBytecodeTesselationEvaluationProperty")
+        set(value) = setStageBytecode(3L, value)
 
-    val bytecodeCompute: ByteArray
+    var bytecodeCompute: ByteArray
         @JvmName("bytecodeComputeProperty")
         get() = getStageBytecode(4L)
+        @JvmName("setBytecodeComputeProperty")
+        set(value) = setStageBytecode(4L, value)
 
-    val bytecodeRaygen: ByteArray
+    var bytecodeRaygen: ByteArray
         @JvmName("bytecodeRaygenProperty")
         get() = getStageBytecode(5L)
+        @JvmName("setBytecodeRaygenProperty")
+        set(value) = setStageBytecode(5L, value)
 
-    val bytecodeAnyHit: ByteArray
+    var bytecodeAnyHit: ByteArray
         @JvmName("bytecodeAnyHitProperty")
         get() = getStageBytecode(6L)
+        @JvmName("setBytecodeAnyHitProperty")
+        set(value) = setStageBytecode(6L, value)
 
-    val bytecodeClosestHit: ByteArray
+    var bytecodeClosestHit: ByteArray
         @JvmName("bytecodeClosestHitProperty")
         get() = getStageBytecode(7L)
+        @JvmName("setBytecodeClosestHitProperty")
+        set(value) = setStageBytecode(7L, value)
 
-    val bytecodeMiss: ByteArray
+    var bytecodeMiss: ByteArray
         @JvmName("bytecodeMissProperty")
         get() = getStageBytecode(8L)
+        @JvmName("setBytecodeMissProperty")
+        set(value) = setStageBytecode(8L, value)
 
-    val bytecodeIntersection: ByteArray
+    var bytecodeIntersection: ByteArray
         @JvmName("bytecodeIntersectionProperty")
         get() = getStageBytecode(9L)
+        @JvmName("setBytecodeIntersectionProperty")
+        set(value) = setStageBytecode(9L, value)
 
     var compileErrorVertex: String
         @JvmName("compileErrorVertexProperty")
@@ -115,6 +135,16 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
     /**
      * The SPIR-V bytecode for the vertex shader stage.
      *
+     * Generated from Godot docs: RDShaderSPIRV.set_stage_bytecode
+     */
+    fun setStageBytecode(stage: Long, bytecode: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithLongAndByteArrayArg(setStageBytecodeBind, handle, stage, bytecode)
+    }
+
+    /**
+     * The SPIR-V bytecode for the vertex shader stage.
+     *
      * Generated from Godot docs: RDShaderSPIRV.get_stage_bytecode
      */
     fun getStageBytecode(stage: Long): ByteArray {
@@ -151,6 +181,11 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): RDShaderSPIRV? =
             if (handle.address() == 0L) null else RDShaderSPIRV(handle)
+
+        private const val SET_STAGE_BYTECODE_HASH = 3514097977L
+        private val setStageBytecodeBind by lazy {
+            ObjectCalls.getMethodBind("RDShaderSPIRV", "set_stage_bytecode", SET_STAGE_BYTECODE_HASH)
+        }
 
         private const val GET_STAGE_BYTECODE_HASH = 3816765404L
         private val getStageBytecodeBind by lazy {

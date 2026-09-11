@@ -393,6 +393,21 @@ object EditorInterface {
     }
 
     /**
+     * Pops up an editor dialog for selecting properties from `object`. The `callback` must take a
+     * single argument of type `NodePath`. It is called on the selected property path (see
+     * `NodePath.get_as_property_path`) or the empty path `^""` if the dialog is canceled. If
+     * `type_filter` is provided, the dialog will only show properties that match one of the listed
+     * `Variant.Type` values. If `current_value` is provided, the property will be selected
+     * automatically in the property list, if it exists.
+     *
+     * Generated from Godot docs: EditorInterface.popup_property_selector
+     */
+    @JvmStatic
+    fun popupPropertySelector(objectValue: GodotObject, callback: GodotCallable, typeFilter: List<Int>, currentValue: String = "") {
+        ObjectCalls.ptrcallWithObjectCallablePackedInt32ListStringArgs(popupPropertySelectorBind, singleton, objectValue.handle, callback.target.handle, callback.method, typeFilter, currentValue)
+    }
+
+    /**
      * Pops up an editor dialog for selecting a method from `object`. The `callback` must take a single
      * argument of type `String` which will contain the name of the selected method or be empty if the
      * dialog is canceled. If `current_value` is provided, the method will be selected automatically in
@@ -910,6 +925,11 @@ object EditorInterface {
     private const val SET_CURRENT_FEATURE_PROFILE_HASH = 83702148L
     private val setCurrentFeatureProfileBind by lazy {
         ObjectCalls.getMethodBind("EditorInterface", "set_current_feature_profile", SET_CURRENT_FEATURE_PROFILE_HASH)
+    }
+
+    private const val POPUP_PROPERTY_SELECTOR_HASH = 2955609011L
+    private val popupPropertySelectorBind by lazy {
+        ObjectCalls.getMethodBind("EditorInterface", "popup_property_selector", POPUP_PROPERTY_SELECTOR_HASH)
     }
 
     private const val POPUP_METHOD_SELECTOR_HASH = 3585505226L

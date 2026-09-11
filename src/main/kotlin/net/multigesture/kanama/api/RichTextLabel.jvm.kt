@@ -11,9 +11,7 @@ import net.multigesture.kanama.types.Rect2
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP RichTextLabel waits on: ptrcallWithArrayArg, ptrcallWithObjectAndDictionaryArg,
 //   ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs,
-//   ptrcallWithPackedStringListArgRetDictionary,
-//   ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs, ptrcallWithVariantArg,
-//   ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs,
+//   ptrcallWithVariantArg, ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs,
 //   ptrcallWithVariantLongStringArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -42,15 +40,6 @@ fun RichTextLabel.addImage(image: Texture2D?, width: Double = 0.0, height: Doubl
  */
 fun RichTextLabel.updateImage(key: Any?, mask: Long, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L) {
     ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, handle, key, mask, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
-}
-
-/**
- * Adds a ``p`` tag to the tag stack.
- *
- * Generated from Godot docs: RichTextLabel.push_paragraph
- */
-fun RichTextLabel.pushParagraph(alignment: Long, baseDirection: Long = 0L, language: String = "", stParser: Long = 0L, justificationFlags: Long = 163L, tabStops: List<Float>) {
-    ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, handle, alignment, baseDirection, language, stParser, justificationFlags, tabStops)
 }
 
 /**
@@ -86,15 +75,6 @@ fun RichTextLabel.setStructuredTextBidiOverrideOptions(args: List<Any?>) {
 }
 
 /**
- * Parses BBCode parameter `expressions` into a dictionary.
- *
- * Generated from Godot docs: RichTextLabel.parse_expressions_for_values
- */
-fun RichTextLabel.parseExpressionsForValues(expressions: List<String>): Map<String, Any?> {
-    return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(parseExpressionsForValuesBind, handle, expressions)
-}
-
-/**
  * The currently installed custom effects. This is an array of `RichTextEffect`s. To add a custom
  * effect, it's more convenient to use `install_effect`.
  *
@@ -124,11 +104,6 @@ private val updateImageBind by lazy {
     ObjectCalls.getMethodBind("RichTextLabel", "update_image", UPDATE_IMAGE_HASH)
 }
 
-private const val PUSH_PARAGRAPH_HASH = 3089306873L
-private val pushParagraphBind by lazy {
-    ObjectCalls.getMethodBind("RichTextLabel", "push_paragraph", PUSH_PARAGRAPH_HASH)
-}
-
 private const val PUSH_META_HASH = 3765356747L
 private val pushMetaBind by lazy {
     ObjectCalls.getMethodBind("RichTextLabel", "push_meta", PUSH_META_HASH)
@@ -142,11 +117,6 @@ private val pushCustomfxBind by lazy {
 private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
 private val setStructuredTextBidiOverrideOptionsBind by lazy {
     ObjectCalls.getMethodBind("RichTextLabel", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-}
-
-private const val PARSE_EXPRESSIONS_FOR_VALUES_HASH = 1522900837L
-private val parseExpressionsForValuesBind by lazy {
-    ObjectCalls.getMethodBind("RichTextLabel", "parse_expressions_for_values", PARSE_EXPRESSIONS_FOR_VALUES_HASH)
 }
 
 private const val SET_EFFECTS_HASH = 381264803L

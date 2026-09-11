@@ -75,17 +75,23 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setInvertBorderProperty")
         set(value) = setInvertBorder(value)
 
-    val polygon: List<Vector2>
+    var polygon: List<Vector2>
         @JvmName("polygonProperty")
         get() = getPolygon()
+        @JvmName("setPolygonProperty")
+        set(value) = setPolygon(value)
 
-    val uv: List<Vector2>
+    var uv: List<Vector2>
         @JvmName("uvProperty")
         get() = getUv()
+        @JvmName("setUvProperty")
+        set(value) = setUv(value)
 
-    val vertexColors: List<Color>
+    var vertexColors: List<Color>
         @JvmName("vertexColorsProperty")
         get() = getVertexColors()
+        @JvmName("setVertexColorsProperty")
+        set(value) = setVertexColors(value)
 
     val polygons: List<Any?>
         @JvmName("polygonsProperty")
@@ -100,10 +106,29 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
     /**
      * The polygon's list of vertices. The final point will be connected to the first.
      *
+     * Generated from Godot docs: Polygon2D.set_polygon
+     */
+    fun setPolygon(polygon: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+    }
+
+    /**
+     * The polygon's list of vertices. The final point will be connected to the first.
+     *
      * Generated from Godot docs: Polygon2D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
+    }
+
+    /**
+     * Texture coordinates for each vertex of the polygon. There should be one UV value per polygon
+     * vertex. If there are fewer, undefined vertices will use `Vector2(0, 0)`.
+     *
+     * Generated from Godot docs: Polygon2D.set_uv
+     */
+    fun setUv(uv: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setUvBind, handle, uv)
     }
 
     /**
@@ -146,6 +171,16 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      */
     fun getPolygons(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getPolygonsBind, handle)
+    }
+
+    /**
+     * Color for each vertex. Colors are interpolated between vertices, resulting in smooth gradients.
+     * There should be one per polygon vertex. If there are fewer, undefined vertices will use `color`.
+     *
+     * Generated from Godot docs: Polygon2D.set_vertex_colors
+     */
+    fun setVertexColors(vertexColors: List<Color>) {
+        ObjectCalls.ptrcallWithPackedColorListArg(setVertexColorsBind, handle, vertexColors)
     }
 
     /**
@@ -311,6 +346,15 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Adds a bone with the specified `path` and `weights`.
+     *
+     * Generated from Godot docs: Polygon2D.add_bone
+     */
+    fun addBone(path: NodePath, weights: List<Float>) {
+        ObjectCalls.ptrcallWithNodePathAndPackedFloat32ListArgs(addBoneBind, handle, path, weights)
+    }
+
+    /**
      * Returns the number of bones in this `Polygon2D`.
      *
      * Generated from Godot docs: Polygon2D.get_bone_count
@@ -365,6 +409,15 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Sets the weight values for the specified bone.
+     *
+     * Generated from Godot docs: Polygon2D.set_bone_weights
+     */
+    fun setBoneWeights(index: Int, weights: List<Float>) {
+        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setBoneWeightsBind, handle, index, weights)
+    }
+
+    /**
      * Path to a `Skeleton2D` node used for skeleton-based deformations of this polygon. If empty or
      * invalid, skeletal deformations will not be used.
      *
@@ -410,9 +463,19 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         internal fun wrap(handle: MemorySegment): Polygon2D? =
             if (handle.address() == 0L) null else Polygon2D(handle)
 
+        private const val SET_POLYGON_HASH = 1509147220L
+        private val setPolygonBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "set_polygon", SET_POLYGON_HASH)
+        }
+
         private const val GET_POLYGON_HASH = 2961356807L
         private val getPolygonBind by lazy {
             ObjectCalls.getMethodBind("Polygon2D", "get_polygon", GET_POLYGON_HASH)
+        }
+
+        private const val SET_UV_HASH = 1509147220L
+        private val setUvBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "set_uv", SET_UV_HASH)
         }
 
         private const val GET_UV_HASH = 2961356807L
@@ -433,6 +496,11 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         private const val GET_POLYGONS_HASH = 3995934104L
         private val getPolygonsBind by lazy {
             ObjectCalls.getMethodBind("Polygon2D", "get_polygons", GET_POLYGONS_HASH)
+        }
+
+        private const val SET_VERTEX_COLORS_HASH = 3546319833L
+        private val setVertexColorsBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "set_vertex_colors", SET_VERTEX_COLORS_HASH)
         }
 
         private const val GET_VERTEX_COLORS_HASH = 1392750486L
@@ -520,6 +588,11 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
             ObjectCalls.getMethodBind("Polygon2D", "get_offset", GET_OFFSET_HASH)
         }
 
+        private const val ADD_BONE_HASH = 703042815L
+        private val addBoneBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "add_bone", ADD_BONE_HASH)
+        }
+
         private const val GET_BONE_COUNT_HASH = 3905245786L
         private val getBoneCountBind by lazy {
             ObjectCalls.getMethodBind("Polygon2D", "get_bone_count", GET_BONE_COUNT_HASH)
@@ -548,6 +621,11 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
         private const val SET_BONE_PATH_HASH = 2761262315L
         private val setBonePathBind by lazy {
             ObjectCalls.getMethodBind("Polygon2D", "set_bone_path", SET_BONE_PATH_HASH)
+        }
+
+        private const val SET_BONE_WEIGHTS_HASH = 1345852415L
+        private val setBoneWeightsBind by lazy {
+            ObjectCalls.getMethodBind("Polygon2D", "set_bone_weights", SET_BONE_WEIGHTS_HASH)
         }
 
         private const val SET_SKELETON_HASH = 1348162250L

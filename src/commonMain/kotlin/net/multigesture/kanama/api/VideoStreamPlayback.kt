@@ -12,7 +12,16 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: VideoStreamPlayback
  */
 class VideoStreamPlayback(handle: MemorySegment) : Resource(handle) {
-    // No conservative instance methods emitted yet.
+    /**
+     * Render `num_frames` audio frames (of `_get_channels` floats each) from `buffer`, starting from
+     * index `offset` in the array. Returns the number of audio frames rendered, or -1 on error.
+     *
+     * Generated from Godot docs: VideoStreamPlayback.mix_audio
+     */
+    fun mixAudio(numFrames: Int, buffer: List<Float>, offset: Int = 0): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(mixAudioBind, handle, numFrames, buffer, offset)
+    }
 
     companion object {
         @JvmStatic
@@ -22,6 +31,9 @@ class VideoStreamPlayback(handle: MemorySegment) : Resource(handle) {
         internal fun wrap(handle: MemorySegment): VideoStreamPlayback? =
             if (handle.address() == 0L) null else VideoStreamPlayback(handle)
 
-        // No MethodBinds emitted yet.
+        private const val MIX_AUDIO_HASH = 93876830L
+        private val mixAudioBind by lazy {
+            ObjectCalls.getMethodBind("VideoStreamPlayback", "mix_audio", MIX_AUDIO_HASH)
+        }
     }
 }

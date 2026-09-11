@@ -13,9 +13,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: SplitContainer
  */
 open class SplitContainer(handle: MemorySegment) : Container(handle) {
-    val splitOffsets: List<Int>
+    var splitOffsets: List<Int>
         @JvmName("splitOffsetsProperty")
         get() = getSplitOffsets()
+        @JvmName("setSplitOffsetsProperty")
+        set(value) = setSplitOffsets(value)
 
     var collapsed: Boolean
         @JvmName("collapsedProperty")
@@ -82,6 +84,25 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
         get() = getSplitOffset()
         @JvmName("setSplitOffsetProperty")
         set(value) = setSplitOffset(value)
+
+    /**
+     * Offsets for each dragger in pixels. Each one is the offset of the split between the `Control`
+     * nodes before and after the dragger, with `0` being the default position. The default position is
+     * based on the `Control` nodes expand flags and minimum sizes. See
+     * `Control.size_flags_horizontal`, `Control.size_flags_vertical`, and
+     * `Control.size_flags_stretch_ratio`. If none of the `Control` nodes before the dragger are
+     * expanded, the default position will be at the start of the `SplitContainer`. If none of the
+     * `Control` nodes after the dragger are expanded, the default position will be at the end of the
+     * `SplitContainer`. If the dragger is in between expanded `Control` nodes, the default position
+     * will be in the middle, based on the `Control.size_flags_stretch_ratio`s and minimum sizes. Note:
+     * If the split offsets cause `Control` nodes to overlap, the first split will take priority when
+     * resolving the positions.
+     *
+     * Generated from Godot docs: SplitContainer.set_split_offsets
+     */
+    fun setSplitOffsets(offsets: List<Int>) {
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setSplitOffsetsBind, handle, offsets)
+    }
 
     /**
      * Offsets for each dragger in pixels. Each one is the offset of the split between the `Control`
@@ -379,6 +400,11 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
 
         internal fun wrap(handle: MemorySegment): SplitContainer? =
             if (handle.address() == 0L) null else SplitContainer(handle)
+
+        private const val SET_SPLIT_OFFSETS_HASH = 3614634198L
+        private val setSplitOffsetsBind by lazy {
+            ObjectCalls.getMethodBind("SplitContainer", "set_split_offsets", SET_SPLIT_OFFSETS_HASH)
+        }
 
         private const val GET_SPLIT_OFFSETS_HASH = 1930428628L
         private val getSplitOffsetsBind by lazy {

@@ -2,7 +2,6 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -14,39 +13,15 @@ import net.multigesture.kanama.types.Vector3i
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TextServer waits on: ptrcallWithLongArrayStringArgsRetVector3iList,
-//   ptrcallWithRIDAndArrayArg, ptrcallWithRIDAndByteArrayArg, ptrcallWithRIDAndDictionaryArg,
-//   ptrcallWithRIDAndLongArgRetVector2iList, ptrcallWithRIDAndPackedColorListArgs,
-//   ptrcallWithRIDAndPackedFloat32ListArgRetDouble, ptrcallWithRIDAndVariantArgRetBool,
+//   ptrcallWithRIDAndArrayArg, ptrcallWithRIDAndDictionaryArg,
+//   ptrcallWithRIDAndLongArgRetVector2iList, ptrcallWithRIDAndVariantArgRetBool,
 //   ptrcallWithRIDAndVariantArgRetLong, ptrcallWithRIDAndVariantArgRetRect2,
 //   ptrcallWithRIDAndVariantArgRetVector2i, ptrcallWithRIDArgRetPackedStringList,
 //   ptrcallWithRIDArgRetVector2iList, ptrcallWithRIDLongRIDListLongDictionaryArgs,
-//   ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List,
 //   ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool,
 //   ptrcallWithRIDVariantVector2LongDoubleArgsRetBool,
-//   ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool,
-//   ptrcallWithRIDVector2iLongPackedInt32ListArgs, ptrcallWithStringAndPackedStringListArgRetLong
+//   ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Sets font source data, e.g contents of the dynamic font source file.
- *
- * Generated from Godot docs: TextServer.font_set_data
- */
-fun TextServer.fontSetData(fontRid: RID, data: ByteArray) {
-    checkOpen()
-    ObjectCalls.ptrcallWithRIDAndByteArrayArg(fontSetDataBind, handle, fontRid, data)
-}
-
-/**
- * Sets array of custom colors to override predefined palette. Set to empty array to reset
- * overrides. Use `Color(0, 0, 0, 0)`, to keep predefined palette color at specific position.
- *
- * Generated from Godot docs: TextServer.font_set_palette_custom_colors
- */
-fun TextServer.fontSetPaletteCustomColors(fontRid: RID, colors: List<Color>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithRIDAndPackedColorListArgs(fontSetPaletteCustomColorsBind, handle, fontRid, colors)
-}
 
 /**
  * Sets variation coordinates for the specified font cache entry. See
@@ -68,16 +43,6 @@ fun TextServer.fontSetVariationCoordinates(fontRid: RID, variationCoordinates: M
 fun TextServer.fontGetSizeCacheList(fontRid: RID): List<Vector2i> {
     checkOpen()
     return ObjectCalls.ptrcallWithRIDArgRetVector2iList(fontGetSizeCacheListBind, handle, fontRid)
-}
-
-/**
- * Sets array containing glyph packing data.
- *
- * Generated from Godot docs: TextServer.font_set_texture_offsets
- */
-fun TextServer.fontSetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long, offset: List<Int>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithRIDVector2iLongPackedInt32ListArgs(fontSetTextureOffsetsBind, handle, fontRid, size, textureIndex, offset)
 }
 
 /**
@@ -183,26 +148,6 @@ fun TextServer.shapedSetSpanUpdateFont(shaped: RID, index: Long, fonts: List<RID
 }
 
 /**
- * Aligns shaped text to the given tab-stops.
- *
- * Generated from Godot docs: TextServer.shaped_text_tab_align
- */
-fun TextServer.shapedTextTabAlign(shaped: RID, tabStops: List<Float>): Double {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArgRetDouble(shapedTextTabAlignBind, handle, shaped, tabStops)
-}
-
-/**
- * Breaks text to the lines and columns. Returns character ranges for each segment.
- *
- * Generated from Godot docs: TextServer.shaped_text_get_line_breaks_adv
- */
-fun TextServer.shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start: Long = 0L, once: Boolean = true, breakFlags: Long = 3L): List<Int> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(shapedTextGetLineBreaksAdvBind, handle, shaped, width, start, once, breakFlags)
-}
-
-/**
  * Returns bounding rectangle of the inline object.
  *
  * Generated from Godot docs: TextServer.shaped_text_get_object_rect
@@ -233,19 +178,6 @@ fun TextServer.shapedTextGetObjectGlyph(shaped: RID, key: Any?): Long {
 }
 
 /**
- * Returns index of the first string in `dict` which is visually confusable with the `string`, or
- * `-1` if none is found. Note: This method doesn't detect invisible characters, for spoof
- * detection use it in combination with `spoof_check`. Note: Always returns `-1` if the server does
- * not support the `FEATURE_UNICODE_SECURITY` feature.
- *
- * Generated from Godot docs: TextServer.is_confusable
- */
-fun TextServer.isConfusable(string: String, dict: List<String>): Long {
-    checkOpen()
-    return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(isConfusableBind, handle, string, dict)
-}
-
-/**
  * Default implementation of the BiDi algorithm override function.
  *
  * Generated from Godot docs: TextServer.parse_structured_text
@@ -253,16 +185,6 @@ fun TextServer.isConfusable(string: String, dict: List<String>): Long {
 fun TextServer.parseStructuredText(parserType: Long, args: List<Any?>, text: String): List<Vector3i> {
     checkOpen()
     return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, handle, parserType, args, text)
-}
-
-private const val FONT_SET_DATA_HASH = 1355495400L
-private val fontSetDataBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_set_data", FONT_SET_DATA_HASH)
-}
-
-private const val FONT_SET_PALETTE_CUSTOM_COLORS_HASH = 4037098590L
-private val fontSetPaletteCustomColorsBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_set_palette_custom_colors", FONT_SET_PALETTE_CUSTOM_COLORS_HASH)
 }
 
 private const val FONT_SET_VARIATION_COORDINATES_HASH = 1217542888L
@@ -273,11 +195,6 @@ private val fontSetVariationCoordinatesBind by lazy {
 private const val FONT_GET_SIZE_CACHE_LIST_HASH = 2684255073L
 private val fontGetSizeCacheListBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "font_get_size_cache_list", FONT_GET_SIZE_CACHE_LIST_HASH)
-}
-
-private const val FONT_SET_TEXTURE_OFFSETS_HASH = 3005398047L
-private val fontSetTextureOffsetsBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "font_set_texture_offsets", FONT_SET_TEXTURE_OFFSETS_HASH)
 }
 
 private const val FONT_GET_KERNING_LIST_HASH = 1778388067L
@@ -330,16 +247,6 @@ private val shapedSetSpanUpdateFontBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_set_span_update_font", SHAPED_SET_SPAN_UPDATE_FONT_HASH)
 }
 
-private const val SHAPED_TEXT_TAB_ALIGN_HASH = 1283669550L
-private val shapedTextTabAlignBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_text_tab_align", SHAPED_TEXT_TAB_ALIGN_HASH)
-}
-
-private const val SHAPED_TEXT_GET_LINE_BREAKS_ADV_HASH = 2376991424L
-private val shapedTextGetLineBreaksAdvBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "shaped_text_get_line_breaks_adv", SHAPED_TEXT_GET_LINE_BREAKS_ADV_HASH)
-}
-
 private const val SHAPED_TEXT_GET_OBJECT_RECT_HASH = 447978354L
 private val shapedTextGetObjectRectBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_get_object_rect", SHAPED_TEXT_GET_OBJECT_RECT_HASH)
@@ -353,11 +260,6 @@ private val shapedTextGetObjectRangeBind by lazy {
 private const val SHAPED_TEXT_GET_OBJECT_GLYPH_HASH = 1260085030L
 private val shapedTextGetObjectGlyphBind by lazy {
     ObjectCalls.getMethodBind("TextServer", "shaped_text_get_object_glyph", SHAPED_TEXT_GET_OBJECT_GLYPH_HASH)
-}
-
-private const val IS_CONFUSABLE_HASH = 1433197768L
-private val isConfusableBind by lazy {
-    ObjectCalls.getMethodBind("TextServer", "is_confusable", IS_CONFUSABLE_HASH)
 }
 
 private const val PARSE_STRUCTURED_TEXT_HASH = 3310685015L

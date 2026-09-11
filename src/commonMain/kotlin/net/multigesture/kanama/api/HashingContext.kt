@@ -23,6 +23,16 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Updates the computation with the given `chunk` of data.
+     *
+     * Generated from Godot docs: HashingContext.update
+     */
+    fun update(chunk: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, handle, chunk)
+    }
+
+    /**
      * Closes the current context, and return the computed hash.
      *
      * Generated from Godot docs: HashingContext.finish
@@ -47,6 +57,11 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
         private const val START_HASH = 3940338335L
         private val startBind by lazy {
             ObjectCalls.getMethodBind("HashingContext", "start", START_HASH)
+        }
+
+        private const val UPDATE_HASH = 680677267L
+        private val updateBind by lazy {
+            ObjectCalls.getMethodBind("HashingContext", "update", UPDATE_HASH)
         }
 
         private const val FINISH_HASH = 2115431945L

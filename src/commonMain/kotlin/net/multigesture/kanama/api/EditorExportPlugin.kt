@@ -12,6 +12,33 @@ import net.multigesture.kanama.binding.runtime.*
  */
 class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
     /**
+     * Adds a shared object or a directory containing only shared objects with the given `tags` and
+     * destination `path`. Note: In case of macOS exports, those shared objects will be added to
+     * `Frameworks` directory of app bundle. In case of a directory code-sign will error if you place
+     * non code object in directory.
+     *
+     * Generated from Godot docs: EditorExportPlugin.add_shared_object
+     */
+    fun addSharedObject(path: String, tags: List<String>, target: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringPackedStringListAndStringArgs(addSharedObjectBind, handle, path, tags, target)
+    }
+
+    /**
+     * Adds a custom file to be exported. `path` is the virtual path that can be used to load the file,
+     * `file` is the binary data of the file. When called inside `_export_file` and `remap` is `true`,
+     * the current file will not be exported, but instead remapped to this custom file. `remap` is
+     * ignored when called in other places. `file` will not be imported, so consider using
+     * `_customize_resource` to remap imported resources.
+     *
+     * Generated from Godot docs: EditorExportPlugin.add_file
+     */
+    fun addFile(path: String, file: ByteArray, remap: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringByteArrayBoolArgs(addFileBind, handle, path, file, remap)
+    }
+
+    /**
      * Adds a static library from the given `path` to the Apple embedded platform project.
      *
      * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_project_static_lib
@@ -219,6 +246,16 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): EditorExportPlugin? =
             if (handle.address() == 0L) null else EditorExportPlugin(handle)
+
+        private const val ADD_SHARED_OBJECT_HASH = 3098291045L
+        private val addSharedObjectBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlugin", "add_shared_object", ADD_SHARED_OBJECT_HASH)
+        }
+
+        private const val ADD_FILE_HASH = 527928637L
+        private val addFileBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlugin", "add_file", ADD_FILE_HASH)
+        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_PROJECT_STATIC_LIB_HASH = 83702148L
         private val addAppleEmbeddedPlatformProjectStaticLibBind by lazy {

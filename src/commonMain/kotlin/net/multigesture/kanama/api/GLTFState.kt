@@ -32,9 +32,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("setCopyrightProperty")
         set(value) = setCopyright(value)
 
-    val glbData: ByteArray
+    var glbData: ByteArray
         @JvmName("glbDataProperty")
         get() = getGlbData()
+        @JvmName("setGlbDataProperty")
+        set(value) = setGlbData(value)
 
     var useNamedSkinBinds: Boolean
         @JvmName("useNamedSkinBindsProperty")
@@ -80,9 +82,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("setFilenameProperty")
         set(value) = setFilename(value)
 
-    val rootNodes: List<Int>
+    var rootNodes: List<Int>
         @JvmName("rootNodesProperty")
         get() = getRootNodes()
+        @JvmName("setRootNodesProperty")
+        set(value) = setRootNodes(value)
 
     val textures: List<GLTFTexture>
         @JvmName("texturesProperty")
@@ -151,6 +155,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         ObjectCalls.ptrcallWithStringAndBoolArg(addUsedExtensionBind, handle, extensionName, required)
     }
 
+    fun appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
+        checkOpen()
+        return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(appendDataToBuffersBind, handle, data, deduplication)
+    }
+
     fun appendGltfNode(gltfNode: GLTFNode?, godotSceneNode: Node, parentNodeIndex: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(appendGltfNodeBind, handle, gltfNode?.requireOpenHandle() ?: MemorySegment.NULL, godotSceneNode.handle, parentNodeIndex)
@@ -194,6 +203,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun getGlbData(): ByteArray {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(getGlbDataBind, handle)
+    }
+
+    fun setGlbData(glbData: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithByteArrayArg(setGlbDataBind, handle, glbData)
     }
 
     fun getUseNamedSkinBinds(): Boolean {
@@ -274,6 +288,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun getRootNodes(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootNodesBind, handle)
+    }
+
+    fun setRootNodes(rootNodes: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootNodesBind, handle, rootNodes)
     }
 
     fun getTextures(): List<GLTFTexture> {
@@ -403,6 +422,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "add_used_extension", ADD_USED_EXTENSION_HASH)
         }
 
+        private const val APPEND_DATA_TO_BUFFERS_HASH = 1460416665L
+        private val appendDataToBuffersBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "append_data_to_buffers", APPEND_DATA_TO_BUFFERS_HASH)
+        }
+
         private const val APPEND_GLTF_NODE_HASH = 3562288551L
         private val appendGltfNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "append_gltf_node", APPEND_GLTF_NODE_HASH)
@@ -446,6 +470,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_GLB_DATA_HASH = 2362200018L
         private val getGlbDataBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_glb_data", GET_GLB_DATA_HASH)
+        }
+
+        private const val SET_GLB_DATA_HASH = 2971499966L
+        private val setGlbDataBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_glb_data", SET_GLB_DATA_HASH)
         }
 
         private const val GET_USE_NAMED_SKIN_BINDS_HASH = 36873697L
@@ -526,6 +555,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_ROOT_NODES_HASH = 1930428628L
         private val getRootNodesBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_root_nodes", GET_ROOT_NODES_HASH)
+        }
+
+        private const val SET_ROOT_NODES_HASH = 3614634198L
+        private val setRootNodesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_root_nodes", SET_ROOT_NODES_HASH)
         }
 
         private const val GET_TEXTURES_HASH = 3995934104L

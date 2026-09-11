@@ -64,6 +64,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithVector2Arg(setUv2Bind, handle, uv2)
     }
 
+    fun setBones(bones: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setBonesBind, handle, bones)
+    }
+
     fun setWeights(weights: List<Float>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setWeightsBind, handle, weights)
@@ -235,6 +240,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         private const val SET_UV2_HASH = 743155724L
         private val setUv2Bind by lazy {
             ObjectCalls.getMethodBind("SurfaceTool", "set_uv2", SET_UV2_HASH)
+        }
+
+        private const val SET_BONES_HASH = 3614634198L
+        private val setBonesBind by lazy {
+            ObjectCalls.getMethodBind("SurfaceTool", "set_bones", SET_BONES_HASH)
         }
 
         private const val SET_WEIGHTS_HASH = 2899603908L

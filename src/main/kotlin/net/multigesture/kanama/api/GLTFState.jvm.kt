@@ -9,25 +9,14 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP GLTFState waits on: ptrcallNoArgsRetByteArrayList, ptrcallNoArgsRetTypedStringList,
-//   ptrcallWithByteArrayAndBoolArgRetInt, ptrcallWithByteArrayArg, ptrcallWithByteArrayListArg,
-//   ptrcallWithDictionaryArg, ptrcallWithObjectListArg, ptrcallWithPackedInt32ListArg,
+//   ptrcallWithByteArrayListArg, ptrcallWithDictionaryArg, ptrcallWithObjectListArg,
 //   ptrcallWithStringNameAndVariantArg, ptrcallWithTypedMaterialListArg,
 //   ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
-fun GLTFState.appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
-    checkOpen()
-    return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(appendDataToBuffersBind, handle, data, deduplication)
-}
-
 fun GLTFState.setJson(json: Map<String, Any?>) {
     checkOpen()
     ObjectCalls.ptrcallWithDictionaryArg(setJsonBind, handle, json)
-}
-
-fun GLTFState.setGlbData(glbData: ByteArray) {
-    checkOpen()
-    ObjectCalls.ptrcallWithByteArrayArg(setGlbDataBind, handle, glbData)
 }
 
 fun GLTFState.setNodes(nodes: List<GLTFNode>) {
@@ -63,11 +52,6 @@ fun GLTFState.setMeshes(meshes: List<GLTFMesh>) {
 fun GLTFState.setMaterials(materials: List<Material>) {
     checkOpen()
     ObjectCalls.ptrcallWithTypedMaterialListArg(setMaterialsBind, handle, materials)
-}
-
-fun GLTFState.setRootNodes(rootNodes: List<Int>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedInt32ListArg(setRootNodesBind, handle, rootNodes)
 }
 
 fun GLTFState.setTextures(textures: List<GLTFTexture>) {
@@ -153,19 +137,9 @@ var GLTFState.uniqueAnimationNames: List<String>
     @JvmName("setUniqueAnimationNamesProperty")
     set(value) = setUniqueAnimationNames(value)
 
-private const val APPEND_DATA_TO_BUFFERS_HASH = 1460416665L
-private val appendDataToBuffersBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "append_data_to_buffers", APPEND_DATA_TO_BUFFERS_HASH)
-}
-
 private const val SET_JSON_HASH = 4155329257L
 private val setJsonBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_json", SET_JSON_HASH)
-}
-
-private const val SET_GLB_DATA_HASH = 2971499966L
-private val setGlbDataBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "set_glb_data", SET_GLB_DATA_HASH)
 }
 
 private const val SET_NODES_HASH = 381264803L
@@ -201,11 +175,6 @@ private val setMeshesBind by lazy {
 private const val SET_MATERIALS_HASH = 381264803L
 private val setMaterialsBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_materials", SET_MATERIALS_HASH)
-}
-
-private const val SET_ROOT_NODES_HASH = 3614634198L
-private val setRootNodesBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "set_root_nodes", SET_ROOT_NODES_HASH)
 }
 
 private const val SET_TEXTURES_HASH = 381264803L

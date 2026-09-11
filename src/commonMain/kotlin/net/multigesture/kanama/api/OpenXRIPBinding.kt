@@ -26,9 +26,11 @@ class OpenXRIPBinding(handle: MemorySegment) : Resource(handle) {
         @JvmName("bindingModifiersProperty")
         get() = getBindingModifiers()
 
-    val paths: List<String>
+    var paths: List<String>
         @JvmName("pathsProperty")
         get() = getPaths()
+        @JvmName("setPathsProperty")
+        set(value) = setPaths(value)
 
     fun setAction(action: OpenXRAction?) {
         checkOpen()
@@ -63,6 +65,11 @@ class OpenXRIPBinding(handle: MemorySegment) : Resource(handle) {
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, handle)
+    }
+
+    fun setPaths(paths: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setPathsBind, handle, paths)
     }
 
     fun getPaths(): List<String> {
@@ -131,6 +138,11 @@ class OpenXRIPBinding(handle: MemorySegment) : Resource(handle) {
         private const val GET_BINDING_MODIFIERS_HASH = 3995934104L
         private val getBindingModifiersBind by lazy {
             ObjectCalls.getMethodBind("OpenXRIPBinding", "get_binding_modifiers", GET_BINDING_MODIFIERS_HASH)
+        }
+
+        private const val SET_PATHS_HASH = 4015028928L
+        private val setPathsBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRIPBinding", "set_paths", SET_PATHS_HASH)
         }
 
         private const val GET_PATHS_HASH = 1139954409L

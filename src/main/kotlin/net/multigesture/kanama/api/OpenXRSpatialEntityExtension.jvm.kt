@@ -10,7 +10,6 @@ import net.multigesture.kanama.types.RID
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP OpenXRSpatialEntityExtension waits on: ptrcallWithObjectListObjectCallableArgsRetObject,
 //   ptrcallWithRIDObjectListObjectArgsRetBool, ptrcallWithRIDObjectListObjectCallableArgsRetObject,
-//   ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject,
 //   ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -20,10 +19,6 @@ fun OpenXRSpatialEntityExtension.createSpatialContext(capabilityConfigurations: 
 
 fun OpenXRSpatialEntityExtension.discoverSpatialEntitiesWithComponentData(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
     return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListObjectCallableArgsRetObject(discoverSpatialEntitiesWithComponentDataBind, handle, spatialContext, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
-}
-
-fun OpenXRSpatialEntityExtension.discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-    return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject(discoverSpatialEntitiesBind, handle, spatialContext, componentTypes, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
 }
 
 fun OpenXRSpatialEntityExtension.updateSpatialEntities(spatialContext: RID, entities: List<RID>, componentTypes: List<Long>, next: OpenXRStructureBase?): RID {
@@ -42,11 +37,6 @@ private val createSpatialContextBind by lazy {
 private const val DISCOVER_SPATIAL_ENTITIES_WITH_COMPONENT_DATA_HASH = 1830928590L
 private val discoverSpatialEntitiesWithComponentDataBind by lazy {
     ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "discover_spatial_entities_with_component_data", DISCOVER_SPATIAL_ENTITIES_WITH_COMPONENT_DATA_HASH)
-}
-
-private const val DISCOVER_SPATIAL_ENTITIES_HASH = 2252833536L
-private val discoverSpatialEntitiesBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "discover_spatial_entities", DISCOVER_SPATIAL_ENTITIES_HASH)
 }
 
 private const val UPDATE_SPATIAL_ENTITIES_HASH = 3446086438L

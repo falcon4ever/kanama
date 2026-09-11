@@ -52,13 +52,17 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         @JvmName("setTypeProperty")
         set(value) = setType(value)
 
-    val min: List<Double>
+    var min: List<Double>
         @JvmName("minProperty")
         get() = getMin()
+        @JvmName("setMinProperty")
+        set(value) = setMin(value)
 
-    val max: List<Double>
+    var max: List<Double>
         @JvmName("maxProperty")
         get() = getMax()
+        @JvmName("setMaxProperty")
+        set(value) = setMax(value)
 
     var sparseCount: Long
         @JvmName("sparseCountProperty")
@@ -176,9 +180,19 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMinBind, handle)
     }
 
+    fun setMin(min: List<Double>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMinBind, handle, min)
+    }
+
     fun getMax(): List<Double> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMaxBind, handle)
+    }
+
+    fun setMax(max: List<Double>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMaxBind, handle, max)
     }
 
     fun getSparseCount(): Long {
@@ -349,9 +363,19 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFAccessor", "get_min", GET_MIN_HASH)
         }
 
+        private const val SET_MIN_HASH = 2576592201L
+        private val setMinBind by lazy {
+            ObjectCalls.getMethodBind("GLTFAccessor", "set_min", SET_MIN_HASH)
+        }
+
         private const val GET_MAX_HASH = 547233126L
         private val getMaxBind by lazy {
             ObjectCalls.getMethodBind("GLTFAccessor", "get_max", GET_MAX_HASH)
+        }
+
+        private const val SET_MAX_HASH = 2576592201L
+        private val setMaxBind by lazy {
+            ObjectCalls.getMethodBind("GLTFAccessor", "set_max", SET_MAX_HASH)
         }
 
         private const val GET_SPARSE_COUNT_HASH = 3905245786L

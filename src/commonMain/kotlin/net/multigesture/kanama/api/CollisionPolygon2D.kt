@@ -19,9 +19,11 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
         @JvmName("setBuildModeProperty")
         set(value) = setBuildMode(value)
 
-    val polygon: List<Vector2>
+    var polygon: List<Vector2>
         @JvmName("polygonProperty")
         get() = getPolygon()
+        @JvmName("setPolygonProperty")
+        set(value) = setPolygon(value)
 
     var disabled: Boolean
         @JvmName("disabledProperty")
@@ -46,6 +48,17 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
         get() = getOneWayCollisionDirection()
         @JvmName("setOneWayCollisionDirectionProperty")
         set(value) = setOneWayCollisionDirection(value)
+
+    /**
+     * The polygon's list of vertices. Each point will be connected to the next, and the final point
+     * will be connected to the first. Note: The returned vertices are in the local coordinate space of
+     * the given `CollisionPolygon2D`.
+     *
+     * Generated from Godot docs: CollisionPolygon2D.set_polygon
+     */
+    fun setPolygon(polygon: List<Vector2>) {
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+    }
 
     /**
      * The polygon's list of vertices. Each point will be connected to the next, and the final point
@@ -168,6 +181,11 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
 
         internal fun wrap(handle: MemorySegment): CollisionPolygon2D? =
             if (handle.address() == 0L) null else CollisionPolygon2D(handle)
+
+        private const val SET_POLYGON_HASH = 1509147220L
+        private val setPolygonBind by lazy {
+            ObjectCalls.getMethodBind("CollisionPolygon2D", "set_polygon", SET_POLYGON_HASH)
+        }
 
         private const val GET_POLYGON_HASH = 2961356807L
         private val getPolygonBind by lazy {

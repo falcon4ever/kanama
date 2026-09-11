@@ -7,6 +7,31 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: Packed*Array arguments on every audited shape (task 100, parcel 4)
+
+- A method taking a PackedByteArray, PackedInt32Array, PackedInt64Array, PackedFloat32Array,
+  PackedFloat64Array, PackedVector2Array, PackedVector3Array, PackedColorArray or
+  PackedStringArray argument was called on iOS only through five hand-written helpers (the four
+  CanvasItem draw shapes and the single-arg PackedFloat32Array setter). Every such method whose
+  other arguments are already audited now gets a generated helper: the generic ptrcall dispatch
+  already built Vector2/Color/byte arrays from a `KanamaIosPackedArgDesc {count, data}`, and the
+  task-29 virtual-return path had extended the builder to every fixed-element kind — the dispatch
+  now accepts all of them as BUILD-tagged arguments, plus PackedStringArray built from the same
+  `[int32 count]([int32 len][utf8])*` blob the virtual-return path rebuilds from. The generator
+  lays each argument out through an `ObjectCalls.pack<Kind>Desc` helper (`IOS_PACKED_ARGS`).
+  200 members on 98 classes move from the desktop companions into the shared tree —
+  `Polygon2D.set_polygon`, `CPUParticles2D.set_emission_points`, `ConvexPolygonShape3D.set_points`,
+  `NavigationPolygon.add_polygon`, `Crypto.encrypt`, `AESContext.update`, `AudioStreamMP3.set_data`,
+  `Geometry2D.triangulate_polygon`, `RenderingServer.canvas_item_add_polygon`,
+  `RenderingDevice.buffer_update`, `WebSocketPeer.set_supported_protocols`,
+  `OS.create_process` among them; 76 shared-tree properties whose setter was desktop-only are
+  read-write again (127 → 51 read-only); the gap index goes from 852 to 652 desktop-only members
+  (229 → 173 companion files, 385 → 278 helpers waited on). Seven self-test rows round-trip a
+  Vector2, byte, int32, Vector3, Color, int64, float64 and string array through a generated
+  setter and its read-back, two of them longer than the 256-element inline capacity. Elements are
+  still pushed one at a time on the C side (the builder predates this parcel); a bulk `resize` +
+  copy is a follow-up, not a correctness concern.
+
 ### Added — iOS: Dictionary and Array returns on every audited argument shape (task 100, parcel 6)
 
 - A method returning a `Dictionary`, a generic `Array` or an `Array[Dictionary]` reached iOS only

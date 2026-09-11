@@ -75,6 +75,21 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         ObjectCalls.ptrcallWithIntArg(surfaceRemoveBind, handle, surfIdx)
     }
 
+    fun surfaceUpdateVertexRegion(surfIdx: Int, offset: Int, data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateVertexRegionBind, handle, surfIdx, offset, data)
+    }
+
+    fun surfaceUpdateAttributeRegion(surfIdx: Int, offset: Int, data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateAttributeRegionBind, handle, surfIdx, offset, data)
+    }
+
+    fun surfaceUpdateSkinRegion(surfIdx: Int, offset: Int, data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateSkinRegionBind, handle, surfIdx, offset, data)
+    }
+
     fun surfaceGetArrayLen(surfIdx: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayLenBind, handle, surfIdx)
@@ -200,6 +215,21 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
         private const val SURFACE_REMOVE_HASH = 1286410249L
         private val surfaceRemoveBind by lazy {
             ObjectCalls.getMethodBind("ArrayMesh", "surface_remove", SURFACE_REMOVE_HASH)
+        }
+
+        private const val SURFACE_UPDATE_VERTEX_REGION_HASH = 3837166854L
+        private val surfaceUpdateVertexRegionBind by lazy {
+            ObjectCalls.getMethodBind("ArrayMesh", "surface_update_vertex_region", SURFACE_UPDATE_VERTEX_REGION_HASH)
+        }
+
+        private const val SURFACE_UPDATE_ATTRIBUTE_REGION_HASH = 3837166854L
+        private val surfaceUpdateAttributeRegionBind by lazy {
+            ObjectCalls.getMethodBind("ArrayMesh", "surface_update_attribute_region", SURFACE_UPDATE_ATTRIBUTE_REGION_HASH)
+        }
+
+        private const val SURFACE_UPDATE_SKIN_REGION_HASH = 3837166854L
+        private val surfaceUpdateSkinRegionBind by lazy {
+            ObjectCalls.getMethodBind("ArrayMesh", "surface_update_skin_region", SURFACE_UPDATE_SKIN_REGION_HASH)
         }
 
         private const val SURFACE_GET_ARRAY_LEN_HASH = 923996154L

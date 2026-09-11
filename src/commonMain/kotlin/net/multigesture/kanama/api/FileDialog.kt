@@ -42,9 +42,11 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
         @JvmName("setRootSubfolderProperty")
         set(value) = setRootSubfolder(value)
 
-    val filters: List<String>
+    var filters: List<String>
         @JvmName("filtersProperty")
         get() = getFilters()
+        @JvmName("setFiltersProperty")
+        set(value) = setFilters(value)
 
     var filenameFilter: String
         @JvmName("filenameFilterProperty")
@@ -174,6 +176,19 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Embedded file dialogs and Windows file dialogs support only file extensions, while Android,
      * Linux, and macOS file dialogs also support MIME types.
      *
+     * Generated from Godot docs: FileDialog.set_filters
+     */
+    fun setFilters(filters: List<String>) {
+        ObjectCalls.ptrcallWithPackedStringListArg(setFiltersBind, handle, filters)
+    }
+
+    /**
+     * The available file type filters. Each filter string in the array should be formatted like this:
+     * `*.png,*.jpg,*.jpeg;Image Files;image/png,image/jpeg`. The description text of the filter is
+     * optional and can be omitted. Both file extensions and MIME type should be always set. Note:
+     * Embedded file dialogs and Windows file dialogs support only file extensions, while Android,
+     * Linux, and macOS file dialogs also support MIME types.
+     *
      * Generated from Godot docs: FileDialog.get_filters
      */
     fun getFilters(): List<String> {
@@ -243,6 +258,15 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
     }
 
     /**
+     * Sets the option values of the `OptionButton` with index `option`.
+     *
+     * Generated from Godot docs: FileDialog.set_option_values
+     */
+    fun setOptionValues(option: Int, values: List<String>) {
+        ObjectCalls.ptrcallWithIntAndPackedStringListArg(setOptionValuesBind, handle, option, values)
+    }
+
+    /**
      * Sets the default value index of the `OptionButton` or `CheckBox` with index `option`.
      *
      * Generated from Godot docs: FileDialog.set_option_default
@@ -267,6 +291,17 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      */
     fun getOptionCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getOptionCountBind, handle)
+    }
+
+    /**
+     * Adds an additional `OptionButton` to the file dialog. If `values` is empty, a `CheckBox` is
+     * added instead. `default_value_index` should be an index of the value in the `values`. If
+     * `values` is empty it should be either `1` (checked), or `0` (unchecked).
+     *
+     * Generated from Godot docs: FileDialog.add_option
+     */
+    fun addOption(name: String, values: List<String>, defaultValueIndex: Int) {
+        ObjectCalls.ptrcallWithStringPackedStringListAndIntArgs(addOptionBind, handle, name, values, defaultValueIndex)
     }
 
     /**
@@ -567,6 +602,19 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
 
     companion object {
         /**
+         * Sets the list of favorite directories, which is shared by all `FileDialog` nodes. Useful to
+         * restore the list of favorites saved with `get_favorite_list`. This method can be called only
+         * from the main thread. Note: `FileDialog` will update its internal `ItemList` of favorites when
+         * its visibility changes. Be sure to call this method earlier if you want your changes to have
+         * effect.
+         *
+         * Generated from Godot docs: FileDialog.set_favorite_list
+         */
+        fun setFavoriteList(favorites: List<String>) {
+            ObjectCalls.ptrcallWithPackedStringListArg(setFavoriteListBind, MemorySegment.NULL, favorites)
+        }
+
+        /**
          * Returns the list of favorite directories, which is shared by all `FileDialog` nodes. Useful to
          * store the list of favorites between project sessions. This method can be called only from the
          * main thread.
@@ -575,6 +623,19 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
          */
         fun getFavoriteList(): List<String> {
             return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoriteListBind, MemorySegment.NULL)
+        }
+
+        /**
+         * Sets the list of recent directories, which is shared by all `FileDialog` nodes. Useful to
+         * restore the list of recents saved with `set_recent_list`. This method can be called only from
+         * the main thread. Note: `FileDialog` will update its internal `ItemList` of recent directories
+         * when its visibility changes. Be sure to call this method earlier if you want your changes to
+         * have effect.
+         *
+         * Generated from Godot docs: FileDialog.set_recent_list
+         */
+        fun setRecentList(recents: List<String>) {
+            ObjectCalls.ptrcallWithPackedStringListArg(setRecentListBind, MemorySegment.NULL, recents)
         }
 
         /**
@@ -649,6 +710,11 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
             ObjectCalls.getMethodBind("FileDialog", "add_filter", ADD_FILTER_HASH)
         }
 
+        private const val SET_FILTERS_HASH = 4015028928L
+        private val setFiltersBind by lazy {
+            ObjectCalls.getMethodBind("FileDialog", "set_filters", SET_FILTERS_HASH)
+        }
+
         private const val GET_FILTERS_HASH = 1139954409L
         private val getFiltersBind by lazy {
             ObjectCalls.getMethodBind("FileDialog", "get_filters", GET_FILTERS_HASH)
@@ -684,6 +750,11 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
             ObjectCalls.getMethodBind("FileDialog", "set_option_name", SET_OPTION_NAME_HASH)
         }
 
+        private const val SET_OPTION_VALUES_HASH = 3353661094L
+        private val setOptionValuesBind by lazy {
+            ObjectCalls.getMethodBind("FileDialog", "set_option_values", SET_OPTION_VALUES_HASH)
+        }
+
         private const val SET_OPTION_DEFAULT_HASH = 3937882851L
         private val setOptionDefaultBind by lazy {
             ObjectCalls.getMethodBind("FileDialog", "set_option_default", SET_OPTION_DEFAULT_HASH)
@@ -697,6 +768,11 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
         private const val GET_OPTION_COUNT_HASH = 3905245786L
         private val getOptionCountBind by lazy {
             ObjectCalls.getMethodBind("FileDialog", "get_option_count", GET_OPTION_COUNT_HASH)
+        }
+
+        private const val ADD_OPTION_HASH = 149592325L
+        private val addOptionBind by lazy {
+            ObjectCalls.getMethodBind("FileDialog", "add_option", ADD_OPTION_HASH)
         }
 
         private const val GET_SELECTED_OPTIONS_HASH = 3102165223L
@@ -829,9 +905,19 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
             ObjectCalls.getMethodBind("FileDialog", "deselect_all", DESELECT_ALL_HASH)
         }
 
+        private const val SET_FAVORITE_LIST_HASH = 4015028928L
+        private val setFavoriteListBind by lazy {
+            ObjectCalls.getMethodBind("FileDialog", "set_favorite_list", SET_FAVORITE_LIST_HASH)
+        }
+
         private const val GET_FAVORITE_LIST_HASH = 2981934095L
         private val getFavoriteListBind by lazy {
             ObjectCalls.getMethodBind("FileDialog", "get_favorite_list", GET_FAVORITE_LIST_HASH)
+        }
+
+        private const val SET_RECENT_LIST_HASH = 4015028928L
+        private val setRecentListBind by lazy {
+            ObjectCalls.getMethodBind("FileDialog", "set_recent_list", SET_RECENT_LIST_HASH)
         }
 
         private const val GET_RECENT_LIST_HASH = 2981934095L

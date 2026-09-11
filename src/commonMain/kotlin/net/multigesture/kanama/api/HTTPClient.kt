@@ -64,6 +64,36 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, handle))
     }
 
+    /**
+     * Sends a raw HTTP request to the connected host with the given `method`. The URL parameter is
+     * usually just the part after the host, so for `https://example.com/index.php`, it is
+     * `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For
+     * `HTTPClient.METHOD_OPTIONS` requests, `*` is also allowed. For `HTTPClient.METHOD_CONNECT`
+     * requests, it should be the authority component (`host:port`). `headers` are HTTP request
+     * headers. Sends the body data raw, as a byte array and does not encode it in any way.
+     *
+     * Generated from Godot docs: HTTPClient.request_raw
+     */
+    fun requestRaw(method: Long, url: String, headers: List<String>, body: ByteArray): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(requestRawBind, handle, method, url, headers, body)
+    }
+
+    /**
+     * Sends an HTTP request to the connected host with the given `method`. The URL parameter is
+     * usually just the part after the host, so for `https://example.com/index.php`, it is
+     * `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For
+     * `HTTPClient.METHOD_OPTIONS` requests, `*` is also allowed. For `HTTPClient.METHOD_CONNECT`
+     * requests, it should be the authority component (`host:port`). `headers` are HTTP request
+     * headers. To create a POST request with query strings to push to the server, do:
+     *
+     * Generated from Godot docs: HTTPClient.request
+     */
+    fun request(method: Long, url: String, headers: List<String>, body: String = ""): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(requestBind, handle, method, url, headers, body)
+    }
+
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
@@ -331,6 +361,16 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_CONNECTION_HASH = 2741655269L
         private val getConnectionBind by lazy {
             ObjectCalls.getMethodBind("HTTPClient", "get_connection", GET_CONNECTION_HASH)
+        }
+
+        private const val REQUEST_RAW_HASH = 540161961L
+        private val requestRawBind by lazy {
+            ObjectCalls.getMethodBind("HTTPClient", "request_raw", REQUEST_RAW_HASH)
+        }
+
+        private const val REQUEST_HASH = 3778990155L
+        private val requestBind by lazy {
+            ObjectCalls.getMethodBind("HTTPClient", "request", REQUEST_HASH)
         }
 
         private const val CLOSE_HASH = 3218959716L

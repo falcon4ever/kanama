@@ -95,6 +95,20 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
         return ObjectCalls.ptrcallWithStringArgRetString(getFileTypeBind, handle, path)
     }
 
+    /**
+     * Reimports a set of files. Call this if these files or their `.import` files were directly edited
+     * by script or an external program. If the file type changed or the file was newly created, use
+     * `update_file` or `scan`. Note: This function blocks until the import is finished. However, the
+     * main loop iteration, including timers and `Node._process`, will occur during the import process
+     * due to progress bar updates. Avoid calls to `reimport_files` or `scan` while an import is in
+     * progress.
+     *
+     * Generated from Godot docs: EditorFileSystem.reimport_files
+     */
+    fun reimportFiles(files: List<String>) {
+        ObjectCalls.ptrcallWithPackedStringListArg(reimportFilesBind, handle, files)
+    }
+
     object Signals {
         const val filesystemChanged: String = "filesystem_changed"
         const val scriptClassesUpdated: String = "script_classes_updated"
@@ -155,6 +169,11 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
         private const val GET_FILE_TYPE_HASH = 3135753539L
         private val getFileTypeBind by lazy {
             ObjectCalls.getMethodBind("EditorFileSystem", "get_file_type", GET_FILE_TYPE_HASH)
+        }
+
+        private const val REIMPORT_FILES_HASH = 4015028928L
+        private val reimportFilesBind by lazy {
+            ObjectCalls.getMethodBind("EditorFileSystem", "reimport_files", REIMPORT_FILES_HASH)
         }
     }
 }

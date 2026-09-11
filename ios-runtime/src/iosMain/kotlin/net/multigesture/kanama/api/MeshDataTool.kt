@@ -97,9 +97,19 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, handle, idx)
     }
 
+    fun setVertexBones(idx: Int, bones: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndPackedInt32ListArgs(setVertexBonesBind, handle, idx, bones)
+    }
+
     fun getVertexBones(idx: Int): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexBonesBind, handle, idx)
+    }
+
+    fun setVertexWeights(idx: Int, weights: List<Float>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setVertexWeightsBind, handle, idx, weights)
     }
 
     fun getVertexWeights(idx: Int): List<Float> {
@@ -264,9 +274,19 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_color", GET_VERTEX_COLOR_HASH)
         }
 
+        private const val SET_VERTEX_BONES_HASH = 3500328261L
+        private val setVertexBonesBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "set_vertex_bones", SET_VERTEX_BONES_HASH)
+        }
+
         private const val GET_VERTEX_BONES_HASH = 1706082319L
         private val getVertexBonesBind by lazy {
             ObjectCalls.getMethodBind("MeshDataTool", "get_vertex_bones", GET_VERTEX_BONES_HASH)
+        }
+
+        private const val SET_VERTEX_WEIGHTS_HASH = 1345852415L
+        private val setVertexWeightsBind by lazy {
+            ObjectCalls.getMethodBind("MeshDataTool", "set_vertex_weights", SET_VERTEX_WEIGHTS_HASH)
         }
 
         private const val GET_VERTEX_WEIGHTS_HASH = 1542882410L

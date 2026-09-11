@@ -12,9 +12,11 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: AudioStreamWAV
  */
 class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
-    val data: ByteArray
+    var data: ByteArray
         @JvmName("dataProperty")
         get() = getData()
+        @JvmName("setDataProperty")
+        set(value) = setData(value)
 
     var format: Long
         @JvmName("formatProperty")
@@ -55,6 +57,18 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
     val tags: Map<String, Any?>
         @JvmName("tagsProperty")
         get() = getTags()
+
+    /**
+     * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
+     * expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from each byte.
+     * Note: If `format` is set to `FORMAT_QOA`, this property expects data from a full QOA file.
+     *
+     * Generated from Godot docs: AudioStreamWAV.set_data
+     */
+    fun setData(data: ByteArray) {
+        checkOpen()
+        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
+    }
 
     /**
      * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
@@ -242,6 +256,11 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
 
         internal fun wrap(handle: MemorySegment): AudioStreamWAV? =
             if (handle.address() == 0L) null else AudioStreamWAV(handle)
+
+        private const val SET_DATA_HASH = 2971499966L
+        private val setDataBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamWAV", "set_data", SET_DATA_HASH)
+        }
 
         private const val GET_DATA_HASH = 2362200018L
         private val getDataBind by lazy {

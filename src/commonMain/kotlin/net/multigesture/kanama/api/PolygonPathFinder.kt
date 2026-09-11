@@ -11,6 +11,18 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: PolygonPathFinder
  */
 class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
+    /**
+     * Sets up `PolygonPathFinder` with an array of points that define the vertices of the polygon, and
+     * an array of indices that determine the edges of the polygon. The length of `connections` must be
+     * even, returns an error if odd.
+     *
+     * Generated from Godot docs: PolygonPathFinder.setup
+     */
+    fun setup(points: List<Vector2>, connections: List<Int>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListAndPackedInt32ListArgs(setupBind, handle, points, connections)
+    }
+
     fun findPath(from: Vector2, to: Vector2): List<Vector2> {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(findPathBind, handle, from, to)
@@ -58,6 +70,11 @@ class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): PolygonPathFinder? =
             if (handle.address() == 0L) null else PolygonPathFinder(handle)
+
+        private const val SETUP_HASH = 3251786936L
+        private val setupBind by lazy {
+            ObjectCalls.getMethodBind("PolygonPathFinder", "setup", SETUP_HASH)
+        }
 
         private const val FIND_PATH_HASH = 1562168077L
         private val findPathBind by lazy {

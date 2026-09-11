@@ -10,8 +10,7 @@ import net.multigesture.kanama.types.Vector2
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP NavigationMeshSourceGeometryData2D waits on: ptrcallNoArgsRetPackedVector2ListList,
-//   ptrcallWithArrayArg, ptrcallWithPackedVector2ListAndBoolArg, ptrcallWithPackedVector2ListArg,
-//   ptrcallWithPackedVector2ListListArg
+//   ptrcallWithArrayArg, ptrcallWithPackedVector2ListListArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -77,38 +76,6 @@ fun NavigationMeshSourceGeometryData2D.appendObstructionOutlines(obstructionOutl
 }
 
 /**
- * Adds the outline points of a shape as traversable area.
- *
- * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_traversable_outline
- */
-fun NavigationMeshSourceGeometryData2D.addTraversableOutline(shapeOutline: List<Vector2>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedVector2ListArg(addTraversableOutlineBind, handle, shapeOutline)
-}
-
-/**
- * Adds the outline points of a shape as obstructed area.
- *
- * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_obstruction_outline
- */
-fun NavigationMeshSourceGeometryData2D.addObstructionOutline(shapeOutline: List<Vector2>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedVector2ListArg(addObstructionOutlineBind, handle, shapeOutline)
-}
-
-/**
- * Adds a projected obstruction shape to the source geometry. If `carve` is `true` the carved shape
- * will not be affected by additional offsets (e.g. agent radius) of the navigation mesh baking
- * process.
- *
- * Generated from Godot docs: NavigationMeshSourceGeometryData2D.add_projected_obstruction
- */
-fun NavigationMeshSourceGeometryData2D.addProjectedObstruction(vertices: List<Vector2>, carve: Boolean) {
-    checkOpen()
-    ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(addProjectedObstructionBind, handle, vertices, carve)
-}
-
-/**
  * Sets the projected obstructions with an Array of Dictionaries with the following key value
  * pairs:
  *
@@ -159,21 +126,6 @@ private val appendTraversableOutlinesBind by lazy {
 private const val APPEND_OBSTRUCTION_OUTLINES_HASH = 381264803L
 private val appendObstructionOutlinesBind by lazy {
     ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "append_obstruction_outlines", APPEND_OBSTRUCTION_OUTLINES_HASH)
-}
-
-private const val ADD_TRAVERSABLE_OUTLINE_HASH = 1509147220L
-private val addTraversableOutlineBind by lazy {
-    ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_traversable_outline", ADD_TRAVERSABLE_OUTLINE_HASH)
-}
-
-private const val ADD_OBSTRUCTION_OUTLINE_HASH = 1509147220L
-private val addObstructionOutlineBind by lazy {
-    ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_obstruction_outline", ADD_OBSTRUCTION_OUTLINE_HASH)
-}
-
-private const val ADD_PROJECTED_OBSTRUCTION_HASH = 3882407395L
-private val addProjectedObstructionBind by lazy {
-    ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_projected_obstruction", ADD_PROJECTED_OBSTRUCTION_HASH)
 }
 
 private const val SET_PROJECTED_OBSTRUCTIONS_HASH = 381264803L

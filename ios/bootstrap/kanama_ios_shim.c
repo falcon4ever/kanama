@@ -1641,6 +1641,10 @@ int64_t kanama_ios_godot_get_method_bind(
 static int kanama_ios_build_packed_arg(int32_t tag, const KanamaIosPackedArgDesc *desc, uint64_t *cell);
 static void kanama_ios_destroy_packed_arg(int32_t tag, uint64_t *cell);
 static void kanama_ios_cache_packed_byte_methods(void);
+// PackedStringArray BUILD-tagged arg (task 100, parcel 4): built from the string blob by the task-13
+// blob builder, defined after the dispatch.
+static void kanama_ios_build_packed_string_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
+static void kanama_ios_cache_packed_string_methods(void);
 // Dictionary builders (task 29 virtual-return path uses them before their definitions).
 static void kanama_ios_init_empty_dictionary(GDExtensionTypePtr out);
 static void kanama_ios_dictionary_set_variant(
@@ -1709,7 +1713,15 @@ static void kanama_ios_godot_ptrcall_dispatch(
                 break;
             case KANAMA_IOS_PT_PACKED_VECTOR2_ARRAY:
             case KANAMA_IOS_PT_PACKED_COLOR_ARRAY:
-            case KANAMA_IOS_PT_PACKED_BYTE_ARRAY: {
+            case KANAMA_IOS_PT_PACKED_BYTE_ARRAY:
+            // task 100 parcel 4: every remaining packed kind is a BUILD-tagged arg through the same
+            // desc; PACKED_STRING_ARRAY's desc.data is the [int32 count]([int32 len][utf8])* blob.
+            case KANAMA_IOS_PT_PACKED_INT32_ARRAY:
+            case KANAMA_IOS_PT_PACKED_INT64_ARRAY:
+            case KANAMA_IOS_PT_PACKED_FLOAT32_ARRAY:
+            case KANAMA_IOS_PT_PACKED_FLOAT64_ARRAY:
+            case KANAMA_IOS_PT_PACKED_VECTOR3_ARRAY:
+            case KANAMA_IOS_PT_PACKED_STRING_ARRAY: {
                 // arg ptr is a KanamaIosPackedArgDesc {count, data}; build the array into the cell.
                 const KanamaIosPackedArgDesc *desc =
                     (arg_ptrs != NULL) ? (const KanamaIosPackedArgDesc *)arg_ptrs[i] : NULL;
@@ -1770,6 +1782,12 @@ static void kanama_ios_godot_ptrcall_dispatch(
             case KANAMA_IOS_PT_PACKED_VECTOR2_ARRAY:
             case KANAMA_IOS_PT_PACKED_COLOR_ARRAY:
             case KANAMA_IOS_PT_PACKED_BYTE_ARRAY:
+            case KANAMA_IOS_PT_PACKED_INT32_ARRAY:
+            case KANAMA_IOS_PT_PACKED_INT64_ARRAY:
+            case KANAMA_IOS_PT_PACKED_FLOAT32_ARRAY:
+            case KANAMA_IOS_PT_PACKED_FLOAT64_ARRAY:
+            case KANAMA_IOS_PT_PACKED_VECTOR3_ARRAY:
+            case KANAMA_IOS_PT_PACKED_STRING_ARRAY:
                 kanama_ios_destroy_packed_arg(constructed[i], packed_cells[i]);
                 break;
             case KANAMA_IOS_PT_CALLABLE:
@@ -2898,6 +2916,17 @@ static int kanama_ios_build_packed_arg(int32_t tag, const KanamaIosPackedArgDesc
         }
         return 1;
     }
+    if (tag == KANAMA_IOS_PT_PACKED_STRING_ARRAY) {
+        // task 100 parcel 4 — desc.data is the [int32 count]([int32 len][utf8])* blob the task-13
+        // virtual-return path already rebuilds from (constructor + push_back are resolved by
+        // kanama_ios_resolve_godot_api); desc.count is informational (the blob carries its own).
+        if (g_packed_string_array_constructor == NULL || g_packed_string_array_push_back == NULL) {
+            return 0;
+        }
+        kanama_ios_cache_packed_string_methods();
+        kanama_ios_build_packed_string_array_from_blob((const uint8_t *)desc->data, (GDExtensionTypePtr)cell);
+        return 1;
+    }
     return 0;
 }
 
@@ -2918,6 +2947,8 @@ static void kanama_ios_destroy_packed_arg(int32_t tag, uint64_t *cell) {
         g_packed_float32_array_destructor(cell);
     } else if (tag == KANAMA_IOS_PT_PACKED_FLOAT64_ARRAY && g_packed_float64_array_destructor != NULL) {
         g_packed_float64_array_destructor(cell);
+    } else if (tag == KANAMA_IOS_PT_PACKED_STRING_ARRAY && g_packed_string_array_destructor != NULL) {
+        g_packed_string_array_destructor(cell);
     }
 }
 

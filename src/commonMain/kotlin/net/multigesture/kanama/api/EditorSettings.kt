@@ -43,6 +43,16 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Sets the list of favorite files and directories for this project.
+     *
+     * Generated from Godot docs: EditorSettings.set_favorites
+     */
+    fun setFavorites(dirs: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setFavoritesBind, handle, dirs)
+    }
+
+    /**
      * Returns the list of favorite files and directories for this project.
      *
      * Generated from Godot docs: EditorSettings.get_favorites
@@ -50,6 +60,16 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
     fun getFavorites(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoritesBind, handle)
+    }
+
+    /**
+     * Sets the list of recently visited folders in the file dialog for this project.
+     *
+     * Generated from Godot docs: EditorSettings.set_recent_dirs
+     */
+    fun setRecentDirs(dirs: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListArg(setRecentDirsBind, handle, dirs)
     }
 
     /**
@@ -197,9 +217,19 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("EditorSettings", "erase", ERASE_HASH)
         }
 
+        private const val SET_FAVORITES_HASH = 4015028928L
+        private val setFavoritesBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "set_favorites", SET_FAVORITES_HASH)
+        }
+
         private const val GET_FAVORITES_HASH = 1139954409L
         private val getFavoritesBind by lazy {
             ObjectCalls.getMethodBind("EditorSettings", "get_favorites", GET_FAVORITES_HASH)
+        }
+
+        private const val SET_RECENT_DIRS_HASH = 4015028928L
+        private val setRecentDirsBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "set_recent_dirs", SET_RECENT_DIRS_HASH)
         }
 
         private const val GET_RECENT_DIRS_HASH = 1139954409L
