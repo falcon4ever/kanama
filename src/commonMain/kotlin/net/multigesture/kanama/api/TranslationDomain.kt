@@ -146,6 +146,18 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the `Translation` instances that match `locale` (see
+     * `TranslationServer.compare_locales`). If `exact` is `true`, only instances whose locale exactly
+     * equals `locale` will be returned.
+     *
+     * Generated from Godot docs: TranslationDomain.find_translations
+     */
+    fun findTranslations(locale: String, exact: Boolean): List<Translation> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, handle, locale, exact, Translation::fromHandle)
+    }
+
+    /**
      * Returns the current locale's translation for the given message and context.
      *
      * Generated from Godot docs: TranslationDomain.translate
@@ -508,6 +520,11 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
         private const val HAS_TRANSLATION_HASH = 2696976312L
         private val hasTranslationBind by lazy {
             ObjectCalls.getMethodBind("TranslationDomain", "has_translation", HAS_TRANSLATION_HASH)
+        }
+
+        private const val FIND_TRANSLATIONS_HASH = 2109650934L
+        private val findTranslationsBind by lazy {
+            ObjectCalls.getMethodBind("TranslationDomain", "find_translations", FIND_TRANSLATIONS_HASH)
         }
 
         private const val TRANSLATE_HASH = 1829228469L

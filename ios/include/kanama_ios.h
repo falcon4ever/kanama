@@ -525,6 +525,34 @@ int64_t kanama_ios_godot_ptrcall_ret_object_array(
     int64_t cap
 );
 
+/*
+ * task 100 (parcel 9) — typed-object-array (Array[Object]) return on every audited arg shape: the
+ * method runs ONCE; the element object handles land in out_handles when they fit cap (an ELEMENT
+ * count), otherwise in a single pending slot the caller drains with
+ * kanama_ios_godot_take_pending_object_handles. Handles are BORROWED (the returned Array is
+ * destroyed inside the call). Returns the full element count, or -1 on a null method/instance,
+ * an unavailable API or an allocation failure. Supersedes the two-call protocol of
+ * kanama_ios_godot_ptrcall_ret_object_array for every typed-object-list return.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_object_handles(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_handles,
+    int64_t cap
+);
+
+/*
+ * Drain the handles parked by kanama_ios_godot_ptrcall_ret_object_handles into out_handles (up to
+ * cap elements) and free the slot. Returns the parked element count, or -1 when nothing is parked.
+ */
+int64_t kanama_ios_godot_take_pending_object_handles(
+    int64_t *out_handles,
+    int64_t cap
+);
+
 int64_t kanama_ios_godot_construct_object(const char *class_name);
 
 int64_t kanama_ios_godot_get_singleton(const char *name);

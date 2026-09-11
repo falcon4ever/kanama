@@ -7,6 +7,27 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: typed-object-list returns on every audited argument shape (task 100, parcel 9)
+
+- A method returning `Array[<Object subclass>]` (`List<T>` on Kotlin) reached iOS through three
+  hand-written argument layouts only (no-arg, one bool, two String + two bool); every other such
+  method was desktop-only. Every audited argument layout now gets a generated helper —
+  `fun <T> ObjectCalls.<shape>(..., fromHandle: (MemorySegment) -> T?): List<T>` — that lays its
+  arguments out like any other helper and hands them to the shared `retTypedObjectList` body. That
+  body rides a new C entry, `kanama_ios_godot_ptrcall_ret_object_handles`, which runs the method
+  **once** and delivers the element handles into the caller's buffer or, past 64 elements, a
+  pending slot the Kotlin side drains (the older two-call length protocol re-invoked the method,
+  acceptable for `get_children`, not for `Noise.get_image_3d` or `RenderingServer.bake_render_uv2`).
+  The three hand-written helpers gain the run-once behaviour too. Element handles stay borrowed,
+  as on desktop. 9 members on 7 classes move from the desktop companions into the shared tree:
+  `InputMap.action_get_events`, `RegEx.search_all`, `Noise.get_image_3d` / `get_seamless_image_3d`,
+  `TranslationServer.find_translations`, `TranslationDomain.find_translations`,
+  `RenderingServer.texture_3d_get` / `bake_render_uv2`, `EditorInterface.make_mesh_previews`; the
+  gap index goes from 34 to 25 desktop-only members (20 → 14 companion files, 27 → 19 helpers
+  waited on). Four self-test rows round-trip `RegEx.search_all` through the inline buffer (3
+  matches) and the pending slot (200 distinct match handles), `InputMap.action_get_events` by
+  handle identity and an empty `TranslationServer.find_translations`.
+
 ### Added — iOS: typed-array and Rect2i arguments on every audited shape (task 100, parcel 8)
 
 - A method taking a typed `Array[...]` argument — `Array[RID]`, `Array[String]`, `Array[StringName]`,

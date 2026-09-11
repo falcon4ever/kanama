@@ -127,6 +127,19 @@ object InputMap {
     }
 
     /**
+     * Returns an array of `InputEvent`s associated with a given action. Note: When used in the editor
+     * (e.g. a tool script or `EditorPlugin`), this method will return events for the editor action. If
+     * you want to access your project's input binds from the editor, read the `input/\*` settings from
+     * `ProjectSettings`.
+     *
+     * Generated from Godot docs: InputMap.action_get_events
+     */
+    @JvmStatic
+    fun actionGetEvents(action: String): List<InputEvent> {
+        return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(actionGetEventsBind, singleton, action, InputEvent::fromHandle)
+    }
+
+    /**
      * Returns `true` if the given event is part of an existing action. This method ignores keyboard
      * modifiers if the given `InputEvent` is not pressed (for proper release detection). See
      * `action_has_event` if you don't want this behavior. If `exact_match` is `false`, it ignores
@@ -214,6 +227,11 @@ object InputMap {
     private const val ACTION_ERASE_EVENTS_HASH = 3304788590L
     private val actionEraseEventsBind by lazy {
         ObjectCalls.getMethodBind("InputMap", "action_erase_events", ACTION_ERASE_EVENTS_HASH)
+    }
+
+    private const val ACTION_GET_EVENTS_HASH = 689397652L
+    private val actionGetEventsBind by lazy {
+        ObjectCalls.getMethodBind("InputMap", "action_get_events", ACTION_GET_EVENTS_HASH)
     }
 
     private const val EVENT_IS_ACTION_HASH = 3193353650L

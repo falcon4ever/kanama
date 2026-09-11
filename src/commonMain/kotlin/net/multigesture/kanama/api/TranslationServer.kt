@@ -226,6 +226,18 @@ object TranslationServer {
     }
 
     /**
+     * Returns the `Translation` instances in the main translation domain that match `locale` (see
+     * `compare_locales`). If `exact` is `true`, only instances whose locale exactly equals `locale`
+     * will be returned.
+     *
+     * Generated from Godot docs: TranslationServer.find_translations
+     */
+    @JvmStatic
+    fun findTranslations(locale: String, exact: Boolean): List<Translation> {
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, singleton, locale, exact, Translation::fromHandle)
+    }
+
+    /**
      * Returns `true` if there are any `Translation` instances in the main translation domain that
      * match `locale` (see `compare_locales`). If `exact` is `true`, only instances whose locale
      * exactly equals `locale` are considered.
@@ -473,6 +485,11 @@ object TranslationServer {
     private const val GET_TRANSLATIONS_HASH = 3995934104L
     private val getTranslationsBind by lazy {
         ObjectCalls.getMethodBind("TranslationServer", "get_translations", GET_TRANSLATIONS_HASH)
+    }
+
+    private const val FIND_TRANSLATIONS_HASH = 2109650934L
+    private val findTranslationsBind by lazy {
+        ObjectCalls.getMethodBind("TranslationServer", "find_translations", FIND_TRANSLATIONS_HASH)
     }
 
     private const val HAS_TRANSLATION_FOR_LOCALE_HASH = 2034713381L

@@ -1264,15 +1264,11 @@ IOS_DIRECT_TO_GENERIC_TYPED_OBJECT_LIST = {
     "ptrcallWithTwoStringAndTwoBoolArgsRetTypedNodeList": "ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList",
 }
 
-# The generic typed-object-array-return helpers actually hand-written + audited in ios-runtime
-# ObjectCalls.kt. The iOS gate admits a typed-object-array return only when its (remapped) shape is
-# one of these — mirrors the per-helper Packed*Array gates. Grow this as each arg-shape's helper
-# lands (2.7d widens to the no-arg and String-arg shapes).
-IOS_WIRED_TYPED_OBJECT_LIST_HELPERS = {
-    "ptrcallNoArgsRetTypedObjectList",
-    "ptrcallWithBoolArgRetTypedObjectList",
-    "ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList",
-}
+# task 100 (parcel 9): typed-object-list returns are admitted on EVERY audited arg shape — the
+# generated helper lays its args out like any other and hands them to ObjectCalls.retTypedObjectList
+# (kanama_ios_godot_ptrcall_ret_object_handles: the method runs once, long lists drain from a
+# pending slot). The three hand-written shapes (no-arg, bool, two-String-two-bool) keep their
+# bodies through IOS_HANDWRITTEN_HELPERS; there is no per-helper gate any more.
 
 
 def emits_receiver_guard(class_name: str, method: ApiMethod, singleton: bool, api_classes: dict[str, ApiClass]) -> bool:
@@ -1801,8 +1797,8 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
         and IOS_ARRAY_BLOB_RETURNS[method.return_type][1] == shape.kotlin_return
     )
     if typed_array_element is not None:
-        if shape.function not in IOS_WIRED_TYPED_OBJECT_LIST_HELPERS:
-            return False
+        # task 100 (parcel 9): every audited arg shape returns a typed object list through the
+        # generated retTypedObjectList helper; only the element wrapper must be emitted on iOS.
         if IOS_EMIT_CLASSES is not None and typed_array_element != "Object" and typed_array_element not in IOS_EMIT_CLASSES:
             return False
     elif packed_return or container_return or array_blob_return:
@@ -3297,6 +3293,7 @@ package net.multigesture.kanama.binding.runtime
 import java.lang.foreign.MemorySegment
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointed
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -3821,7 +3818,7 @@ IOS_CONTAINER_RETURNS = {
 
 # String-list and typed-Array returns the iOS helpers read back as a length-prefixed blob through
 # kanama_ios_godot_ptrcall_ret_array_blob (task 100, parcel 5): Godot return type -> (Kotlin helper
-# on ObjectCalls, kotlin_return token). Typed OBJECT arrays keep IOS_WIRED_TYPED_OBJECT_LIST_HELPERS;
+# on ObjectCalls, kotlin_return token). Typed OBJECT arrays render through retTypedObjectList (parcel 9);
 # typedarray::Dictionary / typedarray::Array wait for the Dictionary / Array decode (parcel 6).
 IOS_ARRAY_BLOB_RETURNS = {
     "PackedStringArray": ("ptrcallRetPackedStringList", "List<String>"),
@@ -3852,6 +3849,9 @@ def render_ios_helper(
 ) -> str:
     utf8_return = kotlin_return in ("String", "NodePath")
     variant_return = kotlin_return == "Any?"
+    # task 100 (parcel 9): the bare "List" token is the typed-object-list return (List<T> via a
+    # caller-supplied fromHandle); every other list return carries its element type in the token.
+    typed_object_list_return = kotlin_return == "List"
     packed_return = return_type in IOS_PACKED_RETURNS and IOS_PACKED_RETURNS[return_type][1] == kotlin_return
     container_return = (
         return_type in IOS_CONTAINER_RETURNS and IOS_CONTAINER_RETURNS[return_type][1] == kotlin_return
@@ -3859,7 +3859,11 @@ def render_ios_helper(
     array_blob_return = (
         return_type in IOS_ARRAY_BLOB_RETURNS and IOS_ARRAY_BLOB_RETURNS[return_type][1] == kotlin_return
     )
-    if container_return or array_blob_return:
+    if typed_object_list_return:
+        # Typed-object-list return (parcel 9): the args are laid out inside retTypedObjectList's
+        # memScoped lambda; no ret tag or cell here.
+        ret_type, ret_tag, ret_decl, ret_ptr, read_expr = "List<T>", None, [], "null", None
+    elif container_return or array_blob_return:
         # Dictionary / Array (parcel 6) or string-list / typed-Array (parcel 5) return: the C entry owns
         # the cell and the blob; no ret tag or cell is laid out here.
         ret_type, ret_tag, ret_decl, ret_ptr, read_expr = kotlin_return, None, [], "null", None
@@ -3918,6 +3922,16 @@ def render_ios_helper(
         types_arg, ptrs_arg = "types", "ptrs"
     else:
         types_arg, ptrs_arg = "null", "null"
+    if typed_object_list_return:
+        # The whole arg layout runs inside retTypedObjectList's MemScope lambda (one memScoped, one
+        # ptrcall); the lambda returns the (types, ptrs, argc) triple the C entry consumes.
+        params.append("fromHandle: (MemorySegment) -> T?")
+        body.append(f"Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>({types_arg}, {ptrs_arg}, {n})")
+        indented_body = "\n".join(f"        {line}" for line in body)
+        return (
+            f"fun <T> ObjectCalls.{function}({', '.join(params)}): List<T> =\n"
+            f"    retTypedObjectList(methodBind, instance, fromHandle) {{\n{indented_body}\n    }}"
+        )
     if utf8_return:
         body.append(
             utf8_wrap.format(f"ptrcallRetUtf8(methodBind, instance, {types_arg}, {ptrs_arg}, {n}, {ret_tag})")
@@ -4022,7 +4036,7 @@ def tree_main(args: argparse.Namespace) -> int:
         print(f"{summary} -> {args.regen_tree}")
     if args.write_tree:
         written = 0
-        helper_name = re.compile(r"fun ObjectCalls\.(\w+)\(")
+        helper_name = re.compile(r"fun (?:<T> )?ObjectCalls\.(\w+)\(")
         for rel_path, content in tree.files.items():
             target = ROOT / rel_path
             target.parent.mkdir(parents=True, exist_ok=True)

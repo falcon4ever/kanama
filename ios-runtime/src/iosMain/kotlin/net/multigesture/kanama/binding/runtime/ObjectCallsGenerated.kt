@@ -6,6 +6,7 @@ import java.lang.foreign.MemorySegment
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.CPointed
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.FloatVar
@@ -11161,6 +11162,26 @@ fun ObjectCalls.ptrcallWithObjectListArgRetLong(
   ret.value
 }
 
+fun <T> ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: List<GodotObject>,
+  a1: Int,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val c0 = packTypedObjectArrayDesc(a0)
+    val c1 = alloc<LongVar>()
+    c1.value = a1.toLong()
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_TYPED_ARRAY_BLOB
+    types[1] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 2)
+  }
+
 fun ObjectCalls.ptrcallWithObjectListLongArgsRetRID(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -16887,6 +16908,22 @@ fun ObjectCalls.ptrcallWithRIDArgRetTransform3D(
   )
 }
 
+fun <T> ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: RID,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val c0 = alloc<LongVar>()
+    c0.value = a0.value
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_RID
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 1)
+  }
+
 fun ObjectCalls.ptrcallWithRIDArgRetUInt32(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -19918,6 +19955,32 @@ fun ObjectCalls.ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID(
   )
   RID(ret.value)
 }
+
+fun <T> ObjectCalls.ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: RID,
+  a1: List<RID>,
+  a2: Vector2i,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val c0 = alloc<LongVar>()
+    c0.value = a0.value
+    val c1 = packTypedRIDArrayDesc(a1)
+    val c2 = allocArray<IntVar>(2)
+    c2[0] = a2.x
+    c2[1] = a2.y
+    val types = allocArray<IntVar>(3)
+    types[0] = PT_RID
+    types[1] = PT_TYPED_ARRAY_BLOB
+    types[2] = PT_VECTOR2I
+    val ptrs = allocArray<COpaquePointerVar>(3)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 3)
+  }
 
 fun ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(
   methodBind: MemorySegment,
@@ -23515,6 +23578,25 @@ fun ObjectCalls.ptrcallWithStringAndBoolArgRetString(
   ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
 }
 
+fun <T> ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: Boolean,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val c1 = alloc<ByteVar>()
+    c1.value = if (a1) 1 else 0
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING
+    types[1] = PT_BOOL
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 2)
+  }
+
 fun ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -25976,6 +26058,20 @@ fun ObjectCalls.ptrcallWithStringNameArgRetStringNameList(
   ptrcallRetTypedStringNameList(methodBind, instance, types, ptrs, 1)
 }
 
+fun <T> ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_STRING_NAME
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 1)
+  }
+
 fun ObjectCalls.ptrcallWithStringNameArgRetVector2(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -27622,6 +27718,30 @@ fun ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(
   MemorySegment.ofAddress(ret.value)
 }
 
+fun <T> ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: String,
+  a1: Int,
+  a2: Int,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val c1 = alloc<LongVar>()
+    c1.value = a1.toLong()
+    val c2 = alloc<LongVar>()
+    c2.value = a2.toLong()
+    val types = allocArray<IntVar>(3)
+    types[0] = PT_STRING
+    types[1] = PT_INT64
+    types[2] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(3)
+    ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 3)
+  }
+
 fun ObjectCalls.ptrcallWithStringTwoIntBoolArgsRetString(
   methodBind: MemorySegment,
   instance: MemorySegment,
@@ -28139,6 +28259,83 @@ fun ObjectCalls.ptrcallWithThreeIntArgsRetVector2i(
   )
   Vector2i(ret[0], ret[1])
 }
+
+fun <T> ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+  a1: Int,
+  a2: Int,
+  a3: Boolean,
+  a4: Double,
+  a5: Boolean,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val c0 = alloc<LongVar>()
+    c0.value = a0.toLong()
+    val c1 = alloc<LongVar>()
+    c1.value = a1.toLong()
+    val c2 = alloc<LongVar>()
+    c2.value = a2.toLong()
+    val c3 = alloc<ByteVar>()
+    c3.value = if (a3) 1 else 0
+    val c4 = alloc<DoubleVar>()
+    c4.value = a4
+    val c5 = alloc<ByteVar>()
+    c5.value = if (a5) 1 else 0
+    val types = allocArray<IntVar>(6)
+    types[0] = PT_INT64
+    types[1] = PT_INT64
+    types[2] = PT_INT64
+    types[3] = PT_BOOL
+    types[4] = PT_FLOAT64
+    types[5] = PT_BOOL
+    val ptrs = allocArray<COpaquePointerVar>(6)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrs[4] = c4.ptr.reinterpret<CPointed>()
+    ptrs[5] = c5.ptr.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 6)
+  }
+
+fun <T> ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(
+  methodBind: MemorySegment,
+  instance: MemorySegment,
+  a0: Int,
+  a1: Int,
+  a2: Int,
+  a3: Boolean,
+  a4: Boolean,
+  fromHandle: (MemorySegment) -> T?,
+): List<T> =
+  retTypedObjectList(methodBind, instance, fromHandle) {
+    val c0 = alloc<LongVar>()
+    c0.value = a0.toLong()
+    val c1 = alloc<LongVar>()
+    c1.value = a1.toLong()
+    val c2 = alloc<LongVar>()
+    c2.value = a2.toLong()
+    val c3 = alloc<ByteVar>()
+    c3.value = if (a3) 1 else 0
+    val c4 = alloc<ByteVar>()
+    c4.value = if (a4) 1 else 0
+    val types = allocArray<IntVar>(5)
+    types[0] = PT_INT64
+    types[1] = PT_INT64
+    types[2] = PT_INT64
+    types[3] = PT_BOOL
+    types[4] = PT_BOOL
+    val ptrs = allocArray<COpaquePointerVar>(5)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrs[4] = c4.ptr.reinterpret<CPointed>()
+    Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 5)
+  }
 
 fun ObjectCalls.ptrcallWithThreeLongArgsRetLong(
   methodBind: MemorySegment,

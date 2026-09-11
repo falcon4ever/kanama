@@ -9134,6 +9134,111 @@ int64_t kanama_ios_godot_ptrcall_ret_object_array(
     return size;
 }
 
+// task 100 (parcel 9) — typed-object-array (Array[Object]) returns on EVERY audited arg shape.
+// Same arg cells as kanama_ios_godot_ptrcall; the method runs ONCE (the two-call length protocol
+// of kanama_ios_godot_ptrcall_ret_object_array above re-invokes it, which is only safe for pure
+// getters — Noise.get_image_3d or RenderingServer.bake_render_uv2 must not run twice). The element
+// handles are written into out_handles when they fit cap (an ELEMENT count), otherwise into a
+// malloc'd single pending slot that kanama_ios_godot_take_pending_object_handles drains. Handles
+// are BORROWED, exactly like the two-call entry and desktop's BuiltinTypes.readArrayObjects: the
+// returned Array is destroyed here, so a RefCounted element whose only holder was that Array is
+// gone by the time Kotlin wraps it (a cross-backend convention, not an iOS choice). Non-Object
+// elements yield a 0 handle. Returns the full element count, or -1 on a null method/instance,
+// an unavailable API or an allocation failure.
+static int64_t *g_pending_object_handles = NULL;
+static int64_t g_pending_object_handle_count = 0;
+
+static void kanama_ios_drop_pending_object_handles(void) {
+    if (g_pending_object_handles != NULL) {
+        free(g_pending_object_handles);
+        g_pending_object_handles = NULL;
+    }
+    g_pending_object_handle_count = 0;
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_object_handles(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_handles,
+    int64_t cap
+) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+        return -1;
+    }
+    kanama_ios_cache_array_methods();
+    if (g_array_size_method == NULL || g_array_get_method == NULL || g_variant_to_object == NULL) {
+        return -1;
+    }
+    kanama_ios_drop_pending_object_handles();
+
+    // Array opaque size is 8 bytes on 64-bit (OPAQUE_8_BYTE_TYPES) — a single uint64_t slot.
+    uint64_t array_storage = 0;
+    kanama_ios_godot_ptrcall(
+        method_bind, instance, arg_types, arg_ptrs, arg_count,
+        KANAMA_IOS_PT_OBJECT /* any non-void ret tag → ret_out is used */, &array_storage);
+
+    int64_t size = 0;
+    g_array_size_method(&array_storage, NULL, &size, 0);
+
+    int64_t result = size;
+    if (size > 0) {
+        int64_t *dest = NULL;
+        if (out_handles != NULL && cap >= size) {
+            dest = out_handles;
+        } else {
+            dest = (int64_t *)malloc((size_t)size * sizeof(int64_t));
+            if (dest == NULL) {
+                result = -1;
+            } else {
+                g_pending_object_handles = dest;
+                g_pending_object_handle_count = size;
+            }
+        }
+        for (int64_t i = 0; dest != NULL && i < size; i++) {
+            uint8_t ret_variant[24] = {0};
+            const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&i };
+            g_array_get_method(&array_storage, args, ret_variant, 1);
+            int64_t handle = 0;
+            GDExtensionVariantType elem_type = g_variant_get_type != NULL
+                ? g_variant_get_type((GDExtensionConstVariantPtr)ret_variant)
+                : KANAMA_IOS_VARIANT_TYPE_NIL;
+            if (elem_type == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
+                GDExtensionObjectPtr obj_ptr = NULL;
+                g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
+                handle = (int64_t)(intptr_t)obj_ptr;
+            }
+            if (g_variant_destroy != NULL) {
+                g_variant_destroy((GDExtensionVariantPtr)ret_variant);
+            }
+            dest[i] = handle;
+        }
+    }
+
+    if (g_array_destructor != NULL) {
+        g_array_destructor((GDExtensionTypePtr)&array_storage);
+    }
+    return result;
+}
+
+int64_t kanama_ios_godot_take_pending_object_handles(
+    int64_t *out_handles,
+    int64_t cap
+) {
+    if (g_pending_object_handles == NULL) {
+        return -1;
+    }
+    int64_t count = g_pending_object_handle_count;
+    if (out_handles != NULL && cap > 0) {
+        memcpy(out_handles, g_pending_object_handles,
+               (size_t)((count < cap) ? count : cap) * sizeof(int64_t));
+    }
+    kanama_ios_drop_pending_object_handles();
+    return count;
+}
+
 static GDExtensionBool kanama_ios_script_instance_set_property(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr name,

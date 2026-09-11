@@ -123,6 +123,16 @@ object EditorInterface {
     }
 
     /**
+     * Returns mesh previews rendered at the given size as an `Array` of `Texture2D`s.
+     *
+     * Generated from Godot docs: EditorInterface.make_mesh_previews
+     */
+    @JvmStatic
+    fun makeMeshPreviews(meshes: List<Mesh>, previewSize: Int): List<Texture2D> {
+        return ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(makeMeshPreviewsBind, singleton, meshes, previewSize, Texture2D::fromHandle)
+    }
+
+    /**
      * Sets the enabled status of a plugin. The plugin name is the same as its directory name.
      *
      * Generated from Godot docs: EditorInterface.set_plugin_enabled
@@ -871,6 +881,11 @@ object EditorInterface {
     private const val GET_EDITOR_UNDO_REDO_HASH = 3819628421L
     private val getEditorUndoRedoBind by lazy {
         ObjectCalls.getMethodBind("EditorInterface", "get_editor_undo_redo", GET_EDITOR_UNDO_REDO_HASH)
+    }
+
+    private const val MAKE_MESH_PREVIEWS_HASH = 878078554L
+    private val makeMeshPreviewsBind by lazy {
+        ObjectCalls.getMethodBind("EditorInterface", "make_mesh_previews", MAKE_MESH_PREVIEWS_HASH)
     }
 
     private const val SET_PLUGIN_ENABLED_HASH = 2678287736L

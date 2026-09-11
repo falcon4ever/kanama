@@ -24,6 +24,11 @@ class RegEx(handle: MemorySegment) : RefCounted(handle) {
         return RegExMatch.wrap(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(searchBind, handle, subject, offset, end))
     }
 
+    fun searchAll(subject: String, offset: Int = 0, end: Int = -1): List<RegExMatch> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(searchAllBind, handle, subject, offset, end, RegExMatch::fromHandle)
+    }
+
     fun sub(subject: String, replacement: String, all: Boolean = false, offset: Int = 0, end: Int = -1): String {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(subBind, handle, subject, replacement, all, offset, end)
@@ -79,6 +84,11 @@ class RegEx(handle: MemorySegment) : RefCounted(handle) {
         private const val SEARCH_HASH = 3365977994L
         private val searchBind by lazy {
             ObjectCalls.getMethodBind("RegEx", "search", SEARCH_HASH)
+        }
+
+        private const val SEARCH_ALL_HASH = 849021363L
+        private val searchAllBind by lazy {
+            ObjectCalls.getMethodBind("RegEx", "search_all", SEARCH_ALL_HASH)
         }
 
         private const val SUB_HASH = 54019702L
