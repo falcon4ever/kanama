@@ -1361,6 +1361,11 @@ class GodotBackendContractTest {
       callSite: GodotCallSite,
     ): Long = unexercised(descriptor)
 
+    override fun invokeNoArgsRetLongListSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+    ): List<Long> = unexercised(descriptor)
+
     override fun invokeStringNameObjectRetInt(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,

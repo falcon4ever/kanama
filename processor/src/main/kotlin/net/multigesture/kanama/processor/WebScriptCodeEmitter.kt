@@ -134,9 +134,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
      * happened to name. 23 (task 64, Curve + Resource-typed hydration parcel) adds opcode 306,
      * `Curve.sample` — the one method call thirdperson's Bullet needs once its `scaleDecay: Curve?`
-     * property hydrates over the existing generic OBJECT property arm.
+     * property hydrates over the existing generic OBJECT property arm. 24 (task 64, the DemoPage
+     * set) adds opcodes 307-312: `SceneTree.is_paused`, `Control.release_focus`,
+     * `Environment.set_ssil_enabled` / `set_sdfgi_enabled`, `SceneTree.unload_current_scene` and
+     * `Input.get_connected_joypads` (a new NOARGS_RET_LONG_LIST_SINGLETON shape on the string
+     * channel).
      */
-    const val PROTOCOL_VERSION = 23
+    const val PROTOCOL_VERSION = 24
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -2436,6 +2440,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as CanvasItem).visible = bytes.decode_s32(offset + 8) != 0")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 309 and target_object is Environment:")
+    appendLine(
+      "\t\t\t(target_object as Environment).ssil_enabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 310 and target_object is Environment:")
+    appendLine(
+      "\t\t\t(target_object as Environment).sdfgi_enabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 55 and target_object is AnimatedSprite2D:")
     appendLine(
       "\t\t\t(target_object as AnimatedSprite2D).flip_v = bytes.decode_s32(offset + 8) != 0"
@@ -2486,6 +2502,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\toffset += 8")
     appendLine("\t\telif opcode == 64 and target_object is AudioStreamPlayer:")
     appendLine("\t\t\t(target_object as AudioStreamPlayer).stop()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 308 and target_object is Control:")
+    appendLine("\t\t\t(target_object as Control).release_focus()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    appendLine("\t\telif opcode == 311 and target_object is SceneTree:")
+    appendLine("\t\t\t(target_object as SceneTree).unload_current_scene()")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 8")
     appendLine("\t\telif opcode == 65 and target_object is PathFollow2D:")
@@ -3818,6 +3842,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as InputEventKey).physical_keycode)")
     appendLine("\t\telif opcode == 299 and value is InputEvent:")
     appendLine("\t\t\tresult = int((value as InputEvent).is_echo())")
+    appendLine("\t\telif opcode == 307 and value is SceneTree:")
+    appendLine("\t\t\tresult = int((value as SceneTree).paused)")
     appendLine("\t\telif opcode == 305 and value is InputEvent:")
     appendLine("\t\t\tresult = int((value as InputEvent).is_action(StringName(String(args[2]))))")
     appendLine("\t\telif opcode == 300 and value is InputEventWithModifiers:")
@@ -3910,6 +3936,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 145:")
     appendLine("\t\t\tresult = int(Input.mouse_mode)")
+    appendLine("\t\telif opcode == 312:")
+    appendLine("\t\t\tvar joypad_ids := PackedStringArray()")
+    appendLine("\t\t\tfor joypad_id in Input.get_connected_joypads():")
+    appendLine("\t\t\t\tjoypad_ids.append(str(joypad_id))")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\",\".join(joypad_ids))")
+    appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 148 and value != null:")
     appendLine("\t\t\tvar emit_parts := String(args[2]).split(\"\\u001f\")")
     appendLine("\t\t\tvar emit_arg_handle := int(emit_parts[1])")

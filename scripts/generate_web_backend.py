@@ -349,6 +349,12 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     304: {},
     305: {},
     306: {},
+    307: {},
+    308: {},
+    309: {},
+    310: {},
+    311: {},
+    312: {},
 }
 
 
@@ -1604,6 +1610,19 @@ def body_NOARGS_RET_VECTOR3I_LIST(calls):
     ]
 
 
+def body_NOARGS_RET_LONG_LIST_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// The applier joins the ids with commas on the string channel; an empty string is no joypad.",
+        'return immediateWebStringQuery(descriptor.opcode, requireActiveWebScriptHandle(), "")',
+        ".split(',')",
+        ".filter { it.isNotEmpty() }",
+        ".map { it.toLong() }",
+    ]
+
+
 def body_LONG_OBJECT_ARG(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -1953,6 +1972,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         "GodotHandle?",
     ),
     "NOARGS_RET_LONG_SINGLETON": ([], "Long"),
+    "NOARGS_RET_LONG_LIST_SINGLETON": ([], "List<Long>"),
     "STRINGNAME_OBJECT_RET_INT": (
         ["receiver: GodotHandle", "name: String", "value: GodotHandle"],
         "Int",
@@ -2274,6 +2294,7 @@ EMIT_ORDER = [
     "VECTOR3I_RET_LONG",
     "BASIS_RET_LONG",
     "NOARGS_RET_VECTOR3I_LIST",
+    "NOARGS_RET_LONG_LIST_SINGLETON",
     "LONG_OBJECT_ARG",
     "LONG_TRANSFORM3D_ARG",
     "LONG_RET_STRING",

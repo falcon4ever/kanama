@@ -22,6 +22,14 @@ class Environment(godotObject: GodotHandle) : Resource(godotObject) {
     GodotBackendCalls.invokeBoolArg(D.ENVIRONMENT_SET_GLOW_ENABLED, requireOpenHandle(), enabled)
   }
 
+  fun setSsilEnabled(enabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(D.ENVIRONMENT_SET_SSIL_ENABLED, requireOpenHandle(), enabled)
+  }
+
+  fun setSdfgiEnabled(enabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(D.ENVIRONMENT_SET_SDFGI_ENABLED, requireOpenHandle(), enabled)
+  }
+
   var backgroundEnergyMultiplier: Double
     get() = unsupportedWebGameplayFamily("Environment.get_bg_energy_multiplier")
     set(newValue) = setBgEnergyMultiplier(newValue)
@@ -29,6 +37,14 @@ class Environment(godotObject: GodotHandle) : Resource(godotObject) {
   var glowEnabled: Boolean
     get() = unsupportedWebGameplayFamily("Environment.is_glow_enabled")
     set(newValue) = setGlowEnabled(newValue)
+
+  var ssilEnabled: Boolean
+    get() = unsupportedWebGameplayFamily("Environment.is_ssil_enabled")
+    set(newValue) = setSsilEnabled(newValue)
+
+  var sdfgiEnabled: Boolean
+    get() = unsupportedWebGameplayFamily("Environment.is_sdfgi_enabled")
+    set(newValue) = setSdfgiEnabled(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -36,6 +52,12 @@ fun Environment.setBgEnergyMultiplier(energy: Double) = setBgEnergyMultiplier(en
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Environment.setGlowEnabled(enabled: Boolean) = setGlowEnabled(enabled)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Environment.setSsilEnabled(enabled: Boolean) = setSsilEnabled(enabled)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Environment.setSdfgiEnabled(enabled: Boolean) = setSdfgiEnabled(enabled)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Environment.backgroundEnergyMultiplier: Double
@@ -49,4 +71,18 @@ var Environment.glowEnabled: Boolean
   get() = glowEnabled
   set(newValue) {
     glowEnabled = newValue
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Environment.ssilEnabled: Boolean
+  get() = ssilEnabled
+  set(newValue) {
+    ssilEnabled = newValue
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Environment.sdfgiEnabled: Boolean
+  get() = sdfgiEnabled
+  set(newValue) {
+    sdfgiEnabled = newValue
   }

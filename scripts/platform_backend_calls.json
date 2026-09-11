@@ -4816,6 +4816,94 @@
       "returnOwnership": "BORROWED",
       "semantics": "Sample the curve's baked value at offset (0..1 domain by convention, unclamped past it). Unlocks Resource-typed @ScriptProperty hydration for Curve exports (thirdperson Bullet's scale_decay) -- the property push itself already rides the generic OBJECT property arm; this opcode is the one method call the converged demo needs.",
       "introducedBy": "64-tier3-curve-resource-hydration"
+    },
+    {
+      "opcode": 307,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "is_paused",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Whether the tree is paused (DemoPage toggles pause from the pause action and reads it back). Pairs with set_pause.",
+      "introducedBy": "64-tier3-demopage-set"
+    },
+    {
+      "opcode": 308,
+      "scope": "class",
+      "className": "Control",
+      "methodName": "release_focus",
+      "hash": 3218959716,
+      "arguments": [],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Give up keyboard focus (DemoPage drops focus from the instruction buttons after switching).",
+      "introducedBy": "64-tier3-demopage-set"
+    },
+    {
+      "opcode": 309,
+      "scope": "class",
+      "className": "Environment",
+      "methodName": "set_ssil_enabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle screen-space indirect lighting (DemoPage's deferred-lighting upgrade; a no-op on the Compatibility renderer, the shared script gates it on !web).",
+      "introducedBy": "64-tier3-demopage-set"
+    },
+    {
+      "opcode": 310,
+      "scope": "class",
+      "className": "Environment",
+      "methodName": "set_sdfgi_enabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle SDFGI (DemoPage's deferred-lighting upgrade; a no-op on the Compatibility renderer, the shared script gates it on !web).",
+      "introducedBy": "64-tier3-demopage-set"
+    },
+    {
+      "opcode": 311,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "unload_current_scene",
+      "hash": 3218959716,
+      "arguments": [],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Unload the current scene (DemoPage's Exit path; the shared script takes the browser branch on web, so this is admitted for the shared file to compile and stays unexercised by the corpus).",
+      "introducedBy": "64-tier3-demopage-set"
+    },
+    {
+      "opcode": 312,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "get_connected_joypads",
+      "hash": 2915620761,
+      "arguments": [],
+      "returnType": "typedarray::int",
+      "shape": "NOARGS_RET_LONG_LIST_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Ids of the connected joypads (DemoPage picks the joypad instructions when one is present). Comma-joined ids on the string channel; empty = none.",
+      "introducedBy": "64-tier3-demopage-set"
     }
   ],
   "compositions": [

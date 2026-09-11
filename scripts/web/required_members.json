@@ -188,6 +188,14 @@
         {
           "member": "Main.input_map_probe",
           "reason": "The task-64 tier-3 InputMap / InputEventKey / process-mode / Window-mode conformance probe the driver calls explicitly and asserts to the full 255 mask."
+        },
+        {
+          "member": "Main.demo_page_probe",
+          "reason": "The task-64 DemoPage-set conformance probe (pause read-back, joypad enumeration, Environment toggles, focus release, postAfterFrames) the driver calls explicitly and asserts to the full 31 mask."
+        },
+        {
+          "member": "Main.demo_page_probe_after",
+          "reason": "The task-64 DemoPage-set readback the driver calls after the frame pumps (1 once the postAfterFrames chain ran)."
         }
       ],
       "todo": [
