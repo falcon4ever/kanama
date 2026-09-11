@@ -46,29 +46,39 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("setUseNamedSkinBindsProperty")
         set(value) = setUseNamedSkinBinds(value)
 
-    val nodes: List<GLTFNode>
+    var nodes: List<GLTFNode>
         @JvmName("nodesProperty")
         get() = getNodes()
+        @JvmName("setNodesProperty")
+        set(value) = setNodes(value)
 
     val buffers: List<ByteArray>
         @JvmName("buffersProperty")
         get() = getBuffers()
 
-    val bufferViews: List<GLTFBufferView>
+    var bufferViews: List<GLTFBufferView>
         @JvmName("bufferViewsProperty")
         get() = getBufferViews()
+        @JvmName("setBufferViewsProperty")
+        set(value) = setBufferViews(value)
 
-    val accessors: List<GLTFAccessor>
+    var accessors: List<GLTFAccessor>
         @JvmName("accessorsProperty")
         get() = getAccessors()
+        @JvmName("setAccessorsProperty")
+        set(value) = setAccessors(value)
 
-    val meshes: List<GLTFMesh>
+    var meshes: List<GLTFMesh>
         @JvmName("meshesProperty")
         get() = getMeshes()
+        @JvmName("setMeshesProperty")
+        set(value) = setMeshes(value)
 
-    val materials: List<Material>
+    var materials: List<Material>
         @JvmName("materialsProperty")
         get() = getMaterials()
+        @JvmName("setMaterialsProperty")
+        set(value) = setMaterials(value)
 
     var sceneName: String
         @JvmName("sceneNameProperty")
@@ -94,41 +104,59 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("setRootNodesProperty")
         set(value) = setRootNodes(value)
 
-    val textures: List<GLTFTexture>
+    var textures: List<GLTFTexture>
         @JvmName("texturesProperty")
         get() = getTextures()
+        @JvmName("setTexturesProperty")
+        set(value) = setTextures(value)
 
-    val textureSamplers: List<GLTFTextureSampler>
+    var textureSamplers: List<GLTFTextureSampler>
         @JvmName("textureSamplersProperty")
         get() = getTextureSamplers()
+        @JvmName("setTextureSamplersProperty")
+        set(value) = setTextureSamplers(value)
 
-    val images: List<Texture2D>
+    var images: List<Texture2D>
         @JvmName("imagesProperty")
         get() = getImages()
+        @JvmName("setImagesProperty")
+        set(value) = setImages(value)
 
-    val skins: List<GLTFSkin>
+    var skins: List<GLTFSkin>
         @JvmName("skinsProperty")
         get() = getSkins()
+        @JvmName("setSkinsProperty")
+        set(value) = setSkins(value)
 
-    val cameras: List<GLTFCamera>
+    var cameras: List<GLTFCamera>
         @JvmName("camerasProperty")
         get() = getCameras()
+        @JvmName("setCamerasProperty")
+        set(value) = setCameras(value)
 
-    val lights: List<GLTFLight>
+    var lights: List<GLTFLight>
         @JvmName("lightsProperty")
         get() = getLights()
+        @JvmName("setLightsProperty")
+        set(value) = setLights(value)
 
-    val uniqueNames: List<String>
+    var uniqueNames: List<String>
         @JvmName("uniqueNamesProperty")
         get() = getUniqueNames()
+        @JvmName("setUniqueNamesProperty")
+        set(value) = setUniqueNames(value)
 
-    val uniqueAnimationNames: List<String>
+    var uniqueAnimationNames: List<String>
         @JvmName("uniqueAnimationNamesProperty")
         get() = getUniqueAnimationNames()
+        @JvmName("setUniqueAnimationNamesProperty")
+        set(value) = setUniqueAnimationNames(value)
 
-    val skeletons: List<GLTFSkeleton>
+    var skeletons: List<GLTFSkeleton>
         @JvmName("skeletonsProperty")
         get() = getSkeletons()
+        @JvmName("setSkeletonsProperty")
+        set(value) = setSkeletons(value)
 
     var createAnimations: Boolean
         @JvmName("createAnimationsProperty")
@@ -142,9 +170,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         @JvmName("setImportAsSkeletonBonesProperty")
         set(value) = setImportAsSkeletonBones(value)
 
-    val animations: List<GLTFAnimation>
+    var animations: List<GLTFAnimation>
         @JvmName("animationsProperty")
         get() = getAnimations()
+        @JvmName("setAnimationsProperty")
+        set(value) = setAnimations(value)
 
     var handleBinaryImageMode: Long
         @JvmName("handleBinaryImageModeProperty")
@@ -244,6 +274,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getNodesBind, handle, GLTFNode::fromHandle)
     }
 
+    fun setNodes(nodes: List<GLTFNode>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setNodesBind, handle, nodes)
+    }
+
     fun getBuffers(): List<ByteArray> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArrayList(getBuffersBind, handle)
@@ -254,14 +289,29 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getBufferViewsBind, handle, GLTFBufferView::fromHandle)
     }
 
+    fun setBufferViews(bufferViews: List<GLTFBufferView>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setBufferViewsBind, handle, bufferViews)
+    }
+
     fun getAccessors(): List<GLTFAccessor> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAccessorsBind, handle, GLTFAccessor::fromHandle)
     }
 
+    fun setAccessors(accessors: List<GLTFAccessor>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setAccessorsBind, handle, accessors)
+    }
+
     fun getMeshes(): List<GLTFMesh> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMeshesBind, handle, GLTFMesh::fromHandle)
+    }
+
+    fun setMeshes(meshes: List<GLTFMesh>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setMeshesBind, handle, meshes)
     }
 
     fun getAnimationPlayersCount(animPlayerIndex: Int): Int {
@@ -277,6 +327,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun getMaterials(): List<Material> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMaterialsBind, handle, Material::fromHandle)
+    }
+
+    fun setMaterials(materials: List<Material>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTypedMaterialListArg(setMaterialsBind, handle, materials)
     }
 
     fun getSceneName(): String {
@@ -324,9 +379,19 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTexturesBind, handle, GLTFTexture::fromHandle)
     }
 
+    fun setTextures(textures: List<GLTFTexture>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setTexturesBind, handle, textures)
+    }
+
     fun getTextureSamplers(): List<GLTFTextureSampler> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTextureSamplersBind, handle, GLTFTextureSampler::fromHandle)
+    }
+
+    fun setTextureSamplers(textureSamplers: List<GLTFTextureSampler>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setTextureSamplersBind, handle, textureSamplers)
     }
 
     fun getImages(): List<Texture2D> {
@@ -334,9 +399,19 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getImagesBind, handle, Texture2D::fromHandle)
     }
 
+    fun setImages(images: List<Texture2D>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setImagesBind, handle, images)
+    }
+
     fun getSkins(): List<GLTFSkin> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkinsBind, handle, GLTFSkin::fromHandle)
+    }
+
+    fun setSkins(skins: List<GLTFSkin>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setSkinsBind, handle, skins)
     }
 
     fun getCameras(): List<GLTFCamera> {
@@ -344,9 +419,19 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCamerasBind, handle, GLTFCamera::fromHandle)
     }
 
+    fun setCameras(cameras: List<GLTFCamera>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setCamerasBind, handle, cameras)
+    }
+
     fun getLights(): List<GLTFLight> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightsBind, handle, GLTFLight::fromHandle)
+    }
+
+    fun setLights(lights: List<GLTFLight>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setLightsBind, handle, lights)
     }
 
     fun getUniqueNames(): List<String> {
@@ -354,14 +439,29 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
     }
 
+    fun setUniqueNames(uniqueNames: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, handle, uniqueNames)
+    }
+
     fun getUniqueAnimationNames(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueAnimationNamesBind, handle)
     }
 
+    fun setUniqueAnimationNames(uniqueAnimationNames: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTypedStringListArg(setUniqueAnimationNamesBind, handle, uniqueAnimationNames)
+    }
+
     fun getSkeletons(): List<GLTFSkeleton> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkeletonsBind, handle, GLTFSkeleton::fromHandle)
+    }
+
+    fun setSkeletons(skeletons: List<GLTFSkeleton>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setSkeletonsBind, handle, skeletons)
     }
 
     fun getCreateAnimations(): Boolean {
@@ -387,6 +487,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
     fun getAnimations(): List<GLTFAnimation> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAnimationsBind, handle, GLTFAnimation::fromHandle)
+    }
+
+    fun setAnimations(animations: List<GLTFAnimation>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setAnimationsBind, handle, animations)
     }
 
     fun getSceneNode(gltfNodeIndex: Int): Node? {
@@ -536,6 +641,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "get_nodes", GET_NODES_HASH)
         }
 
+        private const val SET_NODES_HASH = 381264803L
+        private val setNodesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_nodes", SET_NODES_HASH)
+        }
+
         private const val GET_BUFFERS_HASH = 3995934104L
         private val getBuffersBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_buffers", GET_BUFFERS_HASH)
@@ -546,14 +656,29 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "get_buffer_views", GET_BUFFER_VIEWS_HASH)
         }
 
+        private const val SET_BUFFER_VIEWS_HASH = 381264803L
+        private val setBufferViewsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_buffer_views", SET_BUFFER_VIEWS_HASH)
+        }
+
         private const val GET_ACCESSORS_HASH = 3995934104L
         private val getAccessorsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_accessors", GET_ACCESSORS_HASH)
         }
 
+        private const val SET_ACCESSORS_HASH = 381264803L
+        private val setAccessorsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_accessors", SET_ACCESSORS_HASH)
+        }
+
         private const val GET_MESHES_HASH = 3995934104L
         private val getMeshesBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_meshes", GET_MESHES_HASH)
+        }
+
+        private const val SET_MESHES_HASH = 381264803L
+        private val setMeshesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_meshes", SET_MESHES_HASH)
         }
 
         private const val GET_ANIMATION_PLAYERS_COUNT_HASH = 923996154L
@@ -569,6 +694,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_MATERIALS_HASH = 3995934104L
         private val getMaterialsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_materials", GET_MATERIALS_HASH)
+        }
+
+        private const val SET_MATERIALS_HASH = 381264803L
+        private val setMaterialsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_materials", SET_MATERIALS_HASH)
         }
 
         private const val GET_SCENE_NAME_HASH = 201670096L
@@ -616,9 +746,19 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "get_textures", GET_TEXTURES_HASH)
         }
 
+        private const val SET_TEXTURES_HASH = 381264803L
+        private val setTexturesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_textures", SET_TEXTURES_HASH)
+        }
+
         private const val GET_TEXTURE_SAMPLERS_HASH = 3995934104L
         private val getTextureSamplersBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_texture_samplers", GET_TEXTURE_SAMPLERS_HASH)
+        }
+
+        private const val SET_TEXTURE_SAMPLERS_HASH = 381264803L
+        private val setTextureSamplersBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_texture_samplers", SET_TEXTURE_SAMPLERS_HASH)
         }
 
         private const val GET_IMAGES_HASH = 3995934104L
@@ -626,9 +766,19 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "get_images", GET_IMAGES_HASH)
         }
 
+        private const val SET_IMAGES_HASH = 381264803L
+        private val setImagesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_images", SET_IMAGES_HASH)
+        }
+
         private const val GET_SKINS_HASH = 3995934104L
         private val getSkinsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_skins", GET_SKINS_HASH)
+        }
+
+        private const val SET_SKINS_HASH = 381264803L
+        private val setSkinsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_skins", SET_SKINS_HASH)
         }
 
         private const val GET_CAMERAS_HASH = 3995934104L
@@ -636,9 +786,19 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "get_cameras", GET_CAMERAS_HASH)
         }
 
+        private const val SET_CAMERAS_HASH = 381264803L
+        private val setCamerasBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_cameras", SET_CAMERAS_HASH)
+        }
+
         private const val GET_LIGHTS_HASH = 3995934104L
         private val getLightsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_lights", GET_LIGHTS_HASH)
+        }
+
+        private const val SET_LIGHTS_HASH = 381264803L
+        private val setLightsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_lights", SET_LIGHTS_HASH)
         }
 
         private const val GET_UNIQUE_NAMES_HASH = 3995934104L
@@ -646,14 +806,29 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("GLTFState", "get_unique_names", GET_UNIQUE_NAMES_HASH)
         }
 
+        private const val SET_UNIQUE_NAMES_HASH = 381264803L
+        private val setUniqueNamesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_unique_names", SET_UNIQUE_NAMES_HASH)
+        }
+
         private const val GET_UNIQUE_ANIMATION_NAMES_HASH = 3995934104L
         private val getUniqueAnimationNamesBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_unique_animation_names", GET_UNIQUE_ANIMATION_NAMES_HASH)
         }
 
+        private const val SET_UNIQUE_ANIMATION_NAMES_HASH = 381264803L
+        private val setUniqueAnimationNamesBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_unique_animation_names", SET_UNIQUE_ANIMATION_NAMES_HASH)
+        }
+
         private const val GET_SKELETONS_HASH = 3995934104L
         private val getSkeletonsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_skeletons", GET_SKELETONS_HASH)
+        }
+
+        private const val SET_SKELETONS_HASH = 381264803L
+        private val setSkeletonsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_skeletons", SET_SKELETONS_HASH)
         }
 
         private const val GET_CREATE_ANIMATIONS_HASH = 36873697L
@@ -679,6 +854,11 @@ open class GLTFState(handle: MemorySegment) : Resource(handle) {
         private const val GET_ANIMATIONS_HASH = 3995934104L
         private val getAnimationsBind by lazy {
             ObjectCalls.getMethodBind("GLTFState", "get_animations", GET_ANIMATIONS_HASH)
+        }
+
+        private const val SET_ANIMATIONS_HASH = 381264803L
+        private val setAnimationsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFState", "set_animations", SET_ANIMATIONS_HASH)
         }
 
         private const val GET_SCENE_NODE_HASH = 539202265L

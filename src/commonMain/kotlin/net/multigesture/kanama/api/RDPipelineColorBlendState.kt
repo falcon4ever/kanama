@@ -31,9 +31,11 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setBlendConstantProperty")
         set(value) = setBlendConstant(value)
 
-    val attachments: List<RDPipelineColorBlendStateAttachment>
+    var attachments: List<RDPipelineColorBlendStateAttachment>
         @JvmName("attachmentsProperty")
         get() = getAttachments()
+        @JvmName("setAttachmentsProperty")
+        set(value) = setAttachments(value)
 
     /**
      * If `true`, performs the logic operation defined in `logic_op`.
@@ -98,6 +100,16 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
     /**
      * The attachments that are blended together.
      *
+     * Generated from Godot docs: RDPipelineColorBlendState.set_attachments
+     */
+    fun setAttachments(attachments: List<RDPipelineColorBlendStateAttachment>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setAttachmentsBind, handle, attachments)
+    }
+
+    /**
+     * The attachments that are blended together.
+     *
      * Generated from Godot docs: RDPipelineColorBlendState.get_attachments
      */
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
@@ -141,6 +153,11 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_BLEND_CONSTANT_HASH = 3444240500L
         private val getBlendConstantBind by lazy {
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "get_blend_constant", GET_BLEND_CONSTANT_HASH)
+        }
+
+        private const val SET_ATTACHMENTS_HASH = 381264803L
+        private val setAttachmentsBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineColorBlendState", "set_attachments", SET_ATTACHMENTS_HASH)
         }
 
         private const val GET_ATTACHMENTS_HASH = 3995934104L

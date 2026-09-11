@@ -8,8 +8,10 @@ import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
@@ -565,6 +567,29 @@ object RenderingServer {
     }
 
     /**
+     * Creates a 2-dimensional layered texture and adds it to the RenderingServer. It can be accessed
+     * with the RID that is returned. This RID will be used in all `texture_2d_layered_*`
+     * RenderingServer functions. Once finished with your RID, you will want to free the RID using the
+     * RenderingServer's `free_rid` method. Note: The equivalent resource is `TextureLayered`.
+     *
+     * Generated from Godot docs: RenderingServer.texture_2d_layered_create
+     */
+    @JvmStatic
+    fun texture2dLayeredCreate(layers: List<Image>, layeredType: Long): RID {
+        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(texture2dLayeredCreateBind, singleton, layers, layeredType)
+    }
+
+    /**
+     * Note: The equivalent resource is `Texture3D`.
+     *
+     * Generated from Godot docs: RenderingServer.texture_3d_create
+     */
+    @JvmStatic
+    fun texture3dCreate(format: Long, width: Int, height: Int, depth: Int, mipmaps: Boolean, data: List<Image>): RID {
+        return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetRID(texture3dCreateBind, singleton, format, width, height, depth, mipmaps, data)
+    }
+
+    /**
      * This method does nothing and always returns an invalid `RID`.
      *
      * Generated from Godot docs: RenderingServer.texture_proxy_create
@@ -616,6 +641,20 @@ object RenderingServer {
     }
 
     /**
+     * Updates the texture specified by the `texture` `RID`'s data with the data in `data`. All the
+     * texture's layers must be replaced at once. Note: The `texture` must have the same width, height,
+     * depth and format as the current texture data. Otherwise, an error will be printed and the
+     * original texture won't be modified. If you need to use different width, height, depth or format,
+     * use `texture_replace` instead.
+     *
+     * Generated from Godot docs: RenderingServer.texture_3d_update
+     */
+    @JvmStatic
+    fun texture3dUpdate(texture: RID, data: List<Image>) {
+        ObjectCalls.ptrcallWithRIDAndObjectListArgs(texture3dUpdateBind, singleton, texture, data)
+    }
+
+    /**
      * This method does nothing.
      *
      * Generated from Godot docs: RenderingServer.texture_proxy_update
@@ -623,6 +662,19 @@ object RenderingServer {
     @JvmStatic
     fun textureProxyUpdate(texture: RID, proxyTo: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(textureProxyUpdateBind, singleton, texture, proxyTo)
+    }
+
+    /**
+     * Draws to `rect` on up to 4 given Drawable `textures`, using a TextureBlit Shader from
+     * `material`. `modulate` and up to 4 `source_textures` are uniforms for the Shader to process
+     * with. `to_mipmap` can specify to perform this draw to a lower mipmap level. Note: All `textures`
+     * must be the same size and format.
+     *
+     * Generated from Godot docs: RenderingServer.texture_drawable_blit_rect
+     */
+    @JvmStatic
+    fun textureDrawableBlitRect(textures: List<RID>, rect: Rect2i, material: RID, modulate: Color, sourceTextures: List<RID>, toMipmap: Int = 0) {
+        ObjectCalls.ptrcallWithRIDListRect2iRIDColorRIDListIntArgs(textureDrawableBlitRectBind, singleton, textures, rect, material, modulate, sourceTextures, toMipmap)
     }
 
     /**
@@ -2925,6 +2977,20 @@ object RenderingServer {
     }
 
     /**
+     * Sets the trail bind poses for the particle system. This specified as an array of `Transform3D`s
+     * representing the bind pose for each draw pass. See `GPUParticles3D.draw_skin`,
+     * `Skin.get_bind_count`, and `Skin.get_bind_pose`. Set the value for each draw pass to
+     * `Transform3D.IDENTITY` to use the default behavior, which is what built-in trails use
+     * (`RibbonTrailMesh` and `TubeTrailMesh`).
+     *
+     * Generated from Godot docs: RenderingServer.particles_set_trail_bind_poses
+     */
+    @JvmStatic
+    fun particlesSetTrailBindPoses(particles: RID, bindPoses: List<Transform3D>) {
+        ObjectCalls.ptrcallWithRIDAndTransform3DListArgs(particlesSetTrailBindPosesBind, singleton, particles, bindPoses)
+    }
+
+    /**
      * Returns `true` if particles are not emitting and particles are set to inactive.
      *
      * Generated from Godot docs: RenderingServer.particles_is_inactive
@@ -4169,6 +4235,17 @@ object RenderingServer {
     }
 
     /**
+     * Sets the compositor effects for the specified compositor RID. `effects` should be an array
+     * containing RIDs created with `compositor_effect_create`.
+     *
+     * Generated from Godot docs: RenderingServer.compositor_set_compositor_effects
+     */
+    @JvmStatic
+    fun compositorSetCompositorEffects(compositor: RID, effects: List<RID>) {
+        ObjectCalls.ptrcallWithRIDAndRIDListArgs(compositorSetCompositorEffectsBind, singleton, compositor, effects)
+    }
+
+    /**
      * Creates an environment and adds it to the RenderingServer. It can be accessed with the RID that
      * is returned. This RID will be used in all `environment_*` RenderingServer functions. Once
      * finished with your RID, you will want to free the RID using the RenderingServer's `free_rid`
@@ -5038,6 +5115,21 @@ object RenderingServer {
     @JvmStatic
     fun instancesCullRay(from: Vector3, to: Vector3, scenario: RID): List<Long> {
         return ObjectCalls.ptrcallWithTwoVector3RIDArgsRetPackedInt64List(instancesCullRayBind, singleton, from, to, scenario)
+    }
+
+    /**
+     * Returns an array of object IDs intersecting with the provided convex shape. Only 3D nodes that
+     * inherit from `VisualInstance3D` are considered, such as `MeshInstance3D` or
+     * `DirectionalLight3D`. Use `@GlobalScope.instance_from_id` to obtain the actual nodes. A scenario
+     * RID must be provided, which is available in the `World3D` you want to query. This forces an
+     * update for all resources queued to update. Warning: This function is primarily intended for
+     * editor usage. For in-game use cases, prefer physics collision.
+     *
+     * Generated from Godot docs: RenderingServer.instances_cull_convex
+     */
+    @JvmStatic
+    fun instancesCullConvex(convex: List<Plane>, scenario: RID): List<Long> {
+        return ObjectCalls.ptrcallWithPlaneListAndRIDArgsRetPackedInt64List(instancesCullConvexBind, singleton, convex, scenario)
     }
 
     /**
@@ -6612,6 +6704,16 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "texture_2d_create", TEXTURE_2D_CREATE_HASH)
     }
 
+    private const val TEXTURE_2D_LAYERED_CREATE_HASH = 913689023L
+    private val texture2dLayeredCreateBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_layered_create", TEXTURE_2D_LAYERED_CREATE_HASH)
+    }
+
+    private const val TEXTURE_3D_CREATE_HASH = 4036838706L
+    private val texture3dCreateBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "texture_3d_create", TEXTURE_3D_CREATE_HASH)
+    }
+
     private const val TEXTURE_PROXY_CREATE_HASH = 41030802L
     private val textureProxyCreateBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "texture_proxy_create", TEXTURE_PROXY_CREATE_HASH)
@@ -6632,9 +6734,19 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "texture_2d_update", TEXTURE_2D_UPDATE_HASH)
     }
 
+    private const val TEXTURE_3D_UPDATE_HASH = 684822712L
+    private val texture3dUpdateBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "texture_3d_update", TEXTURE_3D_UPDATE_HASH)
+    }
+
     private const val TEXTURE_PROXY_UPDATE_HASH = 395945892L
     private val textureProxyUpdateBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "texture_proxy_update", TEXTURE_PROXY_UPDATE_HASH)
+    }
+
+    private const val TEXTURE_DRAWABLE_BLIT_RECT_HASH = 4077763890L
+    private val textureDrawableBlitRectBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_blit_rect", TEXTURE_DRAWABLE_BLIT_RECT_HASH)
     }
 
     private const val TEXTURE_2D_PLACEHOLDER_CREATE_HASH = 529393457L
@@ -7642,6 +7754,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "particles_set_trails", PARTICLES_SET_TRAILS_HASH)
     }
 
+    private const val PARTICLES_SET_TRAIL_BIND_POSES_HASH = 684822712L
+    private val particlesSetTrailBindPosesBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "particles_set_trail_bind_poses", PARTICLES_SET_TRAIL_BIND_POSES_HASH)
+    }
+
     private const val PARTICLES_IS_INACTIVE_HASH = 3521089500L
     private val particlesIsInactiveBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "particles_is_inactive", PARTICLES_IS_INACTIVE_HASH)
@@ -8162,6 +8279,11 @@ object RenderingServer {
         ObjectCalls.getMethodBind("RenderingServer", "compositor_create", COMPOSITOR_CREATE_HASH)
     }
 
+    private const val COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH = 684822712L
+    private val compositorSetCompositorEffectsBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "compositor_set_compositor_effects", COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH)
+    }
+
     private const val ENVIRONMENT_CREATE_HASH = 529393457L
     private val environmentCreateBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "environment_create", ENVIRONMENT_CREATE_HASH)
@@ -8540,6 +8662,11 @@ object RenderingServer {
     private const val INSTANCES_CULL_RAY_HASH = 2208759584L
     private val instancesCullRayBind by lazy {
         ObjectCalls.getMethodBind("RenderingServer", "instances_cull_ray", INSTANCES_CULL_RAY_HASH)
+    }
+
+    private const val INSTANCES_CULL_CONVEX_HASH = 2488539944L
+    private val instancesCullConvexBind by lazy {
+        ObjectCalls.getMethodBind("RenderingServer", "instances_cull_convex", INSTANCES_CULL_CONVEX_HASH)
     }
 
     private const val CANVAS_CREATE_HASH = 529393457L

@@ -462,6 +462,21 @@ typedef struct {
 } KanamaIosPackedArgDesc;
 
 /*
+ * Descriptor for a typed-Array argument passed through the generic ptrcall dispatcher
+ * (KANAMA_IOS_PT_TYPED_ARRAY_BLOB tag, task 100 parcel 8). `variant_type` is the element's
+ * Variant.Type (array_set_typed), `class_name` the element class for TYPE_OBJECT (NULL otherwise),
+ * `blob` the tagged element blob [int32 count]([int32 elem_tag][int32 elem_len][bytes])* in the
+ * task-29 container layout (RID / int64 8 B, String family utf8, Vector2i 2 x int32, Transform3D
+ * 12 x float32, Plane 4 x float32, Object int64 handle, PackedVector2Array [int32 count][2 x
+ * float32]*). The dispatch builds the typed Array, ptrcalls, and destroys it after the call.
+ */
+typedef struct {
+    int32_t variant_type;
+    const char *class_name;
+    const uint8_t *blob;
+} KanamaIosTypedArrayArgDesc;
+
+/*
  * Descriptor for a Callable argument passed through the generic ptrcall dispatcher
  * (KANAMA_IOS_PT_CALLABLE tag). `object_handle` is the target GodotObject pointer as an
  * int64 and `method` is its method name as a C string. The dispatch builds an object+method

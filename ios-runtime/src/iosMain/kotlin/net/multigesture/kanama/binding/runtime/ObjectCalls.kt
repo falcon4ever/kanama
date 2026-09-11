@@ -39,6 +39,7 @@ import net.multigesture.kanama.ios.KanamaIosRpcConfig
 import net.multigesture.kanama.ios.KanamaIosRuntime
 import net.multigesture.kanama.ios.KanamaIosScriptDescriptor
 import net.multigesture.kanama.ios.cinterop.KanamaIosPackedArgDesc
+import net.multigesture.kanama.ios.cinterop.KanamaIosTypedArrayArgDesc
 import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
@@ -87,12 +88,14 @@ import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.types.Vector3i
+import net.multigesture.kanama.types.Vector4
 
 /**
  * iOS implementation of the runtime abstraction the generated Godot API wrappers call (mirrors the
@@ -151,6 +154,19 @@ object ObjectCalls {
   internal const val VT_PACKED_VECTOR2_ARRAY = 35
   internal const val VT_PACKED_VECTOR3_ARRAY = 36
   internal const val VT_PACKED_COLOR_ARRAY = 37
+  // Variant.Type ids array_set_typed takes for typed-Array ARGUMENTS (task 100, parcel 8); VT_INT
+  // (2) is the existing constant below.
+  internal const val VT_STRING_TYPE = 4
+  internal const val VT_VECTOR2I_TYPE = 6
+  internal const val VT_PLANE_TYPE = 14
+  internal const val VT_TRANSFORM3D_TYPE = 18
+  internal const val VT_STRING_NAME_TYPE = 21
+  internal const val VT_NODE_PATH_TYPE = 22
+  internal const val VT_RID_TYPE = 23
+  internal const val VT_OBJECT_TYPE = 24
+  // Variant.Type NIL: the descriptor asks for an UNTYPED Array (array_set_typed is skipped).
+  internal const val VT_NIL_TYPE = 0
+  internal const val VT_PACKED_VECTOR2_ARRAY_TYPE = 35
   private const val VT_INT = 2
   private const val VT_FLOAT = 3
   private const val VT_STRING = 4
@@ -2007,6 +2023,177 @@ object ObjectCalls {
     desc.data = blob.reinterpret()
     return desc.ptr
   }
+
+  // task 100 (parcel 8) — typed-Array ARGUMENTS. Each element is written as a tagged record
+  // ([int32 tag][int32 len][bytes], the task-29 container layout the C blob boxer reads); the
+  // descriptor carries the element's Variant.Type for array_set_typed (+ the class name for
+  // object elements). The dispatch builds the typed Array before the ptrcall and destroys it after.
+  private fun MemScope.packTypedArrayDesc(
+    variantType: Int,
+    className: String?,
+    elements: List<Pair<Int, ByteArray>>,
+  ): CPointer<KanamaIosTypedArrayArgDesc> {
+    var total = 4
+    for ((_, bytes) in elements) total += 8 + bytes.size
+    val blob = allocArray<ByteVar>(total)
+    var off = 0
+    fun putInt32(v: Int) {
+      blob[off] = (v and 0xFF).toByte()
+      blob[off + 1] = ((v ushr 8) and 0xFF).toByte()
+      blob[off + 2] = ((v ushr 16) and 0xFF).toByte()
+      blob[off + 3] = ((v ushr 24) and 0xFF).toByte()
+      off += 4
+    }
+    putInt32(elements.size)
+    for ((tag, bytes) in elements) {
+      putInt32(tag)
+      putInt32(bytes.size)
+      for (b in bytes) {
+        blob[off] = b
+        off += 1
+      }
+    }
+    val desc = alloc<KanamaIosTypedArrayArgDesc>()
+    desc.variant_type = variantType
+    desc.class_name = className?.cstr?.getPointer(this)
+    desc.blob = blob.reinterpret()
+    return desc.ptr
+  }
+
+  private fun int64Bytes(v: Long): ByteArray =
+    ByteArray(8) { ((v ushr (8 * it)) and 0xFF).toByte() }
+
+  private fun int32Bytes(vararg vs: Int): ByteArray {
+    val out = ByteArray(4 * vs.size)
+    for ((i, v) in vs.withIndex()) for (k in 0 until 4) out[4 * i + k] =
+      ((v ushr (8 * k)) and 0xFF).toByte()
+    return out
+  }
+
+  private fun float32Bytes(vararg vs: Float): ByteArray {
+    val out = ByteArray(4 * vs.size)
+    for ((i, v) in vs.withIndex()) {
+      val bits = v.toRawBits()
+      for (k in 0 until 4) out[4 * i + k] = ((bits ushr (8 * k)) and 0xFF).toByte()
+    }
+    return out
+  }
+
+  fun MemScope.packTypedRIDArrayDesc(values: List<RID>): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(VT_RID_TYPE, null, values.map { Pair(PT_RID, int64Bytes(it.value)) })
+
+  fun MemScope.packTypedLongArrayDesc(values: List<Long>): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(VT_INT, null, values.map { Pair(PT_INT64, int64Bytes(it)) })
+
+  fun MemScope.packTypedStringArrayDesc(
+    values: List<String>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(VT_STRING_TYPE, null, values.map { Pair(PT_STRING, it.encodeToByteArray()) })
+
+  fun MemScope.packTypedStringNameArrayDesc(
+    values: List<String>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_STRING_NAME_TYPE,
+      null,
+      values.map { Pair(PT_STRING_NAME, it.encodeToByteArray()) },
+    )
+
+  fun MemScope.packTypedNodePathArrayDesc(
+    values: List<NodePath>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_NODE_PATH_TYPE,
+      null,
+      values.map { Pair(PT_NODE_PATH, it.path.encodeToByteArray()) },
+    )
+
+  fun MemScope.packTypedVector2iArrayDesc(
+    values: List<Vector2i>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_VECTOR2I_TYPE,
+      null,
+      values.map { Pair(PT_VECTOR2I, int32Bytes(it.x, it.y)) },
+    )
+
+  fun MemScope.packTypedTransform3DArrayDesc(
+    values: List<Transform3D>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_TRANSFORM3D_TYPE,
+      null,
+      values.map { t ->
+        // 9 basis components column-major (ios_arg_layout's Transform3D layout) + 3 origin.
+        Pair(
+          PT_TRANSFORM3D,
+          float32Bytes(
+            GodotReal.toC(t.basis.x.x),
+            GodotReal.toC(t.basis.y.x),
+            GodotReal.toC(t.basis.z.x),
+            GodotReal.toC(t.basis.x.y),
+            GodotReal.toC(t.basis.y.y),
+            GodotReal.toC(t.basis.z.y),
+            GodotReal.toC(t.basis.x.z),
+            GodotReal.toC(t.basis.y.z),
+            GodotReal.toC(t.basis.z.z),
+            GodotReal.toC(t.origin.x),
+            GodotReal.toC(t.origin.y),
+            GodotReal.toC(t.origin.z),
+          ),
+        )
+      },
+    )
+
+  fun MemScope.packTypedPlaneArrayDesc(values: List<Plane>): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_PLANE_TYPE,
+      null,
+      values.map {
+        Pair(
+          PT_PLANE,
+          float32Bytes(
+            GodotReal.toC(it.normal.x),
+            GodotReal.toC(it.normal.y),
+            GodotReal.toC(it.normal.z),
+            GodotReal.toC(it.d),
+          ),
+        )
+      },
+    )
+
+  fun MemScope.packTypedPackedVector2ListArrayDesc(
+    values: List<List<Vector2>>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_PACKED_VECTOR2_ARRAY_TYPE,
+      null,
+      values.map { inner ->
+        val floats = FloatArray(inner.size * 2)
+        for ((i, v) in inner.withIndex()) {
+          floats[2 * i] = GodotReal.toC(v.x)
+          floats[2 * i + 1] = GodotReal.toC(v.y)
+        }
+        Pair(PT_PACKED_VECTOR2_ARRAY, int32Bytes(inner.size) + float32Bytes(*floats))
+      },
+    )
+
+  // Array[<Object subclass>] arguments are packed UNTYPED (Variant.Type NIL, no class name): one
+  // generated helper shape serves every element class (GLTFState.set_nodes and the CompositorEffect
+  // setters share ptrcallWithObjectListArg, as on desktop, whose initArrayOfObjects is untyped
+  // too),
+  // and the engine's TypedArray<T> conversion at the ptrcall boundary validates each element
+  // against
+  // the parameter's class. Typing the Array with any one class here made every other caller of the
+  // same shape hand the engine an Array[WrongClass] that it refuses (parcel-8 device gate finding).
+  fun MemScope.packTypedObjectArrayDesc(
+    values: List<GodotObject>
+  ): CPointer<KanamaIosTypedArrayArgDesc> =
+    packTypedArrayDesc(
+      VT_NIL_TYPE,
+      null,
+      values.map { Pair(PT_OBJECT, int64Bytes(it.handle.address())) },
+    )
 
   private fun MemScope.colorCell(c: Color): CPointer<FloatVar> {
     val cell = allocArray<FloatVar>(4)
@@ -4513,6 +4700,197 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       listOf("kanama/selftest_parcel7"),
     ) == true,
   )
+
+  // task 100 (parcel 8) — typed-Array / Rect2i / Vector4 ARGUMENTS through the GENERATED helpers
+  // (packTyped<Kind>ArrayDesc -> PT_TYPED_ARRAY_BLOB -> array_set_typed + tagged elements in the
+  // dispatch). Every class below is a plain data holder, a server-free node or a core singleton:
+  // no Shape*, physics body, GridMap cell or navigation region — the physics / navigation servers
+  // do not exist at scene-init (two device crashes on 2026-09-10 taught that).
+  // Array[RID] round trip on a RefCounted parameter bag; 1000 elements: the argument blob has no
+  // inline cap, so a long array proves the length handling end to end.
+  val typedPq = ObjectCalls.constructObject("PhysicsPointQueryParameters2D")
+  val typedRids = List(1000) { RID(1000L + it) }
+  ObjectCalls.ptrcallWithRIDListArg(
+    ObjectCalls.getMethodBind("PhysicsPointQueryParameters2D", "set_exclude", 381264803L),
+    typedPq,
+    typedRids,
+  )
+  val typedRidsBack =
+    ObjectCalls.ptrcallNoArgsRetRIDList(
+      ObjectCalls.getMethodBind("PhysicsPointQueryParameters2D", "get_exclude", 3995934104L),
+      typedPq,
+    )
+  check(
+    "arg-typed(PhysicsPointQueryParameters2D.set_exclude 1000 RIDs round-trip)",
+    typedRidsBack == typedRids,
+  )
+  ObjectCalls.destroyObject(typedPq)
+
+  // Array[String] and Array[GLTFNode] (object elements; the Array is built untyped and the
+  // setter's TypedArray<GLTFNode> conversion validates each element) on a GLTFState.
+  // The GLTFNode handles are referenced only by the state's array: destroying the state frees
+  // them, so they are not destroyed here (a second destroy would be a double free).
+  val typedGltf = ObjectCalls.constructObject("GLTFState")
+  ObjectCalls.ptrcallWithTypedStringListArg(
+    ObjectCalls.getMethodBind("GLTFState", "set_unique_names", 381264803L),
+    typedGltf,
+    listOf("alpha", "b\u00eata", ""),
+  )
+  val typedNamesBack =
+    ObjectCalls.ptrcallNoArgsRetTypedStringList(
+      ObjectCalls.getMethodBind("GLTFState", "get_unique_names", 3995934104L),
+      typedGltf,
+    )
+  check(
+    "arg-typed(GLTFState.set_unique_names String round-trip)",
+    typedNamesBack == listOf("alpha", "b\u00eata", ""),
+  )
+  val typedNodeA = ObjectCalls.constructObject("GLTFNode")
+  val typedNodeB = ObjectCalls.constructObject("GLTFNode")
+  ObjectCalls.ptrcallWithObjectListArg(
+    ObjectCalls.getMethodBind("GLTFState", "set_nodes", 381264803L),
+    typedGltf,
+    listOf(RefCounted(typedNodeA), RefCounted(typedNodeB)),
+  )
+  val typedNodesBack =
+    ObjectCalls.ptrcallNoArgsRetTypedObjectList(
+      ObjectCalls.getMethodBind("GLTFState", "get_nodes", 3995934104L),
+      typedGltf,
+    ) {
+      RefCounted(it)
+    }
+  check(
+    "arg-typed(GLTFState.set_nodes Array[GLTFNode] round-trip by handle)",
+    typedNodesBack.map { it.handle.address() } == listOf(typedNodeA.address(), typedNodeB.address()),
+  )
+  ObjectCalls.destroyObject(typedGltf)
+
+  // Array[NodePath] on a GLTFObjectModelProperty (data holder).
+  val typedOmp = ObjectCalls.constructObject("GLTFObjectModelProperty")
+  ObjectCalls.ptrcallWithNodePathListArg(
+    ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_node_paths", 381264803L),
+    typedOmp,
+    listOf(NodePath("A/B"), NodePath("C:prop")),
+  )
+  val typedPathsBack =
+    ObjectCalls.ptrcallNoArgsRetNodePathList(
+      ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_node_paths", 3995934104L),
+      typedOmp,
+    )
+  check(
+    "arg-typed(GLTFObjectModelProperty.set_node_paths NodePath round-trip)",
+    typedPathsBack == listOf(NodePath("A/B"), NodePath("C:prop")),
+  )
+  ObjectCalls.destroyObject(typedOmp)
+
+  // Array[int] on an RDPipelineMultisampleState (a data object; no RenderingDevice involved).
+  val typedMs = ObjectCalls.constructObject("RDPipelineMultisampleState")
+  ObjectCalls.ptrcallWithTypedIntListArg(
+    ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_sample_masks", 381264803L),
+    typedMs,
+    listOf(1L, 255L, -7L),
+  )
+  val typedMasksBack =
+    ObjectCalls.ptrcallNoArgsRetLongList(
+      ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_sample_masks", 3995934104L),
+      typedMs,
+    )
+  check(
+    "arg-typed(RDPipelineMultisampleState.set_sample_masks int round-trip)",
+    typedMasksBack == listOf(1L, 255L, -7L),
+  )
+  ObjectCalls.destroyObject(typedMs)
+
+  // Array[Plane]: the six planes of the unit cube -> Geometry3D.compute_convex_mesh_points gives
+  // its 8 corners (Geometry3D is a core singleton, available at scene-init).
+  val typedGeo = ObjectCalls.getSingleton("Geometry3D")
+  val typedCube =
+    listOf(
+      Plane(Vector3(1f, 0f, 0f), 1f),
+      Plane(Vector3(-1f, 0f, 0f), 1f),
+      Plane(Vector3(0f, 1f, 0f), 1f),
+      Plane(Vector3(0f, -1f, 0f), 1f),
+      Plane(Vector3(0f, 0f, 1f), 1f),
+      Plane(Vector3(0f, 0f, -1f), 1f),
+    )
+  val typedCorners =
+    ObjectCalls.ptrcallWithPlaneListArgRetPackedVector3List(
+      ObjectCalls.getMethodBind("Geometry3D", "compute_convex_mesh_points", 1936902142L),
+      typedGeo,
+      typedCube,
+    )
+  check(
+    "arg-typed(Geometry3D.compute_convex_mesh_points unit cube -> 8 corners)",
+    typedCorners.size == 8,
+  )
+
+  // Array[PackedVector2Array] (nested packed elements) on a NavigationMeshSourceGeometryData2D
+  // (a data holder; nothing is baked, no NavigationServer call).
+  val typedNav = ObjectCalls.constructObject("NavigationMeshSourceGeometryData2D")
+  val typedOutlines =
+    listOf(
+      listOf(Vector2(0f, 0f), Vector2(1f, 0f), Vector2(1f, 1f)),
+      listOf(Vector2(2f, 2f), Vector2(3f, 2f)),
+    )
+  ObjectCalls.ptrcallWithPackedVector2ListListArg(
+    ObjectCalls.getMethodBind(
+      "NavigationMeshSourceGeometryData2D",
+      "set_traversable_outlines",
+      381264803L,
+    ),
+    typedNav,
+    typedOutlines,
+  )
+  val typedOutlinesBack =
+    ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(
+      ObjectCalls.getMethodBind(
+        "NavigationMeshSourceGeometryData2D",
+        "get_traversable_outlines",
+        3995934104L,
+      ),
+      typedNav,
+    )
+  check(
+    "arg-typed(NavigationMeshSourceGeometryData2D.set_traversable_outlines nested round-trip)",
+    typedOutlinesBack == typedOutlines,
+  )
+  ObjectCalls.destroyObject(typedNav)
+
+  // Rect2i argument (4 x int32 POD) round trip on an AStarGrid2D (RefCounted, no server).
+  val typedGrid = ObjectCalls.constructObject("AStarGrid2D")
+  ObjectCalls.ptrcallWithRect2iArg(
+    ObjectCalls.getMethodBind("AStarGrid2D", "set_region", 1763793166L),
+    typedGrid,
+    Rect2i(Vector2i(-2, 3), Vector2i(10, 20)),
+  )
+  val typedRegion =
+    ObjectCalls.ptrcallNoArgsRetRect2i(
+      ObjectCalls.getMethodBind("AStarGrid2D", "get_region", 410525958L),
+      typedGrid,
+    )
+  check(
+    "arg-rect2i(AStarGrid2D.set_region round-trip)",
+    typedRegion == Rect2i(Vector2i(-2, 3), Vector2i(10, 20)),
+  )
+  ObjectCalls.destroyObject(typedGrid)
+
+  // Vector4 argument + return (4 x real_t POD) round trip on a VisualShaderNodeVec4Parameter.
+  val typedVec4 = ObjectCalls.constructObject("VisualShaderNodeVec4Parameter")
+  ObjectCalls.ptrcallWithVector4Arg(
+    ObjectCalls.getMethodBind("VisualShaderNodeVec4Parameter", "set_default_value", 643568085L),
+    typedVec4,
+    Vector4(1f, 2f, 3f, 4f),
+  )
+  val typedVec4Back =
+    ObjectCalls.ptrcallNoArgsRetVector4(
+      ObjectCalls.getMethodBind("VisualShaderNodeVec4Parameter", "get_default_value", 2435802345L),
+      typedVec4,
+    )
+  check(
+    "arg-vector4(VisualShaderNodeVec4Parameter.set_default_value round-trip)",
+    typedVec4Back == Vector4(1f, 2f, 3f, 4f),
+  )
+  ObjectCalls.destroyObject(typedVec4)
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

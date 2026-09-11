@@ -14,13 +14,17 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: NavigationMeshSourceGeometryData2D
  */
 class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handle) {
-    val traversableOutlines: List<List<Vector2>>
+    var traversableOutlines: List<List<Vector2>>
         @JvmName("traversableOutlinesProperty")
         get() = getTraversableOutlines()
+        @JvmName("setTraversableOutlinesProperty")
+        set(value) = setTraversableOutlines(value)
 
-    val obstructionOutlines: List<List<Vector2>>
+    var obstructionOutlines: List<List<Vector2>>
         @JvmName("obstructionOutlinesProperty")
         get() = getObstructionOutlines()
+        @JvmName("setObstructionOutlinesProperty")
+        set(value) = setObstructionOutlines(value)
 
     var projectedObstructions: List<Any?>
         @JvmName("projectedObstructionsProperty")
@@ -49,6 +53,16 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
     }
 
     /**
+     * Sets all the traversable area outlines arrays.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.set_traversable_outlines
+     */
+    fun setTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(setTraversableOutlinesBind, handle, traversableOutlines)
+    }
+
+    /**
      * Returns all the traversable area outlines arrays.
      *
      * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_traversable_outlines
@@ -59,6 +73,16 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
     }
 
     /**
+     * Sets all the obstructed area outlines arrays.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.set_obstruction_outlines
+     */
+    fun setObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(setObstructionOutlinesBind, handle, obstructionOutlines)
+    }
+
+    /**
      * Returns all the obstructed area outlines arrays.
      *
      * Generated from Godot docs: NavigationMeshSourceGeometryData2D.get_obstruction_outlines
@@ -66,6 +90,28 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
     fun getObstructionOutlines(): List<List<Vector2>> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getObstructionOutlinesBind, handle)
+    }
+
+    /**
+     * Appends another array of `traversable_outlines` at the end of the existing traversable outlines
+     * array.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.append_traversable_outlines
+     */
+    fun appendTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendTraversableOutlinesBind, handle, traversableOutlines)
+    }
+
+    /**
+     * Appends another array of `obstruction_outlines` at the end of the existing obstruction outlines
+     * array.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.append_obstruction_outlines
+     */
+    fun appendObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendObstructionOutlinesBind, handle, obstructionOutlines)
     }
 
     /**
@@ -176,14 +222,34 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "has_data", HAS_DATA_HASH)
         }
 
+        private const val SET_TRAVERSABLE_OUTLINES_HASH = 381264803L
+        private val setTraversableOutlinesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "set_traversable_outlines", SET_TRAVERSABLE_OUTLINES_HASH)
+        }
+
         private const val GET_TRAVERSABLE_OUTLINES_HASH = 3995934104L
         private val getTraversableOutlinesBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_traversable_outlines", GET_TRAVERSABLE_OUTLINES_HASH)
         }
 
+        private const val SET_OBSTRUCTION_OUTLINES_HASH = 381264803L
+        private val setObstructionOutlinesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "set_obstruction_outlines", SET_OBSTRUCTION_OUTLINES_HASH)
+        }
+
         private const val GET_OBSTRUCTION_OUTLINES_HASH = 3995934104L
         private val getObstructionOutlinesBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_obstruction_outlines", GET_OBSTRUCTION_OUTLINES_HASH)
+        }
+
+        private const val APPEND_TRAVERSABLE_OUTLINES_HASH = 381264803L
+        private val appendTraversableOutlinesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "append_traversable_outlines", APPEND_TRAVERSABLE_OUTLINES_HASH)
+        }
+
+        private const val APPEND_OBSTRUCTION_OUTLINES_HASH = 381264803L
+        private val appendObstructionOutlinesBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "append_obstruction_outlines", APPEND_OBSTRUCTION_OUTLINES_HASH)
         }
 
         private const val ADD_TRAVERSABLE_OUTLINE_HASH = 1509147220L

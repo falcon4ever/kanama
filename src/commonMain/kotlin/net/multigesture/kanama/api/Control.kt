@@ -344,21 +344,29 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         @JvmName("setAccessibilityLiveProperty")
         set(value) = setAccessibilityLive(value)
 
-    val accessibilityControlsNodes: List<NodePath>
+    var accessibilityControlsNodes: List<NodePath>
         @JvmName("accessibilityControlsNodesProperty")
         get() = getAccessibilityControlsNodes()
+        @JvmName("setAccessibilityControlsNodesProperty")
+        set(value) = setAccessibilityControlsNodes(value)
 
-    val accessibilityDescribedByNodes: List<NodePath>
+    var accessibilityDescribedByNodes: List<NodePath>
         @JvmName("accessibilityDescribedByNodesProperty")
         get() = getAccessibilityDescribedByNodes()
+        @JvmName("setAccessibilityDescribedByNodesProperty")
+        set(value) = setAccessibilityDescribedByNodes(value)
 
-    val accessibilityLabeledByNodes: List<NodePath>
+    var accessibilityLabeledByNodes: List<NodePath>
         @JvmName("accessibilityLabeledByNodesProperty")
         get() = getAccessibilityLabeledByNodes()
+        @JvmName("setAccessibilityLabeledByNodesProperty")
+        set(value) = setAccessibilityLabeledByNodes(value)
 
-    val accessibilityFlowToNodes: List<NodePath>
+    var accessibilityFlowToNodes: List<NodePath>
         @JvmName("accessibilityFlowToNodesProperty")
         get() = getAccessibilityFlowToNodes()
+        @JvmName("setAccessibilityFlowToNodesProperty")
+        set(value) = setAccessibilityFlowToNodes(value)
 
     var theme: Theme?
         @JvmName("themeProperty")
@@ -2036,10 +2044,28 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
     /**
      * The paths to the nodes which are controlled by this node.
      *
+     * Generated from Godot docs: Control.set_accessibility_controls_nodes
+     */
+    fun setAccessibilityControlsNodes(nodePath: List<NodePath>) {
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityControlsNodesBind, handle, nodePath)
+    }
+
+    /**
+     * The paths to the nodes which are controlled by this node.
+     *
      * Generated from Godot docs: Control.get_accessibility_controls_nodes
      */
     fun getAccessibilityControlsNodes(): List<NodePath> {
         return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityControlsNodesBind, handle)
+    }
+
+    /**
+     * The paths to the nodes which are describing this node.
+     *
+     * Generated from Godot docs: Control.set_accessibility_described_by_nodes
+     */
+    fun setAccessibilityDescribedByNodes(nodePath: List<NodePath>) {
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityDescribedByNodesBind, handle, nodePath)
     }
 
     /**
@@ -2054,10 +2080,28 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
     /**
      * The paths to the nodes which label this node.
      *
+     * Generated from Godot docs: Control.set_accessibility_labeled_by_nodes
+     */
+    fun setAccessibilityLabeledByNodes(nodePath: List<NodePath>) {
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityLabeledByNodesBind, handle, nodePath)
+    }
+
+    /**
+     * The paths to the nodes which label this node.
+     *
      * Generated from Godot docs: Control.get_accessibility_labeled_by_nodes
      */
     fun getAccessibilityLabeledByNodes(): List<NodePath> {
         return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityLabeledByNodesBind, handle)
+    }
+
+    /**
+     * The paths to the nodes which this node flows into.
+     *
+     * Generated from Godot docs: Control.set_accessibility_flow_to_nodes
+     */
+    fun setAccessibilityFlowToNodes(nodePath: List<NodePath>) {
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityFlowToNodesBind, handle, nodePath)
     }
 
     /**
@@ -3198,9 +3242,19 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
             ObjectCalls.getMethodBind("Control", "get_accessibility_live", GET_ACCESSIBILITY_LIVE_HASH)
         }
 
+        private const val SET_ACCESSIBILITY_CONTROLS_NODES_HASH = 381264803L
+        private val setAccessibilityControlsNodesBind by lazy {
+            ObjectCalls.getMethodBind("Control", "set_accessibility_controls_nodes", SET_ACCESSIBILITY_CONTROLS_NODES_HASH)
+        }
+
         private const val GET_ACCESSIBILITY_CONTROLS_NODES_HASH = 3995934104L
         private val getAccessibilityControlsNodesBind by lazy {
             ObjectCalls.getMethodBind("Control", "get_accessibility_controls_nodes", GET_ACCESSIBILITY_CONTROLS_NODES_HASH)
+        }
+
+        private const val SET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH = 381264803L
+        private val setAccessibilityDescribedByNodesBind by lazy {
+            ObjectCalls.getMethodBind("Control", "set_accessibility_described_by_nodes", SET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH)
         }
 
         private const val GET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH = 3995934104L
@@ -3208,9 +3262,19 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
             ObjectCalls.getMethodBind("Control", "get_accessibility_described_by_nodes", GET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH)
         }
 
+        private const val SET_ACCESSIBILITY_LABELED_BY_NODES_HASH = 381264803L
+        private val setAccessibilityLabeledByNodesBind by lazy {
+            ObjectCalls.getMethodBind("Control", "set_accessibility_labeled_by_nodes", SET_ACCESSIBILITY_LABELED_BY_NODES_HASH)
+        }
+
         private const val GET_ACCESSIBILITY_LABELED_BY_NODES_HASH = 3995934104L
         private val getAccessibilityLabeledByNodesBind by lazy {
             ObjectCalls.getMethodBind("Control", "get_accessibility_labeled_by_nodes", GET_ACCESSIBILITY_LABELED_BY_NODES_HASH)
+        }
+
+        private const val SET_ACCESSIBILITY_FLOW_TO_NODES_HASH = 381264803L
+        private val setAccessibilityFlowToNodesBind by lazy {
+            ObjectCalls.getMethodBind("Control", "set_accessibility_flow_to_nodes", SET_ACCESSIBILITY_FLOW_TO_NODES_HASH)
         }
 
         private const val GET_ACCESSIBILITY_FLOW_TO_NODES_HASH = 3995934104L

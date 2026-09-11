@@ -560,6 +560,17 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
     }
 
     /**
+     * Tells the `PhysicalBone3D` nodes in the Skeleton to start simulating and reacting to the physics
+     * world. Optionally, a list of bone names can be passed-in, allowing only the passed-in bones to
+     * be simulated.
+     *
+     * Generated from Godot docs: Skeleton3D.physical_bones_start_simulation
+     */
+    fun physicalBonesStartSimulation(bones: List<String>) {
+        ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, handle, bones)
+    }
+
+    /**
      * Adds a collision exception to the physical bone. Works just like the `RigidBody3D` node.
      *
      * Generated from Godot docs: Skeleton3D.physical_bones_add_collision_exception
@@ -862,6 +873,11 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
         private const val PHYSICAL_BONES_STOP_SIMULATION_HASH = 3218959716L
         private val physicalBonesStopSimulationBind by lazy {
             ObjectCalls.getMethodBind("Skeleton3D", "physical_bones_stop_simulation", PHYSICAL_BONES_STOP_SIMULATION_HASH)
+        }
+
+        private const val PHYSICAL_BONES_START_SIMULATION_HASH = 2787316981L
+        private val physicalBonesStartSimulationBind by lazy {
+            ObjectCalls.getMethodBind("Skeleton3D", "physical_bones_start_simulation", PHYSICAL_BONES_START_SIMULATION_HASH)
         }
 
         private const val PHYSICAL_BONES_ADD_COLLISION_EXCEPTION_HASH = 2722037293L

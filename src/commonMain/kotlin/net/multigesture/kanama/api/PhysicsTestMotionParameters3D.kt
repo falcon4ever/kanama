@@ -45,13 +45,17 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
         @JvmName("setCollideSeparationRayProperty")
         set(value) = setCollideSeparationRayEnabled(value)
 
-    val excludeBodies: List<RID>
+    var excludeBodies: List<RID>
         @JvmName("excludeBodiesProperty")
         get() = getExcludeBodies()
+        @JvmName("setExcludeBodiesProperty")
+        set(value) = setExcludeBodies(value)
 
-    val excludeObjects: List<Long>
+    var excludeObjects: List<Long>
         @JvmName("excludeObjectsProperty")
         get() = getExcludeObjects()
+        @JvmName("setExcludeObjectsProperty")
+        set(value) = setExcludeObjects(value)
 
     var recoveryAsCollision: Boolean
         @JvmName("recoveryAsCollisionProperty")
@@ -181,6 +185,17 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
     }
 
     /**
+     * Optional array of body `RID` to exclude from collision. Use `CollisionObject3D.get_rid` to get
+     * the `RID` associated with a `CollisionObject3D`-derived node.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters3D.set_exclude_bodies
+     */
+    fun setExcludeBodies(excludeList: List<RID>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, handle, excludeList)
+    }
+
+    /**
      * Optional array of object unique instance ID to exclude from collision. See
      * `Object.get_instance_id`.
      *
@@ -189,6 +204,17 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
     fun getExcludeObjects(): List<Long> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
+    }
+
+    /**
+     * Optional array of object unique instance ID to exclude from collision. See
+     * `Object.get_instance_id`.
+     *
+     * Generated from Godot docs: PhysicsTestMotionParameters3D.set_exclude_objects
+     */
+    fun setExcludeObjects(excludeList: List<Long>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, handle, excludeList)
     }
 
     /**
@@ -280,9 +306,19 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters3D", "get_exclude_bodies", GET_EXCLUDE_BODIES_HASH)
         }
 
+        private const val SET_EXCLUDE_BODIES_HASH = 381264803L
+        private val setExcludeBodiesBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsTestMotionParameters3D", "set_exclude_bodies", SET_EXCLUDE_BODIES_HASH)
+        }
+
         private const val GET_EXCLUDE_OBJECTS_HASH = 3995934104L
         private val getExcludeObjectsBind by lazy {
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters3D", "get_exclude_objects", GET_EXCLUDE_OBJECTS_HASH)
+        }
+
+        private const val SET_EXCLUDE_OBJECTS_HASH = 381264803L
+        private val setExcludeObjectsBind by lazy {
+            ObjectCalls.getMethodBind("PhysicsTestMotionParameters3D", "set_exclude_objects", SET_EXCLUDE_OBJECTS_HASH)
         }
 
         private const val IS_RECOVERY_AS_COLLISION_ENABLED_HASH = 36873697L
