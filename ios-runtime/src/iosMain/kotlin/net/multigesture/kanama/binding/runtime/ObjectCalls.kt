@@ -62,7 +62,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_container_blob
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_handles
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_byte_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict
@@ -74,6 +74,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_container_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_object_handles
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.decodeIosCallArg
@@ -2414,41 +2415,44 @@ object ObjectCalls {
   // GENERIC over the element wrapper via a `fromHandle: (MemorySegment) -> T?` factory passed by
   // the api-layer caller (e.g. Node::fromHandle). Keeping the wrapper type out of the helper
   // signature avoids inverting the binding.runtime -> api dependency: the generated wrapper owns
-  // its concrete List<Node> return type, the runtime only maps raw handles. The C helper drives a
+  // its concrete List<Node> return type, the runtime only maps raw handles. The C entry drives a
   // ptrcall whose return is a Godot Array (8-byte opaque), reads each element's object handle via
-  // the Array size/get builtins, and fills an int64 buffer (two-call length protocol: measure the
-  // count, allocate, fill). Each handle -> MemorySegment -> fromHandle; nulls (non-Object or freed)
-  // are dropped.
-  private inline fun <T> retTypedObjectList(
+  // the Array size/get builtins and fills an int64 buffer. task 100 (parcel 9): the method runs
+  // ONCE — the handles land in the inline buffer when they fit, otherwise the C side parks them in
+  // a pending slot that is drained into a right-sized buffer (the old two-call length protocol
+  // re-ran the method, which is only safe for pure getters). Handles are BORROWED, as on desktop
+  // (BuiltinTypes.readArrayObjects): the returned Array is destroyed inside the call. Each handle
+  // -> MemorySegment -> fromHandle; nulls (non-Object or freed) are dropped. `internal` so the
+  // GENERATED helpers (every audited arg shape) share this one body.
+  internal inline fun <T> retTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     fromHandle: (MemorySegment) -> T?,
     layoutArgs: MemScope.() -> Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>,
   ): List<T> = memScoped {
     val (types, ptrs, argc) = layoutArgs()
+    val inlineBuf = allocArray<LongVar>(TYPED_OBJECT_LIST_INLINE_CAP)
     val count =
-      kanama_ios_godot_ptrcall_ret_object_array(
+      kanama_ios_godot_ptrcall_ret_object_handles(
         methodBind.address(),
         instance.address(),
         types,
         ptrs,
         argc,
-        null,
-        0L,
+        inlineBuf,
+        TYPED_OBJECT_LIST_INLINE_CAP.toLong(),
       )
     if (count <= 0L) {
       emptyList()
     } else {
-      val buf = allocArray<LongVar>(count)
-      kanama_ios_godot_ptrcall_ret_object_array(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        argc,
-        buf,
-        count,
-      )
+      val buf =
+        if (count <= TYPED_OBJECT_LIST_INLINE_CAP) {
+          inlineBuf
+        } else {
+          val parked = allocArray<LongVar>(count)
+          kanama_ios_godot_take_pending_object_handles(parked, count)
+          parked
+        }
       val out = ArrayList<T>(count.toInt())
       for (i in 0 until count.toInt()) {
         val obj = fromHandle(MemorySegment.ofAddress(buf[i]))
@@ -2457,6 +2461,9 @@ object ObjectCalls {
       out
     }
   }
+
+  // Inline handle capacity of retTypedObjectList (longer lists drain from the C pending slot).
+  internal const val TYPED_OBJECT_LIST_INLINE_CAP = 64
 
   fun <T> ptrcallNoArgsRetTypedObjectList(
     methodBind: MemorySegment,
@@ -2485,8 +2492,7 @@ object ObjectCalls {
   // PT_STRING args pass the UTF-8 cstr ptr; the C generic dispatcher constructs (and destroys) the
   // Godot String from it. PT_BOOL args are uint8 cells. Both string cells stay scope-valid across
   // the
-  // two-call length protocol because layoutArgs runs once inside retTypedObjectList's memScoped
-  // block.
+  // call because layoutArgs runs once inside retTypedObjectList's memScoped block.
   fun <T> ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -4891,6 +4897,94 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     typedVec4Back == Vector4(1f, 2f, 3f, 4f),
   )
   ObjectCalls.destroyObject(typedVec4)
+
+  // task 100 (parcel 9) — typed-object-list RETURNS on every audited arg shape through the
+  // GENERATED helpers (retTypedObjectList: the method runs ONCE, lists longer than the 64-handle
+  // inline buffer drain from the C pending slot). RegEx / RegExMatch are pure data, InputMap and
+  // TranslationServer are core singletons: nothing here needs a physics or navigation server.
+  val p9Regex = ObjectCalls.constructObject("RegEx")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("RegEx", "compile", 3565188097L),
+    p9Regex,
+    listOf("a", true),
+  )
+  val p9SearchAllBind = ObjectCalls.getMethodBind("RegEx", "search_all", 849021363L)
+  val p9Short =
+    ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(
+      p9SearchAllBind,
+      p9Regex,
+      "banana",
+      0,
+      -1,
+    ) {
+      it
+    }
+  check(
+    "ret-typed-object-list(RegEx.search_all 3 matches, inline buffer)",
+    p9Short.size == 3 && p9Short.all { it.address() != 0L },
+  )
+  val p9Long =
+    ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(
+      p9SearchAllBind,
+      p9Regex,
+      "a".repeat(200),
+      0,
+      -1,
+    ) {
+      it
+    }
+  check(
+    "ret-typed-object-list(RegEx.search_all 200 matches, pending slot)",
+    p9Long.size == 200 && p9Long.map { it.address() }.toSet().size == 200,
+  )
+  ObjectCalls.destroyObject(p9Regex)
+  // StringName arg on a singleton: InputMap.action_get_events returns the one event we added,
+  // by handle identity.
+  val p9InputMap = ObjectCalls.getSingleton("InputMap")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("InputMap", "add_action", 1195233573L),
+    p9InputMap,
+    listOf("kanama_selftest_p9", 0.5),
+  )
+  val p9Event = ObjectCalls.constructObject("InputEventKey")
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("InputMap", "action_add_event", 518302593L),
+    p9InputMap,
+    listOf("kanama_selftest_p9", p9Event),
+  )
+  val p9Events =
+    ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(
+      ObjectCalls.getMethodBind("InputMap", "action_get_events", 689397652L),
+      p9InputMap,
+      "kanama_selftest_p9",
+    ) {
+      it
+    }
+  check(
+    "ret-typed-object-list(InputMap.action_get_events by handle)",
+    p9Events.size == 1 && p9Events[0].address() == p9Event.address(),
+  )
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("InputMap", "erase_action", 3304788590L),
+    p9InputMap,
+    listOf("kanama_selftest_p9"),
+  )
+  ObjectCalls.destroyObject(p9Event)
+  // (String, bool) arg on a singleton: an empty typed list is a valid round-trip (no translations
+  // are loaded in the self-test project).
+  val p9Translations =
+    ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(
+      ObjectCalls.getMethodBind("TranslationServer", "find_translations", 2109650934L),
+      ObjectCalls.getSingleton("TranslationServer"),
+      "xx",
+      true,
+    ) {
+      it
+    }
+  check(
+    "ret-typed-object-list(TranslationServer.find_translations empty)",
+    p9Translations.isEmpty(),
+  )
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

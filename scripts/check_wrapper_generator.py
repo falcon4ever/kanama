@@ -482,7 +482,7 @@ def _rel(path: Path) -> str:
 
 # ktfmt breaks `fun ObjectCalls.<name>(` across lines when the CallShape name is long (task 100
 # parcel 4 produced a 119-char one), so the receiver, dot and name may be separated by whitespace.
-IOS_HELPER_NAME = re.compile(r"fun ObjectCalls\s*\.\s*(\w+)\(")
+IOS_HELPER_NAME = re.compile(r"fun (?:<T>\s*)?ObjectCalls\s*\.\s*(\w+)\(")  # `fun <T>` = typed-object-list helpers (parcel 9)
 
 
 def _ios_helper_names(source: str) -> set[str]:

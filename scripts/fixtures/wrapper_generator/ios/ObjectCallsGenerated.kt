@@ -5,6 +5,7 @@ package net.multigesture.kanama.binding.runtime
 import java.lang.foreign.MemorySegment
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointed
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi

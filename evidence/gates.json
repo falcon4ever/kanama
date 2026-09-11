@@ -204,6 +204,16 @@
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
       "source": "scripts/ios_device_gate.sh"
+    },
+    {
+      "gate": "ios-device-gate",
+      "claim": "iOS Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "6187713c344abd2eda1d65bd41ee6188e0efb578",
+      "date": "2026-09-11",
+      "where": "iPhone 12, iOS 26.6",
+      "result": "PASS",
+      "source": "scripts/ios_device_gate.sh"
     }
   ]
 }
