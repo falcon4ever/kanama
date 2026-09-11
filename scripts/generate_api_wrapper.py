@@ -52,6 +52,26 @@ BY_DESIGN_METHOD_SKIPS = {
     ),
 }
 
+# Members desktop deliberately keeps desktop-only (task 100 close-out): their argument types have no
+# Kotlin/Native representation on iOS by design (raw or function pointers; desktop passes a
+# MemorySegment). Keyed by (class, Kotlin member name) as the gap page renders them. They stay in
+# the desktop companion file, are listed on the gap page under "Desktop-only by design" with the
+# reason, and are NOT counted as waiting on a helper -- the exit gate of task 100 is "0 waiting".
+IOS_DESKTOP_ONLY_BY_DESIGN = {
+    ("GDExtensionManager", "loadExtensionFromFunction"): (
+        "by design: takes a GDExtensionInitializationFunction pointer; no Kotlin/Native call shape "
+        "for a raw function pointer on iOS (desktop passes a MemorySegment)"
+    ),
+    ("OpenXRAPIExtension", "transformFromPose"): (
+        "by design: takes a const void* XrPosef; raw pointers have no Kotlin/Native call shape on "
+        "iOS (desktop passes a MemorySegment)"
+    ),
+    ("OpenXRAPIExtension", "setCustomPlaySpace"): (
+        "by design: takes a const void* XrSpace; raw pointers have no Kotlin/Native call shape on "
+        "iOS (desktop passes a MemorySegment)"
+    ),
+}
+
 SCALAR_KOTLIN_TYPES = {
     "bool": "Boolean",
     "int32": "Int",
@@ -3180,10 +3200,21 @@ def tree_universe(api_classes: dict[str, ApiClass]) -> tuple[list[str], list[str
 
 def render_gap_index(gap: dict[str, SharedRender], shared_count: int) -> str:
     rows = [(name, r) for name, r in sorted(gap.items()) if r.desktop_only_members or r.readonly_properties]
-    members = sum(len(r.desktop_only_members) for _, r in rows)
-    helpers = sorted({token for _, r in rows for token in r.waits_on if not token.startswith("wrapper ")})
-    wrappers = sorted({token for _, r in rows for token in r.waits_on if token.startswith("wrapper ")})
-    readonly = sum(len(r.readonly_properties) for _, r in rows)
+    # Split each class's members into "waiting on a helper" and "desktop-only by design".
+    waiting_rows: list[tuple[str, list[str], SharedRender]] = []
+    by_design_rows: list[tuple[str, str, str]] = []
+    for name, r in rows:
+        waiting = [m for m in r.desktop_only_members if (name, m) not in IOS_DESKTOP_ONLY_BY_DESIGN]
+        for m in r.desktop_only_members:
+            reason = IOS_DESKTOP_ONLY_BY_DESIGN.get((name, m))
+            if reason:
+                by_design_rows.append((name, m, reason))
+        if waiting or r.readonly_properties:
+            waiting_rows.append((name, waiting, r))
+    members = sum(len(w) for _, w, _ in waiting_rows)
+    helpers = sorted({token for _, w, r in waiting_rows if w for token in r.waits_on if not token.startswith("wrapper ")})
+    wrappers = sorted({token for _, w, r in waiting_rows if w for token in r.waits_on if token.startswith("wrapper ")})
+    readonly = sum(len(r.readonly_properties) for _, _, r in waiting_rows)
     lines = [
         "# iOS Shape Gap",
         "",
@@ -3196,25 +3227,39 @@ def render_gap_index(gap: dict[str, SharedRender], shared_count: int) -> str:
         "helper for its ptrcall shape yet, or does not host a wrapper type it uses. When the helper lands",
         "on iOS (`IOS_ARG_KINDS` / `IOS_RET_KOTLIN` / the per-helper gates in `ios_method_supported`), the",
         "next regen moves the member back into the shared file and it disappears from this page.",
+        "Members desktop keeps desktop-only on purpose are listed separately with their reason",
+        "(`IOS_DESKTOP_ONLY_BY_DESIGN`) and are not counted as waiting.",
         "",
-        f"**Gap:** {len(rows)} of {shared_count} shared classes carry a desktop companion; "
-        f"{members} desktop-only members; {len(helpers)} distinct `ObjectCalls` helpers and "
-        f"{len(wrappers)} wrapper types waited on; {readonly} properties read-only in the shared "
-        "tree because only their setter is desktop-only.",
+        f"**Gap:** {len(waiting_rows)} of {shared_count} shared classes carry a desktop companion with "
+        f"members waiting on a helper; {members} desktop-only members waiting; {len(helpers)} distinct "
+        f"`ObjectCalls` helpers and {len(wrappers)} wrapper types waited on; {readonly} properties "
+        f"read-only in the shared tree because only their setter is desktop-only; "
+        f"{len(by_design_rows)} desktop-only members by design.",
         "",
         "| Class | Desktop-only members | Read-only in shared | Waits on |",
         "|---|---|---|---|",
     ]
-    for name, r in rows:
+    for name, waiting, r in waiting_rows:
         lines.append(
             f"| `{name}` | "
-            + ", ".join(f"`{m}`" for m in r.desktop_only_members)
+            + ", ".join(f"`{m}`" for m in waiting)
             + " | "
             + ", ".join(f"`{p}`" for p in r.readonly_properties)
             + " | "
-            + ", ".join(f"`{t}`" for t in r.waits_on)
+            + ", ".join(f"`{t}`" for t in (r.waits_on if waiting else []))
             + " |"
         )
+    if not waiting_rows:
+        lines.append("| — | — | — | — |")
+    lines += [
+        "",
+        "## Desktop-only by design",
+        "",
+        "| Class | Member | Reason |",
+        "|---|---|---|",
+    ]
+    for name, m, reason in by_design_rows:
+        lines.append(f"| `{name}` | `{m}` | {reason} |")
     lines.append("")
     return "\n".join(lines)
 
