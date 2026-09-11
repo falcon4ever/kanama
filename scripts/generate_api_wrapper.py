@@ -3481,13 +3481,17 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
     typed_object_element = typed_object_array_element_any(kind)
     if typed_object_element is not None:
         # Array[Object subclass] arg: the wrapper passes List<Element>; List is covariant, so the
-        # descriptor helper takes List<GodotObject> and the element class name for array_set_typed.
-        # List is covariant, so List<Element> from the wrapper binds to List<GodotObject> here and the
-        # generated helper file never has to import a wrapper class (the runtime layer stays below api).
+        # descriptor helper takes List<GodotObject> and the generated helper file never has to
+        # import a wrapper class (the runtime layer stays below api). The Array is built UNTYPED
+        # on purpose: one helper shape serves every element class (GLTFState.set_nodes and
+        # CompositorEffect setters share ptrcallWithObjectListArg, exactly as on desktop), and the
+        # engine's TypedArray<T> conversion at the ptrcall boundary validates each element against
+        # the parameter's class. Typing it with any one class name here breaks every other caller
+        # of the same shape (the parcel-8 device gate caught that on Array[GLTFNode]).
         return (
             "List<GodotObject>",
             "PT_TYPED_ARRAY_BLOB",
-            [f'val {c} = packTypedObjectArrayDesc({a}, "{typed_object_element}")'],
+            [f"val {c} = packTypedObjectArrayDesc({a})"],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Rect2i":

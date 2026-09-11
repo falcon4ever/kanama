@@ -164,6 +164,8 @@ object ObjectCalls {
   internal const val VT_NODE_PATH_TYPE = 22
   internal const val VT_RID_TYPE = 23
   internal const val VT_OBJECT_TYPE = 24
+  // Variant.Type NIL: the descriptor asks for an UNTYPED Array (array_set_typed is skipped).
+  internal const val VT_NIL_TYPE = 0
   internal const val VT_PACKED_VECTOR2_ARRAY_TYPE = 35
   private const val VT_INT = 2
   private const val VT_FLOAT = 3
@@ -2176,13 +2178,20 @@ object ObjectCalls {
       },
     )
 
+  // Array[<Object subclass>] arguments are packed UNTYPED (Variant.Type NIL, no class name): one
+  // generated helper shape serves every element class (GLTFState.set_nodes and the CompositorEffect
+  // setters share ptrcallWithObjectListArg, as on desktop, whose initArrayOfObjects is untyped
+  // too),
+  // and the engine's TypedArray<T> conversion at the ptrcall boundary validates each element
+  // against
+  // the parameter's class. Typing the Array with any one class here made every other caller of the
+  // same shape hand the engine an Array[WrongClass] that it refuses (parcel-8 device gate finding).
   fun MemScope.packTypedObjectArrayDesc(
-    values: List<GodotObject>,
-    className: String,
+    values: List<GodotObject>
   ): CPointer<KanamaIosTypedArrayArgDesc> =
     packTypedArrayDesc(
-      VT_OBJECT_TYPE,
-      className,
+      VT_NIL_TYPE,
+      null,
       values.map { Pair(PT_OBJECT, int64Bytes(it.handle.address())) },
     )
 
@@ -4717,7 +4726,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   )
   ObjectCalls.destroyObject(typedPq)
 
-  // Array[String] and Array[GLTFNode] (object elements, typed by class name) on a GLTFState.
+  // Array[String] and Array[GLTFNode] (object elements; the Array is built untyped and the
+  // setter's TypedArray<GLTFNode> conversion validates each element) on a GLTFState.
   // The GLTFNode handles are referenced only by the state's array: destroying the state frees
   // them, so they are not destroyed here (a second destroy would be a double free).
   val typedGltf = ObjectCalls.constructObject("GLTFState")

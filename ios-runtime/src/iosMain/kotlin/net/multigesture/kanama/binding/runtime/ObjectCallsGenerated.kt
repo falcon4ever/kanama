@@ -9022,7 +9022,7 @@ fun ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(
   c3.value = a3.toLong()
   val c4 = alloc<ByteVar>()
   c4.value = if (a4) 1 else 0
-  val c5 = packTypedObjectArrayDesc(a5, "Image")
+  val c5 = packTypedObjectArrayDesc(a5)
   val types = allocArray<IntVar>(6)
   types[0] = PT_INT64
   types[1] = PT_INT64
@@ -9071,7 +9071,7 @@ fun ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetRID(
   c3.value = a3.toLong()
   val c4 = alloc<ByteVar>()
   c4.value = if (a4) 1 else 0
-  val c5 = packTypedObjectArrayDesc(a5, "Image")
+  val c5 = packTypedObjectArrayDesc(a5)
   val types = allocArray<IntVar>(6)
   types[0] = PT_INT64
   types[1] = PT_INT64
@@ -11129,7 +11129,7 @@ fun ObjectCalls.ptrcallWithObjectListArg(
   instance: MemorySegment,
   a0: List<GodotObject>,
 ) = memScoped {
-  val c0 = packTypedObjectArrayDesc(a0, "CompositorEffect")
+  val c0 = packTypedObjectArrayDesc(a0)
   val types = allocArray<IntVar>(1)
   types[0] = PT_TYPED_ARRAY_BLOB
   val ptrs = allocArray<COpaquePointerVar>(1)
@@ -11144,7 +11144,7 @@ fun ObjectCalls.ptrcallWithObjectListArgRetLong(
   a0: List<GodotObject>,
 ): Long = memScoped {
   val ret = alloc<LongVar>()
-  val c0 = packTypedObjectArrayDesc(a0, "Image")
+  val c0 = packTypedObjectArrayDesc(a0)
   val types = allocArray<IntVar>(1)
   types[0] = PT_TYPED_ARRAY_BLOB
   val ptrs = allocArray<COpaquePointerVar>(1)
@@ -11169,7 +11169,7 @@ fun ObjectCalls.ptrcallWithObjectListLongArgsRetRID(
 ): RID = memScoped {
   val ret = alloc<LongVar>()
   ret.value = 0
-  val c0 = packTypedObjectArrayDesc(a0, "RDAccelerationStructureGeometry")
+  val c0 = packTypedObjectArrayDesc(a0)
   val c1 = alloc<LongVar>()
   c1.value = a1
   val types = allocArray<IntVar>(2)
@@ -11200,7 +11200,7 @@ fun ObjectCalls.ptrcallWithObjectListObjectCallableArgsRetObject(
 ): MemorySegment = memScoped {
   val ret = alloc<LongVar>()
   ret.value = 0
-  val c0 = packTypedObjectArrayDesc(a0, "OpenXRSpatialCapabilityConfigurationBaseHeader")
+  val c0 = packTypedObjectArrayDesc(a0)
   val c1 = alloc<LongVar>()
   c1.value = a1.address()
   val c2 = alloc<KanamaIosCallableArgDesc>()
@@ -11235,7 +11235,7 @@ fun ObjectCalls.ptrcallWithObjectListRIDUInt32ArgsRetRID(
 ): RID = memScoped {
   val ret = alloc<LongVar>()
   ret.value = 0
-  val c0 = packTypedObjectArrayDesc(a0, "RDUniform")
+  val c0 = packTypedObjectArrayDesc(a0)
   val c1 = alloc<LongVar>()
   c1.value = a1.value
   val c2 = alloc<LongVar>()
@@ -11269,7 +11269,7 @@ fun ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(
 ): MemorySegment = memScoped {
   val ret = alloc<LongVar>()
   ret.value = 0
-  val c0 = packTypedObjectArrayDesc(a0, "ImporterMesh")
+  val c0 = packTypedObjectArrayDesc(a0)
   val c1 = packTypedTransform3DArrayDesc(a1)
   val c2 = alloc<ByteVar>()
   c2.value = if (a2) 1 else 0
@@ -11300,7 +11300,7 @@ fun ObjectCalls.ptrcallWithObjectListUInt32ArgsRetLong(
   a1: Long,
 ): Long = memScoped {
   val ret = alloc<LongVar>()
-  val c0 = packTypedObjectArrayDesc(a0, "RDAttachmentFormat")
+  val c0 = packTypedObjectArrayDesc(a0)
   val c1 = alloc<LongVar>()
   c1.value = a1
   val types = allocArray<IntVar>(2)
@@ -14819,7 +14819,7 @@ fun ObjectCalls.ptrcallWithRIDAndObjectListArgs(
 ) = memScoped {
   val c0 = alloc<LongVar>()
   c0.value = a0.value
-  val c1 = packTypedObjectArrayDesc(a1, "Image")
+  val c1 = packTypedObjectArrayDesc(a1)
   val types = allocArray<IntVar>(2)
   types[0] = PT_RID
   types[1] = PT_TYPED_ARRAY_BLOB
@@ -14839,7 +14839,7 @@ fun ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(
   val ret = alloc<LongVar>()
   val c0 = alloc<LongVar>()
   c0.value = a0.value
-  val c1 = packTypedObjectArrayDesc(a1, "RDAccelerationStructureInstance")
+  val c1 = packTypedObjectArrayDesc(a1)
   val types = allocArray<IntVar>(2)
   types[0] = PT_RID
   types[1] = PT_TYPED_ARRAY_BLOB
@@ -18720,7 +18720,7 @@ fun ObjectCalls.ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(
   val ret = alloc<LongVar>()
   ret.value = 0
   val c0 = packTypedRIDArrayDesc(a0)
-  val c1 = packTypedObjectArrayDesc(a1, "RDFramebufferPass")
+  val c1 = packTypedObjectArrayDesc(a1)
   val c2 = alloc<LongVar>()
   c2.value = a2
   val c3 = alloc<LongVar>()
@@ -18757,7 +18757,7 @@ fun ObjectCalls.ptrcallWithRIDListObjectListUInt32ArgsRetRID(
   val ret = alloc<LongVar>()
   ret.value = 0
   val c0 = packTypedRIDArrayDesc(a0)
-  val c1 = packTypedObjectArrayDesc(a1, "RDFramebufferPass")
+  val c1 = packTypedObjectArrayDesc(a1)
   val c2 = alloc<LongVar>()
   c2.value = a2
   val types = allocArray<IntVar>(3)
@@ -19386,7 +19386,7 @@ fun ObjectCalls.ptrcallWithRIDObjectListArgsRetRID(
   ret.value = 0
   val c0 = alloc<LongVar>()
   c0.value = a0.value
-  val c1 = packTypedObjectArrayDesc(a1, "RDPipelineSpecializationConstant")
+  val c1 = packTypedObjectArrayDesc(a1)
   val types = allocArray<IntVar>(2)
   types[0] = PT_RID
   types[1] = PT_TYPED_ARRAY_BLOB
@@ -19415,7 +19415,7 @@ fun ObjectCalls.ptrcallWithRIDObjectListObjectArgsRetBool(
   val ret = alloc<ByteVar>()
   val c0 = alloc<LongVar>()
   c0.value = a0.value
-  val c1 = packTypedObjectArrayDesc(a1, "OpenXRSpatialComponentData")
+  val c1 = packTypedObjectArrayDesc(a1)
   val c2 = alloc<LongVar>()
   c2.value = a2.address()
   val types = allocArray<IntVar>(3)
@@ -19451,7 +19451,7 @@ fun ObjectCalls.ptrcallWithRIDObjectListObjectCallableArgsRetObject(
   ret.value = 0
   val c0 = alloc<LongVar>()
   c0.value = a0.value
-  val c1 = packTypedObjectArrayDesc(a1, "OpenXRSpatialComponentData")
+  val c1 = packTypedObjectArrayDesc(a1)
   val c2 = alloc<LongVar>()
   c2.value = a2.address()
   val c3 = alloc<KanamaIosCallableArgDesc>()
@@ -19489,7 +19489,7 @@ fun ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(
 ) = memScoped {
   val c0 = alloc<LongVar>()
   c0.value = a0.value
-  val c1 = packTypedObjectArrayDesc(a1, "OpenXRSpatialComponentData")
+  val c1 = packTypedObjectArrayDesc(a1)
   val c2 = alloc<LongVar>()
   c2.value = a2.address()
   val c3 = alloc<LongVar>()
@@ -19522,7 +19522,7 @@ fun ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(
   ret.value = 0
   val c0 = alloc<LongVar>()
   c0.value = a0.value
-  val c1 = packTypedObjectArrayDesc(a1, "OpenXRSpatialComponentData")
+  val c1 = packTypedObjectArrayDesc(a1)
   val c2 = alloc<LongVar>()
   c2.value = a2.address()
   val c3 = alloc<LongVar>()
@@ -20745,7 +20745,7 @@ fun ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(
   c8.value = a8
   val c9 = alloc<LongVar>()
   c9.value = a9
-  val c10 = packTypedObjectArrayDesc(a10, "RDPipelineSpecializationConstant")
+  val c10 = packTypedObjectArrayDesc(a10)
   val types = allocArray<IntVar>(11)
   types[0] = PT_RID
   types[1] = PT_INT64
@@ -21709,7 +21709,7 @@ fun ObjectCalls.ptrcallWithRIDUInt32ObjectListArgsRetRID(
   c0.value = a0.value
   val c1 = alloc<LongVar>()
   c1.value = a1
-  val c2 = packTypedObjectArrayDesc(a2, "RDUniform")
+  val c2 = packTypedObjectArrayDesc(a2)
   val types = allocArray<IntVar>(3)
   types[0] = PT_RID
   types[1] = PT_INT64
@@ -23291,8 +23291,8 @@ fun ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(
   c0[1] = a0.position.y
   c0[2] = a0.size.x
   c0[3] = a0.size.y
-  val c1 = packTypedObjectArrayDesc(a1, "Texture2D")
-  val c2 = packTypedObjectArrayDesc(a2, "DrawableTexture2D")
+  val c1 = packTypedObjectArrayDesc(a1)
+  val c2 = packTypedObjectArrayDesc(a2)
   val c3 = allocArray<FloatVar>(4)
   c3[0] = a3.r
   c3[1] = a3.g
@@ -24062,7 +24062,7 @@ fun ObjectCalls.ptrcallWithStringAndObjectListArgs(
   a0: String,
   a1: List<GodotObject>,
 ) = memScoped {
-  val c1 = packTypedObjectArrayDesc(a1, "InputEvent")
+  val c1 = packTypedObjectArrayDesc(a1)
   val types = allocArray<IntVar>(2)
   types[0] = PT_STRING
   types[1] = PT_TYPED_ARRAY_BLOB
@@ -28330,9 +28330,9 @@ fun ObjectCalls.ptrcallWithThreeObjectListUInt32ArgsRetRID(
 ): RID = memScoped {
   val ret = alloc<LongVar>()
   ret.value = 0
-  val c0 = packTypedObjectArrayDesc(a0, "RDPipelineShader")
-  val c1 = packTypedObjectArrayDesc(a1, "RDPipelineShader")
-  val c2 = packTypedObjectArrayDesc(a2, "RDHitGroup")
+  val c0 = packTypedObjectArrayDesc(a0)
+  val c1 = packTypedObjectArrayDesc(a1)
+  val c2 = packTypedObjectArrayDesc(a2)
   val c3 = alloc<LongVar>()
   c3.value = a3
   val types = allocArray<IntVar>(4)
@@ -32230,8 +32230,8 @@ fun ObjectCalls.ptrcallWithTwoObjectListUInt32ArgsRetLong(
   a2: Long,
 ): Long = memScoped {
   val ret = alloc<LongVar>()
-  val c0 = packTypedObjectArrayDesc(a0, "RDAttachmentFormat")
-  val c1 = packTypedObjectArrayDesc(a1, "RDFramebufferPass")
+  val c0 = packTypedObjectArrayDesc(a0)
+  val c1 = packTypedObjectArrayDesc(a1)
   val c2 = alloc<LongVar>()
   c2.value = a2
   val types = allocArray<IntVar>(3)
@@ -35398,7 +35398,7 @@ fun ObjectCalls.ptrcallWithTypedMaterialListArg(
   instance: MemorySegment,
   a0: List<GodotObject>,
 ) = memScoped {
-  val c0 = packTypedObjectArrayDesc(a0, "Material")
+  val c0 = packTypedObjectArrayDesc(a0)
   val types = allocArray<IntVar>(1)
   types[0] = PT_TYPED_ARRAY_BLOB
   val ptrs = allocArray<COpaquePointerVar>(1)
