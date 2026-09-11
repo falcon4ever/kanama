@@ -503,7 +503,7 @@ IOS_ARG_KINDS = {
 # Return shapes the iOS helpers can read back (keyed by CallShape.kotlin_return, the
 # stable per-helper return-type token). StringName/String/RID/List/Map returns
 # are intentionally absent until their read-back is wired + validated.
-IOS_RET_KOTLIN = {"Unit", "Boolean", "Int", "Long", "Double", "Vector2", "Vector2i", "Vector3", "Vector3i", "Color", "Rect2", "Rect2i", "MemorySegment", "String", "NodePath", "Basis", "Transform2D", "Transform3D", "Projection", "RID", "Quaternion", "AABB", "List<Int>", "List<Float>", "List<Vector2>", "List<Color>", "List<String>", "List<NodePath>", "List<Long>", "List<Plane>", "List<Any?>", "Any?", "Plane", "Vector4"}
+IOS_RET_KOTLIN = {"Unit", "Boolean", "Int", "Long", "Double", "Vector2", "Vector2i", "Vector3", "Vector3i", "Color", "Rect2", "Rect2i", "MemorySegment", "String", "NodePath", "Basis", "Transform2D", "Transform3D", "Projection", "RID", "Quaternion", "AABB", "List<Int>", "List<Float>", "List<Vector2>", "List<Color>", "List<String>", "List<NodePath>", "List<Long>", "List<Plane>", "List<Any?>", "Any?", "GodotCallable?", "Plane", "Vector4"}
 
 # Helpers already hand-written in ios-runtime ObjectCalls.kt (the reference template +
 # override set). The generator must NOT re-emit these (they'd clash with the members).
@@ -3317,6 +3317,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.value
+import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.ios.cinterop.KanamaIosCallableArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
@@ -3869,6 +3870,10 @@ def render_ios_helper(
     # task 100 (parcel 9): the bare "List" token is the typed-object-list return (List<T> via a
     # caller-supplied fromHandle); every other list return carries its element type in the token.
     typed_object_list_return = kotlin_return == "List"
+
+    # Callable return (task 100, parcel 11): the C entry owns the Callable cell and decodes it
+    # through Callable.get_object / get_method into a borrowed GodotObject + UTF-8 method name.
+    callable_return = kotlin_return == "GodotCallable?"
     packed_return = return_type in IOS_PACKED_RETURNS and IOS_PACKED_RETURNS[return_type][1] == kotlin_return
     container_return = (
         return_type in IOS_CONTAINER_RETURNS and IOS_CONTAINER_RETURNS[return_type][1] == kotlin_return
@@ -3896,6 +3901,8 @@ def render_ios_helper(
         # Variant-scalar return (task 100, parcel 2): the C entry owns the 24-byte Variant cell,
         # so no ret tag or cell is laid out here.
         ret_type, ret_tag, ret_decl, ret_ptr, read_expr = "Any?", None, [], "null", None
+    elif callable_return:
+        ret_type, ret_tag, ret_decl, ret_ptr, read_expr = "GodotCallable?", None, [], "null", None
     else:
         ret_type, ret_tag, ret_decl, ret_ptr, read_expr = ios_ret_layout(kotlin_return)
     if ret_tag is not None:
@@ -3955,6 +3962,8 @@ def render_ios_helper(
         )
     elif variant_return:
         body.append(f"ptrcallRetVariantScalar(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
+    elif callable_return:
+        body.append(f"ptrcallRetCallable(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
     elif packed_return:
         body.append(f"{IOS_PACKED_RETURNS[return_type][0]}(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
     elif container_return:

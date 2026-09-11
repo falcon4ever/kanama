@@ -7,6 +7,24 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: Callable returns on every audited argument shape (task 100, parcel 11)
+
+- A method returning a `Callable` — `TreeItem.get_custom_draw_callback`,
+  `MultiplayerSpawner.get_spawn_function` (and the `spawn_function` property), the four
+  `NativeMenu.get_*_callback` getters and `DisplayServer.global_menu_get_item_callback` /
+  `global_menu_get_item_key_callback` — was desktop-only. Every such method whose arguments are
+  already audited now gets a generated helper returning `GodotCallable?`, decoded the way the
+  desktop backend decodes it: the method runs once into a Callable cell, `Callable.get_object()`
+  and `Callable.get_method()` are read back through the builtin-method table, the target comes
+  back as a borrowed `GodotObject` over its handle and the method name travels through the
+  parcel-1 UTF-8 path (inline buffer, single pending slot beyond it — never truncated, never
+  re-issued). An empty or object-less Callable is `null`, as on desktop. New C entry
+  `kanama_ios_godot_ptrcall_ret_callable`; no new tag. 9 members on 4 classes move from the
+  desktop companions into the shared tree; the gap index goes from 34 to 25 desktop-only members
+  (20 → 17 companion files, 27 → 22 helpers waited on). Four self-test rows round-trip a
+  `TreeItem` custom-draw callback (target handle and method name; a 602-byte non-ASCII name
+  through the pending slot) and read an empty `MultiplayerSpawner` spawn function back as `null`.
+
 ### Added — iOS: typed arrays of containers and packed arrays on every audited shape (task 100, parcel 10)
 
 - A method taking an `Array[Dictionary]`, `Array[Array]`, `Array[PackedByteArray]` or
