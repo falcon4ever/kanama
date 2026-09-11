@@ -1779,12 +1779,19 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
         method.return_type in IOS_PACKED_RETURNS
         and IOS_PACKED_RETURNS[method.return_type][1] == shape.kotlin_return
     )
+    # Dictionary / Array / Array[Dictionary] returns (task 100, parcel 6): every audited arg shape is
+    # admitted — the generated helper reads the container back as one self-describing blob through
+    # kanama_ios_godot_ptrcall_ret_container_blob (parked C-side when longer than the inline buffer).
+    container_return = (
+        method.return_type in IOS_CONTAINER_RETURNS
+        and IOS_CONTAINER_RETURNS[method.return_type][1] == shape.kotlin_return
+    )
     if typed_array_element is not None:
         if shape.function not in IOS_WIRED_TYPED_OBJECT_LIST_HELPERS:
             return False
         if IOS_EMIT_CLASSES is not None and typed_array_element != "Object" and typed_array_element not in IOS_EMIT_CLASSES:
             return False
-    elif packed_return:
+    elif packed_return or container_return:
         pass
     elif shape.kotlin_return not in IOS_RET_KOTLIN:
         return False
@@ -1828,7 +1835,7 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     if shape.kotlin_return == "List<Plane>" and shape.function != "ptrcallNoArgsRetPlaneList":
         return False
     # Generic Array -> List<Any?> (2.7j variant-array blob): the no-arg getter + the NodePath-arg one.
-    if shape.kotlin_return == "List<Any?>" and shape.function not in (
+    if not container_return and shape.kotlin_return == "List<Any?>" and shape.function not in (
         "ptrcallNoArgsRetArray",
         "ptrcallWithNodePathArgRetArray",
     ):
@@ -3329,8 +3336,10 @@ import net.multigesture.kanama.types.Vector4
  * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
  * read-back, no truncation); Variant-scalar returns to `ObjectCalls.ptrcallRetVariantScalar`
  * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
- * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed). Helpers
- * already hand-written in ObjectCalls.kt are the override set and are NOT regenerated here.
+ * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed); Dictionary /
+ * Array returns to `ObjectCalls.ptrcallRetDictionary` / `ptrcallRetArray` /
+ * `ptrcallRetDictionaryList` (kanama_ios_godot_ptrcall_ret_container_blob). Helpers already
+ * hand-written in ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 '''
 
@@ -3654,6 +3663,14 @@ IOS_PACKED_RETURNS = {
     "PackedColorArray": ("ptrcallRetPackedColorList", "List<Color>"),
 }
 
+# Dictionary / Array returns the iOS helpers read back through kanama_ios_godot_ptrcall_ret_container_blob
+# (task 100, parcel 6): Godot return type -> (Kotlin helper on ObjectCalls, kotlin_return token).
+IOS_CONTAINER_RETURNS = {
+    "Dictionary": ("ptrcallRetDictionary", "Map<String, Any?>"),
+    "Array": ("ptrcallRetArray", "List<Any?>"),
+    "typedarray::Dictionary": ("ptrcallRetDictionaryList", "List<Map<String, Any?>>"),
+}
+
 
 def render_ios_helper(
     function: str,
@@ -3665,7 +3682,13 @@ def render_ios_helper(
     utf8_return = kotlin_return in ("String", "NodePath")
     variant_return = kotlin_return == "Any?"
     packed_return = return_type in IOS_PACKED_RETURNS and IOS_PACKED_RETURNS[return_type][1] == kotlin_return
-    if packed_return:
+    container_return = (
+        return_type in IOS_CONTAINER_RETURNS and IOS_CONTAINER_RETURNS[return_type][1] == kotlin_return
+    )
+    if container_return:
+        # Dictionary / Array return (task 100, parcel 6): the C entry owns the container cell and the blob.
+        ret_type, ret_tag, ret_decl, ret_ptr, read_expr = kotlin_return, None, [], "null", None
+    elif packed_return:
         # Packed*Array return (task 100, parcel 3): the C entry owns the array cell and the copy.
         ret_type, ret_tag, ret_decl, ret_ptr, read_expr = kotlin_return, None, [], "null", None
     elif utf8_return:
@@ -3728,6 +3751,8 @@ def render_ios_helper(
         body.append(f"ptrcallRetVariantScalar(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
     elif packed_return:
         body.append(f"{IOS_PACKED_RETURNS[return_type][0]}(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
+    elif container_return:
+        body.append(f"{IOS_CONTAINER_RETURNS[return_type][0]}(methodBind, instance, {types_arg}, {ptrs_arg}, {n})")
     else:
         body.append(
             f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "

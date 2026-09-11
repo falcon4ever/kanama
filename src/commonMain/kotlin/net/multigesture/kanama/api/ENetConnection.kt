@@ -29,6 +29,11 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
         return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(connectToHostBind, handle, address, port, channels, data))
     }
 
+    fun service(timeout: Int = 0): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(serviceBind, handle, timeout)
+    }
+
     fun flush() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(flushBind, handle)
@@ -125,6 +130,11 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
         private const val CONNECT_TO_HOST_HASH = 2171300490L
         private val connectToHostBind by lazy {
             ObjectCalls.getMethodBind("ENetConnection", "connect_to_host", CONNECT_TO_HOST_HASH)
+        }
+
+        private const val SERVICE_HASH = 2402345344L
+        private val serviceBind by lazy {
+            ObjectCalls.getMethodBind("ENetConnection", "service", SERVICE_HASH)
         }
 
         private const val FLUSH_HASH = 3218959716L

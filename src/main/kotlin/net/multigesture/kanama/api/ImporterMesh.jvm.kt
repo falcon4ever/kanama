@@ -8,10 +8,8 @@ import net.multigesture.kanama.types.Transform3D
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithIntArgRetArray,
-//   ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
-//   ptrcallWithObjectListTransform3DListBoolArgsRetObject, ptrcallWithTwoDoubleArrayArgs,
-//   ptrcallWithTwoIntArgsRetArray
+// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
+//   ptrcallWithObjectListTransform3DListBoolArgsRetObject, ptrcallWithTwoDoubleArrayArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -67,27 +65,6 @@ fun ImporterMesh.addSurface(primitive: Long, arrays: List<Any?>, blendShapes: Li
 }
 
 /**
- * Returns the arrays for the vertices, normals, UVs, etc. that make up the requested surface. See
- * `add_surface`.
- *
- * Generated from Godot docs: ImporterMesh.get_surface_arrays
- */
-fun ImporterMesh.getSurfaceArrays(surfaceIdx: Int): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetArray(getSurfaceArraysBind, handle, surfaceIdx)
-}
-
-/**
- * Returns a single set of blend shape arrays for the requested blend shape index for a surface.
- *
- * Generated from Godot docs: ImporterMesh.get_surface_blend_shape_arrays
- */
-fun ImporterMesh.getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithTwoIntArgsRetArray(getSurfaceBlendShapeArraysBind, handle, surfaceIdx, blendShapeIdx)
-}
-
-/**
  * Generates all lods for this ImporterMesh. `normal_merge_angle` is in degrees and used in the
  * same way as the importer settings in `lods`. `normal_split_angle` is not used and only remains
  * for compatibility with older versions of the API. The number of generated lods can be accessed
@@ -112,16 +89,6 @@ private val mergeImporterMeshesBind by lazy {
 private const val ADD_SURFACE_HASH = 1740448849L
 private val addSurfaceBind by lazy {
     ObjectCalls.getMethodBind("ImporterMesh", "add_surface", ADD_SURFACE_HASH)
-}
-
-private const val GET_SURFACE_ARRAYS_HASH = 663333327L
-private val getSurfaceArraysBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "get_surface_arrays", GET_SURFACE_ARRAYS_HASH)
-}
-
-private const val GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH = 2345056839L
-private val getSurfaceBlendShapeArraysBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "get_surface_blend_shape_arrays", GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH)
 }
 
 private const val GENERATE_LODS_HASH = 2491878677L

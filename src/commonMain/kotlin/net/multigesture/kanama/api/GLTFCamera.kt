@@ -45,6 +45,11 @@ class GLTFCamera(handle: MemorySegment) : Resource(handle) {
         return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
     }
 
+    fun toDictionary(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+    }
+
     fun getPerspective(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(getPerspectiveBind, handle)
@@ -115,6 +120,11 @@ class GLTFCamera(handle: MemorySegment) : Resource(handle) {
         private const val TO_NODE_HASH = 2285090890L
         private val toNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFCamera", "to_node", TO_NODE_HASH)
+        }
+
+        private const val TO_DICTIONARY_HASH = 3102165223L
+        private val toDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFCamera", "to_dictionary", TO_DICTIONARY_HASH)
         }
 
         private const val GET_PERSPECTIVE_HASH = 36873697L

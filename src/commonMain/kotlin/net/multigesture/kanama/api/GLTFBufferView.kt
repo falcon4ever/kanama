@@ -51,6 +51,11 @@ class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithObjectArgRetByteArray(loadBufferViewDataBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    fun toDictionary(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+    }
+
     fun getBuffer(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferBind, handle)
@@ -122,6 +127,11 @@ class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
         private const val LOAD_BUFFER_VIEW_DATA_HASH = 3945446907L
         private val loadBufferViewDataBind by lazy {
             ObjectCalls.getMethodBind("GLTFBufferView", "load_buffer_view_data", LOAD_BUFFER_VIEW_DATA_HASH)
+        }
+
+        private const val TO_DICTIONARY_HASH = 3102165223L
+        private val toDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFBufferView", "to_dictionary", TO_DICTIONARY_HASH)
         }
 
         private const val GET_BUFFER_HASH = 3905245786L

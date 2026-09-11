@@ -496,6 +496,16 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns array of inline objects in the line.
+     *
+     * Generated from Godot docs: TextParagraph.get_line_objects
+     */
+    fun getLineObjects(line: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(getLineObjectsBind, handle, line)
+    }
+
+    /**
      * Returns size of the bounding box of the line of text. Returned size is rounded up.
      *
      * Generated from Godot docs: TextParagraph.get_line_size
@@ -872,6 +882,11 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_LINE_SPACING_HASH = 1740695150L
         private val getLineSpacingBind by lazy {
             ObjectCalls.getMethodBind("TextParagraph", "get_line_spacing", GET_LINE_SPACING_HASH)
+        }
+
+        private const val GET_LINE_OBJECTS_HASH = 663333327L
+        private val getLineObjectsBind by lazy {
+            ObjectCalls.getMethodBind("TextParagraph", "get_line_objects", GET_LINE_OBJECTS_HASH)
         }
 
         private const val GET_LINE_SIZE_HASH = 2299179447L

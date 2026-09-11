@@ -87,6 +87,11 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
         ObjectCalls.ptrcallWithLongAndFourIntArgs(connectNodesForcedBind, handle, type, fromNode, fromPort, toNode, toPort)
     }
 
+    fun getNodeConnections(type: Long): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetDictionaryList(getNodeConnectionsBind, handle, type)
+    }
+
     fun attachNodeToFrame(type: Long, id: Int, frame: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoIntArgs(attachNodeToFrameBind, handle, type, id, frame)
@@ -225,6 +230,11 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
         private const val CONNECT_NODES_FORCED_HASH = 2268060358L
         private val connectNodesForcedBind by lazy {
             ObjectCalls.getMethodBind("VisualShader", "connect_nodes_forced", CONNECT_NODES_FORCED_HASH)
+        }
+
+        private const val GET_NODE_CONNECTIONS_HASH = 1441964831L
+        private val getNodeConnectionsBind by lazy {
+            ObjectCalls.getMethodBind("VisualShader", "get_node_connections", GET_NODE_CONNECTIONS_HASH)
         }
 
         private const val ATTACH_NODE_TO_FRAME_HASH = 2479945279L

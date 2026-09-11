@@ -24,6 +24,16 @@ class WebRTCMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
         return ObjectCalls.ptrcallWithIntArgRetBool(hasPeerBind, handle, peerId)
     }
 
+    fun getPeer(peerId: Int): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(getPeerBind, handle, peerId)
+    }
+
+    fun getPeers(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getPeersBind, handle)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): WebRTCMultiplayerPeer? =
@@ -45,6 +55,16 @@ class WebRTCMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
         private const val HAS_PEER_HASH = 3067735520L
         private val hasPeerBind by lazy {
             ObjectCalls.getMethodBind("WebRTCMultiplayerPeer", "has_peer", HAS_PEER_HASH)
+        }
+
+        private const val GET_PEER_HASH = 3554694381L
+        private val getPeerBind by lazy {
+            ObjectCalls.getMethodBind("WebRTCMultiplayerPeer", "get_peer", GET_PEER_HASH)
+        }
+
+        private const val GET_PEERS_HASH = 2382534195L
+        private val getPeersBind by lazy {
+            ObjectCalls.getMethodBind("WebRTCMultiplayerPeer", "get_peers", GET_PEERS_HASH)
         }
     }
 }

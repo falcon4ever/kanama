@@ -222,6 +222,16 @@ object XRServer {
     }
 
     /**
+     * Returns a list of available interfaces the ID and name of each interface.
+     *
+     * Generated from Godot docs: XRServer.get_interfaces
+     */
+    @JvmStatic
+    fun getInterfaces(): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getInterfacesBind, singleton)
+    }
+
+    /**
      * Finds an interface by its `name`. For example, if your project uses capabilities of an AR/VR
      * platform, you can find the interface for that platform by name and initialize it.
      *
@@ -250,6 +260,16 @@ object XRServer {
     @JvmStatic
     fun removeTracker(tracker: XRTracker?) {
         ObjectCalls.ptrcallWithObjectArgs(removeTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: MemorySegment.NULL))
+    }
+
+    /**
+     * Returns a dictionary of trackers for `tracker_types`.
+     *
+     * Generated from Godot docs: XRServer.get_trackers
+     */
+    @JvmStatic
+    fun getTrackers(trackerTypes: Int): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(getTrackersBind, singleton, trackerTypes)
     }
 
     /**
@@ -369,6 +389,11 @@ object XRServer {
         ObjectCalls.getMethodBind("XRServer", "get_interface", GET_INTERFACE_HASH)
     }
 
+    private const val GET_INTERFACES_HASH = 3995934104L
+    private val getInterfacesBind by lazy {
+        ObjectCalls.getMethodBind("XRServer", "get_interfaces", GET_INTERFACES_HASH)
+    }
+
     private const val FIND_INTERFACE_HASH = 1395192955L
     private val findInterfaceBind by lazy {
         ObjectCalls.getMethodBind("XRServer", "find_interface", FIND_INTERFACE_HASH)
@@ -382,6 +407,11 @@ object XRServer {
     private const val REMOVE_TRACKER_HASH = 684804553L
     private val removeTrackerBind by lazy {
         ObjectCalls.getMethodBind("XRServer", "remove_tracker", REMOVE_TRACKER_HASH)
+    }
+
+    private const val GET_TRACKERS_HASH = 3554694381L
+    private val getTrackersBind by lazy {
+        ObjectCalls.getMethodBind("XRServer", "get_trackers", GET_TRACKERS_HASH)
     }
 
     private const val GET_TRACKER_HASH = 147382240L

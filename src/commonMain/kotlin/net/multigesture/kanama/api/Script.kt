@@ -131,6 +131,49 @@ open class Script(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the list of properties in this `Script`. Note: The dictionaries returned by this method
+     * are formatted identically to those returned by `Object.get_property_list`.
+     *
+     * Generated from Godot docs: Script.get_script_property_list
+     */
+    fun getScriptPropertyList(): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptPropertyListBind, handle)
+    }
+
+    /**
+     * Returns the list of methods in this `Script`. Note: The dictionaries returned by this method are
+     * formatted identically to those returned by `Object.get_method_list`.
+     *
+     * Generated from Godot docs: Script.get_script_method_list
+     */
+    fun getScriptMethodList(): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptMethodListBind, handle)
+    }
+
+    /**
+     * Returns the list of signals defined in this `Script`. Note: The dictionaries returned by this
+     * method are formatted identically to those returned by `Object.get_signal_list`.
+     *
+     * Generated from Godot docs: Script.get_script_signal_list
+     */
+    fun getScriptSignalList(): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptSignalListBind, handle)
+    }
+
+    /**
+     * Returns a dictionary containing constant names and their values.
+     *
+     * Generated from Godot docs: Script.get_script_constant_map
+     */
+    fun getScriptConstantMap(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getScriptConstantMapBind, handle)
+    }
+
+    /**
      * Returns the default value of the specified property.
      *
      * Generated from Godot docs: Script.get_property_default_value
@@ -237,6 +280,26 @@ open class Script(handle: MemorySegment) : Resource(handle) {
         private const val HAS_SCRIPT_SIGNAL_HASH = 2619796661L
         private val hasScriptSignalBind by lazy {
             ObjectCalls.getMethodBind("Script", "has_script_signal", HAS_SCRIPT_SIGNAL_HASH)
+        }
+
+        private const val GET_SCRIPT_PROPERTY_LIST_HASH = 2915620761L
+        private val getScriptPropertyListBind by lazy {
+            ObjectCalls.getMethodBind("Script", "get_script_property_list", GET_SCRIPT_PROPERTY_LIST_HASH)
+        }
+
+        private const val GET_SCRIPT_METHOD_LIST_HASH = 2915620761L
+        private val getScriptMethodListBind by lazy {
+            ObjectCalls.getMethodBind("Script", "get_script_method_list", GET_SCRIPT_METHOD_LIST_HASH)
+        }
+
+        private const val GET_SCRIPT_SIGNAL_LIST_HASH = 2915620761L
+        private val getScriptSignalListBind by lazy {
+            ObjectCalls.getMethodBind("Script", "get_script_signal_list", GET_SCRIPT_SIGNAL_LIST_HASH)
+        }
+
+        private const val GET_SCRIPT_CONSTANT_MAP_HASH = 2382534195L
+        private val getScriptConstantMapBind by lazy {
+            ObjectCalls.getMethodBind("Script", "get_script_constant_map", GET_SCRIPT_CONSTANT_MAP_HASH)
         }
 
         private const val GET_PROPERTY_DEFAULT_VALUE_HASH = 2138907829L

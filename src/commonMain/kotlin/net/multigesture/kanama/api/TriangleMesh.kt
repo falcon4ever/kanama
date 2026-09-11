@@ -23,6 +23,35 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
     }
 
+    /**
+     * Tests for intersection with a segment going from `begin` to `end`. If an intersection with a
+     * triangle happens returns a `Dictionary` with the following fields: `position`: The position on
+     * the intersected triangle. `normal`: The normal of the intersected triangle. `face_index`: The
+     * index of the intersected triangle. Returns an empty `Dictionary` if no intersection happens. See
+     * also `intersect_ray`, which is similar but uses an infinite-length ray.
+     *
+     * Generated from Godot docs: TriangleMesh.intersect_segment
+     */
+    fun intersectSegment(begin: Vector3, end: Vector3): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectSegmentBind, handle, begin, end)
+    }
+
+    /**
+     * Tests for intersection with a ray starting at `begin` and facing `dir` and extending toward
+     * infinity. If an intersection with a triangle happens, returns a `Dictionary` with the following
+     * fields: `position`: The position on the intersected triangle. `normal`: The normal of the
+     * intersected triangle. `face_index`: The index of the intersected triangle. Returns an empty
+     * `Dictionary` if no intersection happens. See also `intersect_segment`, which is similar but uses
+     * a finite-length segment.
+     *
+     * Generated from Godot docs: TriangleMesh.intersect_ray
+     */
+    fun intersectRay(begin: Vector3, dir: Vector3): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectRayBind, handle, begin, dir)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): TriangleMesh? =
@@ -34,6 +63,16 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_FACES_HASH = 497664490L
         private val getFacesBind by lazy {
             ObjectCalls.getMethodBind("TriangleMesh", "get_faces", GET_FACES_HASH)
+        }
+
+        private const val INTERSECT_SEGMENT_HASH = 3648293151L
+        private val intersectSegmentBind by lazy {
+            ObjectCalls.getMethodBind("TriangleMesh", "intersect_segment", INTERSECT_SEGMENT_HASH)
+        }
+
+        private const val INTERSECT_RAY_HASH = 3648293151L
+        private val intersectRayBind by lazy {
+            ObjectCalls.getMethodBind("TriangleMesh", "intersect_ray", INTERSECT_RAY_HASH)
         }
     }
 }

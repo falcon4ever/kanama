@@ -90,6 +90,11 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, handle, id)
     }
 
+    fun getItemShapes(id: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, handle, id)
+    }
+
     fun getItemPreview(id: Int): Texture2D? {
         checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, handle, id))
@@ -211,6 +216,11 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
         private const val GET_ITEM_NAVIGATION_LAYERS_HASH = 923996154L
         private val getItemNavigationLayersBind by lazy {
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_navigation_layers", GET_ITEM_NAVIGATION_LAYERS_HASH)
+        }
+
+        private const val GET_ITEM_SHAPES_HASH = 663333327L
+        private val getItemShapesBind by lazy {
+            ObjectCalls.getMethodBind("MeshLibrary", "get_item_shapes", GET_ITEM_SHAPES_HASH)
         }
 
         private const val GET_ITEM_PREVIEW_HASH = 3536238170L

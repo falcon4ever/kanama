@@ -63,6 +63,11 @@ class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
         return Shape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toResourceBind, handle, cacheShapes))
     }
 
+    fun toDictionary(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+    }
+
     fun getShapeType(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getShapeTypeBind, handle)
@@ -167,6 +172,11 @@ class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
         private const val TO_RESOURCE_HASH = 1913542110L
         private val toResourceBind by lazy {
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "to_resource", TO_RESOURCE_HASH)
+        }
+
+        private const val TO_DICTIONARY_HASH = 3102165223L
+        private val toDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFPhysicsShape", "to_dictionary", TO_DICTIONARY_HASH)
         }
 
         private const val GET_SHAPE_TYPE_HASH = 201670096L
