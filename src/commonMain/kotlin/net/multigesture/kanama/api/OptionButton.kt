@@ -119,6 +119,16 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
     }
 
     /**
+     * Sets the metadata of an item. Metadata may be of any type and can be used to store extra
+     * information about an item, such as an external string ID.
+     *
+     * Generated from Godot docs: OptionButton.set_item_metadata
+     */
+    fun setItemMetadata(idx: Int, metadata: Any?) {
+        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, idx, metadata)
+    }
+
+    /**
      * Sets the tooltip of the item at index `idx`.
      *
      * Generated from Godot docs: OptionButton.set_item_tooltip
@@ -526,6 +536,11 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         private const val SET_ITEM_ID_HASH = 3937882851L
         private val setItemIdBind by lazy {
             ObjectCalls.getMethodBind("OptionButton", "set_item_id", SET_ITEM_ID_HASH)
+        }
+
+        private const val SET_ITEM_METADATA_HASH = 2152698145L
+        private val setItemMetadataBind by lazy {
+            ObjectCalls.getMethodBind("OptionButton", "set_item_metadata", SET_ITEM_METADATA_HASH)
         }
 
         private const val SET_ITEM_TOOLTIP_HASH = 501894301L

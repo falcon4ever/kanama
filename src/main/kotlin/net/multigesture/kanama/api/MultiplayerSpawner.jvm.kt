@@ -8,13 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP MultiplayerSpawner waits on: ptrcallNoArgsRetCallable,
-//   ptrcallWithVariantArgRetObject
+// KANAMA-IOS-GAP MultiplayerSpawner waits on: ptrcallNoArgsRetCallable
 // Index: docs/reference/generated/ios-shape-gap.md
-
-fun MultiplayerSpawner.spawn(data: Any? = null): Node? {
-    return Node.wrap(ObjectCalls.ptrcallWithVariantArgRetObject(spawnBind, handle, data))
-}
 
 fun MultiplayerSpawner.getSpawnFunction(): GodotCallable? {
     return ObjectCalls.ptrcallNoArgsRetCallable(getSpawnFunctionBind, handle)
@@ -23,11 +18,6 @@ fun MultiplayerSpawner.getSpawnFunction(): GodotCallable? {
 val MultiplayerSpawner.spawnFunction: GodotCallable?
     @JvmName("spawnFunctionProperty")
     get() = getSpawnFunction()
-
-private const val SPAWN_HASH = 1991184589L
-private val spawnBind by lazy {
-    ObjectCalls.getMethodBind("MultiplayerSpawner", "spawn", SPAWN_HASH)
-}
 
 private const val GET_SPAWN_FUNCTION_HASH = 1307783378L
 private val getSpawnFunctionBind by lazy {

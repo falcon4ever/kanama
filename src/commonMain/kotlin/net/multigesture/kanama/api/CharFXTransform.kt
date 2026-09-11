@@ -59,9 +59,11 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setColorProperty")
         set(value) = setColor(value)
 
-    val env: Map<String, Any?>
+    var env: Map<String, Any?>
         @JvmName("envProperty")
         get() = getEnvironment()
+        @JvmName("setEnvProperty")
+        set(value) = setEnvironment(value)
 
     var glyphIndex: Long
         @JvmName("glyphIndexProperty")
@@ -265,6 +267,21 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Contains the arguments passed in the opening BBCode tag. By default, arguments are strings; if
+     * their contents match a type such as `bool`, `int` or `float`, they will be converted
+     * automatically. Color codes in the form `#rrggbb` or `#rgb` will be converted to an opaque
+     * `Color`. String arguments may not contain spaces, even if they're quoted. If present, quotes
+     * will also be present in the final string. For example, the opening BBCode tag `[example
+     * foo=hello bar=true baz=42 color=#ffffff]` will map to the following `Dictionary`:
+     *
+     * Generated from Godot docs: CharFXTransform.set_environment
+     */
+    fun setEnvironment(environment: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(setEnvironmentBind, handle, environment)
+    }
+
+    /**
      * Glyph index specific to the `font`. If you want to replace this glyph, use
      * `TextServer.font_get_glyph_index` with `font` to get a new glyph index for a single character.
      *
@@ -457,6 +474,11 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_ENVIRONMENT_HASH = 2382534195L
         private val getEnvironmentBind by lazy {
             ObjectCalls.getMethodBind("CharFXTransform", "get_environment", GET_ENVIRONMENT_HASH)
+        }
+
+        private const val SET_ENVIRONMENT_HASH = 4155329257L
+        private val setEnvironmentBind by lazy {
+            ObjectCalls.getMethodBind("CharFXTransform", "set_environment", SET_ENVIRONMENT_HASH)
         }
 
         private const val GET_GLYPH_INDEX_HASH = 3905245786L

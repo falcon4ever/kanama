@@ -281,6 +281,33 @@ object PhysicsServer3D {
     }
 
     /**
+     * Sets the shape data that configures the shape. The `data` to be passed depends on the shape's
+     * type (see `shape_get_type`): - `SHAPE_WORLD_BOUNDARY`: a `Plane`, - `SHAPE_SEPARATION_RAY`: a
+     * dictionary containing the key `"length"` with a `float` value and the key `"slide_on_slope"`
+     * with a `bool` value, - `SHAPE_SPHERE`: a `float` that is the radius of the sphere, -
+     * `SHAPE_BOX`: a `Vector3` containing the half-extents of the box, - `SHAPE_CAPSULE`: a dictionary
+     * containing the keys `"height"` and `"radius"` with `float` values, - `SHAPE_CYLINDER`: a
+     * dictionary containing the keys `"height"` and `"radius"` with `float` values, -
+     * `SHAPE_CONVEX_POLYGON`: a `PackedVector3Array` of points defining a convex polygon (the shape
+     * will be the convex hull of the points), - `SHAPE_CONCAVE_POLYGON`: a dictionary containing the
+     * key `"faces"` with a `PackedVector3Array` value (with a length divisible by 3, so that each
+     * 3-tuple of points forms a face) and the key `"backface_collision"` with a `bool` value, -
+     * `SHAPE_HEIGHTMAP`: a dictionary containing the keys `"width"` and `"depth"` with `int` values,
+     * and the key `"heights"` with a value that is a packed array of `float`s of length `width *
+     * depth` (that is a `PackedFloat32Array`, or a `PackedFloat64Array` if Godot was compiled with the
+     * `precision=double` option), and optionally the keys `"min_height"` and `"max_height"` with
+     * `float` values, - `SHAPE_SOFT_BODY`: the input `data` is ignored and this method has no effect,
+     * - `SHAPE_CUSTOM`: the input `data` is interpreted by a custom physics server, if it supports
+     * custom shapes.
+     *
+     * Generated from Godot docs: PhysicsServer3D.shape_set_data
+     */
+    @JvmStatic
+    fun shapeSetData(shape: RID, data: Any?) {
+        ObjectCalls.ptrcallWithRIDAndVariantArg(shapeSetDataBind, singleton, shape, data)
+    }
+
+    /**
      * Sets the collision margin for the shape. Note: This is not used in Godot Physics.
      *
      * Generated from Godot docs: PhysicsServer3D.shape_set_margin
@@ -546,6 +573,17 @@ object PhysicsServer3D {
     @JvmStatic
     fun areaGetCollisionMask(area: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionMaskBind, singleton, area)
+    }
+
+    /**
+     * Sets the value for an area parameter. A list of available parameters is on the `AreaParameter`
+     * constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.area_set_param
+     */
+    @JvmStatic
+    fun areaSetParam(area: RID, param: Long, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param, value)
     }
 
     /**
@@ -894,6 +932,16 @@ object PhysicsServer3D {
     }
 
     /**
+     * Sets a body parameter. A list of available parameters is on the `BodyParameter` constants.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_param
+     */
+    @JvmStatic
+    fun bodySetParam(body: RID, param: Long, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param, value)
+    }
+
+    /**
      * Returns the value of a body parameter. A list of available parameters is on the `BodyParameter`
      * constants.
      *
@@ -913,6 +961,16 @@ object PhysicsServer3D {
     @JvmStatic
     fun bodyResetMassProperties(body: RID) {
         ObjectCalls.ptrcallWithRIDArg(bodyResetMassPropertiesBind, singleton, body)
+    }
+
+    /**
+     * Sets a body state.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_state
+     */
+    @JvmStatic
+    fun bodySetState(body: RID, state: Long, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state, value)
     }
 
     /**
@@ -1181,6 +1239,24 @@ object PhysicsServer3D {
     }
 
     /**
+     * Sets the body's custom force integration callback function to `callable`. Use an empty
+     * `Callable` (`Callable()`) to clear the custom callback. The function `callable` will be called
+     * every physics tick, before the standard force integration (see
+     * `body_set_omit_force_integration`). It can be used for example to update the body's linear and
+     * angular velocity based on contact with other bodies. If `userdata` is not `null`, the function
+     * `callable` must take the following two parameters: 1. `state`: a `PhysicsDirectBodyState3D`,
+     * used to retrieve and modify the body's state, 2. `userdata`: a `Variant`; its value will be the
+     * `userdata` passed into this method. If `userdata` is `null`, then `callable` must take only the
+     * `state` parameter.
+     *
+     * Generated from Godot docs: PhysicsServer3D.body_set_force_integration_callback
+     */
+    @JvmStatic
+    fun bodySetForceIntegrationCallback(body: RID, callable: GodotCallable, userdata: Any? = null) {
+        ObjectCalls.ptrcallWithRIDCallableVariantArgs(bodySetForceIntegrationCallbackBind, singleton, body, callable.target.handle, callable.method, userdata)
+    }
+
+    /**
      * Sets the body pickable with rays if `enable` is set.
      *
      * Generated from Godot docs: PhysicsServer3D.body_set_ray_pickable
@@ -1332,6 +1408,18 @@ object PhysicsServer3D {
     @JvmStatic
     fun softBodyRemoveCollisionException(body: RID, bodyB: RID) {
         ObjectCalls.ptrcallWithTwoRIDArgs(softBodyRemoveCollisionExceptionBind, singleton, body, bodyB)
+    }
+
+    /**
+     * Sets the given body state for the given body. Note: Godot's default physics implementation does
+     * not support `BODY_STATE_LINEAR_VELOCITY`, `BODY_STATE_ANGULAR_VELOCITY`, `BODY_STATE_SLEEPING`,
+     * or `BODY_STATE_CAN_SLEEP`.
+     *
+     * Generated from Godot docs: PhysicsServer3D.soft_body_set_state
+     */
+    @JvmStatic
+    fun softBodySetState(body: RID, state: Long, variant: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(softBodySetStateBind, singleton, body, state, variant)
     }
 
     /**
@@ -1971,6 +2059,11 @@ object PhysicsServer3D {
         ObjectCalls.getMethodBind("PhysicsServer3D", "custom_shape_create", CUSTOM_SHAPE_CREATE_HASH)
     }
 
+    private const val SHAPE_SET_DATA_HASH = 3175752987L
+    private val shapeSetDataBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "shape_set_data", SHAPE_SET_DATA_HASH)
+    }
+
     private const val SHAPE_SET_MARGIN_HASH = 1794382983L
     private val shapeSetMarginBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "shape_set_margin", SHAPE_SET_MARGIN_HASH)
@@ -2099,6 +2192,11 @@ object PhysicsServer3D {
     private const val AREA_GET_COLLISION_MASK_HASH = 2198884583L
     private val areaGetCollisionMaskBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_collision_mask", AREA_GET_COLLISION_MASK_HASH)
+    }
+
+    private const val AREA_SET_PARAM_HASH = 2980114638L
+    private val areaSetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_param", AREA_SET_PARAM_HASH)
     }
 
     private const val AREA_SET_TRANSFORM_HASH = 3935195649L
@@ -2266,6 +2364,11 @@ object PhysicsServer3D {
         ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_continuous_collision_detection_enabled", BODY_IS_CONTINUOUS_COLLISION_DETECTION_ENABLED_HASH)
     }
 
+    private const val BODY_SET_PARAM_HASH = 910941953L
+    private val bodySetParamBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_param", BODY_SET_PARAM_HASH)
+    }
+
     private const val BODY_GET_PARAM_HASH = 3385027841L
     private val bodyGetParamBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_param", BODY_GET_PARAM_HASH)
@@ -2274,6 +2377,11 @@ object PhysicsServer3D {
     private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
     private val bodyResetMassPropertiesBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
+    }
+
+    private const val BODY_SET_STATE_HASH = 599977762L
+    private val bodySetStateBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_state", BODY_SET_STATE_HASH)
     }
 
     private const val BODY_GET_STATE_HASH = 1850449534L
@@ -2396,6 +2504,11 @@ object PhysicsServer3D {
         ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_state_sync_callback", BODY_SET_STATE_SYNC_CALLBACK_HASH)
     }
 
+    private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L
+    private val bodySetForceIntegrationCallbackBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_force_integration_callback", BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH)
+    }
+
     private const val BODY_SET_RAY_PICKABLE_HASH = 1265174801L
     private val bodySetRayPickableBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_ray_pickable", BODY_SET_RAY_PICKABLE_HASH)
@@ -2469,6 +2582,11 @@ object PhysicsServer3D {
     private const val SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
     private val softBodyRemoveCollisionExceptionBind by lazy {
         ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_remove_collision_exception", SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH)
+    }
+
+    private const val SOFT_BODY_SET_STATE_HASH = 599977762L
+    private val softBodySetStateBind by lazy {
+        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_state", SOFT_BODY_SET_STATE_HASH)
     }
 
     private const val SOFT_BODY_GET_STATE_HASH = 1850449534L

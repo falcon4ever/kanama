@@ -258,6 +258,17 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, handle, host, port)
     }
 
+    /**
+     * Generates a GET/POST application/x-www-form-urlencoded style query string from a provided
+     * dictionary, e.g.:
+     *
+     * Generated from Godot docs: HTTPClient.query_string_from_dict
+     */
+    fun queryStringFromDict(fields: Map<String, Any?>): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDictionaryArgRetString(queryStringFromDictBind, handle, fields)
+    }
+
     companion object {
         const val METHOD_GET: Long = 0L
         const val METHOD_HEAD: Long = 1L
@@ -451,6 +462,11 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         private const val SET_HTTPS_PROXY_HASH = 2956805083L
         private val setHttpsProxyBind by lazy {
             ObjectCalls.getMethodBind("HTTPClient", "set_https_proxy", SET_HTTPS_PROXY_HASH)
+        }
+
+        private const val QUERY_STRING_FROM_DICT_HASH = 2538086567L
+        private val queryStringFromDictBind by lazy {
+            ObjectCalls.getMethodBind("HTTPClient", "query_string_from_dict", QUERY_STRING_FROM_DICT_HASH)
         }
     }
 }

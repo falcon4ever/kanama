@@ -27,9 +27,11 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
         @JvmName("setIndicesProperty")
         set(value) = setIndices(value)
 
-    val projectedObstructions: List<Any?>
+    var projectedObstructions: List<Any?>
         @JvmName("projectedObstructionsProperty")
         get() = getProjectedObstructions()
+        @JvmName("setProjectedObstructionsProperty")
+        set(value) = setProjectedObstructions(value)
 
     /**
      * Sets the parsed source geometry data vertices. The vertices need to be matched with appropriated
@@ -119,6 +121,19 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
     }
 
     /**
+     * Adds an `Array` the size of `Mesh.ARRAY_MAX` and with vertices at index `Mesh.ARRAY_VERTEX` and
+     * indices at index `Mesh.ARRAY_INDEX` to the navigation mesh baking data. The array must have
+     * valid triangulated mesh data to be considered. Since `NavigationMesh` resources have no
+     * transform, all vertex positions need to be offset by the node's transform using `xform`.
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_mesh_array
+     */
+    fun addMeshArray(meshArray: List<Any?>, xform: Transform3D) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayTransform3DArgs(addMeshArrayBind, handle, meshArray, xform)
+    }
+
+    /**
      * Adds an array of vertex positions to the geometry data for navigation mesh baking to form
      * triangulated faces. For each face the array must have three vertex positions in clockwise
      * winding order. Since `NavigationMesh` resources have no transform, all vertex positions need to
@@ -163,6 +178,17 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
     fun clearProjectedObstructions() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, handle)
+    }
+
+    /**
+     * Sets the projected obstructions with an Array of Dictionaries with the following key value
+     * pairs:
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_projected_obstructions
+     */
+    fun setProjectedObstructions(projectedObstructions: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, handle, projectedObstructions)
     }
 
     /**
@@ -240,6 +266,11 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_mesh", ADD_MESH_HASH)
         }
 
+        private const val ADD_MESH_ARRAY_HASH = 4235710913L
+        private val addMeshArrayBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_mesh_array", ADD_MESH_ARRAY_HASH)
+        }
+
         private const val ADD_FACES_HASH = 1440358797L
         private val addFacesBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_faces", ADD_FACES_HASH)
@@ -258,6 +289,11 @@ class NavigationMeshSourceGeometryData3D(handle: MemorySegment) : Resource(handl
         private const val CLEAR_PROJECTED_OBSTRUCTIONS_HASH = 3218959716L
         private val clearProjectedObstructionsBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "clear_projected_obstructions", CLEAR_PROJECTED_OBSTRUCTIONS_HASH)
+        }
+
+        private const val SET_PROJECTED_OBSTRUCTIONS_HASH = 381264803L
+        private val setProjectedObstructionsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "set_projected_obstructions", SET_PROJECTED_OBSTRUCTIONS_HASH)
         }
 
         private const val GET_PROJECTED_OBSTRUCTIONS_HASH = 3995934104L

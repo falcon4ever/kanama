@@ -38,9 +38,11 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         @JvmName("setSaturationProperty")
         set(value) = setSaturation(value)
 
-    val colorMap: Map<String, Any?>
+    var colorMap: Map<String, Any?>
         @JvmName("colorMapProperty")
         get() = getColorMap()
+        @JvmName("setColorMapProperty")
+        set(value) = setColorMap(value)
 
     /**
      * Sets this SVG texture's source code.
@@ -163,6 +165,16 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
     /**
      * If set, remaps texture colors according to `Color`-`Color` map.
      *
+     * Generated from Godot docs: DPITexture.set_color_map
+     */
+    fun setColorMap(colorMap: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(setColorMapBind, handle, colorMap)
+    }
+
+    /**
+     * If set, remaps texture colors according to `Color`-`Color` map.
+     *
      * Generated from Godot docs: DPITexture.get_color_map
      */
     fun getColorMap(): Map<String, Any?> {
@@ -192,12 +204,27 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
     }
 
     companion object {
+        /**
+         * Creates a new `DPITexture` and initializes it by allocating and setting the SVG data to
+         * `source`.
+         *
+         * Generated from Godot docs: DPITexture.create_from_string
+         */
+        fun createFromString(source: String, scale: Double = 1.0, saturation: Double = 1.0, colorMap: Map<String, Any?> = emptyMap()): DPITexture? {
+            return DPITexture.wrap(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(createFromStringBind, MemorySegment.NULL, source, scale, saturation, colorMap))
+        }
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): DPITexture? =
             wrap(handle)
 
         internal fun wrap(handle: MemorySegment): DPITexture? =
             if (handle.address() == 0L) null else DPITexture(handle)
+
+        private const val CREATE_FROM_STRING_HASH = 755140520L
+        private val createFromStringBind by lazy {
+            ObjectCalls.getMethodBind("DPITexture", "create_from_string", CREATE_FROM_STRING_HASH)
+        }
 
         private const val SET_SOURCE_HASH = 83702148L
         private val setSourceBind by lazy {
@@ -247,6 +274,11 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         private const val GET_SATURATION_HASH = 1740695150L
         private val getSaturationBind by lazy {
             ObjectCalls.getMethodBind("DPITexture", "get_saturation", GET_SATURATION_HASH)
+        }
+
+        private const val SET_COLOR_MAP_HASH = 4155329257L
+        private val setColorMapBind by lazy {
+            ObjectCalls.getMethodBind("DPITexture", "set_color_map", SET_COLOR_MAP_HASH)
         }
 
         private const val GET_COLOR_MAP_HASH = 3102165223L

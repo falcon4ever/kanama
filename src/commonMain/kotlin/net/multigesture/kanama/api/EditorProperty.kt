@@ -400,6 +400,17 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
         ObjectCalls.ptrcallWithObjectArgs(setLabelReferenceBind, handle, listOf(control.handle))
     }
 
+    /**
+     * If one or several properties have changed, this must be called. `field` is used in case your
+     * editor can modify fields separately (as an example, Vector3.x). The `changing` argument avoids
+     * the editor requesting this property to be refreshed (leave as `false` if unsure).
+     *
+     * Generated from Godot docs: EditorProperty.emit_changed
+     */
+    fun emitChanged(property: String, value: Any?, field: String = "", changing: Boolean = false) {
+        ObjectCalls.ptrcallWithStringNameVariantStringNameBoolArgs(emitChangedBind, handle, property, value, field, changing)
+    }
+
     object Signals {
         const val propertyChanged: String = "property_changed"
         const val multiplePropertiesChanged: String = "multiple_properties_changed"
@@ -592,6 +603,11 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
         private const val SET_LABEL_REFERENCE_HASH = 1496901182L
         private val setLabelReferenceBind by lazy {
             ObjectCalls.getMethodBind("EditorProperty", "set_label_reference", SET_LABEL_REFERENCE_HASH)
+        }
+
+        private const val EMIT_CHANGED_HASH = 1822500399L
+        private val emitChangedBind by lazy {
+            ObjectCalls.getMethodBind("EditorProperty", "emit_changed", EMIT_CHANGED_HASH)
         }
     }
 }

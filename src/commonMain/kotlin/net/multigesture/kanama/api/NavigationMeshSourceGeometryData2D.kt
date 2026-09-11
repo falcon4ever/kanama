@@ -22,9 +22,11 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
         @JvmName("obstructionOutlinesProperty")
         get() = getObstructionOutlines()
 
-    val projectedObstructions: List<Any?>
+    var projectedObstructions: List<Any?>
         @JvmName("projectedObstructionsProperty")
         get() = getProjectedObstructions()
+        @JvmName("setProjectedObstructionsProperty")
+        set(value) = setProjectedObstructions(value)
 
     /**
      * Clears the internal data.
@@ -120,6 +122,17 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
     }
 
     /**
+     * Sets the projected obstructions with an Array of Dictionaries with the following key value
+     * pairs:
+     *
+     * Generated from Godot docs: NavigationMeshSourceGeometryData2D.set_projected_obstructions
+     */
+    fun setProjectedObstructions(projectedObstructions: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, handle, projectedObstructions)
+    }
+
+    /**
      * Returns the projected obstructions as an `Array` of dictionaries. Each `Dictionary` contains the
      * following entries: - `vertices` - A `PackedFloat32Array` that defines the outline points of the
      * projected shape. - `carve` - A `bool` that defines how the projected shape affects the
@@ -196,6 +209,11 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
         private const val CLEAR_PROJECTED_OBSTRUCTIONS_HASH = 3218959716L
         private val clearProjectedObstructionsBind by lazy {
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "clear_projected_obstructions", CLEAR_PROJECTED_OBSTRUCTIONS_HASH)
+        }
+
+        private const val SET_PROJECTED_OBSTRUCTIONS_HASH = 381264803L
+        private val setProjectedObstructionsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "set_projected_obstructions", SET_PROJECTED_OBSTRUCTIONS_HASH)
         }
 
         private const val GET_PROJECTED_OBSTRUCTIONS_HASH = 3995934104L

@@ -16,6 +16,18 @@ object Marshalls {
     }
 
     /**
+     * Returns a Base64-encoded string of the `Variant` `variant`. If `full_objects` is `true`,
+     * encoding objects is allowed (and can potentially include code). Internally, this uses the same
+     * encoding mechanism as the `@GlobalScope.var_to_bytes` method.
+     *
+     * Generated from Godot docs: Marshalls.variant_to_base64
+     */
+    @JvmStatic
+    fun variantToBase64(variant: Any?, fullObjects: Boolean = false): String {
+        return ObjectCalls.ptrcallWithVariantAndBoolArgRetString(variantToBase64Bind, singleton, variant, fullObjects)
+    }
+
+    /**
      * Returns a decoded `Variant` corresponding to the Base64-encoded string `base64_str`. If
      * `allow_objects` is `true`, decoding objects is allowed. Internally, this uses the same decoding
      * mechanism as the `@GlobalScope.bytes_to_var` method. Warning: Deserialized objects can contain
@@ -75,6 +87,11 @@ object Marshalls {
 
     internal fun wrap(handle: MemorySegment): Marshalls? =
         if (handle.address() == 0L) null else this
+
+    private const val VARIANT_TO_BASE64_HASH = 3876248563L
+    private val variantToBase64Bind by lazy {
+        ObjectCalls.getMethodBind("Marshalls", "variant_to_base64", VARIANT_TO_BASE64_HASH)
+    }
 
     private const val BASE64_TO_VARIANT_HASH = 218087648L
     private val base64ToVariantBind by lazy {

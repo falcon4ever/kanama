@@ -119,6 +119,11 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, handle)
     }
 
+    fun sshRunOnRemote(host: String, port: String, sshArg: List<String>, cmdArgs: String, output: List<Any?> = emptyList(), portFwd: Int = -1): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(sshRunOnRemoteBind, handle, host, port, sshArg, cmdArgs, output, portFwd)
+    }
+
     fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = -1): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(sshRunOnRemoteNoWaitBind, handle, host, port, sshArgs, cmdArgs, portFwd)
@@ -264,6 +269,11 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_WORST_MESSAGE_TYPE_HASH = 2580557466L
         private val getWorstMessageTypeBind by lazy {
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_worst_message_type", GET_WORST_MESSAGE_TYPE_HASH)
+        }
+
+        private const val SSH_RUN_ON_REMOTE_HASH = 3163734797L
+        private val sshRunOnRemoteBind by lazy {
+            ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_run_on_remote", SSH_RUN_ON_REMOTE_HASH)
         }
 
         private const val SSH_RUN_ON_REMOTE_NO_WAIT_HASH = 3606362233L

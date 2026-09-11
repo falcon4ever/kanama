@@ -9,6 +9,16 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: ConfigFile
  */
 class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
+    fun setValue(section: String, key: String, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setValueBind, handle, section, key, value)
+    }
+
+    fun getValue(section: String, key: String, default: Any? = null): Any? {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getValueBind, handle, section, key, default)
+    }
+
     fun hasSection(section: String): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, handle, section)
@@ -84,16 +94,6 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, handle)
     }
 
-    // ConfigFile.set_value / get_value are (StringName, StringName, Variant) methods the generator
-    // skips on iOS (Variant value); route through the call() Variant path. Matches desktop's
-    // hand-written Variant-coercion helpers.
-    fun setValue(section: String, key: String, value: Any?) {
-        call("set_value", section, key, value)
-    }
-
-    fun getValue(section: String, key: String, default: Any? = null): Any? =
-        call("get_value", section, key, default)
-
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): ConfigFile? =
@@ -105,6 +105,16 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
         // Instantiate a ConfigFile (RefCounted key/value store).
         fun create(): ConfigFile =
             ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile")))
+
+        private const val SET_VALUE_HASH = 2504492430L
+        private val setValueBind by lazy {
+            ObjectCalls.getMethodBind("ConfigFile", "set_value", SET_VALUE_HASH)
+        }
+
+        private const val GET_VALUE_HASH = 89809366L
+        private val getValueBind by lazy {
+            ObjectCalls.getMethodBind("ConfigFile", "get_value", GET_VALUE_HASH)
+        }
 
         private const val HAS_SECTION_HASH = 3927539163L
         private val hasSectionBind by lazy {

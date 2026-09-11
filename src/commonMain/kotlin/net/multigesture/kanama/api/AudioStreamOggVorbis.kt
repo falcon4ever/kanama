@@ -34,9 +34,11 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
         @JvmName("setBarBeatsProperty")
         set(value) = setBarBeats(value)
 
-    val tags: Map<String, Any?>
+    var tags: Map<String, Any?>
         @JvmName("tagsProperty")
         get() = getTags()
+        @JvmName("setTagsProperty")
+        set(value) = setTags(value)
 
     var loop: Boolean
         @JvmName("loopProperty")
@@ -108,6 +110,11 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
     fun getBarBeats(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBarBeatsBind, handle)
+    }
+
+    fun setTags(tags: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, handle, tags)
     }
 
     fun getTags(): Map<String, Any?> {
@@ -199,6 +206,11 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
         private const val GET_BAR_BEATS_HASH = 3905245786L
         private val getBarBeatsBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamOggVorbis", "get_bar_beats", GET_BAR_BEATS_HASH)
+        }
+
+        private const val SET_TAGS_HASH = 4155329257L
+        private val setTagsBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamOggVorbis", "set_tags", SET_TAGS_HASH)
         }
 
         private const val GET_TAGS_HASH = 3102165223L

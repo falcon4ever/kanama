@@ -121,6 +121,17 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, handle, name)
     }
 
+    /**
+     * Changes the value for the given input. This method is called by an `XRInterface` implementation
+     * and should not be used directly.
+     *
+     * Generated from Godot docs: XRPositionalTracker.set_input
+     */
+    fun setInput(name: String, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInputBind, handle, name, value)
+    }
+
     object Signals {
         const val poseChanged: String = "pose_changed"
         const val poseLostTracking: String = "pose_lost_tracking"
@@ -187,6 +198,11 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
         private const val GET_INPUT_HASH = 2760726917L
         private val getInputBind by lazy {
             ObjectCalls.getMethodBind("XRPositionalTracker", "get_input", GET_INPUT_HASH)
+        }
+
+        private const val SET_INPUT_HASH = 3776071444L
+        private val setInputBind by lazy {
+            ObjectCalls.getMethodBind("XRPositionalTracker", "set_input", SET_INPUT_HASH)
         }
     }
 }

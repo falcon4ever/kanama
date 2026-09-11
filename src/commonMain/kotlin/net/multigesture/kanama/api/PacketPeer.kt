@@ -32,6 +32,18 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Sends a `Variant` as a packet. If `full_objects` is `true`, encoding objects is allowed (and can
+     * potentially include code). Internally, this uses the same encoding mechanism as the
+     * `@GlobalScope.var_to_bytes` method.
+     *
+     * Generated from Godot docs: PacketPeer.put_var
+     */
+    fun putVar(varValue: Any?, fullObjects: Boolean = false): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(putVarBind, handle, varValue, fullObjects)
+    }
+
+    /**
      * Gets a raw packet.
      *
      * Generated from Godot docs: PacketPeer.get_packet
@@ -108,6 +120,11 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_VAR_HASH = 3442865206L
         private val getVarBind by lazy {
             ObjectCalls.getMethodBind("PacketPeer", "get_var", GET_VAR_HASH)
+        }
+
+        private const val PUT_VAR_HASH = 2436251611L
+        private val putVarBind by lazy {
+            ObjectCalls.getMethodBind("PacketPeer", "put_var", PUT_VAR_HASH)
         }
 
         private const val GET_PACKET_HASH = 2115431945L

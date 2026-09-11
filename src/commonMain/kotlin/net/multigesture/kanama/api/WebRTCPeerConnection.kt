@@ -9,6 +9,16 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: WebRTCPeerConnection
  */
 open class WebRTCPeerConnection(handle: MemorySegment) : RefCounted(handle) {
+    fun initialize(configuration: Map<String, Any?> = emptyMap()): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithDictionaryArgRetLong(initializeBind, handle, configuration)
+    }
+
+    fun createDataChannel(label: String, options: Map<String, Any?> = emptyMap()): WebRTCDataChannel? {
+        checkOpen()
+        return WebRTCDataChannel.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(createDataChannelBind, handle, label, options))
+    }
+
     fun createOffer(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(createOfferBind, handle)
@@ -91,6 +101,16 @@ open class WebRTCPeerConnection(handle: MemorySegment) : RefCounted(handle) {
         private const val SET_DEFAULT_EXTENSION_HASH = 3304788590L
         private val setDefaultExtensionBind by lazy {
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "set_default_extension", SET_DEFAULT_EXTENSION_HASH)
+        }
+
+        private const val INITIALIZE_HASH = 2625064318L
+        private val initializeBind by lazy {
+            ObjectCalls.getMethodBind("WebRTCPeerConnection", "initialize", INITIALIZE_HASH)
+        }
+
+        private const val CREATE_DATA_CHANNEL_HASH = 1288557393L
+        private val createDataChannelBind by lazy {
+            ObjectCalls.getMethodBind("WebRTCPeerConnection", "create_data_channel", CREATE_DATA_CHANNEL_HASH)
         }
 
         private const val CREATE_OFFER_HASH = 166280745L

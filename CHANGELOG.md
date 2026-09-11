@@ -7,6 +7,33 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: Dictionary, Array and Variant arguments on every audited shape (task 100, parcel 7)
+
+- A method taking a `Variant`, a `Dictionary` or a generic `Array` argument was callable on iOS
+  only through the hand-written Object-call helpers (`callWithVariantArgs` and the few shapes
+  built on it). Every such method whose other arguments are already audited now gets a generated
+  helper: a Variant argument travels as a `KanamaIosVariantArgDesc {tag, ptr}` that the generic
+  ptrcall dispatch boxes with the Object-call boxer into a Variant cell for the call
+  (`KANAMA_IOS_PT_VARIANT`, appended), and a Dictionary or Array argument travels as the task-29
+  entry blob the dispatch rebuilds into a container cell (the DICTIONARY / ARRAY tags double as
+  argument tags). Every cell is destroyed after the call — the engine copies what it keeps, so
+  nothing outlives the ptrcall. Inside a Variant: null, Boolean, Int/Long, Float/Double, String,
+  NodePath, Vector2/2i/3, Color, RID, object handles, and one level of Map / List with scalar
+  values; inside a Dictionary or Array argument: scalars — a nested container or any other Kotlin
+  object throws (`IosReturnContainerScratch.taggedValue` strict mode) instead of silently passing
+  nil, and the blob for each container argument lives in the call's own scope so two container
+  arguments never share a buffer. 109 generated helpers use the new packers; 222 members on 97
+  classes move from the desktop companions into the shared tree — `ConfigFile.set_value`,
+  `ConfigFile.get_value`, `Expression.execute`, `AudioStreamWAV.set_tags`,
+  `ProjectSettings.set_setting`, `JSON.stringify`, `JSON.from_native`, `RichTextLabel.push_meta`,
+  `TextLine.add_string`, `PhysicsServer3D.body_set_param`, `RenderingServer.global_shader_parameter_set`,
+  `CodeHighlighter.set_keyword_colors`, `DisplayServer.global_menu_add_item`,
+  `EngineDebugger.send_message` among them; the gap index goes from 389 to 171 desktop-only
+  members (147 → 68 companion files, 195 → 96 helpers waited on). Eleven self-test rows round-trip
+  int, float, String, bool, Vector2, null (which erases a ConfigFile key), a Map and a List through
+  `ConfigFile.set_value` / `get_value`, an Array element through `Expression.execute`, a Dictionary
+  through `AudioStreamWAV.set_tags` / `get_tags`, and a Variant through `ProjectSettings.set_setting`.
+
 ### Added — iOS: string-list and typed-array returns on every audited argument shape (task 100, parcel 5)
 
 - A method returning a PackedStringArray or a typed `Array[...]` of RID, Vector2i, Vector3i,

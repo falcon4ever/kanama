@@ -202,9 +202,11 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
         @JvmName("setStructuredTextBidiOverrideProperty")
         set(value) = setStructuredTextBidiOverride(value)
 
-    val structuredTextBidiOverrideOptions: List<Any?>
+    var structuredTextBidiOverrideOptions: List<Any?>
         @JvmName("structuredTextBidiOverrideOptionsProperty")
         get() = getStructuredTextBidiOverrideOptions()
+        @JvmName("setStructuredTextBidiOverrideOptionsProperty")
+        set(value) = setStructuredTextBidiOverrideOptions(value)
 
     var rightIcon: Texture2D?
         @JvmName("rightIconProperty")
@@ -342,6 +344,10 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
 
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+    }
+
+    fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
@@ -815,6 +821,11 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
         private val getStructuredTextBidiOverrideBind by lazy {
             ObjectCalls.getMethodBind("LineEdit", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
+        }
+
+        private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
+        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+            ObjectCalls.getMethodBind("LineEdit", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
         }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L

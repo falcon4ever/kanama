@@ -7,15 +7,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP GLTFState waits on: ptrcallWithByteArrayListArg, ptrcallWithDictionaryArg,
-//   ptrcallWithObjectListArg, ptrcallWithStringNameAndVariantArg, ptrcallWithTypedMaterialListArg,
-//   ptrcallWithTypedStringListArg
+// KANAMA-IOS-GAP GLTFState waits on: ptrcallWithByteArrayListArg, ptrcallWithObjectListArg,
+//   ptrcallWithTypedMaterialListArg, ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-fun GLTFState.setJson(json: Map<String, Any?>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithDictionaryArg(setJsonBind, handle, json)
-}
 
 fun GLTFState.setNodes(nodes: List<GLTFNode>) {
     checkOpen()
@@ -97,16 +91,6 @@ fun GLTFState.setAnimations(animations: List<GLTFAnimation>) {
     ObjectCalls.ptrcallWithObjectListArg(setAnimationsBind, handle, animations)
 }
 
-fun GLTFState.setAdditionalData(extensionName: String, additionalData: Any?) {
-    checkOpen()
-    ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
-}
-
-private const val SET_JSON_HASH = 4155329257L
-private val setJsonBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "set_json", SET_JSON_HASH)
-}
-
 private const val SET_NODES_HASH = 381264803L
 private val setNodesBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_nodes", SET_NODES_HASH)
@@ -185,9 +169,4 @@ private val setSkeletonsBind by lazy {
 private const val SET_ANIMATIONS_HASH = 381264803L
 private val setAnimationsBind by lazy {
     ObjectCalls.getMethodBind("GLTFState", "set_animations", SET_ANIMATIONS_HASH)
-}
-
-private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
-private val setAdditionalDataBind by lazy {
-    ObjectCalls.getMethodBind("GLTFState", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
 }

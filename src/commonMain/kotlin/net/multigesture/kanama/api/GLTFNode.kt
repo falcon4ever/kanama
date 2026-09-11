@@ -248,6 +248,11 @@ class GLTFNode(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
     }
 
+    fun setAdditionalData(extensionName: String, additionalData: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+    }
+
     fun getSceneNodePath(gltfState: GLTFState?, handleSkeletons: Boolean = true): NodePath {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getSceneNodePathBind, handle, gltfState?.requireOpenHandle() ?: MemorySegment.NULL, handleSkeletons)
@@ -409,6 +414,11 @@ class GLTFNode(handle: MemorySegment) : Resource(handle) {
         private const val GET_ADDITIONAL_DATA_HASH = 2138907829L
         private val getAdditionalDataBind by lazy {
             ObjectCalls.getMethodBind("GLTFNode", "get_additional_data", GET_ADDITIONAL_DATA_HASH)
+        }
+
+        private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
+        private val setAdditionalDataBind by lazy {
+            ObjectCalls.getMethodBind("GLTFNode", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
         }
 
         private const val GET_SCENE_NODE_PATH_HASH = 573359477L

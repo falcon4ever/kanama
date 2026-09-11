@@ -11,7 +11,26 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: EditorSceneFormatImporter
  */
 open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle) {
-    // No conservative instance methods emitted yet.
+    /**
+     * Add a specific import option (name and default value only). This function can only be called
+     * from `_get_import_options`.
+     *
+     * Generated from Godot docs: EditorSceneFormatImporter.add_import_option
+     */
+    fun addImportOption(name: String, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, handle, name, value)
+    }
+
+    /**
+     * Add a specific import option. This function can only be called from `_get_import_options`.
+     *
+     * Generated from Godot docs: EditorSceneFormatImporter.add_import_option_advanced
+     */
+    fun addImportOptionAdvanced(type: Long, name: String, defaultValue: Any?, hint: Long = 0L, hintString: String = "", usageFlags: Int = 6) {
+        checkOpen()
+        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, handle, type, name, defaultValue, hint, hintString, usageFlags)
+    }
 
     companion object {
         const val IMPORT_SCENE: Long = 1L
@@ -29,6 +48,14 @@ open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle)
         internal fun wrap(handle: MemorySegment): EditorSceneFormatImporter? =
             if (handle.address() == 0L) null else EditorSceneFormatImporter(handle)
 
-        // No MethodBinds emitted yet.
+        private const val ADD_IMPORT_OPTION_HASH = 402577236L
+        private val addImportOptionBind by lazy {
+            ObjectCalls.getMethodBind("EditorSceneFormatImporter", "add_import_option", ADD_IMPORT_OPTION_HASH)
+        }
+
+        private const val ADD_IMPORT_OPTION_ADVANCED_HASH = 3674075649L
+        private val addImportOptionAdvancedBind by lazy {
+            ObjectCalls.getMethodBind("EditorSceneFormatImporter", "add_import_option_advanced", ADD_IMPORT_OPTION_ADVANCED_HASH)
+        }
     }
 }

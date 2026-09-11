@@ -108,9 +108,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         @JvmName("setTabStopsProperty")
         set(value) = setTabStops(value)
 
-    val customEffects: List<Any?>
+    var customEffects: List<Any?>
         @JvmName("customEffectsProperty")
         get() = getEffects()
+        @JvmName("setCustomEffectsProperty")
+        set(value) = setEffects(value)
 
     var metaUnderlined: Boolean
         @JvmName("metaUnderlinedProperty")
@@ -190,9 +192,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         @JvmName("setStructuredTextBidiOverrideProperty")
         set(value) = setStructuredTextBidiOverride(value)
 
-    val structuredTextBidiOverrideOptions: List<Any?>
+    var structuredTextBidiOverrideOptions: List<Any?>
         @JvmName("structuredTextBidiOverrideOptionsProperty")
         get() = getStructuredTextBidiOverrideOptions()
+        @JvmName("setStructuredTextBidiOverrideOptionsProperty")
+        set(value) = setStructuredTextBidiOverrideOptions(value)
 
     /**
      * Returns the text without BBCode mark-up.
@@ -235,6 +239,33 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      */
     fun addHr(width: Int = 90, height: Int = 2, color: Color, alignment: Long = 1L, widthInPercent: Boolean = true, heightInPercent: Boolean = false) {
         ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(addHrBind, handle, width, height, color, alignment, widthInPercent, heightInPercent)
+    }
+
+    /**
+     * Adds an image's opening and closing tags to the tag stack, optionally providing a `width` and
+     * `height` to resize the image, a `color` to tint the image and a `region` to only use parts of
+     * the image. If `width` or `height` is set to 0, the image size will be adjusted in order to keep
+     * the original aspect ratio. If `width` and `height` are not set, but `region` is, the region's
+     * rect will be used. `key` is an optional identifier, that can be used to modify the image via
+     * `update_image`. If `pad` is set, and the image is smaller than the size specified by `width` and
+     * `height`, the image padding is added to match the size instead of upscaling. Parameters
+     * `width_unit` and `height_unit` determine the units used to calculate the image width and height,
+     * respectively. `alt_text` is used as the image description for assistive apps.
+     *
+     * Generated from Godot docs: RichTextLabel.add_image
+     */
+    fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L, altText: String = "") {
+        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, key, pad, tooltip, widthUnit, heightUnit, altText)
+    }
+
+    /**
+     * Updates the existing images with the key `key`. Only properties specified by `mask` bits are
+     * updated. See `add_image`.
+     *
+     * Generated from Godot docs: RichTextLabel.update_image
+     */
+    fun updateImage(key: Any?, mask: Long, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L) {
+        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, handle, key, mask, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
     }
 
     /**
@@ -393,6 +424,19 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Adds a meta tag to the tag stack. Similar to the BBCode `{text} (something)`, but supports
+     * non-`String` metadata types. If `meta_underlined` is `true`, meta tags display an underline.
+     * This behavior can be customized with `underline_mode`. Note: Meta tags do nothing by default
+     * when clicked. To assign behavior when clicked, connect `meta_clicked` to a function that is
+     * called when the meta tag is clicked.
+     *
+     * Generated from Godot docs: RichTextLabel.push_meta
+     */
+    fun pushMeta(data: Any?, underlineMode: Long = 1L, tooltip: String = "") {
+        ObjectCalls.ptrcallWithVariantLongStringArgs(pushMetaBind, handle, data, underlineMode, tooltip)
+    }
+
+    /**
      * Adds a ``hint`` tag to the tag stack. Same as BBCode `[hint=something]{text}`.
      *
      * Generated from Godot docs: RichTextLabel.push_hint
@@ -545,6 +589,16 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * Adds a custom effect tag to the tag stack. The effect does not need to be in `custom_effects`.
+     * The environment is directly passed to the effect.
+     *
+     * Generated from Godot docs: RichTextLabel.push_customfx
+     */
+    fun pushCustomfx(effect: RichTextEffect?, env: Map<String, Any?>) {
+        ObjectCalls.ptrcallWithObjectAndDictionaryArg(pushCustomfxBind, handle, effect?.requireOpenHandle() ?: MemorySegment.NULL, env)
+    }
+
+    /**
      * Adds a context marker to the tag stack. See `pop_context`.
      *
      * Generated from Godot docs: RichTextLabel.push_context
@@ -609,6 +663,15 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      */
     fun getStructuredTextBidiOverride(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+    }
+
+    /**
+     * Set additional options for BiDi override.
+     *
+     * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override_options
+     */
+    fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
     }
 
     /**
@@ -1471,10 +1534,30 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * The currently installed custom effects. This is an array of `RichTextEffect`s. To add a custom
      * effect, it's more convenient to use `install_effect`.
      *
+     * Generated from Godot docs: RichTextLabel.set_effects
+     */
+    fun setEffects(effects: List<Any?>) {
+        ObjectCalls.ptrcallWithArrayArg(setEffectsBind, handle, effects)
+    }
+
+    /**
+     * The currently installed custom effects. This is an array of `RichTextEffect`s. To add a custom
+     * effect, it's more convenient to use `install_effect`.
+     *
      * Generated from Godot docs: RichTextLabel.get_effects
      */
     fun getEffects(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(getEffectsBind, handle)
+    }
+
+    /**
+     * Installs a custom effect. This can also be done in the Inspector through the `custom_effects`
+     * property. `effect` should be a valid `RichTextEffect`.
+     *
+     * Generated from Godot docs: RichTextLabel.install_effect
+     */
+    fun installEffect(effect: Any?) {
+        ObjectCalls.ptrcallWithVariantArg(installEffectBind, handle, effect)
     }
 
     /**
@@ -1573,6 +1656,16 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("RichTextLabel", "add_hr", ADD_HR_HASH)
         }
 
+        private const val ADD_IMAGE_HASH = 1980227702L
+        private val addImageBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "add_image", ADD_IMAGE_HASH)
+        }
+
+        private const val UPDATE_IMAGE_HASH = 202998225L
+        private val updateImageBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "update_image", UPDATE_IMAGE_HASH)
+        }
+
         private const val NEWLINE_HASH = 3218959716L
         private val newlineBind by lazy {
             ObjectCalls.getMethodBind("RichTextLabel", "newline", NEWLINE_HASH)
@@ -1653,6 +1746,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("RichTextLabel", "push_list", PUSH_LIST_HASH)
         }
 
+        private const val PUSH_META_HASH = 3765356747L
+        private val pushMetaBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "push_meta", PUSH_META_HASH)
+        }
+
         private const val PUSH_HINT_HASH = 83702148L
         private val pushHintBind by lazy {
             ObjectCalls.getMethodBind("RichTextLabel", "push_hint", PUSH_HINT_HASH)
@@ -1728,6 +1826,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("RichTextLabel", "push_bgcolor", PUSH_BGCOLOR_HASH)
         }
 
+        private const val PUSH_CUSTOMFX_HASH = 2337942958L
+        private val pushCustomfxBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "push_customfx", PUSH_CUSTOMFX_HASH)
+        }
+
         private const val PUSH_CONTEXT_HASH = 3218959716L
         private val pushContextBind by lazy {
             ObjectCalls.getMethodBind("RichTextLabel", "push_context", PUSH_CONTEXT_HASH)
@@ -1761,6 +1864,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
         private val getStructuredTextBidiOverrideBind by lazy {
             ObjectCalls.getMethodBind("RichTextLabel", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
+        }
+
+        private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
+        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
         }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L
@@ -2183,9 +2291,19 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("RichTextLabel", "parse_expressions_for_values", PARSE_EXPRESSIONS_FOR_VALUES_HASH)
         }
 
+        private const val SET_EFFECTS_HASH = 381264803L
+        private val setEffectsBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "set_effects", SET_EFFECTS_HASH)
+        }
+
         private const val GET_EFFECTS_HASH = 2915620761L
         private val getEffectsBind by lazy {
             ObjectCalls.getMethodBind("RichTextLabel", "get_effects", GET_EFFECTS_HASH)
+        }
+
+        private const val INSTALL_EFFECT_HASH = 1114965689L
+        private val installEffectBind by lazy {
+            ObjectCalls.getMethodBind("RichTextLabel", "install_effect", INSTALL_EFFECT_HASH)
         }
 
         private const val RELOAD_EFFECTS_HASH = 3218959716L

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -129,9 +130,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         @JvmName("setAutoBraceCompletionHighlightMatchingProperty")
         set(value) = setHighlightMatchingBracesEnabled(value)
 
-    val autoBraceCompletionPairs: Map<String, Any?>
+    var autoBraceCompletionPairs: Map<String, Any?>
         @JvmName("autoBraceCompletionPairsProperty")
         get() = getAutoBraceCompletionPairs()
+        @JvmName("setAutoBraceCompletionPairsProperty")
+        set(value) = setAutoBraceCompletionPairs(value)
 
     /**
      * Size of the tabulation indent (one Tab press) in characters. If `indent_use_spaces` is enabled
@@ -296,6 +299,17 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      */
     fun addAutoBraceCompletionPair(startKey: String, endKey: String) {
         ObjectCalls.ptrcallWithTwoStringArgs(addAutoBraceCompletionPairBind, handle, startKey, endKey)
+    }
+
+    /**
+     * Sets the brace pairs to be autocompleted. For each entry in the dictionary, the key is the
+     * opening brace and the value is the closing brace that matches it. A brace is a `String` made of
+     * symbols. See `auto_brace_completion_enabled` and `auto_brace_completion_highlight_matching`.
+     *
+     * Generated from Godot docs: CodeEdit.set_auto_brace_completion_pairs
+     */
+    fun setAutoBraceCompletionPairs(pairs: Map<String, Any?>) {
+        ObjectCalls.ptrcallWithDictionaryArg(setAutoBraceCompletionPairsBind, handle, pairs)
     }
 
     /**
@@ -950,6 +964,18 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
     }
 
     /**
+     * Submits an item to the queue of potential candidates for the autocomplete menu. Call
+     * `update_code_completion_options` to update the list. `location` indicates location of the option
+     * relative to the location of the code completion query. See `CodeEdit.CodeCompletionLocation` for
+     * how to set this value. Note: This list will replace all current candidates.
+     *
+     * Generated from Godot docs: CodeEdit.add_code_completion_option
+     */
+    fun addCodeCompletionOption(type: Long, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
+        ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, handle, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: MemorySegment.NULL, value, location)
+    }
+
+    /**
      * Submits all completion options added with `add_code_completion_option`. Will try to force the
      * autocomplete menu to popup, if `force` is `true`. Note: This will replace all current
      * candidates.
@@ -1291,6 +1317,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
             ObjectCalls.getMethodBind("CodeEdit", "add_auto_brace_completion_pair", ADD_AUTO_BRACE_COMPLETION_PAIR_HASH)
         }
 
+        private const val SET_AUTO_BRACE_COMPLETION_PAIRS_HASH = 4155329257L
+        private val setAutoBraceCompletionPairsBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "set_auto_brace_completion_pairs", SET_AUTO_BRACE_COMPLETION_PAIRS_HASH)
+        }
+
         private const val GET_AUTO_BRACE_COMPLETION_PAIRS_HASH = 3102165223L
         private val getAutoBraceCompletionPairsBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "get_auto_brace_completion_pairs", GET_AUTO_BRACE_COMPLETION_PAIRS_HASH)
@@ -1624,6 +1655,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         private const val REQUEST_CODE_COMPLETION_HASH = 107499316L
         private val requestCodeCompletionBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "request_code_completion", REQUEST_CODE_COMPLETION_HASH)
+        }
+
+        private const val ADD_CODE_COMPLETION_OPTION_HASH = 3944379502L
+        private val addCodeCompletionOptionBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "add_code_completion_option", ADD_CODE_COMPLETION_OPTION_HASH)
         }
 
         private const val UPDATE_CODE_COMPLETION_OPTIONS_HASH = 2586408642L

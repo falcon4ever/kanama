@@ -180,6 +180,17 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Sets a custom parameter. These are used as local memory, because resources can be reused across
+     * the tree or scenes.
+     *
+     * Generated from Godot docs: AnimationNode.set_parameter
+     */
+    fun setParameter(name: String, value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setParameterBind, handle, name, value)
+    }
+
+    /**
      * Gets the value of a parameter. Parameters are custom local memory used for your animation nodes,
      * given a resource can be reused in multiple trees.
      *
@@ -283,6 +294,11 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
         private const val BLEND_INPUT_HASH = 1361527350L
         private val blendInputBind by lazy {
             ObjectCalls.getMethodBind("AnimationNode", "blend_input", BLEND_INPUT_HASH)
+        }
+
+        private const val SET_PARAMETER_HASH = 3776071444L
+        private val setParameterBind by lazy {
+            ObjectCalls.getMethodBind("AnimationNode", "set_parameter", SET_PARAMETER_HASH)
         }
 
         private const val GET_PARAMETER_HASH = 2760726917L

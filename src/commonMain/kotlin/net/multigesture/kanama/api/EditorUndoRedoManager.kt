@@ -84,6 +84,26 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Register a property value change for "do". If this is the first operation, the `object` will be
+     * used to deduce target undo history.
+     *
+     * Generated from Godot docs: EditorUndoRedoManager.add_do_property
+     */
+    fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, handle, objectValue.handle, property, value)
+    }
+
+    /**
+     * Register a property value change for "undo". If this is the first operation, the `object` will
+     * be used to deduce target undo history.
+     *
+     * Generated from Godot docs: EditorUndoRedoManager.add_undo_property
+     */
+    fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, handle, objectValue.handle, property, value)
+    }
+
+    /**
      * Register a reference for "do" that will be erased if the "do" history is lost. This is useful
      * mostly for new nodes created for the "do" call. Do not use for resources.
      *
@@ -183,6 +203,16 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
         private const val ADD_UNDO_METHOD_HASH = 1517810467L
         private val addUndoMethodBind by lazy {
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_undo_method", ADD_UNDO_METHOD_HASH)
+        }
+
+        private const val ADD_DO_PROPERTY_HASH = 1017172818L
+        private val addDoPropertyBind by lazy {
+            ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_do_property", ADD_DO_PROPERTY_HASH)
+        }
+
+        private const val ADD_UNDO_PROPERTY_HASH = 1017172818L
+        private val addUndoPropertyBind by lazy {
+            ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_undo_property", ADD_UNDO_PROPERTY_HASH)
         }
 
         private const val ADD_DO_REFERENCE_HASH = 3975164845L

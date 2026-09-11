@@ -34,6 +34,16 @@ object GDScriptLanguageProtocol {
     }
 
     @JvmStatic
+    fun initialize(params: Map<String, Any?>): Any? {
+        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(initializeBind, singleton, params)
+    }
+
+    @JvmStatic
+    fun initialized(params: Any?) {
+        ObjectCalls.ptrcallWithVariantArg(initializedBind, singleton, params)
+    }
+
+    @JvmStatic
     fun onClientConnected(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(onClientConnectedBind, singleton)
     }
@@ -41,6 +51,11 @@ object GDScriptLanguageProtocol {
     @JvmStatic
     fun onClientDisconnected(clientId: Int) {
         ObjectCalls.ptrcallWithIntArg(onClientDisconnectedBind, singleton, clientId)
+    }
+
+    @JvmStatic
+    fun notifyClient(method: String, params: Any? = null, clientId: Int = -1) {
+        ObjectCalls.ptrcallWithStringVariantAndIntArg(notifyClientBind, singleton, method, params, clientId)
     }
 
     @JvmStatic
@@ -70,6 +85,16 @@ object GDScriptLanguageProtocol {
         ObjectCalls.getMethodBind("GDScriptLanguageProtocol", "is_initialized", IS_INITIALIZED_HASH)
     }
 
+    private const val INITIALIZE_HASH = 3762224011L
+    private val initializeBind by lazy {
+        ObjectCalls.getMethodBind("GDScriptLanguageProtocol", "initialize", INITIALIZE_HASH)
+    }
+
+    private const val INITIALIZED_HASH = 1114965689L
+    private val initializedBind by lazy {
+        ObjectCalls.getMethodBind("GDScriptLanguageProtocol", "initialized", INITIALIZED_HASH)
+    }
+
     private const val ON_CLIENT_CONNECTED_HASH = 166280745L
     private val onClientConnectedBind by lazy {
         ObjectCalls.getMethodBind("GDScriptLanguageProtocol", "on_client_connected", ON_CLIENT_CONNECTED_HASH)
@@ -78,5 +103,10 @@ object GDScriptLanguageProtocol {
     private const val ON_CLIENT_DISCONNECTED_HASH = 1286410249L
     private val onClientDisconnectedBind by lazy {
         ObjectCalls.getMethodBind("GDScriptLanguageProtocol", "on_client_disconnected", ON_CLIENT_DISCONNECTED_HASH)
+    }
+
+    private const val NOTIFY_CLIENT_HASH = 2511212011L
+    private val notifyClientBind by lazy {
+        ObjectCalls.getMethodBind("GDScriptLanguageProtocol", "notify_client", NOTIFY_CLIENT_HASH)
     }
 }

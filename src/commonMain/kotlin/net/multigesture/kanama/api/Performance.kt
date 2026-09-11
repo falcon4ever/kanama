@@ -92,6 +92,19 @@ object Performance {
     }
 
     /**
+     * Adds a custom monitor with the name `id`. You can specify the category of the monitor using
+     * slash delimiters in `id` (for example: `"Game/NumberOfNPCs"`). If there is more than one slash
+     * delimiter, then the default category is used. The default category is `"Custom"`. Prints an
+     * error if given `id` is already present.
+     *
+     * Generated from Godot docs: Performance.add_custom_monitor
+     */
+    @JvmStatic
+    fun addCustomMonitor(id: String, callable: GodotCallable, arguments: List<Any?> = emptyList(), type: Long = 0L) {
+        ObjectCalls.ptrcallWithStringNameCallableArrayLongArgs(addCustomMonitorBind, singleton, id, callable.target.handle, callable.method, arguments, type)
+    }
+
+    /**
      * Removes the custom monitor with given `id`. Prints an error if the given `id` is already absent.
      *
      * Generated from Godot docs: Performance.remove_custom_monitor
@@ -163,6 +176,11 @@ object Performance {
     private const val GET_MONITOR_HASH = 1943275655L
     private val getMonitorBind by lazy {
         ObjectCalls.getMethodBind("Performance", "get_monitor", GET_MONITOR_HASH)
+    }
+
+    private const val ADD_CUSTOM_MONITOR_HASH = 3655788610L
+    private val addCustomMonitorBind by lazy {
+        ObjectCalls.getMethodBind("Performance", "add_custom_monitor", ADD_CUSTOM_MONITOR_HASH)
     }
 
     private const val REMOVE_CUSTOM_MONITOR_HASH = 3304788590L

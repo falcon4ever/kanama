@@ -54,9 +54,11 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
         @JvmName("setStereoProperty")
         set(value) = setStereo(value)
 
-    val tags: Map<String, Any?>
+    var tags: Map<String, Any?>
         @JvmName("tagsProperty")
         get() = getTags()
+        @JvmName("setTagsProperty")
+        set(value) = setTags(value)
 
     /**
      * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
@@ -221,6 +223,20 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      * always existing. Note: Only WAV files using a `LIST` chunk with an identifier of `INFO` to
      * encode the tags are currently supported.
      *
+     * Generated from Godot docs: AudioStreamWAV.set_tags
+     */
+    fun setTags(tags: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, handle, tags)
+    }
+
+    /**
+     * Contains user-defined tags if found in the WAV data. Commonly used tags include `title`,
+     * `artist`, `album`, `tracknumber`, and `date` (`date` does not have a standard date format).
+     * Note: No tag is guaranteed to be present in every file, so make sure to account for the keys not
+     * always existing. Note: Only WAV files using a `LIST` chunk with an identifier of `INFO` to
+     * encode the tags are currently supported.
+     *
      * Generated from Godot docs: AudioStreamWAV.get_tags
      */
     fun getTags(): Map<String, Any?> {
@@ -241,6 +257,27 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
     }
 
     companion object {
+        /**
+         * Creates a new `AudioStreamWAV` instance from the given buffer. The buffer must contain WAV data.
+         * The keys and values of `options` match the properties of `ResourceImporterWAV`. The usage of
+         * `options` is identical to `AudioStreamWAV.load_from_file`.
+         *
+         * Generated from Godot docs: AudioStreamWAV.load_from_buffer
+         */
+        fun loadFromBuffer(streamData: ByteArray, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
+            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithByteArrayAndDictionaryArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData, options))
+        }
+
+        /**
+         * Creates a new `AudioStreamWAV` instance from the given file path. The file must be in WAV
+         * format. The keys and values of `options` match the properties of `ResourceImporterWAV`.
+         *
+         * Generated from Godot docs: AudioStreamWAV.load_from_file
+         */
+        fun loadFromFile(path: String, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
+            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(loadFromFileBind, MemorySegment.NULL, path, options))
+        }
+
         const val FORMAT_8_BITS: Long = 0L
         const val FORMAT_16_BITS: Long = 1L
         const val FORMAT_IMA_ADPCM: Long = 2L
@@ -256,6 +293,16 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
 
         internal fun wrap(handle: MemorySegment): AudioStreamWAV? =
             if (handle.address() == 0L) null else AudioStreamWAV(handle)
+
+        private const val LOAD_FROM_BUFFER_HASH = 4266838938L
+        private val loadFromBufferBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamWAV", "load_from_buffer", LOAD_FROM_BUFFER_HASH)
+        }
+
+        private const val LOAD_FROM_FILE_HASH = 4015802384L
+        private val loadFromFileBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamWAV", "load_from_file", LOAD_FROM_FILE_HASH)
+        }
 
         private const val SET_DATA_HASH = 2971499966L
         private val setDataBind by lazy {
@@ -325,6 +372,11 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
         private const val IS_STEREO_HASH = 36873697L
         private val isStereoBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamWAV", "is_stereo", IS_STEREO_HASH)
+        }
+
+        private const val SET_TAGS_HASH = 4155329257L
+        private val setTagsBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamWAV", "set_tags", SET_TAGS_HASH)
         }
 
         private const val GET_TAGS_HASH = 3102165223L

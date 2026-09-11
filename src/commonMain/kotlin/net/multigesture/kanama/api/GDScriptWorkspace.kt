@@ -29,6 +29,11 @@ class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringArgRetDictionary(generateScriptApiBind, handle, path)
     }
 
+    fun didDeleteFiles(params: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(didDeleteFilesBind, handle, params)
+    }
+
     fun parseScript(path: String, content: String): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, handle, path, content)
@@ -70,6 +75,11 @@ class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
         private const val GENERATE_SCRIPT_API_HASH = 2786125124L
         private val generateScriptApiBind by lazy {
             ObjectCalls.getMethodBind("GDScriptWorkspace", "generate_script_api", GENERATE_SCRIPT_API_HASH)
+        }
+
+        private const val DIDDELETEFILES_HASH = 4155329257L
+        private val didDeleteFilesBind by lazy {
+            ObjectCalls.getMethodBind("GDScriptWorkspace", "didDeleteFiles", DIDDELETEFILES_HASH)
         }
 
         private const val PARSE_SCRIPT_HASH = 852856452L

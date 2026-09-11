@@ -12,15 +12,28 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: RDPipelineSpecializationConstant
  */
 class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handle) {
-    val value: Any?
+    var value: Any?
         @JvmName("valueProperty")
         get() = getValue()
+        @JvmName("setValueProperty")
+        set(value) = setValue(value)
 
     var constantId: Long
         @JvmName("constantIdProperty")
         get() = getConstantId()
         @JvmName("setConstantIdProperty")
         set(value) = setConstantId(value)
+
+    /**
+     * The specialization constant's value. Only `bool`, `int` and `float` types are valid for
+     * specialization constants.
+     *
+     * Generated from Godot docs: RDPipelineSpecializationConstant.set_value
+     */
+    fun setValue(value: Any?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithVariantArg(setValueBind, handle, value)
+    }
 
     /**
      * The specialization constant's value. Only `bool`, `int` and `float` types are valid for
@@ -62,6 +75,11 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
 
         internal fun wrap(handle: MemorySegment): RDPipelineSpecializationConstant? =
             if (handle.address() == 0L) null else RDPipelineSpecializationConstant(handle)
+
+        private const val SET_VALUE_HASH = 1114965689L
+        private val setValueBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineSpecializationConstant", "set_value", SET_VALUE_HASH)
+        }
 
         private const val GET_VALUE_HASH = 1214101251L
         private val getValueBind by lazy {

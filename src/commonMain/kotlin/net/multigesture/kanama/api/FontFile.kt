@@ -106,9 +106,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         @JvmName("setFixedSizeScaleModeProperty")
         set(value) = setFixedSizeScaleMode(value)
 
-    val opentypeFeatureOverrides: Map<String, Any?>
+    var opentypeFeatureOverrides: Map<String, Any?>
         @JvmName("opentypeFeatureOverridesProperty")
         get() = getOpentypeFeatureOverrides()
+        @JvmName("setOpentypeFeatureOverridesProperty")
+        set(value) = setOpentypeFeatureOverrides(value)
 
     var oversampling: Double
         @JvmName("oversamplingProperty")
@@ -623,6 +625,17 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     fun removeSizeCache(cacheIndex: Int, size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndVector2iArg(removeSizeCacheBind, handle, cacheIndex, size)
+    }
+
+    /**
+     * Sets variation coordinates for the specified font cache entry. See
+     * `Font.get_supported_variation_list` for more info.
+     *
+     * Generated from Godot docs: FontFile.set_variation_coordinates
+     */
+    fun setVariationCoordinates(cacheIndex: Int, variationCoordinates: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndDictionaryArg(setVariationCoordinatesBind, handle, cacheIndex, variationCoordinates)
     }
 
     /**
@@ -1199,6 +1212,16 @@ class FontFile(handle: MemorySegment) : Font(handle) {
     /**
      * Font OpenType feature set override.
      *
+     * Generated from Godot docs: FontFile.set_opentype_feature_overrides
+     */
+    fun setOpentypeFeatureOverrides(overrides: Map<String, Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeatureOverridesBind, handle, overrides)
+    }
+
+    /**
+     * Font OpenType feature set override.
+     *
      * Generated from Godot docs: FontFile.get_opentype_feature_overrides
      */
     fun getOpentypeFeatureOverrides(): Map<String, Any?> {
@@ -1458,6 +1481,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         private const val REMOVE_SIZE_CACHE_HASH = 2311374912L
         private val removeSizeCacheBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "remove_size_cache", REMOVE_SIZE_CACHE_HASH)
+        }
+
+        private const val SET_VARIATION_COORDINATES_HASH = 64545446L
+        private val setVariationCoordinatesBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "set_variation_coordinates", SET_VARIATION_COORDINATES_HASH)
         }
 
         private const val GET_VARIATION_COORDINATES_HASH = 3485342025L
@@ -1738,6 +1766,11 @@ class FontFile(handle: MemorySegment) : Font(handle) {
         private const val GET_SCRIPT_SUPPORT_OVERRIDES_HASH = 1139954409L
         private val getScriptSupportOverridesBind by lazy {
             ObjectCalls.getMethodBind("FontFile", "get_script_support_overrides", GET_SCRIPT_SUPPORT_OVERRIDES_HASH)
+        }
+
+        private const val SET_OPENTYPE_FEATURE_OVERRIDES_HASH = 4155329257L
+        private val setOpentypeFeatureOverridesBind by lazy {
+            ObjectCalls.getMethodBind("FontFile", "set_opentype_feature_overrides", SET_OPENTYPE_FEATURE_OVERRIDES_HASH)
         }
 
         private const val GET_OPENTYPE_FEATURE_OVERRIDES_HASH = 3102165223L

@@ -7,18 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP Skeleton3D waits on: ptrcallWithIntStringNameAndVariantArg,
-//   ptrcallWithStringNameListArg
+// KANAMA-IOS-GAP Skeleton3D waits on: ptrcallWithStringNameListArg
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Sets the metadata with the given `key` to `value` for the bone at index `bone_idx`.
- *
- * Generated from Godot docs: Skeleton3D.set_bone_meta
- */
-fun Skeleton3D.setBoneMeta(boneIdx: Int, key: String, value: Any?) {
-    ObjectCalls.ptrcallWithIntStringNameAndVariantArg(setBoneMetaBind, handle, boneIdx, key, value)
-}
 
 /**
  * Tells the `PhysicalBone3D` nodes in the Skeleton to start simulating and reacting to the physics
@@ -29,11 +19,6 @@ fun Skeleton3D.setBoneMeta(boneIdx: Int, key: String, value: Any?) {
  */
 fun Skeleton3D.physicalBonesStartSimulation(bones: List<String>) {
     ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, handle, bones)
-}
-
-private const val SET_BONE_META_HASH = 702482756L
-private val setBoneMetaBind by lazy {
-    ObjectCalls.getMethodBind("Skeleton3D", "set_bone_meta", SET_BONE_META_HASH)
 }
 
 private const val PHYSICAL_BONES_START_SIMULATION_HASH = 2787316981L

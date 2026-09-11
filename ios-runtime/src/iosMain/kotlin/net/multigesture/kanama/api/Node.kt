@@ -250,6 +250,10 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         ObjectCalls.ptrcallWithIntArg(propagateNotificationBind, handle, what)
     }
 
+    fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
+        ObjectCalls.ptrcallWithStringNameArrayBoolArgs(propagateCallBind, handle, method, args, parentFirst)
+    }
+
     fun setPhysicsProcess(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessBind, handle, enable)
     }
@@ -490,6 +494,10 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, handle))
     }
 
+    fun rpcConfig(method: String, config: Any?) {
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(rpcConfigBind, handle, method, config)
+    }
+
     fun getNodeRpcConfig(): Any? {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getNodeRpcConfigBind, handle)
     }
@@ -534,12 +542,20 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         return ObjectCalls.callWithVariantArgs(callDeferredThreadGroupBind, handle, listOf(method, *extraArgs))
     }
 
+    fun setDeferredThreadGroup(property: String, value: Any?) {
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredThreadGroupBind, handle, property, value)
+    }
+
     fun notifyDeferredThreadGroup(what: Int) {
         ObjectCalls.ptrcallWithIntArg(notifyDeferredThreadGroupBind, handle, what)
     }
 
     fun callThreadSafe(method: String, vararg extraArgs: Any?): Any? {
         return ObjectCalls.callWithVariantArgs(callThreadSafeBind, handle, listOf(method, *extraArgs))
+    }
+
+    fun setThreadSafe(property: String, value: Any?) {
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setThreadSafeBind, handle, property, value)
     }
 
     fun notifyThreadSafe(what: Int) {
@@ -580,12 +596,6 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         IosGodot.nodeCreateTween(handle.address()).takeIf { it != 0L }?.let {
             Tween(MemorySegment.ofAddress(it))
         }
-
-    // Node.propagate_call(method, args, parent_first) via the Variant call path (Array arg boxed
-    // through callWithVariantArgs). Matches desktop Node.propagateCall.
-    fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
-        call("propagate_call", method, args, parentFirst)
-    }
 
     // String overloads for the NodePath-typed accessors (desktop exposes both), so demo code can
     // pass a plain path literal.
@@ -914,6 +924,11 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("Node", "propagate_notification", PROPAGATE_NOTIFICATION_HASH)
         }
 
+        private const val PROPAGATE_CALL_HASH = 1871007965L
+        private val propagateCallBind by lazy {
+            ObjectCalls.getMethodBind("Node", "propagate_call", PROPAGATE_CALL_HASH)
+        }
+
         private const val SET_PHYSICS_PROCESS_HASH = 2586408642L
         private val setPhysicsProcessBind by lazy {
             ObjectCalls.getMethodBind("Node", "set_physics_process", SET_PHYSICS_PROCESS_HASH)
@@ -1214,6 +1229,11 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("Node", "get_multiplayer", GET_MULTIPLAYER_HASH)
         }
 
+        private const val RPC_CONFIG_HASH = 3776071444L
+        private val rpcConfigBind by lazy {
+            ObjectCalls.getMethodBind("Node", "rpc_config", RPC_CONFIG_HASH)
+        }
+
         private const val GET_NODE_RPC_CONFIG_HASH = 1214101251L
         private val getNodeRpcConfigBind by lazy {
             ObjectCalls.getMethodBind("Node", "get_node_rpc_config", GET_NODE_RPC_CONFIG_HASH)
@@ -1269,6 +1289,11 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("Node", "call_deferred_thread_group", CALL_DEFERRED_THREAD_GROUP_HASH)
         }
 
+        private const val SET_DEFERRED_THREAD_GROUP_HASH = 3776071444L
+        private val setDeferredThreadGroupBind by lazy {
+            ObjectCalls.getMethodBind("Node", "set_deferred_thread_group", SET_DEFERRED_THREAD_GROUP_HASH)
+        }
+
         private const val NOTIFY_DEFERRED_THREAD_GROUP_HASH = 1286410249L
         private val notifyDeferredThreadGroupBind by lazy {
             ObjectCalls.getMethodBind("Node", "notify_deferred_thread_group", NOTIFY_DEFERRED_THREAD_GROUP_HASH)
@@ -1277,6 +1302,11 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         private const val CALL_THREAD_SAFE_HASH = 3400424181L
         private val callThreadSafeBind by lazy {
             ObjectCalls.getMethodBind("Node", "call_thread_safe", CALL_THREAD_SAFE_HASH)
+        }
+
+        private const val SET_THREAD_SAFE_HASH = 3776071444L
+        private val setThreadSafeBind by lazy {
+            ObjectCalls.getMethodBind("Node", "set_thread_safe", SET_THREAD_SAFE_HASH)
         }
 
         private const val NOTIFY_THREAD_SAFE_HASH = 1286410249L

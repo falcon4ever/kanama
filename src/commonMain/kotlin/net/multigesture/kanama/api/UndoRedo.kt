@@ -71,6 +71,24 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Register a `property` that would change its value to `value` when the action is committed.
+     *
+     * Generated from Godot docs: UndoRedo.add_do_property
+     */
+    fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, handle, objectValue.handle, property, value)
+    }
+
+    /**
+     * Register a `property` that would change its value to `value` when the action is undone.
+     *
+     * Generated from Godot docs: UndoRedo.add_undo_property
+     */
+    fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, handle, objectValue.handle, property, value)
+    }
+
+    /**
      * Register a reference to an object that will be erased if the "do" history is deleted. This is
      * useful for objects added by the "do" action and removed by the "undo" action. When the "do"
      * history is deleted, if the object is a `RefCounted`, it will be unreferenced. Otherwise, it will
@@ -269,6 +287,16 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
         private const val ADD_UNDO_METHOD_HASH = 1611583062L
         private val addUndoMethodBind by lazy {
             ObjectCalls.getMethodBind("UndoRedo", "add_undo_method", ADD_UNDO_METHOD_HASH)
+        }
+
+        private const val ADD_DO_PROPERTY_HASH = 1017172818L
+        private val addDoPropertyBind by lazy {
+            ObjectCalls.getMethodBind("UndoRedo", "add_do_property", ADD_DO_PROPERTY_HASH)
+        }
+
+        private const val ADD_UNDO_PROPERTY_HASH = 1017172818L
+        private val addUndoPropertyBind by lazy {
+            ObjectCalls.getMethodBind("UndoRedo", "add_undo_property", ADD_UNDO_PROPERTY_HASH)
         }
 
         private const val ADD_DO_REFERENCE_HASH = 3975164845L

@@ -16,9 +16,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
         @JvmName("setOutputPortForPreviewProperty")
         set(value) = setOutputPortForPreview(value)
 
-    val defaultInputValues: List<Any?>
+    var defaultInputValues: List<Any?>
         @JvmName("defaultInputValuesProperty")
         get() = getDefaultInputValues()
+        @JvmName("setDefaultInputValuesProperty")
+        set(value) = setDefaultInputValues(value)
 
     var linkedParentGraphFrame: Int
         @JvmName("linkedParentGraphFrameProperty")
@@ -41,6 +43,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortForPreviewBind, handle)
     }
 
+    fun setInputPortDefaultValue(port: Int, value: Any?, prevValue: Any? = null) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndTwoVariantArgs(setInputPortDefaultValueBind, handle, port, value, prevValue)
+    }
+
     fun getInputPortDefaultValue(port: Int): Any? {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getInputPortDefaultValueBind, handle, port)
@@ -54,6 +61,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
     fun clearDefaultInputValues() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearDefaultInputValuesBind, handle)
+    }
+
+    fun setDefaultInputValues(values: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setDefaultInputValuesBind, handle, values)
     }
 
     fun getDefaultInputValues(): List<Any?> {
@@ -105,6 +117,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("VisualShaderNode", "get_output_port_for_preview", GET_OUTPUT_PORT_FOR_PREVIEW_HASH)
         }
 
+        private const val SET_INPUT_PORT_DEFAULT_VALUE_HASH = 150923387L
+        private val setInputPortDefaultValueBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNode", "set_input_port_default_value", SET_INPUT_PORT_DEFAULT_VALUE_HASH)
+        }
+
         private const val GET_INPUT_PORT_DEFAULT_VALUE_HASH = 4227898402L
         private val getInputPortDefaultValueBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNode", "get_input_port_default_value", GET_INPUT_PORT_DEFAULT_VALUE_HASH)
@@ -118,6 +135,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
         private const val CLEAR_DEFAULT_INPUT_VALUES_HASH = 3218959716L
         private val clearDefaultInputValuesBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNode", "clear_default_input_values", CLEAR_DEFAULT_INPUT_VALUES_HASH)
+        }
+
+        private const val SET_DEFAULT_INPUT_VALUES_HASH = 381264803L
+        private val setDefaultInputValuesBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNode", "set_default_input_values", SET_DEFAULT_INPUT_VALUES_HASH)
         }
 
         private const val GET_DEFAULT_INPUT_VALUES_HASH = 3995934104L

@@ -187,6 +187,16 @@ object AccessibilityServer {
     }
 
     /**
+     * Sets the metadata of the accessibility element `id` to `meta`.
+     *
+     * Generated from Godot docs: AccessibilityServer.element_set_meta
+     */
+    @JvmStatic
+    fun elementSetMeta(id: RID, meta: Any?) {
+        ObjectCalls.ptrcallWithRIDAndVariantArg(elementSetMetaBind, singleton, id, meta)
+    }
+
+    /**
      * Returns the metadata of the accessibility element `id`.
      *
      * Generated from Godot docs: AccessibilityServer.element_get_meta
@@ -911,6 +921,11 @@ object AccessibilityServer {
     private const val FREE_ELEMENT_HASH = 2722037293L
     private val freeElementBind by lazy {
         ObjectCalls.getMethodBind("AccessibilityServer", "free_element", FREE_ELEMENT_HASH)
+    }
+
+    private const val ELEMENT_SET_META_HASH = 3175752987L
+    private val elementSetMetaBind by lazy {
+        ObjectCalls.getMethodBind("AccessibilityServer", "element_set_meta", ELEMENT_SET_META_HASH)
     }
 
     private const val ELEMENT_GET_META_HASH = 4171304767L

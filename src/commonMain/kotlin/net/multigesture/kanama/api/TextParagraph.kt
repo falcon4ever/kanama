@@ -233,6 +233,17 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Overrides BiDi for the structured text. Override ranges should cover full source text without
+     * overlaps. BiDi algorithm will be used on each range separately.
+     *
+     * Generated from Godot docs: TextParagraph.set_bidi_override
+     */
+    fun setBidiOverride(override: List<Any?>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, handle, override)
+    }
+
+    /**
      * Sets drop cap, overrides previously set drop cap. Drop cap (dropped capital) is a decorative
      * element at the beginning of a paragraph that is larger than the rest of the text.
      *
@@ -251,6 +262,47 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
     fun clearDropcap() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearDropcapBind, handle)
+    }
+
+    /**
+     * Adds text span and font to draw it.
+     *
+     * Generated from Godot docs: TextParagraph.add_string
+     */
+    fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
+    }
+
+    /**
+     * Adds inline object to the text buffer, `key` must be unique. In the text, object is represented
+     * as `length` object replacement characters.
+     *
+     * Generated from Godot docs: TextParagraph.add_object
+     */
+    fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, handle, key, size, inlineAlign, length, baseline)
+    }
+
+    /**
+     * Sets new size and alignment of embedded object.
+     *
+     * Generated from Godot docs: TextParagraph.resize_object
+     */
+    fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, handle, key, size, inlineAlign, baseline)
+    }
+
+    /**
+     * Returns `true` if an object with `key` is embedded in this shaped text buffer.
+     *
+     * Generated from Godot docs: TextParagraph.has_object
+     */
+    fun hasObject(key: Any?): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, handle, key)
     }
 
     /**
@@ -506,6 +558,16 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns bounding rectangle of the inline object.
+     *
+     * Generated from Godot docs: TextParagraph.get_line_object_rect
+     */
+    fun getLineObjectRect(line: Int, key: Any?): Rect2 {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntAndVariantArgRetRect2(getLineObjectRectBind, handle, line, key)
+    }
+
+    /**
      * Returns size of the bounding box of the line of text. Returned size is rounded up.
      *
      * Generated from Godot docs: TextParagraph.get_line_size
@@ -754,6 +816,11 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextParagraph", "get_preserve_control", GET_PRESERVE_CONTROL_HASH)
         }
 
+        private const val SET_BIDI_OVERRIDE_HASH = 381264803L
+        private val setBidiOverrideBind by lazy {
+            ObjectCalls.getMethodBind("TextParagraph", "set_bidi_override", SET_BIDI_OVERRIDE_HASH)
+        }
+
         private const val SET_DROPCAP_HASH = 2498990330L
         private val setDropcapBind by lazy {
             ObjectCalls.getMethodBind("TextParagraph", "set_dropcap", SET_DROPCAP_HASH)
@@ -762,6 +829,26 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
         private const val CLEAR_DROPCAP_HASH = 3218959716L
         private val clearDropcapBind by lazy {
             ObjectCalls.getMethodBind("TextParagraph", "clear_dropcap", CLEAR_DROPCAP_HASH)
+        }
+
+        private const val ADD_STRING_HASH = 621426851L
+        private val addStringBind by lazy {
+            ObjectCalls.getMethodBind("TextParagraph", "add_string", ADD_STRING_HASH)
+        }
+
+        private const val ADD_OBJECT_HASH = 1316529304L
+        private val addObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextParagraph", "add_object", ADD_OBJECT_HASH)
+        }
+
+        private const val RESIZE_OBJECT_HASH = 2095776372L
+        private val resizeObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextParagraph", "resize_object", RESIZE_OBJECT_HASH)
+        }
+
+        private const val HAS_OBJECT_HASH = 77467830L
+        private val hasObjectBind by lazy {
+            ObjectCalls.getMethodBind("TextParagraph", "has_object", HAS_OBJECT_HASH)
         }
 
         private const val SET_ALIGNMENT_HASH = 2312603777L
@@ -887,6 +974,11 @@ class TextParagraph(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_LINE_OBJECTS_HASH = 663333327L
         private val getLineObjectsBind by lazy {
             ObjectCalls.getMethodBind("TextParagraph", "get_line_objects", GET_LINE_OBJECTS_HASH)
+        }
+
+        private const val GET_LINE_OBJECT_RECT_HASH = 204315017L
+        private val getLineObjectRectBind by lazy {
+            ObjectCalls.getMethodBind("TextParagraph", "get_line_object_rect", GET_LINE_OBJECT_RECT_HASH)
         }
 
         private const val GET_LINE_SIZE_HASH = 2299179447L
