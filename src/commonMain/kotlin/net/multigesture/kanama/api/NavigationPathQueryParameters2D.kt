@@ -68,13 +68,17 @@ class NavigationPathQueryParameters2D(handle: MemorySegment) : RefCounted(handle
         @JvmName("setSimplifyEpsilonProperty")
         set(value) = setSimplifyEpsilon(value)
 
-    val excludedRegions: List<RID>
+    var excludedRegions: List<RID>
         @JvmName("excludedRegionsProperty")
         get() = getExcludedRegions()
+        @JvmName("setExcludedRegionsProperty")
+        set(value) = setExcludedRegions(value)
 
-    val includedRegions: List<RID>
+    var includedRegions: List<RID>
         @JvmName("includedRegionsProperty")
         get() = getIncludedRegions()
+        @JvmName("setIncludedRegionsProperty")
+        set(value) = setIncludedRegions(value)
 
     var pathReturnMaxLength: Double
         @JvmName("pathReturnMaxLengthProperty")
@@ -296,11 +300,40 @@ class NavigationPathQueryParameters2D(handle: MemorySegment) : RefCounted(handle
      * update the original property value. To update the value you need to modify the returned array,
      * and then set it to the property again.
      *
+     * Generated from Godot docs: NavigationPathQueryParameters2D.set_included_regions
+     */
+    fun setIncludedRegions(regions: List<RID>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDListArg(setIncludedRegionsBind, handle, regions)
+    }
+
+    /**
+     * The list of region `RID`s that will be included by the path query. Use
+     * `NavigationRegion2D.get_rid` to get the `RID` associated with a `NavigationRegion2D` node. If
+     * left empty all regions are included. If a region ends up being both included and excluded at the
+     * same time it will be excluded. Note: The returned array is copied and any changes to it will not
+     * update the original property value. To update the value you need to modify the returned array,
+     * and then set it to the property again.
+     *
      * Generated from Godot docs: NavigationPathQueryParameters2D.get_included_regions
      */
     fun getIncludedRegions(): List<RID> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRIDList(getIncludedRegionsBind, handle)
+    }
+
+    /**
+     * The list of region `RID`s that will be excluded from the path query. Use
+     * `NavigationRegion2D.get_rid` to get the `RID` associated with a `NavigationRegion2D` node. Note:
+     * The returned array is copied and any changes to it will not update the original property value.
+     * To update the value you need to modify the returned array, and then set it to the property
+     * again.
+     *
+     * Generated from Godot docs: NavigationPathQueryParameters2D.set_excluded_regions
+     */
+    fun setExcludedRegions(regions: List<RID>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDListArg(setExcludedRegionsBind, handle, regions)
     }
 
     /**
@@ -535,9 +568,19 @@ class NavigationPathQueryParameters2D(handle: MemorySegment) : RefCounted(handle
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_simplify_epsilon", GET_SIMPLIFY_EPSILON_HASH)
         }
 
+        private const val SET_INCLUDED_REGIONS_HASH = 381264803L
+        private val setIncludedRegionsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_included_regions", SET_INCLUDED_REGIONS_HASH)
+        }
+
         private const val GET_INCLUDED_REGIONS_HASH = 3995934104L
         private val getIncludedRegionsBind by lazy {
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_included_regions", GET_INCLUDED_REGIONS_HASH)
+        }
+
+        private const val SET_EXCLUDED_REGIONS_HASH = 381264803L
+        private val setExcludedRegionsBind by lazy {
+            ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_excluded_regions", SET_EXCLUDED_REGIONS_HASH)
         }
 
         private const val GET_EXCLUDED_REGIONS_HASH = 3995934104L

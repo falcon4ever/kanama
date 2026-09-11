@@ -1414,6 +1414,21 @@ object DisplayServer {
     }
 
     /**
+     * Returns a screenshot of the screen region defined by `rect`. Returns `null` if `rect` is outside
+     * screen bounds or the `DisplayServer` fails to capture screenshot. Note: This method is
+     * implemented on macOS and Windows. On other platforms, this method always returns `null`. Note:
+     * On macOS, this method requires the "Screen Recording" permission. If permission is not granted,
+     * this method returns a screenshot that will not include other application windows or OS elements
+     * not related to the application.
+     *
+     * Generated from Godot docs: DisplayServer.screen_get_image_rect
+     */
+    @JvmStatic
+    fun screenGetImageRect(rect: Rect2i): Image? {
+        return Image.wrap(ObjectCalls.ptrcallWithRect2iArgRetObject(screenGetImageRectBind, singleton, rect))
+    }
+
+    /**
      * Sets the `screen`'s `orientation`. See also `screen_get_orientation`. Note: One of the following
      * constants can be used as `screen`: `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`,
      * `SCREEN_WITH_MOUSE_FOCUS`, or `SCREEN_WITH_KEYBOARD_FOCUS`. Note: This method is implemented on
@@ -1506,6 +1521,17 @@ object DisplayServer {
     @JvmStatic
     fun windowGetActivePopup(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(windowGetActivePopupBind, singleton)
+    }
+
+    /**
+     * Sets the bounding box of control, or menu item that was used to open the popup window, in the
+     * screen coordinate system. Clicking this area will not auto-close this popup.
+     *
+     * Generated from Godot docs: DisplayServer.window_set_popup_safe_rect
+     */
+    @JvmStatic
+    fun windowSetPopupSafeRect(window: Int, rect: Rect2i) {
+        ObjectCalls.ptrcallWithIntAndRect2iArg(windowSetPopupSafeRectBind, singleton, window, rect)
     }
 
     /**
@@ -4069,6 +4095,11 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "screen_get_image", SCREEN_GET_IMAGE_HASH)
     }
 
+    private const val SCREEN_GET_IMAGE_RECT_HASH = 2601441065L
+    private val screenGetImageRectBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "screen_get_image_rect", SCREEN_GET_IMAGE_RECT_HASH)
+    }
+
     private const val SCREEN_SET_ORIENTATION_HASH = 2211511631L
     private val screenSetOrientationBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "screen_set_orientation", SCREEN_SET_ORIENTATION_HASH)
@@ -4107,6 +4138,11 @@ object DisplayServer {
     private const val WINDOW_GET_ACTIVE_POPUP_HASH = 3905245786L
     private val windowGetActivePopupBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "window_get_active_popup", WINDOW_GET_ACTIVE_POPUP_HASH)
+    }
+
+    private const val WINDOW_SET_POPUP_SAFE_RECT_HASH = 3317281434L
+    private val windowSetPopupSafeRectBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "window_set_popup_safe_rect", WINDOW_SET_POPUP_SAFE_RECT_HASH)
     }
 
     private const val WINDOW_GET_POPUP_SAFE_RECT_HASH = 2161169500L

@@ -19,9 +19,11 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setShaderProperty")
         set(value) = setShader(value)
 
-    val specializationConstants: List<RDPipelineSpecializationConstant>
+    var specializationConstants: List<RDPipelineSpecializationConstant>
         @JvmName("specializationConstantsProperty")
         get() = getSpecializationConstants()
+        @JvmName("setSpecializationConstantsProperty")
+        set(value) = setSpecializationConstants(value)
 
     /**
      * Shader resource. The required stage is selected by the pipeline.
@@ -41,6 +43,16 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
     fun getShader(): RID {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(getShaderBind, handle)
+    }
+
+    /**
+     * Specialization constants applied to the selected shader stage at pipeline creation time.
+     *
+     * Generated from Godot docs: RDPipelineShader.set_specialization_constants
+     */
+    fun setSpecializationConstants(specializationConstants: List<RDPipelineSpecializationConstant>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setSpecializationConstantsBind, handle, specializationConstants)
     }
 
     /**
@@ -69,6 +81,11 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_SHADER_HASH = 2944877500L
         private val getShaderBind by lazy {
             ObjectCalls.getMethodBind("RDPipelineShader", "get_shader", GET_SHADER_HASH)
+        }
+
+        private const val SET_SPECIALIZATION_CONSTANTS_HASH = 381264803L
+        private val setSpecializationConstantsBind by lazy {
+            ObjectCalls.getMethodBind("RDPipelineShader", "set_specialization_constants", SET_SPECIALIZATION_CONSTANTS_HASH)
         }
 
         private const val GET_SPECIALIZATION_CONSTANTS_HASH = 3995934104L

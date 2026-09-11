@@ -32,9 +32,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         @JvmName("setLineFoldingProperty")
         set(value) = setLineFoldingEnabled(value)
 
-    val lineLengthGuidelines: List<Long>
+    var lineLengthGuidelines: List<Long>
         @JvmName("lineLengthGuidelinesProperty")
         get() = getLineLengthGuidelines()
+        @JvmName("setLineLengthGuidelinesProperty")
+        set(value) = setLineLengthGuidelines(value)
 
     var guttersDrawBreakpointsGutter: Boolean
         @JvmName("guttersDrawBreakpointsGutterProperty")
@@ -78,13 +80,17 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         @JvmName("setGuttersDrawFoldGutterProperty")
         set(value) = setDrawFoldGutter(value)
 
-    val delimiterStrings: List<String>
+    var delimiterStrings: List<String>
         @JvmName("delimiterStringsProperty")
         get() = getStringDelimiters()
+        @JvmName("setDelimiterStringsProperty")
+        set(value) = setStringDelimiters(value)
 
-    val delimiterComments: List<String>
+    var delimiterComments: List<String>
         @JvmName("delimiterCommentsProperty")
         get() = getCommentDelimiters()
+        @JvmName("setDelimiterCommentsProperty")
+        set(value) = setCommentDelimiters(value)
 
     var codeCompletionEnabled: Boolean
         @JvmName("codeCompletionEnabledProperty")
@@ -92,9 +98,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         @JvmName("setCodeCompletionEnabledProperty")
         set(value) = setCodeCompletionEnabled(value)
 
-    val codeCompletionPrefixes: List<String>
+    var codeCompletionPrefixes: List<String>
         @JvmName("codeCompletionPrefixesProperty")
         get() = getCodeCompletionPrefixes()
+        @JvmName("setCodeCompletionPrefixesProperty")
+        set(value) = setCodeCompletionPrefixes(value)
 
     var indentSize: Int
         @JvmName("indentSizeProperty")
@@ -114,9 +122,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         @JvmName("setIndentAutomaticProperty")
         set(value) = setAutoIndentEnabled(value)
 
-    val indentAutomaticPrefixes: List<String>
+    var indentAutomaticPrefixes: List<String>
         @JvmName("indentAutomaticPrefixesProperty")
         get() = getAutoIndentPrefixes()
+        @JvmName("setIndentAutomaticPrefixesProperty")
+        set(value) = setAutoIndentPrefixes(value)
 
     var autoBraceCompletionEnabled: Boolean
         @JvmName("autoBraceCompletionEnabledProperty")
@@ -194,6 +204,15 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      */
     fun isAutoIndentEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoIndentEnabledBind, handle)
+    }
+
+    /**
+     * Prefixes to trigger an automatic indent. Used when `indent_automatic` is set to `true`.
+     *
+     * Generated from Godot docs: CodeEdit.set_auto_indent_prefixes
+     */
+    fun setAutoIndentPrefixes(prefixes: List<String>) {
+        ObjectCalls.ptrcallWithTypedStringListArg(setAutoIndentPrefixesBind, handle, prefixes)
     }
 
     /**
@@ -802,6 +821,15 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
     }
 
     /**
+     * Sets the string delimiters. All existing string delimiters will be removed.
+     *
+     * Generated from Godot docs: CodeEdit.set_string_delimiters
+     */
+    fun setStringDelimiters(stringDelimiters: List<String>) {
+        ObjectCalls.ptrcallWithTypedStringListArg(setStringDelimitersBind, handle, stringDelimiters)
+    }
+
+    /**
      * Removes all string delimiters.
      *
      * Generated from Godot docs: CodeEdit.clear_string_delimiters
@@ -856,6 +884,15 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      */
     fun hasCommentDelimiter(startKey: String): Boolean {
         return ObjectCalls.ptrcallWithStringArgRetBool(hasCommentDelimiterBind, handle, startKey)
+    }
+
+    /**
+     * Sets the comment delimiters. All existing comment delimiters will be removed.
+     *
+     * Generated from Godot docs: CodeEdit.set_comment_delimiters
+     */
+    fun setCommentDelimiters(commentDelimiters: List<String>) {
+        ObjectCalls.ptrcallWithTypedStringListArg(setCommentDelimitersBind, handle, commentDelimiters)
     }
 
     /**
@@ -1068,10 +1105,29 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
     /**
      * Sets prefixes that will trigger code completion.
      *
+     * Generated from Godot docs: CodeEdit.set_code_completion_prefixes
+     */
+    fun setCodeCompletionPrefixes(prefixes: List<String>) {
+        ObjectCalls.ptrcallWithTypedStringListArg(setCodeCompletionPrefixesBind, handle, prefixes)
+    }
+
+    /**
+     * Sets prefixes that will trigger code completion.
+     *
      * Generated from Godot docs: CodeEdit.get_code_completion_prefixes
      */
     fun getCodeCompletionPrefixes(): List<String> {
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(getCodeCompletionPrefixesBind, handle)
+    }
+
+    /**
+     * Draws vertical lines at the provided columns. The first entry is considered a main hard
+     * guideline and is drawn more prominently.
+     *
+     * Generated from Godot docs: CodeEdit.set_line_length_guidelines
+     */
+    fun setLineLengthGuidelines(guidelineColumns: List<Long>) {
+        ObjectCalls.ptrcallWithTypedIntListArg(setLineLengthGuidelinesBind, handle, guidelineColumns)
     }
 
     /**
@@ -1265,6 +1321,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         private const val IS_AUTO_INDENT_ENABLED_HASH = 36873697L
         private val isAutoIndentEnabledBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "is_auto_indent_enabled", IS_AUTO_INDENT_ENABLED_HASH)
+        }
+
+        private const val SET_AUTO_INDENT_PREFIXES_HASH = 381264803L
+        private val setAutoIndentPrefixesBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "set_auto_indent_prefixes", SET_AUTO_INDENT_PREFIXES_HASH)
         }
 
         private const val GET_AUTO_INDENT_PREFIXES_HASH = 3995934104L
@@ -1572,6 +1633,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
             ObjectCalls.getMethodBind("CodeEdit", "has_string_delimiter", HAS_STRING_DELIMITER_HASH)
         }
 
+        private const val SET_STRING_DELIMITERS_HASH = 381264803L
+        private val setStringDelimitersBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "set_string_delimiters", SET_STRING_DELIMITERS_HASH)
+        }
+
         private const val CLEAR_STRING_DELIMITERS_HASH = 3218959716L
         private val clearStringDelimitersBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "clear_string_delimiters", CLEAR_STRING_DELIMITERS_HASH)
@@ -1600,6 +1666,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         private const val HAS_COMMENT_DELIMITER_HASH = 3927539163L
         private val hasCommentDelimiterBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "has_comment_delimiter", HAS_COMMENT_DELIMITER_HASH)
+        }
+
+        private const val SET_COMMENT_DELIMITERS_HASH = 381264803L
+        private val setCommentDelimitersBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "set_comment_delimiters", SET_COMMENT_DELIMITERS_HASH)
         }
 
         private const val CLEAR_COMMENT_DELIMITERS_HASH = 3218959716L
@@ -1707,9 +1778,19 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
             ObjectCalls.getMethodBind("CodeEdit", "is_code_completion_enabled", IS_CODE_COMPLETION_ENABLED_HASH)
         }
 
+        private const val SET_CODE_COMPLETION_PREFIXES_HASH = 381264803L
+        private val setCodeCompletionPrefixesBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "set_code_completion_prefixes", SET_CODE_COMPLETION_PREFIXES_HASH)
+        }
+
         private const val GET_CODE_COMPLETION_PREFIXES_HASH = 3995934104L
         private val getCodeCompletionPrefixesBind by lazy {
             ObjectCalls.getMethodBind("CodeEdit", "get_code_completion_prefixes", GET_CODE_COMPLETION_PREFIXES_HASH)
+        }
+
+        private const val SET_LINE_LENGTH_GUIDELINES_HASH = 381264803L
+        private val setLineLengthGuidelinesBind by lazy {
+            ObjectCalls.getMethodBind("CodeEdit", "set_line_length_guidelines", SET_LINE_LENGTH_GUIDELINES_HASH)
         }
 
         private const val GET_LINE_LENGTH_GUIDELINES_HASH = 3995934104L

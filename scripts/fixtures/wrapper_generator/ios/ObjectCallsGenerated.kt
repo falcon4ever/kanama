@@ -20,6 +20,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.value
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.ios.cinterop.KanamaIosCallableArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.types.AABB
@@ -63,8 +64,9 @@ import net.multigesture.kanama.types.Vector4
  * `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch builds the Godot
  * array from; Variant / Dictionary / Array ARGS by `packVariantDesc` / `packDictionaryBlob` /
  * `packArrayBlob` (a KanamaIosVariantArgDesc or the task-29 entry blob the dispatch boxes for the
- * call). Helpers already hand-written in ObjectCalls.kt are the override set and are NOT
- * regenerated here.
+ * call); typed-Array ARGS by the `ObjectCalls.packTyped<Kind>ArrayDesc` helpers into a
+ * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements). Helpers already hand-written in
+ * ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 
 private const val PT_VOID = 0

@@ -23,9 +23,11 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         @JvmName("setJointsOriginalProperty")
         set(value) = setJointsOriginal(value)
 
-    val inverseBinds: List<Transform3D>
+    var inverseBinds: List<Transform3D>
         @JvmName("inverseBindsProperty")
         get() = getInverseBinds()
+        @JvmName("setInverseBindsProperty")
+        set(value) = setInverseBinds(value)
 
     var joints: List<Int>
         @JvmName("jointsProperty")
@@ -92,6 +94,11 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
     fun getInverseBinds(): List<Transform3D> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3DList(getInverseBindsBind, handle)
+    }
+
+    fun setInverseBinds(inverseBinds: List<Transform3D>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTransform3DListArg(setInverseBindsBind, handle, inverseBinds)
     }
 
     fun getJoints(): List<Int> {
@@ -195,6 +202,11 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
         private const val GET_INVERSE_BINDS_HASH = 2915620761L
         private val getInverseBindsBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkin", "get_inverse_binds", GET_INVERSE_BINDS_HASH)
+        }
+
+        private const val SET_INVERSE_BINDS_HASH = 381264803L
+        private val setInverseBindsBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkin", "set_inverse_binds", SET_INVERSE_BINDS_HASH)
         }
 
         private const val GET_JOINTS_HASH = 969006518L

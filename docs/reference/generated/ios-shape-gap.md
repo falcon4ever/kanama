@@ -10,75 +10,27 @@ helper for its ptrcall shape yet, or does not host a wrapper type it uses. When 
 on iOS (`IOS_ARG_KINDS` / `IOS_RET_KOTLIN` / the per-helper gates in `ios_method_supported`), the
 next regen moves the member back into the shared file and it disappears from this page.
 
-**Gap:** 68 of 979 shared classes carry a desktop companion; 171 desktop-only members; 96 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 58 properties read-only in the shared tree because only their setter is desktop-only.
+**Gap:** 20 of 979 shared classes carry a desktop companion; 34 desktop-only members; 27 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 3 properties read-only in the shared tree because only their setter is desktop-only.
 
 | Class | Desktop-only members | Read-only in shared | Waits on |
 |---|---|---|---|
-| `AStarGrid2D` | `setRegion`, `fillSolidRegion`, `fillWeightScaleRegion`, `getPointDataInRegion` | `region` | `ptrcallWithRect2iAndBoolArg`, `ptrcallWithRect2iAndDoubleArg`, `ptrcallWithRect2iArg`, `ptrcallWithRect2iArgRetDictionaryList` |
-| `BitMap` | `setBitRect`, `growMask`, `opaqueToPolygons` |  | `ptrcallWithIntAndRect2iArg`, `ptrcallWithRect2iAndBoolArg`, `ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList` |
-| `CodeEdit` | `setAutoIndentPrefixes`, `setStringDelimiters`, `setCommentDelimiters`, `setCodeCompletionPrefixes`, `setLineLengthGuidelines` | `lineLengthGuidelines`, `delimiterStrings`, `delimiterComments`, `codeCompletionPrefixes`, `indentAutomaticPrefixes` | `ptrcallWithTypedIntListArg`, `ptrcallWithTypedStringListArg` |
-| `Compositor` | `setCompositorEffects` | `compositorEffects` | `ptrcallWithObjectListArg` |
-| `Control` | `setAccessibilityControlsNodes`, `setAccessibilityDescribedByNodes`, `setAccessibilityLabeledByNodes`, `setAccessibilityFlowToNodes` | `accessibilityControlsNodes`, `accessibilityDescribedByNodes`, `accessibilityLabeledByNodes`, `accessibilityFlowToNodes` | `ptrcallWithNodePathListArg` |
-| `DisplayServer` | `globalMenuGetItemCallback`, `globalMenuGetItemKeyCallback`, `screenGetImageRect`, `windowSetPopupSafeRect`, `fileDialogWithOptionsShow` |  | `ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong`, `ptrcallWithIntAndRect2iArg`, `ptrcallWithRect2iArgRetObject`, `ptrcallWithStringIntArgsRetCallable` |
-| `DrawableTexture2D` | `blitRect`, `blitRectMulti` |  | `ptrcallWithRect2iObjectColorIntObjectArgs`, `ptrcallWithRect2iTwoObjectListColorIntObjectArgs` |
-| `EditorInterface` | `makeMeshPreviews`, `popupDialog`, `popupNodeSelector`, `popupQuickOpen`, `popupCreateDialog` |  | `ptrcallWithCallableStringNameListArgs`, `ptrcallWithCallableStringNameListObjectArgs`, `ptrcallWithCallableStringNameTwoStringStringNameListArgs`, `ptrcallWithObjectAndRect2iArg`, `ptrcallWithObjectListIntArgsRetTypedObjectList` |
-| `EditorSettings` | `setBuiltinActionOverride` |  | `ptrcallWithStringAndObjectListArgs` |
+| `DisplayServer` | `globalMenuGetItemCallback`, `globalMenuGetItemKeyCallback`, `fileDialogWithOptionsShow` |  | `ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong`, `ptrcallWithStringIntArgsRetCallable` |
+| `EditorInterface` | `makeMeshPreviews` |  | `ptrcallWithObjectListIntArgsRetTypedObjectList` |
 | `EditorVCSInterface` | `addDiffHunksIntoDiffFile`, `addLineDiffsIntoDiffHunk` |  | `ptrcallWithDictionaryDictionaryListArgsRetDictionary` |
-| `FramebufferCacheRD` | `getCacheMultipass` |  | `ptrcallWithRIDListObjectListUInt32ArgsRetRID` |
 | `GDExtensionManager` | `loadExtensionFromFunction` |  | `ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong` |
-| `GLTFMesh` | `setInstanceMaterials` | `instanceMaterials` | `ptrcallWithTypedMaterialListArg` |
-| `GLTFObjectModelProperty` | `setNodePaths`, `setJsonPointers` | `nodePaths`, `jsonPointers` | `ptrcallWithNodePathListArg`, `ptrcallWithPackedStringListListArg` |
-| `GLTFSkeleton` | `setUniqueNames` | `uniqueNames` | `ptrcallWithTypedStringListArg` |
-| `GLTFSkin` | `setInverseBinds` | `inverseBinds` | `ptrcallWithTransform3DListArg` |
-| `GLTFState` | `setNodes`, `setBuffers`, `setBufferViews`, `setAccessors`, `setMeshes`, `setMaterials`, `setTextures`, `setTextureSamplers`, `setImages`, `setSkins`, `setCameras`, `setLights`, `setUniqueNames`, `setUniqueAnimationNames`, `setSkeletons`, `setAnimations` | `nodes`, `buffers`, `bufferViews`, `accessors`, `meshes`, `materials`, `textures`, `textureSamplers`, `images`, `skins`, `cameras`, `lights`, `uniqueNames`, `uniqueAnimationNames`, `skeletons`, `animations` | `ptrcallWithByteArrayListArg`, `ptrcallWithObjectListArg`, `ptrcallWithTypedMaterialListArg`, `ptrcallWithTypedStringListArg` |
-| `Geometry3D` | `computeConvexMeshPoints`, `segmentIntersectsConvex`, `clipPolygon` |  | `ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List`, `ptrcallWithPlaneListArgRetPackedVector3List`, `ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List` |
+| `GLTFObjectModelProperty` | `setJsonPointers` | `jsonPointers` | `ptrcallWithPackedStringListListArg` |
+| `GLTFState` | `setBuffers` | `buffers` | `ptrcallWithByteArrayListArg` |
 | `GraphEdit` | `setConnections` | `connections` | `ptrcallWithDictionaryListArg` |
-| `ImageTexture3D` | `create`, `update` |  | `ptrcallWithLongThreeIntBoolObjectListArgsRetLong`, `ptrcallWithObjectListArg` |
-| `ImageTextureLayered` | `createFromImages` |  | `ptrcallWithObjectListArgRetLong` |
-| `ImmediateMesh` | `surfaceSetTangent` |  | `ptrcallWithPlaneArg` |
-| `ImporterMesh` | `mergeImporterMeshes`, `addSurface` |  | `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs`, `ptrcallWithObjectListTransform3DListBoolArgsRetObject` |
+| `ImporterMesh` | `addSurface` |  | `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs` |
 | `InputMap` | `actionGetEvents` |  | `ptrcallWithStringNameArgRetTypedObjectList` |
-| `LightmapGIData` | `setLightmapTextures`, `setShadowmaskTextures` | `lightmapTextures`, `shadowmaskTextures` | `ptrcallWithObjectListArg` |
 | `MultiplayerSpawner` | `getSpawnFunction`, `spawnFunction` |  | `ptrcallNoArgsRetCallable` |
 | `NativeMenu` | `getPopupOpenCallback`, `getPopupCloseCallback`, `getItemCallback`, `getItemKeyCallback` |  | `ptrcallWithRIDArgRetCallable`, `ptrcallWithRIDIntArgsRetCallable` |
-| `NavigationMeshSourceGeometryData2D` | `setTraversableOutlines`, `setObstructionOutlines`, `appendTraversableOutlines`, `appendObstructionOutlines` | `traversableOutlines`, `obstructionOutlines` | `ptrcallWithPackedVector2ListListArg` |
-| `NavigationPathQueryParameters2D` | `setIncludedRegions`, `setExcludedRegions` | `excludedRegions`, `includedRegions` | `ptrcallWithRIDListArg` |
-| `NavigationPathQueryParameters3D` | `setIncludedRegions`, `setExcludedRegions` | `excludedRegions`, `includedRegions` | `ptrcallWithRIDListArg` |
-| `NavigationPathQueryResult2D` | `setPathRids` | `pathRids` | `ptrcallWithRIDListArg` |
-| `NavigationPathQueryResult3D` | `setPathRids` | `pathRids` | `ptrcallWithRIDListArg` |
 | `Noise` | `getImage3d`, `getSeamlessImage3d` |  | `ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList`, `ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList` |
 | `OggPacketSequence` | `setPacketData`, `getPacketData`, `packetData` |  | `ptrcallNoArgsRetArrayList`, `ptrcallWithArrayListArg` |
-| `OpenXRAPIExtension` | `transformFromPose`, `setCustomPlaySpace`, `setRenderRegion` |  | `ptrcallWithConstVoidPtrArg`, `ptrcallWithConstVoidPtrArgRetTransform3D`, `ptrcallWithRect2iArg` |
-| `OpenXRSpatialEntityExtension` | `createSpatialContext`, `discoverSpatialEntitiesWithComponentData`, `updateSpatialEntities`, `querySnapshot` |  | `ptrcallWithObjectListObjectCallableArgsRetObject`, `ptrcallWithRIDObjectListObjectArgsRetBool`, `ptrcallWithRIDObjectListObjectCallableArgsRetObject`, `ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID` |
-| `OpenXRSpatialMarkerTrackingCapability` | `startEntityDiscovery`, `doEntityUpdate` |  | `ptrcallWithRIDObjectListTwoObjectArgs`, `ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject` |
-| `OpenXRSpatialPlaneTrackingCapability` | `startEntityDiscovery` |  | `ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject` |
-| `PhysicalBoneSimulator3D` | `physicalBonesStartSimulation` |  | `ptrcallWithStringNameListArg` |
-| `PhysicsPointQueryParameters2D` | `setExclude` | `exclude` | `ptrcallWithRIDListArg` |
-| `PhysicsPointQueryParameters3D` | `setExclude` | `exclude` | `ptrcallWithRIDListArg` |
-| `PhysicsRayQueryParameters2D` | `create`, `setExclude` | `exclude` | `ptrcallWithRIDListArg`, `ptrcallWithTwoVector2UInt32RIDListArgsRetObject` |
-| `PhysicsRayQueryParameters3D` | `create`, `setExclude` | `exclude` | `ptrcallWithRIDListArg`, `ptrcallWithTwoVector3UInt32RIDListArgsRetObject` |
-| `PhysicsShapeQueryParameters2D` | `setExclude` | `exclude` | `ptrcallWithRIDListArg` |
-| `PhysicsShapeQueryParameters3D` | `setExclude` | `exclude` | `ptrcallWithRIDListArg` |
-| `PhysicsTestMotionParameters2D` | `setExcludeBodies`, `setExcludeObjects` | `excludeBodies`, `excludeObjects` | `ptrcallWithRIDListArg`, `ptrcallWithTypedIntListArg` |
-| `PhysicsTestMotionParameters3D` | `setExcludeBodies`, `setExcludeObjects` | `excludeBodies`, `excludeObjects` | `ptrcallWithRIDListArg`, `ptrcallWithTypedIntListArg` |
-| `RDPipelineColorBlendState` | `setAttachments` | `attachments` | `ptrcallWithObjectListArg` |
-| `RDPipelineMultisampleState` | `setSampleMasks` | `sampleMasks` | `ptrcallWithTypedIntListArg` |
-| `RDPipelineShader` | `setSpecializationConstants` | `specializationConstants` | `ptrcallWithObjectListArg` |
+| `OpenXRAPIExtension` | `transformFromPose`, `setCustomPlaySpace` |  | `ptrcallWithConstVoidPtrArg`, `ptrcallWithConstVoidPtrArgRetTransform3D` |
 | `RegEx` | `searchAll` |  | `ptrcallWithStringTwoIntArgsRetTypedObjectList` |
-| `RenderingDevice` | `textureCreate`, `framebufferFormatCreate`, `framebufferFormatCreateMultipass`, `framebufferCreate`, `framebufferCreateMultipass`, `vertexFormatCreate`, `vertexArrayCreate`, `uniformSetCreate`, `renderPipelineCreate`, `computePipelineCreate`, `raytracingPipelineCreate`, `blasCreate`, `tlasBuild`, `drawListBeginSplit`, `drawListBindVertexBuffersFormat` |  | `ptrcallWithObjectListArgRetLong`, `ptrcallWithObjectListLongArgsRetRID`, `ptrcallWithObjectListRIDUInt32ArgsRetRID`, `ptrcallWithObjectListUInt32ArgsRetLong`, `ptrcallWithRIDAndObjectListArgsRetLong`, `ptrcallWithRIDListLongUInt32ArgsRetRID`, `ptrcallWithRIDListObjectListLongUInt32ArgsRetRID`, `ptrcallWithRIDObjectListArgsRetRID`, `ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID`, `ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List`, `ptrcallWithThreeObjectListUInt32ArgsRetRID`, `ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs`, `ptrcallWithTwoObjectByteArrayListArgsRetRID`, `ptrcallWithTwoObjectListUInt32ArgsRetLong`, `ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID` |
-| `RenderingServer` | `texture2dLayeredCreate`, `texture3dCreate`, `texture3dUpdate`, `textureDrawableBlitRect`, `texture3dGet`, `meshCreateFromSurfaces`, `meshSurfaceGetBlendShapeArrays`, `particlesSetTrailBindPoses`, `compositorSetCompositorEffects`, `instancesCullConvex`, `bakeRenderUv2` |  | `ptrcallWithDictionaryListIntArgsRetRID`, `ptrcallWithLongThreeIntBoolObjectListArgsRetRID`, `ptrcallWithObjectListLongArgsRetRID`, `ptrcallWithPlaneListAndRIDArgsRetPackedInt64List`, `ptrcallWithRIDAndIntArgRetArrayList`, `ptrcallWithRIDAndObjectListArgs`, `ptrcallWithRIDAndRIDListArgs`, `ptrcallWithRIDAndTransform3DListArgs`, `ptrcallWithRIDArgRetTypedObjectList`, `ptrcallWithRIDListRect2iRIDColorRIDListIntArgs`, `ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList` |
-| `Skeleton3D` | `physicalBonesStartSimulation` |  | `ptrcallWithStringNameListArg` |
-| `SkeletonModification2DPhysicalBones` | `startSimulation`, `stopSimulation` |  | `ptrcallWithStringNameListArg` |
-| `TextServer` | `shapedTextAddString`, `shapedSetSpanUpdateFont` |  | `ptrcallWithRIDLongRIDListLongDictionaryArgs`, `ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool` |
-| `TileMap` | `getPattern`, `setCellsTerrainConnect`, `setCellsTerrainPath` |  | `ptrcallWithIntAndVector2iListArgsRetObject`, `ptrcallWithIntVector2iListTwoIntAndBoolArgs` |
-| `TileMapLayer` | `getPattern`, `setCellsTerrainConnect`, `setCellsTerrainPath` |  | `ptrcallWithVector2iListArgRetObject`, `ptrcallWithVector2iListTwoIntAndBoolArgs` |
+| `RenderingDevice` | `textureCreate` |  | `ptrcallWithTwoObjectByteArrayListArgsRetRID` |
+| `RenderingServer` | `texture3dGet`, `meshCreateFromSurfaces`, `meshSurfaceGetBlendShapeArrays`, `bakeRenderUv2` |  | `ptrcallWithDictionaryListIntArgsRetRID`, `ptrcallWithRIDAndIntArgRetArrayList`, `ptrcallWithRIDArgRetTypedObjectList`, `ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList` |
 | `TranslationDomain` | `findTranslations` |  | `ptrcallWithStringAndBoolArgRetTypedObjectList` |
 | `TranslationServer` | `findTranslations` |  | `ptrcallWithStringAndBoolArgRetTypedObjectList` |
 | `TreeItem` | `getCustomDrawCallback` |  | `ptrcallWithIntArgRetCallable` |
-| `UniformSetCacheRD` | `getCache` |  | `ptrcallWithRIDUInt32ObjectListArgsRetRID` |
-| `VisualShaderNodeVec4Parameter` | `setDefaultValue`, `getDefaultValue`, `defaultValue` |  | `ptrcallNoArgsRetVector4`, `ptrcallWithVector4Arg` |
-| `Window` | `setNonclientArea`, `popup`, `popupOnParent`, `popupExclusive`, `popupExclusiveOnParent` | `nonclientArea` | `ptrcallWithObjectAndRect2iArg`, `ptrcallWithRect2iArg` |
-| `WorldBoundaryShape3D` | `setPlane`, `getPlane`, `plane` |  | `ptrcallNoArgsRetPlane`, `ptrcallWithPlaneArg` |
-| `XRAnchor3D` | `getPlane` |  | `ptrcallNoArgsRetPlane` |
-| `XRInterfaceExtension` | `addBlit` |  | `ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs` |
-| `XRVRS` | `setVrsRenderRegion` | `vrsRenderRegion` | `ptrcallWithRect2iArg` |

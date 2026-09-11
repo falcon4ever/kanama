@@ -52,9 +52,11 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         @JvmName("setCurrentScreenProperty")
         set(value) = setCurrentScreen(value)
 
-    val nonclientArea: Rect2i
+    var nonclientArea: Rect2i
         @JvmName("nonclientAreaProperty")
         get() = getNonclientArea()
+        @JvmName("setNonclientAreaProperty")
+        set(value) = setNonclientArea(value)
 
     var mousePassthroughPolygon: List<Vector2>
         @JvmName("mousePassthroughPolygonProperty")
@@ -905,6 +907,17 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * normal input to the window is blocked (such as when it has an exclusive child opened). See also
      * `nonclient_window_input`.
      *
+     * Generated from Godot docs: Window.set_nonclient_area
+     */
+    fun setNonclientArea(area: Rect2i) {
+        ObjectCalls.ptrcallWithRect2iArg(setNonclientAreaBind, handle, area)
+    }
+
+    /**
+     * If set, defines the window's custom decoration area which will receive mouse input, even if
+     * normal input to the window is blocked (such as when it has an exclusive child opened). See also
+     * `nonclient_window_input`.
+     *
      * Generated from Godot docs: Window.get_nonclient_area
      */
     fun getNonclientArea(): Rect2i {
@@ -1513,6 +1526,34 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
     }
 
     /**
+     * Shows the `Window` and makes it transient (see `transient`). If `rect` is provided, it will be
+     * set as the `Window`'s size. Fails if called on the main window. If
+     * `ProjectSettings.display/window/subwindows/embed_subwindows` is `true` (single-window mode),
+     * `rect`'s coordinates are global and relative to the main window's top-left corner (excluding
+     * window decorations). If `rect`'s position coordinates are negative, the window will be located
+     * outside the main window and may not be visible as a result. If
+     * `ProjectSettings.display/window/subwindows/embed_subwindows` is `false` (multi-window mode),
+     * `rect`'s coordinates are global and relative to the top-left corner of the leftmost screen. If
+     * `rect`'s position coordinates are negative, the window will be placed at the top-left corner of
+     * the screen. Note: `rect` must be in global coordinates if specified.
+     *
+     * Generated from Godot docs: Window.popup
+     */
+    fun popup(rect: Rect2i) {
+        ObjectCalls.ptrcallWithRect2iArg(popupBind, handle, rect)
+    }
+
+    /**
+     * Popups the `Window` with a position shifted by parent `Window`'s position. If the `Window` is
+     * embedded, has the same effect as `popup`.
+     *
+     * Generated from Godot docs: Window.popup_on_parent
+     */
+    fun popupOnParent(parentRect: Rect2i) {
+        ObjectCalls.ptrcallWithRect2iArg(popupOnParentBind, handle, parentRect)
+    }
+
+    /**
      * Popups the `Window` at the center of the current screen, with optionally given minimum size. If
      * the `Window` is embedded, it will be centered in the parent `Viewport` instead. Note: Calling it
      * with the default value of `minsize` is equivalent to calling it with `size`.
@@ -1543,6 +1584,28 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      */
     fun popupCenteredClamped(minsize: Vector2i, fallbackRatio: Double = 0.75) {
         ObjectCalls.ptrcallWithVector2iAndDoubleArg(popupCenteredClampedBind, handle, minsize, fallbackRatio)
+    }
+
+    /**
+     * Attempts to parent this dialog to the last exclusive window relative to `from_node`, and then
+     * calls `Window.popup` on it. The dialog must have no current parent, otherwise the method fails.
+     * See also `set_unparent_when_invisible` and `Node.get_last_exclusive_window`.
+     *
+     * Generated from Godot docs: Window.popup_exclusive
+     */
+    fun popupExclusive(fromNode: Node, rect: Rect2i) {
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveBind, handle, fromNode.handle, rect)
+    }
+
+    /**
+     * Attempts to parent this dialog to the last exclusive window relative to `from_node`, and then
+     * calls `Window.popup_on_parent` on it. The dialog must have no current parent, otherwise the
+     * method fails. See also `set_unparent_when_invisible` and `Node.get_last_exclusive_window`.
+     *
+     * Generated from Godot docs: Window.popup_exclusive_on_parent
+     */
+    fun popupExclusiveOnParent(fromNode: Node, parentRect: Rect2i) {
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveOnParentBind, handle, fromNode.handle, parentRect)
     }
 
     /**
@@ -1959,6 +2022,11 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
             ObjectCalls.getMethodBind("Window", "get_content_scale_stretch", GET_CONTENT_SCALE_STRETCH_HASH)
         }
 
+        private const val SET_NONCLIENT_AREA_HASH = 1763793166L
+        private val setNonclientAreaBind by lazy {
+            ObjectCalls.getMethodBind("Window", "set_nonclient_area", SET_NONCLIENT_AREA_HASH)
+        }
+
         private const val GET_NONCLIENT_AREA_HASH = 410525958L
         private val getNonclientAreaBind by lazy {
             ObjectCalls.getMethodBind("Window", "get_nonclient_area", GET_NONCLIENT_AREA_HASH)
@@ -2269,6 +2337,16 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
             ObjectCalls.getMethodBind("Window", "is_using_font_oversampling", IS_USING_FONT_OVERSAMPLING_HASH)
         }
 
+        private const val POPUP_HASH = 1680304321L
+        private val popupBind by lazy {
+            ObjectCalls.getMethodBind("Window", "popup", POPUP_HASH)
+        }
+
+        private const val POPUP_ON_PARENT_HASH = 1763793166L
+        private val popupOnParentBind by lazy {
+            ObjectCalls.getMethodBind("Window", "popup_on_parent", POPUP_ON_PARENT_HASH)
+        }
+
         private const val POPUP_CENTERED_HASH = 3447975422L
         private val popupCenteredBind by lazy {
             ObjectCalls.getMethodBind("Window", "popup_centered", POPUP_CENTERED_HASH)
@@ -2282,6 +2360,16 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         private const val POPUP_CENTERED_CLAMPED_HASH = 2613752477L
         private val popupCenteredClampedBind by lazy {
             ObjectCalls.getMethodBind("Window", "popup_centered_clamped", POPUP_CENTERED_CLAMPED_HASH)
+        }
+
+        private const val POPUP_EXCLUSIVE_HASH = 2134721627L
+        private val popupExclusiveBind by lazy {
+            ObjectCalls.getMethodBind("Window", "popup_exclusive", POPUP_EXCLUSIVE_HASH)
+        }
+
+        private const val POPUP_EXCLUSIVE_ON_PARENT_HASH = 2344671043L
+        private val popupExclusiveOnParentBind by lazy {
+            ObjectCalls.getMethodBind("Window", "popup_exclusive_on_parent", POPUP_EXCLUSIVE_ON_PARENT_HASH)
         }
 
         private const val POPUP_EXCLUSIVE_CENTERED_HASH = 3357594017L

@@ -2,34 +2,13 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Transform3D
 
 // GENERATED desktop/Android companion for ImporterMesh (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
-//   ptrcallWithObjectListTransform3DListBoolArgsRetObject
+// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs
 // Index: docs/reference/generated/ios-shape-gap.md
-
-/**
- * Merges multiple `ImporterMesh`es into a single `ImporterMesh`. Each input mesh is transformed by
- * the corresponding `Transform3D` in the `relative_transforms` array, which must be the same size
- * as `importer_meshes`. Negative scales are supported, and the winding order in the mesh data will
- * be corrected to account for this. If `deduplicate_surfaces` is `true` and multiple meshes have
- * surfaces with the same names and formats, the surfaces will be merged together when the meshes
- * are merged, and will use the material from the first matching surface. This is useful for
- * reducing the number of surfaces in the resulting mesh, and avoids duplicating materials.
- * Surfaces with bone weights will never be deduplicated. If `deduplicate_surfaces` is `false`, the
- * surfaces will always be kept separate, and will be given unique names. Warning: Blend shapes and
- * LODs are not supported and will be discarded. Do not use this function to discard blend shapes
- * and LODs, as support for these may be added in the future.
- *
- * Generated from Godot docs: ImporterMesh.merge_importer_meshes
- */
-fun ImporterMesh.Companion.mergeImporterMeshes(importerMeshes: List<ImporterMesh>, relativeTransforms: List<Transform3D>, deduplicateSurfaces: Boolean = true): ImporterMesh? {
-    return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, MemorySegment.NULL, importerMeshes, relativeTransforms, deduplicateSurfaces))
-}
 
 /**
  * Creates a new surface. `Mesh.get_surface_count` will become the `surf_idx` for this new surface.
@@ -62,11 +41,6 @@ fun ImporterMesh.Companion.mergeImporterMeshes(importerMeshes: List<ImporterMesh
 fun ImporterMesh.addSurface(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
     checkOpen()
     ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, handle, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
-}
-
-private const val MERGE_IMPORTER_MESHES_HASH = 1030647649L
-private val mergeImporterMeshesBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "merge_importer_meshes", MERGE_IMPORTER_MESHES_HASH)
 }
 
 private const val ADD_SURFACE_HASH = 1740448849L

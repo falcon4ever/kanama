@@ -236,6 +236,30 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Creates a new framebuffer format with the specified `attachments` and `view_count`. Returns the
+     * new framebuffer's unique framebuffer format ID. If `view_count` is greater than or equal to `2`,
+     * enables multiview which is used for VR rendering. This requires support for the Vulkan multiview
+     * extension.
+     *
+     * Generated from Godot docs: RenderingDevice.framebuffer_format_create
+     */
+    fun framebufferFormatCreate(attachments: List<RDAttachmentFormat>, viewCount: Long = 1L): Long {
+        return ObjectCalls.ptrcallWithObjectListUInt32ArgsRetLong(framebufferFormatCreateBind, handle, attachments, viewCount)
+    }
+
+    /**
+     * Creates a multipass framebuffer format with the specified `attachments`, `passes` and
+     * `view_count` and returns its ID. If `view_count` is greater than or equal to `2`, enables
+     * multiview which is used for VR rendering. This requires support for the Vulkan multiview
+     * extension.
+     *
+     * Generated from Godot docs: RenderingDevice.framebuffer_format_create_multipass
+     */
+    fun framebufferFormatCreateMultipass(attachments: List<RDAttachmentFormat>, passes: List<RDFramebufferPass>, viewCount: Long = 1L): Long {
+        return ObjectCalls.ptrcallWithTwoObjectListUInt32ArgsRetLong(framebufferFormatCreateMultipassBind, handle, attachments, passes, viewCount)
+    }
+
+    /**
      * Creates a new empty framebuffer format with the specified number of `samples` and returns its
      * ID.
      *
@@ -253,6 +277,28 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun framebufferFormatGetTextureSamples(format: Long, renderPass: Long = 0L): Long {
         return ObjectCalls.ptrcallWithLongAndUInt32ArgRetLong(framebufferFormatGetTextureSamplesBind, handle, format, renderPass)
+    }
+
+    /**
+     * Creates a new framebuffer. It can be accessed with the RID that is returned. Once finished with
+     * your RID, you will want to free the RID using the RenderingDevice's `free_rid` method. This will
+     * be freed automatically when any of the `textures` is freed.
+     *
+     * Generated from Godot docs: RenderingDevice.framebuffer_create
+     */
+    fun framebufferCreate(textures: List<RID>, validateWithFormat: Long = -1L, viewCount: Long = 1L): RID {
+        return ObjectCalls.ptrcallWithRIDListLongUInt32ArgsRetRID(framebufferCreateBind, handle, textures, validateWithFormat, viewCount)
+    }
+
+    /**
+     * Creates a new multipass framebuffer. It can be accessed with the RID that is returned. Once
+     * finished with your RID, you will want to free the RID using the RenderingDevice's `free_rid`
+     * method. This will be freed automatically when any of the `textures` is freed.
+     *
+     * Generated from Godot docs: RenderingDevice.framebuffer_create_multipass
+     */
+    fun framebufferCreateMultipass(textures: List<RID>, passes: List<RDFramebufferPass>, validateWithFormat: Long = -1L, viewCount: Long = 1L): RID {
+        return ObjectCalls.ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(framebufferCreateMultipassBind, handle, textures, passes, validateWithFormat, viewCount)
     }
 
     /**
@@ -313,6 +359,28 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun vertexBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: Long = 0L): RID {
         return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(vertexBufferCreateBind, handle, sizeBytes, data, creationBits)
+    }
+
+    /**
+     * Creates a new vertex format with the specified `vertex_descriptions`. Returns a unique vertex
+     * format ID corresponding to the newly created vertex format.
+     *
+     * Generated from Godot docs: RenderingDevice.vertex_format_create
+     */
+    fun vertexFormatCreate(vertexDescriptions: List<RDVertexAttribute>): Long {
+        return ObjectCalls.ptrcallWithObjectListArgRetLong(vertexFormatCreateBind, handle, vertexDescriptions)
+    }
+
+    /**
+     * Creates a vertex array based on the specified buffers. Optionally, `offsets` (in bytes) may be
+     * defined for each buffer. Once finished with your RID, you will want to free the RID using the
+     * RenderingDevice's `free_rid` method. This will be freed automatically when any of the
+     * `src_buffers` is freed.
+     *
+     * Generated from Godot docs: RenderingDevice.vertex_array_create
+     */
+    fun vertexArrayCreate(vertexCount: Long, vertexFormat: Long, srcBuffers: List<RID>, offsets: List<Long>): RID {
+        return ObjectCalls.ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID(vertexArrayCreateBind, handle, vertexCount, vertexFormat, srcBuffers, offsets)
     }
 
     /**
@@ -442,6 +510,17 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Creates a new uniform set. It can be accessed with the RID that is returned. Once finished with
+     * your RID, you will want to free the RID using the RenderingDevice's `free_rid` method. This will
+     * be freed automatically when the `shader` or any of the RIDs in the `uniforms` is freed.
+     *
+     * Generated from Godot docs: RenderingDevice.uniform_set_create
+     */
+    fun uniformSetCreate(uniforms: List<RDUniform>, shader: RID, shaderSet: Long): RID {
+        return ObjectCalls.ptrcallWithObjectListRIDUInt32ArgsRetRID(uniformSetCreateBind, handle, uniforms, shader, shaderSet)
+    }
+
+    /**
      * Checks if the `uniform_set` is valid, i.e. is owned.
      *
      * Generated from Godot docs: RenderingDevice.uniform_set_is_valid
@@ -527,6 +606,17 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Creates a new render pipeline. It can be accessed with the RID that is returned. Once finished
+     * with your RID, you will want to free the RID using the RenderingDevice's `free_rid` method. This
+     * will be freed automatically when the `shader` is freed.
+     *
+     * Generated from Godot docs: RenderingDevice.render_pipeline_create
+     */
+    fun renderPipelineCreate(shader: RID, framebufferFormat: Long, vertexFormat: Long, primitive: Long, rasterizationState: RDPipelineRasterizationState?, multisampleState: RDPipelineMultisampleState?, stencilState: RDPipelineDepthStencilState?, colorBlendState: RDPipelineColorBlendState?, dynamicStateFlags: Long = 0L, forRenderPass: Long = 0L, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
+        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, handle, shader, framebufferFormat, vertexFormat, primitive, rasterizationState?.requireOpenHandle() ?: MemorySegment.NULL, multisampleState?.requireOpenHandle() ?: MemorySegment.NULL, stencilState?.requireOpenHandle() ?: MemorySegment.NULL, colorBlendState?.requireOpenHandle() ?: MemorySegment.NULL, dynamicStateFlags, forRenderPass, specializationConstants)
+    }
+
+    /**
      * Returns `true` if the render pipeline specified by the `render_pipeline` RID is valid, `false`
      * otherwise.
      *
@@ -534,6 +624,17 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun renderPipelineIsValid(renderPipeline: RID): Boolean {
         return ObjectCalls.ptrcallWithRIDArgRetBool(renderPipelineIsValidBind, handle, renderPipeline)
+    }
+
+    /**
+     * Creates a new compute pipeline. It can be accessed with the RID that is returned. Once finished
+     * with your RID, you will want to free the RID using the RenderingDevice's `free_rid` method. This
+     * will be freed automatically when the `shader` is freed.
+     *
+     * Generated from Godot docs: RenderingDevice.compute_pipeline_create
+     */
+    fun computePipelineCreate(shader: RID, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
+        return ObjectCalls.ptrcallWithRIDObjectListArgsRetRID(computePipelineCreateBind, handle, shader, specializationConstants)
     }
 
     /**
@@ -547,6 +648,20 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Creates a new raytracing pipeline. It can be accessed with the RID that is returned. Once
+     * finished with your RID, you will want to free the RID using the RenderingDevice's `free_rid`
+     * method. Each shader must provide the required stage. All stages must use compatible pipeline
+     * layouts. The pipeline selects the required stage from each shader. Input order defines stable
+     * indices used by the API: - `raygen_shaders` is indexed in `raytracing_list_trace_rays`. -
+     * `miss_shaders` is indexed in `traceRayEXT`. - `hit_groups` is indexed in `hit_sbt_range_update`.
+     *
+     * Generated from Godot docs: RenderingDevice.raytracing_pipeline_create
+     */
+    fun raytracingPipelineCreate(raygenShaders: List<RDPipelineShader>, missShaders: List<RDPipelineShader>, hitGroups: List<RDHitGroup>, maxTraceRecursionDepth: Long): RID {
+        return ObjectCalls.ptrcallWithThreeObjectListUInt32ArgsRetRID(raytracingPipelineCreateBind, handle, raygenShaders, missShaders, hitGroups, maxTraceRecursionDepth)
+    }
+
+    /**
      * Returns `true` if the raytracing pipeline specified by the `raytracing_pipeline` RID is valid,
      * `false` otherwise.
      *
@@ -554,6 +669,17 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun raytracingPipelineIsValid(raytracingPipeline: RID): Boolean {
         return ObjectCalls.ptrcallWithRIDArgRetBool(raytracingPipelineIsValidBind, handle, raytracingPipeline)
+    }
+
+    /**
+     * Creates a new Bottom-Level Acceleration Structure (BLAS). It can be accessed with the RID that
+     * is returned. Once finished with your RID, you will want to free the RID using the
+     * RenderingDevice's `free_rid` method.
+     *
+     * Generated from Godot docs: RenderingDevice.blas_create
+     */
+    fun blasCreate(geometries: List<RDAccelerationStructureGeometry>, flags: Long): RID {
+        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(blasCreateBind, handle, geometries, flags)
     }
 
     /**
@@ -574,6 +700,19 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun blasBuild(blas: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetLong(blasBuildBind, handle, blas)
+    }
+
+    /**
+     * Builds the `tlas`. The contents of previous builds are discarded. Any BLAS provided through the
+     * `RDAccelerationStructureInstance.blas` member must already have been built using the
+     * `blas_build` method. The number of instances can be equal to or smaller than the maximum
+     * instance count provided in the `tlas_create` method. Note: Freeing or rebuilding any of the
+     * provided BLASes after this method invalidates the TLAS and requires it to be rebuilt.
+     *
+     * Generated from Godot docs: RenderingDevice.tlas_build
+     */
+    fun tlasBuild(tlas: RID, instances: List<RDAccelerationStructureInstance>): Long {
+        return ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(tlasBuildBind, handle, tlas, instances)
     }
 
     /**
@@ -701,6 +840,15 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * This method does nothing and always returns an empty `PackedInt64Array`.
+     *
+     * Generated from Godot docs: RenderingDevice.draw_list_begin_split
+     */
+    fun drawListBeginSplit(framebuffer: RID, splits: Long, initialColorAction: Long, finalColorAction: Long, initialDepthAction: Long, finalDepthAction: Long, clearColorValues: List<Color>, clearDepth: Double = 1.0, clearStencil: Long = 0L, region: Rect2, storageTextures: List<RID>): List<Long> {
+        return ObjectCalls.ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(drawListBeginSplitBind, handle, framebuffer, splits, initialColorAction, finalColorAction, initialDepthAction, finalDepthAction, clearColorValues, clearDepth, clearStencil, region, storageTextures)
+    }
+
+    /**
      * Sets blend constants for the specified `draw_list` to `color`. Blend constants are used only if
      * the graphics pipeline is created with `DYNAMIC_STATE_BLEND_CONSTANTS` flag set.
      *
@@ -736,6 +884,17 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      */
     fun drawListBindVertexArray(drawList: Long, vertexArray: RID) {
         ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindVertexArrayBind, handle, drawList, vertexArray)
+    }
+
+    /**
+     * Binds a set of `vertex_buffers` directly to the specified `draw_list` using `vertex_format`
+     * without creating a vertex array RID. Provide the number of vertices in `vertex_count`; optional
+     * per-buffer byte `offsets` may also be supplied.
+     *
+     * Generated from Godot docs: RenderingDevice.draw_list_bind_vertex_buffers_format
+     */
+    fun drawListBindVertexBuffersFormat(drawList: Long, vertexFormat: Long, vertexCount: Long, vertexBuffers: List<RID>, offsets: List<Long>) {
+        ObjectCalls.ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs(drawListBindVertexBuffersFormatBind, handle, drawList, vertexFormat, vertexCount, vertexBuffers, offsets)
     }
 
     /**
@@ -2036,6 +2195,16 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_native_handle", TEXTURE_GET_NATIVE_HANDLE_HASH)
         }
 
+        private const val FRAMEBUFFER_FORMAT_CREATE_HASH = 697032759L
+        private val framebufferFormatCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_create", FRAMEBUFFER_FORMAT_CREATE_HASH)
+        }
+
+        private const val FRAMEBUFFER_FORMAT_CREATE_MULTIPASS_HASH = 2647479094L
+        private val framebufferFormatCreateMultipassBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_create_multipass", FRAMEBUFFER_FORMAT_CREATE_MULTIPASS_HASH)
+        }
+
         private const val FRAMEBUFFER_FORMAT_CREATE_EMPTY_HASH = 555930169L
         private val framebufferFormatCreateEmptyBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_create_empty", FRAMEBUFFER_FORMAT_CREATE_EMPTY_HASH)
@@ -2044,6 +2213,16 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val FRAMEBUFFER_FORMAT_GET_TEXTURE_SAMPLES_HASH = 4223391010L
         private val framebufferFormatGetTextureSamplesBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_get_texture_samples", FRAMEBUFFER_FORMAT_GET_TEXTURE_SAMPLES_HASH)
+        }
+
+        private const val FRAMEBUFFER_CREATE_HASH = 3284231055L
+        private val framebufferCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_create", FRAMEBUFFER_CREATE_HASH)
+        }
+
+        private const val FRAMEBUFFER_CREATE_MULTIPASS_HASH = 1750306695L
+        private val framebufferCreateMultipassBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_create_multipass", FRAMEBUFFER_CREATE_MULTIPASS_HASH)
         }
 
         private const val FRAMEBUFFER_CREATE_EMPTY_HASH = 3058360618L
@@ -2074,6 +2253,16 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val VERTEX_BUFFER_CREATE_HASH = 2089548973L
         private val vertexBufferCreateBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "vertex_buffer_create", VERTEX_BUFFER_CREATE_HASH)
+        }
+
+        private const val VERTEX_FORMAT_CREATE_HASH = 1242678479L
+        private val vertexFormatCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "vertex_format_create", VERTEX_FORMAT_CREATE_HASH)
+        }
+
+        private const val VERTEX_ARRAY_CREATE_HASH = 3799816279L
+        private val vertexArrayCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "vertex_array_create", VERTEX_ARRAY_CREATE_HASH)
         }
 
         private const val INDEX_BUFFER_CREATE_HASH = 2368684885L
@@ -2131,6 +2320,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "texture_buffer_create", TEXTURE_BUFFER_CREATE_HASH)
         }
 
+        private const val UNIFORM_SET_CREATE_HASH = 2280795797L
+        private val uniformSetCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "uniform_set_create", UNIFORM_SET_CREATE_HASH)
+        }
+
         private const val UNIFORM_SET_IS_VALID_HASH = 3521089500L
         private val uniformSetIsValidBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "uniform_set_is_valid", UNIFORM_SET_IS_VALID_HASH)
@@ -2166,9 +2360,19 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_get_device_address", BUFFER_GET_DEVICE_ADDRESS_HASH)
         }
 
+        private const val RENDER_PIPELINE_CREATE_HASH = 2385451958L
+        private val renderPipelineCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "render_pipeline_create", RENDER_PIPELINE_CREATE_HASH)
+        }
+
         private const val RENDER_PIPELINE_IS_VALID_HASH = 3521089500L
         private val renderPipelineIsValidBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "render_pipeline_is_valid", RENDER_PIPELINE_IS_VALID_HASH)
+        }
+
+        private const val COMPUTE_PIPELINE_CREATE_HASH = 1448838280L
+        private val computePipelineCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "compute_pipeline_create", COMPUTE_PIPELINE_CREATE_HASH)
         }
 
         private const val COMPUTE_PIPELINE_IS_VALID_HASH = 3521089500L
@@ -2176,9 +2380,19 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "compute_pipeline_is_valid", COMPUTE_PIPELINE_IS_VALID_HASH)
         }
 
+        private const val RAYTRACING_PIPELINE_CREATE_HASH = 1489129684L
+        private val raytracingPipelineCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "raytracing_pipeline_create", RAYTRACING_PIPELINE_CREATE_HASH)
+        }
+
         private const val RAYTRACING_PIPELINE_IS_VALID_HASH = 3521089500L
         private val raytracingPipelineIsValidBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_pipeline_is_valid", RAYTRACING_PIPELINE_IS_VALID_HASH)
+        }
+
+        private const val BLAS_CREATE_HASH = 1010940044L
+        private val blasCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "blas_create", BLAS_CREATE_HASH)
         }
 
         private const val TLAS_CREATE_HASH = 592780330L
@@ -2189,6 +2403,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val BLAS_BUILD_HASH = 813180755L
         private val blasBuildBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "blas_build", BLAS_BUILD_HASH)
+        }
+
+        private const val TLAS_BUILD_HASH = 261981775L
+        private val tlasBuildBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "tlas_build", TLAS_BUILD_HASH)
         }
 
         private const val HIT_SBT_CREATE_HASH = 2233757277L
@@ -2241,6 +2460,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_begin", DRAW_LIST_BEGIN_HASH)
         }
 
+        private const val DRAW_LIST_BEGIN_SPLIT_HASH = 2406300660L
+        private val drawListBeginSplitBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "draw_list_begin_split", DRAW_LIST_BEGIN_SPLIT_HASH)
+        }
+
         private const val DRAW_LIST_SET_BLEND_CONSTANTS_HASH = 2878471219L
         private val drawListSetBlendConstantsBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_set_blend_constants", DRAW_LIST_SET_BLEND_CONSTANTS_HASH)
@@ -2259,6 +2483,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         private const val DRAW_LIST_BIND_VERTEX_ARRAY_HASH = 4040184819L
         private val drawListBindVertexArrayBind by lazy {
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_vertex_array", DRAW_LIST_BIND_VERTEX_ARRAY_HASH)
+        }
+
+        private const val DRAW_LIST_BIND_VERTEX_BUFFERS_FORMAT_HASH = 2008628980L
+        private val drawListBindVertexBuffersFormatBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_vertex_buffers_format", DRAW_LIST_BIND_VERTEX_BUFFERS_FORMAT_HASH)
         }
 
         private const val DRAW_LIST_BIND_INDEX_ARRAY_HASH = 4040184819L

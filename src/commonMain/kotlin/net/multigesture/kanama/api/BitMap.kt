@@ -4,6 +4,8 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 
 /**
@@ -75,6 +77,16 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Sets a rectangular portion of the bitmap to the specified value.
+     *
+     * Generated from Godot docs: BitMap.set_bit_rect
+     */
+    fun setBitRect(rect: Rect2i, bit: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRect2iAndBoolArg(setBitRectBind, handle, rect, bit)
+    }
+
+    /**
      * Returns the number of bitmap elements that are set to `true`.
      *
      * Generated from Godot docs: BitMap.get_true_bit_count
@@ -105,6 +117,19 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Applies morphological dilation or erosion to the bitmap. If `pixels` is positive, dilation is
+     * applied to the bitmap. If `pixels` is negative, erosion is applied to the bitmap. `rect` defines
+     * the area where the morphological operation is applied. Pixels located outside the `rect` are
+     * unaffected by `grow_mask`.
+     *
+     * Generated from Godot docs: BitMap.grow_mask
+     */
+    fun growMask(pixels: Int, rect: Rect2i) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndRect2iArg(growMaskBind, handle, pixels, rect)
+    }
+
+    /**
      * Returns an image of the same size as the bitmap and with an `Image.Format` of type
      * `Image.FORMAT_L8`. `true` bits of the bitmap are being converted into white pixels, and `false`
      * bits into black.
@@ -114,6 +139,19 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
     fun convertToImage(): Image? {
         checkOpen()
         return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, handle))
+    }
+
+    /**
+     * Creates an `Array` of polygons covering a rectangular portion of the bitmap. It uses a marching
+     * squares algorithm, followed by Ramer-Douglas-Peucker (RDP) reduction of the number of vertices.
+     * Each polygon is described as a `PackedVector2Array` of its vertices. To get polygons covering
+     * the whole bitmap, pass:
+     *
+     * Generated from Godot docs: BitMap.opaque_to_polygons
+     */
+    fun opaqueToPolygons(rect: Rect2i, epsilon: Double = 2.0): List<List<Vector2>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(opaqueToPolygonsBind, handle, rect, epsilon)
     }
 
     companion object {
@@ -154,6 +192,11 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("BitMap", "get_bit", GET_BIT_HASH)
         }
 
+        private const val SET_BIT_RECT_HASH = 472162941L
+        private val setBitRectBind by lazy {
+            ObjectCalls.getMethodBind("BitMap", "set_bit_rect", SET_BIT_RECT_HASH)
+        }
+
         private const val GET_TRUE_BIT_COUNT_HASH = 3905245786L
         private val getTrueBitCountBind by lazy {
             ObjectCalls.getMethodBind("BitMap", "get_true_bit_count", GET_TRUE_BIT_COUNT_HASH)
@@ -169,9 +212,19 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("BitMap", "resize", RESIZE_HASH)
         }
 
+        private const val GROW_MASK_HASH = 3317281434L
+        private val growMaskBind by lazy {
+            ObjectCalls.getMethodBind("BitMap", "grow_mask", GROW_MASK_HASH)
+        }
+
         private const val CONVERT_TO_IMAGE_HASH = 4190603485L
         private val convertToImageBind by lazy {
             ObjectCalls.getMethodBind("BitMap", "convert_to_image", CONVERT_TO_IMAGE_HASH)
+        }
+
+        private const val OPAQUE_TO_POLYGONS_HASH = 48478126L
+        private val opaqueToPolygonsBind by lazy {
+            ObjectCalls.getMethodBind("BitMap", "opaque_to_polygons", OPAQUE_TO_POLYGONS_HASH)
         }
     }
 }

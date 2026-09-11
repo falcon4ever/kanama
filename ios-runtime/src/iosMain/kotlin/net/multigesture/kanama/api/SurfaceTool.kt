@@ -6,6 +6,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
@@ -54,6 +55,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         ObjectCalls.ptrcallWithVector3Arg(setNormalBind, handle, normal)
     }
 
+    fun setTangent(tangent: Plane) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPlaneArg(setTangentBind, handle, tangent)
+    }
+
     fun setUv(uv: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(setUvBind, handle, uv)
@@ -82,6 +88,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
     fun setSmoothGroup(index: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(setSmoothGroupBind, handle, index)
+    }
+
+    fun addTriangleFan(vertices: List<Vector3>, uvs: List<Vector2>, colors: List<Color>, uv2s: List<Vector2>, normals: List<Vector3>, tangents: List<Plane>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(addTriangleFanBind, handle, vertices, uvs, colors, uv2s, normals, tangents)
     }
 
     fun addIndex(index: Int) {
@@ -237,6 +248,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("SurfaceTool", "set_normal", SET_NORMAL_HASH)
         }
 
+        private const val SET_TANGENT_HASH = 3505987427L
+        private val setTangentBind by lazy {
+            ObjectCalls.getMethodBind("SurfaceTool", "set_tangent", SET_TANGENT_HASH)
+        }
+
         private const val SET_UV_HASH = 743155724L
         private val setUvBind by lazy {
             ObjectCalls.getMethodBind("SurfaceTool", "set_uv", SET_UV_HASH)
@@ -265,6 +281,11 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         private const val SET_SMOOTH_GROUP_HASH = 1286410249L
         private val setSmoothGroupBind by lazy {
             ObjectCalls.getMethodBind("SurfaceTool", "set_smooth_group", SET_SMOOTH_GROUP_HASH)
+        }
+
+        private const val ADD_TRIANGLE_FAN_HASH = 2235017613L
+        private val addTriangleFanBind by lazy {
+            ObjectCalls.getMethodBind("SurfaceTool", "add_triangle_fan", ADD_TRIANGLE_FAN_HASH)
         }
 
         private const val ADD_INDEX_HASH = 1286410249L

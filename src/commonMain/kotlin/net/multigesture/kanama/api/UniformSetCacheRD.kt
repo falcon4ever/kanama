@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 
 /**
  * Uniform set cache manager for Rendering Device based renderers.
@@ -14,6 +15,15 @@ class UniformSetCacheRD(handle: MemorySegment) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
+        /**
+         * Creates/returns a cached uniform set based on the provided uniforms for a given shader.
+         *
+         * Generated from Godot docs: UniformSetCacheRD.get_cache
+         */
+        fun getCache(shader: RID, set: Long, uniforms: List<RDUniform>): RID {
+            return ObjectCalls.ptrcallWithRIDUInt32ObjectListArgsRetRID(getCacheBind, MemorySegment.NULL, shader, set, uniforms)
+        }
+
         @JvmStatic
         fun fromHandle(handle: MemorySegment): UniformSetCacheRD? =
             wrap(handle)
@@ -21,6 +31,9 @@ class UniformSetCacheRD(handle: MemorySegment) : GodotObject(handle) {
         internal fun wrap(handle: MemorySegment): UniformSetCacheRD? =
             if (handle.address() == 0L) null else UniformSetCacheRD(handle)
 
-        // No MethodBinds emitted yet.
+        private const val GET_CACHE_HASH = 658571723L
+        private val getCacheBind by lazy {
+            ObjectCalls.getMethodBind("UniformSetCacheRD", "get_cache", GET_CACHE_HASH)
+        }
     }
 }

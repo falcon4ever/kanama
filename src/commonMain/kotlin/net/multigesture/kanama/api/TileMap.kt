@@ -524,6 +524,16 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
     }
 
     /**
+     * Creates a new `TileMapPattern` from the given layer and set of cells. If `layer` is negative,
+     * the layers are accessed from the last one.
+     *
+     * Generated from Godot docs: TileMap.get_pattern
+     */
+    fun getPattern(layer: Int, coordsArray: List<Vector2i>): TileMapPattern? {
+        return TileMapPattern.wrap(ObjectCalls.ptrcallWithIntAndVector2iListArgsRetObject(getPatternBind, handle, layer, coordsArray))
+    }
+
+    /**
      * Returns for the given coordinate `coords_in_pattern` in a `TileMapPattern` the corresponding
      * cell coordinates if the pattern was pasted at the `position_in_tilemap` coordinates (see
      * `set_pattern`). This mapping is required as in half-offset tile shapes, the mapping might not
@@ -543,6 +553,38 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
      */
     fun setPattern(layer: Int, position: Vector2i, pattern: TileMapPattern?) {
         ObjectCalls.ptrcallWithIntVector2iAndObjectArg(setPatternBind, handle, layer, position, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
+    /**
+     * Update all the cells in the `cells` coordinates array so that they use the given `terrain` for
+     * the given `terrain_set`. If an updated cell has the same terrain as one of its neighboring
+     * cells, this function tries to join the two. This function might update neighboring tiles if
+     * needed to create correct terrain transitions. If `ignore_empty_terrains` is `true`, empty
+     * terrains will be ignored when trying to find the best fitting tile for the given terrain
+     * constraints. If `layer` is negative, the layers are accessed from the last one. Note: To work
+     * correctly, this method requires the TileMap's TileSet to have terrains set up with all required
+     * terrain combinations. Otherwise, it may produce unexpected results.
+     *
+     * Generated from Godot docs: TileMap.set_cells_terrain_connect
+     */
+    fun setCellsTerrainConnect(layer: Int, cells: List<Vector2i>, terrainSet: Int, terrain: Int, ignoreEmptyTerrains: Boolean = true) {
+        ObjectCalls.ptrcallWithIntVector2iListTwoIntAndBoolArgs(setCellsTerrainConnectBind, handle, layer, cells, terrainSet, terrain, ignoreEmptyTerrains)
+    }
+
+    /**
+     * Update all the cells in the `path` coordinates array so that they use the given `terrain` for
+     * the given `terrain_set`. The function will also connect two successive cell in the path with the
+     * same terrain. This function might update neighboring tiles if needed to create correct terrain
+     * transitions. If `ignore_empty_terrains` is `true`, empty terrains will be ignored when trying to
+     * find the best fitting tile for the given terrain constraints. If `layer` is negative, the layers
+     * are accessed from the last one. Note: To work correctly, this method requires the TileMap's
+     * TileSet to have terrains set up with all required terrain combinations. Otherwise, it may
+     * produce unexpected results.
+     *
+     * Generated from Godot docs: TileMap.set_cells_terrain_path
+     */
+    fun setCellsTerrainPath(layer: Int, path: List<Vector2i>, terrainSet: Int, terrain: Int, ignoreEmptyTerrains: Boolean = true) {
+        ObjectCalls.ptrcallWithIntVector2iListTwoIntAndBoolArgs(setCellsTerrainPathBind, handle, layer, path, terrainSet, terrain, ignoreEmptyTerrains)
     }
 
     /**
@@ -918,6 +960,11 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
             ObjectCalls.getMethodBind("TileMap", "get_layer_for_body_rid", GET_LAYER_FOR_BODY_RID_HASH)
         }
 
+        private const val GET_PATTERN_HASH = 2833570986L
+        private val getPatternBind by lazy {
+            ObjectCalls.getMethodBind("TileMap", "get_pattern", GET_PATTERN_HASH)
+        }
+
         private const val MAP_PATTERN_HASH = 1864516957L
         private val mapPatternBind by lazy {
             ObjectCalls.getMethodBind("TileMap", "map_pattern", MAP_PATTERN_HASH)
@@ -926,6 +973,16 @@ class TileMap(handle: MemorySegment) : Node2D(handle) {
         private const val SET_PATTERN_HASH = 1195853946L
         private val setPatternBind by lazy {
             ObjectCalls.getMethodBind("TileMap", "set_pattern", SET_PATTERN_HASH)
+        }
+
+        private const val SET_CELLS_TERRAIN_CONNECT_HASH = 3578627656L
+        private val setCellsTerrainConnectBind by lazy {
+            ObjectCalls.getMethodBind("TileMap", "set_cells_terrain_connect", SET_CELLS_TERRAIN_CONNECT_HASH)
+        }
+
+        private const val SET_CELLS_TERRAIN_PATH_HASH = 3578627656L
+        private val setCellsTerrainPathBind by lazy {
+            ObjectCalls.getMethodBind("TileMap", "set_cells_terrain_path", SET_CELLS_TERRAIN_PATH_HASH)
         }
 
         private const val FIX_INVALID_TILES_HASH = 3218959716L

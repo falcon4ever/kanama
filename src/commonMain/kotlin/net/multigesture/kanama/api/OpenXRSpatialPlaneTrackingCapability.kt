@@ -4,6 +4,7 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.RID
 
 /**
  * Generated from Godot docs: OpenXRSpatialPlaneTrackingCapability
@@ -11,6 +12,10 @@ import net.multigesture.kanama.binding.runtime.*
 class OpenXRSpatialPlaneTrackingCapability(handle: MemorySegment) : OpenXRExtensionWrapper(handle) {
     fun isSupported(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSupportedBind, handle)
+    }
+
+    fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(startEntityDiscoveryBind, handle, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
     }
 
     companion object {
@@ -24,6 +29,11 @@ class OpenXRSpatialPlaneTrackingCapability(handle: MemorySegment) : OpenXRExtens
         private const val IS_SUPPORTED_HASH = 2240911060L
         private val isSupportedBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialPlaneTrackingCapability", "is_supported", IS_SUPPORTED_HASH)
+        }
+
+        private const val START_ENTITY_DISCOVERY_HASH = 3452714169L
+        private val startEntityDiscoveryBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialPlaneTrackingCapability", "start_entity_discovery", START_ENTITY_DISCOVERY_HASH)
         }
     }
 }

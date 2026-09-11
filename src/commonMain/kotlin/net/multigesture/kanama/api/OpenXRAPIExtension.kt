@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2i
 
 /**
@@ -229,6 +230,11 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
     fun getProjectionLayer(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getProjectionLayerBind, handle)
+    }
+
+    fun setRenderRegion(renderRegion: Rect2i) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRect2iArg(setRenderRegionBind, handle, renderRegion)
     }
 
     fun setEmulateEnvironmentBlendModeAlphaBlend(enabled: Boolean) {
@@ -485,6 +491,11 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_PROJECTION_LAYER_HASH = 2455072627L
         private val getProjectionLayerBind by lazy {
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_projection_layer", GET_PROJECTION_LAYER_HASH)
+        }
+
+        private const val SET_RENDER_REGION_HASH = 1763793166L
+        private val setRenderRegionBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_render_region", SET_RENDER_REGION_HASH)
         }
 
         private const val SET_EMULATE_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND_HASH = 2586408642L

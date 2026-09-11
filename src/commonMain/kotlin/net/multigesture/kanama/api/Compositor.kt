@@ -12,9 +12,22 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: Compositor
  */
 class Compositor(handle: MemorySegment) : Resource(handle) {
-    val compositorEffects: List<CompositorEffect>
+    var compositorEffects: List<CompositorEffect>
         @JvmName("compositorEffectsProperty")
         get() = getCompositorEffects()
+        @JvmName("setCompositorEffectsProperty")
+        set(value) = setCompositorEffects(value)
+
+    /**
+     * The custom `CompositorEffect`s that are applied during rendering of viewports using this
+     * compositor.
+     *
+     * Generated from Godot docs: Compositor.set_compositor_effects
+     */
+    fun setCompositorEffects(compositorEffects: List<CompositorEffect>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithObjectListArg(setCompositorEffectsBind, handle, compositorEffects)
+    }
 
     /**
      * The custom `CompositorEffect`s that are applied during rendering of viewports using this
@@ -34,6 +47,11 @@ class Compositor(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): Compositor? =
             if (handle.address() == 0L) null else Compositor(handle)
+
+        private const val SET_COMPOSITOR_EFFECTS_HASH = 381264803L
+        private val setCompositorEffectsBind by lazy {
+            ObjectCalls.getMethodBind("Compositor", "set_compositor_effects", SET_COMPOSITOR_EFFECTS_HASH)
+        }
 
         private const val GET_COMPOSITOR_EFFECTS_HASH = 3995934104L
         private val getCompositorEffectsBind by lazy {

@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
@@ -42,6 +43,19 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
     fun surfaceSetNormal(normal: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(surfaceSetNormalBind, handle, normal)
+    }
+
+    /**
+     * Set the tangent attribute that will be pushed with the next vertex. Note: Even though `tangent`
+     * is a `Plane`, it does not directly represent the tangent plane. Its `Plane.x`, `Plane.y`, and
+     * `Plane.z` represent the tangent vector and `Plane.d` should be either `-1` or `1`. See also
+     * `Mesh.ARRAY_TANGENT`.
+     *
+     * Generated from Godot docs: ImmediateMesh.surface_set_tangent
+     */
+    fun surfaceSetTangent(tangent: Plane) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPlaneArg(surfaceSetTangentBind, handle, tangent)
     }
 
     /**
@@ -126,6 +140,11 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
         private const val SURFACE_SET_NORMAL_HASH = 3460891852L
         private val surfaceSetNormalBind by lazy {
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_set_normal", SURFACE_SET_NORMAL_HASH)
+        }
+
+        private const val SURFACE_SET_TANGENT_HASH = 3505987427L
+        private val surfaceSetTangentBind by lazy {
+            ObjectCalls.getMethodBind("ImmediateMesh", "surface_set_tangent", SURFACE_SET_TANGENT_HASH)
         }
 
         private const val SURFACE_SET_UV_HASH = 743155724L

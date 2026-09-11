@@ -71,6 +71,30 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
         ObjectCalls.ptrcallNoArgs(fetchPhysicalBonesBind, handle)
     }
 
+    /**
+     * Tell the `PhysicalBone2D` nodes to start simulating and interacting with the physics world.
+     * Optionally, an array of bone names can be passed to this function, and that will cause only
+     * `PhysicalBone2D` nodes with those names to start simulating.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.start_simulation
+     */
+    fun startSimulation(bones: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameListArg(startSimulationBind, handle, bones)
+    }
+
+    /**
+     * Tell the `PhysicalBone2D` nodes to stop simulating and interacting with the physics world.
+     * Optionally, an array of bone names can be passed to this function, and that will cause only
+     * `PhysicalBone2D` nodes with those names to stop simulating.
+     *
+     * Generated from Godot docs: SkeletonModification2DPhysicalBones.stop_simulation
+     */
+    fun stopSimulation(bones: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringNameListArg(stopSimulationBind, handle, bones)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: MemorySegment): SkeletonModification2DPhysicalBones? =
@@ -102,6 +126,16 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
         private const val FETCH_PHYSICAL_BONES_HASH = 3218959716L
         private val fetchPhysicalBonesBind by lazy {
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "fetch_physical_bones", FETCH_PHYSICAL_BONES_HASH)
+        }
+
+        private const val START_SIMULATION_HASH = 2787316981L
+        private val startSimulationBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "start_simulation", START_SIMULATION_HASH)
+        }
+
+        private const val STOP_SIMULATION_HASH = 2787316981L
+        private val stopSimulationBind by lazy {
+            ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "stop_simulation", STOP_SIMULATION_HASH)
         }
     }
 }

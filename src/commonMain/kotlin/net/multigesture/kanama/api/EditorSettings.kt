@@ -141,6 +141,16 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Overrides the built-in editor action `name` with the input actions defined in `actions_list`.
+     *
+     * Generated from Godot docs: EditorSettings.set_builtin_action_override
+     */
+    fun setBuiltinActionOverride(name: String, actionsList: List<InputEvent>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringAndObjectListArgs(setBuiltinActionOverrideBind, handle, name, actionsList)
+    }
+
+    /**
      * Adds a `shortcut` whose path is specified by `path`. The `path` determines how the shortcut is
      * organized and displayed in the editor's shortcut settings. The path format affects the display
      * as follows: - `"name"` (no slash): Creates a category named `name` with the shortcut displayed
@@ -318,6 +328,11 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
         private const val GET_RECENT_DIRS_HASH = 1139954409L
         private val getRecentDirsBind by lazy {
             ObjectCalls.getMethodBind("EditorSettings", "get_recent_dirs", GET_RECENT_DIRS_HASH)
+        }
+
+        private const val SET_BUILTIN_ACTION_OVERRIDE_HASH = 1209351045L
+        private val setBuiltinActionOverrideBind by lazy {
+            ObjectCalls.getMethodBind("EditorSettings", "set_builtin_action_override", SET_BUILTIN_ACTION_OVERRIDE_HASH)
         }
 
         private const val ADD_SHORTCUT_HASH = 4124020929L

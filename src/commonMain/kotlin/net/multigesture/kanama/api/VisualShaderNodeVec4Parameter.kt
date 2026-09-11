@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Vector4
 
 /**
  * Generated from Godot docs: VisualShaderNodeVec4Parameter
@@ -16,6 +17,12 @@ class VisualShaderNodeVec4Parameter(handle: MemorySegment) : VisualShaderNodePar
         @JvmName("setDefaultValueEnabledProperty")
         set(value) = setDefaultValueEnabled(value)
 
+    var defaultValue: Vector4
+        @JvmName("defaultValueProperty")
+        get() = getDefaultValue()
+        @JvmName("setDefaultValueProperty")
+        set(value) = setDefaultValue(value)
+
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
@@ -24,6 +31,16 @@ class VisualShaderNodeVec4Parameter(handle: MemorySegment) : VisualShaderNodePar
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
+    }
+
+    fun setDefaultValue(value: Vector4) {
+        checkOpen()
+        ObjectCalls.ptrcallWithVector4Arg(setDefaultValueBind, handle, value)
+    }
+
+    fun getDefaultValue(): Vector4 {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetVector4(getDefaultValueBind, handle)
     }
 
     companion object {
@@ -42,6 +59,16 @@ class VisualShaderNodeVec4Parameter(handle: MemorySegment) : VisualShaderNodePar
         private const val IS_DEFAULT_VALUE_ENABLED_HASH = 36873697L
         private val isDefaultValueEnabledBind by lazy {
             ObjectCalls.getMethodBind("VisualShaderNodeVec4Parameter", "is_default_value_enabled", IS_DEFAULT_VALUE_ENABLED_HASH)
+        }
+
+        private const val SET_DEFAULT_VALUE_HASH = 643568085L
+        private val setDefaultValueBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNodeVec4Parameter", "set_default_value", SET_DEFAULT_VALUE_HASH)
+        }
+
+        private const val GET_DEFAULT_VALUE_HASH = 2435802345L
+        private val getDefaultValueBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNodeVec4Parameter", "get_default_value", GET_DEFAULT_VALUE_HASH)
         }
     }
 }

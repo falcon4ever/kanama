@@ -475,11 +475,27 @@ IOS_ARG_KINDS = {
     "Variant",
     "Dictionary",
     "Array",
+
+    # task 100 parcel 8 — POD kinds the layout table lacked, and typed-Array args (one descriptor
+    # each; TypedObjectArray::X / Typed<X>Array object arrays are admitted by prefix in
+    # ios_method_supported, gated on the element class being emitted on iOS).
+    "Rect2i",
+    "Plane",
+    "Vector4",
+    "TypedRIDArray",
+    "TypedIntArray",
+    "TypedStringArray",
+    "TypedStringNameArray",
+    "TypedNodePathArray",
+    "TypedVector2iArray",
+    "TypedTransform3DArray",
+    "TypedPlaneArray",
+    "TypedPackedVector2Array",
 }
 # Return shapes the iOS helpers can read back (keyed by CallShape.kotlin_return, the
 # stable per-helper return-type token). StringName/String/RID/List/Map returns
 # are intentionally absent until their read-back is wired + validated.
-IOS_RET_KOTLIN = {"Unit", "Boolean", "Int", "Long", "Double", "Vector2", "Vector2i", "Vector3", "Vector3i", "Color", "Rect2", "Rect2i", "MemorySegment", "String", "NodePath", "Basis", "Transform2D", "Transform3D", "Projection", "RID", "Quaternion", "AABB", "List<Int>", "List<Float>", "List<Vector2>", "List<Color>", "List<String>", "List<NodePath>", "List<Long>", "List<Plane>", "List<Any?>", "Any?"}
+IOS_RET_KOTLIN = {"Unit", "Boolean", "Int", "Long", "Double", "Vector2", "Vector2i", "Vector3", "Vector3i", "Color", "Rect2", "Rect2i", "MemorySegment", "String", "NodePath", "Basis", "Transform2D", "Transform3D", "Projection", "RID", "Quaternion", "AABB", "List<Int>", "List<Float>", "List<Vector2>", "List<Color>", "List<String>", "List<NodePath>", "List<Long>", "List<Plane>", "List<Any?>", "Any?", "Plane", "Vector4"}
 
 # Helpers already hand-written in ios-runtime ObjectCalls.kt (the reference template +
 # override set). The generator must NOT re-emit these (they'd clash with the members).
@@ -1839,8 +1855,16 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     ):
         return False
     logical_args = method.logical_arg_kinds(object_types)
-    if not all(kind in IOS_ARG_KINDS for kind in logical_args):
-        return False
+    # task 100 parcel 8 — Array[Object subclass] args (TypedObjectArray::X and the named
+    # Typed<X>Array kinds) are admitted when the element wrapper is emitted on iOS.
+    for kind in logical_args:
+        if kind in IOS_ARG_KINDS:
+            continue
+        typed_object_element = typed_object_array_element_any(kind)
+        if typed_object_element is None:
+            return False
+        if IOS_EMIT_CLASSES is not None and typed_object_element != "Object" and typed_object_element not in IOS_EMIT_CLASSES:
+            return False
     # Packed*Array args (task 100, parcel 4): every kind is a BUILD-tagged arg the generic dispatch
     # constructs from a KanamaIosPackedArgDesc (IOS_PACKED_ARGS); no per-helper gate remains. The
     # hand-written CanvasItem draw helpers and ptrcallWithPackedFloat32ListArg keep their bodies.
@@ -3288,6 +3312,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.value
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.ios.cinterop.KanamaIosCallableArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.types.AABB
@@ -3331,8 +3356,9 @@ import net.multigesture.kanama.types.Vector4
  * `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch builds the Godot
  * array from; Variant / Dictionary / Array ARGS by `packVariantDesc` / `packDictionaryBlob` /
  * `packArrayBlob` (a KanamaIosVariantArgDesc or the task-29 entry blob the dispatch boxes for the
- * call). Helpers already hand-written in ObjectCalls.kt are the override set and are NOT
- * regenerated here.
+ * call); typed-Array ARGS by the `ObjectCalls.packTyped<Kind>ArrayDesc` helpers into a
+ * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements). Helpers already hand-written in
+ * ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 '''
 
@@ -3377,6 +3403,12 @@ IOS_PT_TAG_VALUES = {
     "PT_VARIANT": 38,
     "PT_DICTIONARY": 29,
     "PT_ARRAY": 30,
+    # Typed-Array BUILD-tagged arg (task 100, parcel 8): the arg ptr is a KanamaIosTypedArrayArgDesc
+    # {variant_type, class_name, blob}. Value matches the C enum.
+    "PT_TYPED_ARRAY_BLOB": 39,
+    # Element / POD tags reused by parcel 8 (Plane and Vector4 as POD args/returns).
+    "PT_PLANE": 26,
+    "PT_VECTOR4": 10,
     # Packed*Array BUILD-tagged args (task 100, parcel 4): the arg ptr is a KanamaIosPackedArgDesc
     # {count, data} (PT_PACKED_STRING_ARRAY: data is the [int32 count]([int32 len][utf8])* blob).
     # Values match the C enum and KanamaIosRuntime.kt; 23/24 predate the task-29 return tags.
@@ -3407,6 +3439,23 @@ IOS_PACKED_ARGS = {
     "PackedStringArray": ("List<String>", "PT_PACKED_STRING_ARRAY", "packStringDesc"),
 }
 
+# Typed-Array ARGS (task 100, parcel 8): logical kind -> (Kotlin param type, descriptor helper on
+# ObjectCalls). Every one is a KanamaIosTypedArrayArgDesc under the PT_TYPED_ARRAY_BLOB tag; the
+# helper picks the element tags and the Variant.Type array_set_typed needs. Object element arrays
+# (TypedObjectArray::X and the named Typed<X>Array kinds) go through packTypedObjectArrayDesc with
+# the element class name, gated on that class being emitted on iOS (see ios_method_supported).
+IOS_TYPED_ARRAY_ARGS = {
+    "TypedRIDArray": ("List<RID>", "packTypedRIDArrayDesc"),
+    "TypedIntArray": ("List<Long>", "packTypedLongArrayDesc"),
+    "TypedStringArray": ("List<String>", "packTypedStringArrayDesc"),
+    "TypedStringNameArray": ("List<String>", "packTypedStringNameArrayDesc"),
+    "TypedNodePathArray": ("List<NodePath>", "packTypedNodePathArrayDesc"),
+    "TypedVector2iArray": ("List<Vector2i>", "packTypedVector2iArrayDesc"),
+    "TypedTransform3DArray": ("List<Transform3D>", "packTypedTransform3DArrayDesc"),
+    "TypedPlaneArray": ("List<Plane>", "packTypedPlaneArrayDesc"),
+    "TypedPackedVector2Array": ("List<List<Vector2>>", "packTypedPackedVector2ListArrayDesc"),
+}
+
 
 def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
     """(kotlin_param_type, pt_tag, cell_decl_lines, arg_ptr_expr) for one arg.
@@ -3425,6 +3474,49 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
         return ("Double", "PT_FLOAT64", [f"val {c} = alloc<DoubleVar>(); {c}.value = {a}"], f"{c}.ptr.reinterpret<CPointed>()")
     if kind == "Object":
         return ("MemorySegment", "PT_OBJECT", [f"val {c} = alloc<LongVar>(); {c}.value = {a}.address()"], f"{c}.ptr.reinterpret<CPointed>()")
+    # task 100 parcel 8 — typed-Array args: one descriptor per kind, see IOS_TYPED_ARRAY_ARGS.
+    if kind in IOS_TYPED_ARRAY_ARGS:
+        param_type, helper = IOS_TYPED_ARRAY_ARGS[kind]
+        return (param_type, "PT_TYPED_ARRAY_BLOB", [f"val {c} = {helper}({a})"], f"{c}.reinterpret<CPointed>()")
+    typed_object_element = typed_object_array_element_any(kind)
+    if typed_object_element is not None:
+        # Array[Object subclass] arg: the wrapper passes List<Element>; List is covariant, so the
+        # descriptor helper takes List<GodotObject> and the generated helper file never has to
+        # import a wrapper class (the runtime layer stays below api). The Array is built UNTYPED
+        # on purpose: one helper shape serves every element class (GLTFState.set_nodes and
+        # CompositorEffect setters share ptrcallWithObjectListArg, exactly as on desktop), and the
+        # engine's TypedArray<T> conversion at the ptrcall boundary validates each element against
+        # the parameter's class. Typing it with any one class name here breaks every other caller
+        # of the same shape (the parcel-8 device gate caught that on Array[GLTFNode]).
+        return (
+            "List<GodotObject>",
+            "PT_TYPED_ARRAY_BLOB",
+            [f"val {c} = packTypedObjectArrayDesc({a})"],
+            f"{c}.reinterpret<CPointed>()",
+        )
+    if kind == "Rect2i":
+        # 4x int32 POD passthrough (position.x, position.y, size.x, size.y), never widened.
+        return (
+            "Rect2i",
+            "PT_RECT2I",
+            [f"val {c} = allocArray<IntVar>(4); {c}[0] = {a}.position.x; {c}[1] = {a}.position.y; {c}[2] = {a}.size.x; {c}[3] = {a}.size.y"],
+            f"{c}.reinterpret<CPointed>()",
+        )
+    if kind == "Plane":
+        # 4x real_t POD passthrough (normal.x, normal.y, normal.z, d).
+        return (
+            "Plane",
+            "PT_PLANE",
+            [f"val {c} = allocArray<GodotRealVar>(4); {c}[0] = GodotReal.toC({a}.normal.x); {c}[1] = GodotReal.toC({a}.normal.y); {c}[2] = GodotReal.toC({a}.normal.z); {c}[3] = GodotReal.toC({a}.d)"],
+            f"{c}.reinterpret<CPointed>()",
+        )
+    if kind == "Vector4":
+        return (
+            "Vector4",
+            "PT_VECTOR4",
+            [f"val {c} = allocArray<GodotRealVar>(4); {c}[0] = GodotReal.toC({a}.x); {c}[1] = GodotReal.toC({a}.y); {c}[2] = GodotReal.toC({a}.z); {c}[3] = GodotReal.toC({a}.w)"],
+            f"{c}.reinterpret<CPointed>()",
+        )
     if kind == "Vector2":
         return (
             "Vector2",
@@ -3675,6 +3767,23 @@ def ios_ret_layout(kotlin_return: str) -> tuple[str | None, str, list[str], str,
             "ret",
             "AABB(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])), "
             "Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])))",
+        )
+    if kotlin_return == "Plane":
+        # 4x real_t: normal xyz + d (task 100, parcel 8).
+        return (
+            "Plane",
+            "PT_PLANE",
+            ["val ret = allocArray<GodotRealVar>(4)"],
+            "ret",
+            "Plane(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])), GodotReal.fromC(ret[3]))",
+        )
+    if kotlin_return == "Vector4":
+        return (
+            "Vector4",
+            "PT_VECTOR4",
+            ["val ret = allocArray<GodotRealVar>(4)"],
+            "ret",
+            "Vector4(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3]))",
         )
     if kotlin_return == "MemorySegment":
         return ("MemorySegment", "PT_OBJECT", ["val ret = alloc<LongVar>(); ret.value = 0"], "ret.ptr", "MemorySegment.ofAddress(ret.value)")

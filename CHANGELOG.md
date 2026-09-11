@@ -7,6 +7,33 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: typed-array and Rect2i arguments on every audited shape (task 100, parcel 8)
+
+- A method taking a typed `Array[...]` argument — `Array[RID]`, `Array[String]`, `Array[StringName]`,
+  `Array[NodePath]`, `Array[int]`, `Array[Vector2i]`, `Array[Plane]`, `Array[Transform3D]`,
+  `Array[PackedVector2Array]` or an `Array[<Object subclass>]` whose element wrapper is emitted on
+  iOS — was desktop-only, as were `Rect2i`, `Plane` and `Vector4` arguments and `Plane` / `Vector4`
+  returns. Every such method whose other arguments are already audited now gets a generated
+  helper. Typed arrays ride a new BUILD-tagged descriptor: the dispatch constructs an empty Godot
+  Array, makes it typed through the `array_set_typed` interface (the engine only accepts that on
+  an empty array, and several setters reject an untyped one), pushes the descriptor's tagged
+  elements one by one (the task-29 container layout; `push_back` validates each against the
+  type) and destroys the Array after the call. `Rect2i`, `Plane` and `Vector4` are plain
+  fixed-width cells the layout table lacked. 135 members on 55 classes move from the desktop
+  companions into the shared tree — `PhysicsPointQueryParameters2D.set_exclude`,
+  `PhysicsRayQueryParameters3D.create`, `NavigationPathQueryParameters2D.set_included_regions`,
+  `GLTFState.set_nodes`, `GLTFState.set_unique_names`, `CodeEdit.set_comment_delimiters`,
+  `Control.set_accessibility_controls_nodes`, `RDPipelineMultisampleState.set_sample_masks`,
+  `Geometry3D.compute_convex_mesh_points`, `Geometry3D.clip_polygon`,
+  `RenderingDevice.vertex_format_create`, `RenderingServer.texture_3d_create`,
+  `AStarGrid2D.set_region`, `BitMap.set_bit_rect`, `Window.popup`,
+  `VisualShaderNodeVec4Parameter.set_default_value`, `XRAnchor3D.get_plane` among them; the gap
+  index goes from 393 to 258 desktop-only members (147 → 108 companion files, 195 → 128 helpers
+  waited on). Eight self-test rows round-trip a 1000-element `Array[RID]`, `Array[String]`,
+  `Array[GLTFNode]`, `Array[NodePath]`, `Array[int]` and `Array[PackedVector2Array]` through a
+  generated setter and its read-back, feed the unit cube's six planes to
+  `Geometry3D.compute_convex_mesh_points`, and round-trip a `Rect2i` and a `Vector4`.
+
 ### Added — iOS: Dictionary, Array and Variant arguments on every audited shape (task 100, parcel 7)
 
 - A method taking a `Variant`, a `Dictionary` or a generic `Array` argument was callable on iOS

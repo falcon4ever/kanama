@@ -55,6 +55,14 @@ class OpenXRSpatialAnchorCapability(handle: MemorySegment) : OpenXRExtensionWrap
         return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(unpersistAnchorBind, handle, anchorTracker?.requireOpenHandle() ?: MemorySegment.NULL, persistenceContext, userCallback.target.handle, userCallback.method))
     }
 
+    fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(startEntityDiscoveryBind, handle, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
+    }
+
+    fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?) {
+        ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(doEntityUpdateBind, handle, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL)
+    }
+
     companion object {
         const val PERSISTENCE_SCOPE_SYSTEM_MANAGED: Long = 1L
         const val PERSISTENCE_SCOPE_LOCAL_ANCHORS: Long = 1000781000L
@@ -119,6 +127,16 @@ class OpenXRSpatialAnchorCapability(handle: MemorySegment) : OpenXRExtensionWrap
         private const val UNPERSIST_ANCHOR_HASH = 4244202513L
         private val unpersistAnchorBind by lazy {
             ObjectCalls.getMethodBind("OpenXRSpatialAnchorCapability", "unpersist_anchor", UNPERSIST_ANCHOR_HASH)
+        }
+
+        private const val START_ENTITY_DISCOVERY_HASH = 3452714169L
+        private val startEntityDiscoveryBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialAnchorCapability", "start_entity_discovery", START_ENTITY_DISCOVERY_HASH)
+        }
+
+        private const val DO_ENTITY_UPDATE_HASH = 3138044275L
+        private val doEntityUpdateBind by lazy {
+            ObjectCalls.getMethodBind("OpenXRSpatialAnchorCapability", "do_entity_update", DO_ENTITY_UPDATE_HASH)
         }
     }
 }
