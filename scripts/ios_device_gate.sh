@@ -577,6 +577,11 @@ fi
 
 echo "[ios_device_gate] PASS"
 echo "[ios_device_gate] summary: $SUMMARY"
-# Ledger the run (task 99): the Godot pin + Kanama commit this device gate passed on.
-python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate ios-device-gate --claim "iOS Supported" \
-  --result PASS --where "${DEVICE_LABEL:-$DEVICE_ID}" --source scripts/ios_device_gate.sh
+# Ledger the run (task 99): the Godot pin + Kanama commit this device gate passed on. A partial
+# matrix (--start-at) is not the full gate and must not be ledgered as one (task 105).
+if [[ -n "$START_AT" ]]; then
+  echo "[ios_device_gate] partial run (--start-at $START_AT): not recorded in evidence/gates.json"
+else
+  python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate ios-device-gate --claim "iOS Supported" \
+    --result PASS --where "${DEVICE_LABEL:-$DEVICE_ID}" --source scripts/ios_device_gate.sh
+fi
