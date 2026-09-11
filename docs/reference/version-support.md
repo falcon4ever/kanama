@@ -172,7 +172,9 @@ export and launch are the validation target; simulator runs are optional compile
 checks and not a frame-rate signal.
 
 The evidence is the **full ten-step device gate** (`scripts/ios_device_gate.sh`: the
-fresh-project install path plus the nine-demo matrix), validated on two physical
+fresh-project install path plus the nine-demo matrix; since task 105 each demo step also
+streams the device console for 30 s after launch and fails on a crash signature, so a crash
+inside that window is no longer invisible), validated on two physical
 models — **iPhone 12** (iOS 26.5, 2026-06-25; 0 guardrail hits, per-frame Kanama
 script+binding overhead about 0.63 ms/frame measured there) and **iPhone 15 Pro**
 (iOS 26.5, 2026-07-10, on the full-breadth generated-wrapper runtime). The claim
