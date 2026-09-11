@@ -5065,44 +5065,41 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // task 100 (parcel 10) — typed arrays whose elements are containers / packed arrays, through
   // the GENERATED helpers (packTyped{Dictionary,Array,ByteArray,PackedStringList}ArrayDesc ->
-  // PT_TYPED_ARRAY_BLOB -> nested blobs the boxer rebuilds). Data holders and one off-tree Control
-  // only — nothing that needs a physics / navigation server at scene-init.
-  // Array[Dictionary]: GraphEdit.set_connections stores each connection without resolving the
-  // node names (connect_node keeps the StringNames; the redraw uses get_node_or_null), so the
-  // read-back is a pure round trip of the dictionaries' from/to fields.
-  val nestedGraph = ObjectCalls.constructObject("GraphEdit")
-  ObjectCalls.ptrcallWithDictionaryListArg(
-    ObjectCalls.getMethodBind("GraphEdit", "set_connections", 381264803L),
-    nestedGraph,
-    listOf(
-      mapOf(
-        "from_node" to "A",
-        "from_port" to 0L,
-        "to_node" to "B",
-        "to_port" to 1L,
-        "keep_alive" to false,
-      ),
-      mapOf(
-        "from_node" to "B",
-        "from_port" to 2L,
-        "to_node" to "C",
-        "to_port" to 0L,
-        "keep_alive" to false,
-      ),
-    ),
-  )
-  val nestedConnections =
-    ObjectCalls.ptrcallNoArgsRetDictionaryList(
-      ObjectCalls.getMethodBind("GraphEdit", "get_connection_list", 3995934104L),
-      nestedGraph,
+  // PT_TYPED_ARRAY_BLOB -> nested blobs the boxer rebuilds). Data holders and the RenderingServer
+  // only — nothing that needs a physics / navigation server, and no Control, at scene-init.
+  // Array[Dictionary]: RenderingServer.mesh_create_from_surfaces (the RenderingServer exists before
+  // extensions initialise, so RIDs are fine here). NOT GraphEdit / any Control: constructing a
+  // Control at scene-init runs ThemeDB::update_class_instance_items before the theme contexts
+  // exist and segfaults (the 10+11 stack gate caught GraphEdit doing exactly that). An empty
+  // surface list still builds the typed Array[Dictionary] cell (set_typed to Dictionary), passes
+  // it and destroys it; the engine answers with a valid, surface-less mesh RID. A non-empty
+  // Dictionary element cannot be exercised without a Control or a full surface dictionary (AABB
+  // values), so the DICTIONARY boxer case rides on the ARRAY case the OggPacketSequence row proves.
+  val nestedRs = ObjectCalls.getSingleton("RenderingServer")
+  val nestedMesh =
+    ObjectCalls.ptrcallWithDictionaryListIntArgsRetRID(
+      ObjectCalls.getMethodBind("RenderingServer", "mesh_create_from_surfaces", 4291747531L),
+      nestedRs,
+      emptyList(),
+      0,
     )
   check(
-    "arg-nested(GraphEdit.set_connections Array[Dictionary] round-trip)",
-    nestedConnections.map {
-      listOf(it["from_node"], it["from_port"], it["to_node"], it["to_port"])
-    } == listOf(listOf("A", 0L, "B", 1L), listOf("B", 2L, "C", 0L)),
+    "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> valid RID)",
+    nestedMesh != RID(0L),
   )
-  ObjectCalls.destroyObject(nestedGraph)
+  check(
+    "arg-nested(mesh_create_from_surfaces mesh has 0 surfaces)",
+    ObjectCalls.ptrcallWithRIDArgRetInt(
+      ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface_count", 2198884583L),
+      nestedRs,
+      nestedMesh,
+    ) == 0,
+  )
+  ObjectCalls.ptrcallWithRIDArg(
+    ObjectCalls.getMethodBind("RenderingServer", "free_rid", 2722037293L),
+    nestedRs,
+    nestedMesh,
+  )
 
   // Array[Array] whose inner Arrays hold PackedByteArrays: OggPacketSequence packet data, stored
   // as-is by the setter. Proves the nested blob both ways (arg boxer + return encoder), including

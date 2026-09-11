@@ -26,7 +26,7 @@ versioning once public releases begin.
   `add_line_diffs_into_diff_hunk`, `DisplayServer.file_dialog_with_options_show` — and the
   `connections`, `buffers` and `jsonPointers` properties are read-write on iOS again; the gap index
   goes from 34 to 21 desktop-only members (20 → 13 companion files, 27 → 16 helpers waited on, 3 → 0
-  read-only properties). Five self-test rows round-trip two GraphEdit connections through
+  read-only properties). Six self-test rows create a surface-less mesh from an empty `Array[Dictionary]` through
   `set_connections` / `get_connection_list`, two OggPacketSequence pages of PackedByteArray packets
   (byte-exact, including a 300-byte packet), three GLTFState buffers (an empty one and a 5000-byte
   one) and three JSON-pointer PackedStringArrays (a non-ASCII element, an empty array, an empty
