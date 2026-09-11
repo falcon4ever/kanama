@@ -21,9 +21,11 @@ versioning once public releases begin.
   re-issued). An empty or object-less Callable is `null`, as on desktop. New C entry
   `kanama_ios_godot_ptrcall_ret_callable`; no new tag. 9 members on 4 classes move from the
   desktop companions into the shared tree; the gap index goes from 34 to 25 desktop-only members
-  (20 → 17 companion files, 27 → 22 helpers waited on). Four self-test rows round-trip a
-  `TreeItem` custom-draw callback (target handle and method name; a 602-byte non-ASCII name
-  through the pending slot) and read an empty `MultiplayerSpawner` spawn function back as `null`.
+  (20 → 17 companion files, 27 → 22 helpers waited on). Five self-test rows round-trip a
+  `MultiplayerSpawner` spawn function (target handle and method name; a 602-byte non-ASCII name
+  through the pending slot), read the empty spawn function back as `null`, and read `NativeMenu`'s
+  popup callback for an invalid RID back as `null` (no Control is constructed: a Control's
+  post-initialize needs the theme contexts, which do not exist before `Main::setup2`).
 
 ### Added — iOS: typed arrays of containers and packed arrays on every audited shape (task 100, parcel 10)
 

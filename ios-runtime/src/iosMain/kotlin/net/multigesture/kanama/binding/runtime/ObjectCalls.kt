@@ -6077,50 +6077,49 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // task 100 (parcel 11) — Callable RETURNS through the GENERATED helpers (ptrcallRetCallable ->
   // kanama_ios_godot_ptrcall_ret_callable: one ptrcall into a Callable cell, get_object /
-  // get_method, borrowed handle + UTF-8 name back; an empty Callable is null, as on desktop). A
-  // Tree and its root TreeItem are a Control and its data: nothing here touches a physics or
-  // navigation server, so the rows are safe before Main::setup2 (scene-init rule).
+  // get_method, borrowed handle + UTF-8 name back; an empty Callable is null, as on desktop).
+  // MultiplayerSpawner is a plain Node and NativeMenu a singleton: nothing here touches a physics
+  // or navigation server, and no Control is constructed (a Control's _postinitialize runs
+  // ThemeDB::update_class_instance_items before the theme contexts exist and segfaults — the
+  // first version of these rows used Tree/TreeItem and the 10+11 stack gate caught it).
   run {
-    val tree = ObjectCalls.constructObject("Tree")
-    val root =
-      ObjectCalls.ptrcallWithObjectAndIntArgRetObject(
-        ObjectCalls.getMethodBind("Tree", "create_item", 528467046L),
-        tree,
-        MemorySegment.NULL,
-        -1,
-      )
-    val setBind = ObjectCalls.getMethodBind("TreeItem", "set_custom_draw_callback", 957362965L)
-    val getBind = ObjectCalls.getMethodBind("TreeItem", "get_custom_draw_callback", 1317077508L)
-    ObjectCalls.ptrcallWithIntCallableArgs(setBind, root, 0, tree, "queue_redraw")
-    val back = ObjectCalls.ptrcallWithIntArgRetCallable(getBind, root, 0)
+    val spawner = ObjectCalls.constructObject("MultiplayerSpawner")
+    val setBind = ObjectCalls.getMethodBind("MultiplayerSpawner", "set_spawn_function", 1611583062L)
+    val getBind = ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawn_function", 1307783378L)
+    val empty = ObjectCalls.ptrcallNoArgsRetCallable(getBind, spawner)
+    check("ret-callable(MultiplayerSpawner.get_spawn_function empty -> null)", empty == null)
+    ObjectCalls.ptrcallWithCallableArg(setBind, spawner, spawner, "queue_free")
+    val back = ObjectCalls.ptrcallNoArgsRetCallable(getBind, spawner)
     check(
-      "ret-callable(TreeItem.get_custom_draw_callback target handle round-trip)",
-      back != null && back.target.handle.address() == tree.address(),
+      "ret-callable(MultiplayerSpawner.get_spawn_function target handle round-trip)",
+      back != null && back.target.handle.address() == spawner.address(),
     )
     check(
-      "ret-callable(TreeItem.get_custom_draw_callback method name round-trip)",
-      back?.method == "queue_redraw",
+      "ret-callable(MultiplayerSpawner.get_spawn_function method name round-trip)",
+      back?.method == "queue_free",
     )
     // A method name longer than the 256-byte inline buffer comes back whole through the pending
     // slot (402 chars, 602 UTF-8 bytes: the non-ASCII half proves the byte/char accounting).
     val longName = "m_" + "\u00e9x".repeat(200)
-    ObjectCalls.ptrcallWithIntCallableArgs(setBind, root, 0, tree, longName)
-    val backLong = ObjectCalls.ptrcallWithIntArgRetCallable(getBind, root, 0)
+    ObjectCalls.ptrcallWithCallableArg(setBind, spawner, spawner, longName)
+    val backLong = ObjectCalls.ptrcallNoArgsRetCallable(getBind, spawner)
     check(
-      "ret-callable(TreeItem.get_custom_draw_callback 602-byte method via pending slot)",
+      "ret-callable(MultiplayerSpawner.get_spawn_function 602-byte method via pending slot)",
       backLong != null &&
         backLong.method == longName &&
-        backLong.target.handle.address() == tree.address(),
+        backLong.target.handle.address() == spawner.address(),
     )
-    ObjectCalls.destroyObject(tree) // frees its items
-    val spawner = ObjectCalls.constructObject("MultiplayerSpawner")
-    val empty =
-      ObjectCalls.ptrcallNoArgsRetCallable(
-        ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawn_function", 1307783378L),
-        spawner,
-      )
-    check("ret-callable(MultiplayerSpawner.get_spawn_function empty -> null)", empty == null)
     ObjectCalls.destroyObject(spawner)
+    // A RID-argument shape on a singleton: NativeMenu has no popup for an invalid RID, so the
+    // returned Callable is empty -> null (the arg cells and the run-once entry are exercised).
+    val nativeMenu = ObjectCalls.getSingleton("NativeMenu")
+    val noPopup =
+      ObjectCalls.ptrcallWithRIDArgRetCallable(
+        ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", 3170603026L),
+        nativeMenu,
+        RID(0L),
+      )
+    check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
   }
 
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
