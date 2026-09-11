@@ -22,6 +22,17 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the object's Java methods and their signatures as an `Array` of dictionaries, in the
+     * same format as `Object.get_method_list`.
+     *
+     * Generated from Godot docs: JavaClass.get_java_method_list
+     */
+    fun getJavaMethodList(): List<Map<String, Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getJavaMethodListBind, handle)
+    }
+
+    /**
      * Returns a `JavaClass` representing the Java parent class of this class.
      *
      * Generated from Godot docs: JavaClass.get_java_parent_class
@@ -57,6 +68,11 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_JAVA_CLASS_NAME_HASH = 201670096L
         private val getJavaClassNameBind by lazy {
             ObjectCalls.getMethodBind("JavaClass", "get_java_class_name", GET_JAVA_CLASS_NAME_HASH)
+        }
+
+        private const val GET_JAVA_METHOD_LIST_HASH = 3995934104L
+        private val getJavaMethodListBind by lazy {
+            ObjectCalls.getMethodBind("JavaClass", "get_java_method_list", GET_JAVA_METHOD_LIST_HASH)
         }
 
         private const val GET_JAVA_PARENT_CLASS_HASH = 541536347L

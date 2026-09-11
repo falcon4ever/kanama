@@ -281,6 +281,15 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
     }
 
     /**
+     * Returns the additional BiDi options set for this cell.
+     *
+     * Generated from Godot docs: TreeItem.get_structured_text_bidi_override_options
+     */
+    fun getStructuredTextBidiOverrideOptions(column: Int): List<Any?> {
+        return ObjectCalls.ptrcallWithIntArgRetArray(getStructuredTextBidiOverrideOptionsBind, handle, column)
+    }
+
+    /**
      * Sets the language code of the given `column`'s text to `language`. This is used for
      * line-breaking and text shaping algorithms. If `language` is empty, the current locale is used.
      *
@@ -439,6 +448,16 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
      */
     fun setRangeConfig(column: Int, min: Double, max: Double, step: Double, expr: Boolean = false) {
         ObjectCalls.ptrcallWithIntThreeDoubleBoolArgs(setRangeConfigBind, handle, column, min, max, step, expr)
+    }
+
+    /**
+     * Returns a dictionary containing the range parameters for a given column. The keys are "min",
+     * "max", "step", and "expr".
+     *
+     * Generated from Godot docs: TreeItem.get_range_config
+     */
+    fun getRangeConfig(column: Int): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(getRangeConfigBind, handle, column)
     }
 
     /**
@@ -1322,6 +1341,11 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.getMethodBind("TreeItem", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
         }
 
+        private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 663333327L
+        private val getStructuredTextBidiOverrideOptionsBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
+        }
+
         private const val SET_LANGUAGE_HASH = 501894301L
         private val setLanguageBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "set_language", SET_LANGUAGE_HASH)
@@ -1405,6 +1429,11 @@ class TreeItem(handle: MemorySegment) : GodotObject(handle) {
         private const val SET_RANGE_CONFIG_HASH = 1547181014L
         private val setRangeConfigBind by lazy {
             ObjectCalls.getMethodBind("TreeItem", "set_range_config", SET_RANGE_CONFIG_HASH)
+        }
+
+        private const val GET_RANGE_CONFIG_HASH = 3554694381L
+        private val getRangeConfigBind by lazy {
+            ObjectCalls.getMethodBind("TreeItem", "get_range_config", GET_RANGE_CONFIG_HASH)
         }
 
         private const val GET_METADATA_HASH = 4227898402L

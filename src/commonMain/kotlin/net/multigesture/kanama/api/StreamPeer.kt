@@ -19,6 +19,30 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
         set(value) = setBigEndian(value)
 
     /**
+     * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
+     * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
+     * bytes are available, the function will block until the desired amount is received.
+     *
+     * Generated from Godot docs: StreamPeer.get_data
+     */
+    fun getData(bytes: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, handle, bytes)
+    }
+
+    /**
+     * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
+     * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
+     * bytes are available, the function will return how many were actually received.
+     *
+     * Generated from Godot docs: StreamPeer.get_partial_data
+     */
+    fun getPartialData(bytes: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, handle, bytes)
+    }
+
+    /**
      * Returns the number of bytes this `StreamPeer` has available.
      *
      * Generated from Godot docs: StreamPeer.get_available_bytes
@@ -336,6 +360,16 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
 
         internal fun wrap(handle: MemorySegment): StreamPeer? =
             if (handle.address() == 0L) null else StreamPeer(handle)
+
+        private const val GET_DATA_HASH = 1171824711L
+        private val getDataBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "get_data", GET_DATA_HASH)
+        }
+
+        private const val GET_PARTIAL_DATA_HASH = 1171824711L
+        private val getPartialDataBind by lazy {
+            ObjectCalls.getMethodBind("StreamPeer", "get_partial_data", GET_PARTIAL_DATA_HASH)
+        }
 
         private const val GET_AVAILABLE_BYTES_HASH = 3905245786L
         private val getAvailableBytesBind by lazy {

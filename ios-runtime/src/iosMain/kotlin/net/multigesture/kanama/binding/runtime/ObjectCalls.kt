@@ -56,6 +56,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_byte_array
@@ -66,6 +67,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.decodeIosCallArg
@@ -147,6 +149,8 @@ object ObjectCalls {
   private const val VT_STRING_NAME = 21
   private const val VT_NODE_PATH = 22
   private const val VT_OBJECT = 24
+  private const val VT_DICTIONARY = 27
+  private const val VT_ARRAY = 28
 
   fun constructObject(className: String): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_construct_object(className))
@@ -734,6 +738,163 @@ object ObjectCalls {
     List(n) { Color(p[it * 4], p[it * 4 + 1], p[it * 4 + 2], p[it * 4 + 3]) }
   }
 
+  // task 100 (parcel 6) — Dictionary / Array returns on any audited arg shape. Same arg cells as
+  // kanama_ios_godot_ptrcall; the C entry ptrcalls into the container cell and serializes it ONCE
+  // into a self-describing blob (records of [variant_type][byteLen][bytes], nested containers as
+  // nested blobs, String/StringName keys as utf8). A blob longer than the inline buffer is parked
+  // C-side and drained whole; nothing is truncated and the method is not re-issued. The decode is
+  // the same scalar set as decodeVariantScalarReturn plus the nested containers; other types
+  // surface null. Desktop parity: BuiltinTypes.readDictionaryScalars keeps String keys only and
+  // decodes values with variantToScalar; readArrayDictionaries maps the non-Map elements away.
+  private class ContainerBlob(private val b: ByteArray, private var off: Int) {
+    private fun i32(): Int {
+      val v =
+        (b[off].toInt() and 0xFF) or
+          ((b[off + 1].toInt() and 0xFF) shl 8) or
+          ((b[off + 2].toInt() and 0xFF) shl 16) or
+          ((b[off + 3].toInt() and 0xFF) shl 24)
+      off += 4
+      return v
+    }
+
+    private fun i64At(o: Int): Long {
+      var v = 0L
+      for (k in 7 downTo 0) v = (v shl 8) or (b[o + k].toLong() and 0xFF)
+      return v
+    }
+
+    private fun f32At(o: Int): Float = Float.fromBits(i32LE(b, o))
+
+    fun record(): Any? {
+      val vt = i32()
+      val len = i32()
+      val start = off
+      val end = start + len
+      val value: Any? =
+        when (vt) {
+          VT_BOOL -> len >= 1 && b[start].toInt() != 0
+          VT_INT -> if (len >= 8) i64At(start) else 0L
+          VT_FLOAT -> if (len >= 8) Double.fromBits(i64At(start)) else 0.0
+          VT_STRING,
+          VT_STRING_NAME -> b.decodeToString(start, end)
+          VT_NODE_PATH -> NodePath(b.decodeToString(start, end))
+          VT_OBJECT ->
+            if (len >= 8) i64At(start).let { if (it != 0L) MemorySegment.ofAddress(it) else null }
+            else null
+          VT_VECTOR2 ->
+            if (len >= 8)
+              Vector2(GodotReal.fromFloat(f32At(start)), GodotReal.fromFloat(f32At(start + 4)))
+            else null
+          VT_VECTOR2I -> if (len >= 8) Vector2i(i32LE(b, start), i32LE(b, start + 4)) else null
+          VT_VECTOR3 ->
+            if (len >= 12)
+              Vector3(
+                GodotReal.fromFloat(f32At(start)),
+                GodotReal.fromFloat(f32At(start + 4)),
+                GodotReal.fromFloat(f32At(start + 8)),
+              )
+            else null
+          VT_COLOR ->
+            if (len >= 16)
+              Color(f32At(start), f32At(start + 4), f32At(start + 8), f32At(start + 12))
+            else null
+          VT_ARRAY -> if (len >= 4) ContainerBlob(b, start).array() else null
+          VT_DICTIONARY -> if (len >= 4) ContainerBlob(b, start).dictionary() else null
+          else -> null
+        }
+      off = end
+      return value
+    }
+
+    fun array(): List<Any?> {
+      val count = i32()
+      val out = ArrayList<Any?>(if (count > 0) count else 0)
+      repeat(count) { out.add(record()) }
+      return out
+    }
+
+    fun dictionary(): Map<String, Any?> {
+      val count = i32()
+      val out = LinkedHashMap<String, Any?>(if (count > 0) count else 0)
+      repeat(count) {
+        val klen = i32()
+        val key = b.decodeToString(off, off + klen)
+        off += klen
+        out[key] = record()
+      }
+      return out
+    }
+  }
+
+  private fun MemScope.ptrcallContainerBlob(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    containerKind: Int,
+  ): ByteArray {
+    val inlineCap = 4096L
+    val inline = allocArray<ByteVar>(inlineCap)
+    val total =
+      kanama_ios_godot_ptrcall_ret_container_blob(
+        methodBind.address(),
+        instance.address(),
+        argTypes,
+        argPtrs,
+        argCount,
+        containerKind,
+        inline,
+        inlineCap,
+      )
+    return when {
+      total < 4L -> ByteArray(0)
+      total <= inlineCap -> inline.readBytes(total.toInt())
+      else -> {
+        val full = allocArray<ByteVar>(total)
+        val got = kanama_ios_godot_take_pending_container_blob(full, total)
+        if (got < 4L) ByteArray(0) else full.readBytes(minOf(got, total).toInt())
+      }
+    }
+  }
+
+  fun ptrcallRetDictionary(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): Map<String, Any?> = memScoped {
+    val bytes =
+      ptrcallContainerBlob(methodBind, instance, argTypes, argPtrs, argCount, VT_DICTIONARY)
+    if (bytes.size < 4) emptyMap() else ContainerBlob(bytes, 0).dictionary()
+  }
+
+  fun ptrcallRetArray(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Any?> = memScoped {
+    val bytes = ptrcallContainerBlob(methodBind, instance, argTypes, argPtrs, argCount, VT_ARRAY)
+    if (bytes.size < 4) emptyList() else ContainerBlob(bytes, 0).array()
+  }
+
+  // Array[Dictionary] -> List<Map<String, Any?>>: the typed array is a plain Array at the ptrcall
+  // level; non-Dictionary elements are dropped, as desktop's readArrayDictionaries does.
+  fun ptrcallRetDictionaryList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+  ): List<Map<String, Any?>> =
+    ptrcallRetArray(methodBind, instance, argTypes, argPtrs, argCount).mapNotNull {
+      @Suppress("UNCHECKED_CAST")
+      it as? Map<String, Any?>
+    }
+
   // NodePath return: GDExtension has no NodePath->utf8, so the dedicated C helper converts
   // the returned NodePath to a String (String(from: NodePath) ctor) and UTF-8 encodes it,
   // then we wrap it back into a NodePath. Same two-call length protocol as the String helper.
@@ -1192,39 +1353,7 @@ object ObjectCalls {
         total,
       )
       val bytes = b.readBytes(total.toInt())
-      fun i32(o: Int): Int =
-        (bytes[o].toInt() and 0xFF) or
-          ((bytes[o + 1].toInt() and 0xFF) shl 8) or
-          ((bytes[o + 2].toInt() and 0xFF) shl 16) or
-          ((bytes[o + 3].toInt() and 0xFF) shl 24)
-      fun i64(o: Int): Long {
-        var v = 0L
-        for (k in 7 downTo 0) v = (v shl 8) or (bytes[o + k].toLong() and 0xFF)
-        return v
-      }
-      val count = i32(0)
-      var off = 4
-      val out = ArrayList<Any?>(if (count > 0) count else 0)
-      repeat(count) {
-        val vt = i32(off)
-        off += 4
-        val len = i32(off)
-        off += 4
-        out.add(
-          when (vt) {
-            VT_BOOL -> bytes[off].toInt() != 0
-            VT_INT -> i64(off)
-            VT_FLOAT -> Double.fromBits(i64(off))
-            VT_STRING,
-            VT_STRING_NAME -> bytes.decodeToString(off, off + len)
-            VT_NODE_PATH -> NodePath(bytes.decodeToString(off, off + len))
-            VT_OBJECT -> i64(off).let { if (it != 0L) MemorySegment.ofAddress(it) else null }
-            else -> null
-          }
-        )
-        off += len
-      }
-      out
+      ContainerBlob(bytes, 0).array()
     }
   }
 
@@ -3386,6 +3515,98 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       near(packedBaked.last(), Vector3(1f, 2f, 3f)),
   )
   ObjectCalls.destroyObject(packedCurve)
+
+  // task 100 (parcel 6) — Dictionary / Array returns on arg-bearing shapes through the generated
+  // container blob (ptrcallRetDictionary / ptrcallRetArray / ptrcallRetDictionaryList over
+  // kanama_ios_godot_ptrcall_ret_container_blob). Time / OS / ClassDB singletons and a
+  // StreamPeerBuffer only — nothing that needs the scene tree or the render / physics servers.
+  val containerTime = ObjectCalls.getSingleton("Time")
+  val containerEpoch =
+    ObjectCalls.ptrcallWithLongArgRetDictionary(
+      ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_unix_time", 3485342025L),
+      containerTime,
+      0L,
+    )
+  check(
+    "container-ret(Time.get_datetime_dict_from_unix_time(0)==1970-01-01 00:00)",
+    containerEpoch["year"] == 1970L &&
+      containerEpoch["month"] == 1L &&
+      containerEpoch["day"] == 1L &&
+      containerEpoch["hour"] == 0L &&
+      containerEpoch["minute"] == 0L,
+  )
+  val containerOs = ObjectCalls.getSingleton("OS")
+  val containerMem =
+    ObjectCalls.ptrcallNoArgsRetDictionary(
+      ObjectCalls.getMethodBind("OS", "get_memory_info", 3102165223L),
+      containerOs,
+    )
+  check(
+    "container-ret(OS.get_memory_info physical>0)",
+    (containerMem["physical"] as? Long ?: 0L) > 0L,
+  )
+
+  // Generic Array with an int arg: three bytes in, get_data(3) -> [OK, PackedByteArray]; the packed
+  // element is not a blob scalar, so it surfaces null and the list keeps its two slots.
+  val containerPeer = ObjectCalls.constructObject("StreamPeerBuffer")
+  repeat(3) {
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("StreamPeer", "put_u8", 1286410249L),
+      containerPeer,
+      listOf(7),
+    )
+  }
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("StreamPeerBuffer", "seek", 1286410249L),
+    containerPeer,
+    listOf(0),
+  )
+  val containerData =
+    ObjectCalls.ptrcallWithIntArgRetArray(
+      ObjectCalls.getMethodBind("StreamPeer", "get_data", 1171824711L),
+      containerPeer,
+      3,
+    )
+  check(
+    "container-ret(StreamPeer.get_data(3)==[OK, packed])",
+    containerData.size == 2 && containerData[0] == 0L,
+  )
+  ObjectCalls.destroyObject(containerPeer)
+
+  // Array[Dictionary] far larger than the 4 KiB inline buffer, with nested "args" Arrays and a
+  // nested "return" Dictionary per method: proves the pending drain and the recursive records.
+  val containerClassDb = ObjectCalls.getSingleton("ClassDB")
+  val containerMethods =
+    ObjectCalls.ptrcallWithStringNameAndBoolArgRetDictionaryList(
+      ObjectCalls.getMethodBind("ClassDB", "class_get_method_list", 3504980660L),
+      containerClassDb,
+      "Node",
+      false,
+    )
+  val containerAddChild = containerMethods.firstOrNull { it["name"] == "add_child" }
+  check(
+    "container-ret(ClassDB.class_get_method_list(Node) add_child args+return, pending slot)",
+    containerMethods.size > 50 &&
+      containerAddChild != null &&
+      (containerAddChild["args"] as? List<*>)?.size == 3 &&
+      ((containerAddChild["args"] as List<*>)[0] as? Map<*, *>)?.get("name") == "node" &&
+      (containerAddChild["return"] as? Map<*, *>) != null,
+  )
+  check(
+    "container-ret(pending container slot drained)",
+    kanama_ios_godot_take_pending_container_blob(null, 0L) == -1L,
+  )
+  val containerSignal =
+    ObjectCalls.ptrcallWithTwoStringNameArgsRetDictionary(
+      ObjectCalls.getMethodBind("ClassDB", "class_get_signal", 3061114238L),
+      containerClassDb,
+      "Node",
+      "ready",
+    )
+  check(
+    "container-ret(ClassDB.class_get_signal(Node, ready).name==ready)",
+    containerSignal["name"] == "ready",
+  )
 
   // Bound-Callable connect (Phase 4.1). emitter.add_user_signal("kanamaBound"); connectBound it to
   // receiver.set_name bound with "BoundName"; emit -> the bound Callable runs receiver.set_name(

@@ -14,6 +14,10 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("subjectProperty")
         get() = getSubject()
 
+    val names: Map<String, Any?>
+        @JvmName("namesProperty")
+        get() = getNames()
+
     val strings: List<String>
         @JvmName("stringsProperty")
         get() = getStrings()
@@ -26,6 +30,11 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
     fun getGroupCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, handle)
+    }
+
+    fun getNames(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getNamesBind, handle)
     }
 
     fun getStrings(): List<String> {
@@ -49,6 +58,11 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_GROUP_COUNT_HASH = 3905245786L
         private val getGroupCountBind by lazy {
             ObjectCalls.getMethodBind("RegExMatch", "get_group_count", GET_GROUP_COUNT_HASH)
+        }
+
+        private const val GET_NAMES_HASH = 3102165223L
+        private val getNamesBind by lazy {
+            ObjectCalls.getMethodBind("RegExMatch", "get_names", GET_NAMES_HASH)
         }
 
         private const val GET_STRINGS_HASH = 1139954409L

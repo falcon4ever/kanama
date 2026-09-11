@@ -57,6 +57,16 @@ object TextServerManager {
     }
 
     /**
+     * Returns a list of available interfaces, with the index and name of each interface.
+     *
+     * Generated from Godot docs: TextServerManager.get_interfaces
+     */
+    @JvmStatic
+    fun getInterfaces(): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getInterfacesBind, singleton)
+    }
+
+    /**
      * Finds an interface by its `name`.
      *
      * Generated from Godot docs: TextServerManager.find_interface
@@ -116,6 +126,11 @@ object TextServerManager {
     private const val GET_INTERFACE_HASH = 1672475555L
     private val getInterfaceBind by lazy {
         ObjectCalls.getMethodBind("TextServerManager", "get_interface", GET_INTERFACE_HASH)
+    }
+
+    private const val GET_INTERFACES_HASH = 3995934104L
+    private val getInterfacesBind by lazy {
+        ObjectCalls.getMethodBind("TextServerManager", "get_interfaces", GET_INTERFACES_HASH)
     }
 
     private const val FIND_INTERFACE_HASH = 2240905781L

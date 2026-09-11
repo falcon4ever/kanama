@@ -18,6 +18,10 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         @JvmName("rootsProperty")
         get() = getRoots()
 
+    val godotBoneNode: Map<String, Any?>
+        @JvmName("godotBoneNodeProperty")
+        get() = getGodotBoneNode()
+
     fun getJoints(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
@@ -31,6 +35,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
     fun getGodotSkeleton(): Skeleton3D? {
         checkOpen()
         return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkeletonBind, handle))
+    }
+
+    fun getGodotBoneNode(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getGodotBoneNodeBind, handle)
     }
 
     fun getBoneAttachmentCount(): Int {
@@ -64,6 +73,11 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
         private const val GET_GODOT_SKELETON_HASH = 1814733083L
         private val getGodotSkeletonBind by lazy {
             ObjectCalls.getMethodBind("GLTFSkeleton", "get_godot_skeleton", GET_GODOT_SKELETON_HASH)
+        }
+
+        private const val GET_GODOT_BONE_NODE_HASH = 2382534195L
+        private val getGodotBoneNodeBind by lazy {
+            ObjectCalls.getMethodBind("GLTFSkeleton", "get_godot_bone_node", GET_GODOT_BONE_NODE_HASH)
         }
 
         private const val GET_BONE_ATTACHMENT_COUNT_HASH = 2455072627L

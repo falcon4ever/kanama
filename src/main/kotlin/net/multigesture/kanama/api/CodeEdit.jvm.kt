@@ -9,8 +9,7 @@ import net.multigesture.kanama.types.Color
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP CodeEdit waits on: ptrcallNoArgsRetDictionary, ptrcallNoArgsRetDictionaryList,
-//   ptrcallNoArgsRetTypedStringList, ptrcallWithDictionaryArg, ptrcallWithIntArgRetDictionary,
+// KANAMA-IOS-GAP CodeEdit waits on: ptrcallNoArgsRetTypedStringList, ptrcallWithDictionaryArg,
 //   ptrcallWithLongTwoStringColorObjectVariantIntArgs, ptrcallWithTypedIntListArg,
 //   ptrcallWithTypedStringListArg
 // Index: docs/reference/generated/ios-shape-gap.md
@@ -42,17 +41,6 @@ fun CodeEdit.getAutoIndentPrefixes(): List<String> {
  */
 fun CodeEdit.setAutoBraceCompletionPairs(pairs: Map<String, Any?>) {
     ObjectCalls.ptrcallWithDictionaryArg(setAutoBraceCompletionPairsBind, handle, pairs)
-}
-
-/**
- * Sets the brace pairs to be autocompleted. For each entry in the dictionary, the key is the
- * opening brace and the value is the closing brace that matches it. A brace is a `String` made of
- * symbols. See `auto_brace_completion_enabled` and `auto_brace_completion_highlight_matching`.
- *
- * Generated from Godot docs: CodeEdit.get_auto_brace_completion_pairs
- */
-fun CodeEdit.getAutoBraceCompletionPairs(): Map<String, Any?> {
-    return ObjectCalls.ptrcallNoArgsRetDictionary(getAutoBraceCompletionPairsBind, handle)
 }
 
 /**
@@ -101,28 +89,6 @@ fun CodeEdit.getCommentDelimiters(): List<String> {
  */
 fun CodeEdit.addCodeCompletionOption(type: Long, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
     ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, handle, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: MemorySegment.NULL, value, location)
-}
-
-/**
- * Gets all completion options, see `get_code_completion_option` for return content.
- *
- * Generated from Godot docs: CodeEdit.get_code_completion_options
- */
-fun CodeEdit.getCodeCompletionOptions(): List<Map<String, Any?>> {
-    return ObjectCalls.ptrcallNoArgsRetDictionaryList(getCodeCompletionOptionsBind, handle)
-}
-
-/**
- * Gets the completion option at `index`. The return `Dictionary` has the following key-values:
- * `kind`: `CodeCompletionKind` `display_text`: Text that is shown on the autocomplete menu.
- * `insert_text`: Text that is to be inserted when this item is selected. `font_color`: Color of
- * the text on the autocomplete menu. `icon`: Icon to draw on the autocomplete menu.
- * `default_value`: Value of the symbol.
- *
- * Generated from Godot docs: CodeEdit.get_code_completion_option
- */
-fun CodeEdit.getCodeCompletionOption(index: Int): Map<String, Any?> {
-    return ObjectCalls.ptrcallWithIntArgRetDictionary(getCodeCompletionOptionBind, handle, index)
 }
 
 /**
@@ -177,12 +143,6 @@ var CodeEdit.indentAutomaticPrefixes: List<String>
     @JvmName("setIndentAutomaticPrefixesProperty")
     set(value) = setAutoIndentPrefixes(value)
 
-var CodeEdit.autoBraceCompletionPairs: Map<String, Any?>
-    @JvmName("autoBraceCompletionPairsProperty")
-    get() = getAutoBraceCompletionPairs()
-    @JvmName("setAutoBraceCompletionPairsProperty")
-    set(value) = setAutoBraceCompletionPairs(value)
-
 private const val SET_AUTO_INDENT_PREFIXES_HASH = 381264803L
 private val setAutoIndentPrefixesBind by lazy {
     ObjectCalls.getMethodBind("CodeEdit", "set_auto_indent_prefixes", SET_AUTO_INDENT_PREFIXES_HASH)
@@ -196,11 +156,6 @@ private val getAutoIndentPrefixesBind by lazy {
 private const val SET_AUTO_BRACE_COMPLETION_PAIRS_HASH = 4155329257L
 private val setAutoBraceCompletionPairsBind by lazy {
     ObjectCalls.getMethodBind("CodeEdit", "set_auto_brace_completion_pairs", SET_AUTO_BRACE_COMPLETION_PAIRS_HASH)
-}
-
-private const val GET_AUTO_BRACE_COMPLETION_PAIRS_HASH = 3102165223L
-private val getAutoBraceCompletionPairsBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "get_auto_brace_completion_pairs", GET_AUTO_BRACE_COMPLETION_PAIRS_HASH)
 }
 
 private const val SET_STRING_DELIMITERS_HASH = 381264803L
@@ -226,16 +181,6 @@ private val getCommentDelimitersBind by lazy {
 private const val ADD_CODE_COMPLETION_OPTION_HASH = 3944379502L
 private val addCodeCompletionOptionBind by lazy {
     ObjectCalls.getMethodBind("CodeEdit", "add_code_completion_option", ADD_CODE_COMPLETION_OPTION_HASH)
-}
-
-private const val GET_CODE_COMPLETION_OPTIONS_HASH = 3995934104L
-private val getCodeCompletionOptionsBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "get_code_completion_options", GET_CODE_COMPLETION_OPTIONS_HASH)
-}
-
-private const val GET_CODE_COMPLETION_OPTION_HASH = 3485342025L
-private val getCodeCompletionOptionBind by lazy {
-    ObjectCalls.getMethodBind("CodeEdit", "get_code_completion_option", GET_CODE_COMPLETION_OPTION_HASH)
 }
 
 private const val SET_CODE_COMPLETION_PREFIXES_HASH = 381264803L

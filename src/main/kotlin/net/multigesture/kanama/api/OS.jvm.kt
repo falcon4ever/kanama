@@ -7,7 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP OS waits on: ptrcallNoArgsRetDictionary, ptrcallWithBoolAndPackedStringArrayArgs,
+// KANAMA-IOS-GAP OS waits on: ptrcallWithBoolAndPackedStringArrayArgs,
 //   ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList, ptrcallWithPackedStringListArgRetInt,
 //   ptrcallWithStringAndPackedStringListArgRetLong,
 //   ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt,
@@ -138,23 +138,6 @@ fun OS.setRestartOnExit(restart: Boolean, arguments: List<String>) {
     ObjectCalls.ptrcallWithBoolAndPackedStringArrayArgs(setRestartOnExitBind, oSSingleton, restart, arguments)
 }
 
-/**
- * Returns a `Dictionary` containing information about the current memory with the following
- * entries: - `"physical"` - total amount of usable physical memory in bytes. This value can be
- * slightly less than the actual physical memory amount, since it does not include memory reserved
- * by the kernel and devices. - `"free"` - amount of physical memory, that can be immediately
- * allocated without disk access or other costly operations, in bytes. The process might be able to
- * allocate more physical memory, but this action will require moving inactive pages to disk, which
- * can be expensive. - `"available"` - amount of memory that can be allocated without extending the
- * swap file(s), in bytes. This value includes both physical memory and swap. - `"stack"` - size of
- * the current thread stack in bytes. Note: Each entry's value may be `-1` if it is unknown.
- *
- * Generated from Godot docs: OS.get_memory_info
- */
-fun OS.getMemoryInfo(): Map<String, Any?> {
-    return ObjectCalls.ptrcallNoArgsRetDictionary(getMemoryInfoBind, oSSingleton)
-}
-
 private val oSSingleton: MemorySegment by lazy {
     ObjectCalls.getSingleton("OS")
 }
@@ -192,9 +175,4 @@ private val openWithProgramBind by lazy {
 private const val SET_RESTART_ON_EXIT_HASH = 3331453935L
 private val setRestartOnExitBind by lazy {
     ObjectCalls.getMethodBind("OS", "set_restart_on_exit", SET_RESTART_ON_EXIT_HASH)
-}
-
-private const val GET_MEMORY_INFO_HASH = 3102165223L
-private val getMemoryInfoBind by lazy {
-    ObjectCalls.getMethodBind("OS", "get_memory_info", GET_MEMORY_INFO_HASH)
 }

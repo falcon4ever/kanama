@@ -57,6 +57,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(getFontStyleNameBind, handle)
     }
 
+    fun getOtNameStrings(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getOtNameStringsBind, handle)
+    }
+
     fun getFontStyle(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, handle)
@@ -90,6 +95,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
     fun getSpacing(spacing: Long): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, handle, spacing)
+    }
+
+    fun getOpentypeFeatures(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeaturesBind, handle)
     }
 
     fun setCacheCapacity(singleLine: Int, multiLine: Int) {
@@ -162,6 +172,16 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringArgRetBool(isScriptSupportedBind, handle, script)
     }
 
+    fun getSupportedFeatureList(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedFeatureListBind, handle)
+    }
+
+    fun getSupportedVariationList(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedVariationListBind, handle)
+    }
+
     fun getFaceCount(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(getFaceCountBind, handle)
@@ -215,6 +235,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
             ObjectCalls.getMethodBind("Font", "get_font_style_name", GET_FONT_STYLE_NAME_HASH)
         }
 
+        private const val GET_OT_NAME_STRINGS_HASH = 3102165223L
+        private val getOtNameStringsBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_ot_name_strings", GET_OT_NAME_STRINGS_HASH)
+        }
+
         private const val GET_FONT_STYLE_HASH = 2520224254L
         private val getFontStyleBind by lazy {
             ObjectCalls.getMethodBind("Font", "get_font_style", GET_FONT_STYLE_HASH)
@@ -248,6 +273,11 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         private const val GET_SPACING_HASH = 1310880908L
         private val getSpacingBind by lazy {
             ObjectCalls.getMethodBind("Font", "get_spacing", GET_SPACING_HASH)
+        }
+
+        private const val GET_OPENTYPE_FEATURES_HASH = 3102165223L
+        private val getOpentypeFeaturesBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_opentype_features", GET_OPENTYPE_FEATURES_HASH)
         }
 
         private const val SET_CACHE_CAPACITY_HASH = 3937882851L
@@ -318,6 +348,16 @@ open class Font(handle: MemorySegment) : Resource(handle) {
         private const val IS_SCRIPT_SUPPORTED_HASH = 3927539163L
         private val isScriptSupportedBind by lazy {
             ObjectCalls.getMethodBind("Font", "is_script_supported", IS_SCRIPT_SUPPORTED_HASH)
+        }
+
+        private const val GET_SUPPORTED_FEATURE_LIST_HASH = 3102165223L
+        private val getSupportedFeatureListBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_supported_feature_list", GET_SUPPORTED_FEATURE_LIST_HASH)
+        }
+
+        private const val GET_SUPPORTED_VARIATION_LIST_HASH = 3102165223L
+        private val getSupportedVariationListBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_supported_variation_list", GET_SUPPORTED_VARIATION_LIST_HASH)
         }
 
         private const val GET_FACE_COUNT_HASH = 3905245786L

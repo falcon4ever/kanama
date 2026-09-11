@@ -94,6 +94,27 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the arrays for the vertices, normals, UVs, etc. that make up the requested surface. See
+     * `add_surface`.
+     *
+     * Generated from Godot docs: ImporterMesh.get_surface_arrays
+     */
+    fun getSurfaceArrays(surfaceIdx: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(getSurfaceArraysBind, handle, surfaceIdx)
+    }
+
+    /**
+     * Returns a single set of blend shape arrays for the requested blend shape index for a surface.
+     *
+     * Generated from Godot docs: ImporterMesh.get_surface_blend_shape_arrays
+     */
+    fun getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(getSurfaceBlendShapeArraysBind, handle, surfaceIdx, blendShapeIdx)
+    }
+
+    /**
      * Returns the number of lods that the mesh holds on a given surface.
      *
      * Generated from Godot docs: ImporterMesh.get_surface_lod_count
@@ -261,6 +282,16 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
         private const val GET_SURFACE_NAME_HASH = 844755477L
         private val getSurfaceNameBind by lazy {
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_name", GET_SURFACE_NAME_HASH)
+        }
+
+        private const val GET_SURFACE_ARRAYS_HASH = 663333327L
+        private val getSurfaceArraysBind by lazy {
+            ObjectCalls.getMethodBind("ImporterMesh", "get_surface_arrays", GET_SURFACE_ARRAYS_HASH)
+        }
+
+        private const val GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH = 2345056839L
+        private val getSurfaceBlendShapeArraysBind by lazy {
+            ObjectCalls.getMethodBind("ImporterMesh", "get_surface_blend_shape_arrays", GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH)
         }
 
         private const val GET_SURFACE_LOD_COUNT_HASH = 923996154L

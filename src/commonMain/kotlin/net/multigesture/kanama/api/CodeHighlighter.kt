@@ -37,6 +37,18 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
         @JvmName("setMemberVariableColorProperty")
         set(value) = setMemberVariableColor(value)
 
+    val keywordColors: Map<String, Any?>
+        @JvmName("keywordColorsProperty")
+        get() = getKeywordColors()
+
+    val memberKeywordColors: Map<String, Any?>
+        @JvmName("memberKeywordColorsProperty")
+        get() = getMemberKeywordColors()
+
+    val colorRegions: Map<String, Any?>
+        @JvmName("colorRegionsProperty")
+        get() = getColorRegions()
+
     /**
      * Sets the color for a keyword. The keyword cannot contain any symbols except '_'.
      *
@@ -85,6 +97,17 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
     fun clearKeywordColors() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearKeywordColorsBind, handle)
+    }
+
+    /**
+     * Sets the keyword colors. All existing keywords will be removed. The `Dictionary` key is the
+     * keyword. The value is the keyword color.
+     *
+     * Generated from Godot docs: CodeHighlighter.get_keyword_colors
+     */
+    fun getKeywordColors(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getKeywordColorsBind, handle)
     }
 
     /**
@@ -139,6 +162,17 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
     }
 
     /**
+     * Sets the member keyword colors. All existing member keyword will be removed. The `Dictionary`
+     * key is the member keyword. The value is the member keyword color.
+     *
+     * Generated from Godot docs: CodeHighlighter.get_member_keyword_colors
+     */
+    fun getMemberKeywordColors(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getMemberKeywordColorsBind, handle)
+    }
+
+    /**
      * Adds a color region (such as for comments or strings) from `start_key` to `end_key`. Both keys
      * should be symbols, and `start_key` must not be shared with other delimiters. If `line_only` is
      * `true` or `end_key` is an empty `String`, the region does not carry over to the next line.
@@ -178,6 +212,17 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
     fun clearColorRegions() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearColorRegionsBind, handle)
+    }
+
+    /**
+     * Sets the color regions. All existing regions will be removed. The `Dictionary` key is the region
+     * start and end key, separated by a space. The value is the region color.
+     *
+     * Generated from Godot docs: CodeHighlighter.get_color_regions
+     */
+    fun getColorRegions(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getColorRegionsBind, handle)
     }
 
     /**
@@ -295,6 +340,11 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
             ObjectCalls.getMethodBind("CodeHighlighter", "clear_keyword_colors", CLEAR_KEYWORD_COLORS_HASH)
         }
 
+        private const val GET_KEYWORD_COLORS_HASH = 3102165223L
+        private val getKeywordColorsBind by lazy {
+            ObjectCalls.getMethodBind("CodeHighlighter", "get_keyword_colors", GET_KEYWORD_COLORS_HASH)
+        }
+
         private const val ADD_MEMBER_KEYWORD_COLOR_HASH = 1636512886L
         private val addMemberKeywordColorBind by lazy {
             ObjectCalls.getMethodBind("CodeHighlighter", "add_member_keyword_color", ADD_MEMBER_KEYWORD_COLOR_HASH)
@@ -320,6 +370,11 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
             ObjectCalls.getMethodBind("CodeHighlighter", "clear_member_keyword_colors", CLEAR_MEMBER_KEYWORD_COLORS_HASH)
         }
 
+        private const val GET_MEMBER_KEYWORD_COLORS_HASH = 3102165223L
+        private val getMemberKeywordColorsBind by lazy {
+            ObjectCalls.getMethodBind("CodeHighlighter", "get_member_keyword_colors", GET_MEMBER_KEYWORD_COLORS_HASH)
+        }
+
         private const val ADD_COLOR_REGION_HASH = 2924977451L
         private val addColorRegionBind by lazy {
             ObjectCalls.getMethodBind("CodeHighlighter", "add_color_region", ADD_COLOR_REGION_HASH)
@@ -338,6 +393,11 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
         private const val CLEAR_COLOR_REGIONS_HASH = 3218959716L
         private val clearColorRegionsBind by lazy {
             ObjectCalls.getMethodBind("CodeHighlighter", "clear_color_regions", CLEAR_COLOR_REGIONS_HASH)
+        }
+
+        private const val GET_COLOR_REGIONS_HASH = 3102165223L
+        private val getColorRegionsBind by lazy {
+            ObjectCalls.getMethodBind("CodeHighlighter", "get_color_regions", GET_COLOR_REGIONS_HASH)
         }
 
         private const val SET_FUNCTION_COLOR_HASH = 2920490490L

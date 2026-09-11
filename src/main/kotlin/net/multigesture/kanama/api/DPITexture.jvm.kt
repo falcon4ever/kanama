@@ -1,14 +1,13 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
-import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 // GENERATED desktop/Android companion for DPITexture (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP DPITexture waits on: ptrcallNoArgsRetDictionary, ptrcallWithDictionaryArg,
+// KANAMA-IOS-GAP DPITexture waits on: ptrcallWithDictionaryArg,
 //   ptrcallWithStringTwoDoubleDictionaryArgsRetObject
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -32,22 +31,6 @@ fun DPITexture.setColorMap(colorMap: Map<String, Any?>) {
     ObjectCalls.ptrcallWithDictionaryArg(setColorMapBind, handle, colorMap)
 }
 
-/**
- * If set, remaps texture colors according to `Color`-`Color` map.
- *
- * Generated from Godot docs: DPITexture.get_color_map
- */
-fun DPITexture.getColorMap(): Map<String, Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetDictionary(getColorMapBind, handle)
-}
-
-var DPITexture.colorMap: Map<String, Any?>
-    @JvmName("colorMapProperty")
-    get() = getColorMap()
-    @JvmName("setColorMapProperty")
-    set(value) = setColorMap(value)
-
 private const val CREATE_FROM_STRING_HASH = 755140520L
 private val createFromStringBind by lazy {
     ObjectCalls.getMethodBind("DPITexture", "create_from_string", CREATE_FROM_STRING_HASH)
@@ -56,9 +39,4 @@ private val createFromStringBind by lazy {
 private const val SET_COLOR_MAP_HASH = 4155329257L
 private val setColorMapBind by lazy {
     ObjectCalls.getMethodBind("DPITexture", "set_color_map", SET_COLOR_MAP_HASH)
-}
-
-private const val GET_COLOR_MAP_HASH = 3102165223L
-private val getColorMapBind by lazy {
-    ObjectCalls.getMethodBind("DPITexture", "get_color_map", GET_COLOR_MAP_HASH)
 }

@@ -727,6 +727,17 @@ object DisplayServer {
     }
 
     /**
+     * Returns Dictionary of supported system menu IDs and names. Note: This method is implemented only
+     * on macOS.
+     *
+     * Generated from Godot docs: DisplayServer.global_menu_get_system_menu_roots
+     */
+    @JvmStatic
+    fun globalMenuGetSystemMenuRoots(): Map<String, Any?> {
+        return ObjectCalls.ptrcallNoArgsRetDictionary(globalMenuGetSystemMenuRootsBind, singleton)
+    }
+
+    /**
      * Returns `true` if the synthesizer is generating speech, or have utterance waiting in the queue.
      * Note: This method is implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
      *
@@ -746,6 +757,24 @@ object DisplayServer {
     @JvmStatic
     fun ttsIsPaused(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(ttsIsPausedBind, singleton)
+    }
+
+    /**
+     * Returns an `Array` of voice information dictionaries. Each `Dictionary` contains two `String`
+     * entries: - `name` is voice name. - `id` is voice identifier. - `language` is language code in
+     * `lang_Variant` format. The `lang` part is a 2 or 3-letter code based on the ISO-639 standard, in
+     * lowercase. The `Variant` part is an engine-dependent string describing country, region or/and
+     * dialect. Note that Godot depends on system libraries for text-to-speech functionality. These
+     * libraries are installed by default on Windows and macOS, but not on all Linux distributions. If
+     * they are not present, this method will return an empty list. This applies to both Godot users on
+     * Linux, as well as end-users on Linux running Godot games that use text-to-speech. Note: This
+     * method is implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
+     *
+     * Generated from Godot docs: DisplayServer.tts_get_voices
+     */
+    @JvmStatic
+    fun ttsGetVoices(): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(ttsGetVoicesBind, singleton)
     }
 
     /**
@@ -3540,6 +3569,11 @@ object DisplayServer {
         ObjectCalls.getMethodBind("DisplayServer", "global_menu_clear", GLOBAL_MENU_CLEAR_HASH)
     }
 
+    private const val GLOBAL_MENU_GET_SYSTEM_MENU_ROOTS_HASH = 3102165223L
+    private val globalMenuGetSystemMenuRootsBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_system_menu_roots", GLOBAL_MENU_GET_SYSTEM_MENU_ROOTS_HASH)
+    }
+
     private const val TTS_IS_SPEAKING_HASH = 36873697L
     private val ttsIsSpeakingBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "tts_is_speaking", TTS_IS_SPEAKING_HASH)
@@ -3548,6 +3582,11 @@ object DisplayServer {
     private const val TTS_IS_PAUSED_HASH = 36873697L
     private val ttsIsPausedBind by lazy {
         ObjectCalls.getMethodBind("DisplayServer", "tts_is_paused", TTS_IS_PAUSED_HASH)
+    }
+
+    private const val TTS_GET_VOICES_HASH = 3995934104L
+    private val ttsGetVoicesBind by lazy {
+        ObjectCalls.getMethodBind("DisplayServer", "tts_get_voices", TTS_GET_VOICES_HASH)
     }
 
     private const val TTS_SPEAK_HASH = 903992738L

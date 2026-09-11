@@ -75,6 +75,20 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
     }
 
     /**
+     * Returns the list of shader uniforms that can be assigned to a `ShaderMaterial`, for use with
+     * `ShaderMaterial.set_shader_parameter` and `ShaderMaterial.get_shader_parameter`. The parameters
+     * returned are contained in dictionaries in a similar format to the ones returned by
+     * `Object.get_property_list`. If argument `get_groups` is `true`, parameter grouping hints are
+     * also included in the list.
+     *
+     * Generated from Godot docs: Shader.get_shader_uniform_list
+     */
+    fun getShaderUniformList(getGroups: Boolean = false): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithBoolArgRetArray(getShaderUniformListBind, handle, getGroups)
+    }
+
+    /**
      * Only available when running in the editor. Opens a popup that visualizes the generated shader
      * code, including all variants and internal shader code. See also
      * `Material.inspect_native_shader_code`.
@@ -124,6 +138,11 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
         private const val GET_DEFAULT_TEXTURE_PARAMETER_HASH = 4213877425L
         private val getDefaultTextureParameterBind by lazy {
             ObjectCalls.getMethodBind("Shader", "get_default_texture_parameter", GET_DEFAULT_TEXTURE_PARAMETER_HASH)
+        }
+
+        private const val GET_SHADER_UNIFORM_LIST_HASH = 1230511656L
+        private val getShaderUniformListBind by lazy {
+            ObjectCalls.getMethodBind("Shader", "get_shader_uniform_list", GET_SHADER_UNIFORM_LIST_HASH)
         }
 
         private const val INSPECT_NATIVE_SHADER_CODE_HASH = 3218959716L

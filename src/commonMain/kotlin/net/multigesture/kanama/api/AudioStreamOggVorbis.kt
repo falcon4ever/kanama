@@ -34,6 +34,10 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
         @JvmName("setBarBeatsProperty")
         set(value) = setBarBeats(value)
 
+    val tags: Map<String, Any?>
+        @JvmName("tagsProperty")
+        get() = getTags()
+
     var loop: Boolean
         @JvmName("loopProperty")
         get() = hasLoop()
@@ -104,6 +108,11 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
     fun getBarBeats(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBarBeatsBind, handle)
+    }
+
+    fun getTags(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, handle)
     }
 
     companion object {
@@ -181,6 +190,11 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
         private const val GET_BAR_BEATS_HASH = 3905245786L
         private val getBarBeatsBind by lazy {
             ObjectCalls.getMethodBind("AudioStreamOggVorbis", "get_bar_beats", GET_BAR_BEATS_HASH)
+        }
+
+        private const val GET_TAGS_HASH = 3102165223L
+        private val getTagsBind by lazy {
+            ObjectCalls.getMethodBind("AudioStreamOggVorbis", "get_tags", GET_TAGS_HASH)
         }
     }
 }

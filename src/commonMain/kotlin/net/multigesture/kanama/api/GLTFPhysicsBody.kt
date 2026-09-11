@@ -66,6 +66,11 @@ class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
         return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
     }
 
+    fun toDictionary(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+    }
+
     fun getBodyType(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(getBodyTypeBind, handle)
@@ -166,6 +171,11 @@ class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
         private const val TO_NODE_HASH = 3224013656L
         private val toNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "to_node", TO_NODE_HASH)
+        }
+
+        private const val TO_DICTIONARY_HASH = 3102165223L
+        private val toDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFPhysicsBody", "to_dictionary", TO_DICTIONARY_HASH)
         }
 
         private const val GET_BODY_TYPE_HASH = 201670096L

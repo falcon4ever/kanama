@@ -11,8 +11,7 @@ import net.multigesture.kanama.types.Vector2
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP DisplayServer waits on: ptrcallNoArgsRetDictionary, ptrcallNoArgsRetDictionaryList,
-//   ptrcallNoArgsRetRect2List,
+// KANAMA-IOS-GAP DisplayServer waits on: ptrcallNoArgsRetRect2List,
 //   ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong,
 //   ptrcallWithIntAndRect2iArg, ptrcallWithPackedVector2ListAndIntArgs, ptrcallWithRIDAndVariantArg,
 //   ptrcallWithRect2iArgRetObject, ptrcallWithStringAndVariantArgRetInt,
@@ -184,33 +183,6 @@ fun DisplayServer.globalMenuGetItemKeyCallback(menuRoot: String, idx: Int): Godo
  */
 fun DisplayServer.globalMenuSetItemTag(menuRoot: String, idx: Int, tag: Any?) {
     ObjectCalls.ptrcallWithStringIntAndVariantArg(globalMenuSetItemTagBind, displayServerSingleton, menuRoot, idx, tag)
-}
-
-/**
- * Returns Dictionary of supported system menu IDs and names. Note: This method is implemented only
- * on macOS.
- *
- * Generated from Godot docs: DisplayServer.global_menu_get_system_menu_roots
- */
-fun DisplayServer.globalMenuGetSystemMenuRoots(): Map<String, Any?> {
-    return ObjectCalls.ptrcallNoArgsRetDictionary(globalMenuGetSystemMenuRootsBind, displayServerSingleton)
-}
-
-/**
- * Returns an `Array` of voice information dictionaries. Each `Dictionary` contains two `String`
- * entries: - `name` is voice name. - `id` is voice identifier. - `language` is language code in
- * `lang_Variant` format. The `lang` part is a 2 or 3-letter code based on the ISO-639 standard, in
- * lowercase. The `Variant` part is an engine-dependent string describing country, region or/and
- * dialect. Note that Godot depends on system libraries for text-to-speech functionality. These
- * libraries are installed by default on Windows and macOS, but not on all Linux distributions. If
- * they are not present, this method will return an empty list. This applies to both Godot users on
- * Linux, as well as end-users on Linux running Godot games that use text-to-speech. Note: This
- * method is implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
- *
- * Generated from Godot docs: DisplayServer.tts_get_voices
- */
-fun DisplayServer.ttsGetVoices(): List<Map<String, Any?>> {
-    return ObjectCalls.ptrcallNoArgsRetDictionaryList(ttsGetVoicesBind, displayServerSingleton)
 }
 
 /**
@@ -402,16 +374,6 @@ private val globalMenuGetItemKeyCallbackBind by lazy {
 private const val GLOBAL_MENU_SET_ITEM_TAG_HASH = 453659863L
 private val globalMenuSetItemTagBind by lazy {
     ObjectCalls.getMethodBind("DisplayServer", "global_menu_set_item_tag", GLOBAL_MENU_SET_ITEM_TAG_HASH)
-}
-
-private const val GLOBAL_MENU_GET_SYSTEM_MENU_ROOTS_HASH = 3102165223L
-private val globalMenuGetSystemMenuRootsBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "global_menu_get_system_menu_roots", GLOBAL_MENU_GET_SYSTEM_MENU_ROOTS_HASH)
-}
-
-private const val TTS_GET_VOICES_HASH = 3995934104L
-private val ttsGetVoicesBind by lazy {
-    ObjectCalls.getMethodBind("DisplayServer", "tts_get_voices", TTS_GET_VOICES_HASH)
 }
 
 private const val TTS_GET_VOICES_FOR_LANGUAGE_HASH = 4291131558L

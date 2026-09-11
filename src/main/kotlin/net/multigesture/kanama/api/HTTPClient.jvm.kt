@@ -7,7 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP HTTPClient waits on: ptrcallNoArgsRetDictionary, ptrcallWithDictionaryArgRetString,
+// KANAMA-IOS-GAP HTTPClient waits on: ptrcallWithDictionaryArgRetString,
 //   ptrcallWithLongStringPackedStringListByteArrayArgsRetLong,
 //   ptrcallWithLongStringPackedStringListStringArgsRetLong
 // Index: docs/reference/generated/ios-shape-gap.md
@@ -43,18 +43,6 @@ fun HTTPClient.request(method: Long, url: String, headers: List<String>, body: S
 }
 
 /**
- * Returns all response headers as a `Dictionary`. Each entry is composed by the header name, and a
- * `String` containing the values separated by `"; "`. The casing is kept the same as the headers
- * were received.
- *
- * Generated from Godot docs: HTTPClient.get_response_headers_as_dictionary
- */
-fun HTTPClient.getResponseHeadersAsDictionary(): Map<String, Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallNoArgsRetDictionary(getResponseHeadersAsDictionaryBind, handle)
-}
-
-/**
  * Generates a GET/POST application/x-www-form-urlencoded style query string from a provided
  * dictionary, e.g.:
  *
@@ -73,11 +61,6 @@ private val requestRawBind by lazy {
 private const val REQUEST_HASH = 3778990155L
 private val requestBind by lazy {
     ObjectCalls.getMethodBind("HTTPClient", "request", REQUEST_HASH)
-}
-
-private const val GET_RESPONSE_HEADERS_AS_DICTIONARY_HASH = 2382534195L
-private val getResponseHeadersAsDictionaryBind by lazy {
-    ObjectCalls.getMethodBind("HTTPClient", "get_response_headers_as_dictionary", GET_RESPONSE_HEADERS_AS_DICTIONARY_HASH)
 }
 
 private const val QUERY_STRING_FROM_DICT_HASH = 2538086567L

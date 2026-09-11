@@ -230,6 +230,16 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Returns the list of bound parameters for the signal at `idx`.
+     *
+     * Generated from Godot docs: SceneState.get_connection_binds
+     */
+    fun getConnectionBinds(idx: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(getConnectionBindsBind, handle, idx)
+    }
+
+    /**
      * Returns the number of unbound parameters for the signal at `idx`.
      *
      * Generated from Godot docs: SceneState.get_connection_unbinds
@@ -350,6 +360,11 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
         private const val GET_CONNECTION_FLAGS_HASH = 923996154L
         private val getConnectionFlagsBind by lazy {
             ObjectCalls.getMethodBind("SceneState", "get_connection_flags", GET_CONNECTION_FLAGS_HASH)
+        }
+
+        private const val GET_CONNECTION_BINDS_HASH = 663333327L
+        private val getConnectionBindsBind by lazy {
+            ObjectCalls.getMethodBind("SceneState", "get_connection_binds", GET_CONNECTION_BINDS_HASH)
         }
 
         private const val GET_CONNECTION_UNBINDS_HASH = 923996154L

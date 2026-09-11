@@ -52,6 +52,11 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
         return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
     }
 
+    fun toDictionary(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+    }
+
     fun getColor(): Color {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
@@ -137,6 +142,11 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
         private const val TO_NODE_HASH = 2040811672L
         private val toNodeBind by lazy {
             ObjectCalls.getMethodBind("GLTFLight", "to_node", TO_NODE_HASH)
+        }
+
+        private const val TO_DICTIONARY_HASH = 3102165223L
+        private val toDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFLight", "to_dictionary", TO_DICTIONARY_HASH)
         }
 
         private const val GET_COLOR_HASH = 3200896285L

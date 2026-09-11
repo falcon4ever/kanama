@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP StreamPeer waits on: ptrcallWithByteArrayArgRetArray,
-//   ptrcallWithByteArrayArgRetLong, ptrcallWithIntArgRetArray, ptrcallWithVariantAndBoolArg
+//   ptrcallWithByteArrayArgRetLong, ptrcallWithVariantAndBoolArg
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -35,30 +35,6 @@ fun StreamPeer.putPartialData(data: ByteArray): List<Any?> {
 }
 
 /**
- * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
- * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
- * bytes are available, the function will block until the desired amount is received.
- *
- * Generated from Godot docs: StreamPeer.get_data
- */
-fun StreamPeer.getData(bytes: Int): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, handle, bytes)
-}
-
-/**
- * Returns a chunk data with the received bytes, as an `Array` containing two elements: an `Error`
- * constant and a `PackedByteArray`. `bytes` is the number of bytes to be received. If not enough
- * bytes are available, the function will return how many were actually received.
- *
- * Generated from Godot docs: StreamPeer.get_partial_data
- */
-fun StreamPeer.getPartialData(bytes: Int): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, handle, bytes)
-}
-
-/**
  * Puts a Variant into the stream. If `full_objects` is `true` encoding objects is allowed (and can
  * potentially include code). Internally, this uses the same encoding mechanism as the
  * `@GlobalScope.var_to_bytes` method.
@@ -78,16 +54,6 @@ private val putDataBind by lazy {
 private const val PUT_PARTIAL_DATA_HASH = 2934048347L
 private val putPartialDataBind by lazy {
     ObjectCalls.getMethodBind("StreamPeer", "put_partial_data", PUT_PARTIAL_DATA_HASH)
-}
-
-private const val GET_DATA_HASH = 1171824711L
-private val getDataBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "get_data", GET_DATA_HASH)
-}
-
-private const val GET_PARTIAL_DATA_HASH = 1171824711L
-private val getPartialDataBind by lazy {
-    ObjectCalls.getMethodBind("StreamPeer", "get_partial_data", GET_PARTIAL_DATA_HASH)
 }
 
 private const val PUT_VAR_HASH = 738511890L

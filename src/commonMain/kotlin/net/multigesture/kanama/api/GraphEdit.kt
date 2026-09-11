@@ -5,6 +5,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -55,6 +56,10 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         @JvmName("setRightDisconnectsProperty")
         set(value) = setRightDisconnects(value)
 
+    val typeNames: Map<String, Any?>
+        @JvmName("typeNamesProperty")
+        get() = getTypeNames()
+
     var connectionLinesCurvature: Double
         @JvmName("connectionLinesCurvatureProperty")
         get() = getConnectionLinesCurvature()
@@ -72,6 +77,10 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         get() = isConnectionLinesAntialiased()
         @JvmName("setConnectionLinesAntialiasedProperty")
         set(value) = setConnectionLinesAntialiased(value)
+
+    val connections: List<Map<String, Any?>>
+        @JvmName("connectionsProperty")
+        get() = getConnectionList()
 
     var zoom: Double
         @JvmName("zoomProperty")
@@ -195,12 +204,53 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * The connections between `GraphNode`s. A connection is represented as a `Dictionary` in the form
+     * of:
+     *
+     * Generated from Godot docs: GraphEdit.get_connection_list
+     */
+    fun getConnectionList(): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getConnectionListBind, handle)
+    }
+
+    /**
      * Returns the number of connections from `from_port` of `from_node`.
      *
      * Generated from Godot docs: GraphEdit.get_connection_count
      */
     fun getConnectionCount(fromNode: String, fromPort: Int): Int {
         return ObjectCalls.ptrcallWithStringNameAndIntArgRetInt(getConnectionCountBind, handle, fromNode, fromPort)
+    }
+
+    /**
+     * Returns the closest connection to the given point in screen space. If no connection is found
+     * within `max_distance` pixels, an empty `Dictionary` is returned. A connection is represented as
+     * a `Dictionary` in the form of:
+     *
+     * Generated from Godot docs: GraphEdit.get_closest_connection_at_point
+     */
+    fun getClosestConnectionAtPoint(point: Vector2, maxDistance: Double = 4.0): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetDictionary(getClosestConnectionAtPointBind, handle, point, maxDistance)
+    }
+
+    /**
+     * Returns an `Array` containing a list of all connections for `node`. A connection is represented
+     * as a `Dictionary` in the form of:
+     *
+     * Generated from Godot docs: GraphEdit.get_connection_list_from_node
+     */
+    fun getConnectionListFromNode(node: String): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(getConnectionListFromNodeBind, handle, node)
+    }
+
+    /**
+     * Returns an `Array` containing the list of connections that intersect with the given `Rect2`. A
+     * connection is represented as a `Dictionary` in the form of:
+     *
+     * Generated from Godot docs: GraphEdit.get_connections_intersecting_with_rect
+     */
+    fun getConnectionsIntersectingWithRect(rect: Rect2): List<Map<String, Any?>> {
+        return ObjectCalls.ptrcallWithRect2ArgRetDictionaryList(getConnectionsIntersectingWithRectBind, handle, rect)
     }
 
     /**
@@ -758,6 +808,15 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
     }
 
     /**
+     * `Dictionary` of human-readable port type names.
+     *
+     * Generated from Godot docs: GraphEdit.get_type_names
+     */
+    fun getTypeNames(): Map<String, Any?> {
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getTypeNamesBind, handle)
+    }
+
+    /**
      * Gets the `HBoxContainer` that contains the zooming and grid snap controls in the top left of the
      * graph. You can use this method to reposition the toolbar or to add your own custom controls to
      * it. Warning: This is a required internal node, removing and freeing it may cause a crash. If you
@@ -843,9 +902,29 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
             ObjectCalls.getMethodBind("GraphEdit", "set_connection_activity", SET_CONNECTION_ACTIVITY_HASH)
         }
 
+        private const val GET_CONNECTION_LIST_HASH = 3995934104L
+        private val getConnectionListBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "get_connection_list", GET_CONNECTION_LIST_HASH)
+        }
+
         private const val GET_CONNECTION_COUNT_HASH = 861718734L
         private val getConnectionCountBind by lazy {
             ObjectCalls.getMethodBind("GraphEdit", "get_connection_count", GET_CONNECTION_COUNT_HASH)
+        }
+
+        private const val GET_CLOSEST_CONNECTION_AT_POINT_HASH = 453879819L
+        private val getClosestConnectionAtPointBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "get_closest_connection_at_point", GET_CLOSEST_CONNECTION_AT_POINT_HASH)
+        }
+
+        private const val GET_CONNECTION_LIST_FROM_NODE_HASH = 3147814860L
+        private val getConnectionListFromNodeBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "get_connection_list_from_node", GET_CONNECTION_LIST_FROM_NODE_HASH)
+        }
+
+        private const val GET_CONNECTIONS_INTERSECTING_WITH_RECT_HASH = 2709748719L
+        private val getConnectionsIntersectingWithRectBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "get_connections_intersecting_with_rect", GET_CONNECTIONS_INTERSECTING_WITH_RECT_HASH)
         }
 
         private const val CLEAR_CONNECTIONS_HASH = 3218959716L
@@ -1141,6 +1220,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         private const val IS_RIGHT_DISCONNECTS_ENABLED_HASH = 36873697L
         private val isRightDisconnectsEnabledBind by lazy {
             ObjectCalls.getMethodBind("GraphEdit", "is_right_disconnects_enabled", IS_RIGHT_DISCONNECTS_ENABLED_HASH)
+        }
+
+        private const val GET_TYPE_NAMES_HASH = 3102165223L
+        private val getTypeNamesBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "get_type_names", GET_TYPE_NAMES_HASH)
         }
 
         private const val GET_MENU_HBOX_HASH = 3590609951L

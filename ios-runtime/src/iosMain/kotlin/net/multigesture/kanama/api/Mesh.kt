@@ -44,6 +44,11 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, handle)
     }
 
+    fun surfaceGetArrays(surfIdx: Int): List<Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArray(surfaceGetArraysBind, handle, surfIdx)
+    }
+
     fun surfaceSetMaterial(surfIdx: Int, material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(surfaceSetMaterialBind, handle, surfIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
@@ -178,6 +183,11 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
         private const val GET_SURFACE_COUNT_HASH = 3905245786L
         private val getSurfaceCountBind by lazy {
             ObjectCalls.getMethodBind("Mesh", "get_surface_count", GET_SURFACE_COUNT_HASH)
+        }
+
+        private const val SURFACE_GET_ARRAYS_HASH = 663333327L
+        private val surfaceGetArraysBind by lazy {
+            ObjectCalls.getMethodBind("Mesh", "surface_get_arrays", SURFACE_GET_ARRAYS_HASH)
         }
 
         private const val SURFACE_SET_MATERIAL_HASH = 3671737478L

@@ -10,8 +10,8 @@ import net.multigesture.kanama.types.Vector2
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
 // KANAMA-IOS-GAP TextParagraph waits on: ptrcallWithArrayArg, ptrcallWithIntAndVariantArgRetRect2,
-//   ptrcallWithIntArgRetArray, ptrcallWithStringObjectIntStringVariantArgsRetBool,
-//   ptrcallWithVariantArgRetBool, ptrcallWithVariantVector2LongDoubleArgsRetBool,
+//   ptrcallWithStringObjectIntStringVariantArgsRetBool, ptrcallWithVariantArgRetBool,
+//   ptrcallWithVariantVector2LongDoubleArgsRetBool,
 //   ptrcallWithVariantVector2LongIntDoubleArgsRetBool
 // Index: docs/reference/generated/ios-shape-gap.md
 
@@ -68,16 +68,6 @@ fun TextParagraph.hasObject(key: Any?): Boolean {
 }
 
 /**
- * Returns array of inline objects in the line.
- *
- * Generated from Godot docs: TextParagraph.get_line_objects
- */
-fun TextParagraph.getLineObjects(line: Int): List<Any?> {
-    checkOpen()
-    return ObjectCalls.ptrcallWithIntArgRetArray(getLineObjectsBind, handle, line)
-}
-
-/**
  * Returns bounding rectangle of the inline object.
  *
  * Generated from Godot docs: TextParagraph.get_line_object_rect
@@ -110,11 +100,6 @@ private val resizeObjectBind by lazy {
 private const val HAS_OBJECT_HASH = 77467830L
 private val hasObjectBind by lazy {
     ObjectCalls.getMethodBind("TextParagraph", "has_object", HAS_OBJECT_HASH)
-}
-
-private const val GET_LINE_OBJECTS_HASH = 663333327L
-private val getLineObjectsBind by lazy {
-    ObjectCalls.getMethodBind("TextParagraph", "get_line_objects", GET_LINE_OBJECTS_HASH)
 }
 
 private const val GET_LINE_OBJECT_RECT_HASH = 204315017L

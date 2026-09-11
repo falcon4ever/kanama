@@ -774,6 +774,24 @@ object OS {
     }
 
     /**
+     * Returns a `Dictionary` containing information about the current memory with the following
+     * entries: - `"physical"` - total amount of usable physical memory in bytes. This value can be
+     * slightly less than the actual physical memory amount, since it does not include memory reserved
+     * by the kernel and devices. - `"free"` - amount of physical memory, that can be immediately
+     * allocated without disk access or other costly operations, in bytes. The process might be able to
+     * allocate more physical memory, but this action will require moving inactive pages to disk, which
+     * can be expensive. - `"available"` - amount of memory that can be allocated without extending the
+     * swap file(s), in bytes. This value includes both physical memory and swap. - `"stack"` - size of
+     * the current thread stack in bytes. Note: Each entry's value may be `-1` if it is unknown.
+     *
+     * Generated from Godot docs: OS.get_memory_info
+     */
+    @JvmStatic
+    fun getMemoryInfo(): Map<String, Any?> {
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getMemoryInfoBind, singleton)
+    }
+
+    /**
      * Moves the file or directory at the given `path` to the system's recycle bin. See also
      * `DirAccess.remove`. The method takes only global paths, so you may need to use
      * `ProjectSettings.globalize_path`. Do not use it for files in `res://` as it will not work in
@@ -1340,6 +1358,11 @@ object OS {
     private const val GET_STATIC_MEMORY_PEAK_USAGE_HASH = 3905245786L
     private val getStaticMemoryPeakUsageBind by lazy {
         ObjectCalls.getMethodBind("OS", "get_static_memory_peak_usage", GET_STATIC_MEMORY_PEAK_USAGE_HASH)
+    }
+
+    private const val GET_MEMORY_INFO_HASH = 3102165223L
+    private val getMemoryInfoBind by lazy {
+        ObjectCalls.getMethodBind("OS", "get_memory_info", GET_MEMORY_INFO_HASH)
     }
 
     private const val MOVE_TO_TRASH_HASH = 2113323047L

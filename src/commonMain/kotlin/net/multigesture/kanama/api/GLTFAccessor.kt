@@ -96,6 +96,11 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         @JvmName("setSparseValuesByteOffsetProperty")
         set(value) = setSparseValuesByteOffset(value)
 
+    fun toDictionary(): Map<String, Any?> {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+    }
+
     fun getBufferView(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferViewBind, handle)
@@ -263,6 +268,11 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
 
         internal fun wrap(handle: MemorySegment): GLTFAccessor? =
             if (handle.address() == 0L) null else GLTFAccessor(handle)
+
+        private const val TO_DICTIONARY_HASH = 3102165223L
+        private val toDictionaryBind by lazy {
+            ObjectCalls.getMethodBind("GLTFAccessor", "to_dictionary", TO_DICTIONARY_HASH)
+        }
 
         private const val GET_BUFFER_VIEW_HASH = 3905245786L
         private val getBufferViewBind by lazy {
