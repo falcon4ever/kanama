@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
@@ -39,6 +39,10 @@ size = Vector3(1, 1, 1)
 [sub_resource type="BoxShape3D" id="Shape_Coin"]
 size = Vector3(0.6, 0.6, 0.6)
 
+[sub_resource type="Curve" id="Curve_probe"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
 [node name="Web3D" type="Node3D" node_paths=PackedStringArray("probe_object")]
 script = ExtResource("1_main")
 enter_tree_greeting = "web3d-enter-tree"
@@ -53,6 +57,7 @@ probe_vector3 = Vector3(3, 4, 5)
 probe_vector2i = Vector2i(6, 7)
 probe_object = NodePath("Spinner")
 probe_string_array = Array[String](["a", "b"])
+probe_curve = SubResource("Curve_probe")
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")

@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 22;
+  const KANAMA_WEB_PROTOCOL_VERSION = 23;
 
   function commandWordCount(opcode) {
     if (
@@ -2212,6 +2212,20 @@
       callback(opcode, handle, value);
       if (this.immediateLongResult !== 1) {
         throw new Error("Godot double-query callback did not confirm application");
+      }
+      return this.immediateLongResult;
+    },
+    immediateDoubleRetDouble(opcode, handle, value) {
+      // Object-query channel carrying one double and RETURNING one (Noise.get_noise_1d,
+      // Curve.sample): the applier publishes the sample scaled x1000 as the integer result, so
+      // any published integer -- 0 included, a curve really can sample to 0 -- is the answer.
+      // Only a callback that never published is a failure; `immediateDoubleQuery` above is the
+      // confirm-only shape (result must be 1) and must not be reused for value returns.
+      const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot double query");
+      this.immediateLongResult = null;
+      callback(opcode, handle, value);
+      if (!Number.isInteger(this.immediateLongResult)) {
+        throw new Error("Godot double-returning query callback did not publish a result");
       }
       return this.immediateLongResult;
     },

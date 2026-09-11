@@ -131,6 +131,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`propertyProbe: mask=${propertyProbe}`);
 
+  // Task 64 Curve + Resource-typed hydration proof: Main.curve_sample_probe (Int->Int) returns
+  // a mask -- bit 1 = the scene-exported `Curve?` property hydrated non-null over the generic
+  // OBJECT property arm, bit 2 = Curve.sample (opcode 306) read back the VALUE a linear
+  // two-point curve predicts at its midpoint. A healthy run returns 3.
+  const curveProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("curve_sample_probe")}, 0)`,
+    ),
+  );
+  trace(`curveProbe: mask=${curveProbe}`);
+
   // Task 80 slice 4: signal-shape conformance (see Main.signal_probe).
   const signalProbe = Number(
     await evaluate(
@@ -316,6 +327,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // with the backend, and the corpus was never affected (fps and City-Builder both `error()`
     // on a null reference and both pass).
     propertyShapesDeliverValues: propertyProbe === 4095,
+    // Task 64: Curve + Resource-typed hydration -- the exported Curve resource hydrated
+    // non-null and Curve.sample reads back the VALUE the linear probe curve predicts, not
+    // merely a successful call.
+    curveResourceHydrationDeliversValue: curveProbe === 3,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

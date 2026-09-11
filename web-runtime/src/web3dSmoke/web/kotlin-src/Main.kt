@@ -13,6 +13,7 @@ import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.CanvasLayer
+import net.multigesture.kanama.api.Curve
 import net.multigesture.kanama.api.DirectionalLight3D
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -114,6 +115,14 @@ class Main(godotObject: GodotHandle) :
   @ScriptProperty var probeObject: Node3D? = null
 
   @ScriptProperty var probeStringArray: List<String> = emptyList()
+
+  /**
+   * Task-64 Curve + Resource-typed hydration proof (thirdperson Bullet's `scaleDecay: Curve?`).
+   * Overridden in main.tscn to a two-point linear curve `(0,0)-(1,1)` with zero tangents — never
+   * the default null — so [curveSampleProbe] can compare [Curve.sample] against a value the
+   * Kotlin default could never produce by accident.
+   */
+  @ScriptProperty var probeCurve: Curve? = null
 
   private lateinit var spinner: Node3D
   private var angle = 0.0
@@ -508,6 +517,21 @@ class Main(godotObject: GodotHandle) :
     if (probeVector2i == Vector2i(6, 7)) mask = mask or 512L
     if (probeObject != null) mask = mask or 1024L
     if (probeStringArray == listOf("a", "b")) mask = mask or 2048L
+    return mask
+  }
+
+  /**
+   * Task-64 Curve + Resource-typed hydration probe (driver method after `property_probe`): bit 1
+   * = the `Curve?` `@ScriptProperty` hydrated a non-null resource over the generic OBJECT
+   * property arm, bit 2 = [Curve.sample] (opcode 306) reads back the VALUE a linear two-point
+   * curve predicts at its midpoint, not merely a successful call. A healthy run returns 3.
+   */
+  @RegisterFunction("curve_sample_probe")
+  fun curveSampleProbe(value: Long): Long {
+    var mask = 0L
+    val curve = probeCurve
+    if (curve != null) mask = mask or 1L
+    if (curve != null && abs(curve.sample(0.5) - 0.5) < 1e-3) mask = mask or 2L
     return mask
   }
 
