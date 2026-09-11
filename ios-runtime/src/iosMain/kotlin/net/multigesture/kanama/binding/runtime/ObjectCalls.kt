@@ -5068,13 +5068,14 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // PT_TYPED_ARRAY_BLOB -> nested blobs the boxer rebuilds). Data holders and the RenderingServer
   // only — nothing that needs a physics / navigation server, and no Control, at scene-init.
   // Array[Dictionary]: RenderingServer.mesh_create_from_surfaces (the RenderingServer exists before
-  // extensions initialise, so RIDs are fine here). NOT GraphEdit / any Control: constructing a
-  // Control at scene-init runs ThemeDB::update_class_instance_items before the theme contexts
-  // exist and segfaults (the 10+11 stack gate caught GraphEdit doing exactly that). An empty
-  // surface list still builds the typed Array[Dictionary] cell (set_typed to Dictionary), passes
-  // it and destroys it; the engine answers with a valid, surface-less mesh RID. A non-empty
-  // Dictionary element cannot be exercised without a Control or a full surface dictionary (AABB
-  // values), so the DICTIONARY boxer case rides on the ARRAY case the OggPacketSequence row proves.
+  // extensions initialise). NOT GraphEdit / any Control: constructing a Control at scene-init runs
+  // ThemeDB::update_class_instance_items before the theme contexts exist and segfaults (the 10+11
+  // stack gate caught GraphEdit doing exactly that). The engine rejects an EMPTY surface list
+  // (ERR_FAIL_COND_V(p_surfaces.is_empty(), RID())), so the row asserts the invalid RID: the typed
+  // Array[Dictionary] cell was built, set_typed, handed over and inspected by the engine, and the
+  // call returned — a broken cell would crash or hang, not answer. A non-empty Dictionary element
+  // cannot be exercised here without a Control or a full surface dictionary (AABB values), so the
+  // DICTIONARY boxer case rides on the ARRAY case the OggPacketSequence row proves.
   val nestedRs = ObjectCalls.getSingleton("RenderingServer")
   val nestedMesh =
     ObjectCalls.ptrcallWithDictionaryListIntArgsRetRID(
@@ -5084,21 +5085,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       0,
     )
   check(
-    "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> valid RID)",
-    nestedMesh != RID(0L),
-  )
-  check(
-    "arg-nested(mesh_create_from_surfaces mesh has 0 surfaces)",
-    ObjectCalls.ptrcallWithRIDArgRetInt(
-      ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface_count", 2198884583L),
-      nestedRs,
-      nestedMesh,
-    ) == 0,
-  )
-  ObjectCalls.ptrcallWithRIDArg(
-    ObjectCalls.getMethodBind("RenderingServer", "free_rid", 2722037293L),
-    nestedRs,
-    nestedMesh,
+    "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> engine rejects it, invalid RID)",
+    nestedMesh == RID(0L),
   )
 
   // Array[Array] whose inner Arrays hold PackedByteArrays: OggPacketSequence packet data, stored
