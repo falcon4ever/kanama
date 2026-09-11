@@ -4800,6 +4800,22 @@
       "returnOwnership": "BORROWED",
       "semantics": "Does the InputMap bind this event to the named action (exact_match baked to Godot's default false)? Unlike is_action_pressed it ignores the pressed flag, so a freshly constructed, never-pressed InputEventKey answers true right after action_add_event -- the VALUE proof that the attach landed.",
       "introducedBy": "64-tier3-inputmap"
+    },
+    {
+      "opcode": 306,
+      "scope": "class",
+      "className": "Curve",
+      "methodName": "sample",
+      "hash": 3919130443,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "float",
+      "shape": "DOUBLE_RET_DOUBLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Sample the curve's baked value at offset (0..1 domain by convention, unclamped past it). Unlocks Resource-typed @ScriptProperty hydration for Curve exports (thirdperson Bullet's scale_decay) -- the property push itself already rides the generic OBJECT property arm; this opcode is the one method call the converged demo needs.",
+      "introducedBy": "64-tier3-curve-resource-hydration"
     }
   ],
   "compositions": [

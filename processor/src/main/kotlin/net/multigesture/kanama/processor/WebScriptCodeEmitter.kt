@@ -132,9 +132,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * crossing with the ownerless `kanamaWebPumpFrameScheduler(delta)`, which the bridge drives
      * from the `_process` dispatch every proxy emits — so the coroutine frame scheduler advances
      * once per engine frame in every demo instead of only the four whose "Main" handle the bridge
-     * happened to name.
+     * happened to name. 23 (task 64, Curve + Resource-typed hydration parcel) adds opcode 306,
+     * `Curve.sample` — the one method call thirdperson's Bullet needs once its `scaleDecay: Curve?`
+     * property hydrates over the existing generic OBJECT property arm.
      */
-    const val PROTOCOL_VERSION = 22
+    const val PROTOCOL_VERSION = 23
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -4355,6 +4357,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\telif opcode == 276 and value is Noise:")
     appendLine("\t\t\tresult = int(round((value as Noise).get_noise_1d(float(args[2])) * 1000.0))")
+    appendLine("\t\telif opcode == 306 and value is Curve:")
+    appendLine("\t\t\tresult = int(round((value as Curve).sample(float(args[2])) * 1000.0))")
     appendLine("\t\telif opcode == 278 and value is Node:")
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(String((value as Node).name))")
     appendLine("\t\t\tresult = 1")
