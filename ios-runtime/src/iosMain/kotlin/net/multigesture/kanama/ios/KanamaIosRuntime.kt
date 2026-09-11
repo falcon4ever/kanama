@@ -1504,12 +1504,16 @@ internal object IosReturnContainerScratch {
         )
       is Color -> Pair(IOS_PT_COLOR, float32Bytes(value.r, value.g, value.b, value.a))
       is RID -> Pair(IOS_PT_RID, int64Bytes(value.value))
+      // task 100 parcel 10: a PackedByteArray value (OggPacketSequence packet data inside an
+      // Array[Array]) travels as its raw bytes; the C boxer rebuilds the packed array.
+      is ByteArray -> Pair(IOS_PT_PACKED_BYTE_ARRAY, value)
       else ->
         if (strict) {
           error(
             "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
-              "Dictionary / Array argument (nested containers and non-scalar values are not " +
-              "marshalled yet — task 100 parcel 7)"
+              "Dictionary / Array argument (one container level with scalars and ByteArrays " +
+              "inside is marshalled; deeper nesting and other objects are not — task 100 " +
+              "parcels 7 and 10)"
           )
         } else {
           Pair(IOS_PT_VOID, ByteArray(0))
@@ -1525,24 +1529,34 @@ internal object IosReturnContainerScratch {
     map: Map<*, *>,
     alloc: (Int) -> CPointer<ByteVar> = ::ensure,
     strict: Boolean = false,
-  ): CPointer<ByteVar> {
+  ): CPointer<ByteVar> = copyOut(encodeDictionaryBytes(map, strict), alloc)
+
+  fun encodeArray(
+    values: List<*>,
+    alloc: (Int) -> CPointer<ByteVar> = ::ensure,
+    strict: Boolean = false,
+  ): CPointer<ByteVar> = copyOut(encodeArrayBytes(values, strict), alloc)
+
+  /**
+   * The entry blob as bytes (task 100 parcel 10): a Dictionary element of a typed-Array argument is
+   * written into the outer record as a whole nested blob, so the encoder has to hand the bytes back
+   * rather than a scratch pointer.
+   */
+  fun encodeDictionaryBytes(map: Map<*, *>, strict: Boolean = false): ByteArray {
     val entries =
       map.entries.map { (k, v) ->
         Pair((k as? String ?: k.toString()).encodeToByteArray(), taggedValue(v, strict))
       }
     var needed = 4
     for ((key, tagged) in entries) needed += 4 + key.size + 8 + tagged.second.size
-    val b = alloc(needed)
+    val out = ByteArray(needed)
     var off = 0
     fun putInt32(v: Int) {
-      b[off] = (v and 0xFF).toByte()
-      b[off + 1] = ((v ushr 8) and 0xFF).toByte()
-      b[off + 2] = ((v ushr 16) and 0xFF).toByte()
-      b[off + 3] = ((v ushr 24) and 0xFF).toByte()
+      putInt32LE(out, off, v)
       off += 4
     }
     fun putBytes(bytes: ByteArray) {
-      for (i in bytes.indices) b[off + i] = bytes[i]
+      bytes.copyInto(out, off)
       off += bytes.size
     }
     putInt32(entries.size)
@@ -1553,28 +1567,21 @@ internal object IosReturnContainerScratch {
       putInt32(tagged.second.size)
       putBytes(tagged.second)
     }
-    return b
+    return out
   }
 
-  fun encodeArray(
-    values: List<*>,
-    alloc: (Int) -> CPointer<ByteVar> = ::ensure,
-    strict: Boolean = false,
-  ): CPointer<ByteVar> {
+  fun encodeArrayBytes(values: List<*>, strict: Boolean = false): ByteArray {
     val elements = values.map { taggedValue(it, strict) }
     var needed = 4
     for (tagged in elements) needed += 8 + tagged.second.size
-    val b = alloc(needed)
+    val out = ByteArray(needed)
     var off = 0
     fun putInt32(v: Int) {
-      b[off] = (v and 0xFF).toByte()
-      b[off + 1] = ((v ushr 8) and 0xFF).toByte()
-      b[off + 2] = ((v ushr 16) and 0xFF).toByte()
-      b[off + 3] = ((v ushr 24) and 0xFF).toByte()
+      putInt32LE(out, off, v)
       off += 4
     }
     fun putBytes(bytes: ByteArray) {
-      for (i in bytes.indices) b[off + i] = bytes[i]
+      bytes.copyInto(out, off)
       off += bytes.size
     }
     putInt32(elements.size)
@@ -1583,6 +1590,12 @@ internal object IosReturnContainerScratch {
       putInt32(tagged.second.size)
       putBytes(tagged.second)
     }
+    return out
+  }
+
+  private fun copyOut(bytes: ByteArray, alloc: (Int) -> CPointer<ByteVar>): CPointer<ByteVar> {
+    val b = alloc(bytes.size)
+    for (i in bytes.indices) b[i] = bytes[i]
     return b
   }
 

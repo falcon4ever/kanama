@@ -491,6 +491,14 @@ IOS_ARG_KINDS = {
     "TypedTransform3DArray",
     "TypedPlaneArray",
     "TypedPackedVector2Array",
+    # task 100 parcel 10 — typed-Array args whose ELEMENTS are containers or packed arrays. The
+    # element is a whole task-29 blob (Dictionary / Array, one level with scalars and ByteArrays
+    # inside), the raw bytes (PackedByteArray) or the task-13 string blob (PackedStringArray); the
+    # dispatch's blob boxer rebuilds each before push_back.
+    "TypedDictionaryArray",
+    "TypedArrayArray",
+    "TypedPackedByteArray",
+    "TypedPackedStringArray",
 }
 # Return shapes the iOS helpers can read back (keyed by CallShape.kotlin_return, the
 # stable per-helper return-type token). StringName/String/RID/List/Map returns
@@ -3354,7 +3362,8 @@ import net.multigesture.kanama.types.Vector4
  * array from; Variant / Dictionary / Array ARGS by `packVariantDesc` / `packDictionaryBlob` /
  * `packArrayBlob` (a KanamaIosVariantArgDesc or the task-29 entry blob the dispatch boxes for the
  * call); typed-Array ARGS by the `ObjectCalls.packTyped<Kind>ArrayDesc` helpers into a
- * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements). Helpers already hand-written in
+ * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements; Dictionary / Array / packed
+ * elements travel as nested blobs the boxer rebuilds). Helpers already hand-written in
  * ObjectCalls.kt are the override set and are NOT regenerated here.
  */
 '''
@@ -3451,6 +3460,11 @@ IOS_TYPED_ARRAY_ARGS = {
     "TypedTransform3DArray": ("List<Transform3D>", "packTypedTransform3DArrayDesc"),
     "TypedPlaneArray": ("List<Plane>", "packTypedPlaneArrayDesc"),
     "TypedPackedVector2Array": ("List<List<Vector2>>", "packTypedPackedVector2ListArrayDesc"),
+    # task 100 parcel 10 — container / packed element kinds (see IOS_ARG_KINDS).
+    "TypedDictionaryArray": ("List<Map<String, Any?>>", "packTypedDictionaryArrayDesc"),
+    "TypedArrayArray": ("List<List<Any?>>", "packTypedArrayArrayDesc"),
+    "TypedPackedByteArray": ("List<ByteArray>", "packTypedByteArrayArrayDesc"),
+    "TypedPackedStringArray": ("List<List<String>>", "packTypedPackedStringListArrayDesc"),
 }
 
 
@@ -3814,6 +3828,9 @@ IOS_CONTAINER_RETURNS = {
     "Dictionary": ("ptrcallRetDictionary", "Map<String, Any?>"),
     "Array": ("ptrcallRetArray", "List<Any?>"),
     "typedarray::Dictionary": ("ptrcallRetDictionaryList", "List<Map<String, Any?>>"),
+    # task 100 parcel 10 — Array[Array] returns ride the same blob; nested PackedByteArray elements
+    # decode to ByteArray (other nested packed arrays still surface null, the recorded limit).
+    "typedarray::Array": ("ptrcallRetArrayList", "List<List<Any?>>"),
 }
 
 # String-list and typed-Array returns the iOS helpers read back as a length-prefixed blob through

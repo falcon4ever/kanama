@@ -7,6 +7,31 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — iOS: typed arrays of containers and packed arrays on every audited shape (task 100, parcel 10)
+
+- A method taking an `Array[Dictionary]`, `Array[Array]`, `Array[PackedByteArray]` or
+  `Array[PackedStringArray]` argument — or returning an `Array[Array]` — was desktop-only; every such
+  method whose other arguments are already audited now gets a generated helper. The typed-array
+  descriptor of parcel 8 carries each element as a nested blob (a Dictionary / Array element is the
+  task-29 entry blob, one container level with scalars and `ByteArray`s inside; a PackedByteArray
+  element is its raw bytes; a PackedStringArray element the task-13 string blob), and the dispatch's
+  blob boxer rebuilds each element before `push_back`, destroying the temporary once the Variant
+  holds its own reference. `Array[Array]` returns ride the parcel-6 container blob, which now encodes
+  PackedByteArray elements as their bytes (other nested packed arrays still surface `null`, the
+  recorded limit). 13 members on 8 classes move from the desktop companions into the shared tree —
+  `GraphEdit.set_connections`, `GLTFState.set_buffers`, `GLTFObjectModelProperty.set_json_pointers`,
+  `OggPacketSequence.set_packet_data` / `get_packet_data`, `RenderingDevice.texture_create`,
+  `RenderingServer.mesh_create_from_surfaces` / `mesh_surface_get_blend_shape_arrays`,
+  `ImporterMesh.add_surface`, `EditorVCSInterface.add_diff_hunks_into_diff_file` /
+  `add_line_diffs_into_diff_hunk`, `DisplayServer.file_dialog_with_options_show` — and the
+  `connections`, `buffers` and `jsonPointers` properties are read-write on iOS again; the gap index
+  goes from 34 to 21 desktop-only members (20 → 13 companion files, 27 → 16 helpers waited on, 3 → 0
+  read-only properties). Five self-test rows round-trip two GraphEdit connections through
+  `set_connections` / `get_connection_list`, two OggPacketSequence pages of PackedByteArray packets
+  (byte-exact, including a 300-byte packet), three GLTFState buffers (an empty one and a 5000-byte
+  one) and three JSON-pointer PackedStringArrays (a non-ASCII element, an empty array, an empty
+  string).
+
 ### Added — iOS: typed-object-list returns on every audited argument shape (task 100, parcel 9)
 
 - A method returning `Array[<Object subclass>]` (`List<T>` on Kotlin) reached iOS through three
