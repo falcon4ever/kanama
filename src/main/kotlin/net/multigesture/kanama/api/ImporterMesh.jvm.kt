@@ -7,8 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
 // ObjectCalls helper for their ptrcall shape yet (or does not host a wrapper type they use), so
 // they compile for desktop/Android only. Re-run the generator when iOS gains the helper.
-// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs,
-//   ptrcallWithTwoDoubleArrayArgs
+// KANAMA-IOS-GAP ImporterMesh waits on: ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs
 // Index: docs/reference/generated/ios-shape-gap.md
 
 /**
@@ -44,29 +43,7 @@ fun ImporterMesh.addSurface(primitive: Long, arrays: List<Any?>, blendShapes: Li
     ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, handle, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
 }
 
-/**
- * Generates all lods for this ImporterMesh. `normal_merge_angle` is in degrees and used in the
- * same way as the importer settings in `lods`. `normal_split_angle` is not used and only remains
- * for compatibility with older versions of the API. The number of generated lods can be accessed
- * using `get_surface_lod_count`, and each LOD is available in `get_surface_lod_size` and
- * `get_surface_lod_indices`. `bone_transform_array` is an `Array` which can be either empty or
- * contain `Transform3D`s which, for each of the mesh's bone IDs, will apply mesh skinning when
- * generating the LOD mesh variations. This is usually used to account for discrepancies in scale
- * between the mesh itself and its skinning data.
- *
- * Generated from Godot docs: ImporterMesh.generate_lods
- */
-fun ImporterMesh.generateLods(normalMergeAngle: Double, normalSplitAngle: Double, boneTransformArray: List<Any?>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithTwoDoubleArrayArgs(generateLodsBind, handle, normalMergeAngle, normalSplitAngle, boneTransformArray)
-}
-
 private const val ADD_SURFACE_HASH = 1740448849L
 private val addSurfaceBind by lazy {
     ObjectCalls.getMethodBind("ImporterMesh", "add_surface", ADD_SURFACE_HASH)
-}
-
-private const val GENERATE_LODS_HASH = 2491878677L
-private val generateLodsBind by lazy {
-    ObjectCalls.getMethodBind("ImporterMesh", "generate_lods", GENERATE_LODS_HASH)
 }

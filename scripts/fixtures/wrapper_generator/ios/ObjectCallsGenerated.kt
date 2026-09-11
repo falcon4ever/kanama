@@ -62,7 +62,9 @@ import net.multigesture.kanama.types.Vector4
  * typed-Array returns to the `ObjectCalls.ptrcallRetTyped<Kind>List` blob read-backs
  * (kanama_ios_godot_ptrcall_ret_array_blob). Packed*Array ARGS are laid out by the
  * `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch builds the Godot
- * array from; typed-Array ARGS by the `ObjectCalls.packTyped<Kind>ArrayDesc` helpers into a
+ * array from; Variant / Dictionary / Array ARGS by `packVariantDesc` / `packDictionaryBlob` /
+ * `packArrayBlob` (a KanamaIosVariantArgDesc or the task-29 entry blob the dispatch boxes for the
+ * call); typed-Array ARGS by the `ObjectCalls.packTyped<Kind>ArrayDesc` helpers into a
  * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements). Helpers already hand-written in
  * ObjectCalls.kt are the override set and are NOT regenerated here.
  */

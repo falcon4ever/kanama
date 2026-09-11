@@ -10,115 +10,27 @@ helper for its ptrcall shape yet, or does not host a wrapper type it uses. When 
 on iOS (`IOS_ARG_KINDS` / `IOS_RET_KOTLIN` / the per-helper gates in `ios_method_supported`), the
 next regen moves the member back into the shared file and it disappears from this page.
 
-**Gap:** 108 of 979 shared classes carry a desktop companion; 258 desktop-only members; 128 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 38 properties read-only in the shared tree because only their setter is desktop-only.
+**Gap:** 20 of 979 shared classes carry a desktop companion; 34 desktop-only members; 27 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 3 properties read-only in the shared tree because only their setter is desktop-only.
 
 | Class | Desktop-only members | Read-only in shared | Waits on |
 |---|---|---|---|
-| `AccessibilityServer` | `elementSetMeta` |  | `ptrcallWithRIDAndVariantArg` |
-| `Animation` | `trackInsertKey`, `trackSetKeyValue` |  | `ptrcallWithIntDoubleVariantDoubleArgsRetInt`, `ptrcallWithTwoIntAndVariantArg` |
-| `AnimationNode` | `setParameter` |  | `ptrcallWithStringNameAndVariantArg` |
-| `AudioStreamOggVorbis` | `setTags` | `tags` | `ptrcallWithDictionaryArg` |
-| `AudioStreamWAV` | `loadFromBuffer`, `loadFromFile`, `setTags` | `tags` | `ptrcallWithByteArrayAndDictionaryArgRetObject`, `ptrcallWithDictionaryArg`, `ptrcallWithStringAndDictionaryArgRetObject` |
-| `CameraFeed` | `setFormat` |  | `ptrcallWithIntAndDictionaryArgRetBool` |
-| `CanvasItem` | `setInstanceShaderParameter` |  | `ptrcallWithStringNameAndVariantArg` |
-| `CharFXTransform` | `setEnvironment` | `env` | `ptrcallWithDictionaryArg` |
-| `ClassDB` | `classSetProperty` |  | `ptrcallWithObjectStringNameAndVariantArgRetLong` |
-| `CodeEdit` | `setAutoBraceCompletionPairs`, `addCodeCompletionOption` | `autoBraceCompletionPairs` | `ptrcallWithDictionaryArg`, `ptrcallWithLongTwoStringColorObjectVariantIntArgs` |
-| `CodeHighlighter` | `setKeywordColors`, `setMemberKeywordColors`, `setColorRegions` | `keywordColors`, `memberKeywordColors`, `colorRegions` | `ptrcallWithDictionaryArg` |
-| `Control` | `forceDrag` |  | `ptrcallWithVariantAndObjectArg` |
-| `DPITexture` | `createFromString`, `setColorMap` | `colorMap` | `ptrcallWithDictionaryArg`, `ptrcallWithStringTwoDoubleDictionaryArgsRetObject` |
-| `DisplayServer` | `globalMenuAddItem`, `globalMenuAddCheckItem`, `globalMenuAddIconItem`, `globalMenuAddIconCheckItem`, `globalMenuAddRadioCheckItem`, `globalMenuAddIconRadioCheckItem`, `globalMenuAddMultistateItem`, `globalMenuGetItemIndexFromTag`, `globalMenuGetItemCallback`, `globalMenuGetItemKeyCallback`, `globalMenuSetItemTag`, `accessibilityElementSetMeta`, `fileDialogWithOptionsShow` |  | `ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong`, `ptrcallWithRIDAndVariantArg`, `ptrcallWithStringAndVariantArgRetInt`, `ptrcallWithStringIntAndVariantArg`, `ptrcallWithStringIntArgsRetCallable`, `ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt`, `ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt`, `ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt` |
-| `EditorDebuggerSession` | `sendMessage`, `toggleProfiler` |  | `ptrcallWithStringAndArrayArg`, `ptrcallWithStringBoolArrayArgs` |
-| `EditorImportPlugin` | `appendImportExternalResource` |  | `ptrcallWithStringDictionaryStringVariantArgsRetLong` |
+| `DisplayServer` | `globalMenuGetItemCallback`, `globalMenuGetItemKeyCallback`, `fileDialogWithOptionsShow` |  | `ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong`, `ptrcallWithStringIntArgsRetCallable` |
 | `EditorInterface` | `makeMeshPreviews` |  | `ptrcallWithObjectListIntArgsRetTypedObjectList` |
-| `EditorProperty` | `emitChanged` |  | `ptrcallWithStringNameVariantStringNameBoolArgs` |
-| `EditorResourcePreview` | `queueResourcePreview`, `queueEditedResourcePreview` |  | `ptrcallWithStringObjectStringNameVariantArgs`, `ptrcallWithTwoObjectStringNameVariantArgs` |
-| `EditorSceneFormatImporter` | `addImportOption`, `addImportOptionAdvanced` |  | `ptrcallWithLongStringVariantLongStringIntArgs`, `ptrcallWithStringAndVariantArg` |
-| `EditorScenePostImportPlugin` | `addImportOption`, `addImportOptionAdvanced` |  | `ptrcallWithLongStringVariantLongStringIntArgs`, `ptrcallWithStringAndVariantArg` |
-| `EditorSettings` | `setSetting`, `setInitialValue`, `addPropertyInfo`, `setProjectMetadata`, `getProjectMetadata` |  | `ptrcallWithDictionaryArg`, `ptrcallWithStringAndVariantArg`, `ptrcallWithStringNameVariantBoolArgs`, `ptrcallWithTwoStringAndVariantArg`, `ptrcallWithTwoStringAndVariantArgRetVariantScalar` |
-| `EditorUndoRedoManager` | `addDoProperty`, `addUndoProperty` |  | `ptrcallWithObjectStringNameAndVariantArg` |
 | `EditorVCSInterface` | `addDiffHunksIntoDiffFile`, `addLineDiffsIntoDiffHunk` |  | `ptrcallWithDictionaryDictionaryListArgsRetDictionary` |
-| `EngineDebugger` | `profilerAddFrameData`, `profilerEnable`, `sendMessage` |  | `ptrcallWithStringAndArrayArg`, `ptrcallWithStringNameArrayArgs`, `ptrcallWithStringNameBoolArrayArgs` |
-| `Expression` | `execute` |  | `ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar` |
-| `FontFile` | `setVariationCoordinates`, `setOpentypeFeatureOverrides` | `opentypeFeatureOverrides` | `ptrcallWithDictionaryArg`, `ptrcallWithIntAndDictionaryArg` |
-| `FontVariation` | `setVariationOpentype`, `setOpentypeFeatures` | `variationOpentype` | `ptrcallWithDictionaryArg` |
 | `GDExtensionManager` | `loadExtensionFromFunction` |  | `ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong` |
-| `GDScriptLanguageProtocol` | `initialize`, `initialized`, `notifyClient` |  | `ptrcallWithDictionaryArgRetVariantScalar`, `ptrcallWithStringVariantAndIntArg`, `ptrcallWithVariantArg` |
-| `GDScriptTextDocument` | `didOpen`, `didClose`, `didChange`, `willSaveWaitUntil`, `didSave`, `nativeSymbol`, `documentSymbol`, `completion`, `prepareRename`, `references`, `foldingRange`, `codeLens`, `documentLink`, `colorPresentation`, `hover`, `definition`, `declaration`, `signatureHelp` |  | `ptrcallWithDictionaryArgRetArray`, `ptrcallWithDictionaryArgRetVariantScalar`, `ptrcallWithVariantArg` |
-| `GDScriptWorkspace` | `didDeleteFiles` |  | `ptrcallWithDictionaryArg` |
-| `GLTFAccessor` | `fromDictionary` |  | `ptrcallWithDictionaryArgRetObject` |
-| `GLTFAnimation` | `setAdditionalData` |  | `ptrcallWithStringNameAndVariantArg` |
-| `GLTFBufferView` | `fromDictionary` |  | `ptrcallWithDictionaryArgRetObject` |
-| `GLTFCamera` | `fromDictionary` |  | `ptrcallWithDictionaryArgRetObject` |
-| `GLTFLight` | `fromDictionary`, `setAdditionalData` |  | `ptrcallWithDictionaryArgRetObject`, `ptrcallWithStringNameAndVariantArg` |
-| `GLTFMesh` | `setAdditionalData` |  | `ptrcallWithStringNameAndVariantArg` |
-| `GLTFNode` | `setAdditionalData` |  | `ptrcallWithStringNameAndVariantArg` |
 | `GLTFObjectModelProperty` | `setJsonPointers` | `jsonPointers` | `ptrcallWithPackedStringListListArg` |
-| `GLTFPhysicsBody` | `fromDictionary` |  | `ptrcallWithDictionaryArgRetObject` |
-| `GLTFPhysicsShape` | `fromDictionary` |  | `ptrcallWithDictionaryArgRetObject` |
-| `GLTFSkeleton` | `setGodotBoneNode` | `godotBoneNode` | `ptrcallWithDictionaryArg` |
-| `GLTFSkin` | `setJointIToBoneI`, `setJointIToName` | `jointIToBoneI`, `jointIToName` | `ptrcallWithDictionaryArg` |
-| `GLTFState` | `setJson`, `setBuffers`, `setAdditionalData` | `json`, `buffers` | `ptrcallWithByteArrayListArg`, `ptrcallWithDictionaryArg`, `ptrcallWithStringNameAndVariantArg` |
-| `GeometryInstance3D` | `setInstanceShaderParameter` |  | `ptrcallWithStringNameAndVariantArg` |
-| `GraphEdit` | `setConnections`, `setTypeNames` | `typeNames`, `connections` | `ptrcallWithDictionaryArg`, `ptrcallWithDictionaryListArg` |
-| `GraphNode` | `setSlotMetadataLeft`, `setSlotMetadataRight` |  | `ptrcallWithIntAndVariantArg` |
-| `HTTPClient` | `queryStringFromDict` |  | `ptrcallWithDictionaryArgRetString` |
-| `ImporterMesh` | `addSurface`, `generateLods` |  | `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs`, `ptrcallWithTwoDoubleArrayArgs` |
-| `Input` | `setJoyMotionSensorsCalibration` |  | `ptrcallWithIntAndDictionaryArg` |
+| `GLTFState` | `setBuffers` | `buffers` | `ptrcallWithByteArrayListArg` |
+| `GraphEdit` | `setConnections` | `connections` | `ptrcallWithDictionaryListArg` |
+| `ImporterMesh` | `addSurface` |  | `ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs` |
 | `InputMap` | `actionGetEvents` |  | `ptrcallWithStringNameArgRetTypedObjectList` |
-| `ItemList` | `setItemMetadata` |  | `ptrcallWithIntAndVariantArg` |
-| `JSON` | `stringify`, `setData`, `fromNative`, `toNative` | `data` | `ptrcallWithVariantAndBoolArgRetVariantScalar`, `ptrcallWithVariantArg`, `ptrcallWithVariantStringTwoBoolArgsRetString` |
-| `JSONRPC` | `processAction`, `makeRequest`, `makeResponse`, `makeNotification`, `makeResponseError` |  | `ptrcallWithIntStringVariantArgsRetDictionary`, `ptrcallWithStringAndTwoVariantArgsRetDictionary`, `ptrcallWithStringAndVariantArgRetDictionary`, `ptrcallWithTwoVariantArgsRetDictionary`, `ptrcallWithVariantAndBoolArgRetVariantScalar` |
-| `Label` | `setStructuredTextBidiOverrideOptions` | `structuredTextBidiOverrideOptions` | `ptrcallWithArrayArg` |
-| `Label3D` | `setStructuredTextBidiOverrideOptions` | `structuredTextBidiOverrideOptions` | `ptrcallWithArrayArg` |
-| `LinkButton` | `setStructuredTextBidiOverrideOptions` | `structuredTextBidiOverrideOptions` | `ptrcallWithArrayArg` |
-| `Marshalls` | `variantToBase64` |  | `ptrcallWithVariantAndBoolArgRetString` |
-| `MultiplayerAPI` | `rpc`, `objectConfigurationAdd`, `objectConfigurationRemove` |  | `ptrcallWithIntObjectStringNameArrayArgsRetLong`, `ptrcallWithObjectAndVariantArgRetLong` |
-| `MultiplayerSpawner` | `spawn`, `getSpawnFunction`, `spawnFunction` |  | `ptrcallNoArgsRetCallable`, `ptrcallWithVariantArgRetObject` |
-| `NativeMenu` | `getPopupOpenCallback`, `getPopupCloseCallback`, `addSubmenuItem`, `addItem`, `addCheckItem`, `addIconItem`, `addIconCheckItem`, `addRadioCheckItem`, `addIconRadioCheckItem`, `addMultistateItem`, `findItemIndexWithTag`, `getItemCallback`, `getItemKeyCallback`, `setItemTag` |  | `ptrcallWithRIDAndVariantArgRetInt`, `ptrcallWithRIDArgRetCallable`, `ptrcallWithRIDIntAndVariantArgs`, `ptrcallWithRIDIntArgsRetCallable`, `ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt`, `ptrcallWithRIDStringRIDVariantIntArgsRetInt`, `ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt`, `ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt` |
-| `NavigationMeshSourceGeometryData2D` | `setProjectedObstructions` | `projectedObstructions` | `ptrcallWithArrayArg` |
-| `NavigationMeshSourceGeometryData3D` | `addMeshArray`, `setProjectedObstructions` | `projectedObstructions` | `ptrcallWithArrayArg`, `ptrcallWithArrayTransform3DArgs` |
+| `MultiplayerSpawner` | `getSpawnFunction`, `spawnFunction` |  | `ptrcallNoArgsRetCallable` |
+| `NativeMenu` | `getPopupOpenCallback`, `getPopupCloseCallback`, `getItemCallback`, `getItemKeyCallback` |  | `ptrcallWithRIDArgRetCallable`, `ptrcallWithRIDIntArgsRetCallable` |
 | `Noise` | `getImage3d`, `getSeamlessImage3d` |  | `ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList`, `ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList` |
-| `OS` | `execute` |  | `ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt` |
 | `OggPacketSequence` | `setPacketData`, `getPacketData`, `packetData` |  | `ptrcallNoArgsRetArrayList`, `ptrcallWithArrayListArg` |
-| `OpenXRAPIExtension` | `transformFromPose`, `xrResult`, `setCustomPlaySpace` |  | `ptrcallWithConstVoidPtrArg`, `ptrcallWithConstVoidPtrArgRetTransform3D`, `ptrcallWithLongStringArrayArgsRetBool` |
-| `OpenXRActionMap` | `setActionSets`, `setInteractionProfiles` | `actionSets`, `interactionProfiles` | `ptrcallWithArrayArg` |
-| `OpenXRActionSet` | `setActions` | `actions` | `ptrcallWithArrayArg` |
-| `OpenXRFutureResult` | `setResultValue` |  | `ptrcallWithVariantArg` |
-| `OpenXRIPBinding` | `setBindingModifiers` | `bindingModifiers` | `ptrcallWithArrayArg` |
-| `OpenXRInteractionProfile` | `setBindings`, `setBindingModifiers` | `bindings`, `bindingModifiers` | `ptrcallWithArrayArg` |
-| `OpenXRMarkerTracker` | `setMarkerData` |  | `ptrcallWithVariantArg` |
-| `OptionButton` | `setItemMetadata` |  | `ptrcallWithIntAndVariantArg` |
-| `PackedDataContainer` | `pack` |  | `ptrcallWithVariantArgRetLong` |
-| `PacketPeer` | `putVar` |  | `ptrcallWithVariantAndBoolArgRetLong` |
-| `Performance` | `addCustomMonitor` |  | `ptrcallWithStringNameCallableArrayLongArgs` |
-| `PhysicsServer2D` | `shapeSetData`, `areaSetParam`, `bodySetParam`, `bodySetState`, `bodySetForceIntegrationCallback` |  | `ptrcallWithRIDAndVariantArg`, `ptrcallWithRIDCallableVariantArgs`, `ptrcallWithRIDLongAndVariantArgs` |
-| `PhysicsServer3D` | `shapeSetData`, `areaSetParam`, `bodySetParam`, `bodySetState`, `bodySetForceIntegrationCallback`, `softBodySetState` |  | `ptrcallWithRIDAndVariantArg`, `ptrcallWithRIDCallableVariantArgs`, `ptrcallWithRIDLongAndVariantArgs` |
-| `Polygon2D` | `setPolygons` | `polygons` | `ptrcallWithArrayArg` |
-| `PopupMenu` | `setItemMetadata` |  | `ptrcallWithIntAndVariantArg` |
-| `RDPipelineSpecializationConstant` | `setValue` | `value` | `ptrcallWithVariantArg` |
+| `OpenXRAPIExtension` | `transformFromPose`, `setCustomPlaySpace` |  | `ptrcallWithConstVoidPtrArg`, `ptrcallWithConstVoidPtrArgRetTransform3D` |
 | `RegEx` | `searchAll` |  | `ptrcallWithStringTwoIntArgsRetTypedObjectList` |
-| `RegExMatch` | `getString`, `getStart`, `getEnd` |  | `ptrcallWithVariantArgRetInt`, `ptrcallWithVariantArgRetString` |
 | `RenderingDevice` | `textureCreate` |  | `ptrcallWithTwoObjectByteArrayListArgsRetRID` |
-| `RenderingServer` | `texture3dGet`, `materialSetParam`, `meshCreateFromSurfaces`, `meshAddSurface`, `meshAddSurfaceFromArrays`, `meshSurfaceGetBlendShapeArrays`, `instanceGeometrySetShaderParameter`, `bakeRenderUv2`, `canvasItemSetInstanceShaderParameter`, `globalShaderParameterAdd`, `globalShaderParameterSet`, `globalShaderParameterSetOverride` |  | `ptrcallWithDictionaryListIntArgsRetRID`, `ptrcallWithRIDAndDictionaryArg`, `ptrcallWithRIDAndIntArgRetArrayList`, `ptrcallWithRIDArgRetTypedObjectList`, `ptrcallWithRIDLongTwoArrayDictionaryLongArgs`, `ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList`, `ptrcallWithRIDStringNameAndVariantArgs`, `ptrcallWithStringNameAndVariantArg`, `ptrcallWithStringNameLongVariantArgs` |
-| `RichTextLabel` | `addImage`, `updateImage`, `pushMeta`, `pushCustomfx`, `setStructuredTextBidiOverrideOptions`, `setEffects`, `installEffect` | `customEffects`, `structuredTextBidiOverrideOptions` | `ptrcallWithArrayArg`, `ptrcallWithObjectAndDictionaryArg`, `ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs`, `ptrcallWithVariantArg`, `ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs`, `ptrcallWithVariantLongStringArgs` |
-| `Shortcut` | `setEvents` | `events` | `ptrcallWithArrayArg` |
-| `Skeleton3D` | `setBoneMeta` |  | `ptrcallWithIntStringNameAndVariantArg` |
-| `StreamPeer` | `putVar` |  | `ptrcallWithVariantAndBoolArg` |
-| `TabContainer` | `setTabMetadata` |  | `ptrcallWithIntAndVariantArg` |
-| `TextEdit` | `setStructuredTextBidiOverrideOptions`, `setLineGutterMetadata` | `structuredTextBidiOverrideOptions` | `ptrcallWithArrayArg`, `ptrcallWithTwoIntAndVariantArg` |
-| `TextLine` | `setBidiOverride`, `addString`, `addObject`, `resizeObject`, `hasObject`, `getObjectRect` |  | `ptrcallWithArrayArg`, `ptrcallWithStringObjectIntStringVariantArgsRetBool`, `ptrcallWithVariantArgRetBool`, `ptrcallWithVariantArgRetRect2`, `ptrcallWithVariantVector2LongDoubleArgsRetBool`, `ptrcallWithVariantVector2LongIntDoubleArgsRetBool` |
-| `TextMesh` | `setStructuredTextBidiOverrideOptions` | `structuredTextBidiOverrideOptions` | `ptrcallWithArrayArg` |
-| `TextParagraph` | `setBidiOverride`, `addString`, `addObject`, `resizeObject`, `hasObject`, `getLineObjectRect` |  | `ptrcallWithArrayArg`, `ptrcallWithIntAndVariantArgRetRect2`, `ptrcallWithStringObjectIntStringVariantArgsRetBool`, `ptrcallWithVariantArgRetBool`, `ptrcallWithVariantVector2LongDoubleArgsRetBool`, `ptrcallWithVariantVector2LongIntDoubleArgsRetBool` |
-| `TextServer` | `fontSetVariationCoordinates`, `fontSetOpentypeFeatureOverrides`, `shapedTextSetBidiOverride`, `shapedTextAddString`, `shapedTextAddObject`, `shapedTextResizeObject`, `shapedTextHasObject`, `shapedSetSpanUpdateFont`, `shapedTextGetObjectRect`, `shapedTextGetObjectRange`, `shapedTextGetObjectGlyph`, `parseStructuredText` |  | `ptrcallWithLongArrayStringArgsRetVector3iList`, `ptrcallWithRIDAndArrayArg`, `ptrcallWithRIDAndDictionaryArg`, `ptrcallWithRIDAndVariantArgRetBool`, `ptrcallWithRIDAndVariantArgRetLong`, `ptrcallWithRIDAndVariantArgRetRect2`, `ptrcallWithRIDAndVariantArgRetVector2i`, `ptrcallWithRIDLongRIDListLongDictionaryArgs`, `ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool`, `ptrcallWithRIDVariantVector2LongDoubleArgsRetBool`, `ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool` |
-| `Theme` | `setThemeItem` |  | `ptrcallWithLongAndTwoStringNameAndVariantArg` |
-| `TileData` | `setCustomData`, `setCustomDataByLayerId` |  | `ptrcallWithIntAndVariantArg`, `ptrcallWithStringAndVariantArg` |
-| `Time` | `getDateTimeStringFromDateTimeDict`, `getUnixTimeFromDateTimeDict` |  | `ptrcallWithDictionaryAndBoolArgRetString`, `ptrcallWithDictionaryArgRetLong` |
+| `RenderingServer` | `texture3dGet`, `meshCreateFromSurfaces`, `meshSurfaceGetBlendShapeArrays`, `bakeRenderUv2` |  | `ptrcallWithDictionaryListIntArgsRetRID`, `ptrcallWithRIDAndIntArgRetArrayList`, `ptrcallWithRIDArgRetTypedObjectList`, `ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList` |
 | `TranslationDomain` | `findTranslations` |  | `ptrcallWithStringAndBoolArgRetTypedObjectList` |
 | `TranslationServer` | `findTranslations` |  | `ptrcallWithStringAndBoolArgRetTypedObjectList` |
-| `TreeItem` | `setStructuredTextBidiOverrideOptions`, `setMetadata`, `getCustomDrawCallback` |  | `ptrcallWithIntAndArrayArg`, `ptrcallWithIntAndVariantArg`, `ptrcallWithIntArgRetCallable` |
-| `UndoRedo` | `addDoProperty`, `addUndoProperty` |  | `ptrcallWithObjectStringNameAndVariantArg` |
-| `VisualShaderNode` | `setInputPortDefaultValue`, `setDefaultInputValues` | `defaultInputValues` | `ptrcallWithArrayArg`, `ptrcallWithIntAndTwoVariantArgs` |
-| `WebRTCMultiplayerPeer` | `createServer`, `createClient`, `createMesh` |  | `ptrcallWithArrayArgRetLong`, `ptrcallWithIntAndArrayArgRetLong` |
-| `WebRTCPeerConnection` | `initialize`, `createDataChannel` |  | `ptrcallWithDictionaryArgRetLong`, `ptrcallWithStringAndDictionaryArgRetObject` |
-| `XRPositionalTracker` | `setInput` |  | `ptrcallWithStringNameAndVariantArg` |
+| `TreeItem` | `getCustomDrawCallback` |  | `ptrcallWithIntArgRetCallable` |

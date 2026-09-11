@@ -1789,6 +1789,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     }
 
     /**
+     * Adds text span and font to draw it to the text buffer.
+     *
+     * Generated from Godot docs: TextServer.shaped_text_add_string
+     */
+    fun shapedTextAddString(shaped: RID, text: String, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap(), language: String = "", meta: Any? = null): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(shapedTextAddStringBind, handle, shaped, text, fonts, size, opentypeFeatures, language, meta)
+    }
+
+    /**
      * Adds inline object to the text buffer, `key` must be unique. In the text, object is represented
      * as `length` object replacement characters.
      *
@@ -1877,6 +1887,16 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
     fun shapedGetSpanObject(shaped: RID, index: Long): Any? {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanObjectBind, handle, shaped, index)
+    }
+
+    /**
+     * Changes text span font, font size, and OpenType features, without changing the text.
+     *
+     * Generated from Godot docs: TextServer.shaped_set_span_update_font
+     */
+    fun shapedSetSpanUpdateFont(shaped: RID, index: Long, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap()) {
+        checkOpen()
+        ObjectCalls.ptrcallWithRIDLongRIDListLongDictionaryArgs(shapedSetSpanUpdateFontBind, handle, shaped, index, fonts, size, opentypeFeatures)
     }
 
     /**
@@ -3542,6 +3562,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_get_spacing", SHAPED_TEXT_GET_SPACING_HASH)
         }
 
+        private const val SHAPED_TEXT_ADD_STRING_HASH = 623473029L
+        private val shapedTextAddStringBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_text_add_string", SHAPED_TEXT_ADD_STRING_HASH)
+        }
+
         private const val SHAPED_TEXT_ADD_OBJECT_HASH = 3664424789L
         private val shapedTextAddObjectBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_text_add_object", SHAPED_TEXT_ADD_OBJECT_HASH)
@@ -3585,6 +3610,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         private const val SHAPED_GET_SPAN_OBJECT_HASH = 4069510997L
         private val shapedGetSpanObjectBind by lazy {
             ObjectCalls.getMethodBind("TextServer", "shaped_get_span_object", SHAPED_GET_SPAN_OBJECT_HASH)
+        }
+
+        private const val SHAPED_SET_SPAN_UPDATE_FONT_HASH = 2022725822L
+        private val shapedSetSpanUpdateFontBind by lazy {
+            ObjectCalls.getMethodBind("TextServer", "shaped_set_span_update_font", SHAPED_SET_SPAN_UPDATE_FONT_HASH)
         }
 
         private const val SHAPED_GET_RUN_COUNT_HASH = 2198884583L

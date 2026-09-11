@@ -39,9 +39,8 @@ import net.multigesture.kanama.ios.KanamaIosRpcConfig
 import net.multigesture.kanama.ios.KanamaIosRuntime
 import net.multigesture.kanama.ios.KanamaIosScriptDescriptor
 import net.multigesture.kanama.ios.cinterop.KanamaIosPackedArgDesc
-import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
-
 import net.multigesture.kanama.ios.cinterop.KanamaIosTypedArrayArgDesc
+import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
@@ -4692,7 +4691,6 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       listOf("kanama/selftest_parcel7"),
     ) == true,
   )
-
 
   // task 100 (parcel 8) — typed-Array / Rect2i / Vector4 ARGUMENTS through the GENERATED helpers
   // (packTyped<Kind>ArrayDesc -> PT_TYPED_ARRAY_BLOB -> array_set_typed + tagged elements in the
