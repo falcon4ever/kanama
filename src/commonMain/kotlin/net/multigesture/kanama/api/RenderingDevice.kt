@@ -17,6 +17,22 @@ import net.multigesture.kanama.types.Vector3
  */
 class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
     /**
+     * Creates a new texture. It can be accessed with the RID that is returned. Once finished with your
+     * RID, you will want to free the RID using the RenderingDevice's `free_rid` method. Note: `data`
+     * takes an `Array` of `PackedByteArray`s. For `TEXTURE_TYPE_1D`, `TEXTURE_TYPE_2D`, and
+     * `TEXTURE_TYPE_3D` types, this array should only have one element, a `PackedByteArray` containing
+     * all the data for the texture. For `_ARRAY` and `_CUBE` types, the length should be the same as
+     * the number of `RDTextureFormat.array_layers` in `format`. Note: Not to be confused with
+     * `RenderingServer.texture_2d_create`, which creates the Godot-specific `Texture2D` resource as
+     * opposed to the graphics API's own texture type.
+     *
+     * Generated from Godot docs: RenderingDevice.texture_create
+     */
+    fun textureCreate(format: RDTextureFormat?, view: RDTextureView?, data: List<ByteArray>): RID {
+        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(textureCreateBind, handle, format?.requireOpenHandle() ?: MemorySegment.NULL, view?.requireOpenHandle() ?: MemorySegment.NULL, data)
+    }
+
+    /**
      * Creates a shared texture using the specified `view` and the texture information from
      * `with_texture`. This will be freed automatically when the `with_texture` is freed.
      *
@@ -2114,6 +2130,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
 
         internal fun wrap(handle: MemorySegment): RenderingDevice? =
             if (handle.address() == 0L) null else RenderingDevice(handle)
+
+        private const val TEXTURE_CREATE_HASH = 3709173589L
+        private val textureCreateBind by lazy {
+            ObjectCalls.getMethodBind("RenderingDevice", "texture_create", TEXTURE_CREATE_HASH)
+        }
 
         private const val TEXTURE_CREATE_SHARED_HASH = 3178156134L
         private val textureCreateSharedBind by lazy {

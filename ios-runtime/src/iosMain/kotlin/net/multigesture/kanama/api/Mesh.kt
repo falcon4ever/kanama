@@ -49,6 +49,11 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
         return ObjectCalls.ptrcallWithIntArgRetArray(surfaceGetArraysBind, handle, surfIdx)
     }
 
+    fun surfaceGetBlendShapeArrays(surfIdx: Int): List<List<Any?>> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithIntArgRetArrayList(surfaceGetBlendShapeArraysBind, handle, surfIdx)
+    }
+
     fun surfaceSetMaterial(surfIdx: Int, material: Material?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(surfaceSetMaterialBind, handle, surfIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
@@ -188,6 +193,11 @@ open class Mesh(handle: MemorySegment) : Resource(handle) {
         private const val SURFACE_GET_ARRAYS_HASH = 663333327L
         private val surfaceGetArraysBind by lazy {
             ObjectCalls.getMethodBind("Mesh", "surface_get_arrays", SURFACE_GET_ARRAYS_HASH)
+        }
+
+        private const val SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH = 663333327L
+        private val surfaceGetBlendShapeArraysBind by lazy {
+            ObjectCalls.getMethodBind("Mesh", "surface_get_blend_shape_arrays", SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH)
         }
 
         private const val SURFACE_SET_MATERIAL_HASH = 3671737478L

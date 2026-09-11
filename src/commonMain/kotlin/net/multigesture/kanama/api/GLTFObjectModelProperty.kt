@@ -35,9 +35,11 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
         @JvmName("setObjectModelTypeProperty")
         set(value) = setObjectModelType(value)
 
-    val jsonPointers: List<List<String>>
+    var jsonPointers: List<List<String>>
         @JvmName("jsonPointersProperty")
         get() = getJsonPointers()
+        @JvmName("setJsonPointersProperty")
+        set(value) = setJsonPointers(value)
 
     var variantType: Long
         @JvmName("variantTypeProperty")
@@ -113,6 +115,11 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
     fun hasJsonPointers(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(hasJsonPointersBind, handle)
+    }
+
+    fun setJsonPointers(jsonPointers: List<List<String>>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithPackedStringListListArg(setJsonPointersBind, handle, jsonPointers)
     }
 
     fun getVariantType(): Long {
@@ -218,6 +225,11 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
         private const val HAS_JSON_POINTERS_HASH = 36873697L
         private val hasJsonPointersBind by lazy {
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "has_json_pointers", HAS_JSON_POINTERS_HASH)
+        }
+
+        private const val SET_JSON_POINTERS_HASH = 381264803L
+        private val setJsonPointersBind by lazy {
+            ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_json_pointers", SET_JSON_POINTERS_HASH)
         }
 
         private const val GET_VARIANT_TYPE_HASH = 3416842102L

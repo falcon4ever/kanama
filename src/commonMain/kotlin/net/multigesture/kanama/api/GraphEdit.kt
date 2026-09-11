@@ -80,9 +80,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         @JvmName("setConnectionLinesAntialiasedProperty")
         set(value) = setConnectionLinesAntialiased(value)
 
-    val connections: List<Map<String, Any?>>
+    var connections: List<Map<String, Any?>>
         @JvmName("connectionsProperty")
         get() = getConnectionList()
+        @JvmName("setConnectionsProperty")
+        set(value) = setConnections(value)
 
     var zoom: Double
         @JvmName("zoomProperty")
@@ -203,6 +205,16 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      */
     fun setConnectionActivity(fromNode: String, fromPort: Int, toNode: String, toPort: Int, amount: Double) {
         ObjectCalls.ptrcallWithStringNameIntStringNameIntDoubleArgs(setConnectionActivityBind, handle, fromNode, fromPort, toNode, toPort, amount)
+    }
+
+    /**
+     * The connections between `GraphNode`s. A connection is represented as a `Dictionary` in the form
+     * of:
+     *
+     * Generated from Godot docs: GraphEdit.set_connections
+     */
+    fun setConnections(connections: List<Map<String, Any?>>) {
+        ObjectCalls.ptrcallWithDictionaryListArg(setConnectionsBind, handle, connections)
     }
 
     /**
@@ -920,6 +932,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         private const val SET_CONNECTION_ACTIVITY_HASH = 1141899943L
         private val setConnectionActivityBind by lazy {
             ObjectCalls.getMethodBind("GraphEdit", "set_connection_activity", SET_CONNECTION_ACTIVITY_HASH)
+        }
+
+        private const val SET_CONNECTIONS_HASH = 381264803L
+        private val setConnectionsBind by lazy {
+            ObjectCalls.getMethodBind("GraphEdit", "set_connections", SET_CONNECTIONS_HASH)
         }
 
         private const val GET_CONNECTION_LIST_HASH = 3995934104L
