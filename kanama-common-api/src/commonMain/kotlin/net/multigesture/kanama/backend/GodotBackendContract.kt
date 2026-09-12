@@ -92,6 +92,7 @@ enum class GodotCallShape {
   LONG_RET_BOOL_SINGLETON,
   NOARGS_RET_VECTOR2_SINGLETON,
   STRINGNAME_RET_HANDLE_LIST,
+  DOUBLE_RET_HANDLE,
   LONG_OBJECT_ARG,
   LONG_TRANSFORM3D_ARG,
   LONG_RET_STRING,
@@ -606,6 +607,14 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: String,
   ): List<GodotHandle>
+
+  /** Double-argument handle query (a retained RefCounted result): e.g. SceneTree.create_timer. */
+  fun invokeDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Double,
+  ): GodotHandle?
 
   /** Signal emission carrying one Godot-object argument. */
   fun invokeStringNameObjectRetInt(
@@ -1533,6 +1542,22 @@ object GodotBackendCalls {
     val selected = requireBackend()
     selected.requireLive(receiver)
     return selected.invokeStringNameRetHandleList(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+    )
+  }
+
+  fun invokeDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: Double,
+  ): GodotHandle? {
+    requireShape(descriptor, GodotCallShape.DOUBLE_RET_HANDLE)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeDoubleRetHandle(
       descriptor,
       resolve(selected, descriptor),
       receiver,

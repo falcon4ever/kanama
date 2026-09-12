@@ -363,6 +363,7 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     318: {},
     319: {},
     320: {},
+    321: {"ret": "browser"},
 }
 
 
@@ -1655,6 +1656,21 @@ def body_NOARGS_RET_VECTOR2_SINGLETON(calls):
         "immediateWebNoArgsVector2Y().toFloat(),",
         ")",
     ]
+def body_DOUBLE_RET_HANDLE(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(value.isFinite())",
+        "commands.flush()",
+        "// Task 64 tps-demo parcel 7: the seconds ride the property-object channel as their decimal",
+        "// spelling; the applier creates the SceneTreeTimer and registers it under the proposed",
+        "// OBJECT-kind slot (a retained RefCounted, like a Tween), so its timeout signal connects.",
+        "return registerReturnedBrowserObject(",
+        "immediateWebPropertyObjectQuery(descriptor.opcode, receiver.webId(), value.toString())",
+        ")",
+    ]
+
+
 def body_STRINGNAME_RET_HANDLE_LIST(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -2020,6 +2036,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     "LONG_RET_BOOL_SINGLETON": (["value: Long"], "Boolean"),
     "NOARGS_RET_VECTOR2_SINGLETON": ([], "GodotVector2"),
     "STRINGNAME_RET_HANDLE_LIST": (["receiver: GodotHandle", "value: String"], "List<GodotHandle>"),
+    "DOUBLE_RET_HANDLE": (["receiver: GodotHandle", "value: Double"], "GodotHandle?"),
     "STRINGNAME_OBJECT_RET_INT": (
         ["receiver: GodotHandle", "name: String", "value: GodotHandle"],
         "Int",
@@ -2345,6 +2362,7 @@ EMIT_ORDER = [
     "LONG_RET_BOOL_SINGLETON",
     "NOARGS_RET_VECTOR2_SINGLETON",
     "STRINGNAME_RET_HANDLE_LIST",
+    "DOUBLE_RET_HANDLE",
     "LONG_OBJECT_ARG",
     "LONG_TRANSFORM3D_ARG",
     "LONG_RET_STRING",

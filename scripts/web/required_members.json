@@ -204,6 +204,14 @@
         {
           "member": "Main.node_lifecycle_probe",
           "reason": "node lifecycle queries (task 64 parcel 6): is_inside_tree / is_queued_for_deletion"
+        },
+        {
+          "member": "Main.timer_probe",
+          "reason": "The task-64 parcel-7 SceneTree.create_timer probe the driver arms explicitly (timeout awaited through the generic signal path)."
+        },
+        {
+          "member": "Main.timer_probe_mask",
+          "reason": "The task-64 parcel-7 timer probe's read-back the driver asserts to 7."
         }
       ],
       "todo": [

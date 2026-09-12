@@ -7,6 +7,22 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — Web SceneTree.create_timer (task 64, tps-demo parcel 7)
+
+- **Web protocol 26 → 27.** `SceneTree.create_timer(time_sec)` (opcode 321, new `DOUBLE_RET_HANDLE`
+  shape: the seconds ride the property-object channel, the applier registers the `SceneTreeTimer`
+  under the proposed OBJECT slot as a retained RefCounted, like a Tween), returned by the generated
+  `SceneTree.createTimer(timeSec, …)` as a `RefCounted` handle whose `timeout` is awaited through the
+  generic signal path, so the shared demo idiom
+  `getTree().createTimer(t)?.signal(Timer.Signals.timeout)?.await(self)` compiles and runs on Web
+  unchanged (the three flags must keep Godot's defaults). `MainThread.postNextFrame` is a member (was
+  an extension needing its own import); the Web multiplayer facade's `MultiplayerAPI` gains the
+  owned-handle `close()` the shared helpers call and `MultiplayerPeer` is `AutoCloseable`, so the
+  stdlib `use { }` resolves on both backends (the facade's own `use` extension is gone). The in-repo
+  `web3d` fixture proves the timer fires (`Main.timer_probe`, required by the smoke gate, must read 7).
+  **Existing Web exports must be rebuilt**: a protocol-26 export refuses to load against a
+  protocol-27 bridge, and vice versa.
+
 ### Added — Web node lifecycle queries (task 64, tps-demo parcel 6)
 
 - **Web protocol 25 → 26.** The Kotlin/Wasm backend admits `Node.is_inside_tree` (319) and

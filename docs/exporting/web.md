@@ -2,7 +2,7 @@
 
 The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
 them against a Godot Web export through a generated per-call proxy and a
-versioned JavaScript bridge (protocol 26). <!-- kanama-claim: protocol --> This page is the reproducible export
+versioned JavaScript bridge (protocol 27). <!-- kanama-claim: protocol --> This page is the reproducible export
 workflow: prerequisites, the build/export/serve/smoke/publish commands, the
 browser matrix and budgets you run, and the limitations you meet while
 shipping. The tier, the twelve-demo corpus evidence, the browser floors and

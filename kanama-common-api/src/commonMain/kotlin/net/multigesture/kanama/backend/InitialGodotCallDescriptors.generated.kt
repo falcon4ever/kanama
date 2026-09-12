@@ -3524,6 +3524,17 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val SCENETREE_CREATE_TIMER =
+    GodotCallDescriptor(
+      opcode = 321,
+      className = "SceneTree",
+      methodName = "create_timer",
+      hash = 2709170273L,
+      shape = GodotCallShape.DOUBLE_RET_HANDLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 320
+  const val MAX_OPCODE = 321
 }
