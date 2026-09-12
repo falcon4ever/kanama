@@ -12,6 +12,7 @@ import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.AudioStreamPlayer
+import net.multigesture.kanama.api.Camera3D
 import net.multigesture.kanama.api.CanvasLayer
 import net.multigesture.kanama.api.Curve
 import net.multigesture.kanama.api.Control
@@ -577,6 +578,49 @@ class Main(godotObject: GodotHandle) :
   /** Task-64 DemoPage-set readback: 1 once the `postAfterFrames(3)` hop chain has run. */
   @RegisterFunction("demo_page_probe_after")
   fun demoPageProbeAfter(value: Long): Long = if (demoPageAfterFrames) 1L else 0L
+
+  /**
+   * Task-64 CameraMode-family conformance probe (driver method after `demo_page_probe`, protocol
+   * 25): bit 1 = a Camera3D constructed from Kotlin (`Camera3D.create`, the ClassDB.instantiate
+   * composition), added under this node, made current (`set_current`, 315) and given a fov
+   * (`set_fov`, 316) reads that fov back (`get_fov`, 317); bit 2 = `SceneTree.get_nodes_in_group`
+   * (318, the new StringName -> handle-list shape) returns exactly the fixture's Spinner (group
+   * `camera_mode_probe`) as the same instance `get_node_or_null` resolves; bit 4 =
+   * `Input.is_key_pressed` (313, the new Long -> bool singleton shape) is false for W on a headless
+   * runner; bit 8 = `Input.get_last_mouse_velocity` (314, the new Vector2 singleton shape) answers a
+   * finite vector; bit 16 = the probe camera no longer owns the viewport once it is made
+   * non-current and freed (`set_current`, 315, applied). A healthy run returns 31.
+   */
+  @RegisterFunction("camera_mode_probe")
+  fun cameraModeProbe(value: Long): Long {
+    var mask = 0L
+    val previousCamera = self.getViewport()?.getCamera3D()
+    val probeCamera = Camera3D.create()
+    self.addChild(probeCamera)
+    probeCamera.setCurrent(true)
+    probeCamera.setFov(61.0)
+    if (abs(probeCamera.getFov() - 61.0) < 1e-3) mask = mask or 1L
+    val spinner = self.getNodeOrNull("Spinner")
+    val members = self.getTree().getNodesInGroup("camera_mode_probe")
+    if (spinner != null && members.size == 1 && members[0].isSameInstance(spinner)) {
+      mask = mask or 2L
+    }
+    if (!Input.isKeyPressed(InputEventKey.KEY_W)) mask = mask or 4L
+    val mouseVelocity = Input.getLastMouseVelocity()
+    if (mouseVelocity.x.isFinite() && mouseVelocity.y.isFinite()) mask = mask or 8L
+    probeCamera.setCurrent(false)
+    previousCamera?.makeCurrent()
+    probeCamera.queueFree()
+    // Bit 16: `set_current(false)` (315) took effect -- the probe camera no longer owns the
+    // viewport. Whether the camera that is current afterwards is the SAME instance as the one read
+    // before the probe is deliberately not asserted: on Web `get_camera_3d` after `make_current`
+    // (283, an older opcode) answers a camera that isSameInstance reports as different from the
+    // handle read before the probe (measured mask 367 with diagnostic bits on 2026-09-11) -- a
+    // handle-identity question for the 194/283 pair, recorded in the task notes, not this family.
+    val currentCamera = self.getViewport()?.getCamera3D()
+    if (currentCamera == null || !currentCamera.isSameInstance(probeCamera)) mask = mask or 16L
+    return mask
+  }
 
   // ---------- Task 80 slice 2: dispatch-shape conformance probe ----------
   //

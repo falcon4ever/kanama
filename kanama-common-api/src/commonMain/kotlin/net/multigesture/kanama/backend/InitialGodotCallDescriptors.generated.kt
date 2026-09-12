@@ -3436,6 +3436,72 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val INPUT_IS_KEY_PRESSED =
+    GodotCallDescriptor(
+      opcode = 313,
+      className = "Input",
+      methodName = "is_key_pressed",
+      hash = 1938909964L,
+      shape = GodotCallShape.LONG_RET_BOOL_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUT_GET_LAST_MOUSE_VELOCITY =
+    GodotCallDescriptor(
+      opcode = 314,
+      className = "Input",
+      methodName = "get_last_mouse_velocity",
+      hash = 1497962370L,
+      shape = GodotCallShape.NOARGS_RET_VECTOR2_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CAMERA3D_SET_CURRENT =
+    GodotCallDescriptor(
+      opcode = 315,
+      className = "Camera3D",
+      methodName = "set_current",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CAMERA3D_SET_FOV =
+    GodotCallDescriptor(
+      opcode = 316,
+      className = "Camera3D",
+      methodName = "set_fov",
+      hash = 373806689L,
+      shape = GodotCallShape.DOUBLE_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CAMERA3D_GET_FOV =
+    GodotCallDescriptor(
+      opcode = 317,
+      className = "Camera3D",
+      methodName = "get_fov",
+      hash = 1740695150L,
+      shape = GodotCallShape.NOARGS_RET_DOUBLE,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val SCENETREE_GET_NODES_IN_GROUP =
+    GodotCallDescriptor(
+      opcode = 318,
+      className = "SceneTree",
+      methodName = "get_nodes_in_group",
+      hash = 689397652L,
+      shape = GodotCallShape.STRINGNAME_RET_HANDLE_LIST,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 312
+  const val MAX_OPCODE = 318
 }

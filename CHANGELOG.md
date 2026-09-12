@@ -7,6 +7,22 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — Web: the CameraMode family (task 64, parcel 4)
+
+- **Web protocol 24 → 25.** The Kotlin/Wasm backend admits `Input.is_key_pressed` (opcode 313, a
+  new `LONG_RET_BOOL_SINGLETON` shape: the key code rides the object-query string channel),
+  `Input.get_last_mouse_velocity` (314, new `NOARGS_RET_VECTOR2_SINGLETON`), `Camera3D.set_current`
+  (315, queued) / `set_fov` (316, queued) / `get_fov` (317), `SceneTree.get_nodes_in_group` (318, new
+  `STRINGNAME_RET_HANDLE_LIST`: scripted members resolve to script handles, engine nodes get
+  tracked browser handles, as `find_children` does), and `Camera3D.create()` (the
+  `ClassDB.instantiate` composition). This is everything third-person's shared `CameraMode.kt`
+  — the debug fly-camera — needs to compile on Web; it self-gates on `OS.isDebugBuild()`, false
+  for the release template, so it stays inert at runtime. The `web3d` fixture's
+  `Main.camera_mode_probe` (required by the smoke gate, mask 31) constructs a camera, makes it
+  current, sets and reads its fov, queries a group, polls a key and the mouse velocity, and
+  restores the previous camera. **Existing Web exports must be rebuilt** (protocol mismatch
+  refuses to load).
+
 ### Changed — iOS device gate: the demo steps watch the device console (task 105)
 
 - `scripts/ios_device_gate.sh --console-seconds N` (default 30) makes every demo step stream the
