@@ -309,6 +309,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("coroutine_probe_mask")}, 0)`,
     ).then(Number);
+  // Task 64 tps-demo parcel 7: arm the SceneTree.create_timer probe before the coroutine section so
+  // the frames it pumps also carry the 50 ms timer to its timeout; read the mask after it.
+  await evaluate(
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("timer_probe")}); true`,
+  );
   trace("coroutine_probe");
   const maskBeforeArm = await readCoroutineMask();
   await evaluate(
@@ -321,6 +326,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     coroutineMask = await readCoroutineMask();
   }
   const afterCoroutine = (await snapshot(evaluate)) ?? atPeak;
+  const timerMask = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("timer_probe_mask")}, 0)`,
+    ),
+  );
+  trace(`timerProbe: mask=${timerMask}`);
   trace(
     `coroutine: mask=${coroutineMask} (was ${maskBeforeArm}) pumps=${afterCoroutine.pumps} continuations=${afterCoroutine.continuations}`,
   );
@@ -382,6 +393,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 64 CameraMode family: Kotlin-constructed camera + fov round-trip, group query identity,
     // key polling and mouse velocity, previous camera restored.
     cameraModeFamilyDelivers: cameraModeProbe === 31,
+    // Task 64 tps-demo parcel 7: SceneTree.create_timer handle + its timeout awaited (7).
+    sceneTreeTimerDelivers: timerMask === 7,
     // Task 64 tps-demo parcel 6: node lifecycle queries (is_inside_tree, is_queued_for_deletion).
     nodeLifecycleDelivers: nodeLifecycleProbe === 15,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,

@@ -52,10 +52,14 @@ inline fun <R> ButtonGroup.use(block: (ButtonGroup) -> R): R {
 // Multiplayer facade.
 // ---------------------------------------------------------------------------
 
-open class MultiplayerPeer internal constructor() {
+/**
+ * `AutoCloseable` like desktop's `RefCounted`, so the shared demo sources' `peer.use { }` resolves
+ * to the stdlib `use` on both backends without an import.
+ */
+open class MultiplayerPeer internal constructor() : AutoCloseable {
   open fun closeConnection() = Unit
 
-  open fun close() = Unit
+  override fun close() = Unit
 }
 
 class OfflineMultiplayerPeer internal constructor() : MultiplayerPeer() {
@@ -82,6 +86,9 @@ class ENetMultiplayerPeer internal constructor() : MultiplayerPeer() {
 
 class MultiplayerAPI internal constructor() {
   fun isServer(): Boolean = true
+
+  /** Owned-handle idiom of the shared demo helpers (`withMultiplayer` closes what it got); a no-op here. */
+  fun close() = Unit
 
   fun getUniqueId(): Int = 1
 
@@ -134,15 +141,6 @@ private val multiplayerApi = MultiplayerAPI()
 
 /** Nullable to match the desktop shape, so ported call sites keep their `?.` chains. */
 fun Node.getMultiplayer(): MultiplayerAPI? = multiplayerApi
-
-/** Mirrors the desktop owned-peer idiom ("close what you create", task 61). */
-inline fun <T : MultiplayerPeer, R> T.use(block: (T) -> R): R {
-  try {
-    return block(this)
-  } finally {
-    close()
-  }
-}
 
 /** Replication node; with a single local peer there is nothing to synchronize. */
 class MultiplayerSynchronizer(godotObject: GodotHandle) : Node(godotObject) {

@@ -33,6 +33,7 @@ import net.multigesture.kanama.api.RenderingServer
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.SceneTree
+import net.multigesture.kanama.api.Timer
 import net.multigesture.kanama.api.Window
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
@@ -680,6 +681,7 @@ class Main(godotObject: GodotHandle) :
   private var probeJoinId = -1L
   private var probeJoinNodeWasNull = false
   private var coroutineMask = 0L
+  private var timerMask = 0L
 
   @RegisterFunction("dispatch_probe_float")
   fun dispatchProbeFloat(amount: Double) {
@@ -821,6 +823,27 @@ class Main(godotObject: GodotHandle) :
    * body unrun and throws nothing at all. That is exactly why the assertion has to be a positive
    * observation of resumption, read back through [coroutineProbeMask], and never "no error".
    */
+  /**
+   * Task-64 tps-demo parcel 7 (protocol 27): `SceneTree.create_timer` as a retained browser handle
+   * whose `timeout` is awaited through the generic signal path. Bit 1 = the probe ran, 2 = the
+   * timer handle came back non-null, 4 = the coroutine resumed past `await` on its timeout (the
+   * engine fired the one-shot timer and the connection delivered it). Read back through
+   * [timerProbeMask] after the driver's coroutine section has pumped frames; a healthy run reads 7.
+   */
+  @RegisterFunction("timer_probe")
+  fun timerProbe() {
+    timerMask = 1L
+    kanamaScope.launch {
+      val timer = self.getTree().createTimer(0.05)
+      if (timer != null) timerMask = timerMask or 2L
+      timer?.signal(Timer.Signals.timeout)?.await(self, argumentCount = 0)
+      timerMask = timerMask or 4L
+    }
+  }
+
+  @RegisterFunction("timer_probe_mask")
+  fun timerProbeMask(value: Long): Long = timerMask
+
   @RegisterFunction("coroutine_probe")
   fun coroutineProbe() {
     coroutineMask = 1L

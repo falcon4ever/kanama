@@ -140,7 +140,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `Input.get_connected_joypads` (a new NOARGS_RET_LONG_LIST_SINGLETON shape on the string
      * channel).
      */
-    const val PROTOCOL_VERSION = 26
+    const val PROTOCOL_VERSION = 27
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -4015,6 +4015,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int((value as Node).is_inside_tree())")
     appendLine("\t\telif opcode == 320:")
     appendLine("\t\t\tresult = int(value.is_queued_for_deletion())")
+    // Task 64 tps-demo parcel 7 (protocol 27): SceneTree.create_timer -- a retained SceneTreeTimer
+    // under the proposed OBJECT slot; Kotlin awaits its `timeout` through the generic signal path.
+    appendLine("\t\telif opcode == 321 and value is SceneTree:")
+    appendLine("\t\t\tvar timer_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine("\t\t\tvar scene_timer := (value as SceneTree).create_timer(float(timer_parts[0]))")
+    appendLine("\t\t\tif scene_timer != null:")
+    appendLine("\t\t\t\tresult = int(timer_parts[1])")
+    appendLine("\t\t\t\t_kanama_object_handles[result] = scene_timer")
     appendLine("\t\telif opcode == 317 and value is Camera3D:")
     appendLine("\t\t\tresult = int(round((value as Camera3D).fov * 1000.0))")
     appendLine("\t\telif opcode == 318 and value is SceneTree:")

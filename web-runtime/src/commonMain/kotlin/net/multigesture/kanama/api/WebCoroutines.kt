@@ -74,7 +74,11 @@ object MainThread {
       post { postAfterFrames(frames - 1, block) }
     }
   }
-}
 
-/** Frame-deferred work; the Web scheduler already runs posts on the next frame. */
-fun MainThread.postNextFrame(block: () -> Unit) = post(block)
+  /**
+   * Frame-deferred work; the Web scheduler already runs posts on the next frame. A member, not an
+   * extension, so a shared demo file that imports only `MainThread` resolves it as on desktop
+   * (task 64, tps-demo parcel 7).
+   */
+  fun postNextFrame(block: () -> Unit) = post(block)
+}
