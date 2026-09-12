@@ -52,6 +52,13 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
     GodotBackendCalls.invokeNoArgsVoid(D.SCENETREE_UNLOAD_CURRENT_SCENE, requireOpenHandle())
   }
 
+  fun getNodesInGroup(group: String): List<Node> =
+    GodotBackendCalls.invokeStringNameRetHandleList(
+      D.SCENETREE_GET_NODES_IN_GROUP,
+      requireOpenHandle(),
+      group,
+    ).map { Node(it.toWebId()) }
+
   var paused: Boolean
     get() = isPaused()
     set(newValue) = setPause(newValue)
@@ -116,6 +123,9 @@ fun SceneTree.isPaused(): Boolean = isPaused()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun SceneTree.unloadCurrentScene() = unloadCurrentScene()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun SceneTree.getNodesInGroup(group: String): List<Node> = getNodesInGroup(group)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var SceneTree.paused: Boolean

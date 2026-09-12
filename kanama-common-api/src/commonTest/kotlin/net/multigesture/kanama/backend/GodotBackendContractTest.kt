@@ -1366,6 +1366,24 @@ class GodotBackendContractTest {
       callSite: GodotCallSite,
     ): List<Long> = unexercised(descriptor)
 
+    override fun invokeLongRetBoolSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: Long,
+    ): Boolean = unexercised(descriptor)
+
+    override fun invokeNoArgsRetVector2Singleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+    ): GodotVector2 = unexercised(descriptor)
+
+    override fun invokeStringNameRetHandleList(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: String,
+    ): List<GodotHandle> = unexercised(descriptor)
+
     override fun invokeStringNameObjectRetInt(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,

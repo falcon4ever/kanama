@@ -355,6 +355,12 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     310: {},
     311: {},
     312: {},
+    313: {},
+    314: {},
+    315: {},
+    316: {},
+    317: {},
+    318: {},
 }
 
 
@@ -1623,6 +1629,42 @@ def body_NOARGS_RET_LONG_LIST_SINGLETON(calls):
     ]
 
 
+def body_LONG_RET_BOOL_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Task 64 CameraMode family: the key code rides the object-query string channel as its",
+        "// decimal spelling (the applier parses it back); no receiver, the active script stands in.",
+        "return immediateWebObjectQuery(",
+        "descriptor.opcode,",
+        "requireActiveWebScriptHandle(),",
+        "value.toString(),",
+        ") != 0",
+    ]
+def body_NOARGS_RET_VECTOR2_SINGLETON(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Task 64 CameraMode family: the Vector2 channel addressed to the active script (no receiver).",
+        "return GodotVector2(",
+        "immediateWebNoArgsVector2X(descriptor.opcode, requireActiveWebScriptHandle()).toFloat(),",
+        "immediateWebNoArgsVector2Y().toFloat(),",
+        ")",
+    ]
+def body_STRINGNAME_RET_HANDLE_LIST(calls):
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "// Task 64 CameraMode family: the applier packs the group members' handles (unit separator);",
+        "// scripted members resolve to script handles, engine nodes get tracked browser handles.",
+        "return immediateWebStringQuery(descriptor.opcode, receiver.webId(), value)",
+        ".split('\u001f')",
+        ".filter { it.isNotEmpty() }",
+        ".map { GodotHandle.fromBackendToken(it.toLong()) }",
+    ]
 def body_LONG_OBJECT_ARG(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -1973,6 +2015,9 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     ),
     "NOARGS_RET_LONG_SINGLETON": ([], "Long"),
     "NOARGS_RET_LONG_LIST_SINGLETON": ([], "List<Long>"),
+    "LONG_RET_BOOL_SINGLETON": (["value: Long"], "Boolean"),
+    "NOARGS_RET_VECTOR2_SINGLETON": ([], "GodotVector2"),
+    "STRINGNAME_RET_HANDLE_LIST": (["receiver: GodotHandle", "value: String"], "List<GodotHandle>"),
     "STRINGNAME_OBJECT_RET_INT": (
         ["receiver: GodotHandle", "name: String", "value: GodotHandle"],
         "Int",
@@ -2295,6 +2340,9 @@ EMIT_ORDER = [
     "BASIS_RET_LONG",
     "NOARGS_RET_VECTOR3I_LIST",
     "NOARGS_RET_LONG_LIST_SINGLETON",
+    "LONG_RET_BOOL_SINGLETON",
+    "NOARGS_RET_VECTOR2_SINGLETON",
+    "STRINGNAME_RET_HANDLE_LIST",
     "LONG_OBJECT_ARG",
     "LONG_TRANSFORM3D_ARG",
     "LONG_RET_STRING",

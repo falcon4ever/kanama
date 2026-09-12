@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 24;
+  const KANAMA_WEB_PROTOCOL_VERSION = 25;
 
   function commandWordCount(opcode) {
     if (
@@ -81,6 +81,9 @@
       // Task 64 DemoPage set: Environment.set_ssil_enabled / set_sdfgi_enabled (one bool word).
       opcode === 309 ||
       opcode === 310 ||
+      // Task 64 CameraMode family: Camera3D.set_current (one bool word), set_fov (one double).
+      opcode === 315 ||
+      opcode === 316 ||
       opcode === 55 ||
       opcode === 56 ||
       opcode === 60 ||

@@ -89,6 +89,9 @@ enum class GodotCallShape {
   BASIS_RET_LONG,
   NOARGS_RET_VECTOR3I_LIST,
   NOARGS_RET_LONG_LIST_SINGLETON,
+  LONG_RET_BOOL_SINGLETON,
+  NOARGS_RET_VECTOR2_SINGLETON,
+  STRINGNAME_RET_HANDLE_LIST,
   LONG_OBJECT_ARG,
   LONG_TRANSFORM3D_ARG,
   LONG_RET_STRING,
@@ -582,6 +585,27 @@ interface GodotBackendSpi {
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
   ): List<Long>
+
+  /** Singleton Long-argument boolean query (no receiver): e.g. Input.is_key_pressed. */
+  fun invokeLongRetBoolSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: Long,
+  ): Boolean
+
+  /** Singleton no-args Vector2 query (no receiver): e.g. Input.get_last_mouse_velocity. */
+  fun invokeNoArgsRetVector2Singleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): GodotVector2
+
+  /** StringName-argument handle-list query: e.g. SceneTree.get_nodes_in_group. */
+  fun invokeStringNameRetHandleList(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): List<GodotHandle>
 
   /** Signal emission carrying one Godot-object argument. */
   fun invokeStringNameObjectRetInt(
@@ -1486,6 +1510,34 @@ object GodotBackendCalls {
     requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG_LIST_SINGLETON)
     val selected = requireBackend()
     return selected.invokeNoArgsRetLongListSingleton(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeLongRetBoolSingleton(descriptor: GodotCallDescriptor, value: Long): Boolean {
+    requireShape(descriptor, GodotCallShape.LONG_RET_BOOL_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeLongRetBoolSingleton(descriptor, resolve(selected, descriptor), value)
+  }
+
+  fun invokeNoArgsRetVector2Singleton(descriptor: GodotCallDescriptor): GodotVector2 {
+    requireShape(descriptor, GodotCallShape.NOARGS_RET_VECTOR2_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeNoArgsRetVector2Singleton(descriptor, resolve(selected, descriptor))
+  }
+
+  fun invokeStringNameRetHandleList(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: String,
+  ): List<GodotHandle> {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_HANDLE_LIST)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameRetHandleList(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+    )
   }
 
   fun invokeStringNameObjectRetInt(

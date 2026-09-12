@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 24"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 25"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -439,6 +439,27 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(proxy.contains("elif opcode == 311 and target_object is SceneTree:"))
     assertTrue(proxy.contains("for joypad_id in Input.get_connected_joypads():"))
+    // Task 64 CameraMode family (protocol 25): key polling and fov read-back on the object-query
+    // channel, the mouse-velocity Vector2 singleton, the two queued Camera3D setters and the
+    // group query's handle packing.
+    assertTrue(proxy.contains("elif opcode == 313:"))
+    assertTrue(proxy.contains("result = int(Input.is_key_pressed(int(String(args[2]))))"))
+    assertTrue(proxy.contains("elif opcode == 314:"))
+    assertTrue(proxy.contains("result = Input.get_last_mouse_velocity()"))
+    assertTrue(proxy.contains("elif opcode == 315 and target_object is Camera3D:"))
+    assertTrue(
+      proxy.contains("(target_object as Camera3D).current = bytes.decode_s32(offset + 8) != 0")
+    )
+    assertTrue(proxy.contains("elif opcode == 316 and target_object is Camera3D:"))
+    assertTrue(proxy.contains("(target_object as Camera3D).fov = bytes.decode_double(offset + 8)"))
+    assertTrue(proxy.contains("elif opcode == 317 and value is Camera3D:"))
+    assertTrue(proxy.contains("result = int(round((value as Camera3D).fov * 1000.0))"))
+    assertTrue(proxy.contains("elif opcode == 318 and value is SceneTree:"))
+    assertTrue(
+      proxy.contains(
+        "var group_nodes := (value as SceneTree).get_nodes_in_group(StringName(String(args[2])))"
+      )
+    )
     assertTrue(proxy.contains("elif opcode == 305 and value is InputEvent:"))
     assertTrue(
       proxy.contains("result = int((value as InputEvent).is_action(StringName(String(args[2]))))")
@@ -697,7 +718,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 24"))
+    assertTrue(protocol.contains("\"protocolVersion\": 25"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -708,7 +729,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=24\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=25\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1718,7 +1739,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 24"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 25"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(

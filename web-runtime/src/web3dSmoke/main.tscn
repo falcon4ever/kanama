@@ -67,7 +67,7 @@ transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 
 shadow_enabled = true
 light_energy = 1.0
 
-[node name="Spinner" type="Node3D" parent="."]
+[node name="Spinner" type="Node3D" parent="." groups=["camera_mode_probe"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, -2)
 
 [node name="Box" type="MeshInstance3D" parent="Spinner"]
