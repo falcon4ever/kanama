@@ -286,6 +286,15 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`cameraModeProbe: mask=${cameraModeProbe}`);
 
+  // Task 64 tps-demo parcel 6 (protocol 26): Main.node_lifecycle_probe -- is_inside_tree /
+  // is_queued_for_deletion on a node created and added by Kotlin. Healthy = 15.
+  const nodeLifecycleProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("node_lifecycle_probe")}, 0)`,
+    ),
+  );
+  trace(`nodeLifecycleProbe: mask=${nodeLifecycleProbe}`);
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -373,6 +382,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 64 CameraMode family: Kotlin-constructed camera + fov round-trip, group query identity,
     // key polling and mouse velocity, previous camera restored.
     cameraModeFamilyDelivers: cameraModeProbe === 31,
+    // Task 64 tps-demo parcel 6: node lifecycle queries (is_inside_tree, is_queued_for_deletion).
+    nodeLifecycleDelivers: nodeLifecycleProbe === 15,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

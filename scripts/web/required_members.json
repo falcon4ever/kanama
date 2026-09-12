@@ -200,6 +200,10 @@
         {
           "member": "Main.camera_mode_probe",
           "reason": "The task-64 CameraMode-family conformance probe (Kotlin-constructed Camera3D + fov round-trip, get_nodes_in_group identity, is_key_pressed, get_last_mouse_velocity, previous camera restored) the driver calls explicitly and asserts to the full 31 mask."
+        },
+        {
+          "member": "Main.node_lifecycle_probe",
+          "reason": "node lifecycle queries (task 64 parcel 6): is_inside_tree / is_queued_for_deletion"
         }
       ],
       "todo": [

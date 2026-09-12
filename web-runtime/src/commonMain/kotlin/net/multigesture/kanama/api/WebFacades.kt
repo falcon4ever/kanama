@@ -18,14 +18,9 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
  * generator's `--check` fails on any other hand-written dispatch.
  */
 
-// ---------------------------------------------------------------------------
-// Liveness. Web adaptation: the tracked-handle registry is the source of truth,
-// so both desktop guards collapse onto GD.isInstanceValid (the corpus-wide rule).
-// ---------------------------------------------------------------------------
-
-fun GodotObject.isQueuedForDeletion(): Boolean = !GD.isInstanceValid(this)
-
-fun GodotObject.isInsideTree(): Boolean = GD.isInstanceValid(this)
+// Liveness: `Node.isInsideTree()` and `GodotObject.isQueuedForDeletion()` are generated members
+// since protocol 26 (task 64 parcel 6, opcodes 319/320) -- the earlier facades that collapsed both
+// onto GD.isInstanceValid are gone.
 
 /** Web-only erasure helper for the ported corpus (no desktop counterpart; stays an extension). */
 fun GodotObject.asObject(): GodotObject = this

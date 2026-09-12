@@ -7,6 +7,16 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — Web node lifecycle queries (task 64, tps-demo parcel 6)
+
+- **Web protocol 25 → 26.** The Kotlin/Wasm backend admits `Node.is_inside_tree` (319) and
+  `Object.is_queued_for_deletion` (320) as immediate bool queries — the guards tps-demo's Level,
+  Part and Blast put around late signal handlers. The `web3d` fixture's `node_lifecycle_probe`
+  (required member, mask 15) creates and adds a node from Kotlin and reads both queries back.
+  **Existing Web exports must be rebuilt**: a protocol-25 export refuses to load against a
+  protocol-26 bridge, and vice versa. Demos side: tps-demo's Blast, Door, FlyingForklift
+  and CameraNoiseShakeEffect drop their Web overrides.
+
 ### Added — Web: typed cross-script call helpers (task 64, parcel 5)
 
 - The Web script processor now emits the `<Script>Methods` objects desktop has always had (one

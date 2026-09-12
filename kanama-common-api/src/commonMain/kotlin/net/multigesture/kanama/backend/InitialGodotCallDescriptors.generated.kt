@@ -3502,6 +3502,28 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val NODE_IS_INSIDE_TREE =
+    GodotCallDescriptor(
+      opcode = 319,
+      className = "Node",
+      methodName = "is_inside_tree",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OBJECT_IS_QUEUED_FOR_DELETION =
+    GodotCallDescriptor(
+      opcode = 320,
+      className = "Object",
+      methodName = "is_queued_for_deletion",
+      hash = 36873697L,
+      shape = GodotCallShape.NOARGS_RET_BOOL,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 318
+  const val MAX_OPCODE = 320
 }
