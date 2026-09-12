@@ -136,6 +136,9 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   fun getProcessMode(): Long =
     GodotBackendCalls.invokeNoArgsRetLong(D.NODE_GET_PROCESS_MODE, requireOpenHandle())
 
+  fun isInsideTree(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(D.NODE_IS_INSIDE_TREE, requireOpenHandle())
+
   var name: String
     get() = getName()
     set(newValue) = setName(newValue)
@@ -247,6 +250,9 @@ fun Node.setProcessMode(mode: Long) = setProcessMode(mode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getProcessMode(): Long = getProcessMode()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.isInsideTree(): Boolean = isInsideTree()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Node.name: String

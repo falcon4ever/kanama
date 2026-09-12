@@ -591,6 +591,28 @@ class Main(godotObject: GodotHandle) :
    * finite vector; bit 16 = the probe camera no longer owns the viewport once it is made
    * non-current and freed (`set_current`, 315, applied). A healthy run returns 31.
    */
+  /**
+   * Task-64 tps-demo parcel 6 node-lifecycle probe (protocol 26): bit 1 = this node
+   * `is_inside_tree` (319); bit 2 = a fresh `Camera3D.create()` is NOT in the tree; bit 4 = after
+   * `add_child` it is; bit 8 = it is not `is_queued_for_deletion` (320). A healthy run returns 15.
+   */
+  @RegisterFunction("node_lifecycle_probe")
+  fun nodeLifecycleProbe(value: Long): Long {
+    var mask = 0L
+    if (self.isInsideTree()) mask = mask or 1L
+    val probe = Camera3D.create()
+    if (!probe.isInsideTree()) mask = mask or 2L
+    self.addChild(probe)
+    if (probe.isInsideTree()) mask = mask or 4L
+    if (!probe.isQueuedForDeletion()) mask = mask or 8L
+    // No bit for "queued for deletion after queue_free" on purpose: on Web a Kotlin-issued
+    // queue_free releases the browser handle at the flush, so any later call on that handle throws
+    // (measured: "Stale Kanama Web browser handle"). The query is for nodes the engine or another
+    // script is freeing, which is exactly how tps-demo's Level / Part / Blast use it.
+    probe.queueFree()
+    return mask
+  }
+
   @RegisterFunction("camera_mode_probe")
   fun cameraModeProbe(value: Long): Long {
     var mask = 0L
