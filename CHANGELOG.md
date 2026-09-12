@@ -7,6 +7,16 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — Web: typed cross-script call helpers (task 64, parcel 5)
+
+- The Web script processor now emits the `<Script>Methods` objects desktop has always had (one
+  overload per `@RegisterFunction` taking the Kotlin instance, one resolving it from a
+  `GodotObject` through `kotlinScriptInstance`), so a shared demo file can call another script the
+  typed way on every platform — third-person's `BeetleBot` hits the player through
+  `PlayerMethods.damage` on desktop and Web alike, and the runtime node-lookup audit's "no dynamic
+  `call` in per-frame functions" rule holds on the shared file. No protocol change (a direct Kotlin
+  call through the script-instance registry; no Godot crossing).
+
 ### Added — Web: the CameraMode family (task 64, parcel 4)
 
 - **Web protocol 24 → 25.** The Kotlin/Wasm backend admits `Input.is_key_pressed` (opcode 313, a

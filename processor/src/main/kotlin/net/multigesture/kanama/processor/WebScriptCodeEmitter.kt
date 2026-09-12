@@ -942,9 +942,64 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
   }
 
+  /**
+   * `object <Script>Methods`: the typed cross-script call helpers, identical in shape to the
+   * desktop CodeEmitter's (`appendMethodHelpers`): one overload takes the Kotlin instance, one
+   * resolves it from a `GodotObject` through `kotlinScriptInstance` and answers whether the target
+   * hosted the script. Types are spelled fully qualified, as everything else in this file.
+   */
+  private fun StringBuilder.appendWebMethodHelpers(model: ScriptModel) {
+    val regularMethods = model.methods.filter { it.kind == MethodKind.REGULAR }
+    if (regularMethods.isEmpty()) return
+    val fq = model.fqName
+    appendLine()
+    appendLine("object ${model.simpleName}Methods {")
+    for (method in regularMethods) {
+      val kotlinParams = method.args.joinToString(", ") { "${it.name}: ${it.kotlinType}" }
+      val params = if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""
+      val argNames = method.args.joinToString(", ") { it.name }
+      val helperArgs = if (argNames.isNotEmpty()) ", $argNames" else ""
+      val returnType = method.returnType?.kotlinType
+      if (returnType == null) {
+        appendLine("  fun ${method.kotlinName}(instance: $fq$params) {")
+        appendLine("    instance.${method.kotlinName}($argNames)")
+        appendLine("  }")
+        appendLine()
+        appendLine(
+          "  fun ${method.kotlinName}(target: net.multigesture.kanama.api.GodotObject$params): Boolean {"
+        )
+        appendLine("    val instance = target.kotlinScriptInstance<$fq>() ?: return false")
+        appendLine("    ${method.kotlinName}(instance$helperArgs)")
+        appendLine("    return true")
+        appendLine("  }")
+      } else {
+        appendLine("  fun ${method.kotlinName}(instance: $fq$params): $returnType =")
+        appendLine("    instance.${method.kotlinName}($argNames)")
+        appendLine()
+        appendLine(
+          "  fun ${method.kotlinName}(target: net.multigesture.kanama.api.GodotObject$params): $returnType? ="
+        )
+        appendLine(
+          "    target.kotlinScriptInstance<$fq>()?.let { ${method.kotlinName}(it$helperArgs) }"
+        )
+      }
+      appendLine()
+    }
+    appendLine("}")
+  }
+
   fun constantsSource(): String = buildString {
     appendLine("package net.multigesture.kanama.generated")
     appendLine()
+    if (scripts.any { input -> input.model.methods.any { it.kind == MethodKind.REGULAR } }) {
+      // Task 64 parcel 5: the `<Script>Methods` typed cross-script helpers exist on Web too, so a
+      // shared demo file can call another script the typed way on every platform (desktop's
+      // CodeEmitter emits the same object per script). Direct Kotlin calls through the script
+      // instance registry -- no Godot crossing, which is also what the runtime node-lookup audit
+      // wants inside per-frame functions.
+      appendLine("import net.multigesture.kanama.api.kotlinScriptInstance")
+      appendLine()
+    }
     appendLine("@Suppress(\"unused\")")
     appendLine(
       "private fun emitWebSignal(instance: Any, signalName: String, args: Array<out Any?>) {"
@@ -975,6 +1030,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         }
         appendLine("}")
       }
+      appendWebMethodHelpers(model)
       if (
         model.methods.isNotEmpty() || model.properties.isNotEmpty() || model.signals.isNotEmpty()
       ) {
