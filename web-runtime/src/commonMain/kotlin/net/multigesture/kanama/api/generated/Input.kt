@@ -78,6 +78,12 @@ object Input {
   fun getConnectedJoypads(): List<Long> =
     GodotBackendCalls.invokeNoArgsRetLongListSingleton(D.INPUT_GET_CONNECTED_JOYPADS)
 
+  fun isKeyPressed(keycode: Long): Boolean =
+    GodotBackendCalls.invokeLongRetBoolSingleton(D.INPUT_IS_KEY_PRESSED, keycode)
+
+  fun getLastMouseVelocity(): Vector2 =
+    GodotBackendCalls.invokeNoArgsRetVector2Singleton(D.INPUT_GET_LAST_MOUSE_VELOCITY).toApi()
+
   var mouseMode: Long
     get() = getMouseMode()
     set(newValue) = setMouseMode(newValue)
@@ -147,6 +153,12 @@ fun Input.getActionStrength(action: String, exactMatch: Boolean = false): Double
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Input.getConnectedJoypads(): List<Long> = getConnectedJoypads()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Input.isKeyPressed(keycode: Long): Boolean = isKeyPressed(keycode)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Input.getLastMouseVelocity(): Vector2 = getLastMouseVelocity()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Input.mouseMode: Long

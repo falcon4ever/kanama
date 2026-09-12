@@ -196,6 +196,10 @@
         {
           "member": "Main.demo_page_probe_after",
           "reason": "The task-64 DemoPage-set readback the driver calls after the frame pumps (1 once the postAfterFrames chain ran)."
+        },
+        {
+          "member": "Main.camera_mode_probe",
+          "reason": "The task-64 CameraMode-family conformance probe (Kotlin-constructed Camera3D + fov round-trip, get_nodes_in_group identity, is_key_pressed, get_last_mouse_velocity, previous camera restored) the driver calls explicitly and asserts to the full 31 mask."
         }
       ],
       "todo": [

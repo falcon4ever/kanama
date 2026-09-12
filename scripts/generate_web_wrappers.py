@@ -1151,6 +1151,9 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
   }
 """,
     },
+    # Task 64 CameraMode family: the debug fly-camera constructs its own Camera3D from Kotlin
+    # (ClassDB.instantiate composition); the tree owns it once added, queue_free releases it.
+    "Camera3D": {"instantiable": True},
     "InputEventKey": {
         "instantiable": True,
         "release": "constructed",

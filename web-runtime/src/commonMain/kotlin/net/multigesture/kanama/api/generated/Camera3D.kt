@@ -29,6 +29,31 @@ class Camera3D(godotObject: GodotHandle) : Node3D(godotObject) {
   fun makeCurrent() {
     GodotBackendCalls.invokeNoArgsVoid(D.CAMERA3D_MAKE_CURRENT, requireOpenHandle())
   }
+
+  fun setCurrent(enabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(D.CAMERA3D_SET_CURRENT, requireOpenHandle(), enabled)
+  }
+
+  fun setFov(fov: Double) {
+    GodotBackendCalls.invokeDoubleArg(D.CAMERA3D_SET_FOV, requireOpenHandle(), fov)
+  }
+
+  fun getFov(): Double =
+    GodotBackendCalls.invokeNoArgsRetDouble(D.CAMERA3D_GET_FOV, requireOpenHandle())
+
+  var current: Boolean
+    get() = unsupportedWebGameplayFamily("Camera3D.is_current")
+    set(newValue) = setCurrent(newValue)
+
+  var fov: Double
+    get() = getFov()
+    set(newValue) = setFov(newValue)
+
+  companion object {
+    /** Constructs a new Camera3D engine-side; the wrapper owns the handle (close what you create). */
+    fun create(): Camera3D =
+      Camera3D(checkNotNull(ClassDB.instantiate("Camera3D")) { "Godot could not instantiate Camera3D" }.toWebId())
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -39,3 +64,26 @@ fun Camera3D.projectRayNormal(screenPoint: Vector2): Vector3 = projectRayNormal(
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Camera3D.makeCurrent() = makeCurrent()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Camera3D.setCurrent(enabled: Boolean) = setCurrent(enabled)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Camera3D.setFov(fov: Double) = setFov(fov)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Camera3D.getFov(): Double = getFov()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Camera3D.current: Boolean
+  get() = current
+  set(newValue) {
+    current = newValue
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Camera3D.fov: Double
+  get() = fov
+  set(newValue) {
+    fov = newValue
+  }

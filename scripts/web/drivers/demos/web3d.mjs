@@ -155,6 +155,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`demoPageProbe: mask=${demoPageProbe}`);
 
+  // Task 64 CameraMode family (protocol 25): Main.camera_mode_probe (Int->Int) returns a mask --
+  // bit 1 = a Kotlin-constructed Camera3D made current took and read back its fov, bit 2 =
+  // SceneTree.get_nodes_in_group returned the fixture's Spinner as the same instance, bit 4 =
+  // Input.is_key_pressed is false for W on a headless runner, bit 8 = Input.get_last_mouse_velocity
+  // answered a finite Vector2, bit 16 = the previous camera is current again after the probe camera
   // Task 80 slice 4: signal-shape conformance (see Main.signal_probe).
   const signalProbe = Number(
     await evaluate(
@@ -270,6 +275,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`inputMapProbe: ${inputMapProbe}`);
 
+  // Task 64 CameraMode family. Runs AFTER generic_probe / input_map_probe on purpose: the probe wraps
+  // the viewport (root Window) through the typed path, which TRACKS it; genericMintsNodeHandle needs
+  // the window still untracked (same coupling as input_map_probe, stated in Main.kt).
+  // is freed. A healthy run returns 31.
+  const cameraModeProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("camera_mode_probe")}, 0)`,
+    ),
+  );
+  trace(`cameraModeProbe: mask=${cameraModeProbe}`);
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -354,6 +370,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 64 DemoPage set: pause read-back, joypad enumeration, Environment toggles, focus release
     // and the postAfterFrames hop chain (the readback runs after the coroutine section's pumps).
     demoPageSetDelivers: demoPageProbe === 31 && demoPageProbeAfter === 1,
+    // Task 64 CameraMode family: Kotlin-constructed camera + fov round-trip, group query identity,
+    // key polling and mouse velocity, previous camera restored.
+    cameraModeFamilyDelivers: cameraModeProbe === 31,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

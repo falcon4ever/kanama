@@ -119,6 +119,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           261,
           309,
           310,
+          315,
         )
     )
     val objectId = receiver.webId()
@@ -143,7 +144,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       GodotExecutionMode.QUEUED_MUTATION -> {
         require(
           descriptor.opcode in
-            setOf(48, 49, 50, 53, 62, 82, 99, 146, 158, 161, 182, 183, 200, 262, 275)
+            setOf(48, 49, 50, 53, 62, 82, 99, 146, 158, 161, 182, 183, 200, 262, 275, 316)
         )
         commands.appendDoubleMutation(descriptor.opcode, receiver.webId(), value)
       }
@@ -889,7 +890,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
               "object handle=${receiver.webId()}"
           )
       GodotExecutionMode.IMMEDIATE_RESULT -> {
-        require(descriptor.opcode in setOf(199, 201, 240, 249, 263))
+        require(descriptor.opcode in setOf(199, 201, 240, 249, 263, 317))
         commands.flush()
         // Scaled by 1000 through the shared integer object-query transport.
         immediateWebObjectQuery(descriptor.opcode, receiver.webId(), "") / 1000.0
@@ -1446,6 +1447,57 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       .split(',')
       .filter { it.isNotEmpty() }
       .map { it.toLong() }
+  }
+
+  override fun invokeLongRetBoolSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: Long,
+  ): Boolean {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 313)
+    commands.flush()
+    // Task 64 CameraMode family: the key code rides the object-query string channel as its
+    // decimal spelling (the applier parses it back); no receiver, the active script stands in.
+    return immediateWebObjectQuery(
+      descriptor.opcode,
+      requireActiveWebScriptHandle(),
+      value.toString(),
+    ) != 0
+  }
+
+  override fun invokeNoArgsRetVector2Singleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+  ): GodotVector2 {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 314)
+    commands.flush()
+    // Task 64 CameraMode family: the Vector2 channel addressed to the active script (no receiver).
+    return GodotVector2(
+      immediateWebNoArgsVector2X(descriptor.opcode, requireActiveWebScriptHandle()).toFloat(),
+      immediateWebNoArgsVector2Y().toFloat(),
+    )
+  }
+
+  override fun invokeStringNameRetHandleList(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): List<GodotHandle> {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 318)
+    commands.flush()
+    // Task 64 CameraMode family: the applier packs the group members' handles (unit separator);
+    // scripted members resolve to script handles, engine nodes get tracked browser handles.
+    return immediateWebStringQuery(descriptor.opcode, receiver.webId(), value)
+      .split('')
+      .filter { it.isNotEmpty() }
+      .map { GodotHandle.fromBackendToken(it.toLong()) }
   }
 
   override fun invokeLongObjectArg(

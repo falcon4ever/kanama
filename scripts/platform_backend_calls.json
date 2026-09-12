@@ -4904,6 +4904,98 @@
       "returnOwnership": "BORROWED",
       "semantics": "Ids of the connected joypads (DemoPage picks the joypad instructions when one is present). Comma-joined ids on the string channel; empty = none.",
       "introducedBy": "64-tier3-demopage-set"
+    },
+    {
+      "opcode": 313,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "is_key_pressed",
+      "hash": 1938909964,
+      "arguments": [
+        "enum::Key"
+      ],
+      "returnType": "bool",
+      "shape": "LONG_RET_BOOL_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Is a keyboard key held (CameraMode's WASD/QE fly-camera polls six keys per frame). The key code rides the object-query string channel as its decimal spelling.",
+      "introducedBy": "64-tier4-cameramode"
+    },
+    {
+      "opcode": 314,
+      "scope": "class",
+      "className": "Input",
+      "methodName": "get_last_mouse_velocity",
+      "hash": 1497962370,
+      "arguments": [],
+      "returnType": "Vector2",
+      "shape": "NOARGS_RET_VECTOR2_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Last mouse velocity (CameraMode's fly-camera look). Vector2 channel addressed to the active script.",
+      "introducedBy": "64-tier4-cameramode"
+    },
+    {
+      "opcode": 315,
+      "scope": "class",
+      "className": "Camera3D",
+      "methodName": "set_current",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue making this camera (not) current (CameraMode swaps its fly-camera in and the cached camera back).",
+      "introducedBy": "64-tier4-cameramode"
+    },
+    {
+      "opcode": 316,
+      "scope": "class",
+      "className": "Camera3D",
+      "methodName": "set_fov",
+      "hash": 373806689,
+      "arguments": [
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "DOUBLE_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the vertical field of view (CameraMode copies the cached camera's fov onto its fly-camera).",
+      "introducedBy": "64-tier4-cameramode"
+    },
+    {
+      "opcode": 317,
+      "scope": "class",
+      "className": "Camera3D",
+      "methodName": "get_fov",
+      "hash": 1740695150,
+      "arguments": [],
+      "returnType": "float",
+      "shape": "NOARGS_RET_DOUBLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the vertical field of view (x1000 on the integer channel).",
+      "introducedBy": "64-tier4-cameramode"
+    },
+    {
+      "opcode": 318,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "get_nodes_in_group",
+      "hash": 689397652,
+      "arguments": [
+        "StringName"
+      ],
+      "returnType": "typedarray::Node",
+      "shape": "STRINGNAME_RET_HANDLE_LIST",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Members of a node group (CameraMode toggles the camera_mode_toggle CanvasItems). Scripted members resolve to script handles, engine nodes get tracked browser handles, as find_children does.",
+      "introducedBy": "64-tier4-cameramode"
     }
   ],
   "compositions": [

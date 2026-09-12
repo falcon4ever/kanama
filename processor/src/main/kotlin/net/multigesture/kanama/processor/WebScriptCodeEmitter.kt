@@ -140,7 +140,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `Input.get_connected_joypads` (a new NOARGS_RET_LONG_LIST_SINGLETON shape on the string
      * channel).
      */
-    const val PROTOCOL_VERSION = 24
+    const val PROTOCOL_VERSION = 25
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -2452,6 +2452,15 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    // Task 64 CameraMode family (protocol 25): the fly-camera's current flag and fov.
+    appendLine("\t\telif opcode == 315 and target_object is Camera3D:")
+    appendLine("\t\t\t(target_object as Camera3D).current = bytes.decode_s32(offset + 8) != 0")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 316 and target_object is Camera3D:")
+    appendLine("\t\t\t(target_object as Camera3D).fov = bytes.decode_double(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 55 and target_object is AnimatedSprite2D:")
     appendLine(
       "\t\t\t(target_object as AnimatedSprite2D).flip_v = bytes.decode_s32(offset + 8) != 0"
@@ -3942,6 +3951,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\tjoypad_ids.append(str(joypad_id))")
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\",\".join(joypad_ids))")
     appendLine("\t\t\tresult = 1")
+    // Task 64 CameraMode family (protocol 25): key polling, fov read-back and the group query.
+    appendLine("\t\telif opcode == 313:")
+    appendLine("\t\t\tresult = int(Input.is_key_pressed(int(String(args[2]))))")
+    appendLine("\t\telif opcode == 317 and value is Camera3D:")
+    appendLine("\t\t\tresult = int(round((value as Camera3D).fov * 1000.0))")
+    appendLine("\t\telif opcode == 318 and value is SceneTree:")
+    appendLine(
+      "\t\t\tvar group_nodes := (value as SceneTree).get_nodes_in_group(StringName(String(args[2])))"
+    )
+    appendLine("\t\t\tvar group_handles := PackedStringArray()")
+    appendLine("\t\t\tfor group_node in group_nodes:")
+    appendLine("\t\t\t\tvar group_handle := 0")
+    appendLine("\t\t\t\tif group_node.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\t\t\t\tgroup_handle = int(group_node.call(\"_kanama_ensure_created\"))")
+    appendLine("\t\t\t\tif group_handle == 0:")
+    appendLine("\t\t\t\t\tfor existing_group in _kanama_object_handles:")
+    appendLine("\t\t\t\t\t\tif is_same(_kanama_object_handles[existing_group], group_node):")
+    appendLine("\t\t\t\t\t\t\tgroup_handle = int(existing_group)")
+    appendLine("\t\t\t\t\t\t\tbreak")
+    appendLine("\t\t\t\tif group_handle == 0:")
+    appendLine(
+      "\t\t\t\t\tgroup_handle = int(_kanama_bridge.allocateFoundNodeHandle(_kanama_handle))"
+    )
+    appendLine("\t\t\t\t_kanama_object_handles[group_handle] = group_node")
+    appendLine("\t\t\t\tgroup_handles.append(str(group_handle))")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(\"\\u001f\".join(group_handles))")
+    appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 148 and value != null:")
     appendLine("\t\t\tvar emit_parts := String(args[2]).split(\"\\u001f\")")
     appendLine("\t\t\tvar emit_arg_handle := int(emit_parts[1])")
@@ -4503,6 +4539,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar result := Vector2.ZERO")
     appendLine("\tif opcode == 27 and value is CanvasItem:")
     appendLine("\t\tresult = (value as CanvasItem).get_local_mouse_position()")
+    // Task 64 CameraMode family (protocol 25): singleton Vector2 query, no receiver.
+    appendLine("\telif opcode == 314:")
+    appendLine("\t\tresult = Input.get_last_mouse_velocity()")
     appendLine("\telif opcode == 127 and value is InputEventMouseMotion:")
     appendLine("\t\tresult = (value as InputEventMouseMotion).relative")
     appendLine("\telif opcode == 220 and value is Viewport:")
