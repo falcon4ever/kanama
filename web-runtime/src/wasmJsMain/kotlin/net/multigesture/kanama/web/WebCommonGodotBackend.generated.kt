@@ -1500,6 +1500,25 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       .map { GodotHandle.fromBackendToken(it.toLong()) }
   }
 
+  override fun invokeDoubleRetHandle(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: Double,
+  ): GodotHandle? {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 321)
+    require(value.isFinite())
+    commands.flush()
+    // Task 64 tps-demo parcel 7: the seconds ride the property-object channel as their decimal
+    // spelling; the applier creates the SceneTreeTimer and registers it under the proposed
+    // OBJECT-kind slot (a retained RefCounted, like a Tween), so its timeout signal connects.
+    return registerReturnedBrowserObject(
+      immediateWebPropertyObjectQuery(descriptor.opcode, receiver.webId(), value.toString())
+    )
+  }
+
   override fun invokeLongObjectArg(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,

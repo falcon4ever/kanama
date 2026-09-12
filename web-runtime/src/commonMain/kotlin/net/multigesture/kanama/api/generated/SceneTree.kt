@@ -59,6 +59,22 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
       group,
     ).map { Node(it.toWebId()) }
 
+  fun createTimer(
+    timeSec: Double,
+    processAlways: Boolean = true,
+    processInPhysics: Boolean = false,
+    ignoreTimeScale: Boolean = false,
+  ): RefCounted? {
+    require(processAlways == true) { "Web SceneTree.create_timer supports only processAlways = true" }
+    require(processInPhysics == false) { "Web SceneTree.create_timer supports only processInPhysics = false" }
+    require(ignoreTimeScale == false) { "Web SceneTree.create_timer supports only ignoreTimeScale = false" }
+    return GodotBackendCalls.invokeDoubleRetHandle(
+      D.SCENETREE_CREATE_TIMER,
+      requireOpenHandle(),
+      timeSec,
+    )?.let { RefCounted(it.toWebId()) }
+  }
+
   var paused: Boolean
     get() = isPaused()
     set(newValue) = setPause(newValue)
@@ -126,6 +142,14 @@ fun SceneTree.unloadCurrentScene() = unloadCurrentScene()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun SceneTree.getNodesInGroup(group: String): List<Node> = getNodesInGroup(group)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun SceneTree.createTimer(
+  timeSec: Double,
+  processAlways: Boolean = true,
+  processInPhysics: Boolean = false,
+  ignoreTimeScale: Boolean = false,
+): RefCounted? = createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var SceneTree.paused: Boolean

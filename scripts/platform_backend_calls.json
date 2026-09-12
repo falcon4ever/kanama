@@ -5024,6 +5024,25 @@
       "returnOwnership": "BORROWED",
       "semantics": "Whether queue_free has been called on the object (tps-demo's Level / Part / Blast skip nodes that are on their way out).",
       "introducedBy": "64-parcel6-tps-lifecycle"
+    },
+    {
+      "opcode": 321,
+      "scope": "class",
+      "className": "SceneTree",
+      "methodName": "create_timer",
+      "hash": 2709170273,
+      "arguments": [
+        "float",
+        "bool",
+        "bool",
+        "bool"
+      ],
+      "returnType": "SceneTreeTimer",
+      "shape": "DOUBLE_RET_HANDLE",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "RETAINED_REFCOUNTED",
+      "semantics": "One-shot SceneTreeTimer (time in seconds; process_always/process_in_physics/ignore_time_scale keep Godot's defaults) as a retained browser handle; its `timeout` signal is awaited through the generic signal path (tps-demo's Level / Part / PartDisappear waits).",
+      "introducedBy": "64-parcel7-tps-timer"
     }
   ],
   "compositions": [

@@ -1384,6 +1384,13 @@ class GodotBackendContractTest {
       value: String,
     ): List<GodotHandle> = unexercised(descriptor)
 
+    override fun invokeDoubleRetHandle(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: Double,
+    ): GodotHandle? = unexercised(descriptor)
+
     override fun invokeStringNameObjectRetInt(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
