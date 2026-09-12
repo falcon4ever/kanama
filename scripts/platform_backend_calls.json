@@ -1876,7 +1876,7 @@
       "shape": "NOARGS_RET_HANDLE",
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
-      "semantics": "Return the hit object as an existing tracked handle (a scripted Enemy resolves to its script handle \u2014 the KinematicCollision3D.get_collider rule).",
+      "semantics": "Return the hit object as an existing tracked handle (a scripted Enemy resolves to its script handle — the KinematicCollision3D.get_collider rule).",
       "introducedBy": "60e-fps"
     },
     {
@@ -1966,7 +1966,7 @@
       "shape": "STRINGNAME_ARG",
       "executionMode": "QUEUED_MUTATION",
       "returnOwnership": "BORROWED",
-      "semantics": "Queue playing a named 3D sprite animation (custom_speed/from_end baked to Godot defaults, the only values the demos pass) \u2014 FPS muzzle flashes and impacts.",
+      "semantics": "Queue playing a named 3D sprite animation (custom_speed/from_end baked to Godot defaults, the only values the demos pass) — FPS muzzle flashes and impacts.",
       "introducedBy": "60e-fps"
     },
     {
@@ -2647,7 +2647,7 @@
       ],
       "shape": "OBJECT_ARG",
       "executionMode": "QUEUED_MUTATION",
-      "semantics": "Queue excluding a collision object from the spring-arm probe; the RID never crosses the boundary \u2014 the applier derives it from the passed object handle.",
+      "semantics": "Queue excluding a collision object from the spring-arm probe; the RID never crosses the boundary — the applier derives it from the passed object handle.",
       "scope": "class",
       "returnType": "void",
       "returnOwnership": "BORROWED",
@@ -2948,7 +2948,7 @@
       ],
       "shape": "LONG_ARG",
       "executionMode": "QUEUED_MUTATION",
-      "semantics": "Queue clearing one surface override (material baked null \u2014 bee-bot teardown).",
+      "semantics": "Queue clearing one surface override (material baked null — bee-bot teardown).",
       "descriptorName": "MESHINSTANCE3D_CLEAR_SURFACE_OVERRIDE_MATERIAL",
       "scope": "class",
       "returnType": "void",
@@ -3182,7 +3182,7 @@
       "returnType": "void",
       "shape": "VECTOR3I_LONG_LONG_ARG",
       "executionMode": "IMMEDIATE_RESULT",
-      "semantics": "Place or clear one grid cell (position, item, orientation) \u2014 the build/demolish core loop.",
+      "semantics": "Place or clear one grid cell (position, item, orientation) — the build/demolish core loop.",
       "scope": "class",
       "returnOwnership": "BORROWED",
       "introducedBy": "60h-citybuilder"
@@ -4996,6 +4996,34 @@
       "returnOwnership": "BORROWED",
       "semantics": "Members of a node group (CameraMode toggles the camera_mode_toggle CanvasItems). Scripted members resolve to script handles, engine nodes get tracked browser handles, as find_children does.",
       "introducedBy": "64-tier4-cameramode"
+    },
+    {
+      "opcode": 319,
+      "scope": "class",
+      "className": "Node",
+      "methodName": "is_inside_tree",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Whether the node is in the scene tree (tps-demo's Level / Part / Blast guard their late signal handlers with it).",
+      "introducedBy": "64-parcel6-tps-lifecycle"
+    },
+    {
+      "opcode": 320,
+      "scope": "class",
+      "className": "Object",
+      "methodName": "is_queued_for_deletion",
+      "hash": 36873697,
+      "arguments": [],
+      "returnType": "bool",
+      "shape": "NOARGS_RET_BOOL",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Whether queue_free has been called on the object (tps-demo's Level / Part / Blast skip nodes that are on their way out).",
+      "introducedBy": "64-parcel6-tps-lifecycle"
     }
   ],
   "compositions": [

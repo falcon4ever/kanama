@@ -140,7 +140,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `Input.get_connected_joypads` (a new NOARGS_RET_LONG_LIST_SINGLETON shape on the string
      * channel).
      */
-    const val PROTOCOL_VERSION = 25
+    const val PROTOCOL_VERSION = 26
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -4010,6 +4010,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     // Task 64 CameraMode family (protocol 25): key polling, fov read-back and the group query.
     appendLine("\t\telif opcode == 313:")
     appendLine("\t\t\tresult = int(Input.is_key_pressed(int(String(args[2]))))")
+    // Task 64 tps-demo parcel 6 (protocol 26): node lifecycle queries.
+    appendLine("\t\telif opcode == 319 and value is Node:")
+    appendLine("\t\t\tresult = int((value as Node).is_inside_tree())")
+    appendLine("\t\telif opcode == 320:")
+    appendLine("\t\t\tresult = int(value.is_queued_for_deletion())")
     appendLine("\t\telif opcode == 317 and value is Camera3D:")
     appendLine("\t\t\tresult = int(round((value as Camera3D).fov * 1000.0))")
     appendLine("\t\telif opcode == 318 and value is SceneTree:")

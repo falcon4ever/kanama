@@ -228,6 +228,9 @@ open class GodotObject(godotObject: GodotHandle) {
   fun hasSignal(signal: String): Boolean =
     GodotBackendCalls.invokeStringNameRetBool(D.OBJECT_HAS_SIGNAL, requireOpenHandle(), signal)
 
+  fun isQueuedForDeletion(): Boolean =
+    GodotBackendCalls.invokeNoArgsRetBool(D.OBJECT_IS_QUEUED_FOR_DELETION, requireOpenHandle())
+
   val handle: GodotHandle
     get() = WebObjectId(backendHandle.backendToken().toInt())
 
@@ -321,3 +324,6 @@ fun GodotObject.callDeferred(method: String, argument: GodotObject) = callDeferr
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.hasSignal(signal: String): Boolean = hasSignal(signal)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun GodotObject.isQueuedForDeletion(): Boolean = isQueuedForDeletion()
