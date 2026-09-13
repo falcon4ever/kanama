@@ -47,6 +47,8 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
             |
             |typealias real_t = Float
             |
+            |typealias GodotRealArray = FloatArray
+            |
             |object GodotReal {
             |    const val SIZE_BYTES: Long = 4L
             |    const val ALIGN_BYTES: Long = 4L
@@ -54,6 +56,9 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
             |    fun fromNumber(value: Number): real_t = value.toFloat()
             |    fun fromDouble(value: Double): real_t = value.toFloat()
             |    fun fromFloat(value: Float): real_t = value
+            |
+            |    fun toC(value: real_t): Float = value
+            |    fun fromC(value: Float): real_t = value
             |
             |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
             |
