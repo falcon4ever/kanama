@@ -65,6 +65,12 @@ to answer.
    desktop generates one at build time. The design listed value types as
    "shared in commonMain" as if they were generated. Under KMP they need their
    own unification first; under a shared source directory they stay per platform.
+   **Resolved by task 104 step 2:** the 19 value types are one hand-written set
+   under `src/commonMain/kotlin/net/multigesture/kanama/types` (public surface =
+   the union of the two it replaced, `Vector4i` included), reaching the engine
+   only through the `BuiltinCalls` facade, which exists once per platform under
+   one fully-qualified name and is kept identical by
+   `scripts/check_builtin_calls_contract.py`. Only `Real.kt` stays per platform.
 
 ## Two mechanisms, and what each costs
 
