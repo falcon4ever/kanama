@@ -17,8 +17,8 @@ object FileAccess {
     const val READ_WRITE = 3L
 
     fun open(path: String, flags: Long): FileAccessHandle? {
-        val handle = ObjectCalls.ptrcallStaticWithStringAndLongArgsRetObject(openBind, path, flags)
-        return if (handle.address() == 0L) null else FileAccessHandle(handle)
+        val segment = ObjectCalls.ptrcallStaticWithStringAndLongArgsRetObject(openBind, path, flags)
+        return if (segment.address() == 0L) null else FileAccessHandle(GodotHandle(segment))
     }
 
     fun getSize(path: String): Long =
@@ -69,18 +69,18 @@ object FileAccess {
  * Instance handle returned by FileAccess.open, mirroring the desktop FileAccessHandle
  * subset shared game code uses.
  */
-class FileAccessHandle internal constructor(handle: MemorySegment) : RefCounted(handle) {
+class FileAccessHandle internal constructor(handle: GodotHandle) : RefCounted(handle) {
     private var fileClosed = false
 
-    fun getAsText(): String = FileAccess.getAsTextHandle(handle)
+    fun getAsText(): String = FileAccess.getAsTextHandle(segment)
 
-    fun storeString(text: String): Boolean = FileAccess.storeStringHandle(handle, text)
+    fun storeString(text: String): Boolean = FileAccess.storeStringHandle(segment, text)
 
     override fun close() {
         if (!fileClosed) {
             fileClosed = true
-            if (FileAccess.isOpenHandle(handle)) {
-                FileAccess.closeHandle(handle)
+            if (FileAccess.isOpenHandle(segment)) {
+                FileAccess.closeHandle(segment)
             }
         }
         super.close()

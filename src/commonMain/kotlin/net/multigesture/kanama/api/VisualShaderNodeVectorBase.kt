@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeVectorBase
  */
-open class VisualShaderNodeVectorBase(handle: MemorySegment) : VisualShaderNode(handle) {
+open class VisualShaderNodeVectorBase(handle: GodotHandle) : VisualShaderNode(handle) {
     var opType: Long
         @JvmName("opTypeProperty")
         get() = getOpType()
@@ -18,12 +18,12 @@ open class VisualShaderNodeVectorBase(handle: MemorySegment) : VisualShaderNode(
 
     fun setOpType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type)
     }
 
     fun getOpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
     }
 
     companion object {
@@ -33,11 +33,11 @@ open class VisualShaderNodeVectorBase(handle: MemorySegment) : VisualShaderNode(
         const val OP_TYPE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeVectorBase? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorBase? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeVectorBase? =
-            if (handle.address() == 0L) null else VisualShaderNodeVectorBase(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeVectorBase(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 1692596998L
         private val setOpTypeBind by lazy {

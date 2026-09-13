@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTexture2DArray
  */
-class VisualShaderNodeTexture2DArray(handle: MemorySegment) : VisualShaderNodeSample3D(handle) {
+class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSample3D(handle) {
     var textureArray: TextureLayered?
         @JvmName("textureArrayProperty")
         get() = getTextureArray()
@@ -18,21 +18,21 @@ class VisualShaderNodeTexture2DArray(handle: MemorySegment) : VisualShaderNodeSa
 
     fun setTextureArray(value: TextureLayered?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureArrayBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureArrayBind, segment, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTextureArray(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureArrayBind, handle))
+        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureArrayBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTexture2DArray? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture2DArray? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTexture2DArray? =
-            if (handle.address() == 0L) null else VisualShaderNodeTexture2DArray(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTexture2DArray(GodotHandle(handle))
 
         private const val SET_TEXTURE_ARRAY_HASH = 1278366092L
         private val setTextureArrayBind by lazy {

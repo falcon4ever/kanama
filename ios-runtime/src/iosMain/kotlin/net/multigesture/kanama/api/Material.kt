@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: Material
  */
-open class Material(handle: MemorySegment) : Resource(handle) {
+open class Material(handle: GodotHandle) : Resource(handle) {
     var renderPriority: Int
         @JvmName("renderPriorityProperty")
         get() = getRenderPriority()
@@ -24,13 +24,13 @@ open class Material(handle: MemorySegment) : Resource(handle) {
 
     fun setNextPass(nextPass: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNextPassBind, handle, listOf(nextPass?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNextPassBind, segment, listOf(nextPass?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNextPass(): Material? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextPassBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextPassBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -39,23 +39,23 @@ open class Material(handle: MemorySegment) : Resource(handle) {
 
     fun setRenderPriority(priority: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, segment, priority)
     }
 
     fun getRenderPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, segment)
     }
 
     fun inspectNativeShaderCode() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
+        ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, segment)
     }
 
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -67,11 +67,11 @@ open class Material(handle: MemorySegment) : Resource(handle) {
         const val RENDER_PRIORITY_MIN: Long = -128L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Material? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Material? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Material? =
-            if (handle.address() == 0L) null else Material(handle)
+            if (handle.address() == 0L) null else Material(GodotHandle(handle))
 
         // Downcast a Resource to Material (null if not), mirroring the desktop helper.
         fun fromResource(value: Resource?): Material? =

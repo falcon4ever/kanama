@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AnimatedSprite2D
  */
-class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
+class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
     var spriteFrames: SpriteFrames?
         @JvmName("spriteFramesProperty")
         get() = getSpriteFrames()
@@ -80,7 +80,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_sprite_frames
      */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, handle, listOf(spriteFrames?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -90,7 +90,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_sprite_frames
      */
     fun getSpriteFrames(): SpriteFrames? {
-        return SpriteFrames.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, handle))
+        return SpriteFrames.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
     }
 
     /**
@@ -100,7 +100,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_animation
      */
     fun setAnimation(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, segment, name)
     }
 
     /**
@@ -110,7 +110,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_animation
      */
     fun getAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, segment)
     }
 
     /**
@@ -119,7 +119,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_autoplay
      */
     fun setAutoplay(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAutoplayBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setAutoplayBind, segment, name)
     }
 
     /**
@@ -128,7 +128,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_autoplay
      */
     fun getAutoplay(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAutoplayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAutoplayBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.play
      */
     fun play(name: String = "", customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(playBind, handle, name, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(playBind, segment, name, customSpeed, fromEnd)
     }
 
     /**
@@ -160,7 +160,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.play_backwards
      */
     fun playBackwards(name: String = "") {
-        ObjectCalls.ptrcallWithStringNameArg(playBackwardsBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(playBackwardsBind, segment, name)
     }
 
     /**
@@ -171,7 +171,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, handle)
+        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_centered
      */
     fun setCentered(centered: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, handle, centered)
+        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, segment, centered)
     }
 
     /**
@@ -207,7 +207,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_centered
      */
     fun isCentered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, segment)
     }
 
     /**
@@ -216,7 +216,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -225,7 +225,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_flip_h
      */
     fun setFlipH(flipH: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, flipH)
+        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, flipH)
     }
 
     /**
@@ -243,7 +243,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
     }
 
     /**
@@ -252,7 +252,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_flip_v
      */
     fun setFlipV(flipV: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, flipV)
+        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, flipV)
     }
 
     /**
@@ -261,7 +261,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
     }
 
     /**
@@ -271,7 +271,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_frame
      */
     fun setFrame(frame: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, handle, frame)
+        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
     }
 
     /**
@@ -281,7 +281,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_frame
      */
     fun getFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
     }
 
     /**
@@ -291,7 +291,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_frame_progress
      */
     fun setFrameProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrameProgressBind, handle, progress)
+        ObjectCalls.ptrcallWithDoubleArg(setFrameProgressBind, segment, progress)
     }
 
     /**
@@ -301,7 +301,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_frame_progress
      */
     fun getFrameProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrameProgressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFrameProgressBind, segment)
     }
 
     /**
@@ -311,7 +311,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_frame_and_progress
      */
     fun setFrameAndProgress(frame: Int, progress: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameAndProgressBind, handle, frame, progress)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameAndProgressBind, segment, frame, progress)
     }
 
     /**
@@ -323,7 +323,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_speed_scale
      */
     fun setSpeedScale(speedScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, speedScale)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speedScale)
     }
 
     /**
@@ -335,7 +335,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     /**
@@ -346,7 +346,7 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_playing_speed
      */
     fun getPlayingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
     }
 
     object Signals {
@@ -359,11 +359,11 @@ class AnimatedSprite2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimatedSprite2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimatedSprite2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimatedSprite2D? =
-            if (handle.address() == 0L) null else AnimatedSprite2D(handle)
+            if (handle.address() == 0L) null else AnimatedSprite2D(GodotHandle(handle))
 
         private const val SET_SPRITE_FRAMES_HASH = 905781144L
         private val setSpriteFramesBind by lazy {

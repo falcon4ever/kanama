@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: ProceduralSkyMaterial
  */
-class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
+class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     var skyTopColor: Color
         @JvmName("skyTopColorProperty")
         get() = getSkyTopColor()
@@ -103,7 +103,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSkyTopColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, segment, color)
     }
 
     /**
@@ -113,7 +113,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSkyTopColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, segment)
     }
 
     /**
@@ -123,7 +123,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSkyHorizonColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, segment, color)
     }
 
     /**
@@ -133,7 +133,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSkyHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSkyCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, segment, curve)
     }
 
     /**
@@ -153,7 +153,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSkyCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, segment)
     }
 
     /**
@@ -163,7 +163,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSkyEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, handle, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -173,7 +173,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSkyEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, segment)
     }
 
     /**
@@ -187,7 +187,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSkyCover(skyCover: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSkyCoverBind, handle, listOf(skyCover?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSkyCoverBind, segment, listOf(skyCover?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -201,7 +201,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSkyCover(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyCoverBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyCoverBind, segment))
     }
 
     /**
@@ -213,7 +213,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSkyCoverModulate(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, segment, color)
     }
 
     /**
@@ -225,7 +225,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSkyCoverModulate(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setGroundBottomColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, segment, color)
     }
 
     /**
@@ -245,7 +245,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getGroundBottomColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, segment)
     }
 
     /**
@@ -255,7 +255,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setGroundHorizonColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, segment, color)
     }
 
     /**
@@ -265,7 +265,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getGroundHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, segment)
     }
 
     /**
@@ -275,7 +275,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setGroundCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, segment, curve)
     }
 
     /**
@@ -285,7 +285,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getGroundCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, segment)
     }
 
     /**
@@ -295,7 +295,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setGroundEnergyMultiplier(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, segment, energy)
     }
 
     /**
@@ -305,7 +305,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getGroundEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, segment)
     }
 
     /**
@@ -315,7 +315,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSunAngleMax(degrees: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, segment, degrees)
     }
 
     /**
@@ -325,7 +325,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSunAngleMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, segment)
     }
 
     /**
@@ -335,7 +335,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSunCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, segment, curve)
     }
 
     /**
@@ -345,7 +345,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSunCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, segment)
     }
 
     /**
@@ -356,7 +356,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setUseDebanding(useDebanding: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
+        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, useDebanding)
     }
 
     /**
@@ -367,7 +367,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, segment)
     }
 
     /**
@@ -377,7 +377,7 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -387,16 +387,16 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ProceduralSkyMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ProceduralSkyMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ProceduralSkyMaterial? =
-            if (handle.address() == 0L) null else ProceduralSkyMaterial(handle)
+            if (handle.address() == 0L) null else ProceduralSkyMaterial(GodotHandle(handle))
 
         @JvmStatic
         fun fromResource(value: Resource): ProceduralSkyMaterial? =

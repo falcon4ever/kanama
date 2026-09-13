@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: GPUParticlesCollisionSDF3D
  */
-class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3D(handle) {
+class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(handle) {
     var size: Vector3
         @JvmName("sizeProperty")
         get() = getSize()
@@ -50,7 +50,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -60,7 +60,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_resolution
      */
     fun setResolution(resolution: Long) {
-        ObjectCalls.ptrcallWithLongArg(setResolutionBind, handle, resolution)
+        ObjectCalls.ptrcallWithLongArg(setResolutionBind, segment, resolution)
     }
 
     /**
@@ -88,7 +88,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_resolution
      */
     fun getResolution(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_texture
      */
     fun setTexture(texture: Texture3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -106,7 +106,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_texture
      */
     fun getTexture(): Texture3D? {
-        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -118,7 +118,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_thickness
      */
     fun setThickness(thickness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setThicknessBind, handle, thickness)
+        ObjectCalls.ptrcallWithDoubleArg(setThicknessBind, segment, thickness)
     }
 
     /**
@@ -130,7 +130,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_thickness
      */
     fun getThickness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThicknessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getThicknessBind, segment)
     }
 
     /**
@@ -142,7 +142,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_bake_mask
      */
     fun setBakeMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setBakeMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setBakeMaskBind, segment, mask)
     }
 
     /**
@@ -154,7 +154,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_bake_mask
      */
     fun getBakeMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBakeMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getBakeMaskBind, segment)
     }
 
     /**
@@ -164,7 +164,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_bake_mask_value
      */
     fun setBakeMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setBakeMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setBakeMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -174,7 +174,7 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_bake_mask_value
      */
     fun getBakeMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, segment, layerNumber)
     }
 
     companion object {
@@ -187,11 +187,11 @@ class GPUParticlesCollisionSDF3D(handle: MemorySegment) : GPUParticlesCollision3
         const val RESOLUTION_MAX: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GPUParticlesCollisionSDF3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GPUParticlesCollisionSDF3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GPUParticlesCollisionSDF3D? =
-            if (handle.address() == 0L) null else GPUParticlesCollisionSDF3D(handle)
+            if (handle.address() == 0L) null else GPUParticlesCollisionSDF3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {

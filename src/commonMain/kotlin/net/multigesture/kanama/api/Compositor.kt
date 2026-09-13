@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Compositor
  */
-class Compositor(handle: MemorySegment) : Resource(handle) {
+class Compositor(handle: GodotHandle) : Resource(handle) {
     var compositorEffects: List<CompositorEffect>
         @JvmName("compositorEffectsProperty")
         get() = getCompositorEffects()
@@ -26,7 +26,7 @@ class Compositor(handle: MemorySegment) : Resource(handle) {
      */
     fun setCompositorEffects(compositorEffects: List<CompositorEffect>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setCompositorEffectsBind, handle, compositorEffects)
+        ObjectCalls.ptrcallWithObjectListArg(setCompositorEffectsBind, segment, compositorEffects)
     }
 
     /**
@@ -37,16 +37,16 @@ class Compositor(handle: MemorySegment) : Resource(handle) {
      */
     fun getCompositorEffects(): List<CompositorEffect> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, handle, CompositorEffect::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, segment, CompositorEffect::wrap)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Compositor? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Compositor? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Compositor? =
-            if (handle.address() == 0L) null else Compositor(handle)
+            if (handle.address() == 0L) null else Compositor(GodotHandle(handle))
 
         private const val SET_COMPOSITOR_EFFECTS_HASH = 381264803L
         private val setCompositorEffectsBind by lazy {

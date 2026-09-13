@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeCurveTexture
  */
-class VisualShaderNodeCurveTexture(handle: MemorySegment) : VisualShaderNodeResizableBase(handle) {
+class VisualShaderNodeCurveTexture(handle: GodotHandle) : VisualShaderNodeResizableBase(handle) {
     var texture: CurveTexture?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -18,21 +18,21 @@ class VisualShaderNodeCurveTexture(handle: MemorySegment) : VisualShaderNodeResi
 
     fun setTexture(texture: CurveTexture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): CurveTexture? {
         checkOpen()
-        return CurveTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return CurveTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeCurveTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeCurveTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeCurveTexture? =
-            if (handle.address() == 0L) null else VisualShaderNodeCurveTexture(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeCurveTexture(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 181872837L
         private val setTextureBind by lazy {

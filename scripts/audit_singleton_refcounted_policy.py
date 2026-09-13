@@ -65,7 +65,7 @@ def main() -> int:
         errors.append("KanamaScriptLanguage ClassDB parent ScriptLanguageExtension is RefCounted")
 
     engine_source = ENGINE_WRAPPER.read_text(encoding="utf-8")
-    if 'fun registerSingleton(name: String, objectArg: MemorySegment)' not in engine_source:
+    if 'fun registerSingleton(name: String, objectArg: GodotHandle)' not in engine_source:
         errors.append("Engine.registerSingleton wrapper not found")
     if 'isClass("RefCounted")' not in engine_source:
         errors.append("Engine.registerSingleton must reject RefCounted instances before calling Godot")

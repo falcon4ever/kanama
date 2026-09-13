@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: Camera3D
  */
-open class Camera3D(handle: MemorySegment) : Node3D(handle) {
+open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     var keepAspect: Long
         @JvmName("keepAspectProperty")
         get() = getKeepAspectMode()
@@ -107,199 +107,199 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
         set(value) = setFar(value)
 
     fun projectRayNormal(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayNormalBind, handle, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayNormalBind, segment, screenPoint)
     }
 
     fun projectLocalRayNormal(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectLocalRayNormalBind, handle, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectLocalRayNormalBind, segment, screenPoint)
     }
 
     fun projectRayOrigin(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayOriginBind, handle, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayOriginBind, segment, screenPoint)
     }
 
     fun unprojectPosition(worldPoint: Vector3): Vector2 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector2(unprojectPositionBind, handle, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector2(unprojectPositionBind, segment, worldPoint)
     }
 
     fun isPositionBehind(worldPoint: Vector3): Boolean {
-        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionBehindBind, handle, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionBehindBind, segment, worldPoint)
     }
 
     fun projectPosition(screenPoint: Vector2, zDepth: Double): Vector3 {
-        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetVector3(projectPositionBind, handle, screenPoint, zDepth)
+        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetVector3(projectPositionBind, segment, screenPoint, zDepth)
     }
 
     fun setPerspective(fov: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithThreeDoubleArgs(setPerspectiveBind, handle, fov, zNear, zFar)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(setPerspectiveBind, segment, fov, zNear, zFar)
     }
 
     fun setOrthogonal(size: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithThreeDoubleArgs(setOrthogonalBind, handle, size, zNear, zFar)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(setOrthogonalBind, segment, size, zNear, zFar)
     }
 
     fun setFrustum(size: Double, offset: Vector2, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithDoubleVector2TwoDoubleArgs(setFrustumBind, handle, size, offset, zNear, zFar)
+        ObjectCalls.ptrcallWithDoubleVector2TwoDoubleArgs(setFrustumBind, segment, size, offset, zNear, zFar)
     }
 
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
+        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
     }
 
     fun clearCurrent(enableNext: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(clearCurrentBind, handle, enableNext)
+        ObjectCalls.ptrcallWithBoolArg(clearCurrentBind, segment, enableNext)
     }
 
     fun setCurrent(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, segment, enabled)
     }
 
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
     }
 
     fun getCameraTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getCameraTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getCameraTransformBind, segment)
     }
 
     fun getCameraProjection(): Projection {
-        return ObjectCalls.ptrcallNoArgsRetProjection(getCameraProjectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetProjection(getCameraProjectionBind, segment)
     }
 
     fun getFov(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, segment)
     }
 
     fun getFrustumOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFrustumOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getFrustumOffsetBind, segment)
     }
 
     fun getSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, segment)
     }
 
     fun getFar(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, segment)
     }
 
     fun getNear(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, segment)
     }
 
     fun setFov(fov: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFovBind, handle, fov)
+        ObjectCalls.ptrcallWithDoubleArg(setFovBind, segment, fov)
     }
 
     fun setFrustumOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setFrustumOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setFrustumOffsetBind, segment, offset)
     }
 
     fun setSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, segment, size)
     }
 
     fun setFar(far: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFarBind, handle, far)
+        ObjectCalls.ptrcallWithDoubleArg(setFarBind, segment, far)
     }
 
     fun setNear(near: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNearBind, handle, near)
+        ObjectCalls.ptrcallWithDoubleArg(setNearBind, segment, near)
     }
 
     fun getProjection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, segment)
     }
 
     fun setProjection(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProjectionBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProjectionBind, segment, mode)
     }
 
     fun setHOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, segment, offset)
     }
 
     fun getHOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, segment)
     }
 
     fun setVOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, segment, offset)
     }
 
     fun getVOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, segment)
     }
 
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
     }
 
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     fun setEnvironment(env: Environment?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getEnvironment(): Environment? {
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
+        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
     }
 
     fun setAttributes(env: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setAttributesBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAttributesBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAttributesBind, handle))
+        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAttributesBind, segment))
     }
 
     fun setCompositor(compositor: Compositor?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, handle, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCompositor(): Compositor? {
-        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, handle))
+        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
     }
 
     fun setKeepAspectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, segment, mode)
     }
 
     fun getKeepAspectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, segment)
     }
 
     fun setDopplerTracking(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode)
     }
 
     fun getDopplerTracking(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment)
     }
 
     fun getFrustum(): List<Plane> {
-        return ObjectCalls.ptrcallNoArgsRetPlaneList(getFrustumBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPlaneList(getFrustumBind, segment)
     }
 
     fun isPositionInFrustum(worldPoint: Vector3): Boolean {
-        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionInFrustumBind, handle, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionInFrustumBind, segment, worldPoint)
     }
 
     fun getCameraRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCameraRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCameraRidBind, segment)
     }
 
     fun getPyramidShapeRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getPyramidShapeRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getPyramidShapeRidBind, segment)
     }
 
     fun setCullMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCullMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCullMaskValueBind, segment, layerNumber, value)
     }
 
     fun getCullMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCullMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCullMaskValueBind, segment, layerNumber)
     }
 
     companion object {
@@ -313,15 +313,15 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
         const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Camera3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Camera3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Camera3D? =
-            if (handle.address() == 0L) null else Camera3D(handle)
+            if (handle.address() == 0L) null else Camera3D(GodotHandle(handle))
 
         // Instantiate a Camera3D (e.g. the debug free-camera).
         fun create(): Camera3D =
-            Camera3D(MemorySegment.ofAddress(IosGodot.constructObject("Camera3D")))
+            Camera3D(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("Camera3D"))))
 
         private const val PROJECT_RAY_NORMAL_HASH = 1718073306L
         private val projectRayNormalBind by lazy {

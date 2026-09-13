@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ShaderIncludeDB
  */
-class ShaderIncludeDB(handle: MemorySegment) : GodotObject(handle) {
+class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -43,11 +43,11 @@ class ShaderIncludeDB(handle: MemorySegment) : GodotObject(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ShaderIncludeDB? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ShaderIncludeDB? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ShaderIncludeDB? =
-            if (handle.address() == 0L) null else ShaderIncludeDB(handle)
+            if (handle.address() == 0L) null else ShaderIncludeDB(GodotHandle(handle))
 
         private const val LIST_BUILT_IN_INCLUDE_FILES_HASH = 2981934095L
         private val listBuiltInIncludeFilesBind by lazy {

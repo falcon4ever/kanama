@@ -13,14 +13,14 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicsServer3DRenderingServerHandler
  */
-class PhysicsServer3DRenderingServerHandler(handle: MemorySegment) : GodotObject(handle) {
+class PhysicsServer3DRenderingServerHandler(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Sets the position for the `SoftBody3D` vertex at the index specified by `vertex_id`.
      *
      * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_vertex
      */
     fun setVertex(vertexId: Int, vertex: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, handle, vertexId, vertex)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, segment, vertexId, vertex)
     }
 
     /**
@@ -29,7 +29,7 @@ class PhysicsServer3DRenderingServerHandler(handle: MemorySegment) : GodotObject
      * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_normal
      */
     fun setNormal(vertexId: Int, normal: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setNormalBind, handle, vertexId, normal)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setNormalBind, segment, vertexId, normal)
     }
 
     /**
@@ -38,16 +38,16 @@ class PhysicsServer3DRenderingServerHandler(handle: MemorySegment) : GodotObject
      * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_aabb
      */
     fun setAabb(aabb: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setAabbBind, segment, aabb)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsServer3DRenderingServerHandler? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsServer3DRenderingServerHandler? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsServer3DRenderingServerHandler? =
-            if (handle.address() == 0L) null else PhysicsServer3DRenderingServerHandler(handle)
+            if (handle.address() == 0L) null else PhysicsServer3DRenderingServerHandler(GodotHandle(handle))
 
         private const val SET_VERTEX_HASH = 1530502735L
         private val setVertexBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MainLoop
  */
-open class MainLoop(handle: MemorySegment) : GodotObject(handle) {
+open class MainLoop(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     object Signals {
@@ -32,11 +32,11 @@ open class MainLoop(handle: MemorySegment) : GodotObject(handle) {
         const val NOTIFICATION_APPLICATION_PIP_MODE_EXITED: Long = 2020L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MainLoop? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MainLoop? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MainLoop? =
-            if (handle.address() == 0L) null else MainLoop(handle)
+            if (handle.address() == 0L) null else MainLoop(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

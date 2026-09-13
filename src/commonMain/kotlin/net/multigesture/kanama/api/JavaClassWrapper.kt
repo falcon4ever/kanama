@@ -53,7 +53,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun createSamCallback(samInterface: String, callable: GodotCallable): JavaObject? {
-        return JavaObject.wrap(ObjectCalls.ptrcallWithStringCallableArgsRetObject(createSamCallbackBind, singleton, samInterface, callable.target.handle, callable.method))
+        return JavaObject.wrap(ObjectCalls.ptrcallWithStringCallableArgsRetObject(createSamCallbackBind, singleton, samInterface, callable.target.segment, callable.method))
     }
 
     /**
@@ -66,12 +66,12 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun createProxy(objectValue: GodotObject, interfaces: List<String>): JavaObject? {
-        return JavaObject.wrap(ObjectCalls.ptrcallWithObjectAndPackedStringListArgsRetObject(createProxyBind, singleton, objectValue.handle, interfaces))
+        return JavaObject.wrap(ObjectCalls.ptrcallWithObjectAndPackedStringListArgsRetObject(createProxyBind, singleton, objectValue.segment, interfaces))
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): JavaClassWrapper? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): JavaClassWrapper? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): JavaClassWrapper? =
         if (handle.address() == 0L) null else this

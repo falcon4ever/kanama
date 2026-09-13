@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: WebRTCPeerConnectionExtension
  */
-class WebRTCPeerConnectionExtension(handle: MemorySegment) : WebRTCPeerConnection(handle) {
+class WebRTCPeerConnectionExtension(handle: GodotHandle) : WebRTCPeerConnection(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WebRTCPeerConnectionExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WebRTCPeerConnectionExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WebRTCPeerConnectionExtension? =
-            if (handle.address() == 0L) null else WebRTCPeerConnectionExtension(handle)
+            if (handle.address() == 0L) null else WebRTCPeerConnectionExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

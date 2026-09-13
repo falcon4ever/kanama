@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PanoramaSkyMaterial
  */
-class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
+class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
     var panorama: Texture2D?
         @JvmName("panoramaProperty")
         get() = getPanorama()
@@ -37,7 +37,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setPanorama(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -47,7 +47,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getPanorama(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, segment))
     }
 
     /**
@@ -57,7 +57,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setFilteringEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilteringEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFilteringEnabledBind, segment, enabled)
     }
 
     /**
@@ -67,7 +67,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun isFilteringEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFilteringEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFilteringEnabledBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -87,16 +87,16 @@ class PanoramaSkyMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PanoramaSkyMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PanoramaSkyMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PanoramaSkyMaterial? =
-            if (handle.address() == 0L) null else PanoramaSkyMaterial(handle)
+            if (handle.address() == 0L) null else PanoramaSkyMaterial(GodotHandle(handle))
 
         private const val SET_PANORAMA_HASH = 4051416890L
         private val setPanoramaBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: SkeletonModification2DCCDIK
  */
-class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2D(handle) {
+class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(handle) {
     var targetNodepath: NodePath
         @JvmName("targetNodepathProperty")
         get() = getTargetNode()
@@ -39,7 +39,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -50,7 +50,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setTipNode(tipNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTipNodeBind, handle, tipNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setTipNodeBind, segment, tipNodepath)
     }
 
     /**
@@ -72,7 +72,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getTipNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTipNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTipNodeBind, segment)
     }
 
     /**
@@ -82,7 +82,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikDataChainLength(length: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCcdikDataChainLengthBind, handle, length)
+        ObjectCalls.ptrcallWithIntArg(setCcdikDataChainLengthBind, segment, length)
     }
 
     /**
@@ -92,7 +92,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikDataChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCcdikDataChainLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCcdikDataChainLengthBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setCcdikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setCcdikJointBone2dNodeBind, segment, jointIdx, bone2dNodepath)
     }
 
     /**
@@ -112,7 +112,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikJointBone2dNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getCcdikJointBone2dNodeBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getCcdikJointBone2dNodeBind, segment, jointIdx)
     }
 
     /**
@@ -123,7 +123,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setCcdikJointBoneIndexBind, handle, jointIdx, boneIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(setCcdikJointBoneIndexBind, segment, jointIdx, boneIdx)
     }
 
     /**
@@ -133,7 +133,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikJointBoneIndex(jointIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCcdikJointBoneIndexBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCcdikJointBoneIndexBind, segment, jointIdx)
     }
 
     /**
@@ -144,7 +144,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikJointRotateFromJoint(jointIdx: Int, rotateFromJoint: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointRotateFromJointBind, handle, jointIdx, rotateFromJoint)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointRotateFromJointBind, segment, jointIdx, rotateFromJoint)
     }
 
     /**
@@ -155,7 +155,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikJointRotateFromJoint(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointRotateFromJointBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointRotateFromJointBind, segment, jointIdx)
     }
 
     /**
@@ -166,7 +166,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikJointEnableConstraint(jointIdx: Int, enableConstraint: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointEnableConstraintBind, handle, jointIdx, enableConstraint)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointEnableConstraintBind, segment, jointIdx, enableConstraint)
     }
 
     /**
@@ -176,7 +176,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikJointEnableConstraint(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointEnableConstraintBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointEnableConstraintBind, segment, jointIdx)
     }
 
     /**
@@ -186,7 +186,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikJointConstraintAngleMin(jointIdx: Int, angleMin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMinBind, handle, jointIdx, angleMin)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMinBind, segment, jointIdx, angleMin)
     }
 
     /**
@@ -196,7 +196,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikJointConstraintAngleMin(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMinBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMinBind, segment, jointIdx)
     }
 
     /**
@@ -206,7 +206,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikJointConstraintAngleMax(jointIdx: Int, angleMax: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMaxBind, handle, jointIdx, angleMax)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setCcdikJointConstraintAngleMaxBind, segment, jointIdx, angleMax)
     }
 
     /**
@@ -216,7 +216,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikJointConstraintAngleMax(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMaxBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getCcdikJointConstraintAngleMaxBind, segment, jointIdx)
     }
 
     /**
@@ -229,7 +229,7 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun setCcdikJointConstraintAngleInvert(jointIdx: Int, invert: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointConstraintAngleInvertBind, handle, jointIdx, invert)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCcdikJointConstraintAngleInvertBind, segment, jointIdx, invert)
     }
 
     /**
@@ -240,16 +240,16 @@ class SkeletonModification2DCCDIK(handle: MemorySegment) : SkeletonModification2
      */
     fun getCcdikJointConstraintAngleInvert(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointConstraintAngleInvertBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCcdikJointConstraintAngleInvertBind, segment, jointIdx)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2DCCDIK? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2DCCDIK? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2DCCDIK? =
-            if (handle.address() == 0L) null else SkeletonModification2DCCDIK(handle)
+            if (handle.address() == 0L) null else SkeletonModification2DCCDIK(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L
         private val setTargetNodeBind by lazy {

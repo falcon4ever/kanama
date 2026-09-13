@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: VisualShader
  */
-class VisualShader(handle: MemorySegment) : Shader(handle) {
+class VisualShader(handle: GodotHandle) : Shader(handle) {
     var graphOffset: Vector2
         @JvmName("graphOffsetProperty")
         get() = getGraphOffset()
@@ -19,112 +19,112 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
 
     fun setMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
     }
 
     fun addNode(type: Long, node: VisualShaderNode?, position: Vector2, id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongObjectVector2IntArgs(addNodeBind, handle, type, node?.requireOpenHandle() ?: MemorySegment.NULL, position, id)
+        ObjectCalls.ptrcallWithLongObjectVector2IntArgs(addNodeBind, segment, type, node?.requireOpenHandle() ?: MemorySegment.NULL, position, id)
     }
 
     fun getNode(type: Long, id: Int): VisualShaderNode? {
         checkOpen()
-        return VisualShaderNode.wrap(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(getNodeBind, handle, type, id))
+        return VisualShaderNode.wrap(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(getNodeBind, segment, type, id))
     }
 
     fun setNodePosition(type: Long, id: Int, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongIntVector2Args(setNodePositionBind, handle, type, id, position)
+        ObjectCalls.ptrcallWithLongIntVector2Args(setNodePositionBind, segment, type, id, position)
     }
 
     fun getNodePosition(type: Long, id: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(getNodePositionBind, handle, type, id)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(getNodePositionBind, segment, type, id)
     }
 
     fun getNodeList(type: Long): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedInt32List(getNodeListBind, handle, type)
+        return ObjectCalls.ptrcallWithLongArgRetPackedInt32List(getNodeListBind, segment, type)
     }
 
     fun getValidNodeId(type: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getValidNodeIdBind, handle, type)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getValidNodeIdBind, segment, type)
     }
 
     fun removeNode(type: Long, id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(removeNodeBind, handle, type, id)
+        ObjectCalls.ptrcallWithLongAndIntArgs(removeNodeBind, segment, type, id)
     }
 
     fun replaceNode(type: Long, id: Int, newClass: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongIntStringNameArgs(replaceNodeBind, handle, type, id, newClass)
+        ObjectCalls.ptrcallWithLongIntStringNameArgs(replaceNodeBind, segment, type, id, newClass)
     }
 
     fun isNodeConnection(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(isNodeConnectionBind, handle, type, fromNode, fromPort, toNode, toPort)
+        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(isNodeConnectionBind, segment, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun canConnectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(canConnectNodesBind, handle, type, fromNode, fromPort, toNode, toPort)
+        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(canConnectNodesBind, segment, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun connectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(connectNodesBind, handle, type, fromNode, fromPort, toNode, toPort)
+        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(connectNodesBind, segment, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun disconnectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndFourIntArgs(disconnectNodesBind, handle, type, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.ptrcallWithLongAndFourIntArgs(disconnectNodesBind, segment, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun connectNodesForced(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndFourIntArgs(connectNodesForcedBind, handle, type, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.ptrcallWithLongAndFourIntArgs(connectNodesForcedBind, segment, type, fromNode, fromPort, toNode, toPort)
     }
 
     fun getNodeConnections(type: Long): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDictionaryList(getNodeConnectionsBind, handle, type)
+        return ObjectCalls.ptrcallWithLongArgRetDictionaryList(getNodeConnectionsBind, segment, type)
     }
 
     fun attachNodeToFrame(type: Long, id: Int, frame: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoIntArgs(attachNodeToFrameBind, handle, type, id, frame)
+        ObjectCalls.ptrcallWithLongAndTwoIntArgs(attachNodeToFrameBind, segment, type, id, frame)
     }
 
     fun detachNodeFromFrame(type: Long, id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(detachNodeFromFrameBind, handle, type, id)
+        ObjectCalls.ptrcallWithLongAndIntArgs(detachNodeFromFrameBind, segment, type, id)
     }
 
     fun addVarying(name: String, mode: Long, type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringTwoLongArgs(addVaryingBind, handle, name, mode, type)
+        ObjectCalls.ptrcallWithStringTwoLongArgs(addVaryingBind, segment, name, mode, type)
     }
 
     fun removeVarying(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeVaryingBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(removeVaryingBind, segment, name)
     }
 
     fun hasVarying(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasVaryingBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasVaryingBind, segment, name)
     }
 
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, segment, offset)
     }
 
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, segment)
     }
 
     companion object {
@@ -156,11 +156,11 @@ class VisualShader(handle: MemorySegment) : Shader(handle) {
         const val VARYING_TYPE_MAX: Long = 8L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShader? =
-            if (handle.address() == 0L) null else VisualShader(handle)
+            if (handle.address() == 0L) null else VisualShader(GodotHandle(handle))
 
         private const val SET_MODE_HASH = 3978014962L
         private val setModeBind by lazy {

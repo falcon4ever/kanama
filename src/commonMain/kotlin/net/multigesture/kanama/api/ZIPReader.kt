@@ -8,44 +8,44 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ZIPReader
  */
-class ZIPReader(handle: MemorySegment) : RefCounted(handle) {
+class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
     fun open(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(openBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(openBind, segment, path)
     }
 
     fun closeArchive(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, segment)
     }
 
     fun getFiles(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesBind, segment)
     }
 
     fun readFile(path: String, caseSensitive: Boolean = true): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetByteArray(readFileBind, handle, path, caseSensitive)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetByteArray(readFileBind, segment, path, caseSensitive)
     }
 
     fun fileExists(path: String, caseSensitive: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(fileExistsBind, handle, path, caseSensitive)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(fileExistsBind, segment, path, caseSensitive)
     }
 
     fun getCompressionLevel(path: String, caseSensitive: Boolean = true): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetInt(getCompressionLevelBind, handle, path, caseSensitive)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetInt(getCompressionLevelBind, segment, path, caseSensitive)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ZIPReader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ZIPReader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ZIPReader? =
-            if (handle.address() == 0L) null else ZIPReader(handle)
+            if (handle.address() == 0L) null else ZIPReader(GodotHandle(handle))
 
         private const val OPEN_HASH = 166001499L
         private val openBind by lazy {

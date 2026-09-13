@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventFromWindow
  */
-open class InputEventFromWindow(handle: MemorySegment) : InputEvent(handle) {
+open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
     var windowId: Long
         @JvmName("windowIdProperty")
         get() = getWindowId()
@@ -25,7 +25,7 @@ open class InputEventFromWindow(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setWindowId(id: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWindowIdBind, handle, id)
+        ObjectCalls.ptrcallWithLongArg(setWindowIdBind, segment, id)
     }
 
     /**
@@ -35,16 +35,16 @@ open class InputEventFromWindow(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getWindowId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWindowIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getWindowIdBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventFromWindow? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventFromWindow? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventFromWindow? =
-            if (handle.address() == 0L) null else InputEventFromWindow(handle)
+            if (handle.address() == 0L) null else InputEventFromWindow(GodotHandle(handle))
 
         private const val SET_WINDOW_ID_HASH = 1286410249L
         private val setWindowIdBind by lazy {

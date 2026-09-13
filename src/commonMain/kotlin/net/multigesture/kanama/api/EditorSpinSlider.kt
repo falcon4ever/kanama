@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorSpinSlider
  */
-class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
+class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
     var label: String
         @JvmName("labelProperty")
         get() = getLabel()
@@ -66,7 +66,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_label
      */
     fun setLabel(label: String) {
-        ObjectCalls.ptrcallWithStringArg(setLabelBind, handle, label)
+        ObjectCalls.ptrcallWithStringArg(setLabelBind, segment, label)
     }
 
     /**
@@ -75,7 +75,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.get_label
      */
     fun getLabel(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, segment)
     }
 
     /**
@@ -85,7 +85,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_suffix
      */
     fun setSuffix(suffix: String) {
-        ObjectCalls.ptrcallWithStringArg(setSuffixBind, handle, suffix)
+        ObjectCalls.ptrcallWithStringArg(setSuffixBind, segment, suffix)
     }
 
     /**
@@ -95,7 +95,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.get_suffix
      */
     fun getSuffix(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_read_only
      */
     fun setReadOnly(readOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, handle, readOnly)
+        ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, segment, readOnly)
     }
 
     /**
@@ -113,7 +113,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_read_only
      */
     fun isReadOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_flat
      */
     fun setFlat(flat: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, flat)
+        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, flat)
     }
 
     /**
@@ -131,7 +131,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_flat
      */
     fun isFlat(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_control_state
      */
     fun setControlState(state: Long) {
-        ObjectCalls.ptrcallWithLongArg(setControlStateBind, handle, state)
+        ObjectCalls.ptrcallWithLongArg(setControlStateBind, segment, state)
     }
 
     /**
@@ -149,7 +149,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.get_control_state
      */
     fun getControlState(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getControlStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getControlStateBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_hide_slider
      */
     fun setHideSlider(hideSlider: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideSliderBind, handle, hideSlider)
+        ObjectCalls.ptrcallWithBoolArg(setHideSliderBind, segment, hideSlider)
     }
 
     /**
@@ -167,7 +167,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_hiding_slider
      */
     fun isHidingSlider(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHidingSliderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHidingSliderBind, segment)
     }
 
     /**
@@ -182,7 +182,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_editing_integer
      */
     fun setEditingInteger(editingInteger: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditingIntegerBind, handle, editingInteger)
+        ObjectCalls.ptrcallWithBoolArg(setEditingIntegerBind, segment, editingInteger)
     }
 
     /**
@@ -197,7 +197,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_editing_integer
      */
     fun isEditingInteger(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntegerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntegerBind, segment)
     }
 
     /**
@@ -207,7 +207,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_deferred_drag_mode_enabled
      */
     fun setDeferredDragModeEnabled(enabled: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(setDeferredDragModeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDeferredDragModeEnabledBind, segment, enabled)
     }
 
     /**
@@ -217,7 +217,7 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_deferred_drag_mode_enabled
      */
     fun isDeferredDragModeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeferredDragModeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDeferredDragModeEnabledBind, segment)
     }
 
     object Signals {
@@ -234,11 +234,11 @@ class EditorSpinSlider(handle: MemorySegment) : Range(handle) {
         const val CONTROL_STATE_HIDE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorSpinSlider? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorSpinSlider? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorSpinSlider? =
-            if (handle.address() == 0L) null else EditorSpinSlider(handle)
+            if (handle.address() == 0L) null else EditorSpinSlider(GodotHandle(handle))
 
         private const val SET_LABEL_HASH = 83702148L
         private val setLabelBind by lazy {

@@ -52,7 +52,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun createCallback(callable: GodotCallable): JavaScriptObject? {
-        return JavaScriptObject.wrap(ObjectCalls.ptrcallWithCallableArgRetObject(createCallbackBind, singleton, callable.target.handle, callable.method))
+        return JavaScriptObject.wrap(ObjectCalls.ptrcallWithCallableArgRetObject(createCallbackBind, singleton, callable.target.segment, callable.method))
     }
 
     /**
@@ -146,8 +146,8 @@ object JavaScriptBridge {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): JavaScriptBridge? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): JavaScriptBridge? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): JavaScriptBridge? =
         if (handle.address() == 0L) null else this

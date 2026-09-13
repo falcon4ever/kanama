@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: GPUParticlesAttractorSphere3D
  */
-class GPUParticlesAttractorSphere3D(handle: MemorySegment) : GPUParticlesAttractor3D(handle) {
+class GPUParticlesAttractorSphere3D(handle: GodotHandle) : GPUParticlesAttractor3D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -25,7 +25,7 @@ class GPUParticlesAttractorSphere3D(handle: MemorySegment) : GPUParticlesAttract
      * Generated from Godot docs: GPUParticlesAttractorSphere3D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -35,16 +35,16 @@ class GPUParticlesAttractorSphere3D(handle: MemorySegment) : GPUParticlesAttract
      * Generated from Godot docs: GPUParticlesAttractorSphere3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GPUParticlesAttractorSphere3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GPUParticlesAttractorSphere3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GPUParticlesAttractorSphere3D? =
-            if (handle.address() == 0L) null else GPUParticlesAttractorSphere3D(handle)
+            if (handle.address() == 0L) null else GPUParticlesAttractorSphere3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

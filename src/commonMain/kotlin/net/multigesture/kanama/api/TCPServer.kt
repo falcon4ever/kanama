@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TCPServer
  */
-class TCPServer(handle: MemorySegment) : SocketServer(handle) {
+class TCPServer(handle: GodotHandle) : SocketServer(handle) {
     /**
      * Listen on the `port` binding to `bind_address`. If `bind_address` is set as `"*"` (default), the
      * server will listen on all available addresses (both IPv4 and IPv6). If `bind_address` is set as
@@ -23,7 +23,7 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
      */
     fun listen(port: Int, bindAddress: String = "*"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress)
     }
 
     /**
@@ -33,7 +33,7 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
     }
 
     /**
@@ -43,16 +43,16 @@ class TCPServer(handle: MemorySegment) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerTCP? {
         checkOpen()
-        return StreamPeerTCP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
+        return StreamPeerTCP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TCPServer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TCPServer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TCPServer? =
-            if (handle.address() == 0L) null else TCPServer(handle)
+            if (handle.address() == 0L) null else TCPServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 3167955072L
         private val listenBind by lazy {

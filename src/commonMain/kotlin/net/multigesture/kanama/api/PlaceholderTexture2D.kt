@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: PlaceholderTexture2D
  */
-class PlaceholderTexture2D(handle: MemorySegment) : Texture2D(handle) {
+class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
     /**
      * The texture's size (in pixels).
      *
@@ -19,16 +19,16 @@ class PlaceholderTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PlaceholderTexture2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaceholderTexture2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaceholderTexture2D? =
-            if (handle.address() == 0L) null else PlaceholderTexture2D(handle)
+            if (handle.address() == 0L) null else PlaceholderTexture2D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L
         private val setSizeBind by lazy {

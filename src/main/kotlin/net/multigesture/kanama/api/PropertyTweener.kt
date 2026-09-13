@@ -8,7 +8,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: PropertyTweener
  */
-class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(handle) {
+class PropertyTweener internal constructor(handle: GodotHandle) : Tweener(handle) {
 
     /**
      * Sets a custom initial value to the `PropertyTweener`.
@@ -19,7 +19,7 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
         checkOpen()
         // Must be the ptrcall path: wrapOrThis releases the +1 the return slot transfers,
         // and the Variant call path is ref-neutral (releasing there underflows the tweener).
-        return wrapOrThis(ObjectCalls.ptrcallWithVariantArgRetObject(fromBind, handle, value))
+        return wrapOrThis(ObjectCalls.ptrcallWithVariantArgRetObject(fromBind, segment, value))
     }
 
     /**
@@ -31,7 +31,7 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
      */
     fun fromCurrent(): PropertyTweener {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(fromCurrentBind, handle))
+        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(fromCurrentBind, segment))
     }
 
     /**
@@ -41,7 +41,7 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
      */
     fun asRelative(): PropertyTweener {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(asRelativeBind, handle))
+        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(asRelativeBind, segment))
     }
 
     /**
@@ -52,7 +52,7 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
      */
     fun setTrans(trans: Long): PropertyTweener {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, handle, trans))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans))
     }
 
     /**
@@ -63,7 +63,7 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
      */
     fun setEase(ease: Long): PropertyTweener {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease))
     }
 
     /**
@@ -80,8 +80,8 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
         return wrapOrThis(
             ObjectCalls.ptrcallWithCallableArgRetObject(
                 setCustomInterpolatorBind,
-                handle,
-                interpolatorMethod.target.handle,
+                segment,
+                interpolatorMethod.target.segment,
                 interpolatorMethod.method,
             ),
         )
@@ -95,17 +95,17 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
      */
     fun setDelay(delay: Double): PropertyTweener {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay))
+        return wrapOrThis(ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay))
     }
 
     private fun wrapOrThis(value: MemorySegment): PropertyTweener =
         if (value.address() == 0L) {
             this
-        } else if (value.address() == handle.address()) {
+        } else if (value.address() == segment.address()) {
             releaseHandle(value)
             this
         } else {
-            PropertyTweener(value)
+            PropertyTweener(GodotHandle(value))
         }
 
     companion object {
@@ -145,6 +145,6 @@ class PropertyTweener internal constructor(handle: MemorySegment) : Tweener(hand
         }
 
         internal fun wrap(handle: MemorySegment): PropertyTweener? =
-            if (handle.address() == 0L) null else PropertyTweener(handle)
+            if (handle.address() == 0L) null else PropertyTweener(GodotHandle(handle))
     }
 }

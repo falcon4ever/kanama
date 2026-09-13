@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: VisualShaderNodeTransformConstant
  */
-class VisualShaderNodeTransformConstant(handle: MemorySegment) : VisualShaderNodeConstant(handle) {
+class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
     var constant: Transform3D
         @JvmName("constantProperty")
         get() = getConstant()
@@ -19,21 +19,21 @@ class VisualShaderNodeTransformConstant(handle: MemorySegment) : VisualShaderNod
 
     fun setConstant(constant: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setConstantBind, handle, constant)
+        ObjectCalls.ptrcallWithTransform3DArg(setConstantBind, segment, constant)
     }
 
     fun getConstant(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getConstantBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getConstantBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTransformConstant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformConstant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTransformConstant? =
-            if (handle.address() == 0L) null else VisualShaderNodeTransformConstant(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTransformConstant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 2952846383L
         private val setConstantBind by lazy {

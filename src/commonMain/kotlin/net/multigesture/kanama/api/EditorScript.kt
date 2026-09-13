@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorScript
  */
-class EditorScript(handle: MemorySegment) : RefCounted(handle) {
+class EditorScript(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Makes `node` root of the currently opened scene. Only works if the scene is empty. If the `node`
      * is a scene instance, an inheriting scene will be created.
@@ -19,7 +19,7 @@ class EditorScript(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addRootNode(node: Node) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, segment, listOf(node.segment))
     }
 
     /**
@@ -30,7 +30,7 @@ class EditorScript(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getScene(): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSceneBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSceneBind, segment))
     }
 
     /**
@@ -40,16 +40,16 @@ class EditorScript(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEditorInterface(): EditorInterface? {
         checkOpen()
-        return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorInterfaceBind, handle))
+        return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorInterfaceBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorScript? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorScript? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorScript? =
-            if (handle.address() == 0L) null else EditorScript(handle)
+            if (handle.address() == 0L) null else EditorScript(GodotHandle(handle))
 
         private const val ADD_ROOT_NODE_HASH = 1078189570L
         private val addRootNodeBind by lazy {

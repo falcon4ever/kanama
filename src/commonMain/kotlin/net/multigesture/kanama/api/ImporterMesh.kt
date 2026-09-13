@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: ImporterMesh
  */
-class ImporterMesh(handle: MemorySegment) : Resource(handle) {
+class ImporterMesh(handle: GodotHandle) : Resource(handle) {
     /**
      * Adds name for a blend shape that will be added with `add_surface`. Must be called before surface
      * is added.
@@ -21,7 +21,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun addBlendShape(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addBlendShapeBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(addBlendShapeBind, segment, name)
     }
 
     /**
@@ -31,7 +31,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getBlendShapeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, segment)
     }
 
     /**
@@ -41,7 +41,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getBlendShapeName(blendShapeIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getBlendShapeNameBind, handle, blendShapeIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getBlendShapeNameBind, segment, blendShapeIdx)
     }
 
     /**
@@ -51,7 +51,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setBlendShapeMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode)
     }
 
     /**
@@ -61,7 +61,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getBlendShapeMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment)
     }
 
     /**
@@ -94,7 +94,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun addSurface(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, handle, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
     }
 
     /**
@@ -104,7 +104,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, segment)
     }
 
     /**
@@ -114,7 +114,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfacePrimitiveType(surfaceIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, handle, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, segment, surfaceIdx)
     }
 
     /**
@@ -124,7 +124,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceName(surfaceIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getSurfaceNameBind, handle, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getSurfaceNameBind, segment, surfaceIdx)
     }
 
     /**
@@ -135,7 +135,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceArrays(surfaceIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getSurfaceArraysBind, handle, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetArray(getSurfaceArraysBind, segment, surfaceIdx)
     }
 
     /**
@@ -145,7 +145,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(getSurfaceBlendShapeArraysBind, handle, surfaceIdx, blendShapeIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(getSurfaceBlendShapeArraysBind, segment, surfaceIdx, blendShapeIdx)
     }
 
     /**
@@ -155,7 +155,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceLodCount(surfaceIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSurfaceLodCountBind, handle, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSurfaceLodCountBind, segment, surfaceIdx)
     }
 
     /**
@@ -165,7 +165,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceLodSize(surfaceIdx: Int, lodIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getSurfaceLodSizeBind, handle, surfaceIdx, lodIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getSurfaceLodSizeBind, segment, surfaceIdx, lodIdx)
     }
 
     /**
@@ -175,7 +175,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceLodIndices(surfaceIdx: Int, lodIdx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(getSurfaceLodIndicesBind, handle, surfaceIdx, lodIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(getSurfaceLodIndicesBind, segment, surfaceIdx, lodIdx)
     }
 
     /**
@@ -185,7 +185,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceMaterial(surfaceIdx: Int): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceMaterialBind, handle, surfaceIdx))
+        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceMaterialBind, segment, surfaceIdx))
     }
 
     /**
@@ -195,7 +195,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceFormat(surfaceIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getSurfaceFormatBind, handle, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getSurfaceFormatBind, segment, surfaceIdx)
     }
 
     /**
@@ -205,7 +205,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setSurfaceName(surfaceIdx: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setSurfaceNameBind, handle, surfaceIdx, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setSurfaceNameBind, segment, surfaceIdx, name)
     }
 
     /**
@@ -215,7 +215,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setSurfaceMaterial(surfaceIdx: Int, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceMaterialBind, handle, surfaceIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceMaterialBind, segment, surfaceIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -232,7 +232,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun generateLods(normalMergeAngle: Double, normalSplitAngle: Double, boneTransformArray: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoDoubleArrayArgs(generateLodsBind, handle, normalMergeAngle, normalSplitAngle, boneTransformArray)
+        ObjectCalls.ptrcallWithTwoDoubleArrayArgs(generateLodsBind, segment, normalMergeAngle, normalSplitAngle, boneTransformArray)
     }
 
     /**
@@ -244,7 +244,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, handle, baseMesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, segment, baseMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -254,7 +254,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -264,7 +264,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setLightmapSizeHint(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, segment, size)
     }
 
     /**
@@ -274,7 +274,7 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getLightmapSizeHint(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, segment)
     }
 
     companion object {
@@ -308,11 +308,11 @@ class ImporterMesh(handle: MemorySegment) : Resource(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImporterMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImporterMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImporterMesh? =
-            if (handle.address() == 0L) null else ImporterMesh(handle)
+            if (handle.address() == 0L) null else ImporterMesh(GodotHandle(handle))
 
         private const val MERGE_IMPORTER_MESHES_HASH = 1030647649L
         private val mergeImporterMeshesBind by lazy {

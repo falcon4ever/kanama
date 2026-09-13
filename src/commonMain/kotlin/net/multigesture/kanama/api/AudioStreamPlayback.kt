@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AudioStreamPlayback
  */
-open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
+open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Associates `AudioSamplePlayback` to this `AudioStreamPlayback` for playing back the audio sample
      * of this stream.
@@ -20,7 +20,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSamplePlayback(playbackSample: AudioSamplePlayback?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSamplePlaybackBind, handle, listOf(playbackSample?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSamplePlaybackBind, segment, listOf(playbackSample?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -31,7 +31,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSamplePlayback(): AudioSamplePlayback? {
         checkOpen()
-        return AudioSamplePlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, handle))
+        return AudioSamplePlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, segment))
     }
 
     /**
@@ -44,7 +44,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun mixAudio(rateScale: Double, frames: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedVector2List(mixAudioBind, handle, rateScale, frames)
+        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedVector2List(mixAudioBind, segment, rateScale, frames)
     }
 
     /**
@@ -54,7 +54,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun start(fromPos: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(startBind, handle, fromPos)
+        ObjectCalls.ptrcallWithDoubleArg(startBind, segment, fromPos)
     }
 
     /**
@@ -64,7 +64,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun seek(time: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(seekBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(seekBind, segment, time)
     }
 
     /**
@@ -74,7 +74,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLoopCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLoopCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLoopCountBind, segment)
     }
 
     /**
@@ -94,7 +94,7 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPlaybackPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, segment)
     }
 
     /**
@@ -104,16 +104,16 @@ open class AudioStreamPlayback(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPlaying(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamPlayback? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamPlayback? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamPlayback? =
-            if (handle.address() == 0L) null else AudioStreamPlayback(handle)
+            if (handle.address() == 0L) null else AudioStreamPlayback(GodotHandle(handle))
 
         private const val SET_SAMPLE_PLAYBACK_HASH = 3195455091L
         private val setSamplePlaybackBind by lazy {

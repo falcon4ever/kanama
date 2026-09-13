@@ -820,9 +820,9 @@ IOS_MEMBER_SECTIONS = {
         check(!closed) { "RefCounted handle is closed" }
     }
 
-    override fun requireOpenHandle(): MemorySegment {
+    internal override fun requireOpenHandle(): MemorySegment {
         checkOpen()
-        return handle
+        return segment
     }
 
     override fun close() {
@@ -830,7 +830,7 @@ IOS_MEMBER_SECTIONS = {
         wrapperReferenceReleased = true
         if (unreference()) {
             closed = true
-            ObjectCalls.destroyObject(handle)
+            ObjectCalls.destroyObject(segment)
         }
     }
 """.strip("\n"),
@@ -840,34 +840,34 @@ IOS_MEMBER_SECTIONS = {
     // return type), so it is intentionally not duplicated here.
 
     fun getTree(): SceneTree =
-        SceneTree(MemorySegment.ofAddress(IosGodot.nodeGetTree(handle.address())))
+        SceneTree(GodotHandle(MemorySegment.ofAddress(IosGodot.nodeGetTree(segment.address()))))
 
     fun getNodeOrNull(path: String): Node? =
-        IosGodot.nodeGetNodeOrNull(handle.address(), path).takeIf { it != 0L }?.let {
-            Node(MemorySegment.ofAddress(it))
+        IosGodot.nodeGetNodeOrNull(segment.address(), path).takeIf { it != 0L }?.let {
+            Node(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
-    fun <T : Node> getAsOrNull(path: String, ctor: (MemorySegment) -> T): T? =
+    fun <T : Node> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
         getNodeOrNull(path)?.let { ctor(it.handle) }
 
-    fun <T : Node> getAsOrNull(path: NodePath, ctor: (MemorySegment) -> T): T? =
+    fun <T : Node> getAsOrNull(path: NodePath, ctor: (GodotHandle) -> T): T? =
         getAsOrNull(path.path, ctor)
 
-    fun <T : Node> requireAs(path: String, ctor: (MemorySegment) -> T): T =
+    fun <T : Node> requireAs(path: String, ctor: (GodotHandle) -> T): T =
         getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
 
-    fun <T : Node> requireAs(path: NodePath, ctor: (MemorySegment) -> T): T =
+    fun <T : Node> requireAs(path: NodePath, ctor: (GodotHandle) -> T): T =
         requireAs(path.path, ctor)
 
-    fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (MemorySegment) -> T): T? =
+    fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (GodotHandle) -> T): T? =
         getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
 
     // `open` so the hand-written SceneTree subclass (IosGodotApi.kt) can override createTween() with
     // the correct SceneTree.create_tween bind — the FPS F2 fix. Generated here so a regen preserves
     // the openness instead of silently dropping it (which would re-break the SIGSEGV path).
     open fun createTween(): Tween? =
-        IosGodot.nodeCreateTween(handle.address()).takeIf { it != 0L }?.let {
-            Tween(MemorySegment.ofAddress(it))
+        IosGodot.nodeCreateTween(segment.address()).takeIf { it != 0L }?.let {
+            Tween(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
     // String overloads for the NodePath-typed accessors (desktop exposes both), so demo code can
@@ -932,7 +932,7 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 
         // Instantiate a blank InputEventKey (for synthesizing input events / InputMap actions).
         fun create(): InputEventKey =
-            InputEventKey(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey")))
+            InputEventKey(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))))
 
         // Cast a generic event to InputEventKey (null if not), mirroring the desktop helper.
         fun from(value: GodotObject): InputEventKey? =
@@ -941,17 +941,17 @@ IOS_COMPANION_MEMBER_SECTIONS = {
     "Camera3D": """
         // Instantiate a Camera3D (e.g. the debug free-camera).
         fun create(): Camera3D =
-            Camera3D(MemorySegment.ofAddress(IosGodot.constructObject("Camera3D")))
+            Camera3D(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("Camera3D"))))
 """.strip("\n"),
     "SurfaceTool": """
         // Instantiate a SurfaceTool (RefCounted; used to build meshes procedurally).
         fun create(): SurfaceTool =
-            SurfaceTool(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool")))
+            SurfaceTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))))
 """.strip("\n"),
     "MeshDataTool": """
         // Instantiate a MeshDataTool (RefCounted; used to read mesh vertex/face data).
         fun create(): MeshDataTool =
-            MeshDataTool(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool")))
+            MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))))
 """.strip("\n"),
     "ArrayMesh": """
         // Downcast a Resource/Mesh to ArrayMesh (null if not), mirroring the desktop helper.
@@ -981,7 +981,7 @@ IOS_COMPANION_MEMBER_SECTIONS = {
     "LightmapGI": """
         // Instantiate a LightmapGI node.
         fun create(): LightmapGI =
-            LightmapGI(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI")))
+            LightmapGI(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI"))))
 """.strip("\n"),
     "Material": """
         // Downcast a Resource to Material (null if not), mirroring the desktop helper.
@@ -996,17 +996,17 @@ IOS_COMPANION_MEMBER_SECTIONS = {
     "ConfigFile": """
         // Instantiate a ConfigFile (RefCounted key/value store).
         fun create(): ConfigFile =
-            ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile")))
+            ConfigFile(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))))
 """.strip("\n"),
     "ENetMultiplayerPeer": """
         // Instantiate an ENetMultiplayerPeer.
         fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer")))
+            ENetMultiplayerPeer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer"))))
 """.strip("\n"),
     "ButtonGroup": """
         // Instantiate a ButtonGroup (RefCounted radio-button grouping).
         fun create(): ButtonGroup =
-            ButtonGroup(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup")))
+            ButtonGroup(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup"))))
 """.strip("\n"),
     "ShaderMaterial": """
         // Downcast a Resource to ShaderMaterial (null if not), mirroring the desktop helper.
@@ -1030,12 +1030,12 @@ SHARED_COMPANION_MEMBER_SECTIONS = {
     "Sprite2D": """
         @JvmStatic
         fun create(): Sprite2D =
-            Sprite2D(ObjectCalls.constructObject("Sprite2D"))
+            Sprite2D(GodotHandle(ObjectCalls.constructObject("Sprite2D")))
 """.strip("\n"),
     "FastNoiseLite": """
         @JvmStatic
         fun create(): FastNoiseLite =
-            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
+            FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite")))
 
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
@@ -1044,7 +1044,7 @@ SHARED_COMPANION_MEMBER_SECTIONS = {
     "OfflineMultiplayerPeer": """
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
+            OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer")))
 """.strip("\n"),
     "SphereMesh": """
         @JvmStatic
@@ -1094,7 +1094,7 @@ fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMach
     val playback = when (value) {
         is AnimationNodeStateMachinePlayback -> value
         // iOS decodes a Variant Object return as a raw handle (MemorySegment), not a wrapper.
-        is MemorySegment -> if (value.address() != 0L) AnimationNodeStateMachinePlayback(value) else null
+        is MemorySegment -> if (value.address() != 0L) AnimationNodeStateMachinePlayback(GodotHandle(value)) else null
         is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
         is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
         else -> null
@@ -1108,10 +1108,10 @@ fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMach
 // raw handle into a GodotObject so scripts can `hit["collider"] as? GodotObject`.
 fun PhysicsDirectSpaceState3D.intersectRay(parameters: PhysicsRayQueryParameters3D?): Map<String, Any?> {
     val query = parameters ?: return emptyMap()
-    val raw = ObjectCalls.ptrcallIntersectRay(intersectRayBind, handle, query.handle)
+    val raw = ObjectCalls.ptrcallIntersectRay(intersectRayBind, segment, query.segment)
     if (raw.isEmpty()) return emptyMap()
     val result = raw.toMutableMap()
-    (raw["collider"] as? MemorySegment)?.let { result["collider"] = GodotObject(it) }
+    (raw["collider"] as? MemorySegment)?.let { result["collider"] = GodotObject(GodotHandle(it)) }
     return result
 }
 
@@ -1125,7 +1125,7 @@ private val intersectRayBind by lazy {
 // Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
 fun PhysicsRayQueryParameters3D.setExclude(exclude: List<RID>) {
     checkOpen()
-    ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
+    ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
 }
 
 // Build a ray query: instantiate and set the scalar/Vector3 properties + the exclude RID-list
@@ -1136,7 +1136,7 @@ fun PhysicsRayQueryParameters3D.Companion.create(
     collisionMask: Long = 4294967295L,
     exclude: List<RID> = emptyList(),
 ): PhysicsRayQueryParameters3D {
-    val query = PhysicsRayQueryParameters3D(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))
+    val query = PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D")))
     query.from = from
     query.to = to
     query.collisionMask = collisionMask
@@ -1273,10 +1273,10 @@ NO_ARG_TYPED_OBJECT_LIST_HELPERS = {
 
 # iOS marshals typed-object-array returns through GENERIC helpers that take a
 # `fromHandle: (MemorySegment) -> T?` factory supplied by the api-layer caller (e.g.
-# Node::fromHandle). The DIRECT desktop/Android helpers (ptrcall*RetTypedNodeList etc.) return
+# Node::wrap). The DIRECT desktop/Android helpers (ptrcall*RetTypedNodeList etc.) return
 # List<Node> by referencing api.Node from binding.runtime — a dependency inversion the iOS island
 # can't take. So under IOS_AUDIT_ONLY, candidate_for remaps each direct helper to its arg-shape's
-# generic equivalent (render_method then appends `{wrapper}::fromHandle` automatically, since the
+# generic equivalent (render_method then appends `{wrapper}::wrap` automatically, since the
 # generic name is not in DIRECT_TYPED_OBJECT_LIST_HELPERS).
 IOS_DIRECT_TO_GENERIC_TYPED_OBJECT_LIST = {
     "ptrcallNoArgsRetTypedNodeList": "ptrcallNoArgsRetTypedObjectList",
@@ -1797,9 +1797,9 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     if shape is None:
         return False
     # Typed-object-array returns: candidate_for has already remapped the DIRECT List<Node> helper
-    # to its generic fromHandle equivalent on iOS. Admit only the arg-shapes whose generic helper is
+    # to its generic wrap equivalent on iOS. Admit only the arg-shapes whose generic helper is
     # hand-written + audited, and only when the element wrapper is itself emitted on iOS (else
-    # `{Element}::fromHandle` wouldn't compile). Detected by element (covers both the dedicated named
+    # `{Element}::wrap` wouldn't compile). Detected by element (covers both the dedicated named
     # kinds and the generic TypedObjectArray::X form), not by the kotlin_return token. Mirrors the
     # per-helper Packed*Array gates.
     typed_array_element = typed_object_array_element_any(method.logical_return_kind(object_types))
@@ -2067,13 +2067,13 @@ def object_arg_expression(
     is_nullable: bool,
     api_classes: dict[str, ApiClass],
 ) -> str:
-    """Marshal an Object parameter to its MemorySegment handle. [is_nullable] is the decision from
+    """Marshal an Object parameter to its raw MemorySegment. [is_nullable] is the decision from
     [object_param_is_nullable] so the type and the marshalling stay in lockstep. Resource-like keeps
     the closed-handle check via requireOpenHandle()."""
     resource_like = is_resource_like(type_name, api_classes)
     if resource_like:
         return f"{name}?.requireOpenHandle() ?: MemorySegment.NULL" if is_nullable else f"{name}.requireOpenHandle()"
-    return f"{name}?.handle ?: MemorySegment.NULL" if is_nullable else f"{name}.handle"
+    return f"{name}?.segment ?: MemorySegment.NULL" if is_nullable else f"{name}.segment"
 
 
 def call_argument_expressions(
@@ -2099,11 +2099,11 @@ def call_argument_expressions(
             )
             expressions.append(object_arg_expression(name, type_name, is_nullable, api_classes))
         elif logical_kind == "Callable":
-            expressions.extend([f"{name}.target.handle", f"{name}.method"])
+            expressions.extend([f"{name}.target.segment", f"{name}.method"])
         elif logical_kind == "Signal":
             # Signal args marshal as (owner handle, signal name); the helper constructs the
             # Signal builtin via Signal(Object, StringName) and destroys it after the call.
-            expressions.extend([f"{name}.owner.handle", f"{name}.name"])
+            expressions.extend([f"{name}.owner.segment", f"{name}.name"])
         else:
             expressions.append(name)
     return expressions
@@ -2202,12 +2202,14 @@ def render_method(
         return_wrapper = api_object_wrapper_type(return_array_element, wrapper_classes)
         if return_wrapper is None:
             raise ValueError(f"unsupported typed object-array wrapper for {return_array_element}")
-        call_args.append(f"{return_wrapper}::fromHandle")
+        # the ObjectCalls callback is `(MemorySegment) -> T?`: that is `wrap`, not the public
+        # `fromHandle(GodotHandle)` (task 104 step 1).
+        call_args.append(f"{return_wrapper}::wrap")
     if shape.function == "ptrcallWithObjectArgs":
-        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
+        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "segment")
         call = f"ObjectCalls.{shape.function}({bind_name}, {receiver}, listOf({', '.join(call_args)}))"
     else:
-        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
+        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "segment")
         call = f"ObjectCalls.{shape.function}({', '.join([bind_name, receiver, *call_args])})"
     return_expression = render_return_expression(call, method, wrapper_classes)
     return_kind = method.logical_return_kind(object_types)
@@ -2231,7 +2233,7 @@ def render_method(
                 f"    {visibility}fun {function_name}({params}){return_type_text} {{",
                 *guard_lines,
                 f"        val ret = {call}",
-                "        if (ret.address() == handle.address()) {",
+                "        if (ret.address() == segment.address()) {",
                 "            RefCounted.releaseHandle(ret)",
                 "            return this",
                 "        }",
@@ -2294,7 +2296,7 @@ def render_vararg_method(
         call_args = f"listOf({fixed_args}, *extraArgs)"
     else:
         call_args = "listOf(*extraArgs)"
-    receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "handle")
+    receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "segment")
     # A METHOD_CALL_SHAPE_OVERRIDES entry names an alternate dispatch helper (e.g.
     # callWithVariantArgsOwned for the owned return decode); default is callWithVariantArgs.
     override = METHOD_CALL_SHAPE_OVERRIDES.get((class_name, method.name))
@@ -2581,7 +2583,7 @@ def has_api_subclasses(class_name: str, api_classes: dict[str, ApiClass]) -> boo
 
 
 # Classes whose `fromHandle` must return a NON-NULL wrapper. KanamaScript's selfFactory is
-# `(MemorySegment) -> Self` (non-null); a `@ScriptClass(attachTo = "Resource")` script uses
+# `(GodotHandle) -> Self` (non-null); a `@ScriptClass(attachTo = "Resource")` script uses
 # `Resource::fromHandle` as that factory, so `Resource.fromHandle` must be `-> Resource`, not
 # `-> Resource?`. The nullable `wrap` helper stays for the general object-return path. Keep this
 # minimal — only classes actually used as a non-null script selfFactory base belong here.
@@ -2593,21 +2595,21 @@ def render_wrap_helpers(class_name: str) -> str:
     if class_name in NON_NULL_FROM_HANDLE_CLASSES:
         lines.extend(
             [
-                f"        fun fromHandle(handle: MemorySegment): {class_name} =",
+                f"        fun fromHandle(handle: GodotHandle): {class_name} =",
                 f"            {class_name}(handle)",
                 "",
                 f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
-                f"            if (handle.address() == 0L) null else {class_name}(handle)",
+                f"            if (handle.address() == 0L) null else {class_name}(GodotHandle(handle))",
             ],
         )
     else:
         lines.extend(
             [
-                f"        fun fromHandle(handle: MemorySegment): {class_name}? =",
-                "            wrap(handle)",
+                f"        fun fromHandle(handle: GodotHandle): {class_name}? =",
+                "            wrap(handle.segment)",
                 "",
                 f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
-                f"            if (handle.address() == 0L) null else {class_name}(handle)",
+                f"            if (handle.address() == 0L) null else {class_name}(GodotHandle(handle))",
             ],
         )
     return "\n".join(lines)
@@ -2617,8 +2619,8 @@ def render_singleton_wrap_helpers(class_name: str) -> str:
     lines = ["    @JvmStatic"] if _jvm_static() else []
     lines.extend(
         [
-            f"    fun fromHandle(handle: MemorySegment): {class_name}? =",
-            "        wrap(handle)",
+            f"    fun fromHandle(handle: GodotHandle): {class_name}? =",
+            "        wrap(handle.segment)",
             "",
             f"    internal fun wrap(handle: MemorySegment): {class_name}? =",
             "        if (handle.address() == 0L) null else this",
@@ -2869,7 +2871,7 @@ def render_draft(
                 "/**",
                 f" * Generated from Godot docs: {cls.name}",
                 " */",
-                f"{class_keyword} {cls.name}(handle: MemorySegment) : {parent}(handle){extra_supertypes} {{",
+                f"{class_keyword} {cls.name}(handle: GodotHandle) : {parent}(handle){extra_supertypes} {{",
                 "\n\n".join(body_sections),
                 "",
                 "    companion object {",
@@ -3693,7 +3695,7 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
             f"{c}.reinterpret<CPointed>()",
         )
     # Callable is handled directly in render_ios_helper: a Callable arg is expanded at the wrapper
-    # call site into (target.handle, method) — a (MemorySegment, String) pair — matching the desktop
+    # call site into (target.segment, method) — a (MemorySegment, String) pair — matching the desktop
     # helper contract, so it maps to TWO helper params, not one. See render_ios_helper.
     if kind in IOS_PACKED_ARGS:
         param_type, tag, helper = IOS_PACKED_ARGS[kind]
@@ -3958,7 +3960,7 @@ def render_ios_helper(
     cell_decls: list[str] = []
     for i, kind in enumerate(logical_args):
         if kind == "Callable":
-            # The wrapper call site expands a GodotCallable into (target.handle, method) — a
+            # The wrapper call site expands a GodotCallable into (target.segment, method) — a
             # (MemorySegment, String) pair (call_argument_expressions, same as desktop). Build a
             # KanamaIosCallableArgDesc from that pair; the PT_CALLABLE ptrcall dispatch constructs the
             # object+method Callable (constructor index 2) and destroys it after the call.

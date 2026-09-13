@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: NavigationLink3D
  */
-class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
+class NavigationLink3D(handle: GodotHandle) : Node3D(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = isEnabled()
@@ -62,7 +62,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -82,7 +82,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -102,7 +102,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -112,7 +112,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_bidirectional
      */
     fun setBidirectional(bidirectional: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBidirectionalBind, handle, bidirectional)
+        ObjectCalls.ptrcallWithBoolArg(setBidirectionalBind, segment, bidirectional)
     }
 
     /**
@@ -122,7 +122,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.is_bidirectional
      */
     fun isBidirectional(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBidirectionalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBidirectionalBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_navigation_layers
      */
     fun setNavigationLayers(navigationLayers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, handle, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -142,7 +142,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_navigation_layers
      */
     fun getNavigationLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_navigation_layer_value
      */
     fun setNavigationLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -162,7 +162,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_navigation_layer_value
      */
     fun getNavigationLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -173,7 +173,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_start_position
      */
     fun setStartPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setStartPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setStartPositionBind, segment, position)
     }
 
     /**
@@ -184,7 +184,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_start_position
      */
     fun getStartPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getStartPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getStartPositionBind, segment)
     }
 
     /**
@@ -195,7 +195,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_end_position
      */
     fun setEndPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setEndPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setEndPositionBind, segment, position)
     }
 
     /**
@@ -206,7 +206,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_end_position
      */
     fun getEndPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEndPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getEndPositionBind, segment)
     }
 
     /**
@@ -215,7 +215,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_global_start_position
      */
     fun setGlobalStartPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalStartPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalStartPositionBind, segment, position)
     }
 
     /**
@@ -224,7 +224,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_global_start_position
      */
     fun getGlobalStartPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalStartPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalStartPositionBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_global_end_position
      */
     fun setGlobalEndPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalEndPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalEndPositionBind, segment, position)
     }
 
     /**
@@ -242,7 +242,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_global_end_position
      */
     fun getGlobalEndPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalEndPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalEndPositionBind, segment)
     }
 
     /**
@@ -252,7 +252,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_enter_cost
      */
     fun setEnterCost(enterCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnterCostBind, handle, enterCost)
+        ObjectCalls.ptrcallWithDoubleArg(setEnterCostBind, segment, enterCost)
     }
 
     /**
@@ -262,7 +262,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_enter_cost
      */
     fun getEnterCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnterCostBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnterCostBind, segment)
     }
 
     /**
@@ -272,7 +272,7 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.set_travel_cost
      */
     fun setTravelCost(travelCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTravelCostBind, handle, travelCost)
+        ObjectCalls.ptrcallWithDoubleArg(setTravelCostBind, segment, travelCost)
     }
 
     /**
@@ -282,16 +282,16 @@ class NavigationLink3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationLink3D.get_travel_cost
      */
     fun getTravelCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTravelCostBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTravelCostBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationLink3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationLink3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationLink3D? =
-            if (handle.address() == 0L) null else NavigationLink3D(handle)
+            if (handle.address() == 0L) null else NavigationLink3D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L
         private val getRidBind by lazy {

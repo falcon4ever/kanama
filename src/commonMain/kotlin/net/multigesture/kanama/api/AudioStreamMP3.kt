@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: AudioStreamMP3
  */
-class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
     var data: ByteArray
         @JvmName("dataProperty")
         get() = getData()
@@ -48,62 +48,62 @@ class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
 
     fun setData(data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
+        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, segment, data)
     }
 
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment)
     }
 
     fun setLoop(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, enable)
     }
 
     fun hasLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
     }
 
     fun setLoopOffset(seconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLoopOffsetBind, handle, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(setLoopOffsetBind, segment, seconds)
     }
 
     fun getLoopOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLoopOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLoopOffsetBind, segment)
     }
 
     fun setBpm(bpm: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBpmBind, handle, bpm)
+        ObjectCalls.ptrcallWithDoubleArg(setBpmBind, segment, bpm)
     }
 
     fun getBpm(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, segment)
     }
 
     fun setBeatCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBeatCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setBeatCountBind, segment, count)
     }
 
     fun getBeatCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBeatCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBeatCountBind, segment)
     }
 
     fun setBarBeats(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBarBeatsBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setBarBeatsBind, segment, count)
     }
 
     fun getBarBeats(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBarBeatsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBarBeatsBind, segment)
     }
 
     companion object {
@@ -116,11 +116,11 @@ class AudioStreamMP3(handle: MemorySegment) : AudioStream(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamMP3? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamMP3? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamMP3? =
-            if (handle.address() == 0L) null else AudioStreamMP3(handle)
+            if (handle.address() == 0L) null else AudioStreamMP3(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 1674970313L
         private val loadFromBufferBind by lazy {

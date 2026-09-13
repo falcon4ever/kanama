@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ConvertTransformModifier3D
  */
-class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
+class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
     /**
      * Sets the operation of the remapping destination transform.
      *
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_transform_mode
      */
     fun setApplyTransformMode(index: Int, transformMode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyTransformModeBind, handle, index, transformMode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyTransformModeBind, segment, index, transformMode)
     }
 
     /**
@@ -26,7 +26,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_transform_mode
      */
     fun getApplyTransformMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getApplyTransformModeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getApplyTransformModeBind, segment, index)
     }
 
     /**
@@ -35,7 +35,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_axis
      */
     fun setApplyAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyAxisBind, handle, index, axis)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyAxisBind, segment, index, axis)
     }
 
     /**
@@ -44,7 +44,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_axis
      */
     fun getApplyAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getApplyAxisBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getApplyAxisBind, segment, index)
     }
 
     /**
@@ -53,7 +53,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_range_min
      */
     fun setApplyRangeMin(index: Int, rangeMin: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMinBind, handle, index, rangeMin)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMinBind, segment, index, rangeMin)
     }
 
     /**
@@ -62,7 +62,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_range_min
      */
     fun getApplyRangeMin(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMinBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMinBind, segment, index)
     }
 
     /**
@@ -71,7 +71,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_range_max
      */
     fun setApplyRangeMax(index: Int, rangeMax: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMaxBind, handle, index, rangeMax)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMaxBind, segment, index, rangeMax)
     }
 
     /**
@@ -80,7 +80,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_range_max
      */
     fun getApplyRangeMax(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMaxBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMaxBind, segment, index)
     }
 
     /**
@@ -89,7 +89,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_transform_mode
      */
     fun setReferenceTransformMode(index: Int, transformMode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTransformModeBind, handle, index, transformMode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTransformModeBind, segment, index, transformMode)
     }
 
     /**
@@ -98,7 +98,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_transform_mode
      */
     fun getReferenceTransformMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTransformModeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTransformModeBind, segment, index)
     }
 
     /**
@@ -107,7 +107,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_axis
      */
     fun setReferenceAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceAxisBind, handle, index, axis)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceAxisBind, segment, index, axis)
     }
 
     /**
@@ -116,7 +116,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_axis
      */
     fun getReferenceAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceAxisBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceAxisBind, segment, index)
     }
 
     /**
@@ -125,7 +125,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_range_min
      */
     fun setReferenceRangeMin(index: Int, rangeMin: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMinBind, handle, index, rangeMin)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMinBind, segment, index, rangeMin)
     }
 
     /**
@@ -134,7 +134,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_range_min
      */
     fun getReferenceRangeMin(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMinBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMinBind, segment, index)
     }
 
     /**
@@ -143,7 +143,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_range_max
      */
     fun setReferenceRangeMax(index: Int, rangeMax: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMaxBind, handle, index, rangeMax)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMaxBind, segment, index, rangeMax)
     }
 
     /**
@@ -152,7 +152,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_range_max
      */
     fun getReferenceRangeMax(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMaxBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMaxBind, segment, index)
     }
 
     /**
@@ -163,7 +163,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_relative
      */
     fun setRelative(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, segment, index, enabled)
     }
 
     /**
@@ -172,7 +172,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.is_relative
      */
     fun isRelative(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, segment, index)
     }
 
     /**
@@ -185,7 +185,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.set_additive
      */
     fun setAdditive(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAdditiveBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAdditiveBind, segment, index, enabled)
     }
 
     /**
@@ -194,7 +194,7 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
      * Generated from Godot docs: ConvertTransformModifier3D.is_additive
      */
     fun isAdditive(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
     }
 
     companion object {
@@ -203,11 +203,11 @@ class ConvertTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handl
         const val TRANSFORM_MODE_SCALE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConvertTransformModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConvertTransformModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConvertTransformModifier3D? =
-            if (handle.address() == 0L) null else ConvertTransformModifier3D(handle)
+            if (handle.address() == 0L) null else ConvertTransformModifier3D(GodotHandle(handle))
 
         private const val SET_APPLY_TRANSFORM_MODE_HASH = 1386463405L
         private val setApplyTransformModeBind by lazy {

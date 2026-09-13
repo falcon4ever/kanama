@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeScreenNormalWorldSpace
  */
-class VisualShaderNodeScreenNormalWorldSpace(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeScreenNormalWorldSpace(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeScreenNormalWorldSpace? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeScreenNormalWorldSpace? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeScreenNormalWorldSpace? =
-            if (handle.address() == 0L) null else VisualShaderNodeScreenNormalWorldSpace(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeScreenNormalWorldSpace(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: Container
  */
-open class Container(handle: MemorySegment) : Control(handle) {
+open class Container(handle: GodotHandle) : Control(handle) {
     var accessibilityRegion: Boolean
         @JvmName("accessibilityRegionProperty")
         get() = isAccessibilityRegion()
@@ -26,7 +26,7 @@ open class Container(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Container.queue_sort
      */
     fun queueSort() {
-        ObjectCalls.ptrcallNoArgs(queueSortBind, handle)
+        ObjectCalls.ptrcallNoArgs(queueSortBind, segment)
     }
 
     /**
@@ -36,7 +36,7 @@ open class Container(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Container.fit_child_in_rect
      */
     fun fitChildInRect(child: Control, rect: Rect2) {
-        ObjectCalls.ptrcallWithObjectAndRect2Arg(fitChildInRectBind, handle, child.handle, rect)
+        ObjectCalls.ptrcallWithObjectAndRect2Arg(fitChildInRectBind, segment, child.segment, rect)
     }
 
     /**
@@ -47,7 +47,7 @@ open class Container(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Container.set_accessibility_region
      */
     fun setAccessibilityRegion(region: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAccessibilityRegionBind, handle, region)
+        ObjectCalls.ptrcallWithBoolArg(setAccessibilityRegionBind, segment, region)
     }
 
     /**
@@ -58,7 +58,7 @@ open class Container(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Container.is_accessibility_region
      */
     fun isAccessibilityRegion(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAccessibilityRegionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAccessibilityRegionBind, segment)
     }
 
     object Signals {
@@ -71,11 +71,11 @@ open class Container(handle: MemorySegment) : Control(handle) {
         const val NOTIFICATION_SORT_CHILDREN: Long = 51L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Container? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Container? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Container? =
-            if (handle.address() == 0L) null else Container(handle)
+            if (handle.address() == 0L) null else Container(GodotHandle(handle))
 
         private const val QUEUE_SORT_HASH = 3218959716L
         private val queueSortBind by lazy {

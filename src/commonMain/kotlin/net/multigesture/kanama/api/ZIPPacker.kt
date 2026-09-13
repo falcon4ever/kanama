@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ZIPPacker
  */
-class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
+class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
     var compressionLevel: Int
         @JvmName("compressionLevelProperty")
         get() = getCompressionLevel()
@@ -18,42 +18,42 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
 
     fun open(path: String, append: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndLongArgRetLong(openBind, handle, path, append)
+        return ObjectCalls.ptrcallWithStringAndLongArgRetLong(openBind, segment, path, append)
     }
 
     fun setCompressionLevel(compressionLevel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCompressionLevelBind, handle, compressionLevel)
+        ObjectCalls.ptrcallWithIntArg(setCompressionLevelBind, segment, compressionLevel)
     }
 
     fun getCompressionLevel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCompressionLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCompressionLevelBind, segment)
     }
 
     fun addDirectory(path: String, permissions: Long = 493L, modifiedTime: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(addDirectoryBind, handle, path, permissions, modifiedTime)
+        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(addDirectoryBind, segment, path, permissions, modifiedTime)
     }
 
     fun startFile(path: String, permissions: Long = 420L, modifiedTime: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, handle, path, permissions, modifiedTime)
+        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, segment, path, permissions, modifiedTime)
     }
 
     fun writeFile(data: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(writeFileBind, handle, data)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(writeFileBind, segment, data)
     }
 
     fun closeFile(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(closeFileBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(closeFileBind, segment)
     }
 
     fun closeArchive(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, segment)
     }
 
     companion object {
@@ -66,11 +66,11 @@ class ZIPPacker(handle: MemorySegment) : RefCounted(handle) {
         const val COMPRESSION_BEST: Long = 9L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ZIPPacker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ZIPPacker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ZIPPacker? =
-            if (handle.address() == 0L) null else ZIPPacker(handle)
+            if (handle.address() == 0L) null else ZIPPacker(GodotHandle(handle))
 
         private const val OPEN_HASH = 1936816515L
         private val openBind by lazy {

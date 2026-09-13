@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ScriptExtension
  */
-class ScriptExtension(handle: MemorySegment) : Script(handle) {
+class ScriptExtension(handle: GodotHandle) : Script(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScriptExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScriptExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScriptExtension? =
-            if (handle.address() == 0L) null else ScriptExtension(handle)
+            if (handle.address() == 0L) null else ScriptExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

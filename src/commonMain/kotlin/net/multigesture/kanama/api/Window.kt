@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: Window
  */
-open class Window(handle: MemorySegment) : Viewport(handle) {
+open class Window(handle: GodotHandle) : Viewport(handle) {
     var mode: Long
         @JvmName("modeProperty")
         get() = getMode()
@@ -268,7 +268,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
+        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
     }
 
     /**
@@ -277,7 +277,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
     }
 
     /**
@@ -286,7 +286,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_initial_position
      */
     fun setInitialPosition(initialPosition: Long) {
-        ObjectCalls.ptrcallWithLongArg(setInitialPositionBind, handle, initialPosition)
+        ObjectCalls.ptrcallWithLongArg(setInitialPositionBind, segment, initialPosition)
     }
 
     /**
@@ -295,7 +295,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_initial_position
      */
     fun getInitialPosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getInitialPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getInitialPositionBind, segment)
     }
 
     /**
@@ -304,7 +304,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_current_screen
      */
     fun setCurrentScreen(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCurrentScreenBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(setCurrentScreenBind, segment, index)
     }
 
     /**
@@ -313,7 +313,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_current_screen
      */
     fun getCurrentScreen(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentScreenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentScreenBind, segment)
     }
 
     /**
@@ -326,7 +326,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_position
      */
     fun setPosition(position: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2iArg(setPositionBind, segment, position)
     }
 
     /**
@@ -339,7 +339,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_position
      */
     fun getPosition(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionBind, segment)
     }
 
     /**
@@ -349,7 +349,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.move_to_center
      */
     fun moveToCenter() {
-        ObjectCalls.ptrcallNoArgs(moveToCenterBind, handle)
+        ObjectCalls.ptrcallNoArgs(moveToCenterBind, segment)
     }
 
     /**
@@ -359,7 +359,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_size
      */
     fun setSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
     }
 
     /**
@@ -369,7 +369,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_size
      */
     fun getSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     /**
@@ -380,7 +380,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.reset_size
      */
     fun resetSize() {
-        ObjectCalls.ptrcallNoArgs(resetSizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetSizeBind, segment)
     }
 
     /**
@@ -390,7 +390,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_position_with_decorations
      */
     fun getPositionWithDecorations(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionWithDecorationsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionWithDecorationsBind, segment)
     }
 
     /**
@@ -400,7 +400,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_size_with_decorations
      */
     fun getSizeWithDecorations(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeWithDecorationsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeWithDecorationsBind, segment)
     }
 
     /**
@@ -410,7 +410,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_max_size
      */
     fun setMaxSize(maxSize: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setMaxSizeBind, handle, maxSize)
+        ObjectCalls.ptrcallWithVector2iArg(setMaxSizeBind, segment, maxSize)
     }
 
     /**
@@ -420,7 +420,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_max_size
      */
     fun getMaxSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getMaxSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getMaxSizeBind, segment)
     }
 
     /**
@@ -431,7 +431,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_min_size
      */
     fun setMinSize(minSize: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setMinSizeBind, handle, minSize)
+        ObjectCalls.ptrcallWithVector2iArg(setMinSizeBind, segment, minSize)
     }
 
     /**
@@ -442,7 +442,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_min_size
      */
     fun getMinSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getMinSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getMinSizeBind, segment)
     }
 
     /**
@@ -453,7 +453,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_mode
      */
     fun setMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
     }
 
     /**
@@ -464,7 +464,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_mode
      */
     fun getMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
     }
 
     /**
@@ -473,7 +473,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_flag
      */
     fun setFlag(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, handle, flag, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag, enabled)
     }
 
     /**
@@ -482,7 +482,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_flag
      */
     fun getFlag(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag)
     }
 
     /**
@@ -495,7 +495,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_hdr_output_requested
      */
     fun setHdrOutputRequested(requested: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHdrOutputRequestedBind, handle, requested)
+        ObjectCalls.ptrcallWithBoolArg(setHdrOutputRequestedBind, segment, requested)
     }
 
     /**
@@ -508,7 +508,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_hdr_output_requested
      */
     fun isHdrOutputRequested(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHdrOutputRequestedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHdrOutputRequestedBind, segment)
     }
 
     /**
@@ -524,7 +524,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_output_max_linear_value
      */
     fun getOutputMaxLinearValue(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOutputMaxLinearValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOutputMaxLinearValueBind, segment)
     }
 
     /**
@@ -533,7 +533,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_maximize_allowed
      */
     fun isMaximizeAllowed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMaximizeAllowedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMaximizeAllowedBind, segment)
     }
 
     /**
@@ -543,7 +543,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.request_attention
      */
     fun requestAttention() {
-        ObjectCalls.ptrcallNoArgs(requestAttentionBind, handle)
+        ObjectCalls.ptrcallNoArgs(requestAttentionBind, segment)
     }
 
     /**
@@ -554,7 +554,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_taskbar_progress_value
      */
     fun setTaskbarProgressValue(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTaskbarProgressValueBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setTaskbarProgressValueBind, segment, value)
     }
 
     /**
@@ -565,7 +565,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_taskbar_progress_state
      */
     fun setTaskbarProgressState(state: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTaskbarProgressStateBind, handle, state)
+        ObjectCalls.ptrcallWithLongArg(setTaskbarProgressStateBind, segment, state)
     }
 
     /**
@@ -574,7 +574,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.move_to_foreground
      */
     fun moveToForeground() {
-        ObjectCalls.ptrcallNoArgs(moveToForegroundBind, handle)
+        ObjectCalls.ptrcallNoArgs(moveToForegroundBind, segment)
     }
 
     /**
@@ -583,7 +583,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
     }
 
     /**
@@ -592,7 +592,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
     }
 
     /**
@@ -602,7 +602,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, handle)
+        ObjectCalls.ptrcallNoArgs(hideBind, segment)
     }
 
     /**
@@ -612,7 +612,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, handle)
+        ObjectCalls.ptrcallNoArgs(showBind, segment)
     }
 
     /**
@@ -625,7 +625,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_transient
      */
     fun setTransient(transient: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransientBind, handle, transient)
+        ObjectCalls.ptrcallWithBoolArg(setTransientBind, segment, transient)
     }
 
     /**
@@ -638,7 +638,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_transient
      */
     fun isTransient(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransientBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTransientBind, segment)
     }
 
     /**
@@ -650,7 +650,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_transient_to_focused
      */
     fun setTransientToFocused(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransientToFocusedBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setTransientToFocusedBind, segment, enable)
     }
 
     /**
@@ -662,7 +662,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_transient_to_focused
      */
     fun isTransientToFocused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransientToFocusedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTransientToFocusedBind, segment)
     }
 
     /**
@@ -672,7 +672,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_exclusive
      */
     fun setExclusive(exclusive: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExclusiveBind, handle, exclusive)
+        ObjectCalls.ptrcallWithBoolArg(setExclusiveBind, segment, exclusive)
     }
 
     /**
@@ -682,7 +682,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_exclusive
      */
     fun isExclusive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isExclusiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isExclusiveBind, segment)
     }
 
     /**
@@ -693,7 +693,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_unparent_when_invisible
      */
     fun setUnparentWhenInvisible(unparent: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUnparentWhenInvisibleBind, handle, unparent)
+        ObjectCalls.ptrcallWithBoolArg(setUnparentWhenInvisibleBind, segment, unparent)
     }
 
     /**
@@ -702,7 +702,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.can_draw
      */
     fun canDraw(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(canDrawBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(canDrawBind, segment)
     }
 
     /**
@@ -711,7 +711,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_focus
      */
     fun hasFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasFocusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasFocusBind, segment)
     }
 
     /**
@@ -720,7 +720,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.grab_focus
      */
     fun grabFocus() {
-        ObjectCalls.ptrcallNoArgs(grabFocusBind, handle)
+        ObjectCalls.ptrcallNoArgs(grabFocusBind, segment)
     }
 
     /**
@@ -732,7 +732,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.start_drag
      */
     fun startDrag() {
-        ObjectCalls.ptrcallNoArgs(startDragBind, handle)
+        ObjectCalls.ptrcallNoArgs(startDragBind, segment)
     }
 
     /**
@@ -743,7 +743,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.start_resize
      */
     fun startResize(edge: Long) {
-        ObjectCalls.ptrcallWithLongArg(startResizeBind, handle, edge)
+        ObjectCalls.ptrcallWithLongArg(startResizeBind, segment, edge)
     }
 
     /**
@@ -752,7 +752,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_ime_active
      */
     fun setImeActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setImeActiveBind, handle, active)
+        ObjectCalls.ptrcallWithBoolArg(setImeActiveBind, segment, active)
     }
 
     /**
@@ -761,7 +761,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_ime_position
      */
     fun setImePosition(position: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setImePositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2iArg(setImePositionBind, segment, position)
     }
 
     /**
@@ -770,7 +770,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_embedded
      */
     fun isEmbedded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddedBind, segment)
     }
 
     /**
@@ -781,7 +781,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_contents_minimum_size
      */
     fun getContentsMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getContentsMinimumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getContentsMinimumSizeBind, segment)
     }
 
     /**
@@ -790,7 +790,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_force_native
      */
     fun setForceNative(forceNative: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setForceNativeBind, handle, forceNative)
+        ObjectCalls.ptrcallWithBoolArg(setForceNativeBind, segment, forceNative)
     }
 
     /**
@@ -799,7 +799,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_force_native
      */
     fun getForceNative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getForceNativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getForceNativeBind, segment)
     }
 
     /**
@@ -819,7 +819,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_size
      */
     fun setContentScaleSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setContentScaleSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setContentScaleSizeBind, segment, size)
     }
 
     /**
@@ -839,7 +839,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_size
      */
     fun getContentScaleSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getContentScaleSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getContentScaleSizeBind, segment)
     }
 
     /**
@@ -848,7 +848,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_mode
      */
     fun setContentScaleMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setContentScaleModeBind, segment, mode)
     }
 
     /**
@@ -857,7 +857,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_mode
      */
     fun getContentScaleMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleModeBind, segment)
     }
 
     /**
@@ -867,7 +867,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_aspect
      */
     fun setContentScaleAspect(aspect: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleAspectBind, handle, aspect)
+        ObjectCalls.ptrcallWithLongArg(setContentScaleAspectBind, segment, aspect)
     }
 
     /**
@@ -877,7 +877,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_aspect
      */
     fun getContentScaleAspect(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleAspectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleAspectBind, segment)
     }
 
     /**
@@ -888,7 +888,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_stretch
      */
     fun setContentScaleStretch(stretch: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleStretchBind, handle, stretch)
+        ObjectCalls.ptrcallWithLongArg(setContentScaleStretchBind, segment, stretch)
     }
 
     /**
@@ -899,7 +899,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_stretch
      */
     fun getContentScaleStretch(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleStretchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleStretchBind, segment)
     }
 
     /**
@@ -910,7 +910,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_nonclient_area
      */
     fun setNonclientArea(area: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(setNonclientAreaBind, handle, area)
+        ObjectCalls.ptrcallWithRect2iArg(setNonclientAreaBind, segment, area)
     }
 
     /**
@@ -921,7 +921,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_nonclient_area
      */
     fun getNonclientArea(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getNonclientAreaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(getNonclientAreaBind, segment)
     }
 
     /**
@@ -930,7 +930,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_keep_title_visible
      */
     fun setKeepTitleVisible(titleVisible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeepTitleVisibleBind, handle, titleVisible)
+        ObjectCalls.ptrcallWithBoolArg(setKeepTitleVisibleBind, segment, titleVisible)
     }
 
     /**
@@ -939,7 +939,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_keep_title_visible
      */
     fun getKeepTitleVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getKeepTitleVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getKeepTitleVisibleBind, segment)
     }
 
     /**
@@ -949,7 +949,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_factor
      */
     fun setContentScaleFactor(factor: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setContentScaleFactorBind, handle, factor)
+        ObjectCalls.ptrcallWithDoubleArg(setContentScaleFactorBind, segment, factor)
     }
 
     /**
@@ -959,7 +959,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_factor
      */
     fun getContentScaleFactor(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getContentScaleFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getContentScaleFactorBind, segment)
     }
 
     /**
@@ -970,7 +970,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_mouse_passthrough_polygon
      */
     fun setMousePassthroughPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setMousePassthroughPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setMousePassthroughPolygonBind, segment, polygon)
     }
 
     /**
@@ -981,7 +981,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_mouse_passthrough_polygon
      */
     fun getMousePassthroughPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getMousePassthroughPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getMousePassthroughPolygonBind, segment)
     }
 
     /**
@@ -992,7 +992,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_wrap_controls
      */
     fun setWrapControls(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setWrapControlsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setWrapControlsBind, segment, enable)
     }
 
     /**
@@ -1003,7 +1003,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_wrapping_controls
      */
     fun isWrappingControls(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isWrappingControlsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isWrappingControlsBind, segment)
     }
 
     /**
@@ -1012,7 +1012,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.child_controls_changed
      */
     fun childControlsChanged() {
-        ObjectCalls.ptrcallNoArgs(childControlsChangedBind, handle)
+        ObjectCalls.ptrcallNoArgs(childControlsChangedBind, segment)
     }
 
     /**
@@ -1023,7 +1023,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_theme
      */
     fun setTheme(theme: Theme?) {
-        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, handle, listOf(theme?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1034,7 +1034,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme
      */
     fun getTheme(): Theme? {
-        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, handle))
+        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, segment))
     }
 
     /**
@@ -1044,7 +1044,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_theme_type_variation
      */
     fun setThemeTypeVariation(themeType: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setThemeTypeVariationBind, handle, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(setThemeTypeVariationBind, segment, themeType)
     }
 
     /**
@@ -1054,7 +1054,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_type_variation
      */
     fun getThemeTypeVariation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getThemeTypeVariationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getThemeTypeVariationBind, segment)
     }
 
     /**
@@ -1064,7 +1064,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.begin_bulk_theme_override
      */
     fun beginBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(beginBulkThemeOverrideBind, handle)
+        ObjectCalls.ptrcallNoArgs(beginBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1073,7 +1073,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.end_bulk_theme_override
      */
     fun endBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, handle)
+        ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1084,7 +1084,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_icon_override
      */
     fun addThemeIconOverride(name: String, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, segment, name, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -1096,7 +1096,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_stylebox_override
      */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, handle, name, stylebox?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, segment, name, stylebox?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -1107,7 +1107,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_font_override
      */
     fun addThemeFontOverride(name: String, font: Font?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, handle, name, font?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, segment, name, font?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -1118,7 +1118,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_font_size_override
      */
     fun addThemeFontSizeOverride(name: String, fontSize: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeFontSizeOverrideBind, handle, name, fontSize)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeFontSizeOverrideBind, segment, name, fontSize)
     }
 
     /**
@@ -1130,7 +1130,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_color_override
      */
     fun addThemeColorOverride(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringNameAndColorArg(addThemeColorOverrideBind, handle, name, color)
+        ObjectCalls.ptrcallWithStringNameAndColorArg(addThemeColorOverrideBind, segment, name, color)
     }
 
     /**
@@ -1141,7 +1141,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_constant_override
      */
     fun addThemeConstantOverride(name: String, constant: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeConstantOverrideBind, handle, name, constant)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeConstantOverrideBind, segment, name, constant)
     }
 
     /**
@@ -1151,7 +1151,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_icon_override
      */
     fun removeThemeIconOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeIconOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1161,7 +1161,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_stylebox_override
      */
     fun removeThemeStyleboxOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeStyleboxOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1171,7 +1171,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_font_override
      */
     fun removeThemeFontOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1181,7 +1181,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_font_size_override
      */
     fun removeThemeFontSizeOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontSizeOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1191,7 +1191,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_color_override
      */
     fun removeThemeColorOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeColorOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1201,7 +1201,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_constant_override
      */
     fun removeThemeConstantOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeConstantOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1211,7 +1211,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_icon
      */
     fun getThemeIcon(name: String, themeType: String = ""): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, handle, name, themeType))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, segment, name, themeType))
     }
 
     /**
@@ -1221,7 +1221,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_stylebox
      */
     fun getThemeStylebox(name: String, themeType: String = ""): StyleBox? {
-        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, handle, name, themeType))
+        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -1231,7 +1231,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_font
      */
     fun getThemeFont(name: String, themeType: String = ""): Font? {
-        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, handle, name, themeType))
+        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, segment, name, themeType))
     }
 
     /**
@@ -1241,7 +1241,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_font_size
      */
     fun getThemeFontSize(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeFontSizeBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1251,7 +1251,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_color
      */
     fun getThemeColor(name: String, themeType: String = ""): Color {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getThemeColorBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1261,7 +1261,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_constant
      */
     fun getThemeConstant(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeConstantBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1271,7 +1271,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_icon_override
      */
     fun hasThemeIconOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeIconOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1281,7 +1281,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_stylebox_override
      */
     fun hasThemeStyleboxOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeStyleboxOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1291,7 +1291,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font_override
      */
     fun hasThemeFontOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1301,7 +1301,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font_size_override
      */
     fun hasThemeFontSizeOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontSizeOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1311,7 +1311,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_color_override
      */
     fun hasThemeColorOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeColorOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1321,7 +1321,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_constant_override
      */
     fun hasThemeConstantOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeConstantOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1331,7 +1331,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_icon
      */
     fun hasThemeIcon(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeIconBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeIconBind, segment, name, themeType)
     }
 
     /**
@@ -1341,7 +1341,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_stylebox
      */
     fun hasThemeStylebox(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeStyleboxBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -1351,7 +1351,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font
      */
     fun hasThemeFont(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontBind, segment, name, themeType)
     }
 
     /**
@@ -1361,7 +1361,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font_size
      */
     fun hasThemeFontSize(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontSizeBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1371,7 +1371,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_color
      */
     fun hasThemeColor(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeColorBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1381,7 +1381,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_constant
      */
     fun hasThemeConstant(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeConstantBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1391,7 +1391,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_default_base_scale
      */
     fun getThemeDefaultBaseScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThemeDefaultBaseScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getThemeDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -1401,7 +1401,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_default_font
      */
     fun getThemeDefaultFont(): Font? {
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, handle))
+        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, segment))
     }
 
     /**
@@ -1411,7 +1411,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_default_font_size
      */
     fun getThemeDefaultFontSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getThemeDefaultFontSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getThemeDefaultFontSizeBind, segment)
     }
 
     /**
@@ -1420,7 +1420,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_window_id
      */
     fun getWindowId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getWindowIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWindowIdBind, segment)
     }
 
     /**
@@ -1429,7 +1429,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_accessibility_name
      */
     fun setAccessibilityName(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setAccessibilityNameBind, segment, name)
     }
 
     /**
@@ -1438,7 +1438,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_accessibility_name
      */
     fun getAccessibilityName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityNameBind, segment)
     }
 
     /**
@@ -1447,7 +1447,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_accessibility_description
      */
     fun setAccessibilityDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityDescriptionBind, handle, description)
+        ObjectCalls.ptrcallWithStringArg(setAccessibilityDescriptionBind, segment, description)
     }
 
     /**
@@ -1456,7 +1456,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_accessibility_description
      */
     fun getAccessibilityDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityDescriptionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityDescriptionBind, segment)
     }
 
     /**
@@ -1466,7 +1466,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_layout_direction
      */
     fun setLayoutDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction)
     }
 
     /**
@@ -1475,7 +1475,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.get_layout_direction
      */
     fun getLayoutDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment)
     }
 
     /**
@@ -1484,7 +1484,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_layout_rtl
      */
     fun isLayoutRtl(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLayoutRtlBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLayoutRtlBind, segment)
     }
 
     /**
@@ -1494,7 +1494,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_auto_translate
      */
     fun setAutoTranslate(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoTranslateBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoTranslateBind, segment, enable)
     }
 
     /**
@@ -1504,7 +1504,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_auto_translating
      */
     fun isAutoTranslating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTranslatingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTranslatingBind, segment)
     }
 
     /**
@@ -1513,7 +1513,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.set_use_font_oversampling
      */
     fun setUseFontOversampling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFontOversamplingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseFontOversamplingBind, segment, enable)
     }
 
     /**
@@ -1522,7 +1522,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.is_using_font_oversampling
      */
     fun isUsingFontOversampling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingFontOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingFontOversamplingBind, segment)
     }
 
     /**
@@ -1540,7 +1540,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup
      */
     fun popup(rect: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(popupBind, handle, rect)
+        ObjectCalls.ptrcallWithRect2iArg(popupBind, segment, rect)
     }
 
     /**
@@ -1550,7 +1550,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_on_parent
      */
     fun popupOnParent(parentRect: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(popupOnParentBind, handle, parentRect)
+        ObjectCalls.ptrcallWithRect2iArg(popupOnParentBind, segment, parentRect)
     }
 
     /**
@@ -1561,7 +1561,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_centered
      */
     fun popupCentered(minsize: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(popupCenteredBind, handle, minsize)
+        ObjectCalls.ptrcallWithVector2iArg(popupCenteredBind, segment, minsize)
     }
 
     /**
@@ -1572,7 +1572,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_centered_ratio
      */
     fun popupCenteredRatio(ratio: Double = 0.8) {
-        ObjectCalls.ptrcallWithDoubleArg(popupCenteredRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(popupCenteredRatioBind, segment, ratio)
     }
 
     /**
@@ -1583,7 +1583,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_centered_clamped
      */
     fun popupCenteredClamped(minsize: Vector2i, fallbackRatio: Double = 0.75) {
-        ObjectCalls.ptrcallWithVector2iAndDoubleArg(popupCenteredClampedBind, handle, minsize, fallbackRatio)
+        ObjectCalls.ptrcallWithVector2iAndDoubleArg(popupCenteredClampedBind, segment, minsize, fallbackRatio)
     }
 
     /**
@@ -1594,7 +1594,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive
      */
     fun popupExclusive(fromNode: Node, rect: Rect2i) {
-        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveBind, handle, fromNode.handle, rect)
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveBind, segment, fromNode.segment, rect)
     }
 
     /**
@@ -1605,7 +1605,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_on_parent
      */
     fun popupExclusiveOnParent(fromNode: Node, parentRect: Rect2i) {
-        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveOnParentBind, handle, fromNode.handle, parentRect)
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveOnParentBind, segment, fromNode.segment, parentRect)
     }
 
     /**
@@ -1616,7 +1616,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_centered
      */
     fun popupExclusiveCentered(fromNode: Node, minsize: Vector2i) {
-        ObjectCalls.ptrcallWithObjectAndVector2iArg(popupExclusiveCenteredBind, handle, fromNode.handle, minsize)
+        ObjectCalls.ptrcallWithObjectAndVector2iArg(popupExclusiveCenteredBind, segment, fromNode.segment, minsize)
     }
 
     /**
@@ -1627,7 +1627,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_centered_ratio
      */
     fun popupExclusiveCenteredRatio(fromNode: Node, ratio: Double = 0.8) {
-        ObjectCalls.ptrcallWithObjectAndDoubleArg(popupExclusiveCenteredRatioBind, handle, fromNode.handle, ratio)
+        ObjectCalls.ptrcallWithObjectAndDoubleArg(popupExclusiveCenteredRatioBind, segment, fromNode.segment, ratio)
     }
 
     /**
@@ -1638,7 +1638,7 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_centered_clamped
      */
     fun popupExclusiveCenteredClamped(fromNode: Node, minsize: Vector2i, fallbackRatio: Double = 0.75) {
-        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupExclusiveCenteredClampedBind, handle, fromNode.handle, minsize, fallbackRatio)
+        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupExclusiveCenteredClampedBind, segment, fromNode.segment, minsize, fallbackRatio)
     }
 
     object Signals {
@@ -1716,11 +1716,11 @@ open class Window(handle: MemorySegment) : Viewport(handle) {
         const val WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Window? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Window? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Window? =
-            if (handle.address() == 0L) null else Window(handle)
+            if (handle.address() == 0L) null else Window(GodotHandle(handle))
 
         private const val SET_TITLE_HASH = 83702148L
         private val setTitleBind by lazy {

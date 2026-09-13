@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: Joint3D
  */
-open class Joint3D(handle: MemorySegment) : Node3D(handle) {
+open class Joint3D(handle: GodotHandle) : Node3D(handle) {
     var nodeA: NodePath
         @JvmName("nodeAProperty")
         get() = getNodeA()
@@ -46,7 +46,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.set_node_a
      */
     fun setNodeA(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setNodeABind, handle, node)
+        ObjectCalls.ptrcallWithNodePathArg(setNodeABind, segment, node)
     }
 
     /**
@@ -57,7 +57,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.get_node_a
      */
     fun getNodeA(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeABind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeABind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.set_node_b
      */
     fun setNodeB(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setNodeBBind, handle, node)
+        ObjectCalls.ptrcallWithNodePathArg(setNodeBBind, segment, node)
     }
 
     /**
@@ -79,7 +79,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.get_node_b
      */
     fun getNodeB(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeBBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeBBind, segment)
     }
 
     /**
@@ -90,7 +90,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.set_solver_priority
      */
     fun setSolverPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSolverPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setSolverPriorityBind, segment, priority)
     }
 
     /**
@@ -101,7 +101,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.get_solver_priority
      */
     fun getSolverPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSolverPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSolverPriorityBind, segment)
     }
 
     /**
@@ -110,7 +110,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.set_exclude_nodes_from_collision
      */
     fun setExcludeNodesFromCollision(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExcludeNodesFromCollisionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setExcludeNodesFromCollisionBind, segment, enable)
     }
 
     /**
@@ -119,7 +119,7 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.get_exclude_nodes_from_collision
      */
     fun getExcludeNodesFromCollision(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeNodesFromCollisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeNodesFromCollisionBind, segment)
     }
 
     /**
@@ -128,16 +128,16 @@ open class Joint3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Joint3D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Joint3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Joint3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Joint3D? =
-            if (handle.address() == 0L) null else Joint3D(handle)
+            if (handle.address() == 0L) null else Joint3D(GodotHandle(handle))
 
         private const val SET_NODE_A_HASH = 1348162250L
         private val setNodeABind by lazy {

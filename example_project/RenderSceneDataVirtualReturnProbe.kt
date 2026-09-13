@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Vector4
 
@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector4
  * virtual table.
  */
 @ScriptClass(attachTo = "RenderSceneDataExtension")
-class RenderSceneDataVirtualReturnProbe(val godotObject: MemorySegment) {
+class RenderSceneDataVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // Projection value-type return (distinct per-column values so the smoke
   // can assert column order survived).

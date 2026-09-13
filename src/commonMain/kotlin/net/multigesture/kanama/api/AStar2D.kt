@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AStar2D
  */
-class AStar2D(handle: MemorySegment) : RefCounted(handle) {
+class AStar2D(handle: GodotHandle) : RefCounted(handle) {
     var neighborFilterEnabled: Boolean
         @JvmName("neighborFilterEnabledProperty")
         get() = isNeighborFilterEnabled()
@@ -27,7 +27,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAvailablePointId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAvailablePointIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAvailablePointIdBind, segment)
     }
 
     /**
@@ -41,7 +41,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addPoint(id: Long, position: Vector2, weightScale: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongVector2AndDoubleArgs(addPointBind, handle, id, position, weightScale)
+        ObjectCalls.ptrcallWithLongVector2AndDoubleArgs(addPointBind, segment, id, position, weightScale)
     }
 
     /**
@@ -51,7 +51,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointPosition(id: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(getPointPositionBind, handle, id)
+        return ObjectCalls.ptrcallWithLongArgRetVector2(getPointPositionBind, segment, id)
     }
 
     /**
@@ -61,7 +61,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPointPosition(id: Long, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector2Arg(setPointPositionBind, handle, id, position)
+        ObjectCalls.ptrcallWithLongAndVector2Arg(setPointPositionBind, segment, id, position)
     }
 
     /**
@@ -71,7 +71,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointWeightScale(id: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getPointWeightScaleBind, handle, id)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getPointWeightScaleBind, segment, id)
     }
 
     /**
@@ -83,7 +83,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPointWeightScale(id: Long, weightScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setPointWeightScaleBind, handle, id, weightScale)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setPointWeightScaleBind, segment, id, weightScale)
     }
 
     /**
@@ -93,7 +93,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun removePoint(id: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(removePointBind, handle, id)
+        ObjectCalls.ptrcallWithLongArg(removePointBind, segment, id)
     }
 
     /**
@@ -103,7 +103,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasPoint(id: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasPointBind, handle, id)
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasPointBind, segment, id)
     }
 
     /**
@@ -113,7 +113,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointConnections(id: Long): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedInt64List(getPointConnectionsBind, handle, id)
+        return ObjectCalls.ptrcallWithLongArgRetPackedInt64List(getPointConnectionsBind, segment, id)
     }
 
     /**
@@ -123,7 +123,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointIds(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPointIdsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPointIdsBind, segment)
     }
 
     /**
@@ -133,7 +133,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setNeighborFilterEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeighborFilterEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setNeighborFilterEnabledBind, segment, enabled)
     }
 
     /**
@@ -143,7 +143,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isNeighborFilterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNeighborFilterEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNeighborFilterEnabledBind, segment)
     }
 
     /**
@@ -153,7 +153,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPointDisabled(id: Long, disabled: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setPointDisabledBind, handle, id, disabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setPointDisabledBind, segment, id, disabled)
     }
 
     /**
@@ -163,7 +163,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPointDisabled(id: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isPointDisabledBind, handle, id)
+        return ObjectCalls.ptrcallWithLongArgRetBool(isPointDisabledBind, segment, id)
     }
 
     /**
@@ -174,7 +174,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun connectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(connectPointsBind, handle, id, toId, bidirectional)
+        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(connectPointsBind, segment, id, toId, bidirectional)
     }
 
     /**
@@ -185,7 +185,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun disconnectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(disconnectPointsBind, handle, id, toId, bidirectional)
+        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(disconnectPointsBind, segment, id, toId, bidirectional)
     }
 
     /**
@@ -196,7 +196,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun arePointsConnected(id: Long, toId: Long, bidirectional: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(arePointsConnectedBind, handle, id, toId, bidirectional)
+        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(arePointsConnectedBind, segment, id, toId, bidirectional)
     }
 
     /**
@@ -206,7 +206,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPointCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPointCountBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointCapacity(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPointCapacityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPointCapacityBind, segment)
     }
 
     /**
@@ -228,7 +228,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun reserveSpace(numNodes: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(reserveSpaceBind, handle, numNodes)
+        ObjectCalls.ptrcallWithLongArg(reserveSpaceBind, segment, numNodes)
     }
 
     /**
@@ -238,7 +238,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getClosestPoint(toPosition: Vector2, includeDisabled: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2AndBoolArgRetLong(getClosestPointBind, handle, toPosition, includeDisabled)
+        return ObjectCalls.ptrcallWithVector2AndBoolArgRetLong(getClosestPointBind, segment, toPosition, includeDisabled)
     }
 
     /**
@@ -262,7 +262,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getClosestPositionInSegment(toPosition: Vector2): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPositionInSegmentBind, handle, toPosition)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPositionInSegmentBind, segment, toPosition)
     }
 
     /**
@@ -280,7 +280,7 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(getPointPathBind, handle, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(getPointPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     /**
@@ -296,16 +296,16 @@ class AStar2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIdPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(getIdPathBind, handle, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(getIdPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AStar2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AStar2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AStar2D? =
-            if (handle.address() == 0L) null else AStar2D(handle)
+            if (handle.address() == 0L) null else AStar2D(GodotHandle(handle))
 
         private const val GET_AVAILABLE_POINT_ID_HASH = 3905245786L
         private val getAvailablePointIdBind by lazy {

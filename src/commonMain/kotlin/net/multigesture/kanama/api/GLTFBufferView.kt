@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFBufferView
  */
-class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
+class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
     var buffer: Int
         @JvmName("bufferProperty")
         get() = getBuffer()
@@ -48,72 +48,72 @@ class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
 
     fun loadBufferViewData(state: GLTFState?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(loadBufferViewDataBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(loadBufferViewDataBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
     }
 
     fun getBuffer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBufferBind, segment)
     }
 
     fun setBuffer(buffer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBufferBind, handle, buffer)
+        ObjectCalls.ptrcallWithIntArg(setBufferBind, segment, buffer)
     }
 
     fun getByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, segment)
     }
 
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, handle, byteOffset)
+        ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, segment, byteOffset)
     }
 
     fun getByteLength(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getByteLengthBind, segment)
     }
 
     fun setByteLength(byteLength: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteLengthBind, handle, byteLength)
+        ObjectCalls.ptrcallWithLongArg(setByteLengthBind, segment, byteLength)
     }
 
     fun getByteStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteStrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getByteStrideBind, segment)
     }
 
     fun setByteStride(byteStride: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteStrideBind, handle, byteStride)
+        ObjectCalls.ptrcallWithLongArg(setByteStrideBind, segment, byteStride)
     }
 
     fun getIndices(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIndicesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIndicesBind, segment)
     }
 
     fun setIndices(indices: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIndicesBind, handle, indices)
+        ObjectCalls.ptrcallWithBoolArg(setIndicesBind, segment, indices)
     }
 
     fun getVertexAttributes(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getVertexAttributesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getVertexAttributesBind, segment)
     }
 
     fun setVertexAttributes(isAttributes: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVertexAttributesBind, handle, isAttributes)
+        ObjectCalls.ptrcallWithBoolArg(setVertexAttributesBind, segment, isAttributes)
     }
 
     companion object {
@@ -122,11 +122,11 @@ class GLTFBufferView(handle: MemorySegment) : Resource(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFBufferView? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFBufferView? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFBufferView? =
-            if (handle.address() == 0L) null else GLTFBufferView(handle)
+            if (handle.address() == 0L) null else GLTFBufferView(GodotHandle(handle))
 
         private const val LOAD_BUFFER_VIEW_DATA_HASH = 3945446907L
         private val loadBufferViewDataBind by lazy {

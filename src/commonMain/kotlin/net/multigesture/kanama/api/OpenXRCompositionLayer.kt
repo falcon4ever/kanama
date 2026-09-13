@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: OpenXRCompositionLayer
  */
-open class OpenXRCompositionLayer(handle: MemorySegment) : Node3D(handle) {
+open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
     val layerViewport: SubViewport?
         @JvmName("layerViewportProperty")
         get() = getLayerViewport()
@@ -127,167 +127,167 @@ open class OpenXRCompositionLayer(handle: MemorySegment) : Node3D(handle) {
         set(value) = setBorderColor(value)
 
     fun setLayerViewport(viewport: SubViewport) {
-        ObjectCalls.ptrcallWithObjectArgs(setLayerViewportBind, handle, listOf(viewport.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setLayerViewportBind, segment, listOf(viewport.segment))
     }
 
     fun getLayerViewport(): SubViewport? {
-        return SubViewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLayerViewportBind, handle))
+        return SubViewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLayerViewportBind, segment))
     }
 
     fun setUseAndroidSurface(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAndroidSurfaceBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseAndroidSurfaceBind, segment, enable)
     }
 
     fun getUseAndroidSurface(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseAndroidSurfaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseAndroidSurfaceBind, segment)
     }
 
     fun setAndroidSurfaceSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setAndroidSurfaceSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setAndroidSurfaceSizeBind, segment, size)
     }
 
     fun getAndroidSurfaceSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getAndroidSurfaceSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getAndroidSurfaceSizeBind, segment)
     }
 
     fun setEnableHolePunch(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableHolePunchBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableHolePunchBind, segment, enable)
     }
 
     fun getEnableHolePunch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableHolePunchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableHolePunchBind, segment)
     }
 
     fun setSortOrder(order: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSortOrderBind, handle, order)
+        ObjectCalls.ptrcallWithIntArg(setSortOrderBind, segment, order)
     }
 
     fun getSortOrder(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSortOrderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSortOrderBind, segment)
     }
 
     fun setAlphaBlend(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAlphaBlendBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAlphaBlendBind, segment, enabled)
     }
 
     fun getAlphaBlend(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAlphaBlendBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAlphaBlendBind, segment)
     }
 
     fun getAndroidSurface(): JavaObject? {
-        return JavaObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAndroidSurfaceBind, handle))
+        return JavaObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAndroidSurfaceBind, segment))
     }
 
     fun isNativelySupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNativelySupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNativelySupportedBind, segment)
     }
 
     fun isProtectedContent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProtectedContentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProtectedContentBind, segment)
     }
 
     fun setProtectedContent(protectedContent: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProtectedContentBind, handle, protectedContent)
+        ObjectCalls.ptrcallWithBoolArg(setProtectedContentBind, segment, protectedContent)
     }
 
     fun setMinFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, mode)
     }
 
     fun getMinFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment)
     }
 
     fun setMagFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, mode)
     }
 
     fun getMagFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment)
     }
 
     fun setMipmapMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMipmapModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMipmapModeBind, segment, mode)
     }
 
     fun getMipmapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMipmapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMipmapModeBind, segment)
     }
 
     fun setHorizontalWrap(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalWrapBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalWrapBind, segment, mode)
     }
 
     fun getHorizontalWrap(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalWrapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalWrapBind, segment)
     }
 
     fun setVerticalWrap(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalWrapBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVerticalWrapBind, segment, mode)
     }
 
     fun getVerticalWrap(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalWrapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalWrapBind, segment)
     }
 
     fun setRedSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRedSwizzleBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setRedSwizzleBind, segment, mode)
     }
 
     fun getRedSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRedSwizzleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRedSwizzleBind, segment)
     }
 
     fun setGreenSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGreenSwizzleBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setGreenSwizzleBind, segment, mode)
     }
 
     fun getGreenSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGreenSwizzleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getGreenSwizzleBind, segment)
     }
 
     fun setBlueSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBlueSwizzleBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlueSwizzleBind, segment, mode)
     }
 
     fun getBlueSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlueSwizzleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlueSwizzleBind, segment)
     }
 
     fun setAlphaSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaSwizzleBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setAlphaSwizzleBind, segment, mode)
     }
 
     fun getAlphaSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaSwizzleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaSwizzleBind, segment)
     }
 
     fun setMaxAnisotropy(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxAnisotropyBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxAnisotropyBind, segment, value)
     }
 
     fun getMaxAnisotropy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxAnisotropyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxAnisotropyBind, segment)
     }
 
     fun setBorderColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, segment, color)
     }
 
     fun getBorderColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, segment)
     }
 
     fun setEyeVisibility(eyeVisibility: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEyeVisibilityBind, handle, eyeVisibility)
+        ObjectCalls.ptrcallWithLongArg(setEyeVisibilityBind, segment, eyeVisibility)
     }
 
     fun getEyeVisibility(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEyeVisibilityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEyeVisibilityBind, segment)
     }
 
     fun intersectsRay(origin: Vector3, direction: Vector3): Vector2 {
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetVector2(intersectsRayBind, handle, origin, direction)
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetVector2(intersectsRayBind, segment, origin, direction)
     }
 
     companion object {
@@ -313,11 +313,11 @@ open class OpenXRCompositionLayer(handle: MemorySegment) : Node3D(handle) {
         const val EYE_VISIBILITY_RIGHT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRCompositionLayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRCompositionLayer? =
-            if (handle.address() == 0L) null else OpenXRCompositionLayer(handle)
+            if (handle.address() == 0L) null else OpenXRCompositionLayer(GodotHandle(handle))
 
         private const val SET_LAYER_VIEWPORT_HASH = 3888077664L
         private val setLayerViewportBind by lazy {

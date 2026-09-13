@@ -12,14 +12,14 @@ import net.multigesture.kanama.types.Transform2D
  *
  * Generated from Godot docs: Skeleton2D
  */
-class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
+class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
     /**
      * Returns the number of `Bone2D` nodes in the node hierarchy parented by Skeleton2D.
      *
      * Generated from Godot docs: Skeleton2D.get_bone_count
      */
     fun getBoneCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, segment)
     }
 
     /**
@@ -30,7 +30,7 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_bone
      */
     fun getBone(idx: Int): Bone2D? {
-        return Bone2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBoneBind, handle, idx))
+        return Bone2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBoneBind, segment, idx))
     }
 
     /**
@@ -39,7 +39,7 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_skeleton
      */
     fun getSkeleton(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, segment)
     }
 
     /**
@@ -48,7 +48,7 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.set_modification_stack
      */
     fun setModificationStack(modificationStack: SkeletonModificationStack2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setModificationStackBind, handle, listOf(modificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setModificationStackBind, segment, listOf(modificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -57,7 +57,7 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_modification_stack
      */
     fun getModificationStack(): SkeletonModificationStack2D? {
-        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, handle))
+        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, segment))
     }
 
     /**
@@ -67,7 +67,7 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.execute_modifications
      */
     fun executeModifications(delta: Double, executionMode: Int) {
-        ObjectCalls.ptrcallWithDoubleAndIntArgs(executeModificationsBind, handle, delta, executionMode)
+        ObjectCalls.ptrcallWithDoubleAndIntArgs(executeModificationsBind, segment, delta, executionMode)
     }
 
     /**
@@ -79,7 +79,7 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.set_bone_local_pose_override
      */
     fun setBoneLocalPoseOverride(boneIdx: Int, overridePose: Transform2D, strength: Double, persistent: Boolean) {
-        ObjectCalls.ptrcallWithIntTransform2DDoubleBoolArgs(setBoneLocalPoseOverrideBind, handle, boneIdx, overridePose, strength, persistent)
+        ObjectCalls.ptrcallWithIntTransform2DDoubleBoolArgs(setBoneLocalPoseOverrideBind, segment, boneIdx, overridePose, strength, persistent)
     }
 
     /**
@@ -88,7 +88,7 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_bone_local_pose_override
      */
     fun getBoneLocalPoseOverride(boneIdx: Int): Transform2D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getBoneLocalPoseOverrideBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getBoneLocalPoseOverrideBind, segment, boneIdx)
     }
 
     object Signals {
@@ -97,11 +97,11 @@ class Skeleton2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Skeleton2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Skeleton2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Skeleton2D? =
-            if (handle.address() == 0L) null else Skeleton2D(handle)
+            if (handle.address() == 0L) null else Skeleton2D(GodotHandle(handle))
 
         private const val GET_BONE_COUNT_HASH = 3905245786L
         private val getBoneCountBind by lazy {

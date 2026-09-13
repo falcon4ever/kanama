@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: LightmapProbe
  */
-class LightmapProbe(handle: MemorySegment) : Node3D(handle) {
+class LightmapProbe(handle: GodotHandle) : Node3D(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LightmapProbe? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LightmapProbe? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LightmapProbe? =
-            if (handle.address() == 0L) null else LightmapProbe(handle)
+            if (handle.address() == 0L) null else LightmapProbe(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

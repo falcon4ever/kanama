@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ImageFormatLoaderExtension
  */
-class ImageFormatLoaderExtension(handle: MemorySegment) : ImageFormatLoader(handle) {
+class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle) {
     /**
      * Add this format loader to the engine, allowing it to recognize the file extensions returned by
      * `_get_recognized_extensions`.
@@ -19,7 +19,7 @@ class ImageFormatLoaderExtension(handle: MemorySegment) : ImageFormatLoader(hand
      */
     fun addFormatLoader() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(addFormatLoaderBind, handle)
+        ObjectCalls.ptrcallNoArgs(addFormatLoaderBind, segment)
     }
 
     /**
@@ -29,16 +29,16 @@ class ImageFormatLoaderExtension(handle: MemorySegment) : ImageFormatLoader(hand
      */
     fun removeFormatLoader() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(removeFormatLoaderBind, handle)
+        ObjectCalls.ptrcallNoArgs(removeFormatLoaderBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImageFormatLoaderExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImageFormatLoaderExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImageFormatLoaderExtension? =
-            if (handle.address() == 0L) null else ImageFormatLoaderExtension(handle)
+            if (handle.address() == 0L) null else ImageFormatLoaderExtension(GodotHandle(handle))
 
         private const val ADD_FORMAT_LOADER_HASH = 3218959716L
         private val addFormatLoaderBind by lazy {

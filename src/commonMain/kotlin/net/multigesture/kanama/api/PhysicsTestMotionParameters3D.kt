@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicsTestMotionParameters3D
  */
-class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) {
+class PhysicsTestMotionParameters3D(handle: GodotHandle) : RefCounted(handle) {
     var from: Transform3D
         @JvmName("fromProperty")
         get() = getFrom()
@@ -71,7 +71,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getFrom(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getFromBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getFromBind, segment)
     }
 
     /**
@@ -82,7 +82,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setFrom(from: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setFromBind, handle, from)
+        ObjectCalls.ptrcallWithTransform3DArg(setFromBind, segment, from)
     }
 
     /**
@@ -92,7 +92,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getMotion(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setMotion(motion: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setMotionBind, handle, motion)
+        ObjectCalls.ptrcallWithVector3Arg(setMotionBind, segment, motion)
     }
 
     /**
@@ -112,7 +112,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setMargin(margin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
     }
 
     /**
@@ -133,7 +133,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getMaxCollisions(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxCollisionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxCollisionsBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setMaxCollisions(maxCollisions: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxCollisionsBind, handle, maxCollisions)
+        ObjectCalls.ptrcallWithIntArg(setMaxCollisionsBind, segment, maxCollisions)
     }
 
     /**
@@ -157,7 +157,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isCollideSeparationRayEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, segment)
     }
 
     /**
@@ -170,7 +170,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, segment, enabled)
     }
 
     /**
@@ -181,7 +181,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getExcludeBodies(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setExcludeBodies(excludeList: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, handle, excludeList)
+        ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, segment, excludeList)
     }
 
     /**
@@ -203,7 +203,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getExcludeObjects(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setExcludeObjects(excludeList: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, handle, excludeList)
+        ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, segment, excludeList)
     }
 
     /**
@@ -227,7 +227,7 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isRecoveryAsCollisionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, segment)
     }
 
     /**
@@ -240,16 +240,16 @@ class PhysicsTestMotionParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, segment, enabled)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsTestMotionParameters3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsTestMotionParameters3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsTestMotionParameters3D? =
-            if (handle.address() == 0L) null else PhysicsTestMotionParameters3D(handle)
+            if (handle.address() == 0L) null else PhysicsTestMotionParameters3D(GodotHandle(handle))
 
         private const val GET_FROM_HASH = 3229777777L
         private val getFromBind by lazy {

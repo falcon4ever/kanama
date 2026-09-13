@@ -10,57 +10,57 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: OpenXRRenderModelExtension
  */
-class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper(handle) {
+class OpenXRRenderModelExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     fun isActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
     }
 
     fun renderModelCreate(renderModelId: Long): RID {
-        return ObjectCalls.ptrcallWithLongArgRetRID(renderModelCreateBind, handle, renderModelId)
+        return ObjectCalls.ptrcallWithLongArgRetRID(renderModelCreateBind, segment, renderModelId)
     }
 
     fun renderModelDestroy(renderModel: RID) {
-        ObjectCalls.ptrcallWithRIDArg(renderModelDestroyBind, handle, renderModel)
+        ObjectCalls.ptrcallWithRIDArg(renderModelDestroyBind, segment, renderModel)
     }
 
     fun renderModelGetAll(): List<RID> {
-        return ObjectCalls.ptrcallNoArgsRetRIDList(renderModelGetAllBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(renderModelGetAllBind, segment)
     }
 
     fun renderModelNewSceneInstance(renderModel: RID): Node3D? {
-        return Node3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(renderModelNewSceneInstanceBind, handle, renderModel))
+        return Node3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(renderModelNewSceneInstanceBind, segment, renderModel))
     }
 
     fun renderModelGetSubactionPaths(renderModel: RID): List<String> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(renderModelGetSubactionPathsBind, handle, renderModel)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(renderModelGetSubactionPathsBind, segment, renderModel)
     }
 
     fun renderModelGetTopLevelPath(renderModel: RID): String {
-        return ObjectCalls.ptrcallWithRIDArgRetString(renderModelGetTopLevelPathBind, handle, renderModel)
+        return ObjectCalls.ptrcallWithRIDArgRetString(renderModelGetTopLevelPathBind, segment, renderModel)
     }
 
     fun renderModelGetConfidence(renderModel: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(renderModelGetConfidenceBind, handle, renderModel)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(renderModelGetConfidenceBind, segment, renderModel)
     }
 
     fun renderModelGetRootTransform(renderModel: RID): Transform3D {
-        return ObjectCalls.ptrcallWithRIDArgRetTransform3D(renderModelGetRootTransformBind, handle, renderModel)
+        return ObjectCalls.ptrcallWithRIDArgRetTransform3D(renderModelGetRootTransformBind, segment, renderModel)
     }
 
     fun renderModelGetAnimatableNodeCount(renderModel: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(renderModelGetAnimatableNodeCountBind, handle, renderModel)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(renderModelGetAnimatableNodeCountBind, segment, renderModel)
     }
 
     fun renderModelGetAnimatableNodeName(renderModel: RID, index: Long): String {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetString(renderModelGetAnimatableNodeNameBind, handle, renderModel, index)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetString(renderModelGetAnimatableNodeNameBind, segment, renderModel, index)
     }
 
     fun renderModelIsAnimatableNodeVisible(renderModel: RID, index: Long): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetBool(renderModelIsAnimatableNodeVisibleBind, handle, renderModel, index)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetBool(renderModelIsAnimatableNodeVisibleBind, segment, renderModel, index)
     }
 
     fun renderModelGetAnimatableNodeTransform(renderModel: RID, index: Long): Transform3D {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetTransform3D(renderModelGetAnimatableNodeTransformBind, handle, renderModel, index)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetTransform3D(renderModelGetAnimatableNodeTransformBind, segment, renderModel, index)
     }
 
     object Signals {
@@ -71,11 +71,11 @@ class OpenXRRenderModelExtension(handle: MemorySegment) : OpenXRExtensionWrapper
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRRenderModelExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRRenderModelExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRRenderModelExtension? =
-            if (handle.address() == 0L) null else OpenXRRenderModelExtension(handle)
+            if (handle.address() == 0L) null else OpenXRRenderModelExtension(GodotHandle(handle))
 
         private const val IS_ACTIVE_HASH = 36873697L
         private val isActiveBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ShaderMaterial
  */
-class ShaderMaterial(handle: MemorySegment) : Material(handle) {
+class ShaderMaterial(handle: GodotHandle) : Material(handle) {
     var shader: Shader?
         @JvmName("shaderProperty")
         get() = getShader()
@@ -18,31 +18,31 @@ class ShaderMaterial(handle: MemorySegment) : Material(handle) {
 
     fun setShader(shader: Shader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setShaderBind, handle, listOf(shader?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShaderBind, segment, listOf(shader?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getShader(): Shader? {
         checkOpen()
-        return Shader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, handle))
+        return Shader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, segment))
     }
 
     fun setShaderParameter(param: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setShaderParameterBind, handle, param, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setShaderParameterBind, segment, param, value)
     }
 
     fun getShaderParameter(param: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, handle, param)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, segment, param)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ShaderMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ShaderMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ShaderMaterial? =
-            if (handle.address() == 0L) null else ShaderMaterial(handle)
+            if (handle.address() == 0L) null else ShaderMaterial(GodotHandle(handle))
 
         // Downcast a Resource to ShaderMaterial (null if not), mirroring the desktop helper.
         fun fromResource(value: Resource?): ShaderMaterial? =

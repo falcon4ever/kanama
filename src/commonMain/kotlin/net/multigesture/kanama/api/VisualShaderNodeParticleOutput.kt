@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParticleOutput
  */
-class VisualShaderNodeParticleOutput(handle: MemorySegment) : VisualShaderNodeOutput(handle) {
+class VisualShaderNodeParticleOutput(handle: GodotHandle) : VisualShaderNodeOutput(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleOutput? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleOutput? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleOutput? =
-            if (handle.address() == 0L) null else VisualShaderNodeParticleOutput(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParticleOutput(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

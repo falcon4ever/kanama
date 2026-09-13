@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PhysicsDirectBodyState2DExtension
  */
-class PhysicsDirectBodyState2DExtension(handle: MemorySegment) : PhysicsDirectBodyState2D(handle) {
+class PhysicsDirectBodyState2DExtension(handle: GodotHandle) : PhysicsDirectBodyState2D(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsDirectBodyState2DExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsDirectBodyState2DExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsDirectBodyState2DExtension? =
-            if (handle.address() == 0L) null else PhysicsDirectBodyState2DExtension(handle)
+            if (handle.address() == 0L) null else PhysicsDirectBodyState2DExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

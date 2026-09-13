@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: VisualShaderNodeResizableBase
  */
-open class VisualShaderNodeResizableBase(handle: MemorySegment) : VisualShaderNode(handle) {
+open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode(handle) {
     var size: Vector2
         @JvmName("sizeProperty")
         get() = getSize()
@@ -19,21 +19,21 @@ open class VisualShaderNodeResizableBase(handle: MemorySegment) : VisualShaderNo
 
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
     }
 
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeResizableBase? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeResizableBase? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeResizableBase? =
-            if (handle.address() == 0L) null else VisualShaderNodeResizableBase(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeResizableBase(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L
         private val setSizeBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CopyTransformModifier3D
  */
-class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
+class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
     /**
      * Sets the flags to process the transform operations. If the flag is valid, the transform
      * operation is processed. Note: If the rotation is valid for only one axis, it respects the roll
@@ -20,7 +20,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_flags
      */
     fun setCopyFlags(index: Int, copyFlags: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCopyFlagsBind, handle, index, copyFlags)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCopyFlagsBind, segment, index, copyFlags)
     }
 
     /**
@@ -29,7 +29,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.get_copy_flags
      */
     fun getCopyFlags(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCopyFlagsBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getCopyFlagsBind, segment, index)
     }
 
     /**
@@ -38,7 +38,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_flags
      */
     fun setAxisFlags(index: Int, axisFlags: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setAxisFlagsBind, handle, index, axisFlags)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setAxisFlagsBind, segment, index, axisFlags)
     }
 
     /**
@@ -47,7 +47,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.get_axis_flags
      */
     fun getAxisFlags(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getAxisFlagsBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getAxisFlagsBind, segment, index)
     }
 
     /**
@@ -61,7 +61,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_invert_flags
      */
     fun setInvertFlags(index: Int, axisFlags: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setInvertFlagsBind, handle, index, axisFlags)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setInvertFlagsBind, segment, index, axisFlags)
     }
 
     /**
@@ -70,7 +70,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.get_invert_flags
      */
     fun getInvertFlags(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getInvertFlagsBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getInvertFlagsBind, segment, index)
     }
 
     /**
@@ -79,7 +79,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_position
      */
     fun setCopyPosition(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyPositionBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyPositionBind, segment, index, enabled)
     }
 
     /**
@@ -89,7 +89,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_position_copying
      */
     fun isPositionCopying(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isPositionCopyingBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isPositionCopyingBind, segment, index)
     }
 
     /**
@@ -98,7 +98,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_rotation
      */
     fun setCopyRotation(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyRotationBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyRotationBind, segment, index, enabled)
     }
 
     /**
@@ -108,7 +108,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_rotation_copying
      */
     fun isRotationCopying(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRotationCopyingBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isRotationCopyingBind, segment, index)
     }
 
     /**
@@ -117,7 +117,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_scale
      */
     fun setCopyScale(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyScaleBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyScaleBind, segment, index, enabled)
     }
 
     /**
@@ -127,7 +127,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_scale_copying
      */
     fun isScaleCopying(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isScaleCopyingBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isScaleCopyingBind, segment, index)
     }
 
     /**
@@ -136,7 +136,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_x_enabled
      */
     fun setAxisXEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisXEnabledBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisXEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -146,7 +146,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_x_enabled
      */
     fun isAxisXEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisXEnabledBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisXEnabledBind, segment, index)
     }
 
     /**
@@ -155,7 +155,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_y_enabled
      */
     fun setAxisYEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisYEnabledBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisYEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -165,7 +165,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_y_enabled
      */
     fun isAxisYEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisYEnabledBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisYEnabledBind, segment, index)
     }
 
     /**
@@ -174,7 +174,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_z_enabled
      */
     fun setAxisZEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisZEnabledBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisZEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -184,7 +184,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_z_enabled
      */
     fun isAxisZEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisZEnabledBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisZEnabledBind, segment, index)
     }
 
     /**
@@ -193,7 +193,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_x_inverted
      */
     fun setAxisXInverted(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisXInvertedBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisXInvertedBind, segment, index, enabled)
     }
 
     /**
@@ -203,7 +203,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_x_inverted
      */
     fun isAxisXInverted(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisXInvertedBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisXInvertedBind, segment, index)
     }
 
     /**
@@ -212,7 +212,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_y_inverted
      */
     fun setAxisYInverted(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisYInvertedBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisYInvertedBind, segment, index, enabled)
     }
 
     /**
@@ -222,7 +222,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_y_inverted
      */
     fun isAxisYInverted(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisYInvertedBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisYInvertedBind, segment, index)
     }
 
     /**
@@ -231,7 +231,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_z_inverted
      */
     fun setAxisZInverted(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisZInvertedBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisZInvertedBind, segment, index, enabled)
     }
 
     /**
@@ -241,7 +241,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_z_inverted
      */
     fun isAxisZInverted(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisZInvertedBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisZInvertedBind, segment, index)
     }
 
     /**
@@ -252,7 +252,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_relative
      */
     fun setRelative(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, segment, index, enabled)
     }
 
     /**
@@ -261,7 +261,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_relative
      */
     fun isRelative(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, segment, index)
     }
 
     /**
@@ -274,7 +274,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.set_additive
      */
     fun setAdditive(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAdditiveBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAdditiveBind, segment, index, enabled)
     }
 
     /**
@@ -283,7 +283,7 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
      * Generated from Godot docs: CopyTransformModifier3D.is_additive
      */
     fun isAdditive(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
     }
 
     companion object {
@@ -297,11 +297,11 @@ class CopyTransformModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) 
         const val AXIS_FLAG_ALL: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CopyTransformModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CopyTransformModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CopyTransformModifier3D? =
-            if (handle.address() == 0L) null else CopyTransformModifier3D(handle)
+            if (handle.address() == 0L) null else CopyTransformModifier3D(GodotHandle(handle))
 
         private const val SET_COPY_FLAGS_HASH = 2252507859L
         private val setCopyFlagsBind by lazy {

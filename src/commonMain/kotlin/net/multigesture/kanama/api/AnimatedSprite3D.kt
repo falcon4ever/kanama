@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimatedSprite3D
  */
-class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
+class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
     var spriteFrames: SpriteFrames?
         @JvmName("spriteFramesProperty")
         get() = getSpriteFrames()
@@ -55,7 +55,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_sprite_frames
      */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, handle, listOf(spriteFrames?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -65,7 +65,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_sprite_frames
      */
     fun getSpriteFrames(): SpriteFrames? {
-        return SpriteFrames.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, handle))
+        return SpriteFrames.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
     }
 
     /**
@@ -75,7 +75,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_animation
      */
     fun setAnimation(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, segment, name)
     }
 
     /**
@@ -85,7 +85,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_animation
      */
     fun getAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, segment)
     }
 
     /**
@@ -94,7 +94,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_autoplay
      */
     fun setAutoplay(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAutoplayBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setAutoplayBind, segment, name)
     }
 
     /**
@@ -103,7 +103,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_autoplay
      */
     fun getAutoplay(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAutoplayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAutoplayBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.play
      */
     fun play(name: String = "", customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(playBind, handle, name, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(playBind, segment, name, customSpeed, fromEnd)
     }
 
     /**
@@ -135,7 +135,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.play_backwards
      */
     fun playBackwards(name: String = "") {
-        ObjectCalls.ptrcallWithStringNameArg(playBackwardsBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(playBackwardsBind, segment, name)
     }
 
     /**
@@ -146,7 +146,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, handle)
+        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
     }
 
     /**
@@ -156,7 +156,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -166,7 +166,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_frame
      */
     fun setFrame(frame: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, handle, frame)
+        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
     }
 
     /**
@@ -176,7 +176,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_frame
      */
     fun getFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
     }
 
     /**
@@ -186,7 +186,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_frame_progress
      */
     fun setFrameProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrameProgressBind, handle, progress)
+        ObjectCalls.ptrcallWithDoubleArg(setFrameProgressBind, segment, progress)
     }
 
     /**
@@ -196,7 +196,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_frame_progress
      */
     fun getFrameProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrameProgressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFrameProgressBind, segment)
     }
 
     /**
@@ -206,7 +206,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_frame_and_progress
      */
     fun setFrameAndProgress(frame: Int, progress: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameAndProgressBind, handle, frame, progress)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameAndProgressBind, segment, frame, progress)
     }
 
     /**
@@ -218,7 +218,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_speed_scale
      */
     fun setSpeedScale(speedScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, speedScale)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speedScale)
     }
 
     /**
@@ -230,7 +230,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     /**
@@ -241,7 +241,7 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_playing_speed
      */
     fun getPlayingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
     }
 
     object Signals {
@@ -254,11 +254,11 @@ class AnimatedSprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimatedSprite3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimatedSprite3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimatedSprite3D? =
-            if (handle.address() == 0L) null else AnimatedSprite3D(handle)
+            if (handle.address() == 0L) null else AnimatedSprite3D(GodotHandle(handle))
 
         private const val SET_SPRITE_FRAMES_HASH = 905781144L
         private val setSpriteFramesBind by lazy {

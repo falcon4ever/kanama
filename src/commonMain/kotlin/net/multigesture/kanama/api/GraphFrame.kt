@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: GraphFrame
  */
-class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
+class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
     var title: String
         @JvmName("titleProperty")
         get() = getTitle()
@@ -56,7 +56,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
+        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
     }
 
     /**
@@ -65,7 +65,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
     }
 
     /**
@@ -76,7 +76,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_titlebar_hbox
      */
     fun getTitlebarHbox(): HBoxContainer? {
-        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTitlebarHboxBind, handle))
+        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTitlebarHboxBind, segment))
     }
 
     /**
@@ -86,7 +86,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_autoshrink_enabled
      */
     fun setAutoshrinkEnabled(shrink: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoshrinkEnabledBind, handle, shrink)
+        ObjectCalls.ptrcallWithBoolArg(setAutoshrinkEnabledBind, segment, shrink)
     }
 
     /**
@@ -96,7 +96,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.is_autoshrink_enabled
      */
     fun isAutoshrinkEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoshrinkEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoshrinkEnabledBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_autoshrink_margin
      */
     fun setAutoshrinkMargin(autoshrinkMargin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAutoshrinkMarginBind, handle, autoshrinkMargin)
+        ObjectCalls.ptrcallWithIntArg(setAutoshrinkMarginBind, segment, autoshrinkMargin)
     }
 
     /**
@@ -116,7 +116,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_autoshrink_margin
      */
     fun getAutoshrinkMargin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAutoshrinkMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAutoshrinkMarginBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_drag_margin
      */
     fun setDragMargin(dragMargin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragMarginBind, handle, dragMargin)
+        ObjectCalls.ptrcallWithIntArg(setDragMarginBind, segment, dragMargin)
     }
 
     /**
@@ -134,7 +134,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_drag_margin
      */
     fun getDragMargin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDragMarginBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_tint_color_enabled
      */
     fun setTintColorEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTintColorEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setTintColorEnabledBind, segment, enable)
     }
 
     /**
@@ -152,7 +152,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.is_tint_color_enabled
      */
     fun isTintColorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTintColorEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTintColorEnabledBind, segment)
     }
 
     /**
@@ -161,7 +161,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_tint_color
      */
     fun setTintColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setTintColorBind, segment, color)
     }
 
     /**
@@ -170,7 +170,7 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_tint_color
      */
     fun getTintColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, segment)
     }
 
     object Signals {
@@ -179,11 +179,11 @@ class GraphFrame(handle: MemorySegment) : GraphElement(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GraphFrame? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GraphFrame? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GraphFrame? =
-            if (handle.address() == 0L) null else GraphFrame(handle)
+            if (handle.address() == 0L) null else GraphFrame(GodotHandle(handle))
 
         private const val SET_TITLE_HASH = 83702148L
         private val setTitleBind by lazy {

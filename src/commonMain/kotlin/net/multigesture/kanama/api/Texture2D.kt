@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Texture2D
  */
-open class Texture2D(handle: MemorySegment) : Texture(handle) {
+open class Texture2D(handle: GodotHandle) : Texture(handle) {
     /**
      * Returns the image format of the texture.
      *
@@ -22,7 +22,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -32,7 +32,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun getMipmapCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, segment)
     }
 
     /**
@@ -42,7 +42,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun hasAlpha(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAlphaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasAlphaBind, segment)
     }
 
     /**
@@ -82,7 +82,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun draw(canvasItem: RID, position: Vector2, modulate: Color, transpose: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(drawBind, handle, canvasItem, position, modulate, transpose)
+        ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(drawBind, segment, canvasItem, position, modulate, transpose)
     }
 
     /**
@@ -103,7 +103,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun drawRect(canvasItem: RID, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(drawRectBind, handle, canvasItem, rect, tile, modulate, transpose)
+        ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(drawRectBind, segment, canvasItem, rect, tile, modulate, transpose)
     }
 
     /**
@@ -113,7 +113,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun drawRectRegion(canvasItem: RID, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(drawRectRegionBind, handle, canvasItem, rect, srcRect, modulate, transpose, clipUv)
+        ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(drawRectRegionBind, segment, canvasItem, rect, srcRect, modulate, transpose, clipUv)
     }
 
     /**
@@ -127,7 +127,7 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun getImage(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, handle))
+        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, segment))
     }
 
     /**
@@ -137,8 +137,8 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -147,11 +147,11 @@ open class Texture2D(handle: MemorySegment) : Texture(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Texture2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Texture2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Texture2D? =
-            if (handle.address() == 0L) null else Texture2D(handle)
+            if (handle.address() == 0L) null else Texture2D(GodotHandle(handle))
 
         private const val GET_FORMAT_HASH = 3847873762L
         private val getFormatBind by lazy {

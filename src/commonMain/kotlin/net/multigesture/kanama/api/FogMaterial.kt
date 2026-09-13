@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: FogMaterial
  */
-class FogMaterial(handle: MemorySegment) : Material(handle) {
+class FogMaterial(handle: GodotHandle) : Material(handle) {
     var density: Double
         @JvmName("densityProperty")
         get() = getDensity()
@@ -60,7 +60,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setDensity(density: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDensityBind, handle, density)
+        ObjectCalls.ptrcallWithDoubleArg(setDensityBind, segment, density)
     }
 
     /**
@@ -74,7 +74,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDensityBind, segment)
     }
 
     /**
@@ -86,7 +86,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setAlbedo(albedo: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setAlbedoBind, handle, albedo)
+        ObjectCalls.ptrcallWithColorArg(setAlbedoBind, segment, albedo)
     }
 
     /**
@@ -98,7 +98,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, segment)
     }
 
     /**
@@ -110,7 +110,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmission(emission: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setEmissionBind, handle, emission)
+        ObjectCalls.ptrcallWithColorArg(setEmissionBind, segment, emission)
     }
 
     /**
@@ -122,7 +122,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, segment)
     }
 
     /**
@@ -135,7 +135,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setHeightFalloff(heightFalloff: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightFalloffBind, handle, heightFalloff)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightFalloffBind, segment, heightFalloff)
     }
 
     /**
@@ -148,7 +148,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getHeightFalloff(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightFalloffBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightFalloffBind, segment)
     }
 
     /**
@@ -159,7 +159,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEdgeFade(edgeFade: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEdgeFadeBind, handle, edgeFade)
+        ObjectCalls.ptrcallWithDoubleArg(setEdgeFadeBind, segment, edgeFade)
     }
 
     /**
@@ -170,7 +170,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEdgeFade(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeFadeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeFadeBind, segment)
     }
 
     /**
@@ -183,7 +183,7 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setDensityTexture(densityTexture: Texture3D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDensityTextureBind, handle, listOf(densityTexture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDensityTextureBind, segment, listOf(densityTexture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -196,16 +196,16 @@ class FogMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getDensityTexture(): Texture3D? {
         checkOpen()
-        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDensityTextureBind, handle))
+        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDensityTextureBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FogMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FogMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FogMaterial? =
-            if (handle.address() == 0L) null else FogMaterial(handle)
+            if (handle.address() == 0L) null else FogMaterial(GodotHandle(handle))
 
         private const val SET_DENSITY_HASH = 373806689L
         private val setDensityBind by lazy {

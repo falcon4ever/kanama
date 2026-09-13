@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: StyleBoxTexture
  */
-class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
+class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     var texture: Texture2D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -105,7 +105,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -115,7 +115,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -127,7 +127,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setTextureMargin(margin: Long, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, handle, margin, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, segment, margin, size)
     }
 
     /**
@@ -137,7 +137,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setTextureMarginAll(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTextureMarginAllBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setTextureMarginAllBind, segment, size)
     }
 
     /**
@@ -149,7 +149,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getTextureMargin(margin: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, segment, margin)
     }
 
     /**
@@ -160,7 +160,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setExpandMargin(margin: Long, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, handle, margin, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin, size)
     }
 
     /**
@@ -170,7 +170,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setExpandMarginAll(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, segment, size)
     }
 
     /**
@@ -181,7 +181,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getExpandMargin(margin: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin)
     }
 
     /**
@@ -193,7 +193,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setRegionRect(region: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, handle, region)
+        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, segment, region)
     }
 
     /**
@@ -205,7 +205,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getRegionRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, segment)
     }
 
     /**
@@ -215,7 +215,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setDrawCenter(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, segment, enable)
     }
 
     /**
@@ -225,7 +225,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun isDrawCenterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setModulate(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, color)
     }
 
     /**
@@ -245,7 +245,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getModulate(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
     }
 
     /**
@@ -255,7 +255,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setHAxisStretchMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode)
     }
 
     /**
@@ -265,7 +265,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getHAxisStretchMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment)
     }
 
     /**
@@ -275,7 +275,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setVAxisStretchMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode)
     }
 
     /**
@@ -285,7 +285,7 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getVAxisStretchMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment)
     }
 
     companion object {
@@ -294,11 +294,11 @@ class StyleBoxTexture(handle: MemorySegment) : StyleBox(handle) {
         const val AXIS_STRETCH_MODE_TILE_FIT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StyleBoxTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StyleBoxTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StyleBoxTexture? =
-            if (handle.address() == 0L) null else StyleBoxTexture(handle)
+            if (handle.address() == 0L) null else StyleBoxTexture(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {

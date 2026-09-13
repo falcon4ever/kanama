@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Color
 /**
  * Generated from Godot docs: GLTFLight
  */
-class GLTFLight(handle: MemorySegment) : Resource(handle) {
+class GLTFLight(handle: GodotHandle) : Resource(handle) {
     var color: Color
         @JvmName("colorProperty")
         get() = getColor()
@@ -49,87 +49,87 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
 
     fun toNode(): Light3D? {
         checkOpen()
-        return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
+        return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, segment))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
     }
 
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     fun getIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getIntensityBind, segment)
     }
 
     fun setIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setIntensityBind, handle, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(setIntensityBind, segment, intensity)
     }
 
     fun getLightType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLightTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLightTypeBind, segment)
     }
 
     fun setLightType(lightType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLightTypeBind, handle, lightType)
+        ObjectCalls.ptrcallWithStringArg(setLightTypeBind, segment, lightType)
     }
 
     fun getRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeBind, segment)
     }
 
     fun setRange(range: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRangeBind, handle, range)
+        ObjectCalls.ptrcallWithDoubleArg(setRangeBind, segment, range)
     }
 
     fun getInnerConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerConeAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerConeAngleBind, segment)
     }
 
     fun setInnerConeAngle(innerConeAngle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setInnerConeAngleBind, handle, innerConeAngle)
+        ObjectCalls.ptrcallWithDoubleArg(setInnerConeAngleBind, segment, innerConeAngle)
     }
 
     fun getOuterConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterConeAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterConeAngleBind, segment)
     }
 
     fun setOuterConeAngle(outerConeAngle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOuterConeAngleBind, handle, outerConeAngle)
+        ObjectCalls.ptrcallWithDoubleArg(setOuterConeAngleBind, segment, outerConeAngle)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, segment, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
     companion object {
         fun fromNode(lightNode: Light3D): GLTFLight? {
-            return GLTFLight.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, lightNode.handle))
+            return GLTFLight.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, lightNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFLight? {
@@ -137,11 +137,11 @@ class GLTFLight(handle: MemorySegment) : Resource(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFLight? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFLight? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFLight? =
-            if (handle.address() == 0L) null else GLTFLight(handle)
+            if (handle.address() == 0L) null else GLTFLight(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 3907677874L
         private val fromNodeBind by lazy {

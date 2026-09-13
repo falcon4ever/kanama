@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeColorFunc
  */
-class VisualShaderNodeColorFunc(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeColorFunc(handle: GodotHandle) : VisualShaderNode(handle) {
     var function: Long
         @JvmName("functionProperty")
         get() = getFunction()
@@ -18,12 +18,12 @@ class VisualShaderNodeColorFunc(handle: MemorySegment) : VisualShaderNode(handle
 
     fun setFunction(func: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
     }
 
     fun getFunction(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
     }
 
     companion object {
@@ -36,11 +36,11 @@ class VisualShaderNodeColorFunc(handle: MemorySegment) : VisualShaderNode(handle
         const val FUNC_MAX: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeColorFunc? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeColorFunc? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeColorFunc? =
-            if (handle.address() == 0L) null else VisualShaderNodeColorFunc(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeColorFunc(GodotHandle(handle))
 
         private const val SET_FUNCTION_HASH = 3973396138L
         private val setFunctionBind by lazy {

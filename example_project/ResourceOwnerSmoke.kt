@@ -1,12 +1,12 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.api.GodotHandle
 
 @ScriptClass(attachTo = "Node")
-class ResourceOwnerSmoke(val godotObject: MemorySegment) {
+class ResourceOwnerSmoke(val godotObject: GodotHandle) {
   @ScriptProperty var smokeResource: SmokeResource? = null
 
   @OnReady

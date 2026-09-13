@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: XRVRS
  */
-class XRVRS(handle: MemorySegment) : GodotObject(handle) {
+class XRVRS(handle: GodotHandle) : GodotObject(handle) {
     var vrsMinRadius: Double
         @JvmName("vrsMinRadiusProperty")
         get() = getVrsMinRadius()
@@ -40,7 +40,7 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.get_vrs_min_radius
      */
     fun getVrsMinRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.set_vrs_min_radius
      */
     fun setVrsMinRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, segment, radius)
     }
 
     /**
@@ -60,7 +60,7 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.get_vrs_strength
      */
     fun getVrsStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.set_vrs_strength
      */
     fun setVrsStrength(strength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, segment, strength)
     }
 
     /**
@@ -79,7 +79,7 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.get_vrs_render_region
      */
     fun getVrsRenderRegion(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getVrsRenderRegionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(getVrsRenderRegionBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.set_vrs_render_region
      */
     fun setVrsRenderRegion(renderRegion: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(setVrsRenderRegionBind, handle, renderRegion)
+        ObjectCalls.ptrcallWithRect2iArg(setVrsRenderRegionBind, segment, renderRegion)
     }
 
     /**
@@ -100,16 +100,16 @@ class XRVRS(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.make_vrs_texture
      */
     fun makeVrsTexture(targetSize: Vector2, eyeFoci: List<Vector2>): RID {
-        return ObjectCalls.ptrcallWithVector2PackedVector2ListArgsRetRID(makeVrsTextureBind, handle, targetSize, eyeFoci)
+        return ObjectCalls.ptrcallWithVector2PackedVector2ListArgsRetRID(makeVrsTextureBind, segment, targetSize, eyeFoci)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRVRS? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRVRS? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRVRS? =
-            if (handle.address() == 0L) null else XRVRS(handle)
+            if (handle.address() == 0L) null else XRVRS(GodotHandle(handle))
 
         private const val GET_VRS_MIN_RADIUS_HASH = 1740695150L
         private val getVrsMinRadiusBind by lazy {

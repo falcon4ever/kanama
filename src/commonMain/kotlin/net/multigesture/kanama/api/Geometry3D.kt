@@ -204,8 +204,8 @@ object Geometry3D {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): Geometry3D? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): Geometry3D? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): Geometry3D? =
         if (handle.address() == 0L) null else this

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: AudioStreamInteractive
  */
-class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     var clipCount: Int
         @JvmName("clipCountProperty")
         get() = getClipCount()
@@ -24,43 +24,43 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
 
     fun setClipCount(clipCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setClipCountBind, handle, clipCount)
+        ObjectCalls.ptrcallWithIntArg(setClipCountBind, segment, clipCount)
     }
 
     fun getClipCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getClipCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getClipCountBind, segment)
     }
 
     fun setInitialClip(clipIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInitialClipBind, handle, clipIndex)
+        ObjectCalls.ptrcallWithIntArg(setInitialClipBind, segment, clipIndex)
     }
 
     fun getInitialClip(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInitialClipBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInitialClipBind, segment)
     }
 
     fun setClipName(clipIndex: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setClipNameBind, handle, clipIndex, name)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setClipNameBind, segment, clipIndex, name)
     }
 
     fun getClipName(clipIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getClipNameBind, handle, clipIndex)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getClipNameBind, segment, clipIndex)
     }
 
     fun setClipStream(clipIndex: Int, stream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setClipStreamBind, handle, clipIndex, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setClipStreamBind, segment, clipIndex, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getClipStream(clipIndex: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getClipStreamBind, handle, clipIndex)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getClipStreamBind, segment, clipIndex)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -69,77 +69,77 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
 
     fun setClipAutoAdvance(clipIndex: Int, mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setClipAutoAdvanceBind, handle, clipIndex, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setClipAutoAdvanceBind, segment, clipIndex, mode)
     }
 
     fun getClipAutoAdvance(clipIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getClipAutoAdvanceBind, handle, clipIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getClipAutoAdvanceBind, segment, clipIndex)
     }
 
     fun setClipAutoAdvanceNextClip(clipIndex: Int, autoAdvanceNextClip: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setClipAutoAdvanceNextClipBind, handle, clipIndex, autoAdvanceNextClip)
+        ObjectCalls.ptrcallWithTwoIntArgs(setClipAutoAdvanceNextClipBind, segment, clipIndex, autoAdvanceNextClip)
     }
 
     fun getClipAutoAdvanceNextClip(clipIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getClipAutoAdvanceNextClipBind, handle, clipIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getClipAutoAdvanceNextClipBind, segment, clipIndex)
     }
 
     fun addTransition(fromClip: Int, toClip: Int, fromTime: Long, toTime: Long, fadeMode: Long, fadeBeats: Double, useFillerClip: Boolean = false, fillerClip: Int = -1, holdPrevious: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(addTransitionBind, handle, fromClip, toClip, fromTime, toTime, fadeMode, fadeBeats, useFillerClip, fillerClip, holdPrevious)
+        ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(addTransitionBind, segment, fromClip, toClip, fromTime, toTime, fadeMode, fadeBeats, useFillerClip, fillerClip, holdPrevious)
     }
 
     fun hasTransition(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(hasTransitionBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(hasTransitionBind, segment, fromClip, toClip)
     }
 
     fun eraseTransition(fromClip: Int, toClip: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(eraseTransitionBind, handle, fromClip, toClip)
+        ObjectCalls.ptrcallWithTwoIntArgs(eraseTransitionBind, segment, fromClip, toClip)
     }
 
     fun getTransitionList(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getTransitionListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getTransitionListBind, segment)
     }
 
     fun getTransitionFromTime(fromClip: Int, toClip: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFromTimeBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFromTimeBind, segment, fromClip, toClip)
     }
 
     fun getTransitionToTime(fromClip: Int, toClip: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionToTimeBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionToTimeBind, segment, fromClip, toClip)
     }
 
     fun getTransitionFadeMode(fromClip: Int, toClip: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFadeModeBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFadeModeBind, segment, fromClip, toClip)
     }
 
     fun getTransitionFadeBeats(fromClip: Int, toClip: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getTransitionFadeBeatsBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getTransitionFadeBeatsBind, segment, fromClip, toClip)
     }
 
     fun isTransitionUsingFillerClip(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionUsingFillerClipBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionUsingFillerClipBind, segment, fromClip, toClip)
     }
 
     fun getTransitionFillerClip(fromClip: Int, toClip: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getTransitionFillerClipBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getTransitionFillerClipBind, segment, fromClip, toClip)
     }
 
     fun isTransitionHoldingPrevious(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionHoldingPreviousBind, handle, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionHoldingPreviousBind, segment, fromClip, toClip)
     }
 
     companion object {
@@ -161,11 +161,11 @@ class AudioStreamInteractive(handle: MemorySegment) : AudioStream(handle) {
         const val AUTO_ADVANCE_RETURN_TO_HOLD: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamInteractive? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamInteractive? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamInteractive? =
-            if (handle.address() == 0L) null else AudioStreamInteractive(handle)
+            if (handle.address() == 0L) null else AudioStreamInteractive(GodotHandle(handle))
 
         private const val SET_CLIP_COUNT_HASH = 1286410249L
         private val setClipCountBind by lazy {

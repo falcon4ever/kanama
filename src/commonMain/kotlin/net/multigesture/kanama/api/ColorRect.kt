@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: ColorRect
  */
-class ColorRect(handle: MemorySegment) : Control(handle) {
+class ColorRect(handle: GodotHandle) : Control(handle) {
     var color: Color
         @JvmName("colorProperty")
         get() = getColor()
@@ -25,7 +25,7 @@ class ColorRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ColorRect.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -34,16 +34,16 @@ class ColorRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ColorRect.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ColorRect? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ColorRect? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ColorRect? =
-            if (handle.address() == 0L) null else ColorRect(handle)
+            if (handle.address() == 0L) null else ColorRect(GodotHandle(handle))
 
         private const val SET_COLOR_HASH = 2920490490L
         private val setColorBind by lazy {

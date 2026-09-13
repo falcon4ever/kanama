@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ScriptCreateDialog
  */
-class ScriptCreateDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
+class ScriptCreateDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     /**
      * Prefills required fields to configure the ScriptCreateDialog for use.
      *
      * Generated from Godot docs: ScriptCreateDialog.config
      */
     fun config(inherits: String, path: String, builtInEnabled: Boolean = true, loadEnabled: Boolean = true) {
-        ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgs(configBind, handle, inherits, path, builtInEnabled, loadEnabled)
+        ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgs(configBind, segment, inherits, path, builtInEnabled, loadEnabled)
     }
 
     object Signals {
@@ -26,11 +26,11 @@ class ScriptCreateDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScriptCreateDialog? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScriptCreateDialog? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScriptCreateDialog? =
-            if (handle.address() == 0L) null else ScriptCreateDialog(handle)
+            if (handle.address() == 0L) null else ScriptCreateDialog(GodotHandle(handle))
 
         private const val CONFIG_HASH = 869314288L
         private val configBind by lazy {

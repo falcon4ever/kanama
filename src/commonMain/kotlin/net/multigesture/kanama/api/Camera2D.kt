@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Camera2D
  */
-class Camera2D(handle: MemorySegment) : Node2D(handle) {
+class Camera2D(handle: GodotHandle) : Node2D(handle) {
     var offset: Vector2
         @JvmName("offsetProperty")
         get() = getOffset()
@@ -187,7 +187,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -198,7 +198,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -207,7 +207,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_anchor_mode
      */
     fun setAnchorMode(anchorMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAnchorModeBind, handle, anchorMode)
+        ObjectCalls.ptrcallWithLongArg(setAnchorModeBind, segment, anchorMode)
     }
 
     /**
@@ -216,7 +216,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_anchor_mode
      */
     fun getAnchorMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAnchorModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAnchorModeBind, segment)
     }
 
     /**
@@ -226,7 +226,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_ignore_rotation
      */
     fun setIgnoreRotation(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreRotationBind, handle, ignore)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreRotationBind, segment, ignore)
     }
 
     /**
@@ -236,7 +236,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_ignoring_rotation
      */
     fun isIgnoringRotation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringRotationBind, segment)
     }
 
     /**
@@ -245,7 +245,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_process_callback
      */
     fun setProcessCallback(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode)
     }
 
     /**
@@ -254,7 +254,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_process_callback
      */
     fun getProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment)
     }
 
     /**
@@ -266,7 +266,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -278,7 +278,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -287,7 +287,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
+        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
     }
 
     /**
@@ -296,7 +296,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
     }
 
     /**
@@ -306,7 +306,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit_enabled
      */
     fun setLimitEnabled(limitEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLimitEnabledBind, handle, limitEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setLimitEnabledBind, segment, limitEnabled)
     }
 
     /**
@@ -316,7 +316,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_limit_enabled
      */
     fun isLimitEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLimitEnabledBind, segment)
     }
 
     /**
@@ -326,7 +326,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit
      */
     fun setLimit(margin: Long, limit: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setLimitBind, handle, margin, limit)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setLimitBind, segment, margin, limit)
     }
 
     /**
@@ -336,7 +336,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_limit
      */
     fun getLimit(margin: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getLimitBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getLimitBind, segment, margin)
     }
 
     /**
@@ -347,7 +347,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit_smoothing_enabled
      */
     fun setLimitSmoothingEnabled(limitSmoothingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLimitSmoothingEnabledBind, handle, limitSmoothingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setLimitSmoothingEnabledBind, segment, limitSmoothingEnabled)
     }
 
     /**
@@ -358,7 +358,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_limit_smoothing_enabled
      */
     fun isLimitSmoothingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitSmoothingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLimitSmoothingEnabledBind, segment)
     }
 
     /**
@@ -368,7 +368,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_vertical_enabled
      */
     fun setDragVerticalEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragVerticalEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDragVerticalEnabledBind, segment, enabled)
     }
 
     /**
@@ -378,7 +378,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_drag_vertical_enabled
      */
     fun isDragVerticalEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragVerticalEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragVerticalEnabledBind, segment)
     }
 
     /**
@@ -388,7 +388,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_horizontal_enabled
      */
     fun setDragHorizontalEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragHorizontalEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDragHorizontalEnabledBind, segment, enabled)
     }
 
     /**
@@ -398,7 +398,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_drag_horizontal_enabled
      */
     fun isDragHorizontalEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragHorizontalEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragHorizontalEnabledBind, segment)
     }
 
     /**
@@ -410,7 +410,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_vertical_offset
      */
     fun setDragVerticalOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDragVerticalOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setDragVerticalOffsetBind, segment, offset)
     }
 
     /**
@@ -422,7 +422,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_drag_vertical_offset
      */
     fun getDragVerticalOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDragVerticalOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDragVerticalOffsetBind, segment)
     }
 
     /**
@@ -434,7 +434,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_horizontal_offset
      */
     fun setDragHorizontalOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDragHorizontalOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setDragHorizontalOffsetBind, segment, offset)
     }
 
     /**
@@ -446,7 +446,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_drag_horizontal_offset
      */
     fun getDragHorizontalOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDragHorizontalOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDragHorizontalOffsetBind, segment)
     }
 
     /**
@@ -456,7 +456,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_margin
      */
     fun setDragMargin(margin: Long, dragMargin: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setDragMarginBind, handle, margin, dragMargin)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setDragMarginBind, segment, margin, dragMargin)
     }
 
     /**
@@ -466,7 +466,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_drag_margin
      */
     fun getDragMargin(margin: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getDragMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getDragMarginBind, segment, margin)
     }
 
     /**
@@ -478,7 +478,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_target_position
      */
     fun getTargetPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, segment)
     }
 
     /**
@@ -488,7 +488,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_screen_center_position
      */
     fun getScreenCenterPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenCenterPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenCenterPositionBind, segment)
     }
 
     /**
@@ -499,7 +499,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_screen_rotation
      */
     fun getScreenRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScreenRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getScreenRotationBind, segment)
     }
 
     /**
@@ -520,7 +520,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_zoom
      */
     fun setZoom(zoom: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setZoomBind, handle, zoom)
+        ObjectCalls.ptrcallWithVector2Arg(setZoomBind, segment, zoom)
     }
 
     /**
@@ -541,7 +541,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_zoom
      */
     fun getZoom(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getZoomBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getZoomBind, segment)
     }
 
     /**
@@ -551,7 +551,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_custom_viewport
      */
     fun setCustomViewport(viewport: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, handle, listOf(viewport.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, segment, listOf(viewport.segment))
     }
 
     /**
@@ -561,7 +561,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_custom_viewport
      */
     fun getCustomViewport(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, segment))
     }
 
     /**
@@ -571,7 +571,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_position_smoothing_speed
      */
     fun setPositionSmoothingSpeed(positionSmoothingSpeed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPositionSmoothingSpeedBind, handle, positionSmoothingSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(setPositionSmoothingSpeedBind, segment, positionSmoothingSpeed)
     }
 
     /**
@@ -581,7 +581,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_position_smoothing_speed
      */
     fun getPositionSmoothingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPositionSmoothingSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPositionSmoothingSpeedBind, segment)
     }
 
     /**
@@ -591,7 +591,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_position_smoothing_enabled
      */
     fun setPositionSmoothingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPositionSmoothingEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPositionSmoothingEnabledBind, segment, enabled)
     }
 
     /**
@@ -601,7 +601,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_position_smoothing_enabled
      */
     fun isPositionSmoothingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPositionSmoothingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPositionSmoothingEnabledBind, segment)
     }
 
     /**
@@ -612,7 +612,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_rotation_smoothing_enabled
      */
     fun setRotationSmoothingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRotationSmoothingEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRotationSmoothingEnabledBind, segment, enabled)
     }
 
     /**
@@ -623,7 +623,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_rotation_smoothing_enabled
      */
     fun isRotationSmoothingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRotationSmoothingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRotationSmoothingEnabledBind, segment)
     }
 
     /**
@@ -633,7 +633,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_rotation_smoothing_speed
      */
     fun setRotationSmoothingSpeed(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationSmoothingSpeedBind, handle, speed)
+        ObjectCalls.ptrcallWithDoubleArg(setRotationSmoothingSpeedBind, segment, speed)
     }
 
     /**
@@ -643,7 +643,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_rotation_smoothing_speed
      */
     fun getRotationSmoothingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationSmoothingSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationSmoothingSpeedBind, segment)
     }
 
     /**
@@ -652,7 +652,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.force_update_scroll
      */
     fun forceUpdateScroll() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateScrollBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceUpdateScrollBind, segment)
     }
 
     /**
@@ -662,7 +662,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.reset_smoothing
      */
     fun resetSmoothing() {
-        ObjectCalls.ptrcallNoArgs(resetSmoothingBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetSmoothingBind, segment)
     }
 
     /**
@@ -672,7 +672,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.align
      */
     fun align() {
-        ObjectCalls.ptrcallNoArgs(alignBind, handle)
+        ObjectCalls.ptrcallNoArgs(alignBind, segment)
     }
 
     /**
@@ -681,7 +681,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_screen_drawing_enabled
      */
     fun setScreenDrawingEnabled(screenDrawingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScreenDrawingEnabledBind, handle, screenDrawingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setScreenDrawingEnabledBind, segment, screenDrawingEnabled)
     }
 
     /**
@@ -690,7 +690,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_screen_drawing_enabled
      */
     fun isScreenDrawingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScreenDrawingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScreenDrawingEnabledBind, segment)
     }
 
     /**
@@ -699,7 +699,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit_drawing_enabled
      */
     fun setLimitDrawingEnabled(limitDrawingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLimitDrawingEnabledBind, handle, limitDrawingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setLimitDrawingEnabledBind, segment, limitDrawingEnabled)
     }
 
     /**
@@ -708,7 +708,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_limit_drawing_enabled
      */
     fun isLimitDrawingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitDrawingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLimitDrawingEnabledBind, segment)
     }
 
     /**
@@ -717,7 +717,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_margin_drawing_enabled
      */
     fun setMarginDrawingEnabled(marginDrawingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMarginDrawingEnabledBind, handle, marginDrawingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setMarginDrawingEnabledBind, segment, marginDrawingEnabled)
     }
 
     /**
@@ -726,7 +726,7 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_margin_drawing_enabled
      */
     fun isMarginDrawingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMarginDrawingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMarginDrawingEnabledBind, segment)
     }
 
     companion object {
@@ -736,11 +736,11 @@ class Camera2D(handle: MemorySegment) : Node2D(handle) {
         const val CAMERA2D_PROCESS_IDLE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Camera2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Camera2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Camera2D? =
-            if (handle.address() == 0L) null else Camera2D(handle)
+            if (handle.address() == 0L) null else Camera2D(GodotHandle(handle))
 
         private const val SET_OFFSET_HASH = 743155724L
         private val setOffsetBind by lazy {

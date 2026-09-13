@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDPipelineDepthStencilState
  */
-class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
+class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     var enableDepthTest: Boolean
         @JvmName("enableDepthTestProperty")
         get() = getEnableDepthTest()
@@ -148,7 +148,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableDepthTest(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableDepthTestBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDepthTestBind, segment, pMember)
     }
 
     /**
@@ -161,7 +161,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableDepthTest(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthTestBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthTestBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableDepthWrite(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableDepthWriteBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDepthWriteBind, segment, pMember)
     }
 
     /**
@@ -183,7 +183,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableDepthWrite(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthWriteBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthWriteBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthCompareOperator(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthCompareOperatorBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setDepthCompareOperatorBind, segment, pMember)
     }
 
     /**
@@ -203,7 +203,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthCompareOperator(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDepthCompareOperatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDepthCompareOperatorBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableDepthRange(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableDepthRangeBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDepthRangeBind, segment, pMember)
     }
 
     /**
@@ -225,7 +225,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableDepthRange(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthRangeBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthRangeMin(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMinBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMinBind, segment, pMember)
     }
 
     /**
@@ -245,7 +245,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthRangeMin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMinBind, segment)
     }
 
     /**
@@ -255,7 +255,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthRangeMax(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMaxBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthRangeMaxBind, segment, pMember)
     }
 
     /**
@@ -265,7 +265,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthRangeMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthRangeMaxBind, segment)
     }
 
     /**
@@ -277,7 +277,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableStencil(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableStencilBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableStencilBind, segment, pMember)
     }
 
     /**
@@ -289,7 +289,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableStencil(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableStencilBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableStencilBind, segment)
     }
 
     /**
@@ -299,7 +299,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontOpFail(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpFailBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpFailBind, segment, pMember)
     }
 
     /**
@@ -309,7 +309,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontOpFail(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpFailBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpFailBind, segment)
     }
 
     /**
@@ -319,7 +319,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontOpPass(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpPassBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpPassBind, segment, pMember)
     }
 
     /**
@@ -329,7 +329,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontOpPass(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpPassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpPassBind, segment)
     }
 
     /**
@@ -340,7 +340,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontOpDepthFail(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpDepthFailBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpDepthFailBind, segment, pMember)
     }
 
     /**
@@ -351,7 +351,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontOpDepthFail(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpDepthFailBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpDepthFailBind, segment)
     }
 
     /**
@@ -361,7 +361,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontOpCompare(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpCompareBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpCompareBind, segment, pMember)
     }
 
     /**
@@ -371,7 +371,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontOpCompare(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpCompareBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpCompareBind, segment)
     }
 
     /**
@@ -381,7 +381,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontOpCompareMask(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setFrontOpCompareMaskBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setFrontOpCompareMaskBind, segment, pMember)
     }
 
     /**
@@ -391,7 +391,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontOpCompareMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpCompareMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpCompareMaskBind, segment)
     }
 
     /**
@@ -401,7 +401,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontOpWriteMask(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setFrontOpWriteMaskBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setFrontOpWriteMaskBind, segment, pMember)
     }
 
     /**
@@ -411,7 +411,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontOpWriteMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpWriteMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpWriteMaskBind, segment)
     }
 
     /**
@@ -421,7 +421,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontOpReference(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setFrontOpReferenceBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setFrontOpReferenceBind, segment, pMember)
     }
 
     /**
@@ -431,7 +431,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontOpReference(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpReferenceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrontOpReferenceBind, segment)
     }
 
     /**
@@ -441,7 +441,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBackOpFail(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpFailBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpFailBind, segment, pMember)
     }
 
     /**
@@ -451,7 +451,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBackOpFail(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpFailBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpFailBind, segment)
     }
 
     /**
@@ -461,7 +461,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBackOpPass(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpPassBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpPassBind, segment, pMember)
     }
 
     /**
@@ -471,7 +471,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBackOpPass(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpPassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpPassBind, segment)
     }
 
     /**
@@ -482,7 +482,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBackOpDepthFail(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpDepthFailBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpDepthFailBind, segment, pMember)
     }
 
     /**
@@ -493,7 +493,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBackOpDepthFail(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpDepthFailBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpDepthFailBind, segment)
     }
 
     /**
@@ -503,7 +503,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBackOpCompare(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpCompareBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpCompareBind, segment, pMember)
     }
 
     /**
@@ -513,7 +513,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBackOpCompare(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpCompareBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpCompareBind, segment)
     }
 
     /**
@@ -523,7 +523,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBackOpCompareMask(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setBackOpCompareMaskBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setBackOpCompareMaskBind, segment, pMember)
     }
 
     /**
@@ -533,7 +533,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBackOpCompareMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpCompareMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpCompareMaskBind, segment)
     }
 
     /**
@@ -543,7 +543,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBackOpWriteMask(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setBackOpWriteMaskBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setBackOpWriteMaskBind, segment, pMember)
     }
 
     /**
@@ -553,7 +553,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBackOpWriteMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpWriteMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpWriteMaskBind, segment)
     }
 
     /**
@@ -563,7 +563,7 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBackOpReference(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setBackOpReferenceBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setBackOpReferenceBind, segment, pMember)
     }
 
     /**
@@ -573,16 +573,16 @@ class RDPipelineDepthStencilState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBackOpReference(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpReferenceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getBackOpReferenceBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDPipelineDepthStencilState? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDPipelineDepthStencilState? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDPipelineDepthStencilState? =
-            if (handle.address() == 0L) null else RDPipelineDepthStencilState(handle)
+            if (handle.address() == 0L) null else RDPipelineDepthStencilState(GodotHandle(handle))
 
         private const val SET_ENABLE_DEPTH_TEST_HASH = 2586408642L
         private val setEnableDepthTestBind by lazy {

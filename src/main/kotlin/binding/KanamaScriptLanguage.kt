@@ -647,11 +647,11 @@ object KanamaScriptLanguage {
     val source = buildString {
       appendLine("import net.multigesture.kanama.annotations.ScriptClass")
       appendLine("import net.multigesture.kanama.annotations.GlobalClass")
-      appendLine("import java.lang.foreign.MemorySegment")
+      appendLine("import net.multigesture.kanama.api.GodotHandle")
       appendLine()
       appendLine("@ScriptClass(attachTo = \"$attachTo\")")
       appendLine("@GlobalClass")
-      appendLine("class $className(val godotObject: MemorySegment) {")
+      appendLine("class $className(val godotObject: GodotHandle) {")
       appendLine("}")
     }
 

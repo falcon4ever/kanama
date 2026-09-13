@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: VisibleOnScreenEnabler3D
  */
-class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3D(handle) {
+class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(handle) {
     var enableMode: Long
         @JvmName("enableModeProperty")
         get() = getEnableMode()
@@ -32,7 +32,7 @@ class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3
      * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_mode
      */
     fun setEnableMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnableModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setEnableModeBind, segment, mode)
     }
 
     /**
@@ -42,7 +42,7 @@ class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3
      * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_mode
      */
     fun getEnableMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnableModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEnableModeBind, segment)
     }
 
     /**
@@ -54,7 +54,7 @@ class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3
      * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_node_path
      */
     fun setEnableNodePath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setEnableNodePathBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setEnableNodePathBind, segment, path)
     }
 
     /**
@@ -66,7 +66,7 @@ class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3
      * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_node_path
      */
     fun getEnableNodePath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getEnableNodePathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getEnableNodePathBind, segment)
     }
 
     companion object {
@@ -75,11 +75,11 @@ class VisibleOnScreenEnabler3D(handle: MemorySegment) : VisibleOnScreenNotifier3
         const val ENABLE_MODE_WHEN_PAUSED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisibleOnScreenEnabler3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisibleOnScreenEnabler3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisibleOnScreenEnabler3D? =
-            if (handle.address() == 0L) null else VisibleOnScreenEnabler3D(handle)
+            if (handle.address() == 0L) null else VisibleOnScreenEnabler3D(GodotHandle(handle))
 
         private const val SET_ENABLE_MODE_HASH = 320303646L
         private val setEnableModeBind by lazy {

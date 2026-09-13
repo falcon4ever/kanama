@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PacketPeerDTLS
  */
-class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
+class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
     /**
      * Poll the connection to check for incoming packets. Call this frequently to update the status and
      * keep the connection working.
@@ -19,7 +19,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun poll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pollBind, handle)
+        ObjectCalls.ptrcallNoArgs(pollBind, segment)
     }
 
     /**
@@ -32,7 +32,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, handle, packetPeer?.requireOpenHandle() ?: MemorySegment.NULL, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: MemorySegment.NULL, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -42,7 +42,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun disconnectFromPeer() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(disconnectFromPeerBind, handle)
+        ObjectCalls.ptrcallNoArgs(disconnectFromPeerBind, segment)
     }
 
     companion object {
@@ -63,11 +63,11 @@ class PacketPeerDTLS(handle: MemorySegment) : PacketPeer(handle) {
         const val STATUS_ERROR_HOSTNAME_MISMATCH: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PacketPeerDTLS? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PacketPeerDTLS? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PacketPeerDTLS? =
-            if (handle.address() == 0L) null else PacketPeerDTLS(handle)
+            if (handle.address() == 0L) null else PacketPeerDTLS(GodotHandle(handle))
 
         private const val POLL_HASH = 3218959716L
         private val pollBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: BlitMaterial
  */
-class BlitMaterial(handle: MemorySegment) : Material(handle) {
+class BlitMaterial(handle: GodotHandle) : Material(handle) {
     var blendMode: Long
         @JvmName("blendModeProperty")
         get() = getBlendMode()
@@ -25,7 +25,7 @@ class BlitMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setBlendMode(blendMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode)
     }
 
     /**
@@ -35,7 +35,7 @@ class BlitMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getBlendMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
     }
 
     companion object {
@@ -46,11 +46,11 @@ class BlitMaterial(handle: MemorySegment) : Material(handle) {
         const val BLEND_MODE_DISABLED: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BlitMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BlitMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BlitMaterial? =
-            if (handle.address() == 0L) null else BlitMaterial(handle)
+            if (handle.address() == 0L) null else BlitMaterial(GodotHandle(handle))
 
         private const val SET_BLEND_MODE_HASH = 80206916L
         private val setBlendModeBind by lazy {

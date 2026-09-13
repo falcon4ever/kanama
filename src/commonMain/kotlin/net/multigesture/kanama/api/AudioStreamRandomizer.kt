@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStreamRandomizer
  */
-class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     var playbackMode: Long
         @JvmName("playbackModeProperty")
         get() = getPlaybackMode()
@@ -50,7 +50,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun addStream(index: Int, stream: AudioStream?, weight: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntObjectDoubleArgs(addStreamBind, handle, index, stream?.requireOpenHandle() ?: MemorySegment.NULL, weight)
+        ObjectCalls.ptrcallWithIntObjectDoubleArgs(addStreamBind, segment, index, stream?.requireOpenHandle() ?: MemorySegment.NULL, weight)
     }
 
     /**
@@ -60,7 +60,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun moveStream(indexFrom: Int, indexTo: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveStreamBind, handle, indexFrom, indexTo)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveStreamBind, segment, indexFrom, indexTo)
     }
 
     /**
@@ -70,7 +70,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun removeStream(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeStreamBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removeStreamBind, segment, index)
     }
 
     /**
@@ -80,7 +80,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setStream(index: Int, stream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setStreamBind, handle, index, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setStreamBind, segment, index, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -90,8 +90,8 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getStream(index: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getStreamBind, handle, index)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getStreamBind, segment, index)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -106,7 +106,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setStreamProbabilityWeight(index: Int, weight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setStreamProbabilityWeightBind, handle, index, weight)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setStreamProbabilityWeightBind, segment, index, weight)
     }
 
     /**
@@ -116,7 +116,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getStreamProbabilityWeight(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getStreamProbabilityWeightBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getStreamProbabilityWeightBind, segment, index)
     }
 
     /**
@@ -126,7 +126,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setStreamsCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStreamsCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setStreamsCountBind, segment, count)
     }
 
     /**
@@ -136,7 +136,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getStreamsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStreamsCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStreamsCountBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setRandomPitch(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRandomPitchBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setRandomPitchBind, segment, scale)
     }
 
     /**
@@ -162,7 +162,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getRandomPitch(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchBind, segment)
     }
 
     /**
@@ -173,7 +173,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setRandomPitchSemitones(semitones: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRandomPitchSemitonesBind, handle, semitones)
+        ObjectCalls.ptrcallWithDoubleArg(setRandomPitchSemitonesBind, segment, semitones)
     }
 
     /**
@@ -184,7 +184,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getRandomPitchSemitones(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchSemitonesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchSemitonesBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setRandomVolumeOffsetDb(dbOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRandomVolumeOffsetDbBind, handle, dbOffset)
+        ObjectCalls.ptrcallWithDoubleArg(setRandomVolumeOffsetDbBind, segment, dbOffset)
     }
 
     /**
@@ -208,7 +208,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getRandomVolumeOffsetDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomVolumeOffsetDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomVolumeOffsetDbBind, segment)
     }
 
     /**
@@ -218,7 +218,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setPlaybackMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlaybackModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setPlaybackModeBind, segment, mode)
     }
 
     /**
@@ -228,7 +228,7 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getPlaybackMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, segment)
     }
 
     companion object {
@@ -237,11 +237,11 @@ class AudioStreamRandomizer(handle: MemorySegment) : AudioStream(handle) {
         const val PLAYBACK_SEQUENTIAL: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamRandomizer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamRandomizer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamRandomizer? =
-            if (handle.address() == 0L) null else AudioStreamRandomizer(handle)
+            if (handle.address() == 0L) null else AudioStreamRandomizer(GodotHandle(handle))
 
         private const val ADD_STREAM_HASH = 1892018854L
         private val addStreamBind by lazy {

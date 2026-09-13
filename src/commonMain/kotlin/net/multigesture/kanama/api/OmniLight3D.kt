@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: OmniLight3D
  */
-class OmniLight3D(handle: MemorySegment) : Light3D(handle) {
+class OmniLight3D(handle: GodotHandle) : Light3D(handle) {
     var omniRange: Double
         @JvmName("omniRangeProperty")
         get() = getParam(4L)
@@ -31,11 +31,11 @@ class OmniLight3D(handle: MemorySegment) : Light3D(handle) {
         set(value) = setShadowMode(value)
 
     fun setShadowMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode)
     }
 
     fun getShadowMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment)
     }
 
     companion object {
@@ -43,11 +43,11 @@ class OmniLight3D(handle: MemorySegment) : Light3D(handle) {
         const val SHADOW_CUBE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OmniLight3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OmniLight3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OmniLight3D? =
-            if (handle.address() == 0L) null else OmniLight3D(handle)
+            if (handle.address() == 0L) null else OmniLight3D(GodotHandle(handle))
 
         private const val SET_SHADOW_MODE_HASH = 121862228L
         private val setShadowModeBind by lazy {

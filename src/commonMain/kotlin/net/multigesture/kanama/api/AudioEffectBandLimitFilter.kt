@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectBandLimitFilter
  */
-class AudioEffectBandLimitFilter(handle: MemorySegment) : AudioEffectFilter(handle) {
+class AudioEffectBandLimitFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectBandLimitFilter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectBandLimitFilter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectBandLimitFilter? =
-            if (handle.address() == 0L) null else AudioEffectBandLimitFilter(handle)
+            if (handle.address() == 0L) null else AudioEffectBandLimitFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

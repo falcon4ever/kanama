@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: AtlasTexture
  */
-class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
+class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
     var atlas: Texture2D?
         @JvmName("atlasProperty")
         get() = getAtlas()
@@ -45,7 +45,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setAtlas(atlas: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAtlasBind, handle, listOf(atlas?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAtlasBind, segment, listOf(atlas?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -56,8 +56,8 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getAtlas(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getAtlasBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getAtlasBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -73,7 +73,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setRegion(region: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setRegionBind, handle, region)
+        ObjectCalls.ptrcallWithRect2Arg(setRegionBind, segment, region)
     }
 
     /**
@@ -85,7 +85,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getRegion(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setMargin(margin: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithRect2Arg(setMarginBind, segment, margin)
     }
 
     /**
@@ -109,7 +109,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getMargin(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getMarginBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFilterClip(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterClipBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFilterClipBind, segment, enable)
     }
 
     /**
@@ -131,16 +131,16 @@ class AtlasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun hasFilterClip(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasFilterClipBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasFilterClipBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AtlasTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AtlasTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AtlasTexture? =
-            if (handle.address() == 0L) null else AtlasTexture(handle)
+            if (handle.address() == 0L) null else AtlasTexture(GodotHandle(handle))
 
         private const val SET_ATLAS_HASH = 4051416890L
         private val setAtlasBind by lazy {

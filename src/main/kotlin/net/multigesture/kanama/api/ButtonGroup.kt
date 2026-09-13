@@ -9,7 +9,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: ButtonGroup
  */
-class ButtonGroup(handle: MemorySegment) : Resource(handle) {
+class ButtonGroup(handle: GodotHandle) : Resource(handle) {
     var allowUnpress: Boolean
         @JvmName("allowUnpressProperty")
         get() = isAllowUnpress()
@@ -23,7 +23,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun getPressedButton(): BaseButton? {
         checkOpen()
-        return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPressedButtonBind, handle))
+        return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPressedButtonBind, segment))
     }
 
     /**
@@ -34,7 +34,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun getButtons(): List<BaseButton> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedBaseButtonList(getButtonsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedBaseButtonList(getButtonsBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun setAllowUnpress(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowUnpressBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAllowUnpressBind, segment, enabled)
     }
 
     /**
@@ -54,7 +54,7 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun isAllowUnpress(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowUnpressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAllowUnpressBind, segment)
     }
 
     object Signals {
@@ -64,14 +64,14 @@ class ButtonGroup(handle: MemorySegment) : Resource(handle) {
     companion object {
         @JvmStatic
         fun create(): ButtonGroup =
-            ButtonGroup(ObjectCalls.constructObject("ButtonGroup"))
+            ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup")))
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ButtonGroup? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ButtonGroup? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ButtonGroup? =
-            if (handle.address() == 0L) null else ButtonGroup(handle)
+            if (handle.address() == 0L) null else ButtonGroup(GodotHandle(handle))
 
         private const val GET_PRESSED_BUTTON_HASH = 3886434893L
         private val getPressedButtonBind by lazy {

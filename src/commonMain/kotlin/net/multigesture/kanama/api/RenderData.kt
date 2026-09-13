@@ -11,14 +11,14 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: RenderData
  */
-open class RenderData(handle: MemorySegment) : GodotObject(handle) {
+open class RenderData(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns the `RenderSceneBuffers` object managing the scene buffers for rendering this viewport.
      *
      * Generated from Godot docs: RenderData.get_render_scene_buffers
      */
     fun getRenderSceneBuffers(): RenderSceneBuffers? {
-        return RenderSceneBuffers.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneBuffersBind, handle))
+        return RenderSceneBuffers.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneBuffersBind, segment))
     }
 
     /**
@@ -27,7 +27,7 @@ open class RenderData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_render_scene_data
      */
     fun getRenderSceneData(): RenderSceneData? {
-        return RenderSceneData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneDataBind, handle))
+        return RenderSceneData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneDataBind, segment))
     }
 
     /**
@@ -37,7 +37,7 @@ open class RenderData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_environment
      */
     fun getEnvironment(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getEnvironmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getEnvironmentBind, segment)
     }
 
     /**
@@ -47,16 +47,16 @@ open class RenderData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_camera_attributes
      */
     fun getCameraAttributes(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCameraAttributesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCameraAttributesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderData? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderData? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderData? =
-            if (handle.address() == 0L) null else RenderData(handle)
+            if (handle.address() == 0L) null else RenderData(GodotHandle(handle))
 
         private const val GET_RENDER_SCENE_BUFFERS_HASH = 2793216201L
         private val getRenderSceneBuffersBind by lazy {

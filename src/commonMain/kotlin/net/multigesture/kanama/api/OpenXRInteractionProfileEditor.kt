@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRInteractionProfileEditor
  */
-class OpenXRInteractionProfileEditor(handle: MemorySegment) : OpenXRInteractionProfileEditorBase(handle) {
+class OpenXRInteractionProfileEditor(handle: GodotHandle) : OpenXRInteractionProfileEditorBase(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRInteractionProfileEditor? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRInteractionProfileEditor? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRInteractionProfileEditor? =
-            if (handle.address() == 0L) null else OpenXRInteractionProfileEditor(handle)
+            if (handle.address() == 0L) null else OpenXRInteractionProfileEditor(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -303,7 +303,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun helpSetSearchCallbacks(searchCallback: GodotCallable, actionCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoCallableArgs(helpSetSearchCallbacksBind, singleton, searchCallback.target.handle, searchCallback.method, actionCallback.target.handle, actionCallback.method)
+        ObjectCalls.ptrcallWithTwoCallableArgs(helpSetSearchCallbacksBind, singleton, searchCallback.target.segment, searchCallback.method, actionCallback.target.segment, actionCallback.method)
     }
 
     /**
@@ -314,7 +314,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuSetPopupCallbacks(menuRoot: String, openCallback: GodotCallable, closeCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringTwoCallableArgs(globalMenuSetPopupCallbacksBind, singleton, menuRoot, openCallback.target.handle, openCallback.method, closeCallback.target.handle, closeCallback.method)
+        ObjectCalls.ptrcallWithStringTwoCallableArgs(globalMenuSetPopupCallbacksBind, singleton, menuRoot, openCallback.target.segment, openCallback.method, closeCallback.target.segment, closeCallback.method)
     }
 
     /**
@@ -344,7 +344,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddItemBind, singleton, menuRoot, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -361,7 +361,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddCheckItemBind, singleton, menuRoot, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -378,7 +378,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -395,7 +395,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -414,7 +414,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddRadioCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddRadioCheckItemBind, singleton, menuRoot, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddRadioCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -434,7 +434,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconRadioCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -454,7 +454,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddMultistateItem(menuRoot: String, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(globalMenuAddMultistateItemBind, singleton, menuRoot, label, maxStates, defaultState, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(globalMenuAddMultistateItemBind, singleton, menuRoot, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -714,7 +714,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuSetItemCallback(menuRoot: String, idx: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringIntCallableArgs(globalMenuSetItemCallbackBind, singleton, menuRoot, idx, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithStringIntCallableArgs(globalMenuSetItemCallbackBind, singleton, menuRoot, idx, callback.target.segment, callback.method)
     }
 
     /**
@@ -727,7 +727,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuSetItemHoverCallbacks(menuRoot: String, idx: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringIntCallableArgs(globalMenuSetItemHoverCallbacksBind, singleton, menuRoot, idx, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithStringIntCallableArgs(globalMenuSetItemHoverCallbacksBind, singleton, menuRoot, idx, callback.target.segment, callback.method)
     }
 
     /**
@@ -740,7 +740,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuSetItemKeyCallback(menuRoot: String, idx: Int, keyCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringIntCallableArgs(globalMenuSetItemKeyCallbackBind, singleton, menuRoot, idx, keyCallback.target.handle, keyCallback.method)
+        ObjectCalls.ptrcallWithStringIntCallableArgs(globalMenuSetItemKeyCallbackBind, singleton, menuRoot, idx, keyCallback.target.segment, keyCallback.method)
     }
 
     /**
@@ -1025,7 +1025,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun ttsSetUtteranceCallback(event: Long, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithLongCallableArgs(ttsSetUtteranceCallbackBind, singleton, event, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithLongCallableArgs(ttsSetUtteranceCallbackBind, singleton, event, callable.target.segment, callable.method)
     }
 
     /**
@@ -1081,7 +1081,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun setSystemThemeChangeCallback(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(setSystemThemeChangeCallbackBind, singleton, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(setSystemThemeChangeCallbackBind, singleton, callable.target.segment, callable.method)
     }
 
     /**
@@ -1695,7 +1695,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun windowSetRectChangedCallback(callback: GodotCallable, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithCallableIntArgs(windowSetRectChangedCallbackBind, singleton, callback.target.handle, callback.method, windowId)
+        ObjectCalls.ptrcallWithCallableIntArgs(windowSetRectChangedCallbackBind, singleton, callback.target.segment, callback.method, windowId)
     }
 
     /**
@@ -1707,7 +1707,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun windowSetWindowEventCallback(callback: GodotCallable, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithCallableIntArgs(windowSetWindowEventCallbackBind, singleton, callback.target.handle, callback.method, windowId)
+        ObjectCalls.ptrcallWithCallableIntArgs(windowSetWindowEventCallbackBind, singleton, callback.target.segment, callback.method, windowId)
     }
 
     /**
@@ -1719,7 +1719,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun windowSetInputEventCallback(callback: GodotCallable, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithCallableIntArgs(windowSetInputEventCallbackBind, singleton, callback.target.handle, callback.method, windowId)
+        ObjectCalls.ptrcallWithCallableIntArgs(windowSetInputEventCallbackBind, singleton, callback.target.segment, callback.method, windowId)
     }
 
     /**
@@ -1731,7 +1731,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun windowSetInputTextCallback(callback: GodotCallable, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithCallableIntArgs(windowSetInputTextCallbackBind, singleton, callback.target.handle, callback.method, windowId)
+        ObjectCalls.ptrcallWithCallableIntArgs(windowSetInputTextCallbackBind, singleton, callback.target.segment, callback.method, windowId)
     }
 
     /**
@@ -1746,7 +1746,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun windowSetDropFilesCallback(callback: GodotCallable, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithCallableIntArgs(windowSetDropFilesCallbackBind, singleton, callback.target.handle, callback.method, windowId)
+        ObjectCalls.ptrcallWithCallableIntArgs(windowSetDropFilesCallbackBind, singleton, callback.target.segment, callback.method, windowId)
     }
 
     /**
@@ -2675,7 +2675,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun accessibilityUpdateAddAction(id: RID, action: Long, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(accessibilityUpdateAddActionBind, singleton, id, action, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(accessibilityUpdateAddActionBind, singleton, id, action, callable.target.segment, callable.method)
     }
 
     /**
@@ -3145,7 +3145,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun setHardwareKeyboardConnectionChangeCallback(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(setHardwareKeyboardConnectionChangeCallbackBind, singleton, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(setHardwareKeyboardConnectionChangeCallbackBind, singleton, callable.target.segment, callable.method)
     }
 
     /**
@@ -3221,7 +3221,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun dialogShow(title: String, description: String, buttons: List<String>, callback: GodotCallable): Long {
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(dialogShowBind, singleton, title, description, buttons, callback.target.handle, callback.method)
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(dialogShowBind, singleton, title, description, buttons, callback.target.segment, callback.method)
     }
 
     /**
@@ -3234,7 +3234,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun dialogInputText(title: String, description: String, existingText: String, callback: GodotCallable): Long {
-        return ObjectCalls.ptrcallWithThreeStringCallableArgsRetLong(dialogInputTextBind, singleton, title, description, existingText, callback.target.handle, callback.method)
+        return ObjectCalls.ptrcallWithThreeStringCallableArgsRetLong(dialogInputTextBind, singleton, title, description, existingText, callback.target.segment, callback.method)
     }
 
     /**
@@ -3263,7 +3263,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun fileDialogShow(title: String, currentDirectory: String, filename: String, showHidden: Boolean, mode: Long, filters: List<String>, callback: GodotCallable, parentWindowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(fileDialogShowBind, singleton, title, currentDirectory, filename, showHidden, mode, filters, callback.target.handle, callback.method, parentWindowId)
+        return ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(fileDialogShowBind, singleton, title, currentDirectory, filename, showHidden, mode, filters, callback.target.segment, callback.method, parentWindowId)
     }
 
     /**
@@ -3289,7 +3289,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun fileDialogWithOptionsShow(title: String, currentDirectory: String, root: String, filename: String, showHidden: Boolean, mode: Long, filters: List<String>, options: List<Map<String, Any?>>, callback: GodotCallable, parentWindowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(fileDialogWithOptionsShowBind, singleton, title, currentDirectory, root, filename, showHidden, mode, filters, options, callback.target.handle, callback.method, parentWindowId)
+        return ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(fileDialogWithOptionsShowBind, singleton, title, currentDirectory, root, filename, showHidden, mode, filters, options, callback.target.segment, callback.method, parentWindowId)
     }
 
     /**
@@ -3402,7 +3402,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun colorPicker(callback: GodotCallable): Boolean {
-        return ObjectCalls.ptrcallWithCallableArgRetBool(colorPickerBind, singleton, callback.target.handle, callback.method)
+        return ObjectCalls.ptrcallWithCallableArgRetBool(colorPickerBind, singleton, callback.target.segment, callback.method)
     }
 
     /**
@@ -3464,7 +3464,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun createStatusIndicator(icon: Texture2D?, tooltip: String, callback: GodotCallable): Int {
-        return ObjectCalls.ptrcallWithObjectStringCallableArgsRetInt(createStatusIndicatorBind, singleton, icon?.requireOpenHandle() ?: MemorySegment.NULL, tooltip, callback.target.handle, callback.method)
+        return ObjectCalls.ptrcallWithObjectStringCallableArgsRetInt(createStatusIndicatorBind, singleton, icon?.requireOpenHandle() ?: MemorySegment.NULL, tooltip, callback.target.segment, callback.method)
     }
 
     /**
@@ -3513,7 +3513,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun statusIndicatorSetCallback(id: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithIntCallableArgs(statusIndicatorSetCallbackBind, singleton, id, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithIntCallableArgs(statusIndicatorSetCallbackBind, singleton, id, callback.target.segment, callback.method)
     }
 
     /**
@@ -3604,7 +3604,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun registerAdditionalOutput(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(registerAdditionalOutputBind, singleton, listOf(objectValue.handle))
+        ObjectCalls.ptrcallWithObjectArgs(registerAdditionalOutputBind, singleton, listOf(objectValue.segment))
     }
 
     /**
@@ -3615,7 +3615,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun unregisterAdditionalOutput(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(unregisterAdditionalOutputBind, singleton, listOf(objectValue.handle))
+        ObjectCalls.ptrcallWithObjectArgs(unregisterAdditionalOutputBind, singleton, listOf(objectValue.segment))
     }
 
     /**
@@ -3676,8 +3676,8 @@ object DisplayServer {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): DisplayServer? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): DisplayServer? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): DisplayServer? =
         if (handle.address() == 0L) null else this

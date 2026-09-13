@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: TileMapLayer
  */
-class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
+class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     var tileMapData: ByteArray
         @JvmName("tileMapDataProperty")
         get() = getTileMapDataAsArray()
@@ -109,7 +109,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_cell
      */
     fun setCell(coords: Vector2i, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = 0) {
-        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, handle, coords, sourceId, atlasCoords, alternativeTile)
+        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, segment, coords, sourceId, atlasCoords, alternativeTile)
     }
 
     /**
@@ -118,7 +118,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.erase_cell
      */
     fun eraseCell(coords: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(eraseCellBind, handle, coords)
+        ObjectCalls.ptrcallWithVector2iArg(eraseCellBind, segment, coords)
     }
 
     /**
@@ -127,7 +127,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.fix_invalid_tiles
      */
     fun fixInvalidTiles() {
-        ObjectCalls.ptrcallNoArgs(fixInvalidTilesBind, handle)
+        ObjectCalls.ptrcallNoArgs(fixInvalidTilesBind, segment)
     }
 
     /**
@@ -136,7 +136,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -146,7 +146,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_source_id
      */
     fun getCellSourceId(coords: Vector2i): Int {
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, segment, coords)
     }
 
     /**
@@ -156,7 +156,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_atlas_coords
      */
     fun getCellAtlasCoords(coords: Vector2i): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, segment, coords)
     }
 
     /**
@@ -165,7 +165,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_alternative_tile
      */
     fun getCellAlternativeTile(coords: Vector2i): Int {
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, segment, coords)
     }
 
     /**
@@ -175,7 +175,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_tile_data
      */
     fun getCellTileData(coords: Vector2i): TileData? {
-        return TileData.wrap(ObjectCalls.ptrcallWithVector2iArgRetObject(getCellTileDataBind, handle, coords))
+        return TileData.wrap(ObjectCalls.ptrcallWithVector2iArgRetObject(getCellTileDataBind, segment, coords))
     }
 
     /**
@@ -185,7 +185,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_cell_flipped_h
      */
     fun isCellFlippedH(coords: Vector2i): Boolean {
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellFlippedHBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellFlippedHBind, segment, coords)
     }
 
     /**
@@ -195,7 +195,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_cell_flipped_v
      */
     fun isCellFlippedV(coords: Vector2i): Boolean {
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellFlippedVBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellFlippedVBind, segment, coords)
     }
 
     /**
@@ -205,7 +205,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_cell_transposed
      */
     fun isCellTransposed(coords: Vector2i): Boolean {
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellTransposedBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellTransposedBind, segment, coords)
     }
 
     /**
@@ -216,7 +216,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_used_cells
      */
     fun getUsedCells(): List<Vector2i> {
-        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, segment)
     }
 
     /**
@@ -231,7 +231,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_used_cells_by_id
      */
     fun getUsedCellsById(sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1): List<Vector2i> {
-        return ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, handle, sourceId, atlasCoords, alternativeTile)
+        return ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, segment, sourceId, atlasCoords, alternativeTile)
     }
 
     /**
@@ -240,7 +240,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_used_rect
      */
     fun getUsedRect(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_pattern
      */
     fun getPattern(coordsArray: List<Vector2i>): TileMapPattern? {
-        return TileMapPattern.wrap(ObjectCalls.ptrcallWithVector2iListArgRetObject(getPatternBind, handle, coordsArray))
+        return TileMapPattern.wrap(ObjectCalls.ptrcallWithVector2iListArgRetObject(getPatternBind, segment, coordsArray))
     }
 
     /**
@@ -259,7 +259,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_pattern
      */
     fun setPattern(position: Vector2i, pattern: TileMapPattern?) {
-        ObjectCalls.ptrcallWithVector2iAndObjectArg(setPatternBind, handle, position, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithVector2iAndObjectArg(setPatternBind, segment, position, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -275,7 +275,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_cells_terrain_connect
      */
     fun setCellsTerrainConnect(cells: List<Vector2i>, terrainSet: Int, terrain: Int, ignoreEmptyTerrains: Boolean = true) {
-        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(setCellsTerrainConnectBind, handle, cells, terrainSet, terrain, ignoreEmptyTerrains)
+        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(setCellsTerrainConnectBind, segment, cells, terrainSet, terrain, ignoreEmptyTerrains)
     }
 
     /**
@@ -290,7 +290,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_cells_terrain_path
      */
     fun setCellsTerrainPath(path: List<Vector2i>, terrainSet: Int, terrain: Int, ignoreEmptyTerrains: Boolean = true) {
-        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(setCellsTerrainPathBind, handle, path, terrainSet, terrain, ignoreEmptyTerrains)
+        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(setCellsTerrainPathBind, segment, path, terrainSet, terrain, ignoreEmptyTerrains)
     }
 
     /**
@@ -299,7 +299,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.has_body_rid
      */
     fun hasBodyRid(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(hasBodyRidBind, handle, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(hasBodyRidBind, segment, body)
     }
 
     /**
@@ -312,7 +312,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_coords_for_body_rid
      */
     fun getCoordsForBodyRid(body: RID): Vector2i {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2i(getCoordsForBodyRidBind, handle, body)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2i(getCoordsForBodyRidBind, segment, body)
     }
 
     /**
@@ -326,7 +326,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.update_internals
      */
     fun updateInternals() {
-        ObjectCalls.ptrcallNoArgs(updateInternalsBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateInternalsBind, segment)
     }
 
     /**
@@ -340,7 +340,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.notify_runtime_tile_data_update
      */
     fun notifyRuntimeTileDataUpdate() {
-        ObjectCalls.ptrcallNoArgs(notifyRuntimeTileDataUpdateBind, handle)
+        ObjectCalls.ptrcallNoArgs(notifyRuntimeTileDataUpdateBind, segment)
     }
 
     /**
@@ -352,7 +352,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.map_pattern
      */
     fun mapPattern(positionInTilemap: Vector2i, coordsInPattern: Vector2i, pattern: TileMapPattern?): Vector2i {
-        return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(mapPatternBind, handle, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(mapPatternBind, segment, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -363,7 +363,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_surrounding_cells
      */
     fun getSurroundingCells(coords: Vector2i): List<Vector2i> {
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(getSurroundingCellsBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(getSurroundingCellsBind, segment, coords)
     }
 
     /**
@@ -373,7 +373,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_neighbor_cell
      */
     fun getNeighborCell(coords: Vector2i, neighbor: Long): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, handle, coords, neighbor)
+        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, segment, coords, neighbor)
     }
 
     /**
@@ -385,7 +385,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.map_to_local
      */
     fun mapToLocal(mapPosition: Vector2i): Vector2 {
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2(mapToLocalBind, handle, mapPosition)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2(mapToLocalBind, segment, mapPosition)
     }
 
     /**
@@ -396,7 +396,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.local_to_map
      */
     fun localToMap(localPosition: Vector2): Vector2i {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2i(localToMapBind, handle, localPosition)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2i(localToMapBind, segment, localPosition)
     }
 
     /**
@@ -405,7 +405,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_tile_map_data_from_array
      */
     fun setTileMapDataFromArray(tileMapLayerData: ByteArray) {
-        ObjectCalls.ptrcallWithByteArrayArg(setTileMapDataFromArrayBind, handle, tileMapLayerData)
+        ObjectCalls.ptrcallWithByteArrayArg(setTileMapDataFromArrayBind, segment, tileMapLayerData)
     }
 
     /**
@@ -414,7 +414,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_tile_map_data_as_array
      */
     fun getTileMapDataAsArray(): ByteArray {
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getTileMapDataAsArrayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getTileMapDataAsArrayBind, segment)
     }
 
     /**
@@ -424,7 +424,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -434,7 +434,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -444,7 +444,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_tile_set
      */
     fun setTileSet(tileSet: TileSet?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTileSetBind, handle, listOf(tileSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTileSetBind, segment, listOf(tileSet?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -454,7 +454,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_tile_set
      */
     fun getTileSet(): TileSet? {
-        return TileSet.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTileSetBind, handle))
+        return TileSet.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTileSetBind, segment))
     }
 
     /**
@@ -464,7 +464,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_y_sort_origin
      */
     fun setYSortOrigin(ySortOrigin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setYSortOriginBind, handle, ySortOrigin)
+        ObjectCalls.ptrcallWithIntArg(setYSortOriginBind, segment, ySortOrigin)
     }
 
     /**
@@ -474,7 +474,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_y_sort_origin
      */
     fun getYSortOrigin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getYSortOriginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getYSortOriginBind, segment)
     }
 
     /**
@@ -484,7 +484,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_x_draw_order_reversed
      */
     fun setXDrawOrderReversed(xDrawOrderReversed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setXDrawOrderReversedBind, handle, xDrawOrderReversed)
+        ObjectCalls.ptrcallWithBoolArg(setXDrawOrderReversedBind, segment, xDrawOrderReversed)
     }
 
     /**
@@ -494,7 +494,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_x_draw_order_reversed
      */
     fun isXDrawOrderReversed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isXDrawOrderReversedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isXDrawOrderReversedBind, segment)
     }
 
     /**
@@ -509,7 +509,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_rendering_quadrant_size
      */
     fun setRenderingQuadrantSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRenderingQuadrantSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setRenderingQuadrantSizeBind, segment, size)
     }
 
     /**
@@ -524,7 +524,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_rendering_quadrant_size
      */
     fun getRenderingQuadrantSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderingQuadrantSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRenderingQuadrantSizeBind, segment)
     }
 
     /**
@@ -533,7 +533,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_collision_enabled
      */
     fun setCollisionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollisionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCollisionEnabledBind, segment, enabled)
     }
 
     /**
@@ -542,7 +542,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_collision_enabled
      */
     fun isCollisionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollisionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollisionEnabledBind, segment)
     }
 
     /**
@@ -552,7 +552,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_use_kinematic_bodies
      */
     fun setUseKinematicBodies(useKinematicBodies: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseKinematicBodiesBind, handle, useKinematicBodies)
+        ObjectCalls.ptrcallWithBoolArg(setUseKinematicBodiesBind, segment, useKinematicBodies)
     }
 
     /**
@@ -562,7 +562,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_using_kinematic_bodies
      */
     fun isUsingKinematicBodies(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingKinematicBodiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingKinematicBodiesBind, segment)
     }
 
     /**
@@ -572,7 +572,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_collision_visibility_mode
      */
     fun setCollisionVisibilityMode(visibilityMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, handle, visibilityMode)
+        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode)
     }
 
     /**
@@ -582,7 +582,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_collision_visibility_mode
      */
     fun getCollisionVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment)
     }
 
     /**
@@ -599,7 +599,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_physics_quadrant_size
      */
     fun setPhysicsQuadrantSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPhysicsQuadrantSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setPhysicsQuadrantSizeBind, segment, size)
     }
 
     /**
@@ -616,7 +616,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_physics_quadrant_size
      */
     fun getPhysicsQuadrantSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsQuadrantSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsQuadrantSizeBind, segment)
     }
 
     /**
@@ -625,7 +625,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_occlusion_enabled
      */
     fun setOcclusionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOcclusionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setOcclusionEnabledBind, segment, enabled)
     }
 
     /**
@@ -634,7 +634,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_occlusion_enabled
      */
     fun isOcclusionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOcclusionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOcclusionEnabledBind, segment)
     }
 
     /**
@@ -643,7 +643,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_navigation_enabled
      */
     fun setNavigationEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNavigationEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setNavigationEnabledBind, segment, enabled)
     }
 
     /**
@@ -652,7 +652,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_navigation_enabled
      */
     fun isNavigationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNavigationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNavigationEnabledBind, segment)
     }
 
     /**
@@ -662,7 +662,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_navigation_map
      */
     fun setNavigationMap(map: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, map)
+        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, map)
     }
 
     /**
@@ -673,7 +673,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -683,7 +683,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_navigation_visibility_mode
      */
     fun setNavigationVisibilityMode(showNavigation: Long) {
-        ObjectCalls.ptrcallWithLongArg(setNavigationVisibilityModeBind, handle, showNavigation)
+        ObjectCalls.ptrcallWithLongArg(setNavigationVisibilityModeBind, segment, showNavigation)
     }
 
     /**
@@ -693,7 +693,7 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_navigation_visibility_mode
      */
     fun getNavigationVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, segment)
     }
 
     object Signals {
@@ -706,11 +706,11 @@ class TileMapLayer(handle: MemorySegment) : Node2D(handle) {
         const val DEBUG_VISIBILITY_MODE_FORCE_SHOW: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TileMapLayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TileMapLayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TileMapLayer? =
-            if (handle.address() == 0L) null else TileMapLayer(handle)
+            if (handle.address() == 0L) null else TileMapLayer(GodotHandle(handle))
 
         private const val SET_CELL_HASH = 2428518503L
         private val setCellBind by lazy {

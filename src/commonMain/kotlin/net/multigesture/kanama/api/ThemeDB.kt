@@ -185,8 +185,8 @@ object ThemeDB {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): ThemeDB? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): ThemeDB? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): ThemeDB? =
         if (handle.address() == 0L) null else this

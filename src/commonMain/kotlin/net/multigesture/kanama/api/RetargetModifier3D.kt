@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RetargetModifier3D
  */
-class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var profile: SkeletonProfile?
         @JvmName("profileProperty")
         get() = getProfile()
@@ -37,7 +37,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_profile
      */
     fun setProfile(profile: SkeletonProfile?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProfileBind, handle, listOf(profile?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -46,7 +46,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.get_profile
      */
     fun getProfile(): SkeletonProfile? {
-        return SkeletonProfile.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, handle))
+        return SkeletonProfile.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, segment))
     }
 
     /**
@@ -62,7 +62,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_use_global_pose
      */
     fun setUseGlobalPose(useGlobalPose: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseGlobalPoseBind, handle, useGlobalPose)
+        ObjectCalls.ptrcallWithBoolArg(setUseGlobalPoseBind, segment, useGlobalPose)
     }
 
     /**
@@ -78,7 +78,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_using_global_pose
      */
     fun isUsingGlobalPose(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingGlobalPoseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingGlobalPoseBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_enable_flags
      */
     fun setEnableFlags(enableFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnableFlagsBind, handle, enableFlags)
+        ObjectCalls.ptrcallWithLongArg(setEnableFlagsBind, segment, enableFlags)
     }
 
     /**
@@ -98,7 +98,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.get_enable_flags
      */
     fun getEnableFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnableFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEnableFlagsBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_position_enabled
      */
     fun setPositionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPositionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPositionEnabledBind, segment, enabled)
     }
 
     /**
@@ -116,7 +116,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_position_enabled
      */
     fun isPositionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPositionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPositionEnabledBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_rotation_enabled
      */
     fun setRotationEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRotationEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRotationEnabledBind, segment, enabled)
     }
 
     /**
@@ -134,7 +134,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_rotation_enabled
      */
     fun isRotationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRotationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRotationEnabledBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_scale_enabled
      */
     fun setScaleEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScaleEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setScaleEnabledBind, segment, enabled)
     }
 
     /**
@@ -152,7 +152,7 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_scale_enabled
      */
     fun isScaleEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScaleEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScaleEnabledBind, segment)
     }
 
     companion object {
@@ -162,11 +162,11 @@ class RetargetModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         const val TRANSFORM_FLAG_ALL: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RetargetModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RetargetModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RetargetModifier3D? =
-            if (handle.address() == 0L) null else RetargetModifier3D(handle)
+            if (handle.address() == 0L) null else RetargetModifier3D(GodotHandle(handle))
 
         private const val SET_PROFILE_HASH = 3870374136L
         private val setProfileBind by lazy {

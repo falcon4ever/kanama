@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CenterContainer
  */
-class CenterContainer(handle: MemorySegment) : Container(handle) {
+class CenterContainer(handle: GodotHandle) : Container(handle) {
     var useTopLeft: Boolean
         @JvmName("useTopLeftProperty")
         get() = isUsingTopLeft()
@@ -24,7 +24,7 @@ class CenterContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: CenterContainer.set_use_top_left
      */
     fun setUseTopLeft(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseTopLeftBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseTopLeftBind, segment, enable)
     }
 
     /**
@@ -33,16 +33,16 @@ class CenterContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: CenterContainer.is_using_top_left
      */
     fun isUsingTopLeft(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTopLeftBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTopLeftBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CenterContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CenterContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CenterContainer? =
-            if (handle.address() == 0L) null else CenterContainer(handle)
+            if (handle.address() == 0L) null else CenterContainer(GodotHandle(handle))
 
         private const val SET_USE_TOP_LEFT_HASH = 2586408642L
         private val setUseTopLeftBind by lazy {

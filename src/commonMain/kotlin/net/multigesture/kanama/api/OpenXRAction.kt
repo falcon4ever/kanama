@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRAction
  */
-class OpenXRAction(handle: MemorySegment) : Resource(handle) {
+class OpenXRAction(handle: GodotHandle) : Resource(handle) {
     var localizedName: String
         @JvmName("localizedNameProperty")
         get() = getLocalizedName()
@@ -30,32 +30,32 @@ class OpenXRAction(handle: MemorySegment) : Resource(handle) {
 
     fun setLocalizedName(localizedName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLocalizedNameBind, handle, localizedName)
+        ObjectCalls.ptrcallWithStringArg(setLocalizedNameBind, segment, localizedName)
     }
 
     fun getLocalizedName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, segment)
     }
 
     fun setActionType(actionType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setActionTypeBind, handle, actionType)
+        ObjectCalls.ptrcallWithLongArg(setActionTypeBind, segment, actionType)
     }
 
     fun getActionType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getActionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getActionTypeBind, segment)
     }
 
     fun setToplevelPaths(toplevelPaths: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setToplevelPathsBind, handle, toplevelPaths)
+        ObjectCalls.ptrcallWithPackedStringListArg(setToplevelPathsBind, segment, toplevelPaths)
     }
 
     fun getToplevelPaths(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getToplevelPathsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getToplevelPathsBind, segment)
     }
 
     companion object {
@@ -65,11 +65,11 @@ class OpenXRAction(handle: MemorySegment) : Resource(handle) {
         const val OPENXR_ACTION_POSE: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRAction? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRAction? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRAction? =
-            if (handle.address() == 0L) null else OpenXRAction(handle)
+            if (handle.address() == 0L) null else OpenXRAction(GodotHandle(handle))
 
         private const val SET_LOCALIZED_NAME_HASH = 83702148L
         private val setLocalizedNameBind by lazy {

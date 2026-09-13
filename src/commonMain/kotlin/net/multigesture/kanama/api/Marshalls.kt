@@ -82,8 +82,8 @@ object Marshalls {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): Marshalls? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): Marshalls? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): Marshalls? =
         if (handle.address() == 0L) null else this

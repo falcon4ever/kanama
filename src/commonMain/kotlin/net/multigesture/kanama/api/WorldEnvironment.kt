@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: WorldEnvironment
  */
-class WorldEnvironment(handle: MemorySegment) : Node(handle) {
+class WorldEnvironment(handle: GodotHandle) : Node(handle) {
     var environment: Environment?
         @JvmName("environmentProperty")
         get() = getEnvironment()
@@ -37,7 +37,7 @@ class WorldEnvironment(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_environment
      */
     fun setEnvironment(env: Environment?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -46,7 +46,7 @@ class WorldEnvironment(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_environment
      */
     fun getEnvironment(): Environment? {
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
+        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
     }
 
     /**
@@ -55,7 +55,7 @@ class WorldEnvironment(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_camera_attributes
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -64,7 +64,7 @@ class WorldEnvironment(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
+        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     /**
@@ -73,7 +73,7 @@ class WorldEnvironment(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_compositor
      */
     fun setCompositor(compositor: Compositor?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, handle, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -82,16 +82,16 @@ class WorldEnvironment(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_compositor
      */
     fun getCompositor(): Compositor? {
-        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, handle))
+        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WorldEnvironment? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WorldEnvironment? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WorldEnvironment? =
-            if (handle.address() == 0L) null else WorldEnvironment(handle)
+            if (handle.address() == 0L) null else WorldEnvironment(GodotHandle(handle))
 
         private const val SET_ENVIRONMENT_HASH = 4143518816L
         private val setEnvironmentBind by lazy {

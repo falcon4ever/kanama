@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectHardLimiter
  */
-class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
     var preGainDb: Double
         @JvmName("preGainDbProperty")
         get() = getPreGainDb()
@@ -40,7 +40,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setCeilingDb(ceiling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
+        ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, segment, ceiling)
     }
 
     /**
@@ -52,7 +52,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getCeilingDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPreGainDb(preGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPreGainDbBind, handle, preGain)
+        ObjectCalls.ptrcallWithDoubleArg(setPreGainDbBind, segment, preGain)
     }
 
     /**
@@ -72,7 +72,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPreGainDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainDbBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setRelease(release: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setReleaseBind, handle, release)
+        ObjectCalls.ptrcallWithDoubleArg(setReleaseBind, segment, release)
     }
 
     /**
@@ -94,16 +94,16 @@ class AudioEffectHardLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getRelease(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectHardLimiter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectHardLimiter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectHardLimiter? =
-            if (handle.address() == 0L) null else AudioEffectHardLimiter(handle)
+            if (handle.address() == 0L) null else AudioEffectHardLimiter(GodotHandle(handle))
 
         private const val SET_CEILING_DB_HASH = 373806689L
         private val setCeilingDbBind by lazy {

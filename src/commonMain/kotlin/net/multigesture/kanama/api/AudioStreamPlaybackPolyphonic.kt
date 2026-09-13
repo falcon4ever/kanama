@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStreamPlaybackPolyphonic
  */
-class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback(handle) {
+class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(handle) {
     /**
      * Play an `AudioStream` at a given offset, volume, pitch scale, playback type, and bus. Playback
      * starts immediately. The return value is a unique integer ID that is associated to this playback
@@ -24,7 +24,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      */
     fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: Long = 0L, bus: String = "Master"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, fromOffset, volumeDb, pitchScale, playbackType, bus)
+        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, segment, stream?.requireOpenHandle() ?: MemorySegment.NULL, fromOffset, volumeDb, pitchScale, playbackType, bus)
     }
 
     /**
@@ -35,7 +35,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      */
     fun setStreamVolume(stream: Long, volumeDb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamVolumeBind, handle, stream, volumeDb)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamVolumeBind, segment, stream, volumeDb)
     }
 
     /**
@@ -45,7 +45,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      */
     fun setStreamPitchScale(stream: Long, pitchScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamPitchScaleBind, handle, stream, pitchScale)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamPitchScaleBind, segment, stream, pitchScale)
     }
 
     /**
@@ -56,7 +56,7 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      */
     fun isStreamPlaying(stream: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isStreamPlayingBind, handle, stream)
+        return ObjectCalls.ptrcallWithLongArgRetBool(isStreamPlayingBind, segment, stream)
     }
 
     /**
@@ -67,18 +67,18 @@ class AudioStreamPlaybackPolyphonic(handle: MemorySegment) : AudioStreamPlayback
      */
     fun stopStream(stream: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(stopStreamBind, handle, stream)
+        ObjectCalls.ptrcallWithLongArg(stopStreamBind, segment, stream)
     }
 
     companion object {
         const val INVALID_ID: Long = -1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamPlaybackPolyphonic? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamPlaybackPolyphonic? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamPlaybackPolyphonic? =
-            if (handle.address() == 0L) null else AudioStreamPlaybackPolyphonic(handle)
+            if (handle.address() == 0L) null else AudioStreamPlaybackPolyphonic(GodotHandle(handle))
 
         private const val PLAY_STREAM_HASH = 1846744803L
         private val playStreamBind by lazy {

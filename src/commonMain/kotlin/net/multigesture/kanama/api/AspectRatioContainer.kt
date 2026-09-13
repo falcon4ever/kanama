@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AspectRatioContainer
  */
-class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
+class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
     var ratio: Double
         @JvmName("ratioProperty")
         get() = getRatio()
@@ -43,7 +43,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_ratio
      */
     fun setRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setRatioBind, segment, ratio)
     }
 
     /**
@@ -53,7 +53,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_ratio
      */
     fun getRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_stretch_mode
      */
     fun setStretchMode(stretchMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, handle, stretchMode)
+        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode)
     }
 
     /**
@@ -71,7 +71,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_stretch_mode
      */
     fun getStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_alignment_horizontal
      */
     fun setAlignmentHorizontal(alignmentHorizontal: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentHorizontalBind, handle, alignmentHorizontal)
+        ObjectCalls.ptrcallWithLongArg(setAlignmentHorizontalBind, segment, alignmentHorizontal)
     }
 
     /**
@@ -89,7 +89,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_alignment_horizontal
      */
     fun getAlignmentHorizontal(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentHorizontalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentHorizontalBind, segment)
     }
 
     /**
@@ -98,7 +98,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_alignment_vertical
      */
     fun setAlignmentVertical(alignmentVertical: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentVerticalBind, handle, alignmentVertical)
+        ObjectCalls.ptrcallWithLongArg(setAlignmentVerticalBind, segment, alignmentVertical)
     }
 
     /**
@@ -107,7 +107,7 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_alignment_vertical
      */
     fun getAlignmentVertical(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentVerticalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentVerticalBind, segment)
     }
 
     companion object {
@@ -120,11 +120,11 @@ class AspectRatioContainer(handle: MemorySegment) : Container(handle) {
         const val ALIGNMENT_END: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AspectRatioContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AspectRatioContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AspectRatioContainer? =
-            if (handle.address() == 0L) null else AspectRatioContainer(handle)
+            if (handle.address() == 0L) null else AspectRatioContainer(GodotHandle(handle))
 
         private const val SET_RATIO_HASH = 373806689L
         private val setRatioBind by lazy {

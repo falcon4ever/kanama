@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: NavigationMeshSourceGeometryData2D
  */
-class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handle) {
+class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle) {
     var traversableOutlines: List<List<Vector2>>
         @JvmName("traversableOutlinesProperty")
         get() = getTraversableOutlines()
@@ -39,7 +39,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -49,7 +49,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun hasData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, segment)
     }
 
     /**
@@ -59,7 +59,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun setTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(setTraversableOutlinesBind, handle, traversableOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(setTraversableOutlinesBind, segment, traversableOutlines)
     }
 
     /**
@@ -69,7 +69,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun getTraversableOutlines(): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getTraversableOutlinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getTraversableOutlinesBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun setObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(setObstructionOutlinesBind, handle, obstructionOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(setObstructionOutlinesBind, segment, obstructionOutlines)
     }
 
     /**
@@ -89,7 +89,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun getObstructionOutlines(): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getObstructionOutlinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getObstructionOutlinesBind, segment)
     }
 
     /**
@@ -100,7 +100,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun appendTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendTraversableOutlinesBind, handle, traversableOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendTraversableOutlinesBind, segment, traversableOutlines)
     }
 
     /**
@@ -111,7 +111,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun appendObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendObstructionOutlinesBind, handle, obstructionOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendObstructionOutlinesBind, segment, obstructionOutlines)
     }
 
     /**
@@ -121,7 +121,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun addTraversableOutline(shapeOutline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(addTraversableOutlineBind, handle, shapeOutline)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(addTraversableOutlineBind, segment, shapeOutline)
     }
 
     /**
@@ -131,7 +131,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun addObstructionOutline(shapeOutline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(addObstructionOutlineBind, handle, shapeOutline)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(addObstructionOutlineBind, segment, shapeOutline)
     }
 
     /**
@@ -142,7 +142,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun merge(otherGeometry: NavigationMeshSourceGeometryData2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeBind, handle, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -154,7 +154,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun addProjectedObstruction(vertices: List<Vector2>, carve: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(addProjectedObstructionBind, handle, vertices, carve)
+        ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(addProjectedObstructionBind, segment, vertices, carve)
     }
 
     /**
@@ -164,7 +164,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun clearProjectedObstructions() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, segment)
     }
 
     /**
@@ -175,7 +175,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, handle, projectedObstructions)
+        ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, segment, projectedObstructions)
     }
 
     /**
@@ -189,7 +189,7 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun getProjectedObstructions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, segment)
     }
 
     /**
@@ -201,16 +201,16 @@ class NavigationMeshSourceGeometryData2D(handle: MemorySegment) : Resource(handl
      */
     fun getBounds(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationMeshSourceGeometryData2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationMeshSourceGeometryData2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationMeshSourceGeometryData2D? =
-            if (handle.address() == 0L) null else NavigationMeshSourceGeometryData2D(handle)
+            if (handle.address() == 0L) null else NavigationMeshSourceGeometryData2D(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {

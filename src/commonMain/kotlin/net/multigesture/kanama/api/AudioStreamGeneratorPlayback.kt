@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AudioStreamGeneratorPlayback
  */
-class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackResampled(handle) {
+class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackResampled(handle) {
     /**
      * Pushes a single audio data frame to the buffer. This is usually less efficient than
      * `push_buffer` in C# and compiled languages via GDExtension, but `push_frame` may be more
@@ -21,7 +21,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      */
     fun pushFrame(frame: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetBool(pushFrameBind, handle, frame)
+        return ObjectCalls.ptrcallWithVector2ArgRetBool(pushFrameBind, segment, frame)
     }
 
     /**
@@ -32,7 +32,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      */
     fun canPushBuffer(amount: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(canPushBufferBind, handle, amount)
+        return ObjectCalls.ptrcallWithIntArgRetBool(canPushBufferBind, segment, amount)
     }
 
     /**
@@ -44,7 +44,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      */
     fun pushBuffer(frames: List<Vector2>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(pushBufferBind, handle, frames)
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(pushBufferBind, segment, frames)
     }
 
     /**
@@ -55,7 +55,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      */
     fun getFramesAvailable(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, segment)
     }
 
     /**
@@ -66,7 +66,7 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      */
     fun getSkips(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkipsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSkipsBind, segment)
     }
 
     /**
@@ -76,16 +76,16 @@ class AudioStreamGeneratorPlayback(handle: MemorySegment) : AudioStreamPlaybackR
      */
     fun clearBuffer() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBufferBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBufferBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamGeneratorPlayback? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamGeneratorPlayback? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamGeneratorPlayback? =
-            if (handle.address() == 0L) null else AudioStreamGeneratorPlayback(handle)
+            if (handle.address() == 0L) null else AudioStreamGeneratorPlayback(GodotHandle(handle))
 
         private const val PUSH_FRAME_HASH = 3975407249L
         private val pushFrameBind by lazy {

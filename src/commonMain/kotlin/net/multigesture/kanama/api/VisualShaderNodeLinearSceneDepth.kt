@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeLinearSceneDepth
  */
-class VisualShaderNodeLinearSceneDepth(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeLinearSceneDepth(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeLinearSceneDepth? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeLinearSceneDepth? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeLinearSceneDepth? =
-            if (handle.address() == 0L) null else VisualShaderNodeLinearSceneDepth(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeLinearSceneDepth(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

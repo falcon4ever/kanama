@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: BoxContainer
  */
-open class BoxContainer(handle: MemorySegment) : Container(handle) {
+open class BoxContainer(handle: GodotHandle) : Container(handle) {
     var alignment: Long
         @JvmName("alignmentProperty")
         get() = getAlignment()
@@ -31,7 +31,7 @@ open class BoxContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: BoxContainer.add_spacer
      */
     fun addSpacer(begin: Boolean): Control? {
-        return Control.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(addSpacerBind, handle, begin))
+        return Control.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(addSpacerBind, segment, begin))
     }
 
     /**
@@ -41,7 +41,7 @@ open class BoxContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: BoxContainer.set_alignment
      */
     fun setAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment)
     }
 
     /**
@@ -51,7 +51,7 @@ open class BoxContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: BoxContainer.get_alignment
      */
     fun getAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ open class BoxContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: BoxContainer.set_vertical
      */
     fun setVertical(vertical: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
+        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
     }
 
     /**
@@ -71,7 +71,7 @@ open class BoxContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: BoxContainer.is_vertical
      */
     fun isVertical(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
     }
 
     companion object {
@@ -80,11 +80,11 @@ open class BoxContainer(handle: MemorySegment) : Container(handle) {
         const val ALIGNMENT_END: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BoxContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BoxContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BoxContainer? =
-            if (handle.address() == 0L) null else BoxContainer(handle)
+            if (handle.address() == 0L) null else BoxContainer(GodotHandle(handle))
 
         private const val ADD_SPACER_HASH = 1326660695L
         private val addSpacerBind by lazy {

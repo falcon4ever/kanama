@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: TileData
  */
-class TileData(handle: MemorySegment) : GodotObject(handle) {
+class TileData(handle: GodotHandle) : GodotObject(handle) {
     var flipH: Boolean
         @JvmName("flipHProperty")
         get() = getFlipH()
@@ -87,7 +87,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_flip_h
      */
     fun setFlipH(flipH: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, flipH)
+        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, flipH)
     }
 
     /**
@@ -96,7 +96,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_flip_h
      */
     fun getFlipH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipHBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFlipHBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_flip_v
      */
     fun setFlipV(flipV: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, flipV)
+        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, flipV)
     }
 
     /**
@@ -114,7 +114,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_flip_v
      */
     fun getFlipV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipVBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFlipVBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_transpose
      */
     fun setTranspose(transpose: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransposeBind, handle, transpose)
+        ObjectCalls.ptrcallWithBoolArg(setTransposeBind, segment, transpose)
     }
 
     /**
@@ -134,7 +134,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_transpose
      */
     fun getTranspose(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getTransposeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getTransposeBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -154,7 +154,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     /**
@@ -163,7 +163,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_texture_origin
      */
     fun setTextureOrigin(textureOrigin: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setTextureOriginBind, handle, textureOrigin)
+        ObjectCalls.ptrcallWithVector2iArg(setTextureOriginBind, segment, textureOrigin)
     }
 
     /**
@@ -172,7 +172,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_texture_origin
      */
     fun getTextureOrigin(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureOriginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureOriginBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, modulate)
+        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
     }
 
     /**
@@ -190,7 +190,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_z_index
      */
     fun setZIndex(zIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZIndexBind, handle, zIndex)
+        ObjectCalls.ptrcallWithIntArg(setZIndexBind, segment, zIndex)
     }
 
     /**
@@ -208,7 +208,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_z_index
      */
     fun getZIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getZIndexBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_y_sort_origin
      */
     fun setYSortOrigin(ySortOrigin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setYSortOriginBind, handle, ySortOrigin)
+        ObjectCalls.ptrcallWithIntArg(setYSortOriginBind, segment, ySortOrigin)
     }
 
     /**
@@ -226,7 +226,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_y_sort_origin
      */
     fun getYSortOrigin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getYSortOriginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getYSortOriginBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder_polygons_count
      */
     fun setOccluderPolygonsCount(layerId: Int, polygonsCount: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setOccluderPolygonsCountBind, handle, layerId, polygonsCount)
+        ObjectCalls.ptrcallWithTwoIntArgs(setOccluderPolygonsCountBind, segment, layerId, polygonsCount)
     }
 
     /**
@@ -245,7 +245,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder_polygons_count
      */
     fun getOccluderPolygonsCount(layerId: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOccluderPolygonsCountBind, handle, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getOccluderPolygonsCountBind, segment, layerId)
     }
 
     /**
@@ -254,7 +254,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.add_occluder_polygon
      */
     fun addOccluderPolygon(layerId: Int) {
-        ObjectCalls.ptrcallWithIntArg(addOccluderPolygonBind, handle, layerId)
+        ObjectCalls.ptrcallWithIntArg(addOccluderPolygonBind, segment, layerId)
     }
 
     /**
@@ -263,7 +263,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.remove_occluder_polygon
      */
     fun removeOccluderPolygon(layerId: Int, polygonIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(removeOccluderPolygonBind, handle, layerId, polygonIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(removeOccluderPolygonBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -273,7 +273,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder_polygon
      */
     fun setOccluderPolygon(layerId: Int, polygonIndex: Int, polygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setOccluderPolygonBind, handle, layerId, polygonIndex, polygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setOccluderPolygonBind, segment, layerId, polygonIndex, polygon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -284,7 +284,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder_polygon
      */
     fun getOccluderPolygon(layerId: Int, polygonIndex: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getOccluderPolygonBind, handle, layerId, polygonIndex, flipH, flipV, transpose))
+        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getOccluderPolygonBind, segment, layerId, polygonIndex, flipH, flipV, transpose))
     }
 
     /**
@@ -293,7 +293,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder
      */
     fun setOccluder(layerId: Int, occluderPolygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setOccluderBind, handle, layerId, occluderPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setOccluderBind, segment, layerId, occluderPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -303,7 +303,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder
      */
     fun getOccluder(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getOccluderBind, handle, layerId, flipH, flipV, transpose))
+        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getOccluderBind, segment, layerId, flipH, flipV, transpose))
     }
 
     /**
@@ -313,7 +313,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_constant_linear_velocity
      */
     fun setConstantLinearVelocity(layerId: Int, velocity: Vector2) {
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setConstantLinearVelocityBind, handle, layerId, velocity)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setConstantLinearVelocityBind, segment, layerId, velocity)
     }
 
     /**
@@ -322,7 +322,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_constant_linear_velocity
      */
     fun getConstantLinearVelocity(layerId: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getConstantLinearVelocityBind, handle, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getConstantLinearVelocityBind, segment, layerId)
     }
 
     /**
@@ -332,7 +332,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_constant_angular_velocity
      */
     fun setConstantAngularVelocity(layerId: Int, velocity: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setConstantAngularVelocityBind, handle, layerId, velocity)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setConstantAngularVelocityBind, segment, layerId, velocity)
     }
 
     /**
@@ -341,7 +341,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_constant_angular_velocity
      */
     fun getConstantAngularVelocity(layerId: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getConstantAngularVelocityBind, handle, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getConstantAngularVelocityBind, segment, layerId)
     }
 
     /**
@@ -350,7 +350,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygons_count
      */
     fun setCollisionPolygonsCount(layerId: Int, polygonsCount: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setCollisionPolygonsCountBind, handle, layerId, polygonsCount)
+        ObjectCalls.ptrcallWithTwoIntArgs(setCollisionPolygonsCountBind, segment, layerId, polygonsCount)
     }
 
     /**
@@ -359,7 +359,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_collision_polygons_count
      */
     fun getCollisionPolygonsCount(layerId: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionPolygonsCountBind, handle, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionPolygonsCountBind, segment, layerId)
     }
 
     /**
@@ -368,7 +368,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.add_collision_polygon
      */
     fun addCollisionPolygon(layerId: Int) {
-        ObjectCalls.ptrcallWithIntArg(addCollisionPolygonBind, handle, layerId)
+        ObjectCalls.ptrcallWithIntArg(addCollisionPolygonBind, segment, layerId)
     }
 
     /**
@@ -377,7 +377,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.remove_collision_polygon
      */
     fun removeCollisionPolygon(layerId: Int, polygonIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(removeCollisionPolygonBind, handle, layerId, polygonIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(removeCollisionPolygonBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -387,7 +387,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygon_points
      */
     fun setCollisionPolygonPoints(layerId: Int, polygonIndex: Int, polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(setCollisionPolygonPointsBind, handle, layerId, polygonIndex, polygon)
+        ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(setCollisionPolygonPointsBind, segment, layerId, polygonIndex, polygon)
     }
 
     /**
@@ -397,7 +397,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_collision_polygon_points
      */
     fun getCollisionPolygonPoints(layerId: Int, polygonIndex: Int): List<Vector2> {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedVector2List(getCollisionPolygonPointsBind, handle, layerId, polygonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedVector2List(getCollisionPolygonPointsBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -407,7 +407,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygon_one_way
      */
     fun setCollisionPolygonOneWay(layerId: Int, polygonIndex: Int, oneWay: Boolean) {
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setCollisionPolygonOneWayBind, handle, layerId, polygonIndex, oneWay)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setCollisionPolygonOneWayBind, segment, layerId, polygonIndex, oneWay)
     }
 
     /**
@@ -417,7 +417,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.is_collision_polygon_one_way
      */
     fun isCollisionPolygonOneWay(layerId: Int, polygonIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isCollisionPolygonOneWayBind, handle, layerId, polygonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isCollisionPolygonOneWayBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -427,7 +427,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygon_one_way_margin
      */
     fun setCollisionPolygonOneWayMargin(layerId: Int, polygonIndex: Int, oneWayMargin: Double) {
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCollisionPolygonOneWayMarginBind, handle, layerId, polygonIndex, oneWayMargin)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCollisionPolygonOneWayMarginBind, segment, layerId, polygonIndex, oneWayMargin)
     }
 
     /**
@@ -437,7 +437,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_collision_polygon_one_way_margin
      */
     fun getCollisionPolygonOneWayMargin(layerId: Int, polygonIndex: Int): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCollisionPolygonOneWayMarginBind, handle, layerId, polygonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCollisionPolygonOneWayMarginBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -446,7 +446,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_terrain_set
      */
     fun setTerrainSet(terrainSet: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTerrainSetBind, handle, terrainSet)
+        ObjectCalls.ptrcallWithIntArg(setTerrainSetBind, segment, terrainSet)
     }
 
     /**
@@ -455,7 +455,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_terrain_set
      */
     fun getTerrainSet(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetBind, segment)
     }
 
     /**
@@ -464,7 +464,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_terrain
      */
     fun setTerrain(terrain: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTerrainBind, handle, terrain)
+        ObjectCalls.ptrcallWithIntArg(setTerrainBind, segment, terrain)
     }
 
     /**
@@ -473,7 +473,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_terrain
      */
     fun getTerrain(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainBind, segment)
     }
 
     /**
@@ -483,7 +483,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_terrain_peering_bit
      */
     fun setTerrainPeeringBit(peeringBit: Long, terrain: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setTerrainPeeringBitBind, handle, peeringBit, terrain)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setTerrainPeeringBitBind, segment, peeringBit, terrain)
     }
 
     /**
@@ -493,7 +493,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_terrain_peering_bit
      */
     fun getTerrainPeeringBit(peeringBit: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getTerrainPeeringBitBind, handle, peeringBit)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getTerrainPeeringBitBind, segment, peeringBit)
     }
 
     /**
@@ -502,7 +502,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.is_valid_terrain_peering_bit
      */
     fun isValidTerrainPeeringBit(peeringBit: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isValidTerrainPeeringBitBind, handle, peeringBit)
+        return ObjectCalls.ptrcallWithLongArgRetBool(isValidTerrainPeeringBitBind, segment, peeringBit)
     }
 
     /**
@@ -511,7 +511,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_navigation_polygon
      */
     fun setNavigationPolygon(layerId: Int, navigationPolygon: NavigationPolygon?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setNavigationPolygonBind, handle, layerId, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setNavigationPolygonBind, segment, layerId, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -521,7 +521,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_navigation_polygon
      */
     fun getNavigationPolygon(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): NavigationPolygon? {
-        return NavigationPolygon.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getNavigationPolygonBind, handle, layerId, flipH, flipV, transpose))
+        return NavigationPolygon.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getNavigationPolygonBind, segment, layerId, flipH, flipV, transpose))
     }
 
     /**
@@ -530,7 +530,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_probability
      */
     fun setProbability(probability: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProbabilityBind, handle, probability)
+        ObjectCalls.ptrcallWithDoubleArg(setProbabilityBind, segment, probability)
     }
 
     /**
@@ -539,7 +539,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_probability
      */
     fun getProbability(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProbabilityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getProbabilityBind, segment)
     }
 
     /**
@@ -548,7 +548,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_custom_data
      */
     fun setCustomData(layerName: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringAndVariantArg(setCustomDataBind, handle, layerName, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(setCustomDataBind, segment, layerName, value)
     }
 
     /**
@@ -558,7 +558,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_custom_data
      */
     fun getCustomData(layerName: String): Any? {
-        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getCustomDataBind, handle, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getCustomDataBind, segment, layerName)
     }
 
     /**
@@ -567,7 +567,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.has_custom_data
      */
     fun hasCustomData(layerName: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataBind, handle, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataBind, segment, layerName)
     }
 
     /**
@@ -576,7 +576,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_custom_data_by_layer_id
      */
     fun setCustomDataByLayerId(layerId: Int, value: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setCustomDataByLayerIdBind, handle, layerId, value)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setCustomDataByLayerIdBind, segment, layerId, value)
     }
 
     /**
@@ -585,7 +585,7 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_custom_data_by_layer_id
      */
     fun getCustomDataByLayerId(layerId: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getCustomDataByLayerIdBind, handle, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getCustomDataByLayerIdBind, segment, layerId)
     }
 
     object Signals {
@@ -594,11 +594,11 @@ class TileData(handle: MemorySegment) : GodotObject(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TileData? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TileData? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TileData? =
-            if (handle.address() == 0L) null else TileData(handle)
+            if (handle.address() == 0L) null else TileData(GodotHandle(handle))
 
         private const val SET_FLIP_H_HASH = 2586408642L
         private val setFlipHBind by lazy {

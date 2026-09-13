@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDTextureView
  */
-class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
+class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
     var formatOverride: Long
         @JvmName("formatOverrideProperty")
         get() = getFormatOverride()
@@ -51,7 +51,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFormatOverride(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, segment, pMember)
     }
 
     /**
@@ -63,7 +63,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFormatOverride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSwizzleR(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, segment, pMember)
     }
 
     /**
@@ -83,7 +83,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSwizzleR(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSwizzleG(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, segment, pMember)
     }
 
     /**
@@ -103,7 +103,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSwizzleG(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSwizzleB(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, segment, pMember)
     }
 
     /**
@@ -123,7 +123,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSwizzleB(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, segment)
     }
 
     /**
@@ -133,7 +133,7 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSwizzleA(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleABind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleABind, segment, pMember)
     }
 
     /**
@@ -143,16 +143,16 @@ class RDTextureView(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSwizzleA(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDTextureView? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDTextureView? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDTextureView? =
-            if (handle.address() == 0L) null else RDTextureView(handle)
+            if (handle.address() == 0L) null else RDTextureView(GodotHandle(handle))
 
         private const val SET_FORMAT_OVERRIDE_HASH = 565531219L
         private val setFormatOverrideBind by lazy {

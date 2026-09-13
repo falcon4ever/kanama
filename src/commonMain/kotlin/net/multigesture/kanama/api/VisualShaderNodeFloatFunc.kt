@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeFloatFunc
  */
-class VisualShaderNodeFloatFunc(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeFloatFunc(handle: GodotHandle) : VisualShaderNode(handle) {
     var function: Long
         @JvmName("functionProperty")
         get() = getFunction()
@@ -18,12 +18,12 @@ class VisualShaderNodeFloatFunc(handle: MemorySegment) : VisualShaderNode(handle
 
     fun setFunction(func: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
     }
 
     fun getFunction(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
     }
 
     companion object {
@@ -62,11 +62,11 @@ class VisualShaderNodeFloatFunc(handle: MemorySegment) : VisualShaderNode(handle
         const val FUNC_MAX: Long = 32L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeFloatFunc? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeFloatFunc? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeFloatFunc? =
-            if (handle.address() == 0L) null else VisualShaderNodeFloatFunc(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeFloatFunc(GodotHandle(handle))
 
         private const val SET_FUNCTION_HASH = 536026177L
         private val setFunctionBind by lazy {

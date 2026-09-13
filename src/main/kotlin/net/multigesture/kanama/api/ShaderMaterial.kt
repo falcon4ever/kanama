@@ -9,7 +9,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: ShaderMaterial
  */
-class ShaderMaterial internal constructor(handle: MemorySegment) : Material(handle) {
+class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle) {
 
     var shader: Shader?
         @JvmName("shaderProperty")
@@ -26,7 +26,7 @@ class ShaderMaterial internal constructor(handle: MemorySegment) : Material(hand
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(
             setShaderBind,
-            handle,
+            segment,
             listOf(shader?.requireOpenHandle() ?: MemorySegment.NULL),
         )
     }
@@ -38,7 +38,7 @@ class ShaderMaterial internal constructor(handle: MemorySegment) : Material(hand
      */
     fun getShader(): Shader? {
         checkOpen()
-        return Shader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, handle))
+        return Shader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, segment))
     }
 
     /**
@@ -55,7 +55,7 @@ class ShaderMaterial internal constructor(handle: MemorySegment) : Material(hand
      */
     fun setShaderParameter(param: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setShaderParameterBind, handle, param, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setShaderParameterBind, segment, param, value)
     }
 
     /**
@@ -65,13 +65,13 @@ class ShaderMaterial internal constructor(handle: MemorySegment) : Material(hand
      */
     fun getShaderParameter(param: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, handle, param)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, segment, param)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ShaderMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ShaderMaterial? =
+            wrap(handle.segment)
 
         @JvmStatic
         fun fromObject(value: GodotObject): ShaderMaterial? =
@@ -82,7 +82,7 @@ class ShaderMaterial internal constructor(handle: MemorySegment) : Material(hand
             if (value.isClass("ShaderMaterial")) ShaderMaterial(value.handle) else null
 
         internal fun wrap(handle: MemorySegment): ShaderMaterial? =
-            if (handle.address() == 0L) null else ShaderMaterial(handle)
+            if (handle.address() == 0L) null else ShaderMaterial(GodotHandle(handle))
 
         private const val SET_SHADER_HASH = 3341921675L
         private const val GET_SHADER_HASH = 2078273437L

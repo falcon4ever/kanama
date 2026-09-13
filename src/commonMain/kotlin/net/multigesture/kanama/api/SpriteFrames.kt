@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SpriteFrames
  */
-class SpriteFrames(handle: MemorySegment) : Resource(handle) {
+class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     /**
      * Adds a new `anim` animation to the library.
      *
@@ -18,7 +18,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun addAnimation(anim: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(addAnimationBind, handle, anim)
+        ObjectCalls.ptrcallWithStringNameArg(addAnimationBind, segment, anim)
     }
 
     /**
@@ -28,7 +28,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun hasAnimation(anim: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, segment, anim)
     }
 
     /**
@@ -39,7 +39,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun duplicateAnimation(animFrom: String, animTo: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(duplicateAnimationBind, handle, animFrom, animTo)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(duplicateAnimationBind, segment, animFrom, animTo)
     }
 
     /**
@@ -49,7 +49,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun removeAnimation(anim: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, handle, anim)
+        ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, segment, anim)
     }
 
     /**
@@ -59,7 +59,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun renameAnimation(anim: String, newname: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, handle, anim, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, segment, anim, newname)
     }
 
     /**
@@ -70,7 +70,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun getAnimationNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationNamesBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun setAnimationSpeed(anim: String, fps: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(setAnimationSpeedBind, handle, anim, fps)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(setAnimationSpeedBind, segment, anim, fps)
     }
 
     /**
@@ -90,7 +90,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun getAnimationSpeed(anim: String): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getAnimationSpeedBind, handle, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getAnimationSpeedBind, segment, anim)
     }
 
     /**
@@ -101,7 +101,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun setAnimationLoop(anim: String, loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(setAnimationLoopBind, handle, anim, loop)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(setAnimationLoopBind, segment, anim, loop)
     }
 
     /**
@@ -111,7 +111,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun getAnimationLoop(anim: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(getAnimationLoopBind, handle, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(getAnimationLoopBind, segment, anim)
     }
 
     /**
@@ -121,7 +121,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun setAnimationLoopMode(anim: String, loopMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndLongArg(setAnimationLoopModeBind, handle, anim, loopMode)
+        ObjectCalls.ptrcallWithStringNameAndLongArg(setAnimationLoopModeBind, segment, anim, loopMode)
     }
 
     /**
@@ -131,7 +131,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun getAnimationLoopMode(anim: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetLong(getAnimationLoopModeBind, handle, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetLong(getAnimationLoopModeBind, segment, anim)
     }
 
     /**
@@ -143,7 +143,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun addFrame(anim: String, texture: Texture2D?, duration: Double = 1.0, atPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(addFrameBind, handle, anim, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration, atPosition)
+        ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(addFrameBind, segment, anim, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration, atPosition)
     }
 
     /**
@@ -154,7 +154,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun setFrame(anim: String, idx: Int, texture: Texture2D?, duration: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(setFrameBind, handle, anim, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration)
+        ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(setFrameBind, segment, anim, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration)
     }
 
     /**
@@ -164,7 +164,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun removeFrame(anim: String, idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndIntArg(removeFrameBind, handle, anim, idx)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(removeFrameBind, segment, anim, idx)
     }
 
     /**
@@ -174,7 +174,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun getFrameCount(anim: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(getFrameCountBind, handle, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(getFrameCountBind, segment, anim)
     }
 
     /**
@@ -184,7 +184,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun getFrameTexture(anim: String, idx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getFrameTextureBind, handle, anim, idx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getFrameTextureBind, segment, anim, idx))
     }
 
     /**
@@ -197,7 +197,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun getFrameDuration(anim: String, idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(getFrameDurationBind, handle, anim, idx)
+        return ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(getFrameDurationBind, segment, anim, idx)
     }
 
     /**
@@ -207,7 +207,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun clear(anim: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(clearBind, handle, anim)
+        ObjectCalls.ptrcallWithStringNameArg(clearBind, segment, anim)
     }
 
     /**
@@ -217,7 +217,7 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
      */
     fun clearAll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearAllBind, segment)
     }
 
     companion object {
@@ -226,11 +226,11 @@ class SpriteFrames(handle: MemorySegment) : Resource(handle) {
         const val LOOP_PINGPONG: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpriteFrames? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpriteFrames? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpriteFrames? =
-            if (handle.address() == 0L) null else SpriteFrames(handle)
+            if (handle.address() == 0L) null else SpriteFrames(GodotHandle(handle))
 
         private const val ADD_ANIMATION_HASH = 3304788590L
         private val addAnimationBind by lazy {

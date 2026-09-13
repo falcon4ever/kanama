@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HTTPClient
  */
-class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
+class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     var blockingModeEnabled: Boolean
         @JvmName("blockingModeEnabledProperty")
         get() = isBlockingModeEnabled()
@@ -41,7 +41,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(connectToHostBind, handle, host, port, tlsOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -51,7 +51,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setConnection(connection: StreamPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setConnectionBind, handle, listOf(connection?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setConnectionBind, segment, listOf(connection?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -61,7 +61,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnection(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, handle))
+        return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, segment))
     }
 
     /**
@@ -76,7 +76,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun requestRaw(method: Long, url: String, headers: List<String>, body: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(requestRawBind, handle, method, url, headers, body)
+        return ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(requestRawBind, segment, method, url, headers, body)
     }
 
     /**
@@ -91,12 +91,12 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun request(method: Long, url: String, headers: List<String>, body: String = ""): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(requestBind, handle, method, url, headers, body)
+        return ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(requestBind, segment, method, url, headers, body)
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasResponse(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasResponseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasResponseBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isResponseChunked(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isResponseChunkedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isResponseChunkedBind, segment)
     }
 
     /**
@@ -126,7 +126,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getResponseCode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getResponseCodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getResponseCodeBind, segment)
     }
 
     /**
@@ -136,7 +136,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getResponseHeaders(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResponseHeadersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResponseHeadersBind, segment)
     }
 
     /**
@@ -148,7 +148,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getResponseHeadersAsDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getResponseHeadersAsDictionaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getResponseHeadersAsDictionaryBind, segment)
     }
 
     /**
@@ -161,7 +161,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getResponseBodyLength(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getResponseBodyLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getResponseBodyLengthBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun readResponseBodyChunk(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(readResponseBodyChunkBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(readResponseBodyChunkBind, segment)
     }
 
     /**
@@ -182,7 +182,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setReadChunkSize(bytes: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setReadChunkSizeBind, handle, bytes)
+        ObjectCalls.ptrcallWithIntArg(setReadChunkSizeBind, segment, bytes)
     }
 
     /**
@@ -193,7 +193,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getReadChunkSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getReadChunkSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getReadChunkSizeBind, segment)
     }
 
     /**
@@ -203,7 +203,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBlockingMode(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBlockingModeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setBlockingModeBind, segment, enabled)
     }
 
     /**
@@ -213,7 +213,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isBlockingModeEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBlockingModeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBlockingModeEnabledBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun poll(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
     }
 
     /**
@@ -244,7 +244,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHttpProxy(host: String, port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, handle, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, segment, host, port)
     }
 
     /**
@@ -255,7 +255,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHttpsProxy(host: String, port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, handle, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, segment, host, port)
     }
 
     /**
@@ -266,7 +266,7 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
      */
     fun queryStringFromDict(fields: Map<String, Any?>): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetString(queryStringFromDictBind, handle, fields)
+        return ObjectCalls.ptrcallWithDictionaryArgRetString(queryStringFromDictBind, segment, fields)
     }
 
     companion object {
@@ -353,11 +353,11 @@ class HTTPClient(handle: MemorySegment) : RefCounted(handle) {
         const val RESPONSE_NETWORK_AUTH_REQUIRED: Long = 511L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HTTPClient? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HTTPClient? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HTTPClient? =
-            if (handle.address() == 0L) null else HTTPClient(handle)
+            if (handle.address() == 0L) null else HTTPClient(GodotHandle(handle))
 
         private const val CONNECT_TO_HOST_HASH = 504540374L
         private val connectToHostBind by lazy {

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CodeEdit
  */
-class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
+class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
     var symbolLookupOnClick: Boolean
         @JvmName("symbolLookupOnClickProperty")
         get() = isSymbolLookupOnClickEnabled()
@@ -153,7 +153,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_indent_size
      */
     fun setIndentSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setIndentSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setIndentSizeBind, segment, size)
     }
 
     /**
@@ -163,7 +163,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_indent_size
      */
     fun getIndentSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getIndentSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getIndentSizeBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_indent_using_spaces
      */
     fun setIndentUsingSpaces(useSpaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIndentUsingSpacesBind, handle, useSpaces)
+        ObjectCalls.ptrcallWithBoolArg(setIndentUsingSpacesBind, segment, useSpaces)
     }
 
     /**
@@ -181,7 +181,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_indent_using_spaces
      */
     fun isIndentUsingSpaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIndentUsingSpacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIndentUsingSpacesBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_auto_indent_enabled
      */
     fun setAutoIndentEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoIndentEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoIndentEnabledBind, segment, enable)
     }
 
     /**
@@ -203,7 +203,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_auto_indent_enabled
      */
     fun isAutoIndentEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoIndentEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoIndentEnabledBind, segment)
     }
 
     /**
@@ -212,7 +212,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_auto_indent_prefixes
      */
     fun setAutoIndentPrefixes(prefixes: List<String>) {
-        ObjectCalls.ptrcallWithTypedStringListArg(setAutoIndentPrefixesBind, handle, prefixes)
+        ObjectCalls.ptrcallWithTypedStringListArg(setAutoIndentPrefixesBind, segment, prefixes)
     }
 
     /**
@@ -221,7 +221,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_auto_indent_prefixes
      */
     fun getAutoIndentPrefixes(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getAutoIndentPrefixesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getAutoIndentPrefixesBind, segment)
     }
 
     /**
@@ -232,7 +232,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.do_indent
      */
     fun doIndent() {
-        ObjectCalls.ptrcallNoArgs(doIndentBind, handle)
+        ObjectCalls.ptrcallNoArgs(doIndentBind, segment)
     }
 
     /**
@@ -242,7 +242,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.indent_lines
      */
     fun indentLines() {
-        ObjectCalls.ptrcallNoArgs(indentLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(indentLinesBind, segment)
     }
 
     /**
@@ -253,7 +253,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.unindent_lines
      */
     fun unindentLines() {
-        ObjectCalls.ptrcallNoArgs(unindentLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(unindentLinesBind, segment)
     }
 
     /**
@@ -263,7 +263,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.convert_indent
      */
     fun convertIndent(fromLine: Int = -1, toLine: Int = -1) {
-        ObjectCalls.ptrcallWithTwoIntArgs(convertIndentBind, handle, fromLine, toLine)
+        ObjectCalls.ptrcallWithTwoIntArgs(convertIndentBind, segment, fromLine, toLine)
     }
 
     /**
@@ -274,7 +274,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_auto_brace_completion_enabled
      */
     fun setAutoBraceCompletionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoBraceCompletionEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoBraceCompletionEnabledBind, segment, enable)
     }
 
     /**
@@ -285,7 +285,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_auto_brace_completion_enabled
      */
     fun isAutoBraceCompletionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoBraceCompletionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoBraceCompletionEnabledBind, segment)
     }
 
     /**
@@ -296,7 +296,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_highlight_matching_braces_enabled
      */
     fun setHighlightMatchingBracesEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHighlightMatchingBracesEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHighlightMatchingBracesEnabledBind, segment, enable)
     }
 
     /**
@@ -307,7 +307,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_highlight_matching_braces_enabled
      */
     fun isHighlightMatchingBracesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightMatchingBracesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightMatchingBracesEnabledBind, segment)
     }
 
     /**
@@ -317,7 +317,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.add_auto_brace_completion_pair
      */
     fun addAutoBraceCompletionPair(startKey: String, endKey: String) {
-        ObjectCalls.ptrcallWithTwoStringArgs(addAutoBraceCompletionPairBind, handle, startKey, endKey)
+        ObjectCalls.ptrcallWithTwoStringArgs(addAutoBraceCompletionPairBind, segment, startKey, endKey)
     }
 
     /**
@@ -328,7 +328,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_auto_brace_completion_pairs
      */
     fun setAutoBraceCompletionPairs(pairs: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithDictionaryArg(setAutoBraceCompletionPairsBind, handle, pairs)
+        ObjectCalls.ptrcallWithDictionaryArg(setAutoBraceCompletionPairsBind, segment, pairs)
     }
 
     /**
@@ -339,7 +339,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_auto_brace_completion_pairs
      */
     fun getAutoBraceCompletionPairs(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getAutoBraceCompletionPairsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getAutoBraceCompletionPairsBind, segment)
     }
 
     /**
@@ -348,7 +348,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.has_auto_brace_completion_open_key
      */
     fun hasAutoBraceCompletionOpenKey(openKey: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasAutoBraceCompletionOpenKeyBind, handle, openKey)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasAutoBraceCompletionOpenKeyBind, segment, openKey)
     }
 
     /**
@@ -357,7 +357,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.has_auto_brace_completion_close_key
      */
     fun hasAutoBraceCompletionCloseKey(closeKey: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasAutoBraceCompletionCloseKeyBind, handle, closeKey)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasAutoBraceCompletionCloseKeyBind, segment, closeKey)
     }
 
     /**
@@ -366,7 +366,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_auto_brace_completion_close_key
      */
     fun getAutoBraceCompletionCloseKey(openKey: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(getAutoBraceCompletionCloseKeyBind, handle, openKey)
+        return ObjectCalls.ptrcallWithStringArgRetString(getAutoBraceCompletionCloseKeyBind, segment, openKey)
     }
 
     /**
@@ -377,7 +377,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_draw_breakpoints_gutter
      */
     fun setDrawBreakpointsGutter(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawBreakpointsGutterBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawBreakpointsGutterBind, segment, enable)
     }
 
     /**
@@ -388,7 +388,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_drawing_breakpoints_gutter
      */
     fun isDrawingBreakpointsGutter(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingBreakpointsGutterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingBreakpointsGutterBind, segment)
     }
 
     /**
@@ -398,7 +398,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_draw_bookmarks_gutter
      */
     fun setDrawBookmarksGutter(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawBookmarksGutterBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawBookmarksGutterBind, segment, enable)
     }
 
     /**
@@ -408,7 +408,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_drawing_bookmarks_gutter
      */
     fun isDrawingBookmarksGutter(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingBookmarksGutterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingBookmarksGutterBind, segment)
     }
 
     /**
@@ -418,7 +418,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_draw_executing_lines_gutter
      */
     fun setDrawExecutingLinesGutter(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawExecutingLinesGutterBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawExecutingLinesGutterBind, segment, enable)
     }
 
     /**
@@ -428,7 +428,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_drawing_executing_lines_gutter
      */
     fun isDrawingExecutingLinesGutter(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingExecutingLinesGutterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingExecutingLinesGutterBind, segment)
     }
 
     /**
@@ -439,7 +439,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_line_as_breakpoint
      */
     fun setLineAsBreakpoint(line: Int, breakpointed: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsBreakpointBind, handle, line, breakpointed)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsBreakpointBind, segment, line, breakpointed)
     }
 
     /**
@@ -448,7 +448,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_breakpointed
      */
     fun isLineBreakpointed(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineBreakpointedBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineBreakpointedBind, segment, line)
     }
 
     /**
@@ -457,7 +457,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.clear_breakpointed_lines
      */
     fun clearBreakpointedLines() {
-        ObjectCalls.ptrcallNoArgs(clearBreakpointedLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBreakpointedLinesBind, segment)
     }
 
     /**
@@ -466,7 +466,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_breakpointed_lines
      */
     fun getBreakpointedLines(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getBreakpointedLinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getBreakpointedLinesBind, segment)
     }
 
     /**
@@ -477,7 +477,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_line_as_bookmarked
      */
     fun setLineAsBookmarked(line: Int, bookmarked: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsBookmarkedBind, handle, line, bookmarked)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsBookmarkedBind, segment, line, bookmarked)
     }
 
     /**
@@ -486,7 +486,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_bookmarked
      */
     fun isLineBookmarked(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineBookmarkedBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineBookmarkedBind, segment, line)
     }
 
     /**
@@ -495,7 +495,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.clear_bookmarked_lines
      */
     fun clearBookmarkedLines() {
-        ObjectCalls.ptrcallNoArgs(clearBookmarkedLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBookmarkedLinesBind, segment)
     }
 
     /**
@@ -504,7 +504,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_bookmarked_lines
      */
     fun getBookmarkedLines(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getBookmarkedLinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getBookmarkedLinesBind, segment)
     }
 
     /**
@@ -515,7 +515,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_line_as_executing
      */
     fun setLineAsExecuting(line: Int, executing: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsExecutingBind, handle, line, executing)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setLineAsExecutingBind, segment, line, executing)
     }
 
     /**
@@ -524,7 +524,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_executing
      */
     fun isLineExecuting(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineExecutingBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineExecutingBind, segment, line)
     }
 
     /**
@@ -533,7 +533,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.clear_executing_lines
      */
     fun clearExecutingLines() {
-        ObjectCalls.ptrcallNoArgs(clearExecutingLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearExecutingLinesBind, segment)
     }
 
     /**
@@ -542,7 +542,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_executing_lines
      */
     fun getExecutingLines(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getExecutingLinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getExecutingLinesBind, segment)
     }
 
     /**
@@ -553,7 +553,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_draw_line_numbers
      */
     fun setDrawLineNumbers(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawLineNumbersBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawLineNumbersBind, segment, enable)
     }
 
     /**
@@ -564,7 +564,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_draw_line_numbers_enabled
      */
     fun isDrawLineNumbersEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawLineNumbersEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawLineNumbersEnabledBind, segment)
     }
 
     /**
@@ -574,7 +574,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_line_numbers_zero_padded
      */
     fun setLineNumbersZeroPadded(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLineNumbersZeroPaddedBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setLineNumbersZeroPaddedBind, segment, enable)
     }
 
     /**
@@ -584,7 +584,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_numbers_zero_padded
      */
     fun isLineNumbersZeroPadded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLineNumbersZeroPaddedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLineNumbersZeroPaddedBind, segment)
     }
 
     /**
@@ -593,7 +593,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_line_numbers_min_digits
      */
     fun setLineNumbersMinDigits(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLineNumbersMinDigitsBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setLineNumbersMinDigitsBind, segment, count)
     }
 
     /**
@@ -602,7 +602,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_line_numbers_min_digits
      */
     fun getLineNumbersMinDigits(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineNumbersMinDigitsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLineNumbersMinDigitsBind, segment)
     }
 
     /**
@@ -614,7 +614,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_draw_fold_gutter
      */
     fun setDrawFoldGutter(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawFoldGutterBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawFoldGutterBind, segment, enable)
     }
 
     /**
@@ -626,7 +626,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_drawing_fold_gutter
      */
     fun isDrawingFoldGutter(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingFoldGutterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingFoldGutterBind, segment)
     }
 
     /**
@@ -636,7 +636,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_line_folding_enabled
      */
     fun setLineFoldingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLineFoldingEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setLineFoldingEnabledBind, segment, enabled)
     }
 
     /**
@@ -646,7 +646,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_folding_enabled
      */
     fun isLineFoldingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLineFoldingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLineFoldingEnabledBind, segment)
     }
 
     /**
@@ -657,7 +657,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.can_fold_line
      */
     fun canFoldLine(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(canFoldLineBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(canFoldLineBind, segment, line)
     }
 
     /**
@@ -666,7 +666,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.fold_line
      */
     fun foldLine(line: Int) {
-        ObjectCalls.ptrcallWithIntArg(foldLineBind, handle, line)
+        ObjectCalls.ptrcallWithIntArg(foldLineBind, segment, line)
     }
 
     /**
@@ -675,7 +675,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.unfold_line
      */
     fun unfoldLine(line: Int) {
-        ObjectCalls.ptrcallWithIntArg(unfoldLineBind, handle, line)
+        ObjectCalls.ptrcallWithIntArg(unfoldLineBind, segment, line)
     }
 
     /**
@@ -684,7 +684,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.fold_all_lines
      */
     fun foldAllLines() {
-        ObjectCalls.ptrcallNoArgs(foldAllLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(foldAllLinesBind, segment)
     }
 
     /**
@@ -693,7 +693,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.unfold_all_lines
      */
     fun unfoldAllLines() {
-        ObjectCalls.ptrcallNoArgs(unfoldAllLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(unfoldAllLinesBind, segment)
     }
 
     /**
@@ -702,7 +702,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.toggle_foldable_line
      */
     fun toggleFoldableLine(line: Int) {
-        ObjectCalls.ptrcallWithIntArg(toggleFoldableLineBind, handle, line)
+        ObjectCalls.ptrcallWithIntArg(toggleFoldableLineBind, segment, line)
     }
 
     /**
@@ -711,7 +711,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.toggle_foldable_lines_at_carets
      */
     fun toggleFoldableLinesAtCarets() {
-        ObjectCalls.ptrcallNoArgs(toggleFoldableLinesAtCaretsBind, handle)
+        ObjectCalls.ptrcallNoArgs(toggleFoldableLinesAtCaretsBind, segment)
     }
 
     /**
@@ -720,7 +720,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_folded
      */
     fun isLineFolded(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineFoldedBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineFoldedBind, segment, line)
     }
 
     /**
@@ -729,7 +729,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_folded_lines
      */
     fun getFoldedLines(): List<Long> {
-        return ObjectCalls.ptrcallNoArgsRetLongList(getFoldedLinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLongList(getFoldedLinesBind, segment)
     }
 
     /**
@@ -743,7 +743,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.create_code_region
      */
     fun createCodeRegion() {
-        ObjectCalls.ptrcallNoArgs(createCodeRegionBind, handle)
+        ObjectCalls.ptrcallNoArgs(createCodeRegionBind, segment)
     }
 
     /**
@@ -752,7 +752,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_code_region_start_tag
      */
     fun getCodeRegionStartTag(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCodeRegionStartTagBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCodeRegionStartTagBind, segment)
     }
 
     /**
@@ -761,7 +761,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_code_region_end_tag
      */
     fun getCodeRegionEndTag(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCodeRegionEndTagBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCodeRegionEndTagBind, segment)
     }
 
     /**
@@ -770,7 +770,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_code_region_tags
      */
     fun setCodeRegionTags(start: String = "region", end: String = "endregion") {
-        ObjectCalls.ptrcallWithTwoStringArgs(setCodeRegionTagsBind, handle, start, end)
+        ObjectCalls.ptrcallWithTwoStringArgs(setCodeRegionTagsBind, segment, start, end)
     }
 
     /**
@@ -779,7 +779,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_code_region_start
      */
     fun isLineCodeRegionStart(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineCodeRegionStartBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineCodeRegionStartBind, segment, line)
     }
 
     /**
@@ -788,7 +788,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_line_code_region_end
      */
     fun isLineCodeRegionEnd(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineCodeRegionEndBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineCodeRegionEndBind, segment, line)
     }
 
     /**
@@ -799,7 +799,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.add_string_delimiter
      */
     fun addStringDelimiter(startKey: String, endKey: String, lineOnly: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoStringAndBoolArgs(addStringDelimiterBind, handle, startKey, endKey, lineOnly)
+        ObjectCalls.ptrcallWithTwoStringAndBoolArgs(addStringDelimiterBind, segment, startKey, endKey, lineOnly)
     }
 
     /**
@@ -808,7 +808,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.remove_string_delimiter
      */
     fun removeStringDelimiter(startKey: String) {
-        ObjectCalls.ptrcallWithStringArg(removeStringDelimiterBind, handle, startKey)
+        ObjectCalls.ptrcallWithStringArg(removeStringDelimiterBind, segment, startKey)
     }
 
     /**
@@ -817,7 +817,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.has_string_delimiter
      */
     fun hasStringDelimiter(startKey: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasStringDelimiterBind, handle, startKey)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasStringDelimiterBind, segment, startKey)
     }
 
     /**
@@ -826,7 +826,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_string_delimiters
      */
     fun setStringDelimiters(stringDelimiters: List<String>) {
-        ObjectCalls.ptrcallWithTypedStringListArg(setStringDelimitersBind, handle, stringDelimiters)
+        ObjectCalls.ptrcallWithTypedStringListArg(setStringDelimitersBind, segment, stringDelimiters)
     }
 
     /**
@@ -835,7 +835,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.clear_string_delimiters
      */
     fun clearStringDelimiters() {
-        ObjectCalls.ptrcallNoArgs(clearStringDelimitersBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearStringDelimitersBind, segment)
     }
 
     /**
@@ -844,7 +844,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_string_delimiters
      */
     fun getStringDelimiters(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getStringDelimitersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getStringDelimitersBind, segment)
     }
 
     /**
@@ -854,7 +854,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_in_string
      */
     fun isInString(line: Int, column: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(isInStringBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(isInStringBind, segment, line, column)
     }
 
     /**
@@ -865,7 +865,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.add_comment_delimiter
      */
     fun addCommentDelimiter(startKey: String, endKey: String, lineOnly: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoStringAndBoolArgs(addCommentDelimiterBind, handle, startKey, endKey, lineOnly)
+        ObjectCalls.ptrcallWithTwoStringAndBoolArgs(addCommentDelimiterBind, segment, startKey, endKey, lineOnly)
     }
 
     /**
@@ -874,7 +874,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.remove_comment_delimiter
      */
     fun removeCommentDelimiter(startKey: String) {
-        ObjectCalls.ptrcallWithStringArg(removeCommentDelimiterBind, handle, startKey)
+        ObjectCalls.ptrcallWithStringArg(removeCommentDelimiterBind, segment, startKey)
     }
 
     /**
@@ -883,7 +883,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.has_comment_delimiter
      */
     fun hasCommentDelimiter(startKey: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasCommentDelimiterBind, handle, startKey)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasCommentDelimiterBind, segment, startKey)
     }
 
     /**
@@ -892,7 +892,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_comment_delimiters
      */
     fun setCommentDelimiters(commentDelimiters: List<String>) {
-        ObjectCalls.ptrcallWithTypedStringListArg(setCommentDelimitersBind, handle, commentDelimiters)
+        ObjectCalls.ptrcallWithTypedStringListArg(setCommentDelimitersBind, segment, commentDelimiters)
     }
 
     /**
@@ -901,7 +901,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.clear_comment_delimiters
      */
     fun clearCommentDelimiters() {
-        ObjectCalls.ptrcallNoArgs(clearCommentDelimitersBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearCommentDelimitersBind, segment)
     }
 
     /**
@@ -910,7 +910,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_comment_delimiters
      */
     fun getCommentDelimiters(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getCommentDelimitersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getCommentDelimitersBind, segment)
     }
 
     /**
@@ -920,7 +920,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_in_comment
      */
     fun isInComment(line: Int, column: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(isInCommentBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(isInCommentBind, segment, line, column)
     }
 
     /**
@@ -929,7 +929,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_delimiter_start_key
      */
     fun getDelimiterStartKey(delimiterIndex: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterStartKeyBind, handle, delimiterIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterStartKeyBind, segment, delimiterIndex)
     }
 
     /**
@@ -938,7 +938,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_delimiter_end_key
      */
     fun getDelimiterEndKey(delimiterIndex: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterEndKeyBind, handle, delimiterIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(getDelimiterEndKeyBind, segment, delimiterIndex)
     }
 
     /**
@@ -948,7 +948,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_delimiter_start_position
      */
     fun getDelimiterStartPosition(line: Int, column: Int): Vector2 {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getDelimiterStartPositionBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getDelimiterStartPositionBind, segment, line, column)
     }
 
     /**
@@ -958,7 +958,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_delimiter_end_position
      */
     fun getDelimiterEndPosition(line: Int, column: Int): Vector2 {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getDelimiterEndPositionBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getDelimiterEndPositionBind, segment, line, column)
     }
 
     /**
@@ -967,7 +967,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_code_hint
      */
     fun setCodeHint(codeHint: String) {
-        ObjectCalls.ptrcallWithStringArg(setCodeHintBind, handle, codeHint)
+        ObjectCalls.ptrcallWithStringArg(setCodeHintBind, segment, codeHint)
     }
 
     /**
@@ -977,7 +977,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_code_hint_draw_below
      */
     fun setCodeHintDrawBelow(drawBelow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCodeHintDrawBelowBind, handle, drawBelow)
+        ObjectCalls.ptrcallWithBoolArg(setCodeHintDrawBelowBind, segment, drawBelow)
     }
 
     /**
@@ -986,7 +986,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_text_for_code_completion
      */
     fun getTextForCodeCompletion(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextForCodeCompletionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextForCodeCompletionBind, segment)
     }
 
     /**
@@ -997,7 +997,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.request_code_completion
      */
     fun requestCodeCompletion(force: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(requestCodeCompletionBind, handle, force)
+        ObjectCalls.ptrcallWithBoolArg(requestCodeCompletionBind, segment, force)
     }
 
     /**
@@ -1009,7 +1009,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.add_code_completion_option
      */
     fun addCodeCompletionOption(type: Long, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
-        ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, handle, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: MemorySegment.NULL, value, location)
+        ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, segment, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: MemorySegment.NULL, value, location)
     }
 
     /**
@@ -1020,7 +1020,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.update_code_completion_options
      */
     fun updateCodeCompletionOptions(force: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(updateCodeCompletionOptionsBind, handle, force)
+        ObjectCalls.ptrcallWithBoolArg(updateCodeCompletionOptionsBind, segment, force)
     }
 
     /**
@@ -1029,7 +1029,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_code_completion_options
      */
     fun getCodeCompletionOptions(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getCodeCompletionOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getCodeCompletionOptionsBind, segment)
     }
 
     /**
@@ -1042,7 +1042,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_code_completion_option
      */
     fun getCodeCompletionOption(index: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getCodeCompletionOptionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(getCodeCompletionOptionBind, segment, index)
     }
 
     /**
@@ -1051,7 +1051,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_code_completion_selected_index
      */
     fun getCodeCompletionSelectedIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCodeCompletionSelectedIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCodeCompletionSelectedIndexBind, segment)
     }
 
     /**
@@ -1060,7 +1060,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_code_completion_selected_index
      */
     fun setCodeCompletionSelectedIndex(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCodeCompletionSelectedIndexBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(setCodeCompletionSelectedIndexBind, segment, index)
     }
 
     /**
@@ -1070,7 +1070,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.confirm_code_completion
      */
     fun confirmCodeCompletion(replace: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(confirmCodeCompletionBind, handle, replace)
+        ObjectCalls.ptrcallWithBoolArg(confirmCodeCompletionBind, segment, replace)
     }
 
     /**
@@ -1079,7 +1079,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.cancel_code_completion
      */
     fun cancelCodeCompletion() {
-        ObjectCalls.ptrcallNoArgs(cancelCodeCompletionBind, handle)
+        ObjectCalls.ptrcallNoArgs(cancelCodeCompletionBind, segment)
     }
 
     /**
@@ -1089,7 +1089,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_code_completion_enabled
      */
     fun setCodeCompletionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCodeCompletionEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCodeCompletionEnabledBind, segment, enable)
     }
 
     /**
@@ -1099,7 +1099,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_code_completion_enabled
      */
     fun isCodeCompletionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCodeCompletionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCodeCompletionEnabledBind, segment)
     }
 
     /**
@@ -1108,7 +1108,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_code_completion_prefixes
      */
     fun setCodeCompletionPrefixes(prefixes: List<String>) {
-        ObjectCalls.ptrcallWithTypedStringListArg(setCodeCompletionPrefixesBind, handle, prefixes)
+        ObjectCalls.ptrcallWithTypedStringListArg(setCodeCompletionPrefixesBind, segment, prefixes)
     }
 
     /**
@@ -1117,7 +1117,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_code_completion_prefixes
      */
     fun getCodeCompletionPrefixes(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getCodeCompletionPrefixesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getCodeCompletionPrefixesBind, segment)
     }
 
     /**
@@ -1127,7 +1127,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_line_length_guidelines
      */
     fun setLineLengthGuidelines(guidelineColumns: List<Long>) {
-        ObjectCalls.ptrcallWithTypedIntListArg(setLineLengthGuidelinesBind, handle, guidelineColumns)
+        ObjectCalls.ptrcallWithTypedIntListArg(setLineLengthGuidelinesBind, segment, guidelineColumns)
     }
 
     /**
@@ -1137,7 +1137,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_line_length_guidelines
      */
     fun getLineLengthGuidelines(): List<Long> {
-        return ObjectCalls.ptrcallNoArgsRetLongList(getLineLengthGuidelinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLongList(getLineLengthGuidelinesBind, segment)
     }
 
     /**
@@ -1147,7 +1147,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_symbol_lookup_on_click_enabled
      */
     fun setSymbolLookupOnClickEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSymbolLookupOnClickEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSymbolLookupOnClickEnabledBind, segment, enable)
     }
 
     /**
@@ -1157,7 +1157,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_symbol_lookup_on_click_enabled
      */
     fun isSymbolLookupOnClickEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSymbolLookupOnClickEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSymbolLookupOnClickEnabledBind, segment)
     }
 
     /**
@@ -1166,7 +1166,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_text_for_symbol_lookup
      */
     fun getTextForSymbolLookup(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextForSymbolLookupBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextForSymbolLookupBind, segment)
     }
 
     /**
@@ -1175,7 +1175,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.get_text_with_cursor_char
      */
     fun getTextWithCursorChar(line: Int, column: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTextWithCursorCharBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTextWithCursorCharBind, segment, line, column)
     }
 
     /**
@@ -1184,7 +1184,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_symbol_lookup_word_as_valid
      */
     fun setSymbolLookupWordAsValid(valid: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSymbolLookupWordAsValidBind, handle, valid)
+        ObjectCalls.ptrcallWithBoolArg(setSymbolLookupWordAsValidBind, segment, valid)
     }
 
     /**
@@ -1193,7 +1193,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.set_symbol_tooltip_on_hover_enabled
      */
     fun setSymbolTooltipOnHoverEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSymbolTooltipOnHoverEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSymbolTooltipOnHoverEnabledBind, segment, enable)
     }
 
     /**
@@ -1202,7 +1202,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.is_symbol_tooltip_on_hover_enabled
      */
     fun isSymbolTooltipOnHoverEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSymbolTooltipOnHoverEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSymbolTooltipOnHoverEnabledBind, segment)
     }
 
     /**
@@ -1211,7 +1211,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.move_lines_up
      */
     fun moveLinesUp() {
-        ObjectCalls.ptrcallNoArgs(moveLinesUpBind, handle)
+        ObjectCalls.ptrcallNoArgs(moveLinesUpBind, segment)
     }
 
     /**
@@ -1220,7 +1220,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.move_lines_down
      */
     fun moveLinesDown() {
-        ObjectCalls.ptrcallNoArgs(moveLinesDownBind, handle)
+        ObjectCalls.ptrcallNoArgs(moveLinesDownBind, segment)
     }
 
     /**
@@ -1229,7 +1229,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.delete_lines
      */
     fun deleteLines() {
-        ObjectCalls.ptrcallNoArgs(deleteLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(deleteLinesBind, segment)
     }
 
     /**
@@ -1239,7 +1239,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.join_lines
      */
     fun joinLines(lineEnding: String = " ") {
-        ObjectCalls.ptrcallWithStringArg(joinLinesBind, handle, lineEnding)
+        ObjectCalls.ptrcallWithStringArg(joinLinesBind, segment, lineEnding)
     }
 
     /**
@@ -1248,7 +1248,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.duplicate_selection
      */
     fun duplicateSelection() {
-        ObjectCalls.ptrcallNoArgs(duplicateSelectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(duplicateSelectionBind, segment)
     }
 
     /**
@@ -1258,7 +1258,7 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.duplicate_lines
      */
     fun duplicateLines() {
-        ObjectCalls.ptrcallNoArgs(duplicateLinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(duplicateLinesBind, segment)
     }
 
     object Signals {
@@ -1287,11 +1287,11 @@ class CodeEdit(handle: MemorySegment) : TextEdit(handle) {
         const val LOCATION_OTHER: Long = 1024L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CodeEdit? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CodeEdit? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CodeEdit? =
-            if (handle.address() == 0L) null else CodeEdit(handle)
+            if (handle.address() == 0L) null else CodeEdit(GodotHandle(handle))
 
         private const val SET_INDENT_SIZE_HASH = 1286410249L
         private val setIndentSizeBind by lazy {

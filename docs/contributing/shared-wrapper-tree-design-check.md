@@ -55,6 +55,9 @@ to answer.
    own source set. In a KMP `commonMain` that JDK package cannot be declared or
    `expect`ed; the shared tree would have to switch every public signature to a
    Kanama-owned handle type, a source-visible API change the design did not cost.
+   **Resolved by task 104 step 1:** `GodotHandle` is now a per-platform
+   `@JvmInline value class` under one fully-qualified name, and no public wrapper or
+   script signature names a `java.lang.foreign` type any more.
 3. **Value types are hand-written and diverged per platform.** The 18 shared
    `types/*.kt` names differ in about 2,400 lines (desktop uses Panama `Arena`
    and `ValueLayout` plus method-bind calls; iOS uses `BuiltinCalls`);

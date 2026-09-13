@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDAttachmentFormat
  */
-class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
+class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
     var format: Long
         @JvmName("formatProperty")
         get() = getFormat()
@@ -37,7 +37,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFormat(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember)
     }
 
     /**
@@ -47,7 +47,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -57,7 +57,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSamples(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplesBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember)
     }
 
     /**
@@ -67,7 +67,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSamples(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setUsageFlags(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setUsageFlagsBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setUsageFlagsBind, segment, pMember)
     }
 
     /**
@@ -87,16 +87,16 @@ class RDAttachmentFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getUsageFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getUsageFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getUsageFlagsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDAttachmentFormat? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDAttachmentFormat? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDAttachmentFormat? =
-            if (handle.address() == 0L) null else RDAttachmentFormat(handle)
+            if (handle.address() == 0L) null else RDAttachmentFormat(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 565531219L
         private val setFormatBind by lazy {

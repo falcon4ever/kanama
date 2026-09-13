@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: WebRTCDataChannelExtension
  */
-class WebRTCDataChannelExtension(handle: MemorySegment) : WebRTCDataChannel(handle) {
+class WebRTCDataChannelExtension(handle: GodotHandle) : WebRTCDataChannel(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WebRTCDataChannelExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WebRTCDataChannelExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WebRTCDataChannelExtension? =
-            if (handle.address() == 0L) null else WebRTCDataChannelExtension(handle)
+            if (handle.address() == 0L) null else WebRTCDataChannelExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

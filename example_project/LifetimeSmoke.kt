@@ -1,9 +1,9 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GD
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.Image
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
@@ -22,7 +22,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  *    (`Image.getWidth`), and argument-side (`requireOpenHandle()` in `setNextPass`).
  */
 @ScriptClass(attachTo = "Node")
-class LifetimeSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+class LifetimeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
 
   private fun describe(t: Throwable?): String =
     if (t == null) "none" else "${t::class.simpleName}:${t.message}"
@@ -30,10 +30,10 @@ class LifetimeSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotObject
   @RegisterFunction
   fun runLifetimeSmoke() {
     // --- isInstanceValid across free() ---
-    val probe = Node.fromHandle(ObjectCalls.constructObject("Node"))!!
+    val probe = Node.fromHandle(GodotHandle(ObjectCalls.constructObject("Node")))!!
     val aliveValid = GD.isInstanceValid(probe)
     val idMatchesPtrcall = probe.instanceId == probe.getInstanceId() && probe.instanceId != 0L
-    ObjectCalls.destroyObject(probe.handle) // Object.free() equivalent for an orphan node
+    ObjectCalls.destroyObject(probe.handle.segment) // Object.free() equivalent for an orphan node
     // Safe by construction: only the captured id is read, never the freed pointer.
     val afterFreeValid = GD.isInstanceValid(probe)
     val idAfterFreeValid = GD.isInstanceIdValid(probe.instanceId)

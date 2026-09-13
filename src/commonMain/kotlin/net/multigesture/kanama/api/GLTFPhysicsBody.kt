@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: GLTFPhysicsBody
  */
-class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
+class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
     var bodyType: String
         @JvmName("bodyTypeProperty")
         get() = getBodyType()
@@ -63,97 +63,97 @@ class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
 
     fun toNode(): CollisionObject3D? {
         checkOpen()
-        return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
+        return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, segment))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
     }
 
     fun getBodyType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getBodyTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBodyTypeBind, segment)
     }
 
     fun setBodyType(bodyType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setBodyTypeBind, handle, bodyType)
+        ObjectCalls.ptrcallWithStringArg(setBodyTypeBind, segment, bodyType)
     }
 
     fun getMass(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
     }
 
     fun setMass(mass: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
+        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
     }
 
     fun getLinearVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
     }
 
     fun setLinearVelocity(linearVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, linearVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, linearVelocity)
     }
 
     fun getAngularVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
     }
 
     fun setAngularVelocity(angularVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, angularVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, angularVelocity)
     }
 
     fun getCenterOfMass(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, segment)
     }
 
     fun setCenterOfMass(centerOfMass: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setCenterOfMassBind, handle, centerOfMass)
+        ObjectCalls.ptrcallWithVector3Arg(setCenterOfMassBind, segment, centerOfMass)
     }
 
     fun getInertiaDiagonal(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getInertiaDiagonalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getInertiaDiagonalBind, segment)
     }
 
     fun setInertiaDiagonal(inertiaDiagonal: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setInertiaDiagonalBind, handle, inertiaDiagonal)
+        ObjectCalls.ptrcallWithVector3Arg(setInertiaDiagonalBind, segment, inertiaDiagonal)
     }
 
     fun getInertiaOrientation(): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getInertiaOrientationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getInertiaOrientationBind, segment)
     }
 
     fun setInertiaOrientation(inertiaOrientation: Quaternion) {
         checkOpen()
-        ObjectCalls.ptrcallWithQuaternionArg(setInertiaOrientationBind, handle, inertiaOrientation)
+        ObjectCalls.ptrcallWithQuaternionArg(setInertiaOrientationBind, segment, inertiaOrientation)
     }
 
     fun getInertiaTensor(): Basis {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBasis(getInertiaTensorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBasis(getInertiaTensorBind, segment)
     }
 
     fun setInertiaTensor(inertiaTensor: Basis) {
         checkOpen()
-        ObjectCalls.ptrcallWithBasisArg(setInertiaTensorBind, handle, inertiaTensor)
+        ObjectCalls.ptrcallWithBasisArg(setInertiaTensorBind, segment, inertiaTensor)
     }
 
     companion object {
         fun fromNode(bodyNode: CollisionObject3D): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, bodyNode.handle))
+            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, bodyNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsBody? {
@@ -161,11 +161,11 @@ class GLTFPhysicsBody(handle: MemorySegment) : Resource(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFPhysicsBody? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFPhysicsBody? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFPhysicsBody? =
-            if (handle.address() == 0L) null else GLTFPhysicsBody(handle)
+            if (handle.address() == 0L) null else GLTFPhysicsBody(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 420544174L
         private val fromNodeBind by lazy {

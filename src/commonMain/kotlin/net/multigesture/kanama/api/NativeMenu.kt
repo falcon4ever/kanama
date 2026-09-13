@@ -164,7 +164,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setPopupOpenCallback(rid: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(setPopupOpenCallbackBind, singleton, rid, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(setPopupOpenCallbackBind, singleton, rid, callback.target.segment, callback.method)
     }
 
     /**
@@ -187,7 +187,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setPopupCloseCallback(rid: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(setPopupCloseCallbackBind, singleton, rid, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(setPopupCloseCallbackBind, singleton, rid, callback.target.segment, callback.method)
     }
 
     /**
@@ -257,7 +257,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addItemBind, singleton, rid, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -275,7 +275,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addCheckItemBind, singleton, rid, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -293,7 +293,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -311,7 +311,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -331,7 +331,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addRadioCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addRadioCheckItemBind, singleton, rid, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addRadioCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -351,7 +351,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconRadioCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -372,7 +372,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addMultistateItem(rid: RID, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(addMultistateItemBind, singleton, rid, label, maxStates, defaultState, callback.target.handle, callback.method, keyCallback.target.handle, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(addMultistateItemBind, singleton, rid, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -646,7 +646,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemCallback(rid: RID, idx: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemCallbackBind, singleton, rid, idx, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemCallbackBind, singleton, rid, idx, callback.target.segment, callback.method)
     }
 
     /**
@@ -659,7 +659,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemHoverCallbacks(rid: RID, idx: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemHoverCallbacksBind, singleton, rid, idx, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemHoverCallbacksBind, singleton, rid, idx, callback.target.segment, callback.method)
     }
 
     /**
@@ -672,7 +672,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemKeyCallback(rid: RID, idx: Int, keyCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemKeyCallbackBind, singleton, rid, idx, keyCallback.target.handle, keyCallback.method)
+        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemKeyCallbackBind, singleton, rid, idx, keyCallback.target.segment, keyCallback.method)
     }
 
     /**
@@ -855,8 +855,8 @@ object NativeMenu {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): NativeMenu? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): NativeMenu? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): NativeMenu? =
         if (handle.address() == 0L) null else this

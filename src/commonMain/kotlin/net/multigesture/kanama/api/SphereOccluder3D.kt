@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SphereOccluder3D
  */
-class SphereOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
+class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -25,7 +25,7 @@ class SphereOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -35,16 +35,16 @@ class SphereOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SphereOccluder3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SphereOccluder3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SphereOccluder3D? =
-            if (handle.address() == 0L) null else SphereOccluder3D(handle)
+            if (handle.address() == 0L) null else SphereOccluder3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

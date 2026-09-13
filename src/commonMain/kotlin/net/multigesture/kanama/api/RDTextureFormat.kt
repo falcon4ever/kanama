@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDTextureFormat
  */
-class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
+class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     var format: Long
         @JvmName("formatProperty")
         get() = getFormat()
@@ -85,7 +85,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFormat(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember)
     }
 
     /**
@@ -95,7 +95,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setWidth(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setWidthBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setWidthBind, segment, pMember)
     }
 
     /**
@@ -115,7 +115,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getWidth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getWidthBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHeight(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setHeightBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setHeightBind, segment, pMember)
     }
 
     /**
@@ -135,7 +135,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getHeight(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getHeightBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepth(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setDepthBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setDepthBind, segment, pMember)
     }
 
     /**
@@ -155,7 +155,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getDepthBind, segment)
     }
 
     /**
@@ -165,7 +165,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setArrayLayers(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setArrayLayersBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setArrayLayersBind, segment, pMember)
     }
 
     /**
@@ -175,7 +175,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getArrayLayers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getArrayLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getArrayLayersBind, segment)
     }
 
     /**
@@ -185,7 +185,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMipmaps(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMipmapsBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setMipmapsBind, segment, pMember)
     }
 
     /**
@@ -195,7 +195,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMipmaps(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getMipmapsBind, segment)
     }
 
     /**
@@ -205,7 +205,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTextureType(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, pMember)
     }
 
     /**
@@ -215,7 +215,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTextureType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment)
     }
 
     /**
@@ -225,7 +225,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSamples(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplesBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember)
     }
 
     /**
@@ -235,7 +235,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSamples(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment)
     }
 
     /**
@@ -245,7 +245,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setUsageBits(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setUsageBitsBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setUsageBitsBind, segment, pMember)
     }
 
     /**
@@ -255,7 +255,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getUsageBits(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getUsageBitsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getUsageBitsBind, segment)
     }
 
     /**
@@ -265,7 +265,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setIsResolveBuffer(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsResolveBufferBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setIsResolveBufferBind, segment, pMember)
     }
 
     /**
@@ -275,7 +275,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIsResolveBuffer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsResolveBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsResolveBufferBind, segment)
     }
 
     /**
@@ -288,7 +288,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setIsDiscardable(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsDiscardableBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setIsDiscardableBind, segment, pMember)
     }
 
     /**
@@ -301,7 +301,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIsDiscardable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsDiscardableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsDiscardableBind, segment)
     }
 
     /**
@@ -313,7 +313,7 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addShareableFormat(format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(addShareableFormatBind, handle, format)
+        ObjectCalls.ptrcallWithLongArg(addShareableFormatBind, segment, format)
     }
 
     /**
@@ -324,16 +324,16 @@ class RDTextureFormat(handle: MemorySegment) : RefCounted(handle) {
      */
     fun removeShareableFormat(format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(removeShareableFormatBind, handle, format)
+        ObjectCalls.ptrcallWithLongArg(removeShareableFormatBind, segment, format)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDTextureFormat? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDTextureFormat? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDTextureFormat? =
-            if (handle.address() == 0L) null else RDTextureFormat(handle)
+            if (handle.address() == 0L) null else RDTextureFormat(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 565531219L
         private val setFormatBind by lazy {

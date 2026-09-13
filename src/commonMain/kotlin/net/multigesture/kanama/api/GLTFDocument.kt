@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: GLTFDocument
  */
-open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
+open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     var imageFormat: String
         @JvmName("imageFormatProperty")
         get() = getImageFormat()
@@ -55,102 +55,102 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
 
     fun setImageFormat(imageFormat: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setImageFormatBind, handle, imageFormat)
+        ObjectCalls.ptrcallWithStringArg(setImageFormatBind, segment, imageFormat)
     }
 
     fun getImageFormat(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getImageFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getImageFormatBind, segment)
     }
 
     fun setLossyQuality(lossyQuality: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLossyQualityBind, handle, lossyQuality)
+        ObjectCalls.ptrcallWithDoubleArg(setLossyQualityBind, segment, lossyQuality)
     }
 
     fun getLossyQuality(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLossyQualityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLossyQualityBind, segment)
     }
 
     fun setFallbackImageFormat(fallbackImageFormat: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFallbackImageFormatBind, handle, fallbackImageFormat)
+        ObjectCalls.ptrcallWithStringArg(setFallbackImageFormatBind, segment, fallbackImageFormat)
     }
 
     fun getFallbackImageFormat(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFallbackImageFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getFallbackImageFormatBind, segment)
     }
 
     fun setFallbackImageQuality(fallbackImageQuality: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFallbackImageQualityBind, handle, fallbackImageQuality)
+        ObjectCalls.ptrcallWithDoubleArg(setFallbackImageQualityBind, segment, fallbackImageQuality)
     }
 
     fun getFallbackImageQuality(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFallbackImageQualityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFallbackImageQualityBind, segment)
     }
 
     fun setRootNodeMode(rootNodeMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRootNodeModeBind, handle, rootNodeMode)
+        ObjectCalls.ptrcallWithLongArg(setRootNodeModeBind, segment, rootNodeMode)
     }
 
     fun getRootNodeMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRootNodeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRootNodeModeBind, segment)
     }
 
     fun setTextureMapMode(textureMapMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureMapModeBind, handle, textureMapMode)
+        ObjectCalls.ptrcallWithLongArg(setTextureMapModeBind, segment, textureMapMode)
     }
 
     fun getTextureMapMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureMapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureMapModeBind, segment)
     }
 
     fun setVisibilityMode(visibilityMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, handle, visibilityMode)
+        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, visibilityMode)
     }
 
     fun getVisibilityMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment)
     }
 
     fun appendFromFile(path: String, state: GLTFState?, flags: Long = 0L, basePath: String = ""): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, handle, path, state?.requireOpenHandle() ?: MemorySegment.NULL, flags, basePath)
+        return ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, segment, path, state?.requireOpenHandle() ?: MemorySegment.NULL, flags, basePath)
     }
 
     fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, handle, bytes, basePath, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
+        return ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
     }
 
     fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, handle, node.handle, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
+        return ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
     }
 
     fun generateScene(state: GLTFState?, bakeFps: Double = 30.0, trimming: Boolean = false, removeImmutableTracks: Boolean = true): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(generateSceneBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL, bakeFps, trimming, removeImmutableTracks))
+        return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(generateSceneBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL, bakeFps, trimming, removeImmutableTracks))
     }
 
     fun generateBuffer(state: GLTFState?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun writeToFilesystem(state: GLTFState?, path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL, path)
+        return ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL, path)
     }
 
     companion object {
@@ -159,7 +159,7 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
         }
 
         fun exportObjectModelProperty(state: GLTFState?, nodePath: NodePath, godotNode: Node, gltfNodeIndex: Int): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(exportObjectModelPropertyBind, MemorySegment.NULL, state?.requireOpenHandle() ?: MemorySegment.NULL, nodePath, godotNode.handle, gltfNodeIndex))
+            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(exportObjectModelPropertyBind, MemorySegment.NULL, state?.requireOpenHandle() ?: MemorySegment.NULL, nodePath, godotNode.segment, gltfNodeIndex))
         }
 
         fun registerGltfDocumentExtension(extension: GLTFDocumentExtension?, firstPriority: Boolean = false) {
@@ -188,11 +188,11 @@ open class GLTFDocument(handle: MemorySegment) : Resource(handle) {
         const val IMPORT_FLAG_FORCE_DISABLE_MESH_COMPRESSION: Long = 64L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFDocument? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFDocument? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFDocument? =
-            if (handle.address() == 0L) null else GLTFDocument(handle)
+            if (handle.address() == 0L) null else GLTFDocument(GodotHandle(handle))
 
         private const val SET_IMAGE_FORMAT_HASH = 83702148L
         private val setImageFormatBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: PolygonOccluder3D
  */
-class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
+class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     var polygon: List<Vector2>
         @JvmName("polygonProperty")
         get() = getPolygon()
@@ -28,7 +28,7 @@ class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun setPolygon(polygon: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
     }
 
     /**
@@ -40,16 +40,16 @@ class PolygonOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun getPolygon(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PolygonOccluder3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PolygonOccluder3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PolygonOccluder3D? =
-            if (handle.address() == 0L) null else PolygonOccluder3D(handle)
+            if (handle.address() == 0L) null else PolygonOccluder3D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L
         private val setPolygonBind by lazy {

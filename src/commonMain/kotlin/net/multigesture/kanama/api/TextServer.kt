@@ -17,7 +17,7 @@ import net.multigesture.kanama.types.Vector3i
  *
  * Generated from Godot docs: TextServer
  */
-open class TextServer(handle: MemorySegment) : RefCounted(handle) {
+open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns `true` if the server supports a feature.
      *
@@ -25,7 +25,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasFeature(feature: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, handle, feature)
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, segment, feature)
     }
 
     /**
@@ -35,7 +35,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
     }
 
     /**
@@ -45,7 +45,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFeatures(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFeaturesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFeaturesBind, segment)
     }
 
     /**
@@ -57,7 +57,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun loadSupportData(filename: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(loadSupportDataBind, handle, filename)
+        return ObjectCalls.ptrcallWithStringArgRetBool(loadSupportDataBind, segment, filename)
     }
 
     /**
@@ -67,7 +67,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSupportDataFilename(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSupportDataFilenameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSupportDataFilenameBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSupportDataInfo(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSupportDataInfoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSupportDataInfoBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun saveSupportData(filename: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(saveSupportDataBind, handle, filename)
+        return ObjectCalls.ptrcallWithStringArgRetBool(saveSupportDataBind, segment, filename)
     }
 
     /**
@@ -98,7 +98,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSupportData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getSupportDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getSupportDataBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isLocaleUsingSupportData(locale: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleUsingSupportDataBind, handle, locale)
+        return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleUsingSupportDataBind, segment, locale)
     }
 
     /**
@@ -118,7 +118,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isLocaleRightToLeft(locale: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleRightToLeftBind, handle, locale)
+        return ObjectCalls.ptrcallWithStringArgRetBool(isLocaleRightToLeftBind, segment, locale)
     }
 
     /**
@@ -129,7 +129,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun nameToTag(name: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(nameToTagBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetLong(nameToTagBind, segment, name)
     }
 
     /**
@@ -140,7 +140,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun tagToName(tag: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(tagToNameBind, handle, tag)
+        return ObjectCalls.ptrcallWithLongArgRetString(tagToNameBind, segment, tag)
     }
 
     /**
@@ -150,7 +150,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun has(rid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(hasBind, handle, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(hasBind, segment, rid)
     }
 
     /**
@@ -160,7 +160,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun freeRid(rid: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(freeRidBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(freeRidBind, segment, rid)
     }
 
     /**
@@ -171,7 +171,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun createFont(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(createFontBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(createFontBind, segment)
     }
 
     /**
@@ -182,7 +182,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun createFontLinkedVariation(fontRid: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(createFontLinkedVariationBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(createFontLinkedVariationBind, segment, fontRid)
     }
 
     /**
@@ -192,7 +192,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetData(fontRid: RID, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndByteArrayArg(fontSetDataBind, handle, fontRid, data)
+        ObjectCalls.ptrcallWithRIDAndByteArrayArg(fontSetDataBind, segment, fontRid, data)
     }
 
     /**
@@ -202,7 +202,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetFaceIndex(fontRid: RID, faceIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFaceIndexBind, handle, fontRid, faceIndex)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFaceIndexBind, segment, fontRid, faceIndex)
     }
 
     /**
@@ -212,7 +212,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetFaceIndex(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceIndexBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceIndexBind, segment, fontRid)
     }
 
     /**
@@ -222,7 +222,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetFaceCount(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceCountBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFaceCountBind, segment, fontRid)
     }
 
     /**
@@ -234,7 +234,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetStyle(fontRid: RID, style: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStyleBind, handle, fontRid, style)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStyleBind, segment, fontRid, style)
     }
 
     /**
@@ -244,7 +244,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetStyle(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStyleBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStyleBind, segment, fontRid)
     }
 
     /**
@@ -254,7 +254,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetName(fontRid: RID, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndStringArg(fontSetNameBind, handle, fontRid, name)
+        ObjectCalls.ptrcallWithRIDAndStringArg(fontSetNameBind, segment, fontRid, name)
     }
 
     /**
@@ -264,7 +264,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetName(fontRid: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetNameBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetNameBind, segment, fontRid)
     }
 
     /**
@@ -275,7 +275,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetOtNameStrings(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOtNameStringsBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOtNameStringsBind, segment, fontRid)
     }
 
     /**
@@ -285,7 +285,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetStyleName(fontRid: RID, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndStringArg(fontSetStyleNameBind, handle, fontRid, name)
+        ObjectCalls.ptrcallWithRIDAndStringArg(fontSetStyleNameBind, segment, fontRid, name)
     }
 
     /**
@@ -295,7 +295,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetStyleName(fontRid: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetStyleNameBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetStyleNameBind, segment, fontRid)
     }
 
     /**
@@ -308,7 +308,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetWeight(fontRid: RID, weight: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetWeightBind, handle, fontRid, weight)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetWeightBind, segment, fontRid, weight)
     }
 
     /**
@@ -319,7 +319,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetWeight(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetWeightBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetWeightBind, segment, fontRid)
     }
 
     /**
@@ -331,7 +331,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetStretch(fontRid: RID, weight: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStretchBind, handle, fontRid, weight)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStretchBind, segment, fontRid, weight)
     }
 
     /**
@@ -342,7 +342,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetStretch(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStretchBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStretchBind, segment, fontRid)
     }
 
     /**
@@ -352,7 +352,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetAntialiasing(fontRid: RID, antialiasing: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetAntialiasingBind, handle, fontRid, antialiasing)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetAntialiasingBind, segment, fontRid, antialiasing)
     }
 
     /**
@@ -362,7 +362,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetAntialiasing(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetAntialiasingBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetAntialiasingBind, segment, fontRid)
     }
 
     /**
@@ -373,7 +373,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetDisableEmbeddedBitmaps(fontRid: RID, disableEmbeddedBitmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetDisableEmbeddedBitmapsBind, handle, fontRid, disableEmbeddedBitmaps)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetDisableEmbeddedBitmapsBind, segment, fontRid, disableEmbeddedBitmaps)
     }
 
     /**
@@ -383,7 +383,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetDisableEmbeddedBitmaps(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetDisableEmbeddedBitmapsBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetDisableEmbeddedBitmapsBind, segment, fontRid)
     }
 
     /**
@@ -393,7 +393,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetGenerateMipmaps(fontRid: RID, generateMipmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetGenerateMipmapsBind, handle, fontRid, generateMipmaps)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetGenerateMipmapsBind, segment, fontRid, generateMipmaps)
     }
 
     /**
@@ -403,7 +403,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGenerateMipmaps(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetGenerateMipmapsBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetGenerateMipmapsBind, segment, fontRid)
     }
 
     /**
@@ -422,7 +422,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetMultichannelSignedDistanceField(fontRid: RID, msdf: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetMultichannelSignedDistanceFieldBind, handle, fontRid, msdf)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetMultichannelSignedDistanceFieldBind, segment, fontRid, msdf)
     }
 
     /**
@@ -433,7 +433,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontIsMultichannelSignedDistanceField(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsMultichannelSignedDistanceFieldBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsMultichannelSignedDistanceFieldBind, segment, fontRid)
     }
 
     /**
@@ -444,7 +444,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetMsdfPixelRange(fontRid: RID, msdfPixelRange: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfPixelRangeBind, handle, fontRid, msdfPixelRange)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfPixelRangeBind, segment, fontRid, msdfPixelRange)
     }
 
     /**
@@ -455,7 +455,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetMsdfPixelRange(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfPixelRangeBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfPixelRangeBind, segment, fontRid)
     }
 
     /**
@@ -465,7 +465,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetMsdfSize(fontRid: RID, msdfSize: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfSizeBind, handle, fontRid, msdfSize)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetMsdfSizeBind, segment, fontRid, msdfSize)
     }
 
     /**
@@ -475,7 +475,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetMsdfSize(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfSizeBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetMsdfSizeBind, segment, fontRid)
     }
 
     /**
@@ -486,7 +486,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetFixedSize(fontRid: RID, fixedSize: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeBind, handle, fontRid, fixedSize)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeBind, segment, fontRid, fixedSize)
     }
 
     /**
@@ -496,7 +496,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetFixedSize(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeBind, segment, fontRid)
     }
 
     /**
@@ -506,7 +506,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetFixedSizeScaleMode(fontRid: RID, fixedSizeScaleMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeScaleModeBind, handle, fontRid, fixedSizeScaleMode)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeScaleModeBind, segment, fontRid, fixedSizeScaleMode)
     }
 
     /**
@@ -516,7 +516,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetFixedSizeScaleMode(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeScaleModeBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeScaleModeBind, segment, fontRid)
     }
 
     /**
@@ -526,7 +526,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetAllowSystemFallback(fontRid: RID, allowSystemFallback: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetAllowSystemFallbackBind, handle, fontRid, allowSystemFallback)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetAllowSystemFallbackBind, segment, fontRid, allowSystemFallback)
     }
 
     /**
@@ -536,7 +536,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontIsAllowSystemFallback(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsAllowSystemFallbackBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsAllowSystemFallbackBind, segment, fontRid)
     }
 
     /**
@@ -546,7 +546,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontClearSystemFallbackCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(fontClearSystemFallbackCacheBind, handle)
+        ObjectCalls.ptrcallNoArgs(fontClearSystemFallbackCacheBind, segment)
     }
 
     /**
@@ -556,7 +556,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetForceAutohinter(fontRid: RID, forceAutohinter: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetForceAutohinterBind, handle, fontRid, forceAutohinter)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetForceAutohinterBind, segment, fontRid, forceAutohinter)
     }
 
     /**
@@ -567,7 +567,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontIsForceAutohinter(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsForceAutohinterBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsForceAutohinterBind, segment, fontRid)
     }
 
     /**
@@ -578,7 +578,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetModulateColorGlyphs(fontRid: RID, modulate: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetModulateColorGlyphsBind, handle, fontRid, modulate)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetModulateColorGlyphsBind, segment, fontRid, modulate)
     }
 
     /**
@@ -588,7 +588,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontIsModulateColorGlyphs(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsModulateColorGlyphsBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(fontIsModulateColorGlyphsBind, segment, fontRid)
     }
 
     /**
@@ -599,7 +599,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetPaletteCount(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetPaletteCountBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetPaletteCountBind, segment, fontRid)
     }
 
     /**
@@ -610,7 +610,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetPaletteName(fontRid: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(fontGetPaletteNameBind, handle, fontRid, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(fontGetPaletteNameBind, segment, fontRid, index)
     }
 
     /**
@@ -622,7 +622,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetPaletteColors(fontRid: RID, index: Long): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedColorList(fontGetPaletteColorsBind, handle, fontRid, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedColorList(fontGetPaletteColorsBind, segment, fontRid, index)
     }
 
     /**
@@ -633,7 +633,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetPaletteCustomColors(fontRid: RID, colors: List<Color>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndPackedColorListArgs(fontSetPaletteCustomColorsBind, handle, fontRid, colors)
+        ObjectCalls.ptrcallWithRIDAndPackedColorListArgs(fontSetPaletteCustomColorsBind, segment, fontRid, colors)
     }
 
     /**
@@ -643,7 +643,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetPaletteCustomColors(fontRid: RID): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(fontGetPaletteCustomColorsBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(fontGetPaletteCustomColorsBind, segment, fontRid)
     }
 
     /**
@@ -653,7 +653,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetUsedPalette(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetUsedPaletteBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetUsedPaletteBind, segment, fontRid)
     }
 
     /**
@@ -663,7 +663,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetUsedPalette(fontRid: RID, index: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetUsedPaletteBind, handle, fontRid, index)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetUsedPaletteBind, segment, fontRid, index)
     }
 
     /**
@@ -673,7 +673,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetHinting(fontRid: RID, hinting: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetHintingBind, handle, fontRid, hinting)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetHintingBind, segment, fontRid, hinting)
     }
 
     /**
@@ -683,7 +683,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetHinting(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetHintingBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetHintingBind, segment, fontRid)
     }
 
     /**
@@ -693,7 +693,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetSubpixelPositioning(fontRid: RID, subpixelPositioning: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetSubpixelPositioningBind, handle, fontRid, subpixelPositioning)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetSubpixelPositioningBind, segment, fontRid, subpixelPositioning)
     }
 
     /**
@@ -703,7 +703,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetSubpixelPositioning(fontRid: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetSubpixelPositioningBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetSubpixelPositioningBind, segment, fontRid)
     }
 
     /**
@@ -715,7 +715,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetKeepRoundingRemainders(fontRid: RID, keepRoundingRemainders: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetKeepRoundingRemaindersBind, handle, fontRid, keepRoundingRemainders)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(fontSetKeepRoundingRemaindersBind, segment, fontRid, keepRoundingRemainders)
     }
 
     /**
@@ -727,7 +727,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetKeepRoundingRemainders(fontRid: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetKeepRoundingRemaindersBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(fontGetKeepRoundingRemaindersBind, segment, fontRid)
     }
 
     /**
@@ -738,7 +738,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetEmbolden(fontRid: RID, strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetEmboldenBind, handle, fontRid, strength)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetEmboldenBind, segment, fontRid, strength)
     }
 
     /**
@@ -748,7 +748,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetEmbolden(fontRid: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetEmboldenBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetEmboldenBind, segment, fontRid)
     }
 
     /**
@@ -758,7 +758,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetSpacing(fontRid: RID, spacing: Long, value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(fontSetSpacingBind, handle, fontRid, spacing, value)
+        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(fontSetSpacingBind, segment, fontRid, spacing, value)
     }
 
     /**
@@ -768,7 +768,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetSpacing(fontRid: RID, spacing: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(fontGetSpacingBind, handle, fontRid, spacing)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(fontGetSpacingBind, segment, fontRid, spacing)
     }
 
     /**
@@ -778,7 +778,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetBaselineOffset(fontRid: RID, baselineOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetBaselineOffsetBind, handle, fontRid, baselineOffset)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetBaselineOffsetBind, segment, fontRid, baselineOffset)
     }
 
     /**
@@ -788,7 +788,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetBaselineOffset(fontRid: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetBaselineOffsetBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetBaselineOffsetBind, segment, fontRid)
     }
 
     /**
@@ -800,7 +800,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetTransform(fontRid: RID, transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(fontSetTransformBind, handle, fontRid, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(fontSetTransformBind, segment, fontRid, transform)
     }
 
     /**
@@ -810,7 +810,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetTransform(fontRid: RID): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetTransform2D(fontGetTransformBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetTransform2D(fontGetTransformBind, segment, fontRid)
     }
 
     /**
@@ -821,7 +821,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetVariationCoordinates(fontRid: RID, variationCoordinates: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetVariationCoordinatesBind, handle, fontRid, variationCoordinates)
+        ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetVariationCoordinatesBind, segment, fontRid, variationCoordinates)
     }
 
     /**
@@ -832,7 +832,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetVariationCoordinates(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetVariationCoordinatesBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetVariationCoordinatesBind, segment, fontRid)
     }
 
     /**
@@ -844,7 +844,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetOversampling(fontRid: RID, oversampling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetOversamplingBind, handle, fontRid, oversampling)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(fontSetOversamplingBind, segment, fontRid, oversampling)
     }
 
     /**
@@ -856,7 +856,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetOversampling(fontRid: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetOversamplingBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(fontGetOversamplingBind, segment, fontRid)
     }
 
     /**
@@ -867,7 +867,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetSizeCacheList(fontRid: RID): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetVector2iList(fontGetSizeCacheListBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2iList(fontGetSizeCacheListBind, segment, fontRid)
     }
 
     /**
@@ -877,7 +877,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontClearSizeCache(fontRid: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(fontClearSizeCacheBind, handle, fontRid)
+        ObjectCalls.ptrcallWithRIDArg(fontClearSizeCacheBind, segment, fontRid)
     }
 
     /**
@@ -887,7 +887,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRemoveSizeCache(fontRid: RID, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndVector2iArg(fontRemoveSizeCacheBind, handle, fontRid, size)
+        ObjectCalls.ptrcallWithRIDAndVector2iArg(fontRemoveSizeCacheBind, segment, fontRid, size)
     }
 
     /**
@@ -900,7 +900,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetSizeCacheInfo(fontRid: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(fontGetSizeCacheInfoBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(fontGetSizeCacheInfoBind, segment, fontRid)
     }
 
     /**
@@ -910,7 +910,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetAscent(fontRid: RID, size: Long, ascent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetAscentBind, handle, fontRid, size, ascent)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetAscentBind, segment, fontRid, size, ascent)
     }
 
     /**
@@ -920,7 +920,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetAscent(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetAscentBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetAscentBind, segment, fontRid, size)
     }
 
     /**
@@ -930,7 +930,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetDescent(fontRid: RID, size: Long, descent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetDescentBind, handle, fontRid, size, descent)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetDescentBind, segment, fontRid, size, descent)
     }
 
     /**
@@ -940,7 +940,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetDescent(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetDescentBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetDescentBind, segment, fontRid, size)
     }
 
     /**
@@ -950,7 +950,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetUnderlinePosition(fontRid: RID, size: Long, underlinePosition: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlinePositionBind, handle, fontRid, size, underlinePosition)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlinePositionBind, segment, fontRid, size, underlinePosition)
     }
 
     /**
@@ -960,7 +960,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetUnderlinePosition(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlinePositionBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlinePositionBind, segment, fontRid, size)
     }
 
     /**
@@ -970,7 +970,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetUnderlineThickness(fontRid: RID, size: Long, underlineThickness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlineThicknessBind, handle, fontRid, size, underlineThickness)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetUnderlineThicknessBind, segment, fontRid, size, underlineThickness)
     }
 
     /**
@@ -980,7 +980,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetUnderlineThickness(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlineThicknessBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetUnderlineThicknessBind, segment, fontRid, size)
     }
 
     /**
@@ -990,7 +990,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetScale(fontRid: RID, size: Long, scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetScaleBind, handle, fontRid, size, scale)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(fontSetScaleBind, segment, fontRid, size, scale)
     }
 
     /**
@@ -1000,7 +1000,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetScale(fontRid: RID, size: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetScaleBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(fontGetScaleBind, segment, fontRid, size)
     }
 
     /**
@@ -1010,7 +1010,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetTextureCount(fontRid: RID, size: Vector2i): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVector2iArgRetLong(fontGetTextureCountBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndVector2iArgRetLong(fontGetTextureCountBind, segment, fontRid, size)
     }
 
     /**
@@ -1021,7 +1021,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontClearTextures(fontRid: RID, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearTexturesBind, handle, fontRid, size)
+        ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearTexturesBind, segment, fontRid, size)
     }
 
     /**
@@ -1032,7 +1032,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRemoveTexture(fontRid: RID, size: Vector2i, textureIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveTextureBind, handle, fontRid, size, textureIndex)
+        ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveTextureBind, segment, fontRid, size, textureIndex)
     }
 
     /**
@@ -1042,7 +1042,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long, image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongObjectArgs(fontSetTextureImageBind, handle, fontRid, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRIDVector2iLongObjectArgs(fontSetTextureImageBind, segment, fontRid, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -1052,7 +1052,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(fontGetTextureImageBind, handle, fontRid, size, textureIndex))
+        return Image.wrap(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(fontGetTextureImageBind, segment, fontRid, size, textureIndex))
     }
 
     /**
@@ -1062,7 +1062,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long, offset: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongPackedInt32ListArgs(fontSetTextureOffsetsBind, handle, fontRid, size, textureIndex, offset)
+        ObjectCalls.ptrcallWithRIDVector2iLongPackedInt32ListArgs(fontSetTextureOffsetsBind, segment, fontRid, size, textureIndex, offset)
     }
 
     /**
@@ -1072,7 +1072,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetTextureOffsets(fontRid: RID, size: Vector2i, textureIndex: Long): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetPackedInt32List(fontGetTextureOffsetsBind, handle, fontRid, size, textureIndex)
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetPackedInt32List(fontGetTextureOffsetsBind, segment, fontRid, size, textureIndex)
     }
 
     /**
@@ -1082,7 +1082,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphList(fontRid: RID, size: Vector2i): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVector2iArgRetPackedInt32List(fontGetGlyphListBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndVector2iArgRetPackedInt32List(fontGetGlyphListBind, segment, fontRid, size)
     }
 
     /**
@@ -1093,7 +1093,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontClearGlyphs(fontRid: RID, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearGlyphsBind, handle, fontRid, size)
+        ObjectCalls.ptrcallWithRIDAndVector2iArg(fontClearGlyphsBind, segment, fontRid, size)
     }
 
     /**
@@ -1104,7 +1104,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRemoveGlyph(fontRid: RID, size: Vector2i, glyph: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveGlyphBind, handle, fontRid, size, glyph)
+        ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRemoveGlyphBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1115,7 +1115,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphAdvance(fontRid: RID, size: Long, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetVector2(fontGetGlyphAdvanceBind, handle, fontRid, size, glyph)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetVector2(fontGetGlyphAdvanceBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1126,7 +1126,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetGlyphAdvance(fontRid: RID, size: Long, glyph: Long, advance: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDTwoLongAndVector2Args(fontSetGlyphAdvanceBind, handle, fontRid, size, glyph, advance)
+        ObjectCalls.ptrcallWithRIDTwoLongAndVector2Args(fontSetGlyphAdvanceBind, segment, fontRid, size, glyph, advance)
     }
 
     /**
@@ -1136,7 +1136,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphOffsetBind, handle, fontRid, size, glyph)
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphOffsetBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1146,7 +1146,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetGlyphOffset(fontRid: RID, size: Vector2i, glyph: Long, offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphOffsetBind, handle, fontRid, size, glyph, offset)
+        ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphOffsetBind, segment, fontRid, size, glyph, offset)
     }
 
     /**
@@ -1156,7 +1156,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphSizeBind, handle, fontRid, size, glyph)
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphSizeBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1166,7 +1166,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetGlyphSize(fontRid: RID, size: Vector2i, glyph: Long, glSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphSizeBind, handle, fontRid, size, glyph, glSize)
+        ObjectCalls.ptrcallWithRIDVector2iLongVector2Args(fontSetGlyphSizeBind, segment, fontRid, size, glyph, glSize)
     }
 
     /**
@@ -1176,7 +1176,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRect2(fontGetGlyphUvRectBind, handle, fontRid, size, glyph)
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRect2(fontGetGlyphUvRectBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1186,7 +1186,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetGlyphUvRect(fontRid: RID, size: Vector2i, glyph: Long, uvRect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongRect2Args(fontSetGlyphUvRectBind, handle, fontRid, size, glyph, uvRect)
+        ObjectCalls.ptrcallWithRIDVector2iLongRect2Args(fontSetGlyphUvRectBind, segment, fontRid, size, glyph, uvRect)
     }
 
     /**
@@ -1196,7 +1196,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetLong(fontGetGlyphTextureIdxBind, handle, fontRid, size, glyph)
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetLong(fontGetGlyphTextureIdxBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1206,7 +1206,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetGlyphTextureIdx(fontRid: RID, size: Vector2i, glyph: Long, textureIdx: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontSetGlyphTextureIdxBind, handle, fontRid, size, glyph, textureIdx)
+        ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontSetGlyphTextureIdxBind, segment, fontRid, size, glyph, textureIdx)
     }
 
     /**
@@ -1217,7 +1217,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphTextureRid(fontRid: RID, size: Vector2i, glyph: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRID(fontGetGlyphTextureRidBind, handle, fontRid, size, glyph)
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetRID(fontGetGlyphTextureRidBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1228,7 +1228,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphTextureSize(fontRid: RID, size: Vector2i, glyph: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphTextureSizeBind, handle, fontRid, size, glyph)
+        return ObjectCalls.ptrcallWithRIDVector2iLongArgsRetVector2(fontGetGlyphTextureSizeBind, segment, fontRid, size, glyph)
     }
 
     /**
@@ -1249,7 +1249,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphContours(font: RID, size: Long, index: Long): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetDictionary(fontGetGlyphContoursBind, handle, font, size, index)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetDictionary(fontGetGlyphContoursBind, segment, font, size, index)
     }
 
     /**
@@ -1259,7 +1259,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetKerningList(fontRid: RID, size: Long): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(fontGetKerningListBind, handle, fontRid, size)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2iList(fontGetKerningListBind, segment, fontRid, size)
     }
 
     /**
@@ -1269,7 +1269,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontClearKerningMap(fontRid: RID, size: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontClearKerningMapBind, handle, fontRid, size)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontClearKerningMapBind, segment, fontRid, size)
     }
 
     /**
@@ -1279,7 +1279,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRemoveKerning(fontRid: RID, size: Long, glyphPair: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongVector2iArgs(fontRemoveKerningBind, handle, fontRid, size, glyphPair)
+        ObjectCalls.ptrcallWithRIDLongVector2iArgs(fontRemoveKerningBind, segment, fontRid, size, glyphPair)
     }
 
     /**
@@ -1289,7 +1289,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetKerning(fontRid: RID, size: Long, glyphPair: Vector2i, kerning: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongVector2iAndVector2Args(fontSetKerningBind, handle, fontRid, size, glyphPair, kerning)
+        ObjectCalls.ptrcallWithRIDLongVector2iAndVector2Args(fontSetKerningBind, segment, fontRid, size, glyphPair, kerning)
     }
 
     /**
@@ -1299,7 +1299,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetKerning(fontRid: RID, size: Long, glyphPair: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDLongVector2iArgsRetVector2(fontGetKerningBind, handle, fontRid, size, glyphPair)
+        return ObjectCalls.ptrcallWithRIDLongVector2iArgsRetVector2(fontGetKerningBind, segment, fontRid, size, glyphPair)
     }
 
     /**
@@ -1310,7 +1310,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlyphIndex(fontRid: RID, size: Long, char: Long, variationSelector: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndThreeLongArgsRetLong(fontGetGlyphIndexBind, handle, fontRid, size, char, variationSelector)
+        return ObjectCalls.ptrcallWithRIDAndThreeLongArgsRetLong(fontGetGlyphIndexBind, segment, fontRid, size, char, variationSelector)
     }
 
     /**
@@ -1321,7 +1321,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetCharFromGlyphIndex(fontRid: RID, size: Long, glyphIndex: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(fontGetCharFromGlyphIndexBind, handle, fontRid, size, glyphIndex)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(fontGetCharFromGlyphIndexBind, segment, fontRid, size, glyphIndex)
     }
 
     /**
@@ -1331,7 +1331,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontHasChar(fontRid: RID, char: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(fontHasCharBind, handle, fontRid, char)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(fontHasCharBind, segment, fontRid, char)
     }
 
     /**
@@ -1341,7 +1341,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetSupportedChars(fontRid: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetSupportedCharsBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetString(fontGetSupportedCharsBind, segment, fontRid)
     }
 
     /**
@@ -1351,7 +1351,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetSupportedGlyphs(fontRid: RID): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(fontGetSupportedGlyphsBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(fontGetSupportedGlyphsBind, segment, fontRid)
     }
 
     /**
@@ -1361,7 +1361,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRenderRange(fontRid: RID, size: Vector2i, start: Long, end: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontRenderRangeBind, handle, fontRid, size, start, end)
+        ObjectCalls.ptrcallWithRIDVector2iTwoLongArgs(fontRenderRangeBind, segment, fontRid, size, start, end)
     }
 
     /**
@@ -1371,7 +1371,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRenderGlyph(fontRid: RID, size: Vector2i, index: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRenderGlyphBind, handle, fontRid, size, index)
+        ObjectCalls.ptrcallWithRIDVector2iLongArgs(fontRenderGlyphBind, segment, fontRid, size, index)
     }
 
     /**
@@ -1385,7 +1385,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontDrawGlyph(fontRid: RID, canvas: RID, size: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoRIDLongVector2LongColorDoubleArgs(fontDrawGlyphBind, handle, fontRid, canvas, size, pos, index, color, oversampling)
+        ObjectCalls.ptrcallWithTwoRIDLongVector2LongColorDoubleArgs(fontDrawGlyphBind, segment, fontRid, canvas, size, pos, index, color, oversampling)
     }
 
     /**
@@ -1400,7 +1400,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontDrawGlyphOutline(fontRid: RID, canvas: RID, size: Long, outlineSize: Long, pos: Vector2, index: Long, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs(fontDrawGlyphOutlineBind, handle, fontRid, canvas, size, outlineSize, pos, index, color, oversampling)
+        ObjectCalls.ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs(fontDrawGlyphOutlineBind, segment, fontRid, canvas, size, outlineSize, pos, index, color, oversampling)
     }
 
     /**
@@ -1411,7 +1411,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontIsLanguageSupported(fontRid: RID, language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsLanguageSupportedBind, handle, fontRid, language)
+        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsLanguageSupportedBind, segment, fontRid, language)
     }
 
     /**
@@ -1421,7 +1421,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetLanguageSupportOverride(fontRid: RID, language: String, supported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetLanguageSupportOverrideBind, handle, fontRid, language, supported)
+        ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetLanguageSupportOverrideBind, segment, fontRid, language, supported)
     }
 
     /**
@@ -1431,7 +1431,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetLanguageSupportOverride(fontRid: RID, language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetLanguageSupportOverrideBind, handle, fontRid, language)
+        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetLanguageSupportOverrideBind, segment, fontRid, language)
     }
 
     /**
@@ -1441,7 +1441,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRemoveLanguageSupportOverride(fontRid: RID, language: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveLanguageSupportOverrideBind, handle, fontRid, language)
+        ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveLanguageSupportOverrideBind, segment, fontRid, language)
     }
 
     /**
@@ -1451,7 +1451,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetLanguageSupportOverrides(fontRid: RID): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetLanguageSupportOverridesBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetLanguageSupportOverridesBind, segment, fontRid)
     }
 
     /**
@@ -1462,7 +1462,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontIsScriptSupported(fontRid: RID, script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsScriptSupportedBind, handle, fontRid, script)
+        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontIsScriptSupportedBind, segment, fontRid, script)
     }
 
     /**
@@ -1472,7 +1472,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetScriptSupportOverride(fontRid: RID, script: String, supported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetScriptSupportOverrideBind, handle, fontRid, script, supported)
+        ObjectCalls.ptrcallWithRIDStringAndBoolArgs(fontSetScriptSupportOverrideBind, segment, fontRid, script, supported)
     }
 
     /**
@@ -1482,7 +1482,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetScriptSupportOverride(fontRid: RID, script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetScriptSupportOverrideBind, handle, fontRid, script)
+        return ObjectCalls.ptrcallWithRIDAndStringArgRetBool(fontGetScriptSupportOverrideBind, segment, fontRid, script)
     }
 
     /**
@@ -1492,7 +1492,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontRemoveScriptSupportOverride(fontRid: RID, script: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveScriptSupportOverrideBind, handle, fontRid, script)
+        ObjectCalls.ptrcallWithRIDAndStringArg(fontRemoveScriptSupportOverrideBind, segment, fontRid, script)
     }
 
     /**
@@ -1502,7 +1502,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetScriptSupportOverrides(fontRid: RID): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetScriptSupportOverridesBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(fontGetScriptSupportOverridesBind, segment, fontRid)
     }
 
     /**
@@ -1512,7 +1512,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetOpentypeFeatureOverrides(fontRid: RID, overrides: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetOpentypeFeatureOverridesBind, handle, fontRid, overrides)
+        ObjectCalls.ptrcallWithRIDAndDictionaryArg(fontSetOpentypeFeatureOverridesBind, segment, fontRid, overrides)
     }
 
     /**
@@ -1522,7 +1522,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetOpentypeFeatureOverrides(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOpentypeFeatureOverridesBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontGetOpentypeFeatureOverridesBind, segment, fontRid)
     }
 
     /**
@@ -1532,7 +1532,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSupportedFeatureList(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedFeatureListBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedFeatureListBind, segment, fontRid)
     }
 
     /**
@@ -1542,7 +1542,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSupportedVariationList(fontRid: RID): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedVariationListBind, handle, fontRid)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionary(fontSupportedVariationListBind, segment, fontRid)
     }
 
     /**
@@ -1552,7 +1552,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontGetGlobalOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(fontGetGlobalOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(fontGetGlobalOversamplingBind, segment)
     }
 
     /**
@@ -1562,7 +1562,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fontSetGlobalOversampling(oversampling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(fontSetGlobalOversamplingBind, handle, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(fontSetGlobalOversamplingBind, segment, oversampling)
     }
 
     /**
@@ -1573,7 +1573,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getHexCodeBoxSize(size: Long, index: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector2(getHexCodeBoxSizeBind, handle, size, index)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector2(getHexCodeBoxSizeBind, segment, size, index)
     }
 
     /**
@@ -1583,7 +1583,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun drawHexCodeBox(canvas: RID, size: Long, pos: Vector2, index: Long, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongVector2LongColorArgs(drawHexCodeBoxBind, handle, canvas, size, pos, index, color)
+        ObjectCalls.ptrcallWithRIDLongVector2LongColorArgs(drawHexCodeBoxBind, segment, canvas, size, pos, index, color)
     }
 
     /**
@@ -1597,7 +1597,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun createShapedText(direction: Long = 0L, orientation: Long = 0L): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetRID(createShapedTextBind, handle, direction, orientation)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetRID(createShapedTextBind, segment, direction, orientation)
     }
 
     /**
@@ -1607,7 +1607,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextClear(rid: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(shapedTextClearBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(shapedTextClearBind, segment, rid)
     }
 
     /**
@@ -1617,7 +1617,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextDuplicate(rid: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextDuplicateBind, handle, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextDuplicateBind, segment, rid)
     }
 
     /**
@@ -1629,7 +1629,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetDirection(shaped: RID, direction: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetDirectionBind, handle, shaped, direction)
+        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetDirectionBind, segment, shaped, direction)
     }
 
     /**
@@ -1639,7 +1639,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetDirection(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetDirectionBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetDirectionBind, segment, shaped)
     }
 
     /**
@@ -1649,7 +1649,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetInferredDirection(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetInferredDirectionBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetInferredDirectionBind, segment, shaped)
     }
 
     /**
@@ -1660,7 +1660,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetBidiOverride(shaped: RID, override: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndArrayArg(shapedTextSetBidiOverrideBind, handle, shaped, override)
+        ObjectCalls.ptrcallWithRIDAndArrayArg(shapedTextSetBidiOverrideBind, segment, shaped, override)
     }
 
     /**
@@ -1671,7 +1671,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetCustomPunctuation(shaped: RID, punct: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndStringArg(shapedTextSetCustomPunctuationBind, handle, shaped, punct)
+        ObjectCalls.ptrcallWithRIDAndStringArg(shapedTextSetCustomPunctuationBind, segment, shaped, punct)
     }
 
     /**
@@ -1682,7 +1682,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetCustomPunctuation(shaped: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(shapedTextGetCustomPunctuationBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetString(shapedTextGetCustomPunctuationBind, segment, shaped)
     }
 
     /**
@@ -1692,7 +1692,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetCustomEllipsis(shaped: RID, char: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetCustomEllipsisBind, handle, shaped, char)
+        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetCustomEllipsisBind, segment, shaped, char)
     }
 
     /**
@@ -1702,7 +1702,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetCustomEllipsis(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetCustomEllipsisBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetCustomEllipsisBind, segment, shaped)
     }
 
     /**
@@ -1713,7 +1713,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetOrientation(shaped: RID, orientation: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetOrientationBind, handle, shaped, orientation)
+        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetOrientationBind, segment, shaped, orientation)
     }
 
     /**
@@ -1723,7 +1723,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetOrientation(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetOrientationBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetOrientationBind, segment, shaped)
     }
 
     /**
@@ -1734,7 +1734,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetPreserveInvalid(shaped: RID, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveInvalidBind, handle, shaped, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveInvalidBind, segment, shaped, enabled)
     }
 
     /**
@@ -1745,7 +1745,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetPreserveInvalid(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveInvalidBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveInvalidBind, segment, shaped)
     }
 
     /**
@@ -1755,7 +1755,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetPreserveControl(shaped: RID, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveControlBind, handle, shaped, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(shapedTextSetPreserveControlBind, segment, shaped, enabled)
     }
 
     /**
@@ -1765,7 +1765,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetPreserveControl(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveControlBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextGetPreserveControlBind, segment, shaped)
     }
 
     /**
@@ -1775,7 +1775,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSetSpacing(shaped: RID, spacing: Long, value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(shapedTextSetSpacingBind, handle, shaped, spacing, value)
+        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(shapedTextSetSpacingBind, segment, shaped, spacing, value)
     }
 
     /**
@@ -1785,7 +1785,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetSpacing(shaped: RID, spacing: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextGetSpacingBind, handle, shaped, spacing)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextGetSpacingBind, segment, shaped, spacing)
     }
 
     /**
@@ -1795,7 +1795,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextAddString(shaped: RID, text: String, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap(), language: String = "", meta: Any? = null): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(shapedTextAddStringBind, handle, shaped, text, fonts, size, opentypeFeatures, language, meta)
+        return ObjectCalls.ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(shapedTextAddStringBind, segment, shaped, text, fonts, size, opentypeFeatures, language, meta)
     }
 
     /**
@@ -1806,7 +1806,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextAddObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Long = 1L, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(shapedTextAddObjectBind, handle, shaped, key, size, inlineAlign, length, baseline)
+        return ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(shapedTextAddObjectBind, segment, shaped, key, size, inlineAlign, length, baseline)
     }
 
     /**
@@ -1816,7 +1816,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextResizeObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(shapedTextResizeObjectBind, handle, shaped, key, size, inlineAlign, baseline)
+        return ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(shapedTextResizeObjectBind, segment, shaped, key, size, inlineAlign, baseline)
     }
 
     /**
@@ -1826,7 +1826,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextHasObject(shaped: RID, key: Any?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetBool(shapedTextHasObjectBind, handle, shaped, key)
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetBool(shapedTextHasObjectBind, segment, shaped, key)
     }
 
     /**
@@ -1836,7 +1836,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetText(shaped: RID): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetString(shapedGetTextBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetString(shapedGetTextBind, segment, shaped)
     }
 
     /**
@@ -1846,7 +1846,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetSpanCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetSpanCountBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetSpanCountBind, segment, shaped)
     }
 
     /**
@@ -1856,7 +1856,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetSpanMeta(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanMetaBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanMetaBind, segment, shaped, index)
     }
 
     /**
@@ -1866,7 +1866,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetSpanEmbeddedObject(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanEmbeddedObjectBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanEmbeddedObjectBind, segment, shaped, index)
     }
 
     /**
@@ -1876,7 +1876,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetSpanText(shaped: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetSpanTextBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetSpanTextBind, segment, shaped, index)
     }
 
     /**
@@ -1886,7 +1886,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetSpanObject(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanObjectBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetSpanObjectBind, segment, shaped, index)
     }
 
     /**
@@ -1896,7 +1896,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedSetSpanUpdateFont(shaped: RID, index: Long, fonts: List<RID>, size: Long, opentypeFeatures: Map<String, Any?> = emptyMap()) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDLongRIDListLongDictionaryArgs(shapedSetSpanUpdateFontBind, handle, shaped, index, fonts, size, opentypeFeatures)
+        ObjectCalls.ptrcallWithRIDLongRIDListLongDictionaryArgs(shapedSetSpanUpdateFontBind, segment, shaped, index, fonts, size, opentypeFeatures)
     }
 
     /**
@@ -1906,7 +1906,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetRunCountBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedGetRunCountBind, segment, shaped)
     }
 
     /**
@@ -1916,7 +1916,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunText(shaped: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunTextBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunTextBind, segment, shaped, index)
     }
 
     /**
@@ -1926,7 +1926,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunRange(shaped: RID, index: Long): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunRangeBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunRangeBind, segment, shaped, index)
     }
 
     /**
@@ -1936,7 +1936,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunGlyphRange(shaped: RID, index: Long): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunGlyphRangeBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2i(shapedGetRunGlyphRangeBind, segment, shaped, index)
     }
 
     /**
@@ -1946,7 +1946,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunFontRid(shaped: RID, index: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(shapedGetRunFontRidBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(shapedGetRunFontRidBind, segment, shaped, index)
     }
 
     /**
@@ -1956,7 +1956,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunFontSize(shaped: RID, index: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetInt(shapedGetRunFontSizeBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetInt(shapedGetRunFontSizeBind, segment, shaped, index)
     }
 
     /**
@@ -1966,7 +1966,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunLanguage(shaped: RID, index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunLanguageBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(shapedGetRunLanguageBind, segment, shaped, index)
     }
 
     /**
@@ -1976,7 +1976,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunDirection(shaped: RID, index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedGetRunDirectionBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedGetRunDirectionBind, segment, shaped, index)
     }
 
     /**
@@ -1986,7 +1986,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedGetRunObject(shaped: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetRunObjectBind, handle, shaped, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(shapedGetRunObjectBind, segment, shaped, index)
     }
 
     /**
@@ -1997,7 +1997,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSubstr(shaped: RID, start: Long, length: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(shapedTextSubstrBind, handle, shaped, start, length)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(shapedTextSubstrBind, segment, shaped, start, length)
     }
 
     /**
@@ -2007,7 +2007,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetParent(shaped: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextGetParentBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(shapedTextGetParentBind, segment, shaped)
     }
 
     /**
@@ -2017,7 +2017,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextFitToWidth(shaped: RID, width: Double, justificationFlags: Long = 3L): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(shapedTextFitToWidthBind, handle, shaped, width, justificationFlags)
+        return ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(shapedTextFitToWidthBind, segment, shaped, width, justificationFlags)
     }
 
     /**
@@ -2027,7 +2027,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextTabAlign(shaped: RID, tabStops: List<Float>): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArgRetDouble(shapedTextTabAlignBind, handle, shaped, tabStops)
+        return ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArgRetDouble(shapedTextTabAlignBind, segment, shaped, tabStops)
     }
 
     /**
@@ -2039,7 +2039,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextShape(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextShapeBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextShapeBind, segment, shaped)
     }
 
     /**
@@ -2049,7 +2049,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextIsReady(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextIsReadyBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextIsReadyBind, segment, shaped)
     }
 
     /**
@@ -2059,7 +2059,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextHasVisibleChars(shaped: RID): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextHasVisibleCharsBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(shapedTextHasVisibleCharsBind, segment, shaped)
     }
 
     /**
@@ -2069,7 +2069,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetGlyphs(shaped: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetGlyphsBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetGlyphsBind, segment, shaped)
     }
 
     /**
@@ -2079,7 +2079,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextSortLogical(shaped: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextSortLogicalBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextSortLogicalBind, segment, shaped)
     }
 
     /**
@@ -2089,7 +2089,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetGlyphCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetGlyphCountBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetGlyphCountBind, segment, shaped)
     }
 
     /**
@@ -2099,7 +2099,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetRange(shaped: RID): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetVector2i(shapedTextGetRangeBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2i(shapedTextGetRangeBind, segment, shaped)
     }
 
     /**
@@ -2109,7 +2109,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start: Long = 0L, once: Boolean = true, breakFlags: Long = 3L): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(shapedTextGetLineBreaksAdvBind, handle, shaped, width, start, once, breakFlags)
+        return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(shapedTextGetLineBreaksAdvBind, segment, shaped, width, start, once, breakFlags)
     }
 
     /**
@@ -2119,7 +2119,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetLineBreaks(shaped: RID, width: Double, start: Long = 0L, breakFlags: Long = 3L): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(shapedTextGetLineBreaksBind, handle, shaped, width, start, breakFlags)
+        return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(shapedTextGetLineBreaksBind, segment, shaped, width, start, breakFlags)
     }
 
     /**
@@ -2130,7 +2130,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetWordBreaks(shaped: RID, graphemeFlags: Long = 264L, skipGraphemeFlags: Long = 4L): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(shapedTextGetWordBreaksBind, handle, shaped, graphemeFlags, skipGraphemeFlags)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(shapedTextGetWordBreaksBind, segment, shaped, graphemeFlags, skipGraphemeFlags)
     }
 
     /**
@@ -2140,7 +2140,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetTrimPos(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetTrimPosBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetTrimPosBind, segment, shaped)
     }
 
     /**
@@ -2150,7 +2150,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetEllipsisPos(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisPosBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisPosBind, segment, shaped)
     }
 
     /**
@@ -2160,7 +2160,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetEllipsisGlyphs(shaped: RID): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetEllipsisGlyphsBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(shapedTextGetEllipsisGlyphsBind, segment, shaped)
     }
 
     /**
@@ -2170,7 +2170,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetEllipsisGlyphCount(shaped: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisGlyphCountBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetEllipsisGlyphCountBind, segment, shaped)
     }
 
     /**
@@ -2180,7 +2180,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextOverrunTrimToWidth(shaped: RID, width: Double = 0.0, overrunTrimFlags: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(shapedTextOverrunTrimToWidthBind, handle, shaped, width, overrunTrimFlags)
+        ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(shapedTextOverrunTrimToWidthBind, segment, shaped, width, overrunTrimFlags)
     }
 
     /**
@@ -2190,7 +2190,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetObjects(shaped: RID): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetArray(shapedTextGetObjectsBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetArray(shapedTextGetObjectsBind, segment, shaped)
     }
 
     /**
@@ -2200,7 +2200,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetObjectRect(shaped: RID, key: Any?): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetRect2(shapedTextGetObjectRectBind, handle, shaped, key)
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetRect2(shapedTextGetObjectRectBind, segment, shaped, key)
     }
 
     /**
@@ -2210,7 +2210,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetObjectRange(shaped: RID, key: Any?): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetVector2i(shapedTextGetObjectRangeBind, handle, shaped, key)
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetVector2i(shapedTextGetObjectRangeBind, segment, shaped, key)
     }
 
     /**
@@ -2220,7 +2220,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetObjectGlyph(shaped: RID, key: Any?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetLong(shapedTextGetObjectGlyphBind, handle, shaped, key)
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetLong(shapedTextGetObjectGlyphBind, segment, shaped, key)
     }
 
     /**
@@ -2230,7 +2230,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetSize(shaped: RID): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(shapedTextGetSizeBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(shapedTextGetSizeBind, segment, shaped)
     }
 
     /**
@@ -2242,7 +2242,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetAscent(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetAscentBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetAscentBind, segment, shaped)
     }
 
     /**
@@ -2254,7 +2254,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetDescent(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetDescentBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetDescentBind, segment, shaped)
     }
 
     /**
@@ -2264,7 +2264,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetWidth(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetWidthBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetWidthBind, segment, shaped)
     }
 
     /**
@@ -2274,7 +2274,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetUnderlinePosition(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlinePositionBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlinePositionBind, segment, shaped)
     }
 
     /**
@@ -2284,7 +2284,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetUnderlineThickness(shaped: RID): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlineThicknessBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapedTextGetUnderlineThicknessBind, segment, shaped)
     }
 
     /**
@@ -2295,7 +2295,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetCarets(shaped: RID, position: Long): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDictionary(shapedTextGetCaretsBind, handle, shaped, position)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDictionary(shapedTextGetCaretsBind, segment, shaped, position)
     }
 
     /**
@@ -2305,7 +2305,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetSelection(shaped: RID, start: Long, end: Long): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(shapedTextGetSelectionBind, handle, shaped, start, end)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(shapedTextGetSelectionBind, segment, shaped, start, end)
     }
 
     /**
@@ -2315,7 +2315,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextHitTestGrapheme(shaped: RID, coords: Double): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestGraphemeBind, handle, shaped, coords)
+        return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestGraphemeBind, segment, shaped, coords)
     }
 
     /**
@@ -2326,7 +2326,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextHitTestPosition(shaped: RID, coords: Double): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestPositionBind, handle, shaped, coords)
+        return ObjectCalls.ptrcallWithRIDAndDoubleArgRetLong(shapedTextHitTestPositionBind, segment, shaped, coords)
     }
 
     /**
@@ -2336,7 +2336,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetGraphemeBounds(shaped: RID, pos: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2(shapedTextGetGraphemeBoundsBind, handle, shaped, pos)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVector2(shapedTextGetGraphemeBoundsBind, segment, shaped, pos)
     }
 
     /**
@@ -2346,7 +2346,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextNextGraphemePos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextGraphemePosBind, handle, shaped, pos)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextGraphemePosBind, segment, shaped, pos)
     }
 
     /**
@@ -2356,7 +2356,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextPrevGraphemePos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevGraphemePosBind, handle, shaped, pos)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevGraphemePosBind, segment, shaped, pos)
     }
 
     /**
@@ -2366,7 +2366,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetCharacterBreaks(shaped: RID): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(shapedTextGetCharacterBreaksBind, handle, shaped)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(shapedTextGetCharacterBreaksBind, segment, shaped)
     }
 
     /**
@@ -2376,7 +2376,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextNextCharacterPos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextCharacterPosBind, handle, shaped, pos)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextNextCharacterPosBind, segment, shaped, pos)
     }
 
     /**
@@ -2386,7 +2386,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextPrevCharacterPos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevCharacterPosBind, handle, shaped, pos)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextPrevCharacterPosBind, segment, shaped, pos)
     }
 
     /**
@@ -2396,7 +2396,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextClosestCharacterPos(shaped: RID, pos: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextClosestCharacterPosBind, handle, shaped, pos)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextClosestCharacterPosBind, segment, shaped, pos)
     }
 
     /**
@@ -2412,7 +2412,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextDraw(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs(shapedTextDrawBind, handle, shaped, canvas, pos, clipL, clipR, color, oversampling)
+        ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs(shapedTextDrawBind, segment, shaped, canvas, pos, clipL, clipR, color, oversampling)
     }
 
     /**
@@ -2428,7 +2428,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextDrawOutline(shaped: RID, canvas: RID, pos: Vector2, clipL: Double = -1.0, clipR: Double = -1.0, outlineSize: Long = 1L, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs(shapedTextDrawOutlineBind, handle, shaped, canvas, pos, clipL, clipR, outlineSize, color, oversampling)
+        ObjectCalls.ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs(shapedTextDrawOutlineBind, segment, shaped, canvas, pos, clipL, clipR, outlineSize, color, oversampling)
     }
 
     /**
@@ -2438,7 +2438,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun shapedTextGetDominantDirectionInRange(shaped: RID, start: Long, end: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(shapedTextGetDominantDirectionInRangeBind, handle, shaped, start, end)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(shapedTextGetDominantDirectionInRangeBind, segment, shaped, start, end)
     }
 
     /**
@@ -2449,7 +2449,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun formatNumber(number: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(formatNumberBind, handle, number, language)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(formatNumberBind, segment, number, language)
     }
 
     /**
@@ -2460,7 +2460,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun parseNumber(number: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(parseNumberBind, handle, number, language)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(parseNumberBind, segment, number, language)
     }
 
     /**
@@ -2471,7 +2471,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun percentSign(language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(percentSignBind, handle, language)
+        return ObjectCalls.ptrcallWithStringArgRetString(percentSignBind, segment, language)
     }
 
     /**
@@ -2483,7 +2483,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stringGetWordBreaks(string: String, language: String = "", charsPerLine: Long = 0L): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndLongArgRetPackedInt32List(stringGetWordBreaksBind, handle, string, language, charsPerLine)
+        return ObjectCalls.ptrcallWithTwoStringAndLongArgRetPackedInt32List(stringGetWordBreaksBind, segment, string, language, charsPerLine)
     }
 
     /**
@@ -2493,7 +2493,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stringGetCharacterBreaks(string: String, language: String = ""): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetPackedInt32List(stringGetCharacterBreaksBind, handle, string, language)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetPackedInt32List(stringGetCharacterBreaksBind, segment, string, language)
     }
 
     /**
@@ -2506,7 +2506,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isConfusable(string: String, dict: List<String>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(isConfusableBind, handle, string, dict)
+        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(isConfusableBind, segment, string, dict)
     }
 
     /**
@@ -2517,7 +2517,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun spoofCheck(string: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(spoofCheckBind, handle, string)
+        return ObjectCalls.ptrcallWithStringArgRetBool(spoofCheckBind, segment, string)
     }
 
     /**
@@ -2527,7 +2527,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stripDiacritics(string: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(stripDiacriticsBind, handle, string)
+        return ObjectCalls.ptrcallWithStringArgRetString(stripDiacriticsBind, segment, string)
     }
 
     /**
@@ -2543,7 +2543,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isValidIdentifier(string: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isValidIdentifierBind, handle, string)
+        return ObjectCalls.ptrcallWithStringArgRetBool(isValidIdentifierBind, segment, string)
     }
 
     /**
@@ -2554,7 +2554,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isValidLetter(unicode: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isValidLetterBind, handle, unicode)
+        return ObjectCalls.ptrcallWithLongArgRetBool(isValidLetterBind, segment, unicode)
     }
 
     /**
@@ -2566,7 +2566,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stringToUpper(string: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToUpperBind, handle, string, language)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToUpperBind, segment, string, language)
     }
 
     /**
@@ -2578,7 +2578,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stringToLower(string: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToLowerBind, handle, string, language)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToLowerBind, segment, string, language)
     }
 
     /**
@@ -2590,7 +2590,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stringToTitle(string: String, language: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToTitleBind, handle, string, language)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetString(stringToTitleBind, segment, string, language)
     }
 
     /**
@@ -2600,7 +2600,7 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun parseStructuredText(parserType: Long, args: List<Any?>, text: String): List<Vector3i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, handle, parserType, args, text)
+        return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, segment, parserType, args, text)
     }
 
     companion object {
@@ -2721,11 +2721,11 @@ open class TextServer(handle: MemorySegment) : RefCounted(handle) {
         const val FIXED_SIZE_SCALE_ENABLED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextServer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextServer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextServer? =
-            if (handle.address() == 0L) null else TextServer(handle)
+            if (handle.address() == 0L) null else TextServer(GodotHandle(handle))
 
         private const val HAS_FEATURE_HASH = 3967367083L
         private val hasFeatureBind by lazy {

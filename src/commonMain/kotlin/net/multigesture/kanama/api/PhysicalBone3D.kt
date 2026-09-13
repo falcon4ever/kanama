@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicalBone3D
  */
-class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
+class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     var jointType: Long
         @JvmName("jointTypeProperty")
         get() = getJointType()
@@ -119,7 +119,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.apply_central_impulse
      */
     fun applyCentralImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, handle, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, segment, impulse)
     }
 
     /**
@@ -131,7 +131,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.apply_impulse
      */
     fun applyImpulse(impulse: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, handle, impulse, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, segment, impulse, position)
     }
 
     /**
@@ -140,7 +140,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_joint_type
      */
     fun setJointType(jointType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJointTypeBind, handle, jointType)
+        ObjectCalls.ptrcallWithLongArg(setJointTypeBind, segment, jointType)
     }
 
     /**
@@ -149,7 +149,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_joint_type
      */
     fun getJointType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJointTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getJointTypeBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_joint_offset
      */
     fun setJointOffset(offset: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setJointOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithTransform3DArg(setJointOffsetBind, segment, offset)
     }
 
     /**
@@ -167,7 +167,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_joint_offset
      */
     fun getJointOffset(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getJointOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getJointOffsetBind, segment)
     }
 
     /**
@@ -176,7 +176,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_joint_rotation
      */
     fun setJointRotation(euler: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setJointRotationBind, handle, euler)
+        ObjectCalls.ptrcallWithVector3Arg(setJointRotationBind, segment, euler)
     }
 
     /**
@@ -185,7 +185,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_joint_rotation
      */
     fun getJointRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getJointRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getJointRotationBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_body_offset
      */
     fun setBodyOffset(offset: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setBodyOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithTransform3DArg(setBodyOffsetBind, segment, offset)
     }
 
     /**
@@ -203,7 +203,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_body_offset
      */
     fun getBodyOffset(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getBodyOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getBodyOffsetBind, segment)
     }
 
     /**
@@ -212,7 +212,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_simulate_physics
      */
     fun getSimulatePhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, segment)
     }
 
     /**
@@ -221,7 +221,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.is_simulating_physics
      */
     fun isSimulatingPhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_bone_id
      */
     fun getBoneId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdBind, segment)
     }
 
     /**
@@ -239,7 +239,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_mass
      */
     fun setMass(mass: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
+        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
     }
 
     /**
@@ -248,7 +248,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_mass
      */
     fun getMass(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
     }
 
     /**
@@ -257,7 +257,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_friction
      */
     fun setFriction(friction: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, handle, friction)
+        ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, segment, friction)
     }
 
     /**
@@ -266,7 +266,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_friction
      */
     fun getFriction(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_bounce
      */
     fun setBounce(bounce: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBounceBind, handle, bounce)
+        ObjectCalls.ptrcallWithDoubleArg(setBounceBind, segment, bounce)
     }
 
     /**
@@ -292,7 +292,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_bounce
      */
     fun getBounce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, segment)
     }
 
     /**
@@ -303,7 +303,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_gravity_scale
      */
     fun setGravityScale(gravityScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, handle, gravityScale)
+        ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, segment, gravityScale)
     }
 
     /**
@@ -314,7 +314,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_gravity_scale
      */
     fun getGravityScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, segment)
     }
 
     /**
@@ -323,7 +323,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_linear_damp_mode
      */
     fun setLinearDampMode(linearDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, handle, linearDampMode)
+        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode)
     }
 
     /**
@@ -332,7 +332,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_linear_damp_mode
      */
     fun getLinearDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment)
     }
 
     /**
@@ -341,7 +341,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_angular_damp_mode
      */
     fun setAngularDampMode(angularDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, handle, angularDampMode)
+        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode)
     }
 
     /**
@@ -350,7 +350,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_angular_damp_mode
      */
     fun getAngularDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_linear_damp
      */
     fun setLinearDamp(linearDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, handle, linearDamp)
+        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, segment, linearDamp)
     }
 
     /**
@@ -376,7 +376,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_linear_damp
      */
     fun getLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, segment)
     }
 
     /**
@@ -389,7 +389,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_angular_damp
      */
     fun setAngularDamp(angularDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, handle, angularDamp)
+        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, segment, angularDamp)
     }
 
     /**
@@ -402,7 +402,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_angular_damp
      */
     fun getAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, segment)
     }
 
     /**
@@ -413,7 +413,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_linear_velocity
      */
     fun setLinearVelocity(linearVelocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, linearVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, linearVelocity)
     }
 
     /**
@@ -424,7 +424,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_linear_velocity
      */
     fun getLinearVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
     }
 
     /**
@@ -433,7 +433,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_angular_velocity
      */
     fun setAngularVelocity(angularVelocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, angularVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, angularVelocity)
     }
 
     /**
@@ -442,7 +442,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_angular_velocity
      */
     fun getAngularVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
     }
 
     /**
@@ -454,7 +454,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_use_custom_integrator
      */
     fun setUseCustomIntegrator(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, segment, enable)
     }
 
     /**
@@ -466,7 +466,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.is_using_custom_integrator
      */
     fun isUsingCustomIntegrator(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, segment)
     }
 
     /**
@@ -476,7 +476,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_can_sleep
      */
     fun setCanSleep(ableToSleep: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, handle, ableToSleep)
+        ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, segment, ableToSleep)
     }
 
     /**
@@ -486,7 +486,7 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.is_able_to_sleep
      */
     fun isAbleToSleep(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, segment)
     }
 
     companion object {
@@ -500,11 +500,11 @@ class PhysicalBone3D(handle: MemorySegment) : PhysicsBody3D(handle) {
         const val JOINT_TYPE_6DOF: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicalBone3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicalBone3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicalBone3D? =
-            if (handle.address() == 0L) null else PhysicalBone3D(handle)
+            if (handle.address() == 0L) null else PhysicalBone3D(GodotHandle(handle))
 
         private const val APPLY_CENTRAL_IMPULSE_HASH = 3460891852L
         private val applyCentralImpulseBind by lazy {

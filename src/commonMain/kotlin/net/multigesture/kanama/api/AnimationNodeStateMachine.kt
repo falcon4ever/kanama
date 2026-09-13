@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AnimationNodeStateMachine
  */
-class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handle) {
+class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle) {
     var stateMachineType: Long
         @JvmName("stateMachineTypeProperty")
         get() = getStateMachineType()
@@ -38,7 +38,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
+        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
     }
 
     /**
@@ -48,7 +48,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun replaceNode(name: String, node: AnimationNode?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(replaceNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(replaceNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -58,8 +58,8 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getNode(name: String): AnimationNode? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, handle, name)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, segment, name)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -73,7 +73,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun removeNode(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, segment, name)
     }
 
     /**
@@ -83,7 +83,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun renameNode(name: String, newName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, handle, name, newName)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, segment, name, newName)
     }
 
     /**
@@ -93,7 +93,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun hasNode(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, segment, name)
     }
 
     /**
@@ -103,7 +103,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getNodeName(node: AnimationNode?): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, segment, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -113,7 +113,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getNodeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, segment)
     }
 
     /**
@@ -123,7 +123,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setNodePosition(name: String, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, handle, name, position)
+        ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, segment, name, position)
     }
 
     /**
@@ -133,7 +133,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getNodePosition(name: String): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, segment, name)
     }
 
     /**
@@ -143,7 +143,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun hasTransition(from: String, to: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTransitionBind, handle, from, to)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTransitionBind, segment, from, to)
     }
 
     /**
@@ -153,7 +153,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun addTransition(from: String, to: String, transition: AnimationNodeStateMachineTransition?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(addTransitionBind, handle, from, to, transition?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(addTransitionBind, segment, from, to, transition?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -163,7 +163,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getTransition(idx: Int): AnimationNodeStateMachineTransition? {
         checkOpen()
-        return AnimationNodeStateMachineTransition.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, handle, idx))
+        return AnimationNodeStateMachineTransition.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, segment, idx))
     }
 
     /**
@@ -173,7 +173,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getTransitionFrom(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionFromBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionFromBind, segment, idx)
     }
 
     /**
@@ -183,7 +183,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getTransitionTo(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionToBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionToBind, segment, idx)
     }
 
     /**
@@ -193,7 +193,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getTransitionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTransitionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTransitionCountBind, segment)
     }
 
     /**
@@ -203,7 +203,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun removeTransitionByIndex(idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeTransitionByIndexBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(removeTransitionByIndexBind, segment, idx)
     }
 
     /**
@@ -213,7 +213,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun removeTransition(from: String, to: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(removeTransitionBind, handle, from, to)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(removeTransitionBind, segment, from, to)
     }
 
     /**
@@ -223,7 +223,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, segment, offset)
     }
 
     /**
@@ -233,7 +233,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, segment)
     }
 
     /**
@@ -244,7 +244,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setStateMachineType(stateMachineType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStateMachineTypeBind, handle, stateMachineType)
+        ObjectCalls.ptrcallWithLongArg(setStateMachineTypeBind, segment, stateMachineType)
     }
 
     /**
@@ -255,7 +255,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getStateMachineType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStateMachineTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStateMachineTypeBind, segment)
     }
 
     /**
@@ -267,7 +267,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setAllowTransitionToSelf(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, segment, enable)
     }
 
     /**
@@ -279,7 +279,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun isAllowTransitionToSelf(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, segment)
     }
 
     /**
@@ -292,7 +292,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setResetEnds(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setResetEndsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setResetEndsBind, segment, enable)
     }
 
     /**
@@ -305,7 +305,7 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun areEndsReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(areEndsResetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areEndsResetBind, segment)
     }
 
     companion object {
@@ -314,11 +314,11 @@ class AnimationNodeStateMachine(handle: MemorySegment) : AnimationRootNode(handl
         const val STATE_MACHINE_TYPE_GROUPED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeStateMachine? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeStateMachine? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeStateMachine? =
-            if (handle.address() == 0L) null else AnimationNodeStateMachine(handle)
+            if (handle.address() == 0L) null else AnimationNodeStateMachine(GodotHandle(handle))
 
         private const val ADD_NODE_HASH = 1980270704L
         private val addNodeBind by lazy {

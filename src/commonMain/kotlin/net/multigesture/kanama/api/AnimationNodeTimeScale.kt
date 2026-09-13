@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeTimeScale
  */
-class AnimationNodeTimeScale(handle: MemorySegment) : AnimationNode(handle) {
+class AnimationNodeTimeScale(handle: GodotHandle) : AnimationNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeTimeScale? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeTimeScale? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeTimeScale? =
-            if (handle.address() == 0L) null else AnimationNodeTimeScale(handle)
+            if (handle.address() == 0L) null else AnimationNodeTimeScale(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -9,29 +9,29 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: OpenXRSpatialContextPersistenceConfig
  */
-class OpenXRSpatialContextPersistenceConfig(handle: MemorySegment) : OpenXRStructureBase(handle) {
+class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructureBase(handle) {
     fun addPersistenceContext(persistenceContext: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(addPersistenceContextBind, handle, persistenceContext)
+        ObjectCalls.ptrcallWithRIDArg(addPersistenceContextBind, segment, persistenceContext)
     }
 
     fun removePersistenceContext(persistenceContext: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(removePersistenceContextBind, handle, persistenceContext)
+        ObjectCalls.ptrcallWithRIDArg(removePersistenceContextBind, segment, persistenceContext)
     }
 
     fun getPersistenceContexts(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getPersistenceContextsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getPersistenceContextsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialContextPersistenceConfig? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialContextPersistenceConfig? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialContextPersistenceConfig? =
-            if (handle.address() == 0L) null else OpenXRSpatialContextPersistenceConfig(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialContextPersistenceConfig(GodotHandle(handle))
 
         private const val ADD_PERSISTENCE_CONTEXT_HASH = 2722037293L
         private val addPersistenceContextBind by lazy {

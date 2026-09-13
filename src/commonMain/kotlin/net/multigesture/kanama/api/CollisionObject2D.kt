@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CollisionObject2D
  */
-open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
+open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
     var disableMode: Long
         @JvmName("disableModeProperty")
         get() = getDisableMode()
@@ -51,7 +51,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -64,7 +64,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_layer
      */
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
     }
 
     /**
@@ -77,7 +77,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_layer
      */
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
     }
 
     /**
@@ -90,7 +90,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -103,7 +103,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_layer_value
      */
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -123,7 +123,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_layer_value
      */
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -133,7 +133,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -143,7 +143,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -154,7 +154,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_priority
      */
     fun setCollisionPriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, segment, priority)
     }
 
     /**
@@ -165,7 +165,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_priority
      */
     fun getCollisionPriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
     }
 
     /**
@@ -174,7 +174,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_disable_mode
      */
     fun setDisableMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode)
     }
 
     /**
@@ -183,7 +183,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_disable_mode
      */
     fun getDisableMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_pickable
      */
     fun setPickable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPickableBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPickableBind, segment, enabled)
     }
 
     /**
@@ -205,7 +205,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.is_pickable
      */
     fun isPickable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPickableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPickableBind, segment)
     }
 
     /**
@@ -215,7 +215,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.create_shape_owner
      */
     fun createShapeOwner(owner: GodotObject): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetUInt32(createShapeOwnerBind, handle, owner.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetUInt32(createShapeOwnerBind, segment, owner.segment)
     }
 
     /**
@@ -224,7 +224,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.remove_shape_owner
      */
     fun removeShapeOwner(ownerId: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(removeShapeOwnerBind, handle, ownerId)
+        ObjectCalls.ptrcallWithUInt32Arg(removeShapeOwnerBind, segment, ownerId)
     }
 
     /**
@@ -234,7 +234,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_shape_owners
      */
     fun getShapeOwners(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getShapeOwnersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getShapeOwnersBind, segment)
     }
 
     /**
@@ -243,7 +243,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_transform
      */
     fun shapeOwnerSetTransform(ownerId: Long, transform: Transform2D) {
-        ObjectCalls.ptrcallWithUInt32AndTransform2DArg(shapeOwnerSetTransformBind, handle, ownerId, transform)
+        ObjectCalls.ptrcallWithUInt32AndTransform2DArg(shapeOwnerSetTransformBind, segment, ownerId, transform)
     }
 
     /**
@@ -252,7 +252,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_transform
      */
     fun shapeOwnerGetTransform(ownerId: Long): Transform2D {
-        return ObjectCalls.ptrcallWithUInt32ArgRetTransform2D(shapeOwnerGetTransformBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetTransform2D(shapeOwnerGetTransformBind, segment, ownerId)
     }
 
     /**
@@ -261,7 +261,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_owner
      */
     fun shapeOwnerGetOwner(ownerId: Long): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallWithUInt32ArgRetObject(shapeOwnerGetOwnerBind, handle, ownerId))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithUInt32ArgRetObject(shapeOwnerGetOwnerBind, segment, ownerId))
     }
 
     /**
@@ -270,7 +270,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_disabled
      */
     fun shapeOwnerSetDisabled(ownerId: Long, disabled: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetDisabledBind, handle, ownerId, disabled)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetDisabledBind, segment, ownerId, disabled)
     }
 
     /**
@@ -279,7 +279,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.is_shape_owner_disabled
      */
     fun isShapeOwnerDisabled(ownerId: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerDisabledBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerDisabledBind, segment, ownerId)
     }
 
     /**
@@ -289,7 +289,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_one_way_collision
      */
     fun shapeOwnerSetOneWayCollision(ownerId: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetOneWayCollisionBind, handle, ownerId, enable)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetOneWayCollisionBind, segment, ownerId, enable)
     }
 
     /**
@@ -299,7 +299,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.is_shape_owner_one_way_collision_enabled
      */
     fun isShapeOwnerOneWayCollisionEnabled(ownerId: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerOneWayCollisionEnabledBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerOneWayCollisionEnabledBind, segment, ownerId)
     }
 
     /**
@@ -309,7 +309,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_one_way_collision_margin
      */
     fun shapeOwnerSetOneWayCollisionMargin(ownerId: Long, margin: Double) {
-        ObjectCalls.ptrcallWithUInt32AndDoubleArg(shapeOwnerSetOneWayCollisionMarginBind, handle, ownerId, margin)
+        ObjectCalls.ptrcallWithUInt32AndDoubleArg(shapeOwnerSetOneWayCollisionMarginBind, segment, ownerId, margin)
     }
 
     /**
@@ -318,7 +318,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_shape_owner_one_way_collision_margin
      */
     fun getShapeOwnerOneWayCollisionMargin(ownerId: Long): Double {
-        return ObjectCalls.ptrcallWithUInt32ArgRetDouble(getShapeOwnerOneWayCollisionMarginBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetDouble(getShapeOwnerOneWayCollisionMarginBind, segment, ownerId)
     }
 
     /**
@@ -327,7 +327,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_shape_owner_one_way_collision_direction
      */
     fun getShapeOwnerOneWayCollisionDirection(ownerId: Long): Vector2 {
-        return ObjectCalls.ptrcallWithUInt32ArgRetVector2(getShapeOwnerOneWayCollisionDirectionBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetVector2(getShapeOwnerOneWayCollisionDirectionBind, segment, ownerId)
     }
 
     /**
@@ -337,7 +337,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_one_way_collision_direction
      */
     fun shapeOwnerSetOneWayCollisionDirection(ownerId: Long, direction: Vector2) {
-        ObjectCalls.ptrcallWithUInt32AndVector2Args(shapeOwnerSetOneWayCollisionDirectionBind, handle, ownerId, direction)
+        ObjectCalls.ptrcallWithUInt32AndVector2Args(shapeOwnerSetOneWayCollisionDirectionBind, segment, ownerId, direction)
     }
 
     /**
@@ -346,7 +346,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_add_shape
      */
     fun shapeOwnerAddShape(ownerId: Long, shape: Shape2D) {
-        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape.requireOpenHandle())
+        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, segment, ownerId, shape.requireOpenHandle())
     }
 
     /**
@@ -355,7 +355,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_shape_count
      */
     fun shapeOwnerGetShapeCount(ownerId: Long): Int {
-        return ObjectCalls.ptrcallWithUInt32ArgRetInt(shapeOwnerGetShapeCountBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetInt(shapeOwnerGetShapeCountBind, segment, ownerId)
     }
 
     /**
@@ -364,7 +364,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_shape
      */
     fun shapeOwnerGetShape(ownerId: Long, shapeId: Int): Shape2D? {
-        return Shape2D.wrap(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(shapeOwnerGetShapeBind, handle, ownerId, shapeId))
+        return Shape2D.wrap(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(shapeOwnerGetShapeBind, segment, ownerId, shapeId))
     }
 
     /**
@@ -373,7 +373,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_shape_index
      */
     fun shapeOwnerGetShapeIndex(ownerId: Long, shapeId: Int): Int {
-        return ObjectCalls.ptrcallWithUInt32AndIntArgRetInt(shapeOwnerGetShapeIndexBind, handle, ownerId, shapeId)
+        return ObjectCalls.ptrcallWithUInt32AndIntArgRetInt(shapeOwnerGetShapeIndexBind, segment, ownerId, shapeId)
     }
 
     /**
@@ -382,7 +382,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_remove_shape
      */
     fun shapeOwnerRemoveShape(ownerId: Long, shapeId: Int) {
-        ObjectCalls.ptrcallWithUInt32AndIntArg(shapeOwnerRemoveShapeBind, handle, ownerId, shapeId)
+        ObjectCalls.ptrcallWithUInt32AndIntArg(shapeOwnerRemoveShapeBind, segment, ownerId, shapeId)
     }
 
     /**
@@ -391,7 +391,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_clear_shapes
      */
     fun shapeOwnerClearShapes(ownerId: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(shapeOwnerClearShapesBind, handle, ownerId)
+        ObjectCalls.ptrcallWithUInt32Arg(shapeOwnerClearShapesBind, segment, ownerId)
     }
 
     /**
@@ -400,7 +400,7 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_find_owner
      */
     fun shapeFindOwner(shapeIndex: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(shapeFindOwnerBind, handle, shapeIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(shapeFindOwnerBind, segment, shapeIndex)
     }
 
     object Signals {
@@ -417,11 +417,11 @@ open class CollisionObject2D(handle: MemorySegment) : Node2D(handle) {
         const val DISABLE_MODE_KEEP_ACTIVE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CollisionObject2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CollisionObject2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CollisionObject2D? =
-            if (handle.address() == 0L) null else CollisionObject2D(handle)
+            if (handle.address() == 0L) null else CollisionObject2D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L
         private val getRidBind by lazy {

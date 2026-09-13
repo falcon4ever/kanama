@@ -500,7 +500,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddAction(id: RID, action: Long, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(updateAddActionBind, singleton, id, action, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(updateAddActionBind, singleton, id, action, callable.target.segment, callable.method)
     }
 
     /**
@@ -887,8 +887,8 @@ object AccessibilityServer {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): AccessibilityServer? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): AccessibilityServer? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): AccessibilityServer? =
         if (handle.address() == 0L) null else this

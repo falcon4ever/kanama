@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: CSGCylinder3D
  */
-class CSGCylinder3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
+class CSGCylinder3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -47,60 +47,60 @@ class CSGCylinder3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     fun setHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     fun getHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     fun setSides(sides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSidesBind, handle, sides)
+        ObjectCalls.ptrcallWithIntArg(setSidesBind, segment, sides)
     }
 
     fun getSides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSidesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSidesBind, segment)
     }
 
     fun setCone(cone: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setConeBind, handle, cone)
+        ObjectCalls.ptrcallWithBoolArg(setConeBind, segment, cone)
     }
 
     fun isCone(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isConeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isConeBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, handle, smoothFaces)
+        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, segment, smoothFaces)
     }
 
     fun getSmoothFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGCylinder3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGCylinder3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGCylinder3D? =
-            if (handle.address() == 0L) null else CSGCylinder3D(handle)
+            if (handle.address() == 0L) null else CSGCylinder3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: AudioStreamPlaylist
  */
-class AudioStreamPlaylist(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
     var shuffle: Boolean
         @JvmName("shuffleProperty")
         get() = getShuffle()
@@ -420,28 +420,28 @@ class AudioStreamPlaylist(handle: MemorySegment) : AudioStream(handle) {
 
     fun setStreamCount(streamCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStreamCountBind, handle, streamCount)
+        ObjectCalls.ptrcallWithIntArg(setStreamCountBind, segment, streamCount)
     }
 
     fun getStreamCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, segment)
     }
 
     fun getBpm(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, segment)
     }
 
     fun setListStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setListStreamBind, handle, streamIndex, audioStream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setListStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getListStream(streamIndex: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getListStreamBind, handle, streamIndex)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getListStreamBind, segment, streamIndex)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -450,43 +450,43 @@ class AudioStreamPlaylist(handle: MemorySegment) : AudioStream(handle) {
 
     fun setShuffle(shuffle: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setShuffleBind, handle, shuffle)
+        ObjectCalls.ptrcallWithBoolArg(setShuffleBind, segment, shuffle)
     }
 
     fun getShuffle(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getShuffleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getShuffleBind, segment)
     }
 
     fun setFadeTime(dec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFadeTimeBind, handle, dec)
+        ObjectCalls.ptrcallWithDoubleArg(setFadeTimeBind, segment, dec)
     }
 
     fun getFadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeTimeBind, segment)
     }
 
     fun setLoop(loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
+        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
     }
 
     fun hasLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
     }
 
     companion object {
         const val MAX_STREAMS: Long = 64L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamPlaylist? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamPlaylist? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamPlaylist? =
-            if (handle.address() == 0L) null else AudioStreamPlaylist(handle)
+            if (handle.address() == 0L) null else AudioStreamPlaylist(GodotHandle(handle))
 
         private const val SET_STREAM_COUNT_HASH = 1286410249L
         private val setStreamCountBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: AnimationNode
  */
-open class AnimationNode(handle: MemorySegment) : Resource(handle) {
+open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     var filterEnabled: Boolean
         @JvmName("filterEnabledProperty")
         get() = isFilterEnabled()
@@ -27,7 +27,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun addInput(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(addInputBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(addInputBind, segment, name)
     }
 
     /**
@@ -37,7 +37,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun removeInput(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeInputBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removeInputBind, segment, index)
     }
 
     /**
@@ -47,7 +47,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun setInputName(input: Int, name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetBool(setInputNameBind, handle, input, name)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetBool(setInputNameBind, segment, input, name)
     }
 
     /**
@@ -57,7 +57,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun getInputName(input: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getInputNameBind, handle, input)
+        return ObjectCalls.ptrcallWithIntArgRetString(getInputNameBind, segment, input)
     }
 
     /**
@@ -68,7 +68,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun getInputCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInputCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInputCountBind, segment)
     }
 
     /**
@@ -78,7 +78,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun findInput(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(findInputBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(findInputBind, segment, name)
     }
 
     /**
@@ -88,7 +88,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun setFilterPath(path: NodePath, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(setFilterPathBind, handle, path, enable)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(setFilterPathBind, segment, path, enable)
     }
 
     /**
@@ -98,7 +98,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun isPathFiltered(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(isPathFilteredBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(isPathFilteredBind, segment, path)
     }
 
     /**
@@ -108,7 +108,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun setFilterEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFilterEnabledBind, segment, enable)
     }
 
     /**
@@ -118,7 +118,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun isFilterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFilterEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFilterEnabledBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun getProcessingAnimationTreeInstanceId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessingAnimationTreeInstanceIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessingAnimationTreeInstanceIdBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun isProcessTesting(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessTestingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProcessTestingBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, handle, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag)
+        ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, segment, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag)
     }
 
     /**
@@ -164,7 +164,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
+        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
     /**
@@ -176,7 +176,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, handle, inputIndex, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
+        return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, segment, inputIndex, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
     /**
@@ -187,7 +187,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun setParameter(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setParameterBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setParameterBind, segment, name, value)
     }
 
     /**
@@ -198,7 +198,7 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
      */
     fun getParameter(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getParameterBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getParameterBind, segment, name)
     }
 
     object Signals {
@@ -215,11 +215,11 @@ open class AnimationNode(handle: MemorySegment) : Resource(handle) {
         const val FILTER_BLEND: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNode? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNode? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNode? =
-            if (handle.address() == 0L) null else AnimationNode(handle)
+            if (handle.address() == 0L) null else AnimationNode(GodotHandle(handle))
 
         private const val ADD_INPUT_HASH = 2323990056L
         private val addInputBind by lazy {

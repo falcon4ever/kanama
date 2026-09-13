@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AreaLight3D
  */
-class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
+class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
     var areaRange: Double
         @JvmName("areaRangeProperty")
         get() = getParam(4L)
@@ -56,7 +56,7 @@ class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.set_area_texture
      */
     fun setAreaTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setAreaTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAreaTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -72,7 +72,7 @@ class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.get_area_texture
      */
     fun getAreaTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAreaTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAreaTextureBind, segment))
     }
 
     /**
@@ -81,7 +81,7 @@ class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.set_area_size
      */
     fun setAreaSize(areaSize: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setAreaSizeBind, handle, areaSize)
+        ObjectCalls.ptrcallWithVector2Arg(setAreaSizeBind, segment, areaSize)
     }
 
     /**
@@ -90,7 +90,7 @@ class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.get_area_size
      */
     fun getAreaSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getAreaSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getAreaSizeBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.set_area_normalize_energy
      */
     fun setAreaNormalizeEnergy(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAreaNormalizeEnergyBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAreaNormalizeEnergyBind, segment, enable)
     }
 
     /**
@@ -112,16 +112,16 @@ class AreaLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.is_area_normalizing_energy
      */
     fun isAreaNormalizingEnergy(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAreaNormalizingEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAreaNormalizingEnergyBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AreaLight3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AreaLight3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AreaLight3D? =
-            if (handle.address() == 0L) null else AreaLight3D(handle)
+            if (handle.address() == 0L) null else AreaLight3D(GodotHandle(handle))
 
         private const val SET_AREA_TEXTURE_HASH = 4051416890L
         private val setAreaTextureBind by lazy {

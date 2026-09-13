@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: DirectionalLight3D
  */
-class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
+class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
     var directionalShadowMode: Long
         @JvmName("directionalShadowModeProperty")
         get() = getShadowMode()
@@ -72,7 +72,7 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.set_shadow_mode
      */
     fun setShadowMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode)
     }
 
     /**
@@ -81,7 +81,7 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.get_shadow_mode
      */
     fun getShadowMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment)
     }
 
     /**
@@ -92,7 +92,7 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.set_blend_splits
      */
     fun setBlendSplits(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBlendSplitsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setBlendSplitsBind, segment, enabled)
     }
 
     /**
@@ -103,7 +103,7 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.is_blend_splits_enabled
      */
     fun isBlendSplitsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBlendSplitsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBlendSplitsEnabledBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.set_sky_mode
      */
     fun setSkyMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSkyModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setSkyModeBind, segment, mode)
     }
 
     /**
@@ -123,7 +123,7 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.get_sky_mode
      */
     fun getSkyMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkyModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSkyModeBind, segment)
     }
 
     companion object {
@@ -135,11 +135,11 @@ class DirectionalLight3D(handle: MemorySegment) : Light3D(handle) {
         const val SKY_MODE_SKY_ONLY: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): DirectionalLight3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): DirectionalLight3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): DirectionalLight3D? =
-            if (handle.address() == 0L) null else DirectionalLight3D(handle)
+            if (handle.address() == 0L) null else DirectionalLight3D(GodotHandle(handle))
 
         private const val SET_SHADOW_MODE_HASH = 1261211726L
         private val setShadowModeBind by lazy {

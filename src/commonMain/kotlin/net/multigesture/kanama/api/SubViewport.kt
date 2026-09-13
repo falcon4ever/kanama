@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: SubViewport
  */
-class SubViewport(handle: MemorySegment) : Viewport(handle) {
+class SubViewport(handle: GodotHandle) : Viewport(handle) {
     var size: Vector2i
         @JvmName("sizeProperty")
         get() = getSize()
@@ -58,7 +58,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_size
      */
     fun setSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
     }
 
     /**
@@ -70,7 +70,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_size
      */
     fun getSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_size_2d_override
      */
     fun setSize2dOverride(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setSize2dOverrideBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSize2dOverrideBind, segment, size)
     }
 
     /**
@@ -90,7 +90,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_size_2d_override
      */
     fun getSize2dOverride(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSize2dOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSize2dOverrideBind, segment)
     }
 
     /**
@@ -99,7 +99,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_size_2d_override_stretch
      */
     fun setSize2dOverrideStretch(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSize2dOverrideStretchBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSize2dOverrideStretchBind, segment, enable)
     }
 
     /**
@@ -108,7 +108,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.is_size_2d_override_stretch_enabled
      */
     fun isSize2dOverrideStretchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSize2dOverrideStretchEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSize2dOverrideStretchEnabledBind, segment)
     }
 
     /**
@@ -117,7 +117,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_view_count
      */
     fun setViewCount(viewCount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setViewCountBind, handle, viewCount)
+        ObjectCalls.ptrcallWithIntArg(setViewCountBind, segment, viewCount)
     }
 
     /**
@@ -126,7 +126,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_view_count
      */
     fun getViewCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getViewCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getViewCountBind, segment)
     }
 
     /**
@@ -135,7 +135,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_update_mode
      */
     fun setUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode)
     }
 
     /**
@@ -144,7 +144,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_update_mode
      */
     fun getUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment)
     }
 
     /**
@@ -154,7 +154,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_clear_mode
      */
     fun setClearMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setClearModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setClearModeBind, segment, mode)
     }
 
     /**
@@ -164,7 +164,7 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_clear_mode
      */
     fun getClearMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getClearModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getClearModeBind, segment)
     }
 
     companion object {
@@ -178,11 +178,11 @@ class SubViewport(handle: MemorySegment) : Viewport(handle) {
         const val UPDATE_ALWAYS: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SubViewport? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SubViewport? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SubViewport? =
-            if (handle.address() == 0L) null else SubViewport(handle)
+            if (handle.address() == 0L) null else SubViewport(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 1130785943L
         private val setSizeBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: GLTFObjectModelProperty
  */
-class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
+class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     var gltfToGodotExpression: Expression?
         @JvmName("gltfToGodotExpressionProperty")
         get() = getGltfToGodotExpression()
@@ -49,92 +49,92 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
 
     fun appendNodePath(nodePath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(appendNodePathBind, handle, nodePath)
+        ObjectCalls.ptrcallWithNodePathArg(appendNodePathBind, segment, nodePath)
     }
 
     fun appendPathToProperty(nodePath: NodePath, propName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathStringNameArgs(appendPathToPropertyBind, handle, nodePath, propName)
+        ObjectCalls.ptrcallWithNodePathStringNameArgs(appendPathToPropertyBind, segment, nodePath, propName)
     }
 
     fun getAccessorType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment)
     }
 
     fun getGltfToGodotExpression(): Expression? {
         checkOpen()
-        return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGltfToGodotExpressionBind, handle))
+        return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGltfToGodotExpressionBind, segment))
     }
 
     fun setGltfToGodotExpression(gltfToGodotExpr: Expression?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGltfToGodotExpressionBind, handle, listOf(gltfToGodotExpr?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGltfToGodotExpressionBind, segment, listOf(gltfToGodotExpr?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getGodotToGltfExpression(): Expression? {
         checkOpen()
-        return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotToGltfExpressionBind, handle))
+        return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotToGltfExpressionBind, segment))
     }
 
     fun setGodotToGltfExpression(godotToGltfExpr: Expression?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGodotToGltfExpressionBind, handle, listOf(godotToGltfExpr?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGodotToGltfExpressionBind, segment, listOf(godotToGltfExpr?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNodePaths(): List<NodePath> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getNodePathsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(getNodePathsBind, segment)
     }
 
     fun hasNodePaths(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasNodePathsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasNodePathsBind, segment)
     }
 
     fun setNodePaths(nodePaths: List<NodePath>) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathListArg(setNodePathsBind, handle, nodePaths)
+        ObjectCalls.ptrcallWithNodePathListArg(setNodePathsBind, segment, nodePaths)
     }
 
     fun getObjectModelType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getObjectModelTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getObjectModelTypeBind, segment)
     }
 
     fun setObjectModelType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setObjectModelTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setObjectModelTypeBind, segment, type)
     }
 
     fun getJsonPointers(): List<List<String>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringListList(getJsonPointersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringListList(getJsonPointersBind, segment)
     }
 
     fun hasJsonPointers(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasJsonPointersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasJsonPointersBind, segment)
     }
 
     fun setJsonPointers(jsonPointers: List<List<String>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListListArg(setJsonPointersBind, handle, jsonPointers)
+        ObjectCalls.ptrcallWithPackedStringListListArg(setJsonPointersBind, segment, jsonPointers)
     }
 
     fun getVariantType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVariantTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVariantTypeBind, segment)
     }
 
     fun setVariantType(variantType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVariantTypeBind, handle, variantType)
+        ObjectCalls.ptrcallWithLongArg(setVariantTypeBind, segment, variantType)
     }
 
     fun setTypes(variantType: Long, objModelType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setTypesBind, handle, variantType, objModelType)
+        ObjectCalls.ptrcallWithTwoLongArgs(setTypesBind, segment, variantType, objModelType)
     }
 
     companion object {
@@ -151,11 +151,11 @@ class GLTFObjectModelProperty(handle: MemorySegment) : RefCounted(handle) {
         const val GLTF_OBJECT_MODEL_TYPE_INT: Long = 10L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFObjectModelProperty? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFObjectModelProperty? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFObjectModelProperty? =
-            if (handle.address() == 0L) null else GLTFObjectModelProperty(handle)
+            if (handle.address() == 0L) null else GLTFObjectModelProperty(GodotHandle(handle))
 
         private const val APPEND_NODE_PATH_HASH = 1348162250L
         private val appendNodePathBind by lazy {

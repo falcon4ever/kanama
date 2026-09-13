@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDPipelineColorBlendStateAttachment
  */
-class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(handle) {
+class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(handle) {
     var enableBlend: Boolean
         @JvmName("enableBlendProperty")
         get() = getEnableBlend()
@@ -90,7 +90,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setAsMix() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(setAsMixBind, handle)
+        ObjectCalls.ptrcallNoArgs(setAsMixBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setEnableBlend(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableBlendBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableBlendBind, segment, pMember)
     }
 
     /**
@@ -116,7 +116,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getEnableBlend(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableBlendBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableBlendBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setSrcColorBlendFactor(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, segment, pMember)
     }
 
     /**
@@ -138,7 +138,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getSrcColorBlendFactor(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setDstColorBlendFactor(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, segment, pMember)
     }
 
     /**
@@ -160,7 +160,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getDstColorBlendFactor(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, segment)
     }
 
     /**
@@ -170,7 +170,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setColorBlendOp(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, segment, pMember)
     }
 
     /**
@@ -180,7 +180,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getColorBlendOp(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, segment)
     }
 
     /**
@@ -191,7 +191,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setSrcAlphaBlendFactor(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, segment, pMember)
     }
 
     /**
@@ -202,7 +202,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getSrcAlphaBlendFactor(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setDstAlphaBlendFactor(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, segment, pMember)
     }
 
     /**
@@ -224,7 +224,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getDstAlphaBlendFactor(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setAlphaBlendOp(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, segment, pMember)
     }
 
     /**
@@ -244,7 +244,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getAlphaBlendOp(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, segment)
     }
 
     /**
@@ -254,7 +254,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setWriteR(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteRBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setWriteRBind, segment, pMember)
     }
 
     /**
@@ -264,7 +264,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getWriteR(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteRBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getWriteRBind, segment)
     }
 
     /**
@@ -274,7 +274,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setWriteG(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteGBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setWriteGBind, segment, pMember)
     }
 
     /**
@@ -284,7 +284,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getWriteG(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteGBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getWriteGBind, segment)
     }
 
     /**
@@ -294,7 +294,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setWriteB(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteBBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setWriteBBind, segment, pMember)
     }
 
     /**
@@ -304,7 +304,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getWriteB(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteBBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getWriteBBind, segment)
     }
 
     /**
@@ -314,7 +314,7 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun setWriteA(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteABind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setWriteABind, segment, pMember)
     }
 
     /**
@@ -324,16 +324,16 @@ class RDPipelineColorBlendStateAttachment(handle: MemorySegment) : RefCounted(ha
      */
     fun getWriteA(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteABind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getWriteABind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDPipelineColorBlendStateAttachment? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDPipelineColorBlendStateAttachment? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDPipelineColorBlendStateAttachment? =
-            if (handle.address() == 0L) null else RDPipelineColorBlendStateAttachment(handle)
+            if (handle.address() == 0L) null else RDPipelineColorBlendStateAttachment(GodotHandle(handle))
 
         private const val SET_AS_MIX_HASH = 3218959716L
         private val setAsMixBind by lazy {

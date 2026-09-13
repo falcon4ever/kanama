@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: AnimationPlayer
  */
-class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
+class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
     var currentAnimation: String
         @JvmName("currentAnimationProperty")
         get() = getCurrentAnimation()
@@ -80,219 +80,219 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
         set(value) = setMovieQuitOnFinishEnabled(value)
 
     fun animationSetNext(animationFrom: String, animationTo: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(animationSetNextBind, handle, animationFrom, animationTo)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(animationSetNextBind, segment, animationFrom, animationTo)
     }
 
     fun animationGetNext(animationFrom: String): String {
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(animationGetNextBind, handle, animationFrom)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(animationGetNextBind, segment, animationFrom)
     }
 
     fun setBlendTime(animationFrom: String, animationTo: String, sec: Double) {
-        ObjectCalls.ptrcallWithTwoStringNameAndDoubleArg(setBlendTimeBind, handle, animationFrom, animationTo, sec)
+        ObjectCalls.ptrcallWithTwoStringNameAndDoubleArg(setBlendTimeBind, segment, animationFrom, animationTo, sec)
     }
 
     fun getBlendTime(animationFrom: String, animationTo: String): Double {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(getBlendTimeBind, handle, animationFrom, animationTo)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(getBlendTimeBind, segment, animationFrom, animationTo)
     }
 
     fun setDefaultBlendTime(sec: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDefaultBlendTimeBind, handle, sec)
+        ObjectCalls.ptrcallWithDoubleArg(setDefaultBlendTimeBind, segment, sec)
     }
 
     fun getDefaultBlendTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBlendTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBlendTimeBind, segment)
     }
 
     fun setAutoCapture(autoCapture: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoCaptureBind, handle, autoCapture)
+        ObjectCalls.ptrcallWithBoolArg(setAutoCaptureBind, segment, autoCapture)
     }
 
     fun isAutoCapture(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoCaptureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoCaptureBind, segment)
     }
 
     fun setAutoCaptureDuration(autoCaptureDuration: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAutoCaptureDurationBind, handle, autoCaptureDuration)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoCaptureDurationBind, segment, autoCaptureDuration)
     }
 
     fun getAutoCaptureDuration(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoCaptureDurationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoCaptureDurationBind, segment)
     }
 
     fun setAutoCaptureTransitionType(autoCaptureTransitionType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureTransitionTypeBind, handle, autoCaptureTransitionType)
+        ObjectCalls.ptrcallWithLongArg(setAutoCaptureTransitionTypeBind, segment, autoCaptureTransitionType)
     }
 
     fun getAutoCaptureTransitionType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureTransitionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureTransitionTypeBind, segment)
     }
 
     fun setAutoCaptureEaseType(autoCaptureEaseType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureEaseTypeBind, handle, autoCaptureEaseType)
+        ObjectCalls.ptrcallWithLongArg(setAutoCaptureEaseTypeBind, segment, autoCaptureEaseType)
     }
 
     fun getAutoCaptureEaseType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, segment)
     }
 
     fun play(name: String = "", customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameDoubleDoubleBoolArgs(playBind, handle, name, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameDoubleDoubleBoolArgs(playBind, segment, name, customBlend, customSpeed, fromEnd)
     }
 
     fun playSectionWithMarkers(name: String = "", startMarker: String = "", endMarker: String = "", customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithThreeStringNameTwoDoubleBoolArgs(playSectionWithMarkersBind, handle, name, startMarker, endMarker, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithThreeStringNameTwoDoubleBoolArgs(playSectionWithMarkersBind, segment, name, startMarker, endMarker, customBlend, customSpeed, fromEnd)
     }
 
     fun playSection(name: String = "", startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameFourDoubleBoolArgs(playSectionBind, handle, name, startTime, endTime, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameFourDoubleBoolArgs(playSectionBind, segment, name, startTime, endTime, customBlend, customSpeed, fromEnd)
     }
 
     fun playBackwards(name: String = "", customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(playBackwardsBind, handle, name, customBlend)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(playBackwardsBind, segment, name, customBlend)
     }
 
     fun playSectionWithMarkersBackwards(name: String = "", startMarker: String = "", endMarker: String = "", customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithThreeStringNameAndDoubleArg(playSectionWithMarkersBackwardsBind, handle, name, startMarker, endMarker, customBlend)
+        ObjectCalls.ptrcallWithThreeStringNameAndDoubleArg(playSectionWithMarkersBackwardsBind, segment, name, startMarker, endMarker, customBlend)
     }
 
     fun playSectionBackwards(name: String = "", startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithStringNameAndThreeDoubleArgs(playSectionBackwardsBind, handle, name, startTime, endTime, customBlend)
+        ObjectCalls.ptrcallWithStringNameAndThreeDoubleArgs(playSectionBackwardsBind, segment, name, startTime, endTime, customBlend)
     }
 
     fun playWithCapture(name: String = "", duration: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false, transType: Long = 0L, easeType: Long = 0L) {
-        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, handle, name, duration, customBlend, customSpeed, fromEnd, transType, easeType)
+        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, segment, name, duration, customBlend, customSpeed, fromEnd, transType, easeType)
     }
 
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, handle)
+        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
     }
 
     fun stop(keepState: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(stopBind, handle, keepState)
+        ObjectCalls.ptrcallWithBoolArg(stopBind, segment, keepState)
     }
 
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     fun isAnimationActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAnimationActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAnimationActiveBind, segment)
     }
 
     fun setCurrentAnimation(animation: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setCurrentAnimationBind, handle, animation)
+        ObjectCalls.ptrcallWithStringNameArg(setCurrentAnimationBind, segment, animation)
     }
 
     fun getCurrentAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentAnimationBind, segment)
     }
 
     fun setAssignedAnimation(animation: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAssignedAnimationBind, handle, animation)
+        ObjectCalls.ptrcallWithStringNameArg(setAssignedAnimationBind, segment, animation)
     }
 
     fun getAssignedAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAssignedAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAssignedAnimationBind, segment)
     }
 
     fun queue(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(queueBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(queueBind, segment, name)
     }
 
     fun getQueue(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getQueueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getQueueBind, segment)
     }
 
     fun clearQueue() {
-        ObjectCalls.ptrcallNoArgs(clearQueueBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearQueueBind, segment)
     }
 
     fun setSpeedScale(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, speed)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speed)
     }
 
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     fun getPlayingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
     }
 
     fun setAutoplay(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAutoplayBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setAutoplayBind, segment, name)
     }
 
     fun getAutoplay(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAutoplayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAutoplayBind, segment)
     }
 
     fun setMovieQuitOnFinishEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMovieQuitOnFinishEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setMovieQuitOnFinishEnabledBind, segment, enabled)
     }
 
     fun isMovieQuitOnFinishEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMovieQuitOnFinishEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMovieQuitOnFinishEnabledBind, segment)
     }
 
     fun getCurrentAnimationPosition(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationPositionBind, segment)
     }
 
     fun getCurrentAnimationLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationLengthBind, segment)
     }
 
     fun setSectionWithMarkers(startMarker: String = "", endMarker: String = "") {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(setSectionWithMarkersBind, handle, startMarker, endMarker)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(setSectionWithMarkersBind, segment, startMarker, endMarker)
     }
 
     fun setSection(startTime: Double = -1.0, endTime: Double = -1.0) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(setSectionBind, handle, startTime, endTime)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(setSectionBind, segment, startTime, endTime)
     }
 
     fun resetSection() {
-        ObjectCalls.ptrcallNoArgs(resetSectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetSectionBind, segment)
     }
 
     fun getSectionStartTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionStartTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionStartTimeBind, segment)
     }
 
     fun getSectionEndTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionEndTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionEndTimeBind, segment)
     }
 
     fun hasSection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasSectionBind, segment)
     }
 
     fun seek(seconds: Double, update: Boolean = false, updateOnly: Boolean = false) {
-        ObjectCalls.ptrcallWithDoubleAndTwoBoolArgs(seekBind, handle, seconds, update, updateOnly)
+        ObjectCalls.ptrcallWithDoubleAndTwoBoolArgs(seekBind, segment, seconds, update, updateOnly)
     }
 
     fun setProcessCallback(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode)
     }
 
     fun getProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment)
     }
 
     fun setMethodCallMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMethodCallModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMethodCallModeBind, segment, mode)
     }
 
     fun getMethodCallMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, segment)
     }
 
     fun setRoot(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setRootBind, segment, path)
     }
 
     fun getRoot(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootBind, segment)
     }
 
     object Signals {
@@ -308,11 +308,11 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
         const val ANIMATION_METHOD_CALL_IMMEDIATE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationPlayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationPlayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationPlayer? =
-            if (handle.address() == 0L) null else AnimationPlayer(handle)
+            if (handle.address() == 0L) null else AnimationPlayer(GodotHandle(handle))
 
         private const val ANIMATION_SET_NEXT_HASH = 3740211285L
         private val animationSetNextBind by lazy {

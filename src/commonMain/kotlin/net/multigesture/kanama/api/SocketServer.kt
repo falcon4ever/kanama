@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SocketServer
  */
-open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
+open class SocketServer(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns `true` if a connection is available for taking.
      *
@@ -18,7 +18,7 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isConnectionAvailable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isListening(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -48,16 +48,16 @@ open class SocketServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun takeSocketConnection(): StreamPeerSocket? {
         checkOpen()
-        return StreamPeerSocket.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, handle))
+        return StreamPeerSocket.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SocketServer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SocketServer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SocketServer? =
-            if (handle.address() == 0L) null else SocketServer(handle)
+            if (handle.address() == 0L) null else SocketServer(GodotHandle(handle))
 
         private const val IS_CONNECTION_AVAILABLE_HASH = 36873697L
         private val isConnectionAvailableBind by lazy {

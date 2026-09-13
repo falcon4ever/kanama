@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ResourceImporterOBJ
  */
-class ResourceImporterOBJ(handle: MemorySegment) : ResourceImporter(handle) {
+class ResourceImporterOBJ(handle: GodotHandle) : ResourceImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceImporterOBJ? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceImporterOBJ? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceImporterOBJ? =
-            if (handle.address() == 0L) null else ResourceImporterOBJ(handle)
+            if (handle.address() == 0L) null else ResourceImporterOBJ(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -10,210 +10,210 @@ import net.multigesture.kanama.types.Vector2i
 /**
  * Generated from Godot docs: Image
  */
-class Image(handle: MemorySegment) : Resource(handle) {
+class Image(handle: GodotHandle) : Resource(handle) {
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
     }
 
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
     }
 
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
     }
 
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     fun getDataSize(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDataSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDataSizeBind, segment)
     }
 
     // KANAMA-IOS-SUGAR: [runtime] get_data / load_png_from_buffer are PackedByteArray shapes
     // the generator's audited table doesn't emit yet; hand-wired through the byte-array
     // dispatch helpers. Re-add after regeneration.
     fun getData(): ByteArray =
-        ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle, getDataSize())
+        ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment, getDataSize())
 
     fun loadPngFromBuffer(buffer: ByteArray): Long =
-        ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, handle, buffer)
+        ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, segment, buffer)
 
     fun convert(format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(convertBind, handle, format)
+        ObjectCalls.ptrcallWithLongArg(convertBind, segment, format)
     }
 
     fun getMipmapCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, segment)
     }
 
     fun getMipmapOffset(mipmap: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getMipmapOffsetBind, handle, mipmap)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getMipmapOffsetBind, segment, mipmap)
     }
 
     fun resizeToPo2(square: Boolean = false, interpolation: Long = 1L) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, handle, square, interpolation)
+        ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, segment, square, interpolation)
     }
 
     fun resize(width: Int, height: Int, interpolation: Long = 1L) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, handle, width, height, interpolation)
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, segment, width, height, interpolation)
     }
 
     fun shrinkX2() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(shrinkX2Bind, handle)
+        ObjectCalls.ptrcallNoArgs(shrinkX2Bind, segment)
     }
 
     fun crop(width: Int, height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(cropBind, handle, width, height)
+        ObjectCalls.ptrcallWithTwoIntArgs(cropBind, segment, width, height)
     }
 
     fun flipX() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(flipXBind, handle)
+        ObjectCalls.ptrcallNoArgs(flipXBind, segment)
     }
 
     fun flipY() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(flipYBind, handle)
+        ObjectCalls.ptrcallNoArgs(flipYBind, segment)
     }
 
     fun generateMipmaps(renormalize: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, handle, renormalize)
+        return ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, segment, renormalize)
     }
 
     fun clearMipmaps() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearMipmapsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearMipmapsBind, segment)
     }
 
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
     }
 
     fun load(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
     }
 
     fun savePng(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, segment, path)
     }
 
     fun saveJpg(path: String, quality: Double = 0.75): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, handle, path, quality)
+        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, segment, path, quality)
     }
 
     fun saveExr(path: String, grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, handle, path, grayscale, colorImage, maxLinearValue)
+        return ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, segment, path, grayscale, colorImage, maxLinearValue)
     }
 
     fun saveDds(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, segment, path)
     }
 
     fun saveWebp(path: String, lossy: Boolean = false, quality: Double = 0.75): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, handle, path, lossy, quality)
+        return ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, segment, path, lossy, quality)
     }
 
     fun detectAlpha(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, segment)
     }
 
     fun isInvisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInvisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInvisibleBind, segment)
     }
 
     fun detectUsedChannels(source: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, handle, source)
+        return ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, segment, source)
     }
 
     fun compress(mode: Long, source: Long = 0L, astcFormat: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, handle, mode, source, astcFormat)
+        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, segment, mode, source, astcFormat)
     }
 
     fun compressFromChannels(mode: Long, channels: Long, astcFormat: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, handle, mode, channels, astcFormat)
+        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, segment, mode, channels, astcFormat)
     }
 
     fun decompress(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(decompressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(decompressBind, segment)
     }
 
     fun isCompressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCompressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCompressedBind, segment)
     }
 
     fun rotate90(direction: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(rotate90Bind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(rotate90Bind, segment, direction)
     }
 
     fun rotate180() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(rotate180Bind, handle)
+        ObjectCalls.ptrcallNoArgs(rotate180Bind, segment)
     }
 
     fun fixAlphaEdges() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(fixAlphaEdgesBind, handle)
+        ObjectCalls.ptrcallNoArgs(fixAlphaEdgesBind, segment)
     }
 
     fun premultiplyAlpha() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(premultiplyAlphaBind, handle)
+        ObjectCalls.ptrcallNoArgs(premultiplyAlphaBind, segment)
     }
 
     fun srgbToLinear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(srgbToLinearBind, handle)
+        ObjectCalls.ptrcallNoArgs(srgbToLinearBind, segment)
     }
 
     fun linearToSrgb() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(linearToSrgbBind, handle)
+        ObjectCalls.ptrcallNoArgs(linearToSrgbBind, segment)
     }
 
     fun normalMapToXy() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(normalMapToXyBind, handle)
+        ObjectCalls.ptrcallNoArgs(normalMapToXyBind, segment)
     }
 
     fun rgbeToSrgb(): Image? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(rgbeToSrgbBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(rgbeToSrgbBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -222,52 +222,52 @@ class Image(handle: MemorySegment) : Resource(handle) {
 
     fun bumpMapToNormalMap(bumpScale: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(bumpMapToNormalMapBind, handle, bumpScale)
+        ObjectCalls.ptrcallWithDoubleArg(bumpMapToNormalMapBind, segment, bumpScale)
     }
 
     fun fill(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(fillBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(fillBind, segment, color)
     }
 
     fun getUsedRect(): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, segment)
     }
 
     fun copyFrom(src: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, handle, listOf(src?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, segment, listOf(src?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getPixelv(point: Vector2i): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetColor(getPixelvBind, handle, point)
+        return ObjectCalls.ptrcallWithVector2iArgRetColor(getPixelvBind, segment, point)
     }
 
     fun getPixel(x: Int, y: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getPixelBind, handle, x, y)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getPixelBind, segment, x, y)
     }
 
     fun setPixelv(point: Vector2i, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndColorArg(setPixelvBind, handle, point, color)
+        ObjectCalls.ptrcallWithVector2iAndColorArg(setPixelvBind, segment, point, color)
     }
 
     fun setPixel(x: Int, y: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setPixelBind, handle, x, y, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(setPixelBind, segment, x, y, color)
     }
 
     fun adjustBcs(brightness: Double, contrast: Double, saturation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeDoubleArgs(adjustBcsBind, handle, brightness, contrast, saturation)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(adjustBcsBind, segment, brightness, contrast, saturation)
     }
 
     fun loadSvgFromString(svgStr: String, scale: Double = 1.0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, handle, svgStr, scale)
+        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, segment, svgStr, scale)
     }
 
     companion object {
@@ -379,11 +379,11 @@ class Image(handle: MemorySegment) : Resource(handle) {
         const val ASTC_FORMAT_4x4: Long = 0L
         const val ASTC_FORMAT_8x8: Long = 1L
 
-        fun fromHandle(handle: MemorySegment): Image? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Image? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Image? =
-            if (handle.address() == 0L) null else Image(handle)
+            if (handle.address() == 0L) null else Image(GodotHandle(handle))
 
         private const val GET_WIDTH_HASH = 3905245786L
         private val getWidthBind by lazy {

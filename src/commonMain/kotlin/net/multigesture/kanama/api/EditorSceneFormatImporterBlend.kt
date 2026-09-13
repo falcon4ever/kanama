@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: EditorSceneFormatImporterBlend
  */
-class EditorSceneFormatImporterBlend(handle: MemorySegment) : EditorSceneFormatImporter(handle) {
+class EditorSceneFormatImporterBlend(handle: GodotHandle) : EditorSceneFormatImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorSceneFormatImporterBlend? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorSceneFormatImporterBlend? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorSceneFormatImporterBlend? =
-            if (handle.address() == 0L) null else EditorSceneFormatImporterBlend(handle)
+            if (handle.address() == 0L) null else EditorSceneFormatImporterBlend(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

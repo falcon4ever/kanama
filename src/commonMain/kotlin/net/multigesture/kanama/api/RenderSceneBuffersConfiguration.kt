@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: RenderSceneBuffersConfiguration
  */
-class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle) {
+class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) {
     var renderTarget: RID
         @JvmName("renderTargetProperty")
         get() = getRenderTarget()
@@ -81,7 +81,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getRenderTarget(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setRenderTarget(renderTarget: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setRenderTargetBind, handle, renderTarget)
+        ObjectCalls.ptrcallWithRIDArg(setRenderTargetBind, segment, renderTarget)
     }
 
     /**
@@ -101,7 +101,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getInternalSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setInternalSize(internalSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setInternalSizeBind, handle, internalSize)
+        ObjectCalls.ptrcallWithVector2iArg(setInternalSizeBind, segment, internalSize)
     }
 
     /**
@@ -121,7 +121,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getTargetSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setTargetSize(targetSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setTargetSizeBind, handle, targetSize)
+        ObjectCalls.ptrcallWithVector2iArg(setTargetSizeBind, segment, targetSize)
     }
 
     /**
@@ -141,7 +141,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setViewCount(viewCount: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setViewCountBind, handle, viewCount)
+        ObjectCalls.ptrcallWithUInt32Arg(setViewCountBind, segment, viewCount)
     }
 
     /**
@@ -162,7 +162,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getScaling3dMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
     }
 
     /**
@@ -173,7 +173,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setScaling3dMode(scaling3dMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, handle, scaling3dMode)
+        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode)
     }
 
     /**
@@ -183,7 +183,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getMsaa3d(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setMsaa3d(msaa3d: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, handle, msaa3d)
+        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa3d)
     }
 
     /**
@@ -203,7 +203,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getScreenSpaceAa(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setScreenSpaceAa(screenSpaceAa: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, handle, screenSpaceAa)
+        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa)
     }
 
     /**
@@ -223,7 +223,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getFsrSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setFsrSharpness(fsrSharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, handle, fsrSharpness)
+        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, segment, fsrSharpness)
     }
 
     /**
@@ -245,7 +245,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getTextureMipmapBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, segment)
     }
 
     /**
@@ -257,7 +257,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setTextureMipmapBias(textureMipmapBias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, handle, textureMipmapBias)
+        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, segment, textureMipmapBias)
     }
 
     /**
@@ -267,7 +267,7 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun getAnisotropicFilteringLevel(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment)
     }
 
     /**
@@ -277,16 +277,16 @@ class RenderSceneBuffersConfiguration(handle: MemorySegment) : RefCounted(handle
      */
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, handle, anisotropicFilteringLevel)
+        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderSceneBuffersConfiguration? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderSceneBuffersConfiguration? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderSceneBuffersConfiguration? =
-            if (handle.address() == 0L) null else RenderSceneBuffersConfiguration(handle)
+            if (handle.address() == 0L) null else RenderSceneBuffersConfiguration(GodotHandle(handle))
 
         private const val GET_RENDER_TARGET_HASH = 2944877500L
         private val getRenderTargetBind by lazy {

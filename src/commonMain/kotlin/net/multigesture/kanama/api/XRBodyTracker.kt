@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Transform3D
  *
  * Generated from Godot docs: XRBodyTracker
  */
-class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
+class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     var hasTrackingData: Boolean
         @JvmName("hasTrackingDataProperty")
         get() = getHasTrackingData()
@@ -32,7 +32,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHasTrackingData(hasData: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
+        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, segment, hasData)
     }
 
     /**
@@ -42,7 +42,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHasTrackingData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setBodyFlags(flags: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBodyFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setBodyFlagsBind, segment, flags)
     }
 
     /**
@@ -62,7 +62,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getBodyFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBodyFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBodyFlagsBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setJointFlags(joint: Long, flags: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setJointFlagsBind, handle, joint, flags)
+        ObjectCalls.ptrcallWithTwoLongArgs(setJointFlagsBind, segment, joint, flags)
     }
 
     /**
@@ -82,7 +82,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getJointFlags(joint: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getJointFlagsBind, handle, joint)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getJointFlagsBind, segment, joint)
     }
 
     /**
@@ -92,7 +92,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setJointTransform(joint: Long, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTransform3DArg(setJointTransformBind, handle, joint, transform)
+        ObjectCalls.ptrcallWithLongAndTransform3DArg(setJointTransformBind, segment, joint, transform)
     }
 
     /**
@@ -102,7 +102,7 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getJointTransform(joint: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, handle, joint)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, segment, joint)
     }
 
     companion object {
@@ -203,11 +203,11 @@ class XRBodyTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
         const val JOINT_FLAG_POSITION_TRACKED: Long = 8L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRBodyTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRBodyTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRBodyTracker? =
-            if (handle.address() == 0L) null else XRBodyTracker(handle)
+            if (handle.address() == 0L) null else XRBodyTracker(GodotHandle(handle))
 
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L
         private val setHasTrackingDataBind by lazy {

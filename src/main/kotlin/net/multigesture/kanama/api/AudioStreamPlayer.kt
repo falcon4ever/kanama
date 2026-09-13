@@ -8,7 +8,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: AudioStreamPlayer
  */
-class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
+class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
 
     /**
      * Plays a sound from the beginning, or the given `from_position` in seconds.
@@ -16,7 +16,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.play
      */
     fun play(fromPosition: Double = 0.0) {
-        ObjectCalls.ptrcallWithDoubleArg(playBind, handle, fromPosition)
+        ObjectCalls.ptrcallWithDoubleArg(playBind, segment, fromPosition)
     }
 
     /**
@@ -26,7 +26,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.seek
      */
     fun seek(toPosition: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(seekBind, handle, toPosition)
+        ObjectCalls.ptrcallWithDoubleArg(seekBind, segment, toPosition)
     }
 
     /**
@@ -35,7 +35,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -45,7 +45,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.is_playing
      */
     fun isPlaying(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
 
     /**
      * If `true`, this node is playing sounds. Setting this property has the same effect as `play` and
@@ -54,7 +54,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_playing
      */
     fun setPlaying(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPlayingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPlayingBind, segment, enable)
     }
 
     /**
@@ -65,7 +65,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_stream_paused
      */
     fun setStreamPaused(paused: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setStreamPausedBind, handle, paused)
+        ObjectCalls.ptrcallWithBoolArg(setStreamPausedBind, segment, paused)
     }
 
     /**
@@ -76,7 +76,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_stream_paused
      */
     fun getStreamPaused(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(getStreamPausedBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(getStreamPausedBind, segment)
 
     /**
      * The `AudioStream` resource to be played. Setting this property stops all currently playing
@@ -85,7 +85,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_stream
      */
     fun setStream(stream: AudioStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, handle, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -105,7 +105,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_stream
      */
     fun getStream(): AudioStream? =
-        AudioStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle))
+        AudioStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
 
     /**
      * Volume of sound, in decibels. This is an offset of the `stream`'s volume. Note: To convert
@@ -115,7 +115,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_volume_db
      */
     fun setVolumeDb(volumeDb: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, volumeDb)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, segment, volumeDb)
     }
 
     /**
@@ -126,7 +126,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_volume_db
      */
     fun getVolumeDb(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, segment)
 
     /**
      * Volume of sound, as a linear value. Note: This member modifies `volume_db` for convenience. The
@@ -137,7 +137,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_volume_linear
      */
     fun setVolumeLinear(volumeLinear: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, handle, volumeLinear)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, segment, volumeLinear)
     }
 
     /**
@@ -149,7 +149,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_volume_linear
      */
     fun getVolumeLinear(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, segment)
 
     /**
      * The audio's pitch and tempo, as a multiplier of the `stream`'s sample rate. A value of `2.0`
@@ -158,7 +158,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_pitch_scale
      */
     fun setPitchScale(pitchScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, handle, pitchScale)
+        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, segment, pitchScale)
     }
 
     /**
@@ -168,7 +168,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_pitch_scale
      */
     fun getPitchScale(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, segment)
 
     /**
      * The target bus name. All sounds from this node will be playing on this bus. Note: At runtime, if
@@ -178,7 +178,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_bus
      */
     fun setBus(bus: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setBusBind, handle, bus)
+        ObjectCalls.ptrcallWithStringNameArg(setBusBind, segment, bus)
     }
 
     /**
@@ -189,7 +189,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_bus
      */
     fun getBus(): String =
-        ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, handle)
+        ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, segment)
 
     /**
      * If `true`, this node calls `play` when entering the tree.
@@ -197,7 +197,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_autoplay
      */
     fun setAutoplay(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, segment, enabled)
     }
 
     /**
@@ -206,7 +206,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.is_autoplay_enabled
      */
     fun isAutoplayEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isAutoplayEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isAutoplayEnabledBind, segment)
 
     /**
      * The mix target channels. Has no effect when two speakers or less are detected (see
@@ -215,7 +215,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_mix_target
      */
     fun setMixTarget(mixTarget: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMixTargetBind, handle, mixTarget)
+        ObjectCalls.ptrcallWithLongArg(setMixTargetBind, segment, mixTarget)
     }
 
     /**
@@ -225,7 +225,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_mix_target
      */
     fun getMixTarget(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getMixTargetBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getMixTargetBind, segment)
 
     /**
      * The maximum number of sounds this node can play at the same time. Calling `play` after this
@@ -234,7 +234,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_max_polyphony
      */
     fun setMaxPolyphony(maxPolyphony: Long) {
-        ObjectCalls.ptrcallWithIntArg(setMaxPolyphonyBind, handle, maxPolyphony.toInt())
+        ObjectCalls.ptrcallWithIntArg(setMaxPolyphonyBind, segment, maxPolyphony.toInt())
     }
 
     /**
@@ -244,7 +244,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_max_polyphony
      */
     fun getMaxPolyphony(): Long =
-        ObjectCalls.ptrcallNoArgsRetInt(getMaxPolyphonyBind, handle).toLong()
+        ObjectCalls.ptrcallNoArgsRetInt(getMaxPolyphonyBind, segment).toLong()
 
     /**
      * Returns the position in the `AudioStream` of the latest sound, in seconds. Returns `0.0` if no
@@ -257,7 +257,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_playback_position
      */
     fun getPlaybackPosition(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, segment)
 
     /**
      * Returns `true` if any sound is active, even if `stream_paused` is set to `true`. See also
@@ -266,7 +266,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.has_stream_playback
      */
     fun hasStreamPlayback(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(hasStreamPlaybackBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(hasStreamPlaybackBind, segment)
 
     /**
      * Returns the latest `AudioStreamPlayback` of this node, usually the most recently created by
@@ -275,7 +275,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_stream_playback
      */
     fun getStreamPlayback(): AudioStreamPlayback? =
-        AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, handle))
+        AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, segment))
 
     /**
      * The playback type of the stream player. If set other than to the default value, it will force
@@ -284,7 +284,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.set_playback_type
      */
     fun setPlaybackType(playbackType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, handle, playbackType)
+        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType)
     }
 
     /**
@@ -294,7 +294,7 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_playback_type
      */
     fun getPlaybackType(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment)
 
     companion object {
         const val MIX_TARGET_STEREO = 0L
@@ -435,6 +435,6 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
 
         @JvmStatic
         fun create(): AudioStreamPlayer =
-            AudioStreamPlayer(ObjectCalls.constructObject("AudioStreamPlayer"))
+            AudioStreamPlayer(GodotHandle(ObjectCalls.constructObject("AudioStreamPlayer")))
     }
 }

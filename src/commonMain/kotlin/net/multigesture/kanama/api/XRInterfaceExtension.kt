@@ -14,20 +14,20 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: XRInterfaceExtension
  */
-class XRInterfaceExtension(handle: MemorySegment) : XRInterface(handle) {
+class XRInterfaceExtension(handle: GodotHandle) : XRInterface(handle) {
     fun getColorTexture(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getColorTextureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getColorTextureBind, segment)
     }
 
     fun getDepthTexture(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getDepthTextureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getDepthTextureBind, segment)
     }
 
     fun getVelocityTexture(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getVelocityTextureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getVelocityTextureBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ class XRInterfaceExtension(handle: MemorySegment) : XRInterface(handle) {
      */
     fun addBlit(renderTarget: RID, srcRect: Rect2, dstRect: Rect2i, useLayer: Boolean, layer: Long, applyLensDistortion: Boolean, eyeCenter: Vector2, k1: Double, k2: Double, upscale: Double, aspectRatio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs(addBlitBind, handle, renderTarget, srcRect, dstRect, useLayer, layer, applyLensDistortion, eyeCenter, k1, k2, upscale, aspectRatio)
+        ObjectCalls.ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs(addBlitBind, segment, renderTarget, srcRect, dstRect, useLayer, layer, applyLensDistortion, eyeCenter, k1, k2, upscale, aspectRatio)
     }
 
     /**
@@ -49,16 +49,16 @@ class XRInterfaceExtension(handle: MemorySegment) : XRInterface(handle) {
      */
     fun getRenderTargetTexture(renderTarget: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetRID(getRenderTargetTextureBind, handle, renderTarget)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(getRenderTargetTextureBind, segment, renderTarget)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRInterfaceExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRInterfaceExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRInterfaceExtension? =
-            if (handle.address() == 0L) null else XRInterfaceExtension(handle)
+            if (handle.address() == 0L) null else XRInterfaceExtension(GodotHandle(handle))
 
         private const val GET_COLOR_TEXTURE_HASH = 529393457L
         private val getColorTextureBind by lazy {

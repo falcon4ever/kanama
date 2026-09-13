@@ -1,7 +1,7 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 
 // Task 56 fixture (inner). A non-@Tool node script whose CONSTRUCTOR prints a marker.
 // A placeholder instance never invokes the factory, so the constructor — and its marker —
@@ -10,7 +10,7 @@ import net.multigesture.kanama.annotations.ScriptClass
 // hand it a placeholder (marker ABSENT). The pre-fix thread-wide flag forced it real (marker
 // PRESENT); that regression is what tool_smoke's check_absent guards.
 @ScriptClass(attachTo = "Node")
-class ReentrantPlaceholderProbe(val godotObject: MemorySegment) {
+class ReentrantPlaceholderProbe(val godotObject: GodotHandle) {
   init {
     System.err.println("[kanama:kt] ReentrantPlaceholderProbe CONSTRUCTED")
   }

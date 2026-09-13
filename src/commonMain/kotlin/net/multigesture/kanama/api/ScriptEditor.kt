@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ScriptEditor
  */
-class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
+class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
     /**
      * Returns the `ScriptEditorBase` object that the user is currently editing.
      *
      * Generated from Godot docs: ScriptEditor.get_current_editor
      */
     fun getCurrentEditor(): ScriptEditorBase? {
-        return ScriptEditorBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentEditorBind, handle))
+        return ScriptEditorBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentEditorBind, segment))
     }
 
     /**
@@ -26,7 +26,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_open_script_editors
      */
     fun getOpenScriptEditors(): List<ScriptEditorBase> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptEditorsBind, handle, ScriptEditorBase::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptEditorsBind, segment, ScriptEditorBase::wrap)
     }
 
     /**
@@ -35,7 +35,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_breakpoints
      */
     fun getBreakpoints(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getBreakpointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getBreakpointsBind, segment)
     }
 
     /**
@@ -45,7 +45,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.register_syntax_highlighter
      */
     fun registerSyntaxHighlighter(syntaxHighlighter: EditorSyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(registerSyntaxHighlighterBind, handle, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(registerSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -55,7 +55,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.unregister_syntax_highlighter
      */
     fun unregisterSyntaxHighlighter(syntaxHighlighter: EditorSyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(unregisterSyntaxHighlighterBind, handle, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(unregisterSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -64,7 +64,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.goto_line
      */
     fun gotoLine(lineNumber: Int) {
-        ObjectCalls.ptrcallWithIntArg(gotoLineBind, handle, lineNumber)
+        ObjectCalls.ptrcallWithIntArg(gotoLineBind, segment, lineNumber)
     }
 
     /**
@@ -73,7 +73,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_current_script
      */
     fun getCurrentScript(): Script? {
-        return Script.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentScriptBind, handle))
+        return Script.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentScriptBind, segment))
     }
 
     /**
@@ -82,7 +82,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_open_scripts
      */
     fun getOpenScripts(): List<Script> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptsBind, handle, Script::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptsBind, segment, Script::wrap)
     }
 
     /**
@@ -92,7 +92,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.open_script_create_dialog
      */
     fun openScriptCreateDialog(baseName: String, basePath: String) {
-        ObjectCalls.ptrcallWithTwoStringArgs(openScriptCreateDialogBind, handle, baseName, basePath)
+        ObjectCalls.ptrcallWithTwoStringArgs(openScriptCreateDialogBind, segment, baseName, basePath)
     }
 
     /**
@@ -103,7 +103,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.reload_open_files
      */
     fun reloadOpenFiles() {
-        ObjectCalls.ptrcallNoArgs(reloadOpenFilesBind, handle)
+        ObjectCalls.ptrcallNoArgs(reloadOpenFilesBind, segment)
     }
 
     /**
@@ -119,7 +119,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.goto_help
      */
     fun gotoHelp(topic: String) {
-        ObjectCalls.ptrcallWithStringArg(gotoHelpBind, handle, topic)
+        ObjectCalls.ptrcallWithStringArg(gotoHelpBind, segment, topic)
     }
 
     /**
@@ -129,7 +129,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.update_docs_from_script
      */
     fun updateDocsFromScript(script: Script?) {
-        ObjectCalls.ptrcallWithObjectArgs(updateDocsFromScriptBind, handle, listOf(script?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(updateDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -139,7 +139,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.clear_docs_from_script
      */
     fun clearDocsFromScript(script: Script?) {
-        ObjectCalls.ptrcallWithObjectArgs(clearDocsFromScriptBind, handle, listOf(script?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(clearDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -148,7 +148,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_unsaved_files
      */
     fun getUnsavedFiles(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getUnsavedFilesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getUnsavedFilesBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.save_all_scripts
      */
     fun saveAllScripts() {
-        ObjectCalls.ptrcallNoArgs(saveAllScriptsBind, handle)
+        ObjectCalls.ptrcallNoArgs(saveAllScriptsBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.close_file
      */
     fun closeFile(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(closeFileBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(closeFileBind, segment, path)
     }
 
     object Signals {
@@ -177,11 +177,11 @@ class ScriptEditor(handle: MemorySegment) : PanelContainer(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScriptEditor? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScriptEditor? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScriptEditor? =
-            if (handle.address() == 0L) null else ScriptEditor(handle)
+            if (handle.address() == 0L) null else ScriptEditor(GodotHandle(handle))
 
         private const val GET_CURRENT_EDITOR_HASH = 1906266726L
         private val getCurrentEditorBind by lazy {

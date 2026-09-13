@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CameraAttributesPractical
  */
-class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle) {
+class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) {
     var dofBlurFarEnabled: Boolean
         @JvmName("dofBlurFarEnabledProperty")
         get() = isDofBlurFarEnabled()
@@ -77,7 +77,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setDofBlurFarEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDofBlurFarEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDofBlurFarEnabledBind, segment, enabled)
     }
 
     /**
@@ -91,7 +91,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun isDofBlurFarEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurFarEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurFarEnabledBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setDofBlurFarDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarDistanceBind, segment, distance)
     }
 
     /**
@@ -113,7 +113,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun getDofBlurFarDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarDistanceBind, segment)
     }
 
     /**
@@ -126,7 +126,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setDofBlurFarTransition(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarTransitionBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarTransitionBind, segment, distance)
     }
 
     /**
@@ -139,7 +139,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun getDofBlurFarTransition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarTransitionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarTransitionBind, segment)
     }
 
     /**
@@ -153,7 +153,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setDofBlurNearEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDofBlurNearEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDofBlurNearEnabledBind, segment, enabled)
     }
 
     /**
@@ -167,7 +167,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun isDofBlurNearEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurNearEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurNearEnabledBind, segment)
     }
 
     /**
@@ -178,7 +178,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setDofBlurNearDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearDistanceBind, segment, distance)
     }
 
     /**
@@ -189,7 +189,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun getDofBlurNearDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearDistanceBind, segment)
     }
 
     /**
@@ -202,7 +202,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setDofBlurNearTransition(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearTransitionBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearTransitionBind, segment, distance)
     }
 
     /**
@@ -215,7 +215,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun getDofBlurNearTransition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearTransitionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearTransitionBind, segment)
     }
 
     /**
@@ -227,7 +227,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setDofBlurAmount(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurAmountBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setDofBlurAmountBind, segment, amount)
     }
 
     /**
@@ -239,7 +239,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun getDofBlurAmount(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurAmountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurAmountBind, segment)
     }
 
     /**
@@ -252,7 +252,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setAutoExposureMaxSensitivity(maxSensitivity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxSensitivityBind, handle, maxSensitivity)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxSensitivityBind, segment, maxSensitivity)
     }
 
     /**
@@ -265,7 +265,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun getAutoExposureMaxSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxSensitivityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxSensitivityBind, segment)
     }
 
     /**
@@ -278,7 +278,7 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun setAutoExposureMinSensitivity(minSensitivity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinSensitivityBind, handle, minSensitivity)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinSensitivityBind, segment, minSensitivity)
     }
 
     /**
@@ -291,16 +291,16 @@ class CameraAttributesPractical(handle: MemorySegment) : CameraAttributes(handle
      */
     fun getAutoExposureMinSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinSensitivityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinSensitivityBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CameraAttributesPractical? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CameraAttributesPractical? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CameraAttributesPractical? =
-            if (handle.address() == 0L) null else CameraAttributesPractical(handle)
+            if (handle.address() == 0L) null else CameraAttributesPractical(GodotHandle(handle))
 
         private const val SET_DOF_BLUR_FAR_ENABLED_HASH = 2586408642L
         private val setDofBlurFarEnabledBind by lazy {

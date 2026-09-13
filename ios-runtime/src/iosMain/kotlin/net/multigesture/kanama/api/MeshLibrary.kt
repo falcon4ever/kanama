@@ -9,139 +9,139 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: MeshLibrary
  */
-class MeshLibrary(handle: MemorySegment) : Resource(handle) {
+class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun createItem(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(createItemBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(createItemBind, segment, id)
     }
 
     fun setItemName(id: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, handle, id, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, segment, id, name)
     }
 
     fun setItemMesh(id: Int, mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, handle, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setItemMeshTransform(id: Int, meshTransform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, handle, id, meshTransform)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, segment, id, meshTransform)
     }
 
     fun setItemMeshCastShadow(id: Int, shadowCastingSetting: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, handle, id, shadowCastingSetting)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, segment, id, shadowCastingSetting)
     }
 
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, handle, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setItemNavigationMeshTransform(id: Int, navigationMesh: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, handle, id, navigationMesh)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, segment, id, navigationMesh)
     }
 
     fun setItemNavigationLayers(id: Int, navigationLayers: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, handle, id, navigationLayers)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, segment, id, navigationLayers)
     }
 
     fun setItemShapes(id: Int, shapes: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, handle, id, shapes)
+        ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, segment, id, shapes)
     }
 
     fun setItemPreview(id: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, handle, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getItemName(id: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, segment, id)
     }
 
     fun getItemMesh(id: Int): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, handle, id))
+        return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, segment, id))
     }
 
     fun getItemMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, segment, id)
     }
 
     fun getItemMeshCastShadow(id: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, segment, id)
     }
 
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, handle, id))
+        return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, segment, id))
     }
 
     fun getItemNavigationMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, segment, id)
     }
 
     fun getItemNavigationLayers(id: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, segment, id)
     }
 
     fun getItemShapes(id: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, segment, id)
     }
 
     fun getItemPreview(id: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, handle, id))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, segment, id))
     }
 
     fun removeItem(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, id)
     }
 
     fun findItemByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, segment, name)
     }
 
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun getItemList(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, segment)
     }
 
     fun getItemCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
     fun getLastUnusedItemId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshLibrary? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshLibrary? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MeshLibrary? =
-            if (handle.address() == 0L) null else MeshLibrary(handle)
+            if (handle.address() == 0L) null else MeshLibrary(GodotHandle(handle))
 
         private const val CREATE_ITEM_HASH = 1286410249L
         private val createItemBind by lazy {

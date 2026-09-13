@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeStateMachinePlayback
  */
-class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle) {
+class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) {
     /**
      * Transitions from the current state to another one, following the shortest path. If the path does
      * not connect from the current state, the animation will play after the state teleports. If
@@ -21,7 +21,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun travel(toNode: String, resetOnTeleport: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(travelBind, handle, toNode, resetOnTeleport)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(travelBind, segment, toNode, resetOnTeleport)
     }
 
     /**
@@ -32,7 +32,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun start(node: String, reset: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(startBind, handle, node, reset)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(startBind, segment, node, reset)
     }
 
     /**
@@ -43,7 +43,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun next() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(nextBind, handle)
+        ObjectCalls.ptrcallNoArgs(nextBind, segment)
     }
 
     /**
@@ -53,7 +53,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun isPlaying(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getCurrentNode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentNodeBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getCurrentPlayPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentPlayPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentPlayPositionBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getCurrentLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentLengthBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getFadingFromNode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getFadingFromNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getFadingFromNodeBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getFadingFromPlayPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromPlayPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromPlayPositionBind, segment)
     }
 
     /**
@@ -129,7 +129,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getFadingFromLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromLengthBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getFadingPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingPositionBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getFadingLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingLengthBind, segment)
     }
 
     /**
@@ -160,7 +160,7 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
      */
     fun getTravelPath(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getTravelPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getTravelPathBind, segment)
     }
 
     object Signals {
@@ -170,11 +170,11 @@ class AnimationNodeStateMachinePlayback(handle: MemorySegment) : Resource(handle
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeStateMachinePlayback? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeStateMachinePlayback? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeStateMachinePlayback? =
-            if (handle.address() == 0L) null else AnimationNodeStateMachinePlayback(handle)
+            if (handle.address() == 0L) null else AnimationNodeStateMachinePlayback(GodotHandle(handle))
 
         private const val TRAVEL_HASH = 3823612587L
         private val travelBind by lazy {

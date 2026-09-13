@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: SoftBody3D
  */
-class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
+class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
     var collisionLayer: Long
         @JvmName("collisionLayerProperty")
         get() = getCollisionLayer()
@@ -93,7 +93,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_physics_rid
      */
     fun getPhysicsRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getPhysicsRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getPhysicsRidBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_collision_mask
      */
     fun setCollisionMask(collisionMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -119,7 +119,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_collision_layer
      */
     fun setCollisionLayer(collisionLayer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, collisionLayer)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, collisionLayer)
     }
 
     /**
@@ -145,7 +145,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_collision_layer
      */
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
     }
 
     /**
@@ -155,7 +155,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -165,7 +165,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -175,7 +175,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_collision_layer_value
      */
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -185,7 +185,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_collision_layer_value
      */
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -194,7 +194,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_parent_collision_ignore
      */
     fun setParentCollisionIgnore(parentCollisionIgnore: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setParentCollisionIgnoreBind, handle, parentCollisionIgnore)
+        ObjectCalls.ptrcallWithNodePathArg(setParentCollisionIgnoreBind, segment, parentCollisionIgnore)
     }
 
     /**
@@ -203,7 +203,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_parent_collision_ignore
      */
     fun getParentCollisionIgnore(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getParentCollisionIgnoreBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getParentCollisionIgnoreBind, segment)
     }
 
     /**
@@ -212,7 +212,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_disable_mode
      */
     fun setDisableMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode)
     }
 
     /**
@@ -221,7 +221,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_disable_mode
      */
     fun getDisableMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_collision_exceptions
      */
     fun getCollisionExceptions(): List<PhysicsBody3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, handle, PhysicsBody3D::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, segment, PhysicsBody3D::wrap)
     }
 
     /**
@@ -239,7 +239,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.add_collision_exception_with
      */
     fun addCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     /**
@@ -248,7 +248,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.remove_collision_exception_with
      */
     fun removeCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     /**
@@ -258,7 +258,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_simulation_precision
      */
     fun setSimulationPrecision(simulationPrecision: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSimulationPrecisionBind, handle, simulationPrecision)
+        ObjectCalls.ptrcallWithIntArg(setSimulationPrecisionBind, segment, simulationPrecision)
     }
 
     /**
@@ -268,7 +268,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_simulation_precision
      */
     fun getSimulationPrecision(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSimulationPrecisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSimulationPrecisionBind, segment)
     }
 
     /**
@@ -277,7 +277,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_total_mass
      */
     fun setTotalMass(mass: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTotalMassBind, handle, mass)
+        ObjectCalls.ptrcallWithDoubleArg(setTotalMassBind, segment, mass)
     }
 
     /**
@@ -286,7 +286,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_total_mass
      */
     fun getTotalMass(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalMassBind, segment)
     }
 
     /**
@@ -296,7 +296,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_linear_stiffness
      */
     fun setLinearStiffness(linearStiffness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearStiffnessBind, handle, linearStiffness)
+        ObjectCalls.ptrcallWithDoubleArg(setLinearStiffnessBind, segment, linearStiffness)
     }
 
     /**
@@ -306,7 +306,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_linear_stiffness
      */
     fun getLinearStiffness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearStiffnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearStiffnessBind, segment)
     }
 
     /**
@@ -318,7 +318,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_shrinking_factor
      */
     fun setShrinkingFactor(shrinkingFactor: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setShrinkingFactorBind, handle, shrinkingFactor)
+        ObjectCalls.ptrcallWithDoubleArg(setShrinkingFactorBind, segment, shrinkingFactor)
     }
 
     /**
@@ -330,7 +330,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_shrinking_factor
      */
     fun getShrinkingFactor(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getShrinkingFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getShrinkingFactorBind, segment)
     }
 
     /**
@@ -340,7 +340,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_pressure_coefficient
      */
     fun setPressureCoefficient(pressureCoefficient: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPressureCoefficientBind, handle, pressureCoefficient)
+        ObjectCalls.ptrcallWithDoubleArg(setPressureCoefficientBind, segment, pressureCoefficient)
     }
 
     /**
@@ -350,7 +350,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_pressure_coefficient
      */
     fun getPressureCoefficient(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureCoefficientBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureCoefficientBind, segment)
     }
 
     /**
@@ -360,7 +360,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_damping_coefficient
      */
     fun setDampingCoefficient(dampingCoefficient: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDampingCoefficientBind, handle, dampingCoefficient)
+        ObjectCalls.ptrcallWithDoubleArg(setDampingCoefficientBind, segment, dampingCoefficient)
     }
 
     /**
@@ -370,7 +370,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_damping_coefficient
      */
     fun getDampingCoefficient(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingCoefficientBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingCoefficientBind, segment)
     }
 
     /**
@@ -380,7 +380,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_drag_coefficient
      */
     fun setDragCoefficient(dragCoefficient: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDragCoefficientBind, handle, dragCoefficient)
+        ObjectCalls.ptrcallWithDoubleArg(setDragCoefficientBind, segment, dragCoefficient)
     }
 
     /**
@@ -390,7 +390,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_drag_coefficient
      */
     fun getDragCoefficient(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDragCoefficientBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDragCoefficientBind, segment)
     }
 
     /**
@@ -399,7 +399,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.get_point_transform
      */
     fun getPointTransform(pointIndex: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointTransformBind, handle, pointIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointTransformBind, segment, pointIndex)
     }
 
     /**
@@ -410,7 +410,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.apply_impulse
      */
     fun applyImpulse(pointIndex: Int, impulse: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(applyImpulseBind, handle, pointIndex, impulse)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(applyImpulseBind, segment, pointIndex, impulse)
     }
 
     /**
@@ -420,7 +420,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.apply_force
      */
     fun applyForce(pointIndex: Int, force: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(applyForceBind, handle, pointIndex, force)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(applyForceBind, segment, pointIndex, force)
     }
 
     /**
@@ -431,7 +431,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.apply_central_impulse
      */
     fun applyCentralImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, handle, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, segment, impulse)
     }
 
     /**
@@ -441,7 +441,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.apply_central_force
      */
     fun applyCentralForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector3Arg(applyCentralForceBind, segment, force)
     }
 
     /**
@@ -451,7 +451,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_point_pinned
      */
     fun setPointPinned(pointIndex: Int, pinned: Boolean, attachmentPath: NodePath, insertAt: Int = -1) {
-        ObjectCalls.ptrcallWithIntBoolNodePathIntArgs(setPointPinnedBind, handle, pointIndex, pinned, attachmentPath, insertAt)
+        ObjectCalls.ptrcallWithIntBoolNodePathIntArgs(setPointPinnedBind, segment, pointIndex, pinned, attachmentPath, insertAt)
     }
 
     /**
@@ -460,7 +460,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.is_point_pinned
      */
     fun isPointPinned(pointIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isPointPinnedBind, handle, pointIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isPointPinnedBind, segment, pointIndex)
     }
 
     /**
@@ -469,7 +469,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.set_ray_pickable
      */
     fun setRayPickable(rayPickable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRayPickableBind, handle, rayPickable)
+        ObjectCalls.ptrcallWithBoolArg(setRayPickableBind, segment, rayPickable)
     }
 
     /**
@@ -478,7 +478,7 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
      * Generated from Godot docs: SoftBody3D.is_ray_pickable
      */
     fun isRayPickable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRayPickableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRayPickableBind, segment)
     }
 
     companion object {
@@ -486,11 +486,11 @@ class SoftBody3D(handle: MemorySegment) : MeshInstance3D(handle) {
         const val DISABLE_MODE_KEEP_ACTIVE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SoftBody3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SoftBody3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SoftBody3D? =
-            if (handle.address() == 0L) null else SoftBody3D(handle)
+            if (handle.address() == 0L) null else SoftBody3D(GodotHandle(handle))
 
         private const val GET_PHYSICS_RID_HASH = 2944877500L
         private val getPhysicsRidBind by lazy {

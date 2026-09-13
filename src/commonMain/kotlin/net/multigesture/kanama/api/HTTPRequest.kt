@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HTTPRequest
  */
-class HTTPRequest(handle: MemorySegment) : Node(handle) {
+class HTTPRequest(handle: GodotHandle) : Node(handle) {
     var downloadFile: String
         @JvmName("downloadFileProperty")
         get() = getDownloadFile()
@@ -72,7 +72,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.request
      */
     fun request(url: String, customHeaders: List<String>, method: Long = 0L, requestData: String = ""): Long {
-        return ObjectCalls.ptrcallWithStringPackedStringListLongStringArgsRetLong(requestBind, handle, url, customHeaders, method, requestData)
+        return ObjectCalls.ptrcallWithStringPackedStringListLongStringArgsRetLong(requestBind, segment, url, customHeaders, method, requestData)
     }
 
     /**
@@ -87,7 +87,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.request_raw
      */
     fun requestRaw(url: String, customHeaders: List<String>, method: Long = 0L, requestDataRaw: ByteArray): Long {
-        return ObjectCalls.ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(requestRawBind, handle, url, customHeaders, method, requestDataRaw)
+        return ObjectCalls.ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(requestRawBind, segment, url, customHeaders, method, requestDataRaw)
     }
 
     /**
@@ -96,7 +96,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.cancel_request
      */
     fun cancelRequest() {
-        ObjectCalls.ptrcallNoArgs(cancelRequestBind, handle)
+        ObjectCalls.ptrcallNoArgs(cancelRequestBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_tls_options
      */
     fun setTlsOptions(clientOptions: TLSOptions?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTlsOptionsBind, handle, listOf(clientOptions?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTlsOptionsBind, segment, listOf(clientOptions?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -114,7 +114,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_http_client_status
      */
     fun getHttpClientStatus(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHttpClientStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHttpClientStatusBind, segment)
     }
 
     /**
@@ -123,7 +123,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_use_threads
      */
     fun setUseThreads(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseThreadsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseThreadsBind, segment, enable)
     }
 
     /**
@@ -132,7 +132,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.is_using_threads
      */
     fun isUsingThreads(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingThreadsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingThreadsBind, segment)
     }
 
     /**
@@ -147,7 +147,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_accept_gzip
      */
     fun setAcceptGzip(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAcceptGzipBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAcceptGzipBind, segment, enable)
     }
 
     /**
@@ -162,7 +162,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.is_accepting_gzip
      */
     fun isAcceptingGzip(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAcceptingGzipBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAcceptingGzipBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_body_size_limit
      */
     fun setBodySizeLimit(bytes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBodySizeLimitBind, handle, bytes)
+        ObjectCalls.ptrcallWithIntArg(setBodySizeLimitBind, segment, bytes)
     }
 
     /**
@@ -182,7 +182,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_body_size_limit
      */
     fun getBodySizeLimit(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBodySizeLimitBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBodySizeLimitBind, segment)
     }
 
     /**
@@ -191,7 +191,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_max_redirects
      */
     fun setMaxRedirects(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxRedirectsBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setMaxRedirectsBind, segment, amount)
     }
 
     /**
@@ -200,7 +200,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_max_redirects
      */
     fun getMaxRedirects(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxRedirectsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxRedirectsBind, segment)
     }
 
     /**
@@ -209,7 +209,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_download_file
      */
     fun setDownloadFile(path: String) {
-        ObjectCalls.ptrcallWithStringArg(setDownloadFileBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(setDownloadFileBind, segment, path)
     }
 
     /**
@@ -218,7 +218,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_download_file
      */
     fun getDownloadFile(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDownloadFileBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDownloadFileBind, segment)
     }
 
     /**
@@ -227,7 +227,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_downloaded_bytes
      */
     fun getDownloadedBytes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDownloadedBytesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDownloadedBytesBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_body_size
      */
     fun getBodySize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBodySizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBodySizeBind, segment)
     }
 
     /**
@@ -254,7 +254,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_timeout
      */
     fun setTimeout(timeout: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTimeoutBind, handle, timeout)
+        ObjectCalls.ptrcallWithDoubleArg(setTimeoutBind, segment, timeout)
     }
 
     /**
@@ -270,7 +270,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_timeout
      */
     fun getTimeout(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeoutBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeoutBind, segment)
     }
 
     /**
@@ -281,7 +281,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_download_chunk_size
      */
     fun setDownloadChunkSize(chunkSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDownloadChunkSizeBind, handle, chunkSize)
+        ObjectCalls.ptrcallWithIntArg(setDownloadChunkSizeBind, segment, chunkSize)
     }
 
     /**
@@ -292,7 +292,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_download_chunk_size
      */
     fun getDownloadChunkSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDownloadChunkSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDownloadChunkSizeBind, segment)
     }
 
     /**
@@ -302,7 +302,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_http_proxy
      */
     fun setHttpProxy(host: String, port: Int) {
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, handle, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, segment, host, port)
     }
 
     /**
@@ -312,7 +312,7 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_https_proxy
      */
     fun setHttpsProxy(host: String, port: Int) {
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, handle, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, segment, host, port)
     }
 
     object Signals {
@@ -336,11 +336,11 @@ class HTTPRequest(handle: MemorySegment) : Node(handle) {
         const val RESULT_TIMEOUT: Long = 13L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HTTPRequest? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HTTPRequest? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HTTPRequest? =
-            if (handle.address() == 0L) null else HTTPRequest(handle)
+            if (handle.address() == 0L) null else HTTPRequest(GodotHandle(handle))
 
         private const val REQUEST_HASH = 3215244323L
         private val requestBind by lazy {

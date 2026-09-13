@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StreamPeerTLS
  */
-class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
+class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
     /**
      * Poll the connection to check for incoming bytes. Call this right before
      * `StreamPeer.get_available_bytes` for it to work properly.
@@ -19,7 +19,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun poll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pollBind, handle)
+        ObjectCalls.ptrcallNoArgs(pollBind, segment)
     }
 
     /**
@@ -29,7 +29,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: MemorySegment.NULL, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -42,7 +42,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, handle, stream?.requireOpenHandle() ?: MemorySegment.NULL, commonName, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, segment, stream?.requireOpenHandle() ?: MemorySegment.NULL, commonName, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -52,7 +52,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun getStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
     }
 
     /**
@@ -62,8 +62,8 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun getStream(): StreamPeer? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -77,7 +77,7 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun disconnectFromStream() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, handle)
+        ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, segment)
     }
 
     companion object {
@@ -88,11 +88,11 @@ class StreamPeerTLS(handle: MemorySegment) : StreamPeer(handle) {
         const val STATUS_ERROR_HOSTNAME_MISMATCH: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeerTLS? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeerTLS? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeerTLS? =
-            if (handle.address() == 0L) null else StreamPeerTLS(handle)
+            if (handle.address() == 0L) null else StreamPeerTLS(GodotHandle(handle))
 
         private const val POLL_HASH = 3218959716L
         private val pollBind by lazy {

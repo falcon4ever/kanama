@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventShortcut
  */
-class InputEventShortcut(handle: MemorySegment) : InputEvent(handle) {
+class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
     var shortcut: Shortcut?
         @JvmName("shortcutProperty")
         get() = getShortcut()
@@ -26,7 +26,7 @@ class InputEventShortcut(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setShortcut(shortcut: Shortcut?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, handle, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -37,16 +37,16 @@ class InputEventShortcut(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getShortcut(): Shortcut? {
         checkOpen()
-        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, handle))
+        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventShortcut? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventShortcut? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventShortcut? =
-            if (handle.address() == 0L) null else InputEventShortcut(handle)
+            if (handle.address() == 0L) null else InputEventShortcut(GodotHandle(handle))
 
         private const val SET_SHORTCUT_HASH = 857163497L
         private val setShortcutBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: ViewportTexture
  */
-class ViewportTexture(handle: MemorySegment) : Texture2D(handle) {
+class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
     var viewportPath: NodePath
         @JvmName("viewportPathProperty")
         get() = getViewportPathInScene()
@@ -29,7 +29,7 @@ class ViewportTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setViewportPathInScene(path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setViewportPathInSceneBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setViewportPathInSceneBind, segment, path)
     }
 
     /**
@@ -42,16 +42,16 @@ class ViewportTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getViewportPathInScene(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getViewportPathInSceneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getViewportPathInSceneBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ViewportTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ViewportTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ViewportTexture? =
-            if (handle.address() == 0L) null else ViewportTexture(handle)
+            if (handle.address() == 0L) null else ViewportTexture(GodotHandle(handle))
 
         private const val SET_VIEWPORT_PATH_IN_SCENE_HASH = 1348162250L
         private val setViewportPathInSceneBind by lazy {

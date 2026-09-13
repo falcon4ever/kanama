@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFSkeleton
  */
-class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
+class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
     var joints: List<Int>
         @JvmName("jointsProperty")
         get() = getJoints()
@@ -36,66 +36,66 @@ class GLTFSkeleton(handle: MemorySegment) : Resource(handle) {
 
     fun getJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, segment)
     }
 
     fun setJoints(joints: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, handle, joints)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, segment, joints)
     }
 
     fun getRoots(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, segment)
     }
 
     fun setRoots(roots: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, handle, roots)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, segment, roots)
     }
 
     fun getGodotSkeleton(): Skeleton3D? {
         checkOpen()
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkeletonBind, handle))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkeletonBind, segment))
     }
 
     fun getUniqueNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, segment)
     }
 
     fun setUniqueNames(uniqueNames: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, handle, uniqueNames)
+        ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, segment, uniqueNames)
     }
 
     fun getGodotBoneNode(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getGodotBoneNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getGodotBoneNodeBind, segment)
     }
 
     fun setGodotBoneNode(godotBoneNode: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setGodotBoneNodeBind, handle, godotBoneNode)
+        ObjectCalls.ptrcallWithDictionaryArg(setGodotBoneNodeBind, segment, godotBoneNode)
     }
 
     fun getBoneAttachmentCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneAttachmentCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneAttachmentCountBind, segment)
     }
 
     fun getBoneAttachment(idx: Int): BoneAttachment3D? {
         checkOpen()
-        return BoneAttachment3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBoneAttachmentBind, handle, idx))
+        return BoneAttachment3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBoneAttachmentBind, segment, idx))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFSkeleton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFSkeleton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFSkeleton? =
-            if (handle.address() == 0L) null else GLTFSkeleton(handle)
+            if (handle.address() == 0L) null else GLTFSkeleton(GodotHandle(handle))
 
         private const val GET_JOINTS_HASH = 969006518L
         private val getJointsBind by lazy {

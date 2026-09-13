@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SyntaxHighlighter
  */
-open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
+open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns the syntax highlighting data for the line at index `line`. If the line is not cached,
      * calls `_get_line_syntax_highlighting` first to calculate the data. Each entry is a column number
@@ -22,7 +22,7 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      */
     fun getLineSyntaxHighlighting(line: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getLineSyntaxHighlightingBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(getLineSyntaxHighlightingBind, segment, line)
     }
 
     /**
@@ -33,7 +33,7 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      */
     fun updateCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(updateCacheBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateCacheBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      */
     fun clearHighlightingCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearHighlightingCacheBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearHighlightingCacheBind, segment)
     }
 
     /**
@@ -54,16 +54,16 @@ open class SyntaxHighlighter(handle: MemorySegment) : Resource(handle) {
      */
     fun getTextEdit(): TextEdit? {
         checkOpen()
-        return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextEditBind, handle))
+        return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextEditBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SyntaxHighlighter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SyntaxHighlighter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SyntaxHighlighter? =
-            if (handle.address() == 0L) null else SyntaxHighlighter(handle)
+            if (handle.address() == 0L) null else SyntaxHighlighter(GodotHandle(handle))
 
         private const val GET_LINE_SYNTAX_HIGHLIGHTING_HASH = 3554694381L
         private val getLineSyntaxHighlightingBind by lazy {

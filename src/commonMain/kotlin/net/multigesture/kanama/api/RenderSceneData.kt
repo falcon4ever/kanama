@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: RenderSceneData
  */
-open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
+open class RenderSceneData(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns the camera transform used to render this frame. Note: If more than one view is rendered,
      * this will return a centered transform.
@@ -22,7 +22,7 @@ open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderSceneData.get_cam_transform
      */
     fun getCamTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getCamTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getCamTransformBind, segment)
     }
 
     /**
@@ -32,7 +32,7 @@ open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderSceneData.get_cam_projection
      */
     fun getCamProjection(): Projection {
-        return ObjectCalls.ptrcallNoArgsRetProjection(getCamProjectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetProjection(getCamProjectionBind, segment)
     }
 
     /**
@@ -41,7 +41,7 @@ open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderSceneData.get_view_count
      */
     fun getViewCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderSceneData.get_view_eye_offset
      */
     fun getViewEyeOffset(view: Long): Vector3 {
-        return ObjectCalls.ptrcallWithUInt32ArgRetVector3(getViewEyeOffsetBind, handle, view)
+        return ObjectCalls.ptrcallWithUInt32ArgRetVector3(getViewEyeOffsetBind, segment, view)
     }
 
     /**
@@ -62,7 +62,7 @@ open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderSceneData.get_view_projection
      */
     fun getViewProjection(view: Long): Projection {
-        return ObjectCalls.ptrcallWithUInt32ArgRetProjection(getViewProjectionBind, handle, view)
+        return ObjectCalls.ptrcallWithUInt32ArgRetProjection(getViewProjectionBind, segment, view)
     }
 
     /**
@@ -71,16 +71,16 @@ open class RenderSceneData(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderSceneData.get_uniform_buffer
      */
     fun getUniformBuffer(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getUniformBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getUniformBufferBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderSceneData? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderSceneData? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderSceneData? =
-            if (handle.address() == 0L) null else RenderSceneData(handle)
+            if (handle.address() == 0L) null else RenderSceneData(GodotHandle(handle))
 
         private const val GET_CAM_TRANSFORM_HASH = 3229777777L
         private val getCamTransformBind by lazy {

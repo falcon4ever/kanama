@@ -12,7 +12,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: MeshDataTool
  */
-class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
+class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Clears all data currently in MeshDataTool.
      *
@@ -20,7 +20,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -31,7 +31,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun createFromSurface(mesh: ArrayMesh?, surface: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
     /**
@@ -41,7 +41,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
+        return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
     }
 
     /**
@@ -53,7 +53,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVertexCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVertexCountBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEdgeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEdgeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getEdgeCountBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFaceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFaceCountBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertex(idx: Int, vertex: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, handle, idx, vertex)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, segment, idx, vertex)
     }
 
     /**
@@ -103,7 +103,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertex(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexBind, segment, idx)
     }
 
     /**
@@ -113,7 +113,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexNormal(idx: Int, normal: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexNormalBind, handle, idx, normal)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexNormalBind, segment, idx, normal)
     }
 
     /**
@@ -123,7 +123,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexNormal(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexNormalBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexNormalBind, segment, idx)
     }
 
     /**
@@ -135,7 +135,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexTangent(idx: Int, tangent: Plane) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPlaneArg(setVertexTangentBind, handle, idx, tangent)
+        ObjectCalls.ptrcallWithIntAndPlaneArg(setVertexTangentBind, segment, idx, tangent)
     }
 
     /**
@@ -145,7 +145,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexTangent(idx: Int): Plane {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPlane(getVertexTangentBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPlane(getVertexTangentBind, segment, idx)
     }
 
     /**
@@ -155,7 +155,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexUv(idx: Int, uv: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUvBind, handle, idx, uv)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUvBind, segment, idx, uv)
     }
 
     /**
@@ -165,7 +165,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexUv(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUvBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUvBind, segment, idx)
     }
 
     /**
@@ -175,7 +175,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexUv2(idx: Int, uv2: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUv2Bind, handle, idx, uv2)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUv2Bind, segment, idx, uv2)
     }
 
     /**
@@ -185,7 +185,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexUv2(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUv2Bind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUv2Bind, segment, idx)
     }
 
     /**
@@ -195,7 +195,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexColor(idx: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setVertexColorBind, handle, idx, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setVertexColorBind, segment, idx, color)
     }
 
     /**
@@ -205,7 +205,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexColor(idx: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, segment, idx)
     }
 
     /**
@@ -215,7 +215,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexBones(idx: Int, bones: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPackedInt32ListArgs(setVertexBonesBind, handle, idx, bones)
+        ObjectCalls.ptrcallWithIntAndPackedInt32ListArgs(setVertexBonesBind, segment, idx, bones)
     }
 
     /**
@@ -225,7 +225,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexBones(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexBonesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexBonesBind, segment, idx)
     }
 
     /**
@@ -235,7 +235,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexWeights(idx: Int, weights: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setVertexWeightsBind, handle, idx, weights)
+        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setVertexWeightsBind, segment, idx, weights)
     }
 
     /**
@@ -245,7 +245,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexWeights(idx: Int): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getVertexWeightsBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getVertexWeightsBind, segment, idx)
     }
 
     /**
@@ -255,7 +255,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVertexMeta(idx: Int, meta: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVariantArg(setVertexMetaBind, handle, idx, meta)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setVertexMetaBind, segment, idx, meta)
     }
 
     /**
@@ -265,7 +265,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getVertexMetaBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getVertexMetaBind, segment, idx)
     }
 
     /**
@@ -275,7 +275,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexEdges(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexEdgesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexEdgesBind, segment, idx)
     }
 
     /**
@@ -285,7 +285,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVertexFaces(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexFacesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexFacesBind, segment, idx)
     }
 
     /**
@@ -296,7 +296,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEdgeVertex(idx: Int, vertex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getEdgeVertexBind, handle, idx, vertex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getEdgeVertexBind, segment, idx, vertex)
     }
 
     /**
@@ -306,7 +306,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEdgeFaces(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getEdgeFacesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getEdgeFacesBind, segment, idx)
     }
 
     /**
@@ -316,7 +316,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEdgeMeta(idx: Int, meta: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVariantArg(setEdgeMetaBind, handle, idx, meta)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setEdgeMetaBind, segment, idx, meta)
     }
 
     /**
@@ -326,7 +326,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEdgeMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getEdgeMetaBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getEdgeMetaBind, segment, idx)
     }
 
     /**
@@ -337,7 +337,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFaceVertex(idx: Int, vertex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceVertexBind, handle, idx, vertex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceVertexBind, segment, idx, vertex)
     }
 
     /**
@@ -348,7 +348,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFaceEdge(idx: Int, edge: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceEdgeBind, handle, idx, edge)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceEdgeBind, segment, idx, edge)
     }
 
     /**
@@ -358,7 +358,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFaceMeta(idx: Int, meta: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVariantArg(setFaceMetaBind, handle, idx, meta)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setFaceMetaBind, segment, idx, meta)
     }
 
     /**
@@ -368,7 +368,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFaceMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getFaceMetaBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getFaceMetaBind, segment, idx)
     }
 
     /**
@@ -378,7 +378,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFaceNormal(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getFaceNormalBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getFaceNormalBind, segment, idx)
     }
 
     /**
@@ -388,7 +388,7 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -398,20 +398,20 @@ class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshDataTool? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshDataTool? =
+            wrap(handle.segment)
 
         @JvmStatic
         fun create(): MeshDataTool =
-            MeshDataTool(ObjectCalls.constructObject("MeshDataTool"))
+            MeshDataTool(GodotHandle(ObjectCalls.constructObject("MeshDataTool")))
 
         internal fun wrap(handle: MemorySegment): MeshDataTool? =
-            if (handle.address() == 0L) null else MeshDataTool(handle)
+            if (handle.address() == 0L) null else MeshDataTool(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {

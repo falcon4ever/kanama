@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: ParallaxLayer
  */
-class ParallaxLayer(handle: MemorySegment) : Node2D(handle) {
+class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
     var motionScale: Vector2
         @JvmName("motionScaleProperty")
         get() = getMotionScale()
@@ -37,7 +37,7 @@ class ParallaxLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.set_motion_scale
      */
     fun setMotionScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMotionScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector2Arg(setMotionScaleBind, segment, scale)
     }
 
     /**
@@ -46,7 +46,7 @@ class ParallaxLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.get_motion_scale
      */
     fun getMotionScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionScaleBind, segment)
     }
 
     /**
@@ -56,7 +56,7 @@ class ParallaxLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.set_motion_offset
      */
     fun setMotionOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMotionOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setMotionOffsetBind, segment, offset)
     }
 
     /**
@@ -66,7 +66,7 @@ class ParallaxLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.get_motion_offset
      */
     fun getMotionOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionOffsetBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ class ParallaxLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.set_mirroring
      */
     fun setMirroring(mirror: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMirroringBind, handle, mirror)
+        ObjectCalls.ptrcallWithVector2Arg(setMirroringBind, segment, mirror)
     }
 
     /**
@@ -110,16 +110,16 @@ class ParallaxLayer(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.get_mirroring
      */
     fun getMirroring(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMirroringBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMirroringBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ParallaxLayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ParallaxLayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ParallaxLayer? =
-            if (handle.address() == 0L) null else ParallaxLayer(handle)
+            if (handle.address() == 0L) null else ParallaxLayer(GodotHandle(handle))
 
         private const val SET_MOTION_SCALE_HASH = 743155724L
         private val setMotionScaleBind by lazy {

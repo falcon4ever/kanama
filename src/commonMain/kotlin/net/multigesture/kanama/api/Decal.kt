@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: Decal
  */
-class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
+class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
     var size: Vector3
         @JvmName("sizeProperty")
         get() = getSize()
@@ -114,7 +114,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -127,7 +127,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -146,7 +146,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_texture
      */
     fun setTexture(type: Long, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, handle, type, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, type, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -165,7 +165,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_texture
      */
     fun getTexture(type: Long): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, handle, type))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, type))
     }
 
     /**
@@ -175,7 +175,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_emission_energy
      */
     fun setEmissionEnergy(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyBind, segment, energy)
     }
 
     /**
@@ -185,7 +185,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_emission_energy
      */
     fun getEmissionEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_albedo_mix
      */
     fun setAlbedoMix(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlbedoMixBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setAlbedoMixBind, segment, energy)
     }
 
     /**
@@ -209,7 +209,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_albedo_mix
      */
     fun getAlbedoMix(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlbedoMixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlbedoMixBind, segment)
     }
 
     /**
@@ -221,7 +221,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_modulate
      */
     fun setModulate(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, color)
     }
 
     /**
@@ -233,7 +233,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
     }
 
     /**
@@ -244,7 +244,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_upper_fade
      */
     fun setUpperFade(fade: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setUpperFadeBind, handle, fade)
+        ObjectCalls.ptrcallWithDoubleArg(setUpperFadeBind, segment, fade)
     }
 
     /**
@@ -255,7 +255,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_upper_fade
      */
     fun getUpperFade(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUpperFadeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getUpperFadeBind, segment)
     }
 
     /**
@@ -266,7 +266,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_lower_fade
      */
     fun setLowerFade(fade: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLowerFadeBind, handle, fade)
+        ObjectCalls.ptrcallWithDoubleArg(setLowerFadeBind, segment, fade)
     }
 
     /**
@@ -277,7 +277,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_lower_fade
      */
     fun getLowerFade(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLowerFadeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLowerFadeBind, segment)
     }
 
     /**
@@ -289,7 +289,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_normal_fade
      */
     fun setNormalFade(fade: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNormalFadeBind, handle, fade)
+        ObjectCalls.ptrcallWithDoubleArg(setNormalFadeBind, segment, fade)
     }
 
     /**
@@ -301,7 +301,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_normal_fade
      */
     fun getNormalFade(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalFadeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalFadeBind, segment)
     }
 
     /**
@@ -313,7 +313,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_enable_distance_fade
      */
     fun setEnableDistanceFade(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, segment, enable)
     }
 
     /**
@@ -325,7 +325,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.is_distance_fade_enabled
      */
     fun isDistanceFadeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, segment)
     }
 
     /**
@@ -334,7 +334,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_distance_fade_begin
      */
     fun setDistanceFadeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, segment, distance)
     }
 
     /**
@@ -343,7 +343,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_distance_fade_begin
      */
     fun getDistanceFadeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_distance_fade_length
      */
     fun setDistanceFadeLength(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, segment, distance)
     }
 
     /**
@@ -365,7 +365,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_distance_fade_length
      */
     fun getDistanceFadeLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, segment)
     }
 
     /**
@@ -377,7 +377,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
     }
 
     /**
@@ -389,7 +389,7 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     companion object {
@@ -400,11 +400,11 @@ class Decal(handle: MemorySegment) : VisualInstance3D(handle) {
         const val TEXTURE_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Decal? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Decal? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Decal? =
-            if (handle.address() == 0L) null else Decal(handle)
+            if (handle.address() == 0L) null else Decal(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {

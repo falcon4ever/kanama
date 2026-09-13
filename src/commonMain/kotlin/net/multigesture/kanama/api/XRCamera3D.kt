@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XRCamera3D
  */
-class XRCamera3D(handle: MemorySegment) : Camera3D(handle) {
+class XRCamera3D(handle: GodotHandle) : Camera3D(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRCamera3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRCamera3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRCamera3D? =
-            if (handle.address() == 0L) null else XRCamera3D(handle)
+            if (handle.address() == 0L) null else XRCamera3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

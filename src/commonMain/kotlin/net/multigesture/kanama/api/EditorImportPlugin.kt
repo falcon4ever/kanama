@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorImportPlugin
  */
-class EditorImportPlugin(handle: MemorySegment) : ResourceImporter(handle) {
+class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
     /**
      * This function can only be called during the `_import` callback and it allows manually importing
      * resources from it. This is useful when the imported file generates external resources that
@@ -26,16 +26,16 @@ class EditorImportPlugin(handle: MemorySegment) : ResourceImporter(handle) {
      */
     fun appendImportExternalResource(path: String, customOptions: Map<String, Any?> = emptyMap(), customImporter: String = "", generatorParameters: Any? = null): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringDictionaryStringVariantArgsRetLong(appendImportExternalResourceBind, handle, path, customOptions, customImporter, generatorParameters)
+        return ObjectCalls.ptrcallWithStringDictionaryStringVariantArgsRetLong(appendImportExternalResourceBind, segment, path, customOptions, customImporter, generatorParameters)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorImportPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorImportPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorImportPlugin? =
-            if (handle.address() == 0L) null else EditorImportPlugin(handle)
+            if (handle.address() == 0L) null else EditorImportPlugin(GodotHandle(handle))
 
         private const val APPEND_IMPORT_EXTERNAL_RESOURCE_HASH = 320493106L
         private val appendImportExternalResourceBind by lazy {

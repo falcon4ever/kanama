@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: CSGTorus3D
  */
-class CSGTorus3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
+class CSGTorus3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     var innerRadius: Double
         @JvmName("innerRadiusProperty")
         get() = getInnerRadius()
@@ -47,60 +47,60 @@ class CSGTorus3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setInnerRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, segment, radius)
     }
 
     fun getInnerRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, segment)
     }
 
     fun setOuterRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, segment, radius)
     }
 
     fun getOuterRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, segment)
     }
 
     fun setSides(sides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSidesBind, handle, sides)
+        ObjectCalls.ptrcallWithIntArg(setSidesBind, segment, sides)
     }
 
     fun getSides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSidesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSidesBind, segment)
     }
 
     fun setRingSides(sides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRingSidesBind, handle, sides)
+        ObjectCalls.ptrcallWithIntArg(setRingSidesBind, segment, sides)
     }
 
     fun getRingSides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingSidesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRingSidesBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, handle, smoothFaces)
+        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, segment, smoothFaces)
     }
 
     fun getSmoothFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGTorus3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGTorus3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGTorus3D? =
-            if (handle.address() == 0L) null else CSGTorus3D(handle)
+            if (handle.address() == 0L) null else CSGTorus3D(GodotHandle(handle))
 
         private const val SET_INNER_RADIUS_HASH = 373806689L
         private val setInnerRadiusBind by lazy {

@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 /**
  * Generated from Godot docs: OptionButton
  */
-class OptionButton(handle: MemorySegment) : Button(handle) {
+class OptionButton(handle: GodotHandle) : Button(handle) {
     val selected: Int
         @JvmName("selectedProperty")
         get() = getSelected()
@@ -56,179 +56,179 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
         set(value) = setItemCount(value)
 
     fun addItem(label: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithStringAndIntArg(addItemBind, handle, label, id)
+        ObjectCalls.ptrcallWithStringAndIntArg(addItemBind, segment, label, id)
     }
 
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
+        ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
     }
 
     fun setItemText(idx: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, handle, idx, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, segment, idx, text)
     }
 
     fun setItemIcon(idx: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, handle, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setItemDisabled(idx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, handle, idx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, segment, idx, disabled)
     }
 
     fun setItemId(idx: Int, id: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, handle, idx, id)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, segment, idx, id)
     }
 
     fun setItemMetadata(idx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, idx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, segment, idx, metadata)
     }
 
     fun setItemTooltip(idx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, idx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, idx, tooltip)
     }
 
     fun setItemAutoTranslateMode(idx: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, idx, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode)
     }
 
     fun setSearchBarEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, segment, enabled)
     }
 
     fun setSearchBarMinItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, segment, count)
     }
 
     fun getSearchBarMinItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, segment)
     }
 
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, segment, enabled)
     }
 
     fun isSearchBarFuzzySearchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, segment)
     }
 
     fun setSearchBarFuzzySearchMaxMisses(maxMisses: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, handle, maxMisses)
+        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, segment, maxMisses)
     }
 
     fun getSearchBarFuzzySearchMaxMisses(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, segment)
     }
 
     fun getItemText(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, segment, idx)
     }
 
     fun getItemIcon(idx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, handle, idx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, idx))
     }
 
     fun getItemId(idx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, segment, idx)
     }
 
     fun getItemIndex(id: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, segment, id)
     }
 
     fun getItemMetadata(idx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, segment, idx)
     }
 
     fun getItemTooltip(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, idx)
     }
 
     fun getItemAutoTranslateMode(idx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx)
     }
 
     fun isItemDisabled(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, segment, idx)
     }
 
     fun isItemSeparator(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, segment, idx)
     }
 
     fun isSearchBarEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, segment)
     }
 
     fun addSeparator(text: String = "") {
-        ObjectCalls.ptrcallWithStringArg(addSeparatorBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(addSeparatorBind, segment, text)
     }
 
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun select(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(selectBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(selectBind, segment, idx)
     }
 
     fun getSelected(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedBind, segment)
     }
 
     fun getSelectedId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedIdBind, segment)
     }
 
     fun getSelectedMetadata(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getSelectedMetadataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getSelectedMetadataBind, segment)
     }
 
     fun removeItem(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, idx)
     }
 
     fun getPopup(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
     }
 
     fun showPopup() {
-        ObjectCalls.ptrcallNoArgs(showPopupBind, handle)
+        ObjectCalls.ptrcallNoArgs(showPopupBind, segment)
     }
 
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
     }
 
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
     fun hasSelectableItems(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSelectableItemsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasSelectableItemsBind, segment)
     }
 
     fun getSelectableItem(fromLast: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithBoolArgRetInt(getSelectableItemBind, handle, fromLast)
+        return ObjectCalls.ptrcallWithBoolArgRetInt(getSelectableItemBind, segment, fromLast)
     }
 
     fun setFitToLongestItem(fit: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitToLongestItemBind, handle, fit)
+        ObjectCalls.ptrcallWithBoolArg(setFitToLongestItemBind, segment, fit)
     }
 
     fun isFitToLongestItem(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitToLongestItemBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFitToLongestItemBind, segment)
     }
 
     fun setAllowReselect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, segment, allow)
     }
 
     fun getAllowReselect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, segment)
     }
 
     fun setDisableShortcuts(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, segment, disabled)
     }
 
     object Signals {
@@ -238,11 +238,11 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OptionButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OptionButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OptionButton? =
-            if (handle.address() == 0L) null else OptionButton(handle)
+            if (handle.address() == 0L) null else OptionButton(GodotHandle(handle))
 
         private const val ADD_ITEM_HASH = 2697778442L
         private val addItemBind by lazy {

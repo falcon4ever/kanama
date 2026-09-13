@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PacketPeerUDP
  */
-class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
+class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
     /**
      * Binds this `PacketPeerUDP` to the specified `port` and `bind_address` with a buffer size
      * `recv_buf_size`, allowing it to receive incoming packets. If `bind_address` is set to `"*"`
@@ -24,17 +24,17 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun bind(port: Int, bindAddress: String = "*", recvBufSize: Int = 65536): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(bindBind, handle, port, bindAddress, recvBufSize)
+        return ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(bindBind, segment, port, bindAddress, recvBufSize)
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
     }
 
     fun waitBlocking(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(waitBlockingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(waitBlockingBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun isBound(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBoundBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBoundBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun connectToHost(host: String, port: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, handle, host, port)
+        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port)
     }
 
     /**
@@ -72,7 +72,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun isSocketConnected(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSocketConnectedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSocketConnectedBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getPacketIp(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPacketIpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPacketIpBind, segment)
     }
 
     /**
@@ -94,7 +94,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getPacketPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPacketPortBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun setDestAddress(host: String, port: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(setDestAddressBind, handle, host, port)
+        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(setDestAddressBind, segment, host, port)
     }
 
     /**
@@ -129,7 +129,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun setBroadcastEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBroadcastEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setBroadcastEnabledBind, segment, enabled)
     }
 
     /**
@@ -142,7 +142,7 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun joinMulticastGroup(multicastAddress: String, interfaceName: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(joinMulticastGroupBind, handle, multicastAddress, interfaceName)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(joinMulticastGroupBind, segment, multicastAddress, interfaceName)
     }
 
     /**
@@ -153,16 +153,16 @@ class PacketPeerUDP(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun leaveMulticastGroup(multicastAddress: String, interfaceName: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(leaveMulticastGroupBind, handle, multicastAddress, interfaceName)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(leaveMulticastGroupBind, segment, multicastAddress, interfaceName)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PacketPeerUDP? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PacketPeerUDP? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PacketPeerUDP? =
-            if (handle.address() == 0L) null else PacketPeerUDP(handle)
+            if (handle.address() == 0L) null else PacketPeerUDP(GodotHandle(handle))
 
         private const val BIND_HASH = 4051239242L
         private val bindBind by lazy {

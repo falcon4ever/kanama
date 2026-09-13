@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectPhaser
  */
-class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
     var rangeMinHz: Double
         @JvmName("rangeMinHzProperty")
         get() = getRangeMinHz()
@@ -51,7 +51,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setRangeMinHz(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRangeMinHzBind, handle, hz)
+        ObjectCalls.ptrcallWithDoubleArg(setRangeMinHzBind, segment, hz)
     }
 
     /**
@@ -62,7 +62,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getRangeMinHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMinHzBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMinHzBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setRangeMaxHz(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRangeMaxHzBind, handle, hz)
+        ObjectCalls.ptrcallWithDoubleArg(setRangeMaxHzBind, segment, hz)
     }
 
     /**
@@ -84,7 +84,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getRangeMaxHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMaxHzBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMaxHzBind, segment)
     }
 
     /**
@@ -95,7 +95,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setRateHz(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRateHzBind, handle, hz)
+        ObjectCalls.ptrcallWithDoubleArg(setRateHzBind, segment, hz)
     }
 
     /**
@@ -106,7 +106,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getRateHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRateHzBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRateHzBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setFeedback(fbk: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackBind, handle, fbk)
+        ObjectCalls.ptrcallWithDoubleArg(setFeedbackBind, segment, fbk)
     }
 
     /**
@@ -130,7 +130,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setDepth(depth: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
     }
 
     /**
@@ -150,16 +150,16 @@ class AudioEffectPhaser(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectPhaser? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectPhaser? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectPhaser? =
-            if (handle.address() == 0L) null else AudioEffectPhaser(handle)
+            if (handle.address() == 0L) null else AudioEffectPhaser(GodotHandle(handle))
 
         private const val SET_RANGE_MIN_HZ_HASH = 373806689L
         private val setRangeMinHzBind by lazy {

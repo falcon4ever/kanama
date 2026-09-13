@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XROrigin3D
  */
-class XROrigin3D(handle: MemorySegment) : Node3D(handle) {
+class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
     var worldScale: Double
         @JvmName("worldScaleProperty")
         get() = getWorldScale()
@@ -32,7 +32,7 @@ class XROrigin3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.set_world_scale
      */
     fun setWorldScale(worldScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWorldScaleBind, handle, worldScale)
+        ObjectCalls.ptrcallWithDoubleArg(setWorldScaleBind, segment, worldScale)
     }
 
     /**
@@ -43,7 +43,7 @@ class XROrigin3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.get_world_scale
      */
     fun getWorldScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWorldScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWorldScaleBind, segment)
     }
 
     /**
@@ -53,7 +53,7 @@ class XROrigin3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.set_current
      */
     fun setCurrent(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, segment, enabled)
     }
 
     /**
@@ -63,16 +63,16 @@ class XROrigin3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XROrigin3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XROrigin3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XROrigin3D? =
-            if (handle.address() == 0L) null else XROrigin3D(handle)
+            if (handle.address() == 0L) null else XROrigin3D(GodotHandle(handle))
 
         private const val SET_WORLD_SCALE_HASH = 373806689L
         private val setWorldScaleBind by lazy {

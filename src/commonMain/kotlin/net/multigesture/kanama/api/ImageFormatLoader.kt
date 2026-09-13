@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ImageFormatLoader
  */
-open class ImageFormatLoader(handle: MemorySegment) : RefCounted(handle) {
+open class ImageFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -19,11 +19,11 @@ open class ImageFormatLoader(handle: MemorySegment) : RefCounted(handle) {
         const val FLAG_CONVERT_COLORS: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImageFormatLoader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImageFormatLoader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImageFormatLoader? =
-            if (handle.address() == 0L) null else ImageFormatLoader(handle)
+            if (handle.address() == 0L) null else ImageFormatLoader(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

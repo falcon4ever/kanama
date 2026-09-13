@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimatedTexture
  */
-class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
+class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
     var frames: Int
         @JvmName("framesProperty")
         get() = getFrames()
@@ -51,7 +51,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFramesBind, handle, frames)
+        ObjectCalls.ptrcallWithIntArg(setFramesBind, segment, frames)
     }
 
     /**
@@ -63,7 +63,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFramesBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setCurrentFrame(frame: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCurrentFrameBind, handle, frame)
+        ObjectCalls.ptrcallWithIntArg(setCurrentFrameBind, segment, frame)
     }
 
     /**
@@ -85,7 +85,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getCurrentFrame(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentFrameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentFrameBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setPause(pause: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPauseBind, handle, pause)
+        ObjectCalls.ptrcallWithBoolArg(setPauseBind, segment, pause)
     }
 
     /**
@@ -107,7 +107,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getPause(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPauseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPauseBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setOneShot(oneShot: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, oneShot)
+        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, oneShot)
     }
 
     /**
@@ -129,7 +129,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getOneShot(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSpeedScale(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, scale)
     }
 
     /**
@@ -151,7 +151,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getSpeedScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     /**
@@ -164,7 +164,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFrameTexture(frame: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setFrameTextureBind, handle, frame, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setFrameTextureBind, segment, frame, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -174,8 +174,8 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getFrameTexture(frame: Int): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getFrameTextureBind, handle, frame)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getFrameTextureBind, segment, frame)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -190,7 +190,7 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFrameDuration(frame: Int, duration: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameDurationBind, handle, frame, duration)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameDurationBind, segment, frame, duration)
     }
 
     /**
@@ -200,18 +200,18 @@ class AnimatedTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getFrameDuration(frame: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getFrameDurationBind, handle, frame)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getFrameDurationBind, segment, frame)
     }
 
     companion object {
         const val MAX_FRAMES: Long = 256L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimatedTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimatedTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimatedTexture? =
-            if (handle.address() == 0L) null else AnimatedTexture(handle)
+            if (handle.address() == 0L) null else AnimatedTexture(GodotHandle(handle))
 
         private const val SET_FRAMES_HASH = 1286410249L
         private val setFramesBind by lazy {

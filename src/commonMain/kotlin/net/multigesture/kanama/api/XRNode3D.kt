@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XRNode3D
  */
-open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
+open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
     var tracker: String
         @JvmName("trackerProperty")
         get() = getTracker()
@@ -38,7 +38,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.set_tracker
      */
     fun setTracker(trackerName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTrackerBind, handle, trackerName)
+        ObjectCalls.ptrcallWithStringNameArg(setTrackerBind, segment, trackerName)
     }
 
     /**
@@ -49,7 +49,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_tracker
      */
     fun getTracker(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.set_pose_name
      */
     fun setPoseName(pose: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setPoseNameBind, handle, pose)
+        ObjectCalls.ptrcallWithStringNameArg(setPoseNameBind, segment, pose)
     }
 
     /**
@@ -71,7 +71,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_pose_name
      */
     fun getPoseName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getPoseNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getPoseNameBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.set_show_when_tracked
      */
     fun setShowWhenTracked(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowWhenTrackedBind, handle, show)
+        ObjectCalls.ptrcallWithBoolArg(setShowWhenTrackedBind, segment, show)
     }
 
     /**
@@ -89,7 +89,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_show_when_tracked
      */
     fun getShowWhenTracked(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShowWhenTrackedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getShowWhenTrackedBind, segment)
     }
 
     /**
@@ -98,7 +98,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_is_active
      */
     fun getIsActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsActiveBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_has_tracking_data
      */
     fun getHasTrackingData(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, segment)
     }
 
     /**
@@ -117,7 +117,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_pose
      */
     fun getPose(): XRPose? {
-        return XRPose.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPoseBind, handle))
+        return XRPose.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPoseBind, segment))
     }
 
     /**
@@ -130,7 +130,7 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.trigger_haptic_pulse
      */
     fun triggerHapticPulse(actionName: String, frequency: Double, amplitude: Double, durationSec: Double, delaySec: Double) {
-        ObjectCalls.ptrcallWithStringFourDoubleArgs(triggerHapticPulseBind, handle, actionName, frequency, amplitude, durationSec, delaySec)
+        ObjectCalls.ptrcallWithStringFourDoubleArgs(triggerHapticPulseBind, segment, actionName, frequency, amplitude, durationSec, delaySec)
     }
 
     object Signals {
@@ -139,11 +139,11 @@ open class XRNode3D(handle: MemorySegment) : Node3D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRNode3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRNode3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRNode3D? =
-            if (handle.address() == 0L) null else XRNode3D(handle)
+            if (handle.address() == 0L) null else XRNode3D(GodotHandle(handle))
 
         private const val SET_TRACKER_HASH = 3304788590L
         private val setTrackerBind by lazy {

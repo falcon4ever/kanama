@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: Light2D
  */
-open class Light2D(handle: MemorySegment) : Node2D(handle) {
+open class Light2D(handle: GodotHandle) : Node2D(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = isEnabled()
@@ -109,7 +109,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -118,7 +118,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_editor_only
      */
     fun setEditorOnly(editorOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, handle, editorOnly)
+        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, segment, editorOnly)
     }
 
     /**
@@ -136,7 +136,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.is_editor_only
      */
     fun isEditorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -154,7 +154,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -163,7 +163,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_energy
      */
     fun setEnergy(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, segment, energy)
     }
 
     /**
@@ -172,7 +172,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_energy
      */
     fun getEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_z_range_min
      */
     fun setZRangeMin(z: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZRangeMinBind, handle, z)
+        ObjectCalls.ptrcallWithIntArg(setZRangeMinBind, segment, z)
     }
 
     /**
@@ -190,7 +190,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_z_range_min
      */
     fun getZRangeMin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZRangeMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getZRangeMinBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_z_range_max
      */
     fun setZRangeMax(z: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZRangeMaxBind, handle, z)
+        ObjectCalls.ptrcallWithIntArg(setZRangeMaxBind, segment, z)
     }
 
     /**
@@ -208,7 +208,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_z_range_max
      */
     fun getZRangeMax(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZRangeMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getZRangeMaxBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_layer_range_min
      */
     fun setLayerRangeMin(layer: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLayerRangeMinBind, handle, layer)
+        ObjectCalls.ptrcallWithIntArg(setLayerRangeMinBind, segment, layer)
     }
 
     /**
@@ -226,7 +226,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_layer_range_min
      */
     fun getLayerRangeMin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayerRangeMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLayerRangeMinBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_layer_range_max
      */
     fun setLayerRangeMax(layer: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLayerRangeMaxBind, handle, layer)
+        ObjectCalls.ptrcallWithIntArg(setLayerRangeMaxBind, segment, layer)
     }
 
     /**
@@ -244,7 +244,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_layer_range_max
      */
     fun getLayerRangeMax(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayerRangeMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLayerRangeMaxBind, segment)
     }
 
     /**
@@ -256,7 +256,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_item_cull_mask
      */
     fun setItemCullMask(itemCullMask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCullMaskBind, handle, itemCullMask)
+        ObjectCalls.ptrcallWithIntArg(setItemCullMaskBind, segment, itemCullMask)
     }
 
     /**
@@ -268,7 +268,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_item_cull_mask
      */
     fun getItemCullMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemCullMaskBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_item_shadow_cull_mask
      */
     fun setItemShadowCullMask(itemShadowCullMask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemShadowCullMaskBind, handle, itemShadowCullMask)
+        ObjectCalls.ptrcallWithIntArg(setItemShadowCullMaskBind, segment, itemShadowCullMask)
     }
 
     /**
@@ -290,7 +290,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_item_shadow_cull_mask
      */
     fun getItemShadowCullMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemShadowCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemShadowCullMaskBind, segment)
     }
 
     /**
@@ -299,7 +299,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_enabled
      */
     fun setShadowEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShadowEnabledBind, segment, enabled)
     }
 
     /**
@@ -308,7 +308,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.is_shadow_enabled
      */
     fun isShadowEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShadowEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShadowEnabledBind, segment)
     }
 
     /**
@@ -319,7 +319,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_smooth
      */
     fun setShadowSmooth(smooth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setShadowSmoothBind, handle, smooth)
+        ObjectCalls.ptrcallWithDoubleArg(setShadowSmoothBind, segment, smooth)
     }
 
     /**
@@ -330,7 +330,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_shadow_smooth
      */
     fun getShadowSmooth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getShadowSmoothBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getShadowSmoothBind, segment)
     }
 
     /**
@@ -339,7 +339,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_filter
      */
     fun setShadowFilter(filter: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowFilterBind, handle, filter)
+        ObjectCalls.ptrcallWithLongArg(setShadowFilterBind, segment, filter)
     }
 
     /**
@@ -348,7 +348,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_shadow_filter
      */
     fun getShadowFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShadowFilterBind, segment)
     }
 
     /**
@@ -357,7 +357,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_color
      */
     fun setShadowColor(shadowColor: Color) {
-        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, handle, shadowColor)
+        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, segment, shadowColor)
     }
 
     /**
@@ -366,7 +366,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_shadow_color
      */
     fun getShadowColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, segment)
     }
 
     /**
@@ -375,7 +375,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_blend_mode
      */
     fun setBlendMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode)
     }
 
     /**
@@ -384,7 +384,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_blend_mode
      */
     fun getBlendMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
     }
 
     /**
@@ -394,7 +394,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_height
      */
     fun setHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     /**
@@ -404,7 +404,7 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_height
      */
     fun getHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     companion object {
@@ -416,11 +416,11 @@ open class Light2D(handle: MemorySegment) : Node2D(handle) {
         const val BLEND_MODE_MIX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Light2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Light2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Light2D? =
-            if (handle.address() == 0L) null else Light2D(handle)
+            if (handle.address() == 0L) null else Light2D(GodotHandle(handle))
 
         private const val SET_ENABLED_HASH = 2586408642L
         private val setEnabledBind by lazy {

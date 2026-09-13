@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: PhysicalBoneSimulator3D
  */
-class PhysicalBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Returns a boolean that indicates whether the `PhysicalBoneSimulator3D` is running and
      * simulating.
@@ -20,7 +20,7 @@ class PhysicalBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle
      * Generated from Godot docs: PhysicalBoneSimulator3D.is_simulating_physics
      */
     fun isSimulatingPhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, segment)
     }
 
     /**
@@ -29,7 +29,7 @@ class PhysicalBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_stop_simulation
      */
     fun physicalBonesStopSimulation() {
-        ObjectCalls.ptrcallNoArgs(physicalBonesStopSimulationBind, handle)
+        ObjectCalls.ptrcallNoArgs(physicalBonesStopSimulationBind, segment)
     }
 
     /**
@@ -40,7 +40,7 @@ class PhysicalBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_start_simulation
      */
     fun physicalBonesStartSimulation(bones: List<String>) {
-        ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, handle, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, segment, bones)
     }
 
     /**
@@ -49,7 +49,7 @@ class PhysicalBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_add_collision_exception
      */
     fun physicalBonesAddCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesAddCollisionExceptionBind, handle, exception)
+        ObjectCalls.ptrcallWithRIDArg(physicalBonesAddCollisionExceptionBind, segment, exception)
     }
 
     /**
@@ -58,16 +58,16 @@ class PhysicalBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_remove_collision_exception
      */
     fun physicalBonesRemoveCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesRemoveCollisionExceptionBind, handle, exception)
+        ObjectCalls.ptrcallWithRIDArg(physicalBonesRemoveCollisionExceptionBind, segment, exception)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicalBoneSimulator3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicalBoneSimulator3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicalBoneSimulator3D? =
-            if (handle.address() == 0L) null else PhysicalBoneSimulator3D(handle)
+            if (handle.address() == 0L) null else PhysicalBoneSimulator3D(GodotHandle(handle))
 
         private const val IS_SIMULATING_PHYSICS_HASH = 36873697L
         private val isSimulatingPhysicsBind by lazy {

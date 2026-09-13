@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Color
 /**
  * Generated from Godot docs: LightmapGI
  */
-class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
+class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     var quality: Long
         @JvmName("qualityProperty")
         get() = getBakeQuality()
@@ -144,179 +144,179 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
         set(value) = setLightData(value)
 
     fun setLightData(data: LightmapGIData?) {
-        ObjectCalls.ptrcallWithObjectArgs(setLightDataBind, handle, listOf(data?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setLightDataBind, segment, listOf(data?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getLightData(): LightmapGIData? {
-        return LightmapGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, handle))
+        return LightmapGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, segment))
     }
 
     fun setBakeQuality(bakeQuality: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, handle, bakeQuality)
+        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, segment, bakeQuality)
     }
 
     fun getBakeQuality(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, segment)
     }
 
     fun setBounces(bounces: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBouncesBind, handle, bounces)
+        ObjectCalls.ptrcallWithIntArg(setBouncesBind, segment, bounces)
     }
 
     fun getBounces(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBouncesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBouncesBind, segment)
     }
 
     fun setBounceIndirectEnergy(bounceIndirectEnergy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBounceIndirectEnergyBind, handle, bounceIndirectEnergy)
+        ObjectCalls.ptrcallWithDoubleArg(setBounceIndirectEnergyBind, segment, bounceIndirectEnergy)
     }
 
     fun getBounceIndirectEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceIndirectEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceIndirectEnergyBind, segment)
     }
 
     fun setGenerateProbes(subdivision: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, handle, subdivision)
+        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, segment, subdivision)
     }
 
     fun getGenerateProbes(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, segment)
     }
 
     fun setBias(bias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, segment, bias)
     }
 
     fun getBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, segment)
     }
 
     fun setEnvironmentMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, segment, mode)
     }
 
     fun getEnvironmentMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, segment)
     }
 
     fun setEnvironmentCustomSky(sky: Sky?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentCustomSkyBind, handle, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentCustomSkyBind, segment, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getEnvironmentCustomSky(): Sky? {
-        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, handle))
+        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, segment))
     }
 
     fun setEnvironmentCustomColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setEnvironmentCustomColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setEnvironmentCustomColorBind, segment, color)
     }
 
     fun getEnvironmentCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getEnvironmentCustomColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getEnvironmentCustomColorBind, segment)
     }
 
     fun setEnvironmentCustomEnergy(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnvironmentCustomEnergyBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setEnvironmentCustomEnergyBind, segment, energy)
     }
 
     fun getEnvironmentCustomEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnvironmentCustomEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnvironmentCustomEnergyBind, segment)
     }
 
     fun setTexelScale(texelScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTexelScaleBind, handle, texelScale)
+        ObjectCalls.ptrcallWithDoubleArg(setTexelScaleBind, segment, texelScale)
     }
 
     fun getTexelScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTexelScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTexelScaleBind, segment)
     }
 
     fun setMaxTextureSize(maxTextureSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxTextureSizeBind, handle, maxTextureSize)
+        ObjectCalls.ptrcallWithIntArg(setMaxTextureSizeBind, segment, maxTextureSize)
     }
 
     fun getMaxTextureSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextureSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextureSizeBind, segment)
     }
 
     fun setSupersamplingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSupersamplingEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSupersamplingEnabledBind, segment, enable)
     }
 
     fun isSupersamplingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSupersamplingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSupersamplingEnabledBind, segment)
     }
 
     fun setSupersamplingFactor(factor: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSupersamplingFactorBind, handle, factor)
+        ObjectCalls.ptrcallWithDoubleArg(setSupersamplingFactorBind, segment, factor)
     }
 
     fun getSupersamplingFactor(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSupersamplingFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSupersamplingFactorBind, segment)
     }
 
     fun setUseDenoiser(useDenoiser: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseDenoiserBind, handle, useDenoiser)
+        ObjectCalls.ptrcallWithBoolArg(setUseDenoiserBind, segment, useDenoiser)
     }
 
     fun isUsingDenoiser(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDenoiserBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDenoiserBind, segment)
     }
 
     fun setDenoiserStrength(denoiserStrength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDenoiserStrengthBind, handle, denoiserStrength)
+        ObjectCalls.ptrcallWithDoubleArg(setDenoiserStrengthBind, segment, denoiserStrength)
     }
 
     fun getDenoiserStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDenoiserStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDenoiserStrengthBind, segment)
     }
 
     fun setDenoiserRange(denoiserRange: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDenoiserRangeBind, handle, denoiserRange)
+        ObjectCalls.ptrcallWithIntArg(setDenoiserRangeBind, segment, denoiserRange)
     }
 
     fun getDenoiserRange(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDenoiserRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDenoiserRangeBind, segment)
     }
 
     fun setInterior(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInteriorBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setInteriorBind, segment, enable)
     }
 
     fun isInterior(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, segment)
     }
 
     fun setDirectional(directional: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDirectionalBind, handle, directional)
+        ObjectCalls.ptrcallWithBoolArg(setDirectionalBind, segment, directional)
     }
 
     fun isDirectional(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDirectionalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDirectionalBind, segment)
     }
 
     fun setShadowmaskMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, segment, mode)
     }
 
     fun getShadowmaskMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, segment)
     }
 
     fun setUseTextureForBounces(useTextureForBounces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseTextureForBouncesBind, handle, useTextureForBounces)
+        ObjectCalls.ptrcallWithBoolArg(setUseTextureForBouncesBind, segment, useTextureForBounces)
     }
 
     fun isUsingTextureForBounces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTextureForBouncesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTextureForBouncesBind, segment)
     }
 
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
+        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     companion object {
@@ -347,15 +347,15 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
         const val ENVIRONMENT_MODE_CUSTOM_COLOR: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LightmapGI? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LightmapGI? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LightmapGI? =
-            if (handle.address() == 0L) null else LightmapGI(handle)
+            if (handle.address() == 0L) null else LightmapGI(GodotHandle(handle))
 
         // Instantiate a LightmapGI node.
         fun create(): LightmapGI =
-            LightmapGI(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI")))
+            LightmapGI(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI"))))
 
         private const val SET_LIGHT_DATA_HASH = 1790597277L
         private val setLightDataBind by lazy {

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  * table.
  */
 @ScriptClass(attachTo = "XRInterfaceExtension")
-class XrVirtualReturnProbe(val godotObject: MemorySegment) {
+class XrVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // Transform3D value-type return.
   @OverrideVirtual

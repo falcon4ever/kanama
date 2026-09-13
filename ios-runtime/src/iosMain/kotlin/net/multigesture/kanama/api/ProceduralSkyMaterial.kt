@@ -9,7 +9,7 @@ import net.multigesture.kanama.types.Color
 /**
  * Generated from Godot docs: ProceduralSkyMaterial
  */
-class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
+class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     var skyTopColor: Color
         @JvmName("skyTopColorProperty")
         get() = getSkyTopColor()
@@ -90,140 +90,140 @@ class ProceduralSkyMaterial(handle: MemorySegment) : Material(handle) {
 
     fun setSkyTopColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, segment, color)
     }
 
     fun getSkyTopColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, segment)
     }
 
     fun setSkyHorizonColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, segment, color)
     }
 
     fun getSkyHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, segment)
     }
 
     fun setSkyCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, segment, curve)
     }
 
     fun getSkyCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, segment)
     }
 
     fun setSkyEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, handle, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, segment, multiplier)
     }
 
     fun getSkyEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, segment)
     }
 
     fun setSkyCoverModulate(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, segment, color)
     }
 
     fun getSkyCoverModulate(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, segment)
     }
 
     fun setGroundBottomColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, segment, color)
     }
 
     fun getGroundBottomColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, segment)
     }
 
     fun setGroundHorizonColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, segment, color)
     }
 
     fun getGroundHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, segment)
     }
 
     fun setGroundCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, segment, curve)
     }
 
     fun getGroundCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, segment)
     }
 
     fun setGroundEnergyMultiplier(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, segment, energy)
     }
 
     fun getGroundEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, segment)
     }
 
     fun setSunAngleMax(degrees: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, segment, degrees)
     }
 
     fun getSunAngleMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, segment)
     }
 
     fun setSunCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, segment, curve)
     }
 
     fun getSunCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, segment)
     }
 
     fun setUseDebanding(useDebanding: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, useDebanding)
+        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, useDebanding)
     }
 
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, segment)
     }
 
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, handle, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, segment, multiplier)
     }
 
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, segment)
     }
 
     companion object {
-        fun fromHandle(handle: MemorySegment): ProceduralSkyMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ProceduralSkyMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ProceduralSkyMaterial? =
-            if (handle.address() == 0L) null else ProceduralSkyMaterial(handle)
+            if (handle.address() == 0L) null else ProceduralSkyMaterial(GodotHandle(handle))
 
         // KANAMA-IOS-SUGAR: [glue] downcast a Resource (null if not), mirroring the desktop
         // helper and the ShaderMaterial.fromResource pattern. Re-add after regeneration.

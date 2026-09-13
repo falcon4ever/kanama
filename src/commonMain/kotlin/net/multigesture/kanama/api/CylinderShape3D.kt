@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CylinderShape3D
  */
-class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
+class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
     var height: Double
         @JvmName("heightProperty")
         get() = getHeight()
@@ -31,7 +31,7 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -41,7 +41,7 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     /**
@@ -61,16 +61,16 @@ class CylinderShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CylinderShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CylinderShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CylinderShape3D? =
-            if (handle.address() == 0L) null else CylinderShape3D(handle)
+            if (handle.address() == 0L) null else CylinderShape3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

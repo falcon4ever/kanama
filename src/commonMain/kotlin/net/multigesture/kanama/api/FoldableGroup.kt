@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: FoldableGroup
  */
-class FoldableGroup(handle: MemorySegment) : Resource(handle) {
+class FoldableGroup(handle: GodotHandle) : Resource(handle) {
     var allowFoldingAll: Boolean
         @JvmName("allowFoldingAllProperty")
         get() = isAllowFoldingAll()
@@ -26,7 +26,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun getExpandedContainer(): FoldableContainer? {
         checkOpen()
-        return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExpandedContainerBind, handle))
+        return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExpandedContainerBind, segment))
     }
 
     /**
@@ -38,7 +38,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun getContainers(): List<FoldableContainer> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getContainersBind, handle, FoldableContainer::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getContainersBind, segment, FoldableContainer::wrap)
     }
 
     /**
@@ -48,7 +48,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun setAllowFoldingAll(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowFoldingAllBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAllowFoldingAllBind, segment, enabled)
     }
 
     /**
@@ -58,7 +58,7 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
      */
     fun isAllowFoldingAll(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowFoldingAllBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAllowFoldingAllBind, segment)
     }
 
     object Signals {
@@ -67,11 +67,11 @@ class FoldableGroup(handle: MemorySegment) : Resource(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FoldableGroup? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FoldableGroup? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FoldableGroup? =
-            if (handle.address() == 0L) null else FoldableGroup(handle)
+            if (handle.address() == 0L) null else FoldableGroup(GodotHandle(handle))
 
         private const val GET_EXPANDED_CONTAINER_HASH = 1427441056L
         private val getExpandedContainerBind by lazy {

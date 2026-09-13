@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: FileDialog
  */
-open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
+open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     var modeOverridesTitle: Boolean
         @JvmName("modeOverridesTitleProperty")
         get() = isModeOverridingTitle()
@@ -150,7 +150,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.clear_filters
      */
     fun clearFilters() {
-        ObjectCalls.ptrcallNoArgs(clearFiltersBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearFiltersBind, segment)
     }
 
     /**
@@ -166,7 +166,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.add_filter
      */
     fun addFilter(filter: String, description: String = "", mimeType: String = "") {
-        ObjectCalls.ptrcallWithThreeStringArgs(addFilterBind, handle, filter, description, mimeType)
+        ObjectCalls.ptrcallWithThreeStringArgs(addFilterBind, segment, filter, description, mimeType)
     }
 
     /**
@@ -179,7 +179,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_filters
      */
     fun setFilters(filters: List<String>) {
-        ObjectCalls.ptrcallWithPackedStringListArg(setFiltersBind, handle, filters)
+        ObjectCalls.ptrcallWithPackedStringListArg(setFiltersBind, segment, filters)
     }
 
     /**
@@ -192,7 +192,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_filters
      */
     fun getFilters(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFiltersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFiltersBind, segment)
     }
 
     /**
@@ -201,7 +201,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.clear_filename_filter
      */
     fun clearFilenameFilter() {
-        ObjectCalls.ptrcallNoArgs(clearFilenameFilterBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearFilenameFilterBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_filename_filter
      */
     fun setFilenameFilter(filter: String) {
-        ObjectCalls.ptrcallWithStringArg(setFilenameFilterBind, handle, filter)
+        ObjectCalls.ptrcallWithStringArg(setFilenameFilterBind, segment, filter)
     }
 
     /**
@@ -227,7 +227,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_filename_filter
      */
     fun getFilenameFilter(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getFilenameFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getFilenameFilterBind, segment)
     }
 
     /**
@@ -236,7 +236,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_name
      */
     fun getOptionName(option: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getOptionNameBind, handle, option)
+        return ObjectCalls.ptrcallWithIntArgRetString(getOptionNameBind, segment, option)
     }
 
     /**
@@ -245,7 +245,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_values
      */
     fun getOptionValues(option: Int): List<String> {
-        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getOptionValuesBind, handle, option)
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getOptionValuesBind, segment, option)
     }
 
     /**
@@ -254,7 +254,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_default
      */
     fun getOptionDefault(option: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOptionDefaultBind, handle, option)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getOptionDefaultBind, segment, option)
     }
 
     /**
@@ -263,7 +263,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_name
      */
     fun setOptionName(option: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setOptionNameBind, handle, option, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setOptionNameBind, segment, option, name)
     }
 
     /**
@@ -272,7 +272,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_values
      */
     fun setOptionValues(option: Int, values: List<String>) {
-        ObjectCalls.ptrcallWithIntAndPackedStringListArg(setOptionValuesBind, handle, option, values)
+        ObjectCalls.ptrcallWithIntAndPackedStringListArg(setOptionValuesBind, segment, option, values)
     }
 
     /**
@@ -281,7 +281,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_default
      */
     fun setOptionDefault(option: Int, defaultValueIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setOptionDefaultBind, handle, option, defaultValueIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(setOptionDefaultBind, segment, option, defaultValueIndex)
     }
 
     /**
@@ -290,7 +290,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_count
      */
     fun setOptionCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOptionCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setOptionCountBind, segment, count)
     }
 
     /**
@@ -299,7 +299,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_count
      */
     fun getOptionCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOptionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOptionCountBind, segment)
     }
 
     /**
@@ -310,7 +310,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.add_option
      */
     fun addOption(name: String, values: List<String>, defaultValueIndex: Int) {
-        ObjectCalls.ptrcallWithStringPackedStringListAndIntArgs(addOptionBind, handle, name, values, defaultValueIndex)
+        ObjectCalls.ptrcallWithStringPackedStringListAndIntArgs(addOptionBind, segment, name, values, defaultValueIndex)
     }
 
     /**
@@ -320,7 +320,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_selected_options
      */
     fun getSelectedOptions(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSelectedOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSelectedOptionsBind, segment)
     }
 
     /**
@@ -330,7 +330,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_current_dir
      */
     fun getCurrentDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentDirBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCurrentDirBind, segment)
     }
 
     /**
@@ -339,7 +339,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_current_file
      */
     fun getCurrentFile(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentFileBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCurrentFileBind, segment)
     }
 
     /**
@@ -348,7 +348,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_current_path
      */
     fun getCurrentPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCurrentPathBind, segment)
     }
 
     /**
@@ -358,7 +358,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_current_dir
      */
     fun setCurrentDir(dir: String) {
-        ObjectCalls.ptrcallWithStringArg(setCurrentDirBind, handle, dir)
+        ObjectCalls.ptrcallWithStringArg(setCurrentDirBind, segment, dir)
     }
 
     /**
@@ -367,7 +367,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_current_file
      */
     fun setCurrentFile(file: String) {
-        ObjectCalls.ptrcallWithStringArg(setCurrentFileBind, handle, file)
+        ObjectCalls.ptrcallWithStringArg(setCurrentFileBind, segment, file)
     }
 
     /**
@@ -376,7 +376,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_current_path
      */
     fun setCurrentPath(path: String) {
-        ObjectCalls.ptrcallWithStringArg(setCurrentPathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(setCurrentPathBind, segment, path)
     }
 
     /**
@@ -386,7 +386,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_mode_overrides_title
      */
     fun setModeOverridesTitle(override: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setModeOverridesTitleBind, handle, override)
+        ObjectCalls.ptrcallWithBoolArg(setModeOverridesTitleBind, segment, override)
     }
 
     /**
@@ -396,7 +396,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.is_mode_overriding_title
      */
     fun isModeOverridingTitle(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isModeOverridingTitleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isModeOverridingTitleBind, segment)
     }
 
     /**
@@ -405,7 +405,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_file_mode
      */
     fun setFileMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFileModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setFileModeBind, segment, mode)
     }
 
     /**
@@ -414,7 +414,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_file_mode
      */
     fun getFileMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFileModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFileModeBind, segment)
     }
 
     /**
@@ -423,7 +423,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_display_mode
      */
     fun setDisplayMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDisplayModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDisplayModeBind, segment, mode)
     }
 
     /**
@@ -432,7 +432,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_display_mode
      */
     fun getDisplayMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDisplayModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDisplayModeBind, segment)
     }
 
     /**
@@ -445,7 +445,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_vbox
      */
     fun getVbox(): VBoxContainer? {
-        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVboxBind, handle))
+        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVboxBind, segment))
     }
 
     /**
@@ -456,7 +456,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_line_edit
      */
     fun getLineEdit(): LineEdit? {
-        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, handle))
+        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, segment))
     }
 
     /**
@@ -467,7 +467,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_access
      */
     fun setAccess(access: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAccessBind, handle, access)
+        ObjectCalls.ptrcallWithLongArg(setAccessBind, segment, access)
     }
 
     /**
@@ -478,7 +478,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_access
      */
     fun getAccess(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAccessBind, segment)
     }
 
     /**
@@ -488,7 +488,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_root_subfolder
      */
     fun setRootSubfolder(dir: String) {
-        ObjectCalls.ptrcallWithStringArg(setRootSubfolderBind, handle, dir)
+        ObjectCalls.ptrcallWithStringArg(setRootSubfolderBind, segment, dir)
     }
 
     /**
@@ -498,7 +498,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_root_subfolder
      */
     fun getRootSubfolder(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getRootSubfolderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getRootSubfolderBind, segment)
     }
 
     /**
@@ -508,7 +508,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_show_hidden_files
      */
     fun setShowHiddenFiles(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowHiddenFilesBind, handle, show)
+        ObjectCalls.ptrcallWithBoolArg(setShowHiddenFilesBind, segment, show)
     }
 
     /**
@@ -518,7 +518,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.is_showing_hidden_files
      */
     fun isShowingHiddenFiles(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingHiddenFilesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingHiddenFilesBind, segment)
     }
 
     /**
@@ -535,7 +535,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_use_native_dialog
      */
     fun setUseNativeDialog(native: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseNativeDialogBind, handle, native)
+        ObjectCalls.ptrcallWithBoolArg(setUseNativeDialogBind, segment, native)
     }
 
     /**
@@ -552,7 +552,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_use_native_dialog
      */
     fun getUseNativeDialog(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseNativeDialogBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseNativeDialogBind, segment)
     }
 
     /**
@@ -561,7 +561,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_customization_flag_enabled
      */
     fun setCustomizationFlagEnabled(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setCustomizationFlagEnabledBind, handle, flag, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setCustomizationFlagEnabledBind, segment, flag, enabled)
     }
 
     /**
@@ -570,7 +570,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.is_customization_flag_enabled
      */
     fun isCustomizationFlagEnabled(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isCustomizationFlagEnabledBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(isCustomizationFlagEnabledBind, segment, flag)
     }
 
     /**
@@ -579,7 +579,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.deselect_all
      */
     fun deselectAll() {
-        ObjectCalls.ptrcallNoArgs(deselectAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(deselectAllBind, segment)
     }
 
     /**
@@ -589,7 +589,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.popup_file_dialog
      */
     fun popupFileDialog() {
-        ObjectCalls.ptrcallNoArgs(popupFileDialogBind, handle)
+        ObjectCalls.ptrcallNoArgs(popupFileDialogBind, segment)
     }
 
     /**
@@ -599,7 +599,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.invalidate
      */
     fun invalidate() {
-        ObjectCalls.ptrcallNoArgs(invalidateBind, handle)
+        ObjectCalls.ptrcallNoArgs(invalidateBind, segment)
     }
 
     object Signals {
@@ -666,7 +666,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_get_icon_callback
          */
         fun setGetIconCallback(callback: GodotCallable) {
-            ObjectCalls.ptrcallWithCallableArg(setGetIconCallbackBind, MemorySegment.NULL, callback.target.handle, callback.method)
+            ObjectCalls.ptrcallWithCallableArg(setGetIconCallbackBind, MemorySegment.NULL, callback.target.segment, callback.method)
         }
 
         /**
@@ -679,7 +679,7 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_get_thumbnail_callback
          */
         fun setGetThumbnailCallback(callback: GodotCallable) {
-            ObjectCalls.ptrcallWithCallableArg(setGetThumbnailCallbackBind, MemorySegment.NULL, callback.target.handle, callback.method)
+            ObjectCalls.ptrcallWithCallableArg(setGetThumbnailCallbackBind, MemorySegment.NULL, callback.target.segment, callback.method)
         }
 
         const val FILE_MODE_OPEN_FILE: Long = 0L
@@ -703,11 +703,11 @@ open class FileDialog(handle: MemorySegment) : ConfirmationDialog(handle) {
         const val CUSTOMIZATION_DELETE: Long = 8L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FileDialog? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FileDialog? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FileDialog? =
-            if (handle.address() == 0L) null else FileDialog(handle)
+            if (handle.address() == 0L) null else FileDialog(GodotHandle(handle))
 
         private const val CLEAR_FILTERS_HASH = 3218959716L
         private val clearFiltersBind by lazy {

@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: RenderingDevice
  */
-class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
+class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Creates a new texture. It can be accessed with the RID that is returned. Once finished with your
      * RID, you will want to free the RID using the RenderingDevice's `free_rid` method. Note: `data`
@@ -29,7 +29,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create
      */
     fun textureCreate(format: RDTextureFormat?, view: RDTextureView?, data: List<ByteArray>): RID {
-        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(textureCreateBind, handle, format?.requireOpenHandle() ?: MemorySegment.NULL, view?.requireOpenHandle() ?: MemorySegment.NULL, data)
+        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(textureCreateBind, segment, format?.requireOpenHandle() ?: MemorySegment.NULL, view?.requireOpenHandle() ?: MemorySegment.NULL, data)
     }
 
     /**
@@ -39,7 +39,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared
      */
     fun textureCreateShared(view: RDTextureView?, withTexture: RID): RID {
-        return ObjectCalls.ptrcallWithObjectRIDArgsRetRID(textureCreateSharedBind, handle, view?.requireOpenHandle() ?: MemorySegment.NULL, withTexture)
+        return ObjectCalls.ptrcallWithObjectRIDArgsRetRID(textureCreateSharedBind, segment, view?.requireOpenHandle() ?: MemorySegment.NULL, withTexture)
     }
 
     /**
@@ -54,7 +54,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared_from_slice
      */
     fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(textureCreateSharedFromSliceBind, handle, view?.requireOpenHandle() ?: MemorySegment.NULL, withTexture, layer, mipmap, mipmaps, sliceType)
+        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: MemorySegment.NULL, withTexture, layer, mipmap, mipmaps, sliceType)
     }
 
     /**
@@ -65,7 +65,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_from_extension
      */
     fun textureCreateFromExtension(type: Long, format: Long, samples: Long, usageFlags: Long, image: Long, width: Long, height: Long, depth: Long, layers: Long, mipmaps: Long = 1L): RID {
-        return ObjectCalls.ptrcallWithFourLongLongLongLongLongLongArgsRetRID(textureCreateFromExtensionBind, handle, type, format, samples, usageFlags, image, width, height, depth, layers, mipmaps)
+        return ObjectCalls.ptrcallWithFourLongLongLongLongLongLongArgsRetRID(textureCreateFromExtensionBind, segment, type, format, samples, usageFlags, image, width, height, depth, layers, mipmaps)
     }
 
     /**
@@ -82,7 +82,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_update
      */
     fun textureUpdate(texture: RID, layer: Long, data: ByteArray): Long {
-        return ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(textureUpdateBind, handle, texture, layer, data)
+        return ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(textureUpdateBind, segment, texture, layer, data)
     }
 
     /**
@@ -99,7 +99,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_data
      */
     fun textureGetData(texture: RID, layer: Long): ByteArray {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetByteArray(textureGetDataBind, handle, texture, layer)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetByteArray(textureGetDataBind, segment, texture, layer)
     }
 
     /**
@@ -117,7 +117,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_data_async
      */
     fun textureGetDataAsync(texture: RID, layer: Long, callback: GodotCallable): Long {
-        return ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(textureGetDataAsyncBind, handle, texture, layer, callback.target.handle, callback.method)
+        return ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(textureGetDataAsyncBind, segment, texture, layer, callback.target.segment, callback.method)
     }
 
     /**
@@ -127,7 +127,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_format_supported_for_usage
      */
     fun textureIsFormatSupportedForUsage(format: Long, usageFlags: Long): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(textureIsFormatSupportedForUsageBind, handle, format, usageFlags)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(textureIsFormatSupportedForUsageBind, segment, format, usageFlags)
     }
 
     /**
@@ -136,7 +136,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_shared
      */
     fun textureIsShared(texture: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsSharedBind, handle, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsSharedBind, segment, texture)
     }
 
     /**
@@ -145,7 +145,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_valid
      */
     fun textureIsValid(texture: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsValidBind, handle, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsValidBind, segment, texture)
     }
 
     /**
@@ -158,7 +158,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_set_discardable
      */
     fun textureSetDiscardable(texture: RID, discardable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(textureSetDiscardableBind, handle, texture, discardable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(textureSetDiscardableBind, segment, texture, discardable)
     }
 
     /**
@@ -168,7 +168,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_discardable
      */
     fun textureIsDiscardable(texture: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsDiscardableBind, handle, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsDiscardableBind, segment, texture)
     }
 
     /**
@@ -190,7 +190,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_copy
      */
     fun textureCopy(fromTexture: RID, toTexture: RID, fromPos: Vector3, toPos: Vector3, size: Vector3, srcMipmap: Long, dstMipmap: Long, srcLayer: Long, dstLayer: Long): Long {
-        return ObjectCalls.ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(textureCopyBind, handle, fromTexture, toTexture, fromPos, toPos, size, srcMipmap, dstMipmap, srcLayer, dstLayer)
+        return ObjectCalls.ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(textureCopyBind, segment, fromTexture, toTexture, fromPos, toPos, size, srcMipmap, dstMipmap, srcLayer, dstLayer)
     }
 
     /**
@@ -206,7 +206,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_clear
      */
     fun textureClear(texture: RID, color: Color, baseMipmap: Long, mipmapCount: Long, baseLayer: Long, layerCount: Long): Long {
-        return ObjectCalls.ptrcallWithRIDColorFourUInt32ArgsRetLong(textureClearBind, handle, texture, color, baseMipmap, mipmapCount, baseLayer, layerCount)
+        return ObjectCalls.ptrcallWithRIDColorFourUInt32ArgsRetLong(textureClearBind, segment, texture, color, baseMipmap, mipmapCount, baseLayer, layerCount)
     }
 
     /**
@@ -228,7 +228,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_resolve_multisample
      */
     fun textureResolveMultisample(fromTexture: RID, toTexture: RID): Long {
-        return ObjectCalls.ptrcallWithTwoRIDArgsRetLong(textureResolveMultisampleBind, handle, fromTexture, toTexture)
+        return ObjectCalls.ptrcallWithTwoRIDArgsRetLong(textureResolveMultisampleBind, segment, fromTexture, toTexture)
     }
 
     /**
@@ -237,7 +237,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_format
      */
     fun textureGetFormat(texture: RID): RDTextureFormat? {
-        return RDTextureFormat.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(textureGetFormatBind, handle, texture))
+        return RDTextureFormat.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(textureGetFormatBind, segment, texture))
     }
 
     /**
@@ -248,7 +248,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_native_handle
      */
     fun textureGetNativeHandle(texture: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(textureGetNativeHandleBind, handle, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(textureGetNativeHandleBind, segment, texture)
     }
 
     /**
@@ -260,7 +260,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_create
      */
     fun framebufferFormatCreate(attachments: List<RDAttachmentFormat>, viewCount: Long = 1L): Long {
-        return ObjectCalls.ptrcallWithObjectListUInt32ArgsRetLong(framebufferFormatCreateBind, handle, attachments, viewCount)
+        return ObjectCalls.ptrcallWithObjectListUInt32ArgsRetLong(framebufferFormatCreateBind, segment, attachments, viewCount)
     }
 
     /**
@@ -272,7 +272,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_create_multipass
      */
     fun framebufferFormatCreateMultipass(attachments: List<RDAttachmentFormat>, passes: List<RDFramebufferPass>, viewCount: Long = 1L): Long {
-        return ObjectCalls.ptrcallWithTwoObjectListUInt32ArgsRetLong(framebufferFormatCreateMultipassBind, handle, attachments, passes, viewCount)
+        return ObjectCalls.ptrcallWithTwoObjectListUInt32ArgsRetLong(framebufferFormatCreateMultipassBind, segment, attachments, passes, viewCount)
     }
 
     /**
@@ -282,7 +282,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_create_empty
      */
     fun framebufferFormatCreateEmpty(samples: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(framebufferFormatCreateEmptyBind, handle, samples)
+        return ObjectCalls.ptrcallWithLongArgRetLong(framebufferFormatCreateEmptyBind, segment, samples)
     }
 
     /**
@@ -292,7 +292,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_get_texture_samples
      */
     fun framebufferFormatGetTextureSamples(format: Long, renderPass: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithLongAndUInt32ArgRetLong(framebufferFormatGetTextureSamplesBind, handle, format, renderPass)
+        return ObjectCalls.ptrcallWithLongAndUInt32ArgRetLong(framebufferFormatGetTextureSamplesBind, segment, format, renderPass)
     }
 
     /**
@@ -303,7 +303,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_create
      */
     fun framebufferCreate(textures: List<RID>, validateWithFormat: Long = -1L, viewCount: Long = 1L): RID {
-        return ObjectCalls.ptrcallWithRIDListLongUInt32ArgsRetRID(framebufferCreateBind, handle, textures, validateWithFormat, viewCount)
+        return ObjectCalls.ptrcallWithRIDListLongUInt32ArgsRetRID(framebufferCreateBind, segment, textures, validateWithFormat, viewCount)
     }
 
     /**
@@ -314,7 +314,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_create_multipass
      */
     fun framebufferCreateMultipass(textures: List<RID>, passes: List<RDFramebufferPass>, validateWithFormat: Long = -1L, viewCount: Long = 1L): RID {
-        return ObjectCalls.ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(framebufferCreateMultipassBind, handle, textures, passes, validateWithFormat, viewCount)
+        return ObjectCalls.ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(framebufferCreateMultipassBind, segment, textures, passes, validateWithFormat, viewCount)
     }
 
     /**
@@ -324,7 +324,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_create_empty
      */
     fun framebufferCreateEmpty(size: Vector2i, samples: Long = 0L, validateWithFormat: Long = -1L): RID {
-        return ObjectCalls.ptrcallWithVector2iLongLongArgsRetRID(framebufferCreateEmptyBind, handle, size, samples, validateWithFormat)
+        return ObjectCalls.ptrcallWithVector2iLongLongArgsRetRID(framebufferCreateEmptyBind, segment, size, samples, validateWithFormat)
     }
 
     /**
@@ -334,7 +334,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_get_format
      */
     fun framebufferGetFormat(framebuffer: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(framebufferGetFormatBind, handle, framebuffer)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(framebufferGetFormatBind, segment, framebuffer)
     }
 
     /**
@@ -344,7 +344,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_is_valid
      */
     fun framebufferIsValid(framebuffer: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(framebufferIsValidBind, handle, framebuffer)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(framebufferIsValidBind, segment, framebuffer)
     }
 
     /**
@@ -354,7 +354,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sampler_create
      */
     fun samplerCreate(state: RDSamplerState?): RID {
-        return ObjectCalls.ptrcallWithObjectArgRetRID(samplerCreateBind, handle, state?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetRID(samplerCreateBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -364,7 +364,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sampler_is_format_supported_for_filter
      */
     fun samplerIsFormatSupportedForFilter(format: Long, samplerFilter: Long): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(samplerIsFormatSupportedForFilterBind, handle, format, samplerFilter)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(samplerIsFormatSupportedForFilterBind, segment, format, samplerFilter)
     }
 
     /**
@@ -374,7 +374,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.vertex_buffer_create
      */
     fun vertexBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(vertexBufferCreateBind, handle, sizeBytes, data, creationBits)
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(vertexBufferCreateBind, segment, sizeBytes, data, creationBits)
     }
 
     /**
@@ -384,7 +384,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.vertex_format_create
      */
     fun vertexFormatCreate(vertexDescriptions: List<RDVertexAttribute>): Long {
-        return ObjectCalls.ptrcallWithObjectListArgRetLong(vertexFormatCreateBind, handle, vertexDescriptions)
+        return ObjectCalls.ptrcallWithObjectListArgRetLong(vertexFormatCreateBind, segment, vertexDescriptions)
     }
 
     /**
@@ -396,7 +396,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.vertex_array_create
      */
     fun vertexArrayCreate(vertexCount: Long, vertexFormat: Long, srcBuffers: List<RID>, offsets: List<Long>): RID {
-        return ObjectCalls.ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID(vertexArrayCreateBind, handle, vertexCount, vertexFormat, srcBuffers, offsets)
+        return ObjectCalls.ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID(vertexArrayCreateBind, segment, vertexCount, vertexFormat, srcBuffers, offsets)
     }
 
     /**
@@ -406,7 +406,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.index_buffer_create
      */
     fun indexBufferCreate(sizeIndices: Long, format: Long, data: ByteArray, useRestartIndices: Boolean = false, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(indexBufferCreateBind, handle, sizeIndices, format, data, useRestartIndices, creationBits)
+        return ObjectCalls.ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(indexBufferCreateBind, segment, sizeIndices, format, data, useRestartIndices, creationBits)
     }
 
     /**
@@ -417,7 +417,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.index_array_create
      */
     fun indexArrayCreate(indexBuffer: RID, indexOffset: Long, indexCount: Long): RID {
-        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetRID(indexArrayCreateBind, handle, indexBuffer, indexOffset, indexCount)
+        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetRID(indexArrayCreateBind, segment, indexBuffer, indexOffset, indexCount)
     }
 
     /**
@@ -432,7 +432,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_spirv_from_source
      */
     fun shaderCompileSpirvFromSource(shaderSource: RDShaderSource?, allowCache: Boolean = true): RDShaderSPIRV? {
-        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(shaderCompileSpirvFromSourceBind, handle, shaderSource?.requireOpenHandle() ?: MemorySegment.NULL, allowCache))
+        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: MemorySegment.NULL, allowCache))
     }
 
     /**
@@ -445,7 +445,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_binary_from_spirv
      */
     fun shaderCompileBinaryFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): ByteArray {
-        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(shaderCompileBinaryFromSpirvBind, handle, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
+        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(shaderCompileBinaryFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
     }
 
     /**
@@ -457,7 +457,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_from_spirv
      */
     fun shaderCreateFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): RID {
-        return ObjectCalls.ptrcallWithObjectStringArgsRetRID(shaderCreateFromSpirvBind, handle, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
+        return ObjectCalls.ptrcallWithObjectStringArgsRetRID(shaderCreateFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
     }
 
     /**
@@ -469,7 +469,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_from_bytecode
      */
     fun shaderCreateFromBytecode(binaryData: ByteArray, placeholderRid: RID): RID {
-        return ObjectCalls.ptrcallWithByteArrayAndRIDArgRetRID(shaderCreateFromBytecodeBind, handle, binaryData, placeholderRid)
+        return ObjectCalls.ptrcallWithByteArrayAndRIDArgRetRID(shaderCreateFromBytecodeBind, segment, binaryData, placeholderRid)
     }
 
     /**
@@ -480,7 +480,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_placeholder
      */
     fun shaderCreatePlaceholder(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(shaderCreatePlaceholderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(shaderCreatePlaceholderBind, segment)
     }
 
     /**
@@ -491,7 +491,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_get_vertex_input_attribute_mask
      */
     fun shaderGetVertexInputAttributeMask(shader: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shaderGetVertexInputAttributeMaskBind, handle, shader)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(shaderGetVertexInputAttributeMaskBind, segment, shader)
     }
 
     /**
@@ -501,7 +501,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.uniform_buffer_create
      */
     fun uniformBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(uniformBufferCreateBind, handle, sizeBytes, data, creationBits)
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(uniformBufferCreateBind, segment, sizeBytes, data, creationBits)
     }
 
     /**
@@ -512,7 +512,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.storage_buffer_create
      */
     fun storageBufferCreate(sizeBytes: Long, data: ByteArray, usage: Long = 0L, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(storageBufferCreateBind, handle, sizeBytes, data, usage, creationBits)
+        return ObjectCalls.ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(storageBufferCreateBind, segment, sizeBytes, data, usage, creationBits)
     }
 
     /**
@@ -522,7 +522,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_buffer_create
      */
     fun textureBufferCreate(sizeBytes: Long, format: Long, data: ByteArray): RID {
-        return ObjectCalls.ptrcallWithUInt32LongByteArrayArgsRetRID(textureBufferCreateBind, handle, sizeBytes, format, data)
+        return ObjectCalls.ptrcallWithUInt32LongByteArrayArgsRetRID(textureBufferCreateBind, segment, sizeBytes, format, data)
     }
 
     /**
@@ -533,7 +533,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.uniform_set_create
      */
     fun uniformSetCreate(uniforms: List<RDUniform>, shader: RID, shaderSet: Long): RID {
-        return ObjectCalls.ptrcallWithObjectListRIDUInt32ArgsRetRID(uniformSetCreateBind, handle, uniforms, shader, shaderSet)
+        return ObjectCalls.ptrcallWithObjectListRIDUInt32ArgsRetRID(uniformSetCreateBind, segment, uniforms, shader, shaderSet)
     }
 
     /**
@@ -542,7 +542,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.uniform_set_is_valid
      */
     fun uniformSetIsValid(uniformSet: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(uniformSetIsValidBind, handle, uniformSet)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(uniformSetIsValidBind, segment, uniformSet)
     }
 
     /**
@@ -554,7 +554,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_copy
      */
     fun bufferCopy(srcBuffer: RID, dstBuffer: RID, srcOffset: Long, dstOffset: Long, size: Long): Long {
-        return ObjectCalls.ptrcallWithTwoRIDThreeUInt32ArgsRetLong(bufferCopyBind, handle, srcBuffer, dstBuffer, srcOffset, dstOffset, size)
+        return ObjectCalls.ptrcallWithTwoRIDThreeUInt32ArgsRetLong(bufferCopyBind, segment, srcBuffer, dstBuffer, srcOffset, dstOffset, size)
     }
 
     /**
@@ -566,7 +566,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_update
      */
     fun bufferUpdate(buffer: RID, offset: Long, sizeBytes: Long, data: ByteArray): Long {
-        return ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(bufferUpdateBind, handle, buffer, offset, sizeBytes, data)
+        return ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(bufferUpdateBind, segment, buffer, offset, sizeBytes, data)
     }
 
     /**
@@ -578,7 +578,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_clear
      */
     fun bufferClear(buffer: RID, offset: Long, sizeBytes: Long): Long {
-        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetLong(bufferClearBind, handle, buffer, offset, sizeBytes)
+        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetLong(bufferClearBind, segment, buffer, offset, sizeBytes)
     }
 
     /**
@@ -590,7 +590,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_get_data
      */
     fun bufferGetData(buffer: RID, offsetBytes: Long = 0L, sizeBytes: Long = 0L): ByteArray {
-        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(bufferGetDataBind, handle, buffer, offsetBytes, sizeBytes)
+        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(bufferGetDataBind, segment, buffer, offsetBytes, sizeBytes)
     }
 
     /**
@@ -606,7 +606,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_get_data_async
      */
     fun bufferGetDataAsync(buffer: RID, callback: GodotCallable, offsetBytes: Long = 0L, sizeBytes: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(bufferGetDataAsyncBind, handle, buffer, callback.target.handle, callback.method, offsetBytes, sizeBytes)
+        return ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(bufferGetDataAsyncBind, segment, buffer, callback.target.segment, callback.method, offsetBytes, sizeBytes)
     }
 
     /**
@@ -618,7 +618,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_get_device_address
      */
     fun bufferGetDeviceAddress(buffer: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bufferGetDeviceAddressBind, handle, buffer)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(bufferGetDeviceAddressBind, segment, buffer)
     }
 
     /**
@@ -629,7 +629,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.render_pipeline_create
      */
     fun renderPipelineCreate(shader: RID, framebufferFormat: Long, vertexFormat: Long, primitive: Long, rasterizationState: RDPipelineRasterizationState?, multisampleState: RDPipelineMultisampleState?, stencilState: RDPipelineDepthStencilState?, colorBlendState: RDPipelineColorBlendState?, dynamicStateFlags: Long = 0L, forRenderPass: Long = 0L, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
-        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, handle, shader, framebufferFormat, vertexFormat, primitive, rasterizationState?.requireOpenHandle() ?: MemorySegment.NULL, multisampleState?.requireOpenHandle() ?: MemorySegment.NULL, stencilState?.requireOpenHandle() ?: MemorySegment.NULL, colorBlendState?.requireOpenHandle() ?: MemorySegment.NULL, dynamicStateFlags, forRenderPass, specializationConstants)
+        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive, rasterizationState?.requireOpenHandle() ?: MemorySegment.NULL, multisampleState?.requireOpenHandle() ?: MemorySegment.NULL, stencilState?.requireOpenHandle() ?: MemorySegment.NULL, colorBlendState?.requireOpenHandle() ?: MemorySegment.NULL, dynamicStateFlags, forRenderPass, specializationConstants)
     }
 
     /**
@@ -639,7 +639,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.render_pipeline_is_valid
      */
     fun renderPipelineIsValid(renderPipeline: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(renderPipelineIsValidBind, handle, renderPipeline)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(renderPipelineIsValidBind, segment, renderPipeline)
     }
 
     /**
@@ -650,7 +650,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_pipeline_create
      */
     fun computePipelineCreate(shader: RID, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
-        return ObjectCalls.ptrcallWithRIDObjectListArgsRetRID(computePipelineCreateBind, handle, shader, specializationConstants)
+        return ObjectCalls.ptrcallWithRIDObjectListArgsRetRID(computePipelineCreateBind, segment, shader, specializationConstants)
     }
 
     /**
@@ -660,7 +660,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_pipeline_is_valid
      */
     fun computePipelineIsValid(computePipeline: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(computePipelineIsValidBind, handle, computePipeline)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(computePipelineIsValidBind, segment, computePipeline)
     }
 
     /**
@@ -674,7 +674,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_pipeline_create
      */
     fun raytracingPipelineCreate(raygenShaders: List<RDPipelineShader>, missShaders: List<RDPipelineShader>, hitGroups: List<RDHitGroup>, maxTraceRecursionDepth: Long): RID {
-        return ObjectCalls.ptrcallWithThreeObjectListUInt32ArgsRetRID(raytracingPipelineCreateBind, handle, raygenShaders, missShaders, hitGroups, maxTraceRecursionDepth)
+        return ObjectCalls.ptrcallWithThreeObjectListUInt32ArgsRetRID(raytracingPipelineCreateBind, segment, raygenShaders, missShaders, hitGroups, maxTraceRecursionDepth)
     }
 
     /**
@@ -684,7 +684,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_pipeline_is_valid
      */
     fun raytracingPipelineIsValid(raytracingPipeline: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(raytracingPipelineIsValidBind, handle, raytracingPipeline)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(raytracingPipelineIsValidBind, segment, raytracingPipeline)
     }
 
     /**
@@ -695,7 +695,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.blas_create
      */
     fun blasCreate(geometries: List<RDAccelerationStructureGeometry>, flags: Long): RID {
-        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(blasCreateBind, handle, geometries, flags)
+        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(blasCreateBind, segment, geometries, flags)
     }
 
     /**
@@ -706,7 +706,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.tlas_create
      */
     fun tlasCreate(maxInstanceCount: Long, flags: Long): RID {
-        return ObjectCalls.ptrcallWithUInt32AndLongArgRetRID(tlasCreateBind, handle, maxInstanceCount, flags)
+        return ObjectCalls.ptrcallWithUInt32AndLongArgRetRID(tlasCreateBind, segment, maxInstanceCount, flags)
     }
 
     /**
@@ -715,7 +715,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.blas_build
      */
     fun blasBuild(blas: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(blasBuildBind, handle, blas)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(blasBuildBind, segment, blas)
     }
 
     /**
@@ -728,7 +728,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.tlas_build
      */
     fun tlasBuild(tlas: RID, instances: List<RDAccelerationStructureInstance>): Long {
-        return ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(tlasBuildBind, handle, tlas, instances)
+        return ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(tlasBuildBind, segment, tlas, instances)
     }
 
     /**
@@ -741,7 +741,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_create
      */
     fun hitSbtCreate(raytracingPipeline: RID, initialHitGroupCapacity: Long): RID {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetRID(hitSbtCreateBind, handle, raytracingPipeline, initialHitGroupCapacity)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetRID(hitSbtCreateBind, segment, raytracingPipeline, initialHitGroupCapacity)
     }
 
     /**
@@ -753,7 +753,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_set_pipeline
      */
     fun hitSbtSetPipeline(hitSbt: RID, raytracingPipeline: RID): Long {
-        return ObjectCalls.ptrcallWithTwoRIDArgsRetLong(hitSbtSetPipelineBind, handle, hitSbt, raytracingPipeline)
+        return ObjectCalls.ptrcallWithTwoRIDArgsRetLong(hitSbtSetPipelineBind, segment, hitSbt, raytracingPipeline)
     }
 
     /**
@@ -769,7 +769,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_alloc
      */
     fun hitSbtRangeAlloc(hitSbt: RID, hitGroupCount: Long): Long {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetLong(hitSbtRangeAllocBind, handle, hitSbt, hitGroupCount)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetLong(hitSbtRangeAllocBind, segment, hitSbt, hitGroupCount)
     }
 
     /**
@@ -779,7 +779,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_free
      */
     fun hitSbtRangeFree(hitSbt: RID, range: Long): Long {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(hitSbtRangeFreeBind, handle, hitSbt, range)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(hitSbtRangeFreeBind, segment, hitSbt, range)
     }
 
     /**
@@ -791,7 +791,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_update
      */
     fun hitSbtRangeUpdate(hitSbt: RID, range: Long, offset: Long, hitGroupIndices: List<Int>): Long {
-        return ObjectCalls.ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(hitSbtRangeUpdateBind, handle, hitSbt, range, offset, hitGroupIndices)
+        return ObjectCalls.ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(hitSbtRangeUpdateBind, segment, hitSbt, range, offset, hitGroupIndices)
     }
 
     /**
@@ -804,7 +804,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.screen_get_width
      */
     fun screenGetWidth(screen: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(screenGetWidthBind, handle, screen)
+        return ObjectCalls.ptrcallWithIntArgRetInt(screenGetWidthBind, segment, screen)
     }
 
     /**
@@ -817,7 +817,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.screen_get_height
      */
     fun screenGetHeight(screen: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(screenGetHeightBind, handle, screen)
+        return ObjectCalls.ptrcallWithIntArgRetInt(screenGetHeightBind, segment, screen)
     }
 
     /**
@@ -828,7 +828,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.screen_get_framebuffer_format
      */
     fun screenGetFramebufferFormat(screen: Int = 0): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(screenGetFramebufferFormatBind, handle, screen)
+        return ObjectCalls.ptrcallWithIntArgRetLong(screenGetFramebufferFormatBind, segment, screen)
     }
 
     /**
@@ -840,7 +840,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_begin_for_screen
      */
     fun drawListBeginForScreen(screen: Int = 0, clearColor: Color): Long {
-        return ObjectCalls.ptrcallWithIntColorArgsRetLong(drawListBeginForScreenBind, handle, screen, clearColor)
+        return ObjectCalls.ptrcallWithIntColorArgsRetLong(drawListBeginForScreenBind, segment, screen, clearColor)
     }
 
     /**
@@ -852,7 +852,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_begin
      */
     fun drawListBegin(framebuffer: RID, drawFlags: Long = 0L, clearColorValues: List<Color>, clearDepthValue: Double = 1.0, clearStencilValue: Long = 0L, region: Rect2, breadcrumb: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(drawListBeginBind, handle, framebuffer, drawFlags, clearColorValues, clearDepthValue, clearStencilValue, region, breadcrumb)
+        return ObjectCalls.ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(drawListBeginBind, segment, framebuffer, drawFlags, clearColorValues, clearDepthValue, clearStencilValue, region, breadcrumb)
     }
 
     /**
@@ -861,7 +861,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_begin_split
      */
     fun drawListBeginSplit(framebuffer: RID, splits: Long, initialColorAction: Long, finalColorAction: Long, initialDepthAction: Long, finalDepthAction: Long, clearColorValues: List<Color>, clearDepth: Double = 1.0, clearStencil: Long = 0L, region: Rect2, storageTextures: List<RID>): List<Long> {
-        return ObjectCalls.ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(drawListBeginSplitBind, handle, framebuffer, splits, initialColorAction, finalColorAction, initialDepthAction, finalDepthAction, clearColorValues, clearDepth, clearStencil, region, storageTextures)
+        return ObjectCalls.ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(drawListBeginSplitBind, segment, framebuffer, splits, initialColorAction, finalColorAction, initialDepthAction, finalDepthAction, clearColorValues, clearDepth, clearStencil, region, storageTextures)
     }
 
     /**
@@ -871,7 +871,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_set_blend_constants
      */
     fun drawListSetBlendConstants(drawList: Long, color: Color) {
-        ObjectCalls.ptrcallWithLongAndColorArg(drawListSetBlendConstantsBind, handle, drawList, color)
+        ObjectCalls.ptrcallWithLongAndColorArg(drawListSetBlendConstantsBind, segment, drawList, color)
     }
 
     /**
@@ -880,7 +880,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_render_pipeline
      */
     fun drawListBindRenderPipeline(drawList: Long, renderPipeline: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindRenderPipelineBind, handle, drawList, renderPipeline)
+        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindRenderPipelineBind, segment, drawList, renderPipeline)
     }
 
     /**
@@ -890,7 +890,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_uniform_set
      */
     fun drawListBindUniformSet(drawList: Long, uniformSet: RID, setIndex: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(drawListBindUniformSetBind, handle, drawList, uniformSet, setIndex)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(drawListBindUniformSetBind, segment, drawList, uniformSet, setIndex)
     }
 
     /**
@@ -899,7 +899,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_vertex_array
      */
     fun drawListBindVertexArray(drawList: Long, vertexArray: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindVertexArrayBind, handle, drawList, vertexArray)
+        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindVertexArrayBind, segment, drawList, vertexArray)
     }
 
     /**
@@ -910,7 +910,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_vertex_buffers_format
      */
     fun drawListBindVertexBuffersFormat(drawList: Long, vertexFormat: Long, vertexCount: Long, vertexBuffers: List<RID>, offsets: List<Long>) {
-        ObjectCalls.ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs(drawListBindVertexBuffersFormatBind, handle, drawList, vertexFormat, vertexCount, vertexBuffers, offsets)
+        ObjectCalls.ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs(drawListBindVertexBuffersFormatBind, segment, drawList, vertexFormat, vertexCount, vertexBuffers, offsets)
     }
 
     /**
@@ -919,7 +919,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_index_array
      */
     fun drawListBindIndexArray(drawList: Long, indexArray: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindIndexArrayBind, handle, drawList, indexArray)
+        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindIndexArrayBind, segment, drawList, indexArray)
     }
 
     /**
@@ -930,7 +930,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_set_push_constant
      */
     fun drawListSetPushConstant(drawList: Long, buffer: ByteArray, sizeBytes: Long) {
-        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(drawListSetPushConstantBind, handle, drawList, buffer, sizeBytes)
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(drawListSetPushConstantBind, segment, drawList, buffer, sizeBytes)
     }
 
     /**
@@ -940,7 +940,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_draw
      */
     fun drawListDraw(drawList: Long, useIndices: Boolean, instances: Long, proceduralVertexCount: Long = 0L) {
-        ObjectCalls.ptrcallWithLongBoolTwoUInt32Args(drawListDrawBind, handle, drawList, useIndices, instances, proceduralVertexCount)
+        ObjectCalls.ptrcallWithLongBoolTwoUInt32Args(drawListDrawBind, segment, drawList, useIndices, instances, proceduralVertexCount)
     }
 
     /**
@@ -952,7 +952,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_draw_indirect
      */
     fun drawListDrawIndirect(drawList: Long, useIndices: Boolean, buffer: RID, offset: Long = 0L, drawCount: Long = 1L, stride: Long = 0L) {
-        ObjectCalls.ptrcallWithLongBoolRIDThreeUInt32Args(drawListDrawIndirectBind, handle, drawList, useIndices, buffer, offset, drawCount, stride)
+        ObjectCalls.ptrcallWithLongBoolRIDThreeUInt32Args(drawListDrawIndirectBind, segment, drawList, useIndices, buffer, offset, drawCount, stride)
     }
 
     /**
@@ -964,7 +964,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_enable_scissor
      */
     fun drawListEnableScissor(drawList: Long, rect: Rect2) {
-        ObjectCalls.ptrcallWithLongRect2Args(drawListEnableScissorBind, handle, drawList, rect)
+        ObjectCalls.ptrcallWithLongRect2Args(drawListEnableScissorBind, segment, drawList, rect)
     }
 
     /**
@@ -974,7 +974,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_disable_scissor
      */
     fun drawListDisableScissor(drawList: Long) {
-        ObjectCalls.ptrcallWithLongArg(drawListDisableScissorBind, handle, drawList)
+        ObjectCalls.ptrcallWithLongArg(drawListDisableScissorBind, segment, drawList)
     }
 
     /**
@@ -983,7 +983,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_switch_to_next_pass
      */
     fun drawListSwitchToNextPass(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(drawListSwitchToNextPassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(drawListSwitchToNextPassBind, segment)
     }
 
     /**
@@ -992,7 +992,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_switch_to_next_pass_split
      */
     fun drawListSwitchToNextPassSplit(splits: Long): List<Long> {
-        return ObjectCalls.ptrcallWithUInt32ArgRetPackedInt64List(drawListSwitchToNextPassSplitBind, handle, splits)
+        return ObjectCalls.ptrcallWithUInt32ArgRetPackedInt64List(drawListSwitchToNextPassSplitBind, segment, splits)
     }
 
     /**
@@ -1001,7 +1001,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_end
      */
     fun drawListEnd() {
-        ObjectCalls.ptrcallNoArgs(drawListEndBind, handle)
+        ObjectCalls.ptrcallNoArgs(drawListEndBind, segment)
     }
 
     /**
@@ -1013,7 +1013,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_begin
      */
     fun computeListBegin(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(computeListBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(computeListBeginBind, segment)
     }
 
     /**
@@ -1024,7 +1024,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_bind_compute_pipeline
      */
     fun computeListBindComputePipeline(computeList: Long, computePipeline: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(computeListBindComputePipelineBind, handle, computeList, computePipeline)
+        ObjectCalls.ptrcallWithLongAndRIDArg(computeListBindComputePipelineBind, segment, computeList, computePipeline)
     }
 
     /**
@@ -1035,7 +1035,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_set_push_constant
      */
     fun computeListSetPushConstant(computeList: Long, buffer: ByteArray, sizeBytes: Long) {
-        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(computeListSetPushConstantBind, handle, computeList, buffer, sizeBytes)
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(computeListSetPushConstantBind, segment, computeList, buffer, sizeBytes)
     }
 
     /**
@@ -1046,7 +1046,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_bind_uniform_set
      */
     fun computeListBindUniformSet(computeList: Long, uniformSet: RID, setIndex: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(computeListBindUniformSetBind, handle, computeList, uniformSet, setIndex)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(computeListBindUniformSetBind, segment, computeList, uniformSet, setIndex)
     }
 
     /**
@@ -1056,7 +1056,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_dispatch
      */
     fun computeListDispatch(computeList: Long, xGroups: Long, yGroups: Long, zGroups: Long) {
-        ObjectCalls.ptrcallWithLongAndThreeUInt32Args(computeListDispatchBind, handle, computeList, xGroups, yGroups, zGroups)
+        ObjectCalls.ptrcallWithLongAndThreeUInt32Args(computeListDispatchBind, segment, computeList, xGroups, yGroups, zGroups)
     }
 
     /**
@@ -1067,7 +1067,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_dispatch_indirect
      */
     fun computeListDispatchIndirect(computeList: Long, buffer: RID, offset: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(computeListDispatchIndirectBind, handle, computeList, buffer, offset)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(computeListDispatchIndirectBind, segment, computeList, buffer, offset)
     }
 
     /**
@@ -1076,7 +1076,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_add_barrier
      */
     fun computeListAddBarrier(computeList: Long) {
-        ObjectCalls.ptrcallWithLongArg(computeListAddBarrierBind, handle, computeList)
+        ObjectCalls.ptrcallWithLongArg(computeListAddBarrierBind, segment, computeList)
     }
 
     /**
@@ -1085,7 +1085,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_end
      */
     fun computeListEnd() {
-        ObjectCalls.ptrcallNoArgs(computeListEndBind, handle)
+        ObjectCalls.ptrcallNoArgs(computeListEndBind, segment)
     }
 
     /**
@@ -1097,7 +1097,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_begin
      */
     fun raytracingListBegin(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(raytracingListBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(raytracingListBeginBind, segment)
     }
 
     /**
@@ -1106,7 +1106,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_bind_raytracing_pipeline
      */
     fun raytracingListBindRaytracingPipeline(raytracingList: Long, raytracingPipeline: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(raytracingListBindRaytracingPipelineBind, handle, raytracingList, raytracingPipeline)
+        ObjectCalls.ptrcallWithLongAndRIDArg(raytracingListBindRaytracingPipelineBind, segment, raytracingList, raytracingPipeline)
     }
 
     /**
@@ -1118,7 +1118,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_set_push_constant
      */
     fun raytracingListSetPushConstant(raytracingList: Long, buffer: ByteArray, sizeBytes: Long) {
-        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(raytracingListSetPushConstantBind, handle, raytracingList, buffer, sizeBytes)
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(raytracingListSetPushConstantBind, segment, raytracingList, buffer, sizeBytes)
     }
 
     /**
@@ -1127,7 +1127,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_bind_uniform_set
      */
     fun raytracingListBindUniformSet(raytracingList: Long, uniformSet: RID, setIndex: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(raytracingListBindUniformSetBind, handle, raytracingList, uniformSet, setIndex)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(raytracingListBindUniformSetBind, segment, raytracingList, uniformSet, setIndex)
     }
 
     /**
@@ -1139,7 +1139,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_trace_rays
      */
     fun raytracingListTraceRays(raytracingList: Long, raygenShaderIndex: Long, hitSbt: RID, width: Long, height: Long, depth: Long) {
-        ObjectCalls.ptrcallWithLongUInt32RIDThreeUInt32Args(raytracingListTraceRaysBind, handle, raytracingList, raygenShaderIndex, hitSbt, width, height, depth)
+        ObjectCalls.ptrcallWithLongUInt32RIDThreeUInt32Args(raytracingListTraceRaysBind, segment, raytracingList, raygenShaderIndex, hitSbt, width, height, depth)
     }
 
     /**
@@ -1148,7 +1148,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_end
      */
     fun raytracingListEnd() {
-        ObjectCalls.ptrcallNoArgs(raytracingListEndBind, handle)
+        ObjectCalls.ptrcallNoArgs(raytracingListEndBind, segment)
     }
 
     /**
@@ -1159,7 +1159,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.free_rid
      */
     fun freeRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeRidBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(freeRidBind, segment, rid)
     }
 
     /**
@@ -1170,7 +1170,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.capture_timestamp
      */
     fun captureTimestamp(name: String) {
-        ObjectCalls.ptrcallWithStringArg(captureTimestampBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(captureTimestampBind, segment, name)
     }
 
     /**
@@ -1179,7 +1179,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamps_count
      */
     fun getCapturedTimestampsCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCapturedTimestampsCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCapturedTimestampsCountBind, segment)
     }
 
     /**
@@ -1189,7 +1189,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamps_frame
      */
     fun getCapturedTimestampsFrame(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCapturedTimestampsFrameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCapturedTimestampsFrameBind, segment)
     }
 
     /**
@@ -1199,7 +1199,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamp_gpu_time
      */
     fun getCapturedTimestampGpuTime(index: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getCapturedTimestampGpuTimeBind, handle, index)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getCapturedTimestampGpuTimeBind, segment, index)
     }
 
     /**
@@ -1209,7 +1209,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamp_cpu_time
      */
     fun getCapturedTimestampCpuTime(index: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getCapturedTimestampCpuTimeBind, handle, index)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getCapturedTimestampCpuTimeBind, segment, index)
     }
 
     /**
@@ -1219,7 +1219,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamp_name
      */
     fun getCapturedTimestampName(index: Long): String {
-        return ObjectCalls.ptrcallWithUInt32ArgRetString(getCapturedTimestampNameBind, handle, index)
+        return ObjectCalls.ptrcallWithUInt32ArgRetString(getCapturedTimestampNameBind, segment, index)
     }
 
     /**
@@ -1228,7 +1228,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.has_feature
      */
     fun hasFeature(feature: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, handle, feature)
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, segment, feature)
     }
 
     /**
@@ -1240,7 +1240,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.limit_get
      */
     fun limitGet(limit: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(limitGetBind, handle, limit)
+        return ObjectCalls.ptrcallWithLongArgRetLong(limitGetBind, segment, limit)
     }
 
     /**
@@ -1251,7 +1251,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_frame_delay
      */
     fun getFrameDelay(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrameDelayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrameDelayBind, segment)
     }
 
     /**
@@ -1261,7 +1261,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.submit
      */
     fun submit() {
-        ObjectCalls.ptrcallNoArgs(submitBind, handle)
+        ObjectCalls.ptrcallNoArgs(submitBind, segment)
     }
 
     /**
@@ -1272,7 +1272,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sync
      */
     fun sync() {
-        ObjectCalls.ptrcallNoArgs(syncBind, handle)
+        ObjectCalls.ptrcallNoArgs(syncBind, segment)
     }
 
     /**
@@ -1281,7 +1281,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.barrier
      */
     fun barrier(from: Long = 32767L, to: Long = 32767L) {
-        ObjectCalls.ptrcallWithTwoLongArgs(barrierBind, handle, from, to)
+        ObjectCalls.ptrcallWithTwoLongArgs(barrierBind, segment, from, to)
     }
 
     /**
@@ -1290,7 +1290,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.full_barrier
      */
     fun fullBarrier() {
-        ObjectCalls.ptrcallNoArgs(fullBarrierBind, handle)
+        ObjectCalls.ptrcallNoArgs(fullBarrierBind, segment)
     }
 
     /**
@@ -1300,7 +1300,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.create_local_device
      */
     fun createLocalDevice(): RenderingDevice? {
-        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(createLocalDeviceBind, handle))
+        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(createLocalDeviceBind, segment))
     }
 
     /**
@@ -1316,7 +1316,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.set_resource_name
      */
     fun setResourceName(id: RID, name: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(setResourceNameBind, handle, id, name)
+        ObjectCalls.ptrcallWithRIDAndStringArg(setResourceNameBind, segment, id, name)
     }
 
     /**
@@ -1330,7 +1330,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_command_begin_label
      */
     fun drawCommandBeginLabel(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringAndColorArg(drawCommandBeginLabelBind, handle, name, color)
+        ObjectCalls.ptrcallWithStringAndColorArg(drawCommandBeginLabelBind, segment, name, color)
     }
 
     /**
@@ -1339,7 +1339,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_command_insert_label
      */
     fun drawCommandInsertLabel(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringAndColorArg(drawCommandInsertLabelBind, handle, name, color)
+        ObjectCalls.ptrcallWithStringAndColorArg(drawCommandInsertLabelBind, segment, name, color)
     }
 
     /**
@@ -1348,7 +1348,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_command_end_label
      */
     fun drawCommandEndLabel() {
-        ObjectCalls.ptrcallNoArgs(drawCommandEndLabelBind, handle)
+        ObjectCalls.ptrcallNoArgs(drawCommandEndLabelBind, segment)
     }
 
     /**
@@ -1358,7 +1358,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_vendor_name
      */
     fun getDeviceVendorName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDeviceVendorNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDeviceVendorNameBind, segment)
     }
 
     /**
@@ -1368,7 +1368,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_name
      */
     fun getDeviceName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDeviceNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDeviceNameBind, segment)
     }
 
     /**
@@ -1380,7 +1380,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_pipeline_cache_uuid
      */
     fun getDevicePipelineCacheUuid(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDevicePipelineCacheUuidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDevicePipelineCacheUuidBind, segment)
     }
 
     /**
@@ -1391,7 +1391,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_memory_usage
      */
     fun getMemoryUsage(type: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(getMemoryUsageBind, handle, type)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getMemoryUsageBind, segment, type)
     }
 
     /**
@@ -1402,7 +1402,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_resource
      */
     fun getDriverResource(resource: Long, rid: RID, index: Long): Long {
-        return ObjectCalls.ptrcallWithLongRIDLongArgsRetLong(getDriverResourceBind, handle, resource, rid, index)
+        return ObjectCalls.ptrcallWithLongRIDLongArgsRetLong(getDriverResourceBind, segment, resource, rid, index)
     }
 
     /**
@@ -1411,7 +1411,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_perf_report
      */
     fun getPerfReport(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPerfReportBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPerfReportBind, segment)
     }
 
     /**
@@ -1426,7 +1426,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_and_device_memory_report
      */
     fun getDriverAndDeviceMemoryReport(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDriverAndDeviceMemoryReportBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDriverAndDeviceMemoryReportBind, segment)
     }
 
     /**
@@ -1445,7 +1445,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_tracked_object_name
      */
     fun getTrackedObjectName(typeIndex: Long): String {
-        return ObjectCalls.ptrcallWithUInt32ArgRetString(getTrackedObjectNameBind, handle, typeIndex)
+        return ObjectCalls.ptrcallWithUInt32ArgRetString(getTrackedObjectNameBind, segment, typeIndex)
     }
 
     /**
@@ -1456,7 +1456,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_tracked_object_type_count
      */
     fun getTrackedObjectTypeCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackedObjectTypeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTrackedObjectTypeCountBind, segment)
     }
 
     /**
@@ -1466,7 +1466,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_total_memory
      */
     fun getDriverTotalMemory(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDriverTotalMemoryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDriverTotalMemoryBind, segment)
     }
 
     /**
@@ -1477,7 +1477,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_allocation_count
      */
     fun getDriverAllocationCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDriverAllocationCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDriverAllocationCountBind, segment)
     }
 
     /**
@@ -1489,7 +1489,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_memory_by_object_type
      */
     fun getDriverMemoryByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDriverMemoryByObjectTypeBind, handle, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDriverMemoryByObjectTypeBind, segment, type)
     }
 
     /**
@@ -1501,7 +1501,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_allocs_by_object_type
      */
     fun getDriverAllocsByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDriverAllocsByObjectTypeBind, handle, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDriverAllocsByObjectTypeBind, segment, type)
     }
 
     /**
@@ -1511,7 +1511,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_total_memory
      */
     fun getDeviceTotalMemory(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDeviceTotalMemoryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDeviceTotalMemoryBind, segment)
     }
 
     /**
@@ -1521,7 +1521,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_allocation_count
      */
     fun getDeviceAllocationCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDeviceAllocationCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDeviceAllocationCountBind, segment)
     }
 
     /**
@@ -1533,7 +1533,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_memory_by_object_type
      */
     fun getDeviceMemoryByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceMemoryByObjectTypeBind, handle, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceMemoryByObjectTypeBind, segment, type)
     }
 
     /**
@@ -1545,7 +1545,7 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_allocs_by_object_type
      */
     fun getDeviceAllocsByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceAllocsByObjectTypeBind, handle, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceAllocsByObjectTypeBind, segment, type)
     }
 
     companion object {
@@ -2125,11 +2125,11 @@ class RenderingDevice(handle: MemorySegment) : GodotObject(handle) {
         const val DRAW_IGNORE_ALL: Long = 720640L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderingDevice? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderingDevice? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderingDevice? =
-            if (handle.address() == 0L) null else RenderingDevice(handle)
+            if (handle.address() == 0L) null else RenderingDevice(GodotHandle(handle))
 
         private const val TEXTURE_CREATE_HASH = 3709173589L
         private val textureCreateBind by lazy {

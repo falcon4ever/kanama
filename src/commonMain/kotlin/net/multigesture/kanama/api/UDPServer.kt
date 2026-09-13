@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: UDPServer
  */
-class UDPServer(handle: MemorySegment) : RefCounted(handle) {
+class UDPServer(handle: GodotHandle) : RefCounted(handle) {
     var maxPendingConnections: Int
         @JvmName("maxPendingConnectionsProperty")
         get() = getMaxPendingConnections()
@@ -27,7 +27,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun listen(port: Int, bindAddress: String = "*"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, handle, port, bindAddress)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress)
     }
 
     /**
@@ -41,7 +41,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun poll(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isConnectionAvailable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
     }
 
     /**
@@ -71,7 +71,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isListening(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun takeConnection(): PacketPeerUDP? {
         checkOpen()
-        return PacketPeerUDP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
+        return PacketPeerUDP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
     }
 
     /**
@@ -94,7 +94,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMaxPendingConnections(maxPendingConnections: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxPendingConnectionsBind, handle, maxPendingConnections)
+        ObjectCalls.ptrcallWithIntArg(setMaxPendingConnectionsBind, segment, maxPendingConnections)
     }
 
     /**
@@ -118,16 +118,16 @@ class UDPServer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMaxPendingConnections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPendingConnectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPendingConnectionsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): UDPServer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): UDPServer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): UDPServer? =
-            if (handle.address() == 0L) null else UDPServer(handle)
+            if (handle.address() == 0L) null else UDPServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 3167955072L
         private val listenBind by lazy {

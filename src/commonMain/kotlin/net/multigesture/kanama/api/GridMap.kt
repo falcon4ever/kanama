@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3i
 /**
  * Generated from Godot docs: GridMap
  */
-class GridMap(handle: MemorySegment) : Node3D(handle) {
+class GridMap(handle: GodotHandle) : Node3D(handle) {
     var meshLibrary: MeshLibrary?
         @JvmName("meshLibraryProperty")
         get() = getMeshLibrary()
@@ -94,227 +94,227 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         set(value) = setBakeNavigation(value)
 
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
     }
 
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
     }
 
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
     }
 
     fun setCollisionPriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, segment, priority)
     }
 
     fun getCollisionPriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
     }
 
     fun setCollisionVisibilityMode(visibilityMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, handle, visibilityMode)
+        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode)
     }
 
     fun getCollisionVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment)
     }
 
     fun setPhysicsMaterial(material: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getPhysicsMaterial(): PhysicsMaterial? {
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialBind, handle))
+        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialBind, segment))
     }
 
     fun setBakeNavigation(bakeNavigation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBakeNavigationBind, handle, bakeNavigation)
+        ObjectCalls.ptrcallWithBoolArg(setBakeNavigationBind, segment, bakeNavigation)
     }
 
     fun isBakingNavigation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBakingNavigationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBakingNavigationBind, segment)
     }
 
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
     }
 
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     fun setMeshLibrary(meshLibrary: MeshLibrary?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshLibraryBind, handle, listOf(meshLibrary?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshLibraryBind, segment, listOf(meshLibrary?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMeshLibrary(): MeshLibrary? {
-        return MeshLibrary.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshLibraryBind, handle))
+        return MeshLibrary.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshLibraryBind, segment))
     }
 
     fun setCellSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setCellSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setCellSizeBind, segment, size)
     }
 
     fun getCellSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCellSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getCellSizeBind, segment)
     }
 
     fun setCellScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCellScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setCellScaleBind, segment, scale)
     }
 
     fun getCellScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCellScaleBind, segment)
     }
 
     fun setOctantSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOctantSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setOctantSizeBind, segment, size)
     }
 
     fun getOctantSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOctantSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOctantSizeBind, segment)
     }
 
     fun setCellItem(position: Vector3i, item: Int, orientation: Int = 0) {
-        ObjectCalls.ptrcallWithVector3iIntIntArgs(setCellItemBind, handle, position, item, orientation)
+        ObjectCalls.ptrcallWithVector3iIntIntArgs(setCellItemBind, segment, position, item, orientation)
     }
 
     fun getCellItem(position: Vector3i): Int {
-        return ObjectCalls.ptrcallWithVector3iArgRetInt(getCellItemBind, handle, position)
+        return ObjectCalls.ptrcallWithVector3iArgRetInt(getCellItemBind, segment, position)
     }
 
     fun getCellItemOrientation(position: Vector3i): Int {
-        return ObjectCalls.ptrcallWithVector3iArgRetInt(getCellItemOrientationBind, handle, position)
+        return ObjectCalls.ptrcallWithVector3iArgRetInt(getCellItemOrientationBind, segment, position)
     }
 
     fun getCellItemBasis(position: Vector3i): Basis {
-        return ObjectCalls.ptrcallWithVector3iArgRetBasis(getCellItemBasisBind, handle, position)
+        return ObjectCalls.ptrcallWithVector3iArgRetBasis(getCellItemBasisBind, segment, position)
     }
 
     fun getBasisWithOrthogonalIndex(index: Int): Basis {
-        return ObjectCalls.ptrcallWithIntArgRetBasis(getBasisWithOrthogonalIndexBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBasis(getBasisWithOrthogonalIndexBind, segment, index)
     }
 
     fun getOrthogonalIndexFromBasis(basis: Basis): Int {
-        return ObjectCalls.ptrcallWithBasisArgRetInt(getOrthogonalIndexFromBasisBind, handle, basis)
+        return ObjectCalls.ptrcallWithBasisArgRetInt(getOrthogonalIndexFromBasisBind, segment, basis)
     }
 
     fun localToMap(localPosition: Vector3): Vector3i {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3i(localToMapBind, handle, localPosition)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3i(localToMapBind, segment, localPosition)
     }
 
     fun mapToLocal(mapPosition: Vector3i): Vector3 {
-        return ObjectCalls.ptrcallWithVector3iArgRetVector3(mapToLocalBind, handle, mapPosition)
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3(mapToLocalBind, segment, mapPosition)
     }
 
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, handle, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setCenterX(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenterXBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCenterXBind, segment, enable)
     }
 
     fun getCenterX(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCenterXBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCenterXBind, segment)
     }
 
     fun setCenterY(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenterYBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCenterYBind, segment, enable)
     }
 
     fun getCenterY(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCenterYBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCenterYBind, segment)
     }
 
     fun setCenterZ(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenterZBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCenterZBind, segment, enable)
     }
 
     fun getCenterZ(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCenterZBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCenterZBind, segment)
     }
 
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun getUsedCells(): List<Vector3i> {
-        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedCellsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedCellsBind, segment)
     }
 
     fun getUsedCellsByItem(item: Int): List<Vector3i> {
-        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedCellsByItemBind, handle, item)
+        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedCellsByItemBind, segment, item)
     }
 
     fun getUsedOctants(): List<Vector3i> {
-        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedOctantsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedOctantsBind, segment)
     }
 
     fun getUsedOctantsByItem(item: Int): List<Vector3i> {
-        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedOctantsByItemBind, handle, item)
+        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedOctantsByItemBind, segment, item)
     }
 
     fun getUsedCellsInOctant(octantCoords: Vector3i): List<Vector3i> {
-        return ObjectCalls.ptrcallWithVector3iArgRetVector3iList(getUsedCellsInOctantBind, handle, octantCoords)
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3iList(getUsedCellsInOctantBind, segment, octantCoords)
     }
 
     fun getUsedCellsInOctantByItem(octantCoords: Vector3i, item: Int): List<Vector3i> {
-        return ObjectCalls.ptrcallWithVector3iAndIntArgRetVector3iList(getUsedCellsInOctantByItemBind, handle, octantCoords, item)
+        return ObjectCalls.ptrcallWithVector3iAndIntArgRetVector3iList(getUsedCellsInOctantByItemBind, segment, octantCoords, item)
     }
 
     fun getOctantsInBounds(bounds: AABB): List<Vector3i> {
-        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getOctantsInBoundsBind, handle, bounds)
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getOctantsInBoundsBind, segment, bounds)
     }
 
     fun getUsedOctantsInBounds(bounds: AABB): List<Vector3i> {
-        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getUsedOctantsInBoundsBind, handle, bounds)
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getUsedOctantsInBoundsBind, segment, bounds)
     }
 
     fun getOctantCoordsFromCellCoords(cellCoords: Vector3i): Vector3i {
-        return ObjectCalls.ptrcallWithVector3iArgRetVector3i(getOctantCoordsFromCellCoordsBind, handle, cellCoords)
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3i(getOctantCoordsFromCellCoordsBind, segment, cellCoords)
     }
 
     fun getMeshes(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getMeshesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getMeshesBind, segment)
     }
 
     fun getBakeMeshes(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getBakeMeshesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getBakeMeshesBind, segment)
     }
 
     fun getBakeMeshInstance(idx: Int): RID {
-        return ObjectCalls.ptrcallWithIntArgRetRID(getBakeMeshInstanceBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetRID(getBakeMeshInstanceBind, segment, idx)
     }
 
     fun clearBakedMeshes() {
-        ObjectCalls.ptrcallNoArgs(clearBakedMeshesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBakedMeshesBind, segment)
     }
 
     fun makeBakedMeshes(genLightmapUv: Boolean = false, lightmapUvTexelSize: Double = 0.1) {
-        ObjectCalls.ptrcallWithBoolAndDoubleArgs(makeBakedMeshesBind, handle, genLightmapUv, lightmapUvTexelSize)
+        ObjectCalls.ptrcallWithBoolAndDoubleArgs(makeBakedMeshesBind, segment, genLightmapUv, lightmapUvTexelSize)
     }
 
     object Signals {
@@ -329,11 +329,11 @@ class GridMap(handle: MemorySegment) : Node3D(handle) {
         const val DEBUG_VISIBILITY_MODE_FORCE_HIDE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GridMap? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GridMap? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GridMap? =
-            if (handle.address() == 0L) null else GridMap(handle)
+            if (handle.address() == 0L) null else GridMap(GodotHandle(handle))
 
         private const val SET_COLLISION_LAYER_HASH = 1286410249L
         private val setCollisionLayerBind by lazy {

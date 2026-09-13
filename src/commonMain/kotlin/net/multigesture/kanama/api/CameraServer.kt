@@ -78,7 +78,7 @@ object CameraServer {
      */
     @JvmStatic
     fun feeds(): List<CameraFeed> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(feedsBind, singleton, CameraFeed::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(feedsBind, singleton, CameraFeed::wrap)
     }
 
     /**
@@ -108,8 +108,8 @@ object CameraServer {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): CameraServer? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): CameraServer? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): CameraServer? =
         if (handle.address() == 0L) null else this

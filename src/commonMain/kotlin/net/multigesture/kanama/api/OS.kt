@@ -1224,8 +1224,8 @@ object OS {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): OS? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): OS? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): OS? =
         if (handle.address() == 0L) null else this

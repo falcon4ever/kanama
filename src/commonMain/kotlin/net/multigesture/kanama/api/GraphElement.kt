@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: GraphElement
  */
-open class GraphElement(handle: MemorySegment) : Container(handle) {
+open class GraphElement(handle: GodotHandle) : Container(handle) {
     var positionOffset: Vector2
         @JvmName("positionOffsetProperty")
         get() = getPositionOffset()
@@ -56,7 +56,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_resizable
      */
     fun setResizable(resizable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setResizableBind, handle, resizable)
+        ObjectCalls.ptrcallWithBoolArg(setResizableBind, segment, resizable)
     }
 
     /**
@@ -66,7 +66,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_resizable
      */
     fun isResizable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isResizableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isResizableBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_draggable
      */
     fun setDraggable(draggable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDraggableBind, handle, draggable)
+        ObjectCalls.ptrcallWithBoolArg(setDraggableBind, segment, draggable)
     }
 
     /**
@@ -84,7 +84,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_draggable
      */
     fun isDraggable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDraggableBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_selectable
      */
     fun setSelectable(selectable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectableBind, handle, selectable)
+        ObjectCalls.ptrcallWithBoolArg(setSelectableBind, segment, selectable)
     }
 
     /**
@@ -102,7 +102,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_selectable
      */
     fun isSelectable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_selected
      */
     fun setSelected(selected: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectedBind, handle, selected)
+        ObjectCalls.ptrcallWithBoolArg(setSelectedBind, segment, selected)
     }
 
     /**
@@ -120,7 +120,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_selected
      */
     fun isSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_scaling_menus
      */
     fun setScalingMenus(scalingMenus: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScalingMenusBind, handle, scalingMenus)
+        ObjectCalls.ptrcallWithBoolArg(setScalingMenusBind, segment, scalingMenus)
     }
 
     /**
@@ -140,7 +140,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_scaling_menus
      */
     fun isScalingMenus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScalingMenusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScalingMenusBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_position_offset
      */
     fun setPositionOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPositionOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setPositionOffsetBind, segment, offset)
     }
 
     /**
@@ -158,7 +158,7 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GraphElement.get_position_offset
      */
     fun getPositionOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionOffsetBind, segment)
     }
 
     object Signals {
@@ -174,11 +174,11 @@ open class GraphElement(handle: MemorySegment) : Container(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GraphElement? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GraphElement? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GraphElement? =
-            if (handle.address() == 0L) null else GraphElement(handle)
+            if (handle.address() == 0L) null else GraphElement(GodotHandle(handle))
 
         private const val SET_RESIZABLE_HASH = 2586408642L
         private val setResizableBind by lazy {

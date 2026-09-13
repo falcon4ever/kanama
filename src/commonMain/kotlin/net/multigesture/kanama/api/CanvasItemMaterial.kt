@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CanvasItemMaterial
  */
-class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
+class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     var blendMode: Long
         @JvmName("blendModeProperty")
         get() = getBlendMode()
@@ -55,7 +55,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setBlendMode(blendMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode)
     }
 
     /**
@@ -65,7 +65,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getBlendMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setLightMode(lightMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLightModeBind, handle, lightMode)
+        ObjectCalls.ptrcallWithLongArg(setLightModeBind, segment, lightMode)
     }
 
     /**
@@ -85,7 +85,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getLightMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLightModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLightModeBind, segment)
     }
 
     /**
@@ -99,7 +99,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParticlesAnimation(particlesAnim: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimationBind, handle, particlesAnim)
+        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimationBind, segment, particlesAnim)
     }
 
     /**
@@ -113,7 +113,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParticlesAnimation(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimationBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParticlesAnimHFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, handle, frames)
+        ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, segment, frames)
     }
 
     /**
@@ -137,7 +137,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParticlesAnimHFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParticlesAnimVFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, handle, frames)
+        ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, segment, frames)
     }
 
     /**
@@ -161,7 +161,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParticlesAnimVFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParticlesAnimLoop(loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, handle, loop)
+        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, segment, loop)
     }
 
     /**
@@ -183,7 +183,7 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParticlesAnimLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, segment)
     }
 
     companion object {
@@ -197,11 +197,11 @@ class CanvasItemMaterial(handle: MemorySegment) : Material(handle) {
         const val LIGHT_MODE_LIGHT_ONLY: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CanvasItemMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CanvasItemMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CanvasItemMaterial? =
-            if (handle.address() == 0L) null else CanvasItemMaterial(handle)
+            if (handle.address() == 0L) null else CanvasItemMaterial(GodotHandle(handle))
 
         private const val SET_BLEND_MODE_HASH = 1786054936L
         private val setBlendModeBind by lazy {

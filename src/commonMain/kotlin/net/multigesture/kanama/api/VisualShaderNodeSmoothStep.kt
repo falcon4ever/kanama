@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeSmoothStep
  */
-class VisualShaderNodeSmoothStep(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeSmoothStep(handle: GodotHandle) : VisualShaderNode(handle) {
     var opType: Long
         @JvmName("opTypeProperty")
         get() = getOpType()
@@ -18,12 +18,12 @@ class VisualShaderNodeSmoothStep(handle: MemorySegment) : VisualShaderNode(handl
 
     fun setOpType(opType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, opType)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, opType)
     }
 
     fun getOpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
     }
 
     companion object {
@@ -37,11 +37,11 @@ class VisualShaderNodeSmoothStep(handle: MemorySegment) : VisualShaderNode(handl
         const val OP_TYPE_MAX: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeSmoothStep? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeSmoothStep? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeSmoothStep? =
-            if (handle.address() == 0L) null else VisualShaderNodeSmoothStep(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeSmoothStep(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 2427426148L
         private val setOpTypeBind by lazy {

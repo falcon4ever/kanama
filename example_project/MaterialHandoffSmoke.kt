@@ -1,10 +1,10 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.BoxMesh
 import net.multigesture.kanama.api.FileAccess
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MeshInstance3D
 import net.multigesture.kanama.api.Node
@@ -22,13 +22,13 @@ import net.multigesture.kanama.types.Color
 // (surface override + material override) so the gate proves the ownership model, not one method.
 // Every created resource is closed via use{} — "close what you create" (task 61 A1 contract).
 @ScriptClass(attachTo = "Node")
-class MaterialHandoffSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+class MaterialHandoffSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
 
   private val node = selfAs(::Node)
 
   // Parent each mesh instance under this (in-tree) node so scene teardown frees it and the mesh.
   private fun freshBox(): MeshInstance3D {
-    val mi = MeshInstance3D.fromHandle(ObjectCalls.constructObject("MeshInstance3D"))!!
+    val mi = MeshInstance3D.fromHandle(GodotHandle(ObjectCalls.constructObject("MeshInstance3D")))!!
     BoxMesh.create().use {
       mi.mesh = it
     } // surface 0 exists; release the wrapper's ref, mesh keeps its

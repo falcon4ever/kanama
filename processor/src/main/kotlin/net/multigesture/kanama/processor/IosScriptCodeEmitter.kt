@@ -230,7 +230,7 @@ internal class IosScriptCodeEmitter(
       builder.appendLine("            ),")
       builder.appendLine("            factory = { ownerObject ->")
       builder.appendLine(
-        "                $bridgeName(${script.className}(MemorySegment.ofAddress(ownerObject)))"
+        "                $bridgeName(${script.className}(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(ownerObject))))"
       )
       builder.appendLine("            },")
       builder.appendLine("        ),")
@@ -329,11 +329,11 @@ internal class IosScriptCodeEmitter(
         if (property.isObjectType && property.godotClassName.isNotEmpty()) {
           if (property.isNullable) {
             builder.appendLine(
-              "        $index -> { script.${property.kotlinName} = if (value != 0L) net.multigesture.kanama.api.${property.godotClassName}(java.lang.foreign.MemorySegment.ofAddress(value)) else null; true }"
+              "        $index -> { script.${property.kotlinName} = if (value != 0L) net.multigesture.kanama.api.${property.godotClassName}(net.multigesture.kanama.api.GodotHandle(java.lang.foreign.MemorySegment.ofAddress(value))) else null; true }"
             )
           } else {
             builder.appendLine(
-              "        $index -> { script.${property.kotlinName} = net.multigesture.kanama.api.${property.godotClassName}(java.lang.foreign.MemorySegment.ofAddress(value)); true }"
+              "        $index -> { script.${property.kotlinName} = net.multigesture.kanama.api.${property.godotClassName}(net.multigesture.kanama.api.GodotHandle(java.lang.foreign.MemorySegment.ofAddress(value))); true }"
             )
           }
         } else if (property.customScriptFqName.isNotEmpty()) {
@@ -387,7 +387,7 @@ internal class IosScriptCodeEmitter(
             // Array of an engine wrapper type: wrap each handle directly.
             property.isList && property.listElementClassName.isNotEmpty() -> {
               builder.appendLine(
-                "        $index -> { script.${property.kotlinName} = values.map { owner: Long -> net.multigesture.kanama.api.${property.listElementClassName}(java.lang.foreign.MemorySegment.ofAddress(owner)) }${property.mutableSuffix()}; true }"
+                "        $index -> { script.${property.kotlinName} = values.map { owner: Long -> net.multigesture.kanama.api.${property.listElementClassName}(net.multigesture.kanama.api.GodotHandle(java.lang.foreign.MemorySegment.ofAddress(owner))) }${property.mutableSuffix()}; true }"
               )
             }
           }
@@ -754,9 +754,9 @@ internal class IosScriptCodeEmitter(
     a.objectWrapperFqName?.let { fq ->
       val w = "net.multigesture.kanama.api.${fq.substringAfterLast('.')}"
       return if (a.nullable) {
-        "($cell as Long).let { if (it != 0L) $w(MemorySegment.ofAddress(it)) else null }"
+        "($cell as Long).let { if (it != 0L) $w(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(it))) else null }"
       } else {
-        "$w(MemorySegment.ofAddress($cell as Long))"
+        "$w(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress($cell as Long)))"
       }
     }
     return if (a.type in iosCallArgTypes) "$cell as ${a.type.kotlinType}" else null

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RenderDataRD
  */
-class RenderDataRD(handle: MemorySegment) : RenderData(handle) {
+class RenderDataRD(handle: GodotHandle) : RenderData(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderDataRD? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderDataRD? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderDataRD? =
-            if (handle.address() == 0L) null else RenderDataRD(handle)
+            if (handle.address() == 0L) null else RenderDataRD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

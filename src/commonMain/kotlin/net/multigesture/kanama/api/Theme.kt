@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: Theme
  */
-class Theme(handle: MemorySegment) : Resource(handle) {
+class Theme(handle: GodotHandle) : Resource(handle) {
     var defaultBaseScale: Double
         @JvmName("defaultBaseScaleProperty")
         get() = getDefaultBaseScale()
@@ -39,7 +39,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setIcon(name: String, themeType: String, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setIconBind, handle, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setIconBind, segment, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -51,7 +51,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getIcon(name: String, themeType: String): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getIconBind, handle, name, themeType))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getIconBind, segment, name, themeType))
     }
 
     /**
@@ -62,7 +62,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasIcon(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasIconBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasIconBind, segment, name, themeType)
     }
 
     /**
@@ -74,7 +74,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameIcon(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameIconBind, handle, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(renameIconBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -85,7 +85,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearIcon(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearIconBind, handle, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(clearIconBind, segment, name, themeType)
     }
 
     /**
@@ -96,7 +96,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getIconList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getIconListBind, handle, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getIconListBind, segment, themeType)
     }
 
     /**
@@ -107,7 +107,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getIconTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getIconTypeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getIconTypeListBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setStylebox(name: String, themeType: String, texture: StyleBox?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setStyleboxBind, handle, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setStyleboxBind, segment, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -130,7 +130,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getStylebox(name: String, themeType: String): StyleBox? {
         checkOpen()
-        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getStyleboxBind, handle, name, themeType))
+        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -141,7 +141,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasStylebox(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasStyleboxBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -153,7 +153,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameStylebox(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameStyleboxBind, handle, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(renameStyleboxBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -164,7 +164,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearStylebox(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearStyleboxBind, handle, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(clearStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -175,7 +175,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getStyleboxList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getStyleboxListBind, handle, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getStyleboxListBind, segment, themeType)
     }
 
     /**
@@ -186,7 +186,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getStyleboxTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStyleboxTypeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStyleboxTypeListBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setFont(name: String, themeType: String, font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setFontBind, handle, name, themeType, font?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setFontBind, segment, name, themeType, font?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -211,7 +211,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getFont(name: String, themeType: String): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getFontBind, handle, name, themeType))
+        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getFontBind, segment, name, themeType))
     }
 
     /**
@@ -223,7 +223,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasFont(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontBind, segment, name, themeType)
     }
 
     /**
@@ -235,7 +235,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameFont(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontBind, handle, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -246,7 +246,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearFont(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontBind, handle, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontBind, segment, name, themeType)
     }
 
     /**
@@ -257,7 +257,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontListBind, handle, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontListBind, segment, themeType)
     }
 
     /**
@@ -268,7 +268,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontTypeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontTypeListBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setFontSize(name: String, themeType: String, fontSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setFontSizeBind, handle, name, themeType, fontSize)
+        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setFontSizeBind, segment, name, themeType, fontSize)
     }
 
     /**
@@ -293,7 +293,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontSize(name: String, themeType: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getFontSizeBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -305,7 +305,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasFontSize(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontSizeBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -317,7 +317,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameFontSize(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontSizeBind, handle, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontSizeBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -328,7 +328,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearFontSize(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontSizeBind, handle, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -339,7 +339,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontSizeList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontSizeListBind, handle, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontSizeListBind, segment, themeType)
     }
 
     /**
@@ -350,7 +350,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontSizeTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontSizeTypeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontSizeTypeListBind, segment)
     }
 
     /**
@@ -361,7 +361,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setColor(name: String, themeType: String, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndColorArg(setColorBind, handle, name, themeType, color)
+        ObjectCalls.ptrcallWithTwoStringNameAndColorArg(setColorBind, segment, name, themeType, color)
     }
 
     /**
@@ -372,7 +372,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getColor(name: String, themeType: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getColorBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getColorBind, segment, name, themeType)
     }
 
     /**
@@ -383,7 +383,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasColor(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasColorBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasColorBind, segment, name, themeType)
     }
 
     /**
@@ -395,7 +395,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameColor(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameColorBind, handle, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(renameColorBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -406,7 +406,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearColor(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearColorBind, handle, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(clearColorBind, segment, name, themeType)
     }
 
     /**
@@ -417,7 +417,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getColorList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getColorListBind, handle, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getColorListBind, segment, themeType)
     }
 
     /**
@@ -428,7 +428,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getColorTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getColorTypeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getColorTypeListBind, segment)
     }
 
     /**
@@ -439,7 +439,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setConstant(name: String, themeType: String, constant: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setConstantBind, handle, name, themeType, constant)
+        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setConstantBind, segment, name, themeType, constant)
     }
 
     /**
@@ -450,7 +450,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getConstant(name: String, themeType: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getConstantBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getConstantBind, segment, name, themeType)
     }
 
     /**
@@ -461,7 +461,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasConstant(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasConstantBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasConstantBind, segment, name, themeType)
     }
 
     /**
@@ -473,7 +473,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameConstant(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameConstantBind, handle, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(renameConstantBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -484,7 +484,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearConstant(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearConstantBind, handle, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(clearConstantBind, segment, name, themeType)
     }
 
     /**
@@ -495,7 +495,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getConstantList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getConstantListBind, handle, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getConstantListBind, segment, themeType)
     }
 
     /**
@@ -506,7 +506,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getConstantTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getConstantTypeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getConstantTypeListBind, segment)
     }
 
     /**
@@ -519,7 +519,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setDefaultBaseScale(baseScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDefaultBaseScaleBind, handle, baseScale)
+        ObjectCalls.ptrcallWithDoubleArg(setDefaultBaseScaleBind, segment, baseScale)
     }
 
     /**
@@ -532,7 +532,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getDefaultBaseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBaseScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -543,7 +543,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasDefaultBaseScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultBaseScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -556,7 +556,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setDefaultFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDefaultFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDefaultFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -569,7 +569,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getDefaultFont(): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDefaultFontBind, handle))
+        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDefaultFontBind, segment))
     }
 
     /**
@@ -579,7 +579,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasDefaultFont(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontBind, segment)
     }
 
     /**
@@ -593,7 +593,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setDefaultFontSize(fontSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDefaultFontSizeBind, handle, fontSize)
+        ObjectCalls.ptrcallWithIntArg(setDefaultFontSizeBind, segment, fontSize)
     }
 
     /**
@@ -607,7 +607,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getDefaultFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDefaultFontSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDefaultFontSizeBind, segment)
     }
 
     /**
@@ -618,7 +618,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasDefaultFontSize(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontSizeBind, segment)
     }
 
     /**
@@ -631,7 +631,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setThemeItem(dataType: Long, name: String, themeType: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(setThemeItemBind, handle, dataType, name, themeType, value)
+        ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(setThemeItemBind, segment, dataType, name, themeType, value)
     }
 
     /**
@@ -644,7 +644,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getThemeItem(dataType: Long, name: String, themeType: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, handle, dataType, name, themeType)
+        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, segment, dataType, name, themeType)
     }
 
     /**
@@ -657,7 +657,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun hasThemeItem(dataType: Long, name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(hasThemeItemBind, handle, dataType, name, themeType)
+        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(hasThemeItemBind, segment, dataType, name, themeType)
     }
 
     /**
@@ -671,7 +671,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameThemeItem(dataType: Long, oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(renameThemeItemBind, handle, dataType, oldName, name, themeType)
+        ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(renameThemeItemBind, segment, dataType, oldName, name, themeType)
     }
 
     /**
@@ -684,7 +684,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearThemeItem(dataType: Long, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(clearThemeItemBind, handle, dataType, name, themeType)
+        ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(clearThemeItemBind, segment, dataType, name, themeType)
     }
 
     /**
@@ -697,7 +697,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getThemeItemList(dataType: Long, themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(getThemeItemListBind, handle, dataType, themeType)
+        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(getThemeItemListBind, segment, dataType, themeType)
     }
 
     /**
@@ -709,7 +709,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getThemeItemTypeList(dataType: Long): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(getThemeItemTypeListBind, handle, dataType)
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(getThemeItemTypeListBind, segment, dataType)
     }
 
     /**
@@ -724,7 +724,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun setTypeVariation(themeType: String, baseType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(setTypeVariationBind, handle, themeType, baseType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(setTypeVariationBind, segment, themeType, baseType)
     }
 
     /**
@@ -734,7 +734,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun isTypeVariation(themeType: String, baseType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isTypeVariationBind, handle, themeType, baseType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isTypeVariationBind, segment, themeType, baseType)
     }
 
     /**
@@ -744,7 +744,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clearTypeVariation(themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(clearTypeVariationBind, handle, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(clearTypeVariationBind, segment, themeType)
     }
 
     /**
@@ -755,7 +755,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getTypeVariationBase(themeType: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(getTypeVariationBaseBind, handle, themeType)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(getTypeVariationBaseBind, segment, themeType)
     }
 
     /**
@@ -765,7 +765,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getTypeVariationList(baseType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(getTypeVariationListBind, handle, baseType)
+        return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(getTypeVariationListBind, segment, baseType)
     }
 
     /**
@@ -777,7 +777,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun addType(themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(addTypeBind, handle, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(addTypeBind, segment, themeType)
     }
 
     /**
@@ -789,7 +789,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun removeType(themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeTypeBind, handle, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(removeTypeBind, segment, themeType)
     }
 
     /**
@@ -802,7 +802,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun renameType(oldThemeType: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameTypeBind, handle, oldThemeType, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(renameTypeBind, segment, oldThemeType, themeType)
     }
 
     /**
@@ -813,7 +813,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun getTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTypeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTypeListBind, segment)
     }
 
     /**
@@ -826,7 +826,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun mergeWith(other: Theme?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeWithBind, handle, listOf(other?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(mergeWithBind, segment, listOf(other?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -836,7 +836,7 @@ class Theme(handle: MemorySegment) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     companion object {
@@ -849,11 +849,11 @@ class Theme(handle: MemorySegment) : Resource(handle) {
         const val DATA_TYPE_MAX: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Theme? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Theme? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Theme? =
-            if (handle.address() == 0L) null else Theme(handle)
+            if (handle.address() == 0L) null else Theme(GodotHandle(handle))
 
         private const val SET_ICON_HASH = 2188371082L
         private val setIconBind by lazy {

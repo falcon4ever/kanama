@@ -16,7 +16,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: CharFXTransform
  */
-class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
+class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     var transform: Transform2D
         @JvmName("transformProperty")
         get() = getTransform()
@@ -104,7 +104,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTransform(transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, transform)
     }
 
     /**
@@ -127,7 +127,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRange(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setRange(range: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setRangeBind, handle, range)
+        ObjectCalls.ptrcallWithVector2iArg(setRangeBind, segment, range)
     }
 
     /**
@@ -150,7 +150,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getElapsedTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getElapsedTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getElapsedTimeBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setElapsedTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setElapsedTimeBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(setElapsedTimeBind, segment, time)
     }
 
     /**
@@ -174,7 +174,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isVisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
     }
 
     /**
@@ -186,7 +186,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setVisibility(visibility: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVisibilityBind, handle, visibility)
+        ObjectCalls.ptrcallWithBoolArg(setVisibilityBind, segment, visibility)
     }
 
     /**
@@ -197,7 +197,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isOutline(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isOutlineBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOutlineBind, segment)
     }
 
     /**
@@ -208,7 +208,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setOutline(outline: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setOutlineBind, handle, outline)
+        ObjectCalls.ptrcallWithBoolArg(setOutlineBind, segment, outline)
     }
 
     /**
@@ -218,7 +218,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -228,7 +228,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -238,7 +238,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -248,7 +248,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -263,7 +263,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnvironment(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getEnvironmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getEnvironmentBind, segment)
     }
 
     /**
@@ -278,7 +278,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnvironment(environment: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setEnvironmentBind, handle, environment)
+        ObjectCalls.ptrcallWithDictionaryArg(setEnvironmentBind, segment, environment)
     }
 
     /**
@@ -289,7 +289,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getGlyphIndex(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getGlyphIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getGlyphIndexBind, segment)
     }
 
     /**
@@ -300,7 +300,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setGlyphIndex(glyphIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setGlyphIndexBind, handle, glyphIndex)
+        ObjectCalls.ptrcallWithUInt32Arg(setGlyphIndexBind, segment, glyphIndex)
     }
 
     /**
@@ -311,7 +311,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRelativeIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRelativeIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRelativeIndexBind, segment)
     }
 
     /**
@@ -322,7 +322,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setRelativeIndex(relativeIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRelativeIndexBind, handle, relativeIndex)
+        ObjectCalls.ptrcallWithIntArg(setRelativeIndexBind, segment, relativeIndex)
     }
 
     /**
@@ -333,7 +333,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getGlyphCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGlyphCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getGlyphCountBind, segment)
     }
 
     /**
@@ -344,7 +344,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setGlyphCount(glyphCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setGlyphCountBind, handle, glyphCount)
+        ObjectCalls.ptrcallWithIntArg(setGlyphCountBind, segment, glyphCount)
     }
 
     /**
@@ -355,7 +355,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getGlyphFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGlyphFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getGlyphFlagsBind, segment)
     }
 
     /**
@@ -366,7 +366,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setGlyphFlags(glyphFlags: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setGlyphFlagsBind, handle, glyphFlags)
+        ObjectCalls.ptrcallWithIntArg(setGlyphFlagsBind, segment, glyphFlags)
     }
 
     /**
@@ -378,7 +378,7 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFont(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getFontBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getFontBind, segment)
     }
 
     /**
@@ -390,16 +390,16 @@ class CharFXTransform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFont(font: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setFontBind, handle, font)
+        ObjectCalls.ptrcallWithRIDArg(setFontBind, segment, font)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CharFXTransform? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CharFXTransform? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CharFXTransform? =
-            if (handle.address() == 0L) null else CharFXTransform(handle)
+            if (handle.address() == 0L) null else CharFXTransform(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 3761352769L
         private val getTransformBind by lazy {

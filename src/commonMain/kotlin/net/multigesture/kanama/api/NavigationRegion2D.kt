@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: NavigationRegion2D
  */
-class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
+class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
     var navigationPolygon: NavigationPolygon?
         @JvmName("navigationPolygonProperty")
         get() = getNavigationPolygon()
@@ -58,7 +58,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -67,7 +67,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_polygon
      */
     fun setNavigationPolygon(navigationPolygon: NavigationPolygon?) {
-        ObjectCalls.ptrcallWithObjectArgs(setNavigationPolygonBind, handle, listOf(navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNavigationPolygonBind, segment, listOf(navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -76,7 +76,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_polygon
      */
     fun getNavigationPolygon(): NavigationPolygon? {
-        return NavigationPolygon.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationPolygonBind, handle))
+        return NavigationPolygon.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationPolygonBind, segment))
     }
 
     /**
@@ -85,7 +85,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -94,7 +94,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -114,7 +114,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_use_edge_connections
      */
     fun setUseEdgeConnections(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseEdgeConnectionsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseEdgeConnectionsBind, segment, enabled)
     }
 
     /**
@@ -134,7 +134,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_use_edge_connections
      */
     fun getUseEdgeConnections(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseEdgeConnectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseEdgeConnectionsBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_layers
      */
     fun setNavigationLayers(navigationLayers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, handle, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -154,7 +154,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_layers
      */
     fun getNavigationLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
     }
 
     /**
@@ -164,7 +164,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_layer_value
      */
     fun setNavigationLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -174,7 +174,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_layer_value
      */
     fun getNavigationLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -183,7 +183,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_region_rid
      */
     fun getRegionRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRegionRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRegionRidBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_enter_cost
      */
     fun setEnterCost(enterCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnterCostBind, handle, enterCost)
+        ObjectCalls.ptrcallWithDoubleArg(setEnterCostBind, segment, enterCost)
     }
 
     /**
@@ -203,7 +203,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_enter_cost
      */
     fun getEnterCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnterCostBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnterCostBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_travel_cost
      */
     fun setTravelCost(travelCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTravelCostBind, handle, travelCost)
+        ObjectCalls.ptrcallWithDoubleArg(setTravelCostBind, segment, travelCost)
     }
 
     /**
@@ -223,7 +223,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_travel_cost
      */
     fun getTravelCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTravelCostBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTravelCostBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.bake_navigation_polygon
      */
     fun bakeNavigationPolygon(onThread: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(bakeNavigationPolygonBind, handle, onThread)
+        ObjectCalls.ptrcallWithBoolArg(bakeNavigationPolygonBind, segment, onThread)
     }
 
     /**
@@ -242,7 +242,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.is_baking
      */
     fun isBaking(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBakingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBakingBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_bounds
      */
     fun getBounds(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, segment)
     }
 
     object Signals {
@@ -261,11 +261,11 @@ class NavigationRegion2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationRegion2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationRegion2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationRegion2D? =
-            if (handle.address() == 0L) null else NavigationRegion2D(handle)
+            if (handle.address() == 0L) null else NavigationRegion2D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L
         private val getRidBind by lazy {

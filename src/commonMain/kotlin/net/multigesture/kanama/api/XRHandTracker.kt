@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: XRHandTracker
  */
-class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
+class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     var hasTrackingData: Boolean
         @JvmName("hasTrackingDataProperty")
         get() = getHasTrackingData()
@@ -33,7 +33,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHasTrackingData(hasData: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasData)
+        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, segment, hasData)
     }
 
     /**
@@ -43,7 +43,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHasTrackingData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, segment)
     }
 
     /**
@@ -53,7 +53,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHandTrackingSource(source: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, handle, source)
+        ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, segment, source)
     }
 
     /**
@@ -63,7 +63,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHandTrackingSource(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHandJointFlags(joint: Long, flags: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, handle, joint, flags)
+        ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, segment, joint, flags)
     }
 
     /**
@@ -83,7 +83,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHandJointFlags(joint: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, handle, joint)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, segment, joint)
     }
 
     /**
@@ -93,7 +93,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHandJointTransform(joint: Long, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, handle, joint, transform)
+        ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, segment, joint, transform)
     }
 
     /**
@@ -103,7 +103,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHandJointTransform(joint: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, handle, joint)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, segment, joint)
     }
 
     /**
@@ -113,7 +113,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHandJointRadius(joint: Long, radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, handle, joint, radius)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, segment, joint, radius)
     }
 
     /**
@@ -123,7 +123,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHandJointRadius(joint: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, handle, joint)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, segment, joint)
     }
 
     /**
@@ -133,7 +133,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHandJointLinearVelocity(joint: Long, linearVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, handle, joint, linearVelocity)
+        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, segment, joint, linearVelocity)
     }
 
     /**
@@ -143,7 +143,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHandJointLinearVelocity(joint: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, handle, joint)
+        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, segment, joint)
     }
 
     /**
@@ -153,7 +153,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun setHandJointAngularVelocity(joint: Long, angularVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, handle, joint, angularVelocity)
+        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, segment, joint, angularVelocity)
     }
 
     /**
@@ -163,7 +163,7 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
      */
     fun getHandJointAngularVelocity(joint: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, handle, joint)
+        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, segment, joint)
     }
 
     companion object {
@@ -207,11 +207,11 @@ class XRHandTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
         const val HAND_JOINT_FLAG_ANGULAR_VELOCITY_VALID: Long = 32L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRHandTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRHandTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRHandTracker? =
-            if (handle.address() == 0L) null else XRHandTracker(handle)
+            if (handle.address() == 0L) null else XRHandTracker(GodotHandle(handle))
 
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L
         private val setHasTrackingDataBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StreamPeerUDS
  */
-class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
+class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
     /**
      * Opens the UDS socket, and binds it to the specified socket path. This method is generally not
      * needed, and only used to force the subsequent call to `connect_to_host` to use the specified
@@ -20,7 +20,7 @@ class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun bind(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(bindBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(bindBind, segment, path)
     }
 
     /**
@@ -30,7 +30,7 @@ class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun connectToHost(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, segment, path)
     }
 
     /**
@@ -40,16 +40,16 @@ class StreamPeerUDS(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun getConnectedPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getConnectedPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getConnectedPathBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeerUDS? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeerUDS? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeerUDS? =
-            if (handle.address() == 0L) null else StreamPeerUDS(handle)
+            if (handle.address() == 0L) null else StreamPeerUDS(GodotHandle(handle))
 
         private const val BIND_HASH = 166001499L
         private val bindBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRActionSet
  */
-class OpenXRActionSet(handle: MemorySegment) : Resource(handle) {
+class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
     var localizedName: String
         @JvmName("localizedNameProperty")
         get() = getLocalizedName()
@@ -30,56 +30,56 @@ class OpenXRActionSet(handle: MemorySegment) : Resource(handle) {
 
     fun setLocalizedName(localizedName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLocalizedNameBind, handle, localizedName)
+        ObjectCalls.ptrcallWithStringArg(setLocalizedNameBind, segment, localizedName)
     }
 
     fun getLocalizedName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, segment)
     }
 
     fun setPriority(priority: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setPriorityBind, segment, priority)
     }
 
     fun getPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, segment)
     }
 
     fun getActionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getActionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getActionCountBind, segment)
     }
 
     fun setActions(actions: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setActionsBind, handle, actions)
+        ObjectCalls.ptrcallWithArrayArg(setActionsBind, segment, actions)
     }
 
     fun getActions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getActionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getActionsBind, segment)
     }
 
     fun addAction(action: OpenXRAction?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addActionBind, handle, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addActionBind, segment, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeAction(action: OpenXRAction?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeActionBind, handle, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeActionBind, segment, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRActionSet? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRActionSet? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRActionSet? =
-            if (handle.address() == 0L) null else OpenXRActionSet(handle)
+            if (handle.address() == 0L) null else OpenXRActionSet(GodotHandle(handle))
 
         private const val SET_LOCALIZED_NAME_HASH = 83702148L
         private val setLocalizedNameBind by lazy {

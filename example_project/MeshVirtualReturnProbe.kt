@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3
 
@@ -18,7 +18,7 @@ import net.multigesture.kanama.types.Vector3
  * the emitted shape of probed siblings (int32/float64 packed, vector2 packed, AABB respectively).
  */
 @ScriptClass(attachTo = "Mesh")
-class MeshVirtualReturnProbe(val godotObject: MemorySegment) {
+class MeshVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // AABB value-type return, boxed via initVariantFromAny.
   @OverrideVirtual

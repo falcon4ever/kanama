@@ -10,7 +10,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: InputEventMouseMotion
  */
-class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
+class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     var tilt: Vector2
         @JvmName("tiltProperty")
         get() = getTilt()
@@ -62,7 +62,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun setTilt(tilt: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setTiltBind, handle, tilt)
+        ObjectCalls.ptrcallWithVector2Arg(setTiltBind, segment, tilt)
     }
 
     /**
@@ -74,7 +74,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun getTilt(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun setPressure(pressure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
+        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, segment, pressure)
     }
 
     /**
@@ -94,7 +94,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun setPenInverted(penInverted: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, handle, penInverted)
+        ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, segment, penInverted)
     }
 
     /**
@@ -116,7 +116,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun getPenInverted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, segment)
     }
 
     /**
@@ -133,7 +133,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun setRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, handle, relative)
+        ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, segment, relative)
     }
 
     /**
@@ -150,7 +150,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun getRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, segment)
     }
 
     /**
@@ -166,7 +166,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun setScreenRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, handle, relative)
+        ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, segment, relative)
     }
 
     /**
@@ -182,7 +182,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun getScreenRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun setVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
     }
 
     /**
@@ -212,7 +212,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun getVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
     }
 
     /**
@@ -226,7 +226,7 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun setScreenVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, segment, velocity)
     }
 
     /**
@@ -240,20 +240,20 @@ class InputEventMouseMotion(handle: MemorySegment) : InputEventMouse(handle) {
      */
     fun getScreenVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventMouseMotion? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventMouseMotion? =
+            wrap(handle.segment)
 
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseMotion? =
             if (value.isClass("InputEventMouseMotion")) InputEventMouseMotion(value.handle) else null
 
         internal fun wrap(handle: MemorySegment): InputEventMouseMotion? =
-            if (handle.address() == 0L) null else InputEventMouseMotion(handle)
+            if (handle.address() == 0L) null else InputEventMouseMotion(GodotHandle(handle))
 
         private const val SET_TILT_HASH = 743155724L
         private val setTiltBind by lazy {

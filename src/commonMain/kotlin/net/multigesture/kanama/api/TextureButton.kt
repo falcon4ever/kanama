@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TextureButton
  */
-class TextureButton(handle: MemorySegment) : BaseButton(handle) {
+class TextureButton(handle: GodotHandle) : BaseButton(handle) {
     var textureNormal: Texture2D?
         @JvmName("textureNormalProperty")
         get() = getTextureNormal()
@@ -79,7 +79,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_normal
      */
     fun setTextureNormal(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -90,7 +90,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_pressed
      */
     fun setTexturePressed(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -100,7 +100,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_hover
      */
     fun setTextureHover(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureHoverBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureHoverBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -110,7 +110,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_disabled
      */
     fun setTextureDisabled(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureDisabledBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureDisabledBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -124,7 +124,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_focused
      */
     fun setTextureFocused(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureFocusedBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureFocusedBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -134,7 +134,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_click_mask
      */
     fun setClickMask(mask: BitMap?) {
-        ObjectCalls.ptrcallWithObjectArgs(setClickMaskBind, handle, listOf(mask?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setClickMaskBind, segment, listOf(mask?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -144,7 +144,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_ignore_texture_size
      */
     fun setIgnoreTextureSize(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreTextureSizeBind, handle, ignore)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreTextureSizeBind, segment, ignore)
     }
 
     /**
@@ -154,7 +154,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_stretch_mode
      */
     fun setStretchMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, mode)
     }
 
     /**
@@ -163,7 +163,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_flip_h
      */
     fun setFlipH(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, enable)
     }
 
     /**
@@ -172,7 +172,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_flip_v
      */
     fun setFlipV(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, enable)
     }
 
     /**
@@ -190,7 +190,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
     }
 
     /**
@@ -200,7 +200,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_normal
      */
     fun getTextureNormal(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
     }
 
     /**
@@ -211,7 +211,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_pressed
      */
     fun getTexturePressed(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
     }
 
     /**
@@ -221,7 +221,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_hover
      */
     fun getTextureHover(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureHoverBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureHoverBind, segment))
     }
 
     /**
@@ -231,7 +231,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_disabled
      */
     fun getTextureDisabled(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureDisabledBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureDisabledBind, segment))
     }
 
     /**
@@ -245,7 +245,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_focused
      */
     fun getTextureFocused(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureFocusedBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureFocusedBind, segment))
     }
 
     /**
@@ -255,7 +255,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_click_mask
      */
     fun getClickMask(): BitMap? {
-        return BitMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClickMaskBind, handle))
+        return BitMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClickMaskBind, segment))
     }
 
     /**
@@ -265,7 +265,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_ignore_texture_size
      */
     fun getIgnoreTextureSize(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getIgnoreTextureSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIgnoreTextureSizeBind, segment)
     }
 
     /**
@@ -275,7 +275,7 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_stretch_mode
      */
     fun getStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment)
     }
 
     companion object {
@@ -288,11 +288,11 @@ class TextureButton(handle: MemorySegment) : BaseButton(handle) {
         const val STRETCH_KEEP_ASPECT_COVERED: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextureButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextureButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextureButton? =
-            if (handle.address() == 0L) null else TextureButton(handle)
+            if (handle.address() == 0L) null else TextureButton(GodotHandle(handle))
 
         private const val SET_TEXTURE_NORMAL_HASH = 4051416890L
         private val setTextureNormalBind by lazy {

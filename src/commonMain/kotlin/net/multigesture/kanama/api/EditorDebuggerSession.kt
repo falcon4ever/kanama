@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorDebuggerSession
  */
-class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
+class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Sends the given `message` to the attached remote instance, optionally passing additionally
      * `data`. See `EngineDebugger` for how to retrieve those messages.
@@ -19,7 +19,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun sendMessage(message: String, data: List<Any?> = emptyList()) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, handle, message, data)
+        ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, segment, message, data)
     }
 
     /**
@@ -30,7 +30,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun toggleProfiler(profiler: String, enable: Boolean, data: List<Any?> = emptyList()) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringBoolArrayArgs(toggleProfilerBind, handle, profiler, enable, data)
+        ObjectCalls.ptrcallWithStringBoolArrayArgs(toggleProfilerBind, segment, profiler, enable, data)
     }
 
     /**
@@ -40,7 +40,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isBreaked(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBreakedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBreakedBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isDebuggable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDebuggableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDebuggableBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
     }
 
     /**
@@ -71,7 +71,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addSessionTab(control: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addSessionTabBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addSessionTabBind, segment, listOf(control.segment))
     }
 
     /**
@@ -81,7 +81,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun removeSessionTab(control: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeSessionTabBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeSessionTabBind, segment, listOf(control.segment))
     }
 
     /**
@@ -92,7 +92,7 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBreakpoint(path: String, line: Int, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringIntAndBoolArgs(setBreakpointBind, handle, path, line, enabled)
+        ObjectCalls.ptrcallWithStringIntAndBoolArgs(setBreakpointBind, segment, path, line, enabled)
     }
 
     object Signals {
@@ -104,11 +104,11 @@ class EditorDebuggerSession(handle: MemorySegment) : RefCounted(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorDebuggerSession? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorDebuggerSession? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorDebuggerSession? =
-            if (handle.address() == 0L) null else EditorDebuggerSession(handle)
+            if (handle.address() == 0L) null else EditorDebuggerSession(GodotHandle(handle))
 
         private const val SEND_MESSAGE_HASH = 85656714L
         private val sendMessageBind by lazy {

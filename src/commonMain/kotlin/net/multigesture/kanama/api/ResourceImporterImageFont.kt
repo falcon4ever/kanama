@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ResourceImporterImageFont
  */
-class ResourceImporterImageFont(handle: MemorySegment) : ResourceImporter(handle) {
+class ResourceImporterImageFont(handle: GodotHandle) : ResourceImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceImporterImageFont? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceImporterImageFont? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceImporterImageFont? =
-            if (handle.address() == 0L) null else ResourceImporterImageFont(handle)
+            if (handle.address() == 0L) null else ResourceImporterImageFont(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

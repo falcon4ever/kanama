@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StreamPeerSocket
  */
-open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
+open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
     /**
      * Polls the socket, updating its state. See `get_status`.
      *
@@ -18,7 +18,7 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun poll(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun getStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun disconnectFromHost() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, handle)
+        ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, segment)
     }
 
     companion object {
@@ -48,11 +48,11 @@ open class StreamPeerSocket(handle: MemorySegment) : StreamPeer(handle) {
         const val STATUS_ERROR: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeerSocket? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeerSocket? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeerSocket? =
-            if (handle.address() == 0L) null else StreamPeerSocket(handle)
+            if (handle.address() == 0L) null else StreamPeerSocket(GodotHandle(handle))
 
         private const val POLL_HASH = 166280745L
         private val pollBind by lazy {

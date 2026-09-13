@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: UPNP
  */
-class UPNP(handle: MemorySegment) : RefCounted(handle) {
+class UPNP(handle: GodotHandle) : RefCounted(handle) {
     var discoverMulticastIf: String
         @JvmName("discoverMulticastIfProperty")
         get() = getDiscoverMulticastIf()
@@ -30,87 +30,87 @@ class UPNP(handle: MemorySegment) : RefCounted(handle) {
 
     fun getDeviceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDeviceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDeviceCountBind, segment)
     }
 
     fun getDevice(index: Int): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDeviceBind, handle, index))
+        return UPNPDevice.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDeviceBind, segment, index))
     }
 
     fun addDevice(device: UPNPDevice?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addDeviceBind, handle, listOf(device?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addDeviceBind, segment, listOf(device?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setDevice(index: Int, device: UPNPDevice?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDeviceBind, handle, index, device?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setDeviceBind, segment, index, device?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun removeDevice(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeDeviceBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removeDeviceBind, segment, index)
     }
 
     fun clearDevices() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearDevicesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearDevicesBind, segment)
     }
 
     fun getGateway(): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGatewayBind, handle))
+        return UPNPDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGatewayBind, segment))
     }
 
     fun discover(timeout: Int = 2000, ttl: Int = 2, deviceFilter: String = "InternetGatewayDevice"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntStringArgsRetInt(discoverBind, handle, timeout, ttl, deviceFilter)
+        return ObjectCalls.ptrcallWithTwoIntStringArgsRetInt(discoverBind, segment, timeout, ttl, deviceFilter)
     }
 
     fun queryExternalAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, segment)
     }
 
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, handle, port, portInternal, desc, proto, duration)
+        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, segment, port, portInternal, desc, proto, duration)
     }
 
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, handle, port, proto)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, segment, port, proto)
     }
 
     fun setDiscoverMulticastIf(mIf: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setDiscoverMulticastIfBind, handle, mIf)
+        ObjectCalls.ptrcallWithStringArg(setDiscoverMulticastIfBind, segment, mIf)
     }
 
     fun getDiscoverMulticastIf(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getDiscoverMulticastIfBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDiscoverMulticastIfBind, segment)
     }
 
     fun setDiscoverLocalPort(port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDiscoverLocalPortBind, handle, port)
+        ObjectCalls.ptrcallWithIntArg(setDiscoverLocalPortBind, segment, port)
     }
 
     fun getDiscoverLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDiscoverLocalPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDiscoverLocalPortBind, segment)
     }
 
     fun setDiscoverIpv6(ipv6: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDiscoverIpv6Bind, handle, ipv6)
+        ObjectCalls.ptrcallWithBoolArg(setDiscoverIpv6Bind, segment, ipv6)
     }
 
     fun isDiscoverIpv6(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDiscoverIpv6Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDiscoverIpv6Bind, segment)
     }
 
     companion object {
@@ -145,11 +145,11 @@ class UPNP(handle: MemorySegment) : RefCounted(handle) {
         const val UPNP_RESULT_UNKNOWN_ERROR: Long = 28L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): UPNP? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): UPNP? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): UPNP? =
-            if (handle.address() == 0L) null else UPNP(handle)
+            if (handle.address() == 0L) null else UPNP(GodotHandle(handle))
 
         private const val GET_DEVICE_COUNT_HASH = 3905245786L
         private val getDeviceCountBind by lazy {

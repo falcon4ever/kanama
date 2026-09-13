@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeIntConstant
  */
-class VisualShaderNodeIntConstant(handle: MemorySegment) : VisualShaderNodeConstant(handle) {
+class VisualShaderNodeIntConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
     var constant: Int
         @JvmName("constantProperty")
         get() = getConstant()
@@ -18,21 +18,21 @@ class VisualShaderNodeIntConstant(handle: MemorySegment) : VisualShaderNodeConst
 
     fun setConstant(constant: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setConstantBind, handle, constant)
+        ObjectCalls.ptrcallWithIntArg(setConstantBind, segment, constant)
     }
 
     fun getConstant(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getConstantBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getConstantBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeIntConstant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeIntConstant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeIntConstant? =
-            if (handle.address() == 0L) null else VisualShaderNodeIntConstant(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeIntConstant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 1286410249L
         private val setConstantBind by lazy {

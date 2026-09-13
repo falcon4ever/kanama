@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: VBoxContainer
  */
-open class VBoxContainer(handle: MemorySegment) : BoxContainer(handle) {
+open class VBoxContainer(handle: GodotHandle) : BoxContainer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VBoxContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VBoxContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VBoxContainer? =
-            if (handle.address() == 0L) null else VBoxContainer(handle)
+            if (handle.address() == 0L) null else VBoxContainer(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

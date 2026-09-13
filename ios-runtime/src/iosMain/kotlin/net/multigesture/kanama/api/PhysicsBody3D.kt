@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: PhysicsBody3D
  */
-open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
+open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
     var axisLockLinearX: Boolean
         @JvmName("axisLockLinearXProperty")
         get() = getAxisLock(1L)
@@ -49,44 +49,44 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
         set(value) = setAxisLock(32L, value)
 
     fun moveAndCollide(motion: Vector3, testOnly: Boolean = false, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): KinematicCollision3D? {
-        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, handle, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
+        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
     }
 
     fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D?, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): Boolean {
-        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(testMoveBind, handle, from, motion, collision?.requireOpenHandle() ?: MemorySegment.NULL, safeMargin, recoveryAsCollision, maxCollisions)
+        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: MemorySegment.NULL, safeMargin, recoveryAsCollision, maxCollisions)
     }
 
     fun getGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, segment)
     }
 
     fun setAxisLock(axis: Long, lock: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setAxisLockBind, handle, axis, lock)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setAxisLockBind, segment, axis, lock)
     }
 
     fun getAxisLock(axis: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getAxisLockBind, handle, axis)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getAxisLockBind, segment, axis)
     }
 
     fun getCollisionExceptions(): List<PhysicsBody3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, handle, PhysicsBody3D::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, segment, PhysicsBody3D::wrap)
     }
 
     fun addCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     fun removeCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsBody3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsBody3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsBody3D? =
-            if (handle.address() == 0L) null else PhysicsBody3D(handle)
+            if (handle.address() == 0L) null else PhysicsBody3D(GodotHandle(handle))
 
         // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
         // (used by set_axis_lock). Values are @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags.

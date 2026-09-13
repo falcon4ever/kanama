@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: Label
  */
-class Label(handle: MemorySegment) : Control(handle) {
+class Label(handle: GodotHandle) : Control(handle) {
     var text: String
         @JvmName("textProperty")
         get() = getText()
@@ -152,7 +152,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -162,7 +162,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_vertical_alignment
      */
     fun setVerticalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -180,7 +180,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_vertical_alignment
      */
     fun getVerticalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -198,7 +198,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     /**
@@ -208,7 +208,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_label_settings
      */
     fun setLabelSettings(settings: LabelSettings?) {
-        ObjectCalls.ptrcallWithObjectArgs(setLabelSettingsBind, handle, listOf(settings?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setLabelSettingsBind, segment, listOf(settings?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -218,7 +218,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_label_settings
      */
     fun getLabelSettings(): LabelSettings? {
-        return LabelSettings.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelSettingsBind, handle))
+        return LabelSettings.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelSettingsBind, segment))
     }
 
     /**
@@ -227,7 +227,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -236,7 +236,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_text_direction
      */
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     /**
@@ -246,7 +246,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -256,7 +256,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -266,7 +266,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_paragraph_separator
      */
     fun setParagraphSeparator(paragraphSeparator: String) {
-        ObjectCalls.ptrcallWithStringArg(setParagraphSeparatorBind, handle, paragraphSeparator)
+        ObjectCalls.ptrcallWithStringArg(setParagraphSeparatorBind, segment, paragraphSeparator)
     }
 
     /**
@@ -276,7 +276,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_paragraph_separator
      */
     fun getParagraphSeparator(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getParagraphSeparatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getParagraphSeparatorBind, segment)
     }
 
     /**
@@ -290,7 +290,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
     }
 
     /**
@@ -304,7 +304,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_autowrap_mode
      */
     fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
     }
 
     /**
@@ -314,7 +314,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
     }
 
     /**
@@ -324,7 +324,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
     }
 
     /**
@@ -333,7 +333,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_justification_flags
      */
     fun setJustificationFlags(justificationFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
     }
 
     /**
@@ -342,7 +342,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_justification_flags
      */
     fun getJustificationFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
     }
 
     /**
@@ -352,7 +352,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_clip_text
      */
     fun setClipText(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipTextBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setClipTextBind, segment, enable)
     }
 
     /**
@@ -362,7 +362,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.is_clipping_text
      */
     fun isClippingText(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClippingTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isClippingTextBind, segment)
     }
 
     /**
@@ -371,7 +371,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_tab_stops
      */
     fun setTabStops(tabStops: List<Float>) {
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setTabStopsBind, handle, tabStops)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setTabStopsBind, segment, tabStops)
     }
 
     /**
@@ -380,7 +380,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_tab_stops
      */
     fun getTabStops(): List<Float> {
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getTabStopsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getTabStopsBind, segment)
     }
 
     /**
@@ -389,7 +389,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
     }
 
     /**
@@ -398,7 +398,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
     }
 
     /**
@@ -407,7 +407,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_ellipsis_char
      */
     fun setEllipsisChar(char: String) {
-        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
+        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, segment, char)
     }
 
     /**
@@ -416,7 +416,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_ellipsis_char
      */
     fun getEllipsisChar(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, segment)
     }
 
     /**
@@ -425,7 +425,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_uppercase
      */
     fun setUppercase(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, segment, enable)
     }
 
     /**
@@ -434,7 +434,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.is_uppercase
      */
     fun isUppercase(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, segment)
     }
 
     /**
@@ -444,7 +444,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_line_height
      */
     fun getLineHeight(line: Int = -1): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLineHeightBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getLineHeightBind, segment, line)
     }
 
     /**
@@ -453,7 +453,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_line_count
      */
     fun getLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
     }
 
     /**
@@ -463,7 +463,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_visible_line_count
      */
     fun getVisibleLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, segment)
     }
 
     /**
@@ -472,7 +472,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_total_character_count
      */
     fun getTotalCharacterCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTotalCharacterCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTotalCharacterCountBind, segment)
     }
 
     /**
@@ -485,7 +485,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_visible_characters
      */
     fun setVisibleCharacters(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVisibleCharactersBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setVisibleCharactersBind, segment, amount)
     }
 
     /**
@@ -498,7 +498,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_visible_characters
      */
     fun getVisibleCharacters(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleCharactersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleCharactersBind, segment)
     }
 
     /**
@@ -507,7 +507,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_visible_characters_behavior
      */
     fun getVisibleCharactersBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, segment)
     }
 
     /**
@@ -516,7 +516,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_visible_characters_behavior
      */
     fun setVisibleCharactersBehavior(behavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, handle, behavior)
+        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, segment, behavior)
     }
 
     /**
@@ -528,7 +528,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_visible_ratio
      */
     fun setVisibleRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibleRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibleRatioBind, segment, ratio)
     }
 
     /**
@@ -540,7 +540,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_visible_ratio
      */
     fun getVisibleRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibleRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibleRatioBind, segment)
     }
 
     /**
@@ -549,7 +549,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_lines_skipped
      */
     fun setLinesSkipped(linesSkipped: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLinesSkippedBind, handle, linesSkipped)
+        ObjectCalls.ptrcallWithIntArg(setLinesSkippedBind, segment, linesSkipped)
     }
 
     /**
@@ -558,7 +558,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_lines_skipped
      */
     fun getLinesSkipped(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLinesSkippedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLinesSkippedBind, segment)
     }
 
     /**
@@ -567,7 +567,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_max_lines_visible
      */
     fun setMaxLinesVisible(linesVisible: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxLinesVisibleBind, handle, linesVisible)
+        ObjectCalls.ptrcallWithIntArg(setMaxLinesVisibleBind, segment, linesVisible)
     }
 
     /**
@@ -576,7 +576,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_max_lines_visible
      */
     fun getMaxLinesVisible(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxLinesVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxLinesVisibleBind, segment)
     }
 
     /**
@@ -585,7 +585,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     /**
@@ -594,7 +594,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
     }
 
     /**
@@ -603,7 +603,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -612,7 +612,7 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -624,16 +624,16 @@ class Label(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Label.get_character_bounds
      */
     fun getCharacterBounds(pos: Int): Rect2 {
-        return ObjectCalls.ptrcallWithIntArgRetRect2(getCharacterBoundsBind, handle, pos)
+        return ObjectCalls.ptrcallWithIntArgRetRect2(getCharacterBoundsBind, segment, pos)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Label? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Label? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Label? =
-            if (handle.address() == 0L) null else Label(handle)
+            if (handle.address() == 0L) null else Label(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
         private val setHorizontalAlignmentBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: ConvexPolygonShape2D
  */
-class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
+class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
     var points: List<Vector2>
         @JvmName("pointsProperty")
         get() = getPoints()
@@ -27,7 +27,7 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setPointCloud(pointCloud: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointCloudBind, handle, pointCloud)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointCloudBind, segment, pointCloud)
     }
 
     /**
@@ -39,7 +39,7 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setPoints(points: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, handle, points)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, segment, points)
     }
 
     /**
@@ -51,16 +51,16 @@ class ConvexPolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getPoints(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConvexPolygonShape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConvexPolygonShape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConvexPolygonShape2D? =
-            if (handle.address() == 0L) null else ConvexPolygonShape2D(handle)
+            if (handle.address() == 0L) null else ConvexPolygonShape2D(GodotHandle(handle))
 
         private const val SET_POINT_CLOUD_HASH = 1509147220L
         private val setPointCloudBind by lazy {

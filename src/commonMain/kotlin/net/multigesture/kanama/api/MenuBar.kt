@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MenuBar
  */
-class MenuBar(handle: MemorySegment) : Control(handle) {
+class MenuBar(handle: GodotHandle) : Control(handle) {
     var flat: Boolean
         @JvmName("flatProperty")
         get() = isFlat()
@@ -55,7 +55,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_switch_on_hover
      */
     fun setSwitchOnHover(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSwitchOnHoverBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSwitchOnHoverBind, segment, enable)
     }
 
     /**
@@ -65,7 +65,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.is_switch_on_hover
      */
     fun isSwitchOnHover(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSwitchOnHoverBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSwitchOnHoverBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_disable_shortcuts
      */
     fun setDisableShortcuts(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, segment, disabled)
     }
 
     /**
@@ -86,7 +86,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_prefer_global_menu
      */
     fun setPreferGlobalMenu(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPreferGlobalMenuBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPreferGlobalMenuBind, segment, enabled)
     }
 
     /**
@@ -98,7 +98,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.is_prefer_global_menu
      */
     fun isPreferGlobalMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPreferGlobalMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPreferGlobalMenuBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.is_native_menu
      */
     fun isNativeMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNativeMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNativeMenuBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.get_menu_count
      */
     fun getMenuCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMenuCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMenuCountBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -134,7 +134,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.get_text_direction
      */
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -154,7 +154,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -163,7 +163,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_flat
      */
     fun setFlat(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, enabled)
     }
 
     /**
@@ -172,7 +172,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.is_flat
      */
     fun isFlat(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
     }
 
     /**
@@ -183,7 +183,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_start_index
      */
     fun setStartIndex(enabled: Int) {
-        ObjectCalls.ptrcallWithIntArg(setStartIndexBind, handle, enabled)
+        ObjectCalls.ptrcallWithIntArg(setStartIndexBind, segment, enabled)
     }
 
     /**
@@ -194,7 +194,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.get_start_index
      */
     fun getStartIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getStartIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStartIndexBind, segment)
     }
 
     /**
@@ -203,7 +203,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_menu_title
      */
     fun setMenuTitle(menu: Int, title: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setMenuTitleBind, handle, menu, title)
+        ObjectCalls.ptrcallWithIntAndStringArg(setMenuTitleBind, segment, menu, title)
     }
 
     /**
@@ -212,7 +212,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.get_menu_title
      */
     fun getMenuTitle(menu: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getMenuTitleBind, handle, menu)
+        return ObjectCalls.ptrcallWithIntArgRetString(getMenuTitleBind, segment, menu)
     }
 
     /**
@@ -221,7 +221,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_menu_tooltip
      */
     fun setMenuTooltip(menu: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setMenuTooltipBind, handle, menu, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setMenuTooltipBind, segment, menu, tooltip)
     }
 
     /**
@@ -230,7 +230,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.get_menu_tooltip
      */
     fun getMenuTooltip(menu: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getMenuTooltipBind, handle, menu)
+        return ObjectCalls.ptrcallWithIntArgRetString(getMenuTooltipBind, segment, menu)
     }
 
     /**
@@ -239,7 +239,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_menu_disabled
      */
     fun setMenuDisabled(menu: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setMenuDisabledBind, handle, menu, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setMenuDisabledBind, segment, menu, disabled)
     }
 
     /**
@@ -248,7 +248,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.is_menu_disabled
      */
     fun isMenuDisabled(menu: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isMenuDisabledBind, handle, menu)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isMenuDisabledBind, segment, menu)
     }
 
     /**
@@ -257,7 +257,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.set_menu_hidden
      */
     fun setMenuHidden(menu: Int, hidden: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setMenuHiddenBind, handle, menu, hidden)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setMenuHiddenBind, segment, menu, hidden)
     }
 
     /**
@@ -266,7 +266,7 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.is_menu_hidden
      */
     fun isMenuHidden(menu: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isMenuHiddenBind, handle, menu)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isMenuHiddenBind, segment, menu)
     }
 
     /**
@@ -275,16 +275,16 @@ class MenuBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: MenuBar.get_menu_popup
      */
     fun getMenuPopup(menu: Int): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getMenuPopupBind, handle, menu))
+        return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getMenuPopupBind, segment, menu))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MenuBar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MenuBar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MenuBar? =
-            if (handle.address() == 0L) null else MenuBar(handle)
+            if (handle.address() == 0L) null else MenuBar(GodotHandle(handle))
 
         private const val SET_SWITCH_ON_HOVER_HASH = 2586408642L
         private val setSwitchOnHoverBind by lazy {

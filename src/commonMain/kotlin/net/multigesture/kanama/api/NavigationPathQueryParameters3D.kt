@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: NavigationPathQueryParameters3D
  */
-class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
+class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     var map: RID
         @JvmName("mapProperty")
         get() = getMap()
@@ -111,7 +111,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setPathfindingAlgorithm(pathfindingAlgorithm: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, handle, pathfindingAlgorithm)
+        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm)
     }
 
     /**
@@ -121,7 +121,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getPathfindingAlgorithm(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setPathPostprocessing(pathPostprocessing: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, handle, pathPostprocessing)
+        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing)
     }
 
     /**
@@ -141,7 +141,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getPathPostprocessing(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setMap(map: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setMapBind, handle, map)
+        ObjectCalls.ptrcallWithRIDArg(setMapBind, segment, map)
     }
 
     /**
@@ -161,7 +161,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getMapBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setStartPosition(startPosition: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setStartPositionBind, handle, startPosition)
+        ObjectCalls.ptrcallWithVector3Arg(setStartPositionBind, segment, startPosition)
     }
 
     /**
@@ -181,7 +181,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getStartPosition(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getStartPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getStartPositionBind, segment)
     }
 
     /**
@@ -191,7 +191,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setTargetPosition(targetPosition: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setTargetPositionBind, handle, targetPosition)
+        ObjectCalls.ptrcallWithVector3Arg(setTargetPositionBind, segment, targetPosition)
     }
 
     /**
@@ -201,7 +201,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getTargetPosition(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTargetPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getTargetPositionBind, segment)
     }
 
     /**
@@ -211,7 +211,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setNavigationLayers(navigationLayers: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, handle, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -221,7 +221,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getNavigationLayers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
     }
 
     /**
@@ -231,7 +231,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setMetadataFlags(flags: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMetadataFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setMetadataFlagsBind, segment, flags)
     }
 
     /**
@@ -241,7 +241,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getMetadataFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMetadataFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMetadataFlagsBind, segment)
     }
 
     /**
@@ -255,7 +255,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setSimplifyPath(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, segment, enabled)
     }
 
     /**
@@ -269,7 +269,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getSimplifyPath(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setSimplifyEpsilon(epsilon: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, handle, epsilon)
+        ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, segment, epsilon)
     }
 
     /**
@@ -289,7 +289,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getSimplifyEpsilon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, segment)
     }
 
     /**
@@ -304,7 +304,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setIncludedRegions(regions: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setIncludedRegionsBind, handle, regions)
+        ObjectCalls.ptrcallWithRIDListArg(setIncludedRegionsBind, segment, regions)
     }
 
     /**
@@ -319,7 +319,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getIncludedRegions(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getIncludedRegionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getIncludedRegionsBind, segment)
     }
 
     /**
@@ -333,7 +333,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setExcludedRegions(regions: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludedRegionsBind, handle, regions)
+        ObjectCalls.ptrcallWithRIDListArg(setExcludedRegionsBind, segment, regions)
     }
 
     /**
@@ -347,7 +347,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getExcludedRegions(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludedRegionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludedRegionsBind, segment)
     }
 
     /**
@@ -358,7 +358,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setPathReturnMaxLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, segment, length)
     }
 
     /**
@@ -369,7 +369,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getPathReturnMaxLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, segment)
     }
 
     /**
@@ -382,7 +382,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setPathReturnMaxRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, segment, radius)
     }
 
     /**
@@ -395,7 +395,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getPathReturnMaxRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, segment)
     }
 
     /**
@@ -410,7 +410,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setPathSearchMaxPolygons(maxPolygons: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, handle, maxPolygons)
+        ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, segment, maxPolygons)
     }
 
     /**
@@ -425,7 +425,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getPathSearchMaxPolygons(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, segment)
     }
 
     /**
@@ -441,7 +441,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun setPathSearchMaxDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -457,7 +457,7 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
      */
     fun getPathSearchMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, segment)
     }
 
     companion object {
@@ -472,11 +472,11 @@ class NavigationPathQueryParameters3D(handle: MemorySegment) : RefCounted(handle
         const val PATH_METADATA_INCLUDE_ALL: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationPathQueryParameters3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationPathQueryParameters3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationPathQueryParameters3D? =
-            if (handle.address() == 0L) null else NavigationPathQueryParameters3D(handle)
+            if (handle.address() == 0L) null else NavigationPathQueryParameters3D(GodotHandle(handle))
 
         private const val SET_PATHFINDING_ALGORITHM_HASH = 394560454L
         private val setPathfindingAlgorithmBind by lazy {

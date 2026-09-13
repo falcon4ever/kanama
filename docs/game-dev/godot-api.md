@@ -292,7 +292,7 @@ Kanama supports globally named classes with `@GlobalClass` or `@ClassName`.
 ```kotlin
 @ScriptClass(attachTo = "Node")
 @GlobalClass
-class Player(godotObject: MemorySegment) :
+class Player(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node)
 ```
 

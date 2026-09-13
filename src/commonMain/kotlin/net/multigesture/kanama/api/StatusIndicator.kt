@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: StatusIndicator
  */
-class StatusIndicator(handle: MemorySegment) : Node(handle) {
+class StatusIndicator(handle: GodotHandle) : Node(handle) {
     var tooltip: String
         @JvmName("tooltipProperty")
         get() = getTooltip()
@@ -45,7 +45,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_tooltip
      */
     fun setTooltip(tooltip: String) {
-        ObjectCalls.ptrcallWithStringArg(setTooltipBind, handle, tooltip)
+        ObjectCalls.ptrcallWithStringArg(setTooltipBind, segment, tooltip)
     }
 
     /**
@@ -54,7 +54,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_tooltip
      */
     fun getTooltip(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTooltipBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTooltipBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_icon
      */
     fun setIcon(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setIconBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setIconBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -72,7 +72,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_icon
      */
     fun getIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIconBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIconBind, segment))
     }
 
     /**
@@ -81,7 +81,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
     }
 
     /**
@@ -90,7 +90,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
     }
 
     /**
@@ -100,7 +100,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_menu
      */
     fun setMenu(menu: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setMenuBind, handle, menu)
+        ObjectCalls.ptrcallWithNodePathArg(setMenuBind, segment, menu)
     }
 
     /**
@@ -110,7 +110,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_menu
      */
     fun getMenu(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getMenuBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
     }
 
     object Signals {
@@ -129,11 +129,11 @@ class StatusIndicator(handle: MemorySegment) : Node(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StatusIndicator? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StatusIndicator? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StatusIndicator? =
-            if (handle.address() == 0L) null else StatusIndicator(handle)
+            if (handle.address() == 0L) null else StatusIndicator(GodotHandle(handle))
 
         private const val SET_TOOLTIP_HASH = 83702148L
         private val setTooltipBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: ImporterMeshInstance3D
  */
-class ImporterMeshInstance3D(handle: MemorySegment) : Node3D(handle) {
+class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
     var mesh: ImporterMesh?
         @JvmName("meshProperty")
         get() = getMesh()
@@ -72,92 +72,92 @@ class ImporterMeshInstance3D(handle: MemorySegment) : Node3D(handle) {
         set(value) = setVisibilityRangeFadeMode(value)
 
     fun setMesh(mesh: ImporterMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMesh(): ImporterMesh? {
-        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setSkin(skin: Skin?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, handle, listOf(skin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getSkin(): Skin? {
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, handle))
+        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
     }
 
     fun setSkeletonPath(skeletonPath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSkeletonPathBind, handle, skeletonPath)
+        ObjectCalls.ptrcallWithNodePathArg(setSkeletonPathBind, segment, skeletonPath)
     }
 
     fun getSkeletonPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonPathBind, segment)
     }
 
     fun setLayerMask(layerMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setLayerMaskBind, handle, layerMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setLayerMaskBind, segment, layerMask)
     }
 
     fun getLayerMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getLayerMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getLayerMaskBind, segment)
     }
 
     fun setCastShadowsSetting(shadowCastingSetting: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, handle, shadowCastingSetting)
+        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting)
     }
 
     fun getCastShadowsSetting(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment)
     }
 
     fun setVisibilityRangeEndMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndMarginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndMarginBind, segment, distance)
     }
 
     fun getVisibilityRangeEndMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndMarginBind, segment)
     }
 
     fun setVisibilityRangeEnd(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndBind, segment, distance)
     }
 
     fun getVisibilityRangeEnd(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndBind, segment)
     }
 
     fun setVisibilityRangeBeginMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginMarginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginMarginBind, segment, distance)
     }
 
     fun getVisibilityRangeBeginMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginMarginBind, segment)
     }
 
     fun setVisibilityRangeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginBind, segment, distance)
     }
 
     fun getVisibilityRangeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginBind, segment)
     }
 
     fun setVisibilityRangeFadeMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode)
     }
 
     fun getVisibilityRangeFadeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImporterMeshInstance3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImporterMeshInstance3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImporterMeshInstance3D? =
-            if (handle.address() == 0L) null else ImporterMeshInstance3D(handle)
+            if (handle.address() == 0L) null else ImporterMeshInstance3D(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 2255166972L
         private val setMeshBind by lazy {

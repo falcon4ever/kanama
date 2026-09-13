@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Texture
  */
-open class Texture(handle: MemorySegment) : Resource(handle) {
+open class Texture(handle: GodotHandle) : Resource(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Texture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Texture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Texture? =
-            if (handle.address() == 0L) null else Texture(handle)
+            if (handle.address() == 0L) null else Texture(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

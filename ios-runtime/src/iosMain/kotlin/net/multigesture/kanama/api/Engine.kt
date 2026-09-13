@@ -16,9 +16,9 @@ object Engine {
     fun isEditorHint(): Boolean =
         ObjectCalls.ptrcallNoArgsRetBool(isEditorHintBind, singleton)
 
-    /** Engine.get_main_loop() — the active MainLoop (the SceneTree) as a raw object handle. */
-    fun getMainLoop(): MemorySegment =
-        ObjectCalls.ptrcallNoArgsRetObject(getMainLoopBind, singleton)
+    /** Engine.get_main_loop() — the active MainLoop (the SceneTree) as an opaque object handle. */
+    fun getMainLoop(): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getMainLoopBind, singleton))
 
     var maxFps: Int
         get() = getMaxFps()

@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: PhysicsTestMotionParameters2D
  */
-class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) {
+class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
     var from: Transform2D
         @JvmName("fromProperty")
         get() = getFrom()
@@ -65,7 +65,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getFrom(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFromBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFromBind, segment)
     }
 
     /**
@@ -76,7 +76,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setFrom(from: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setFromBind, handle, from)
+        ObjectCalls.ptrcallWithTransform2DArg(setFromBind, segment, from)
     }
 
     /**
@@ -86,7 +86,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getMotion(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setMotion(motion: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setMotionBind, handle, motion)
+        ObjectCalls.ptrcallWithVector2Arg(setMotionBind, segment, motion)
     }
 
     /**
@@ -106,7 +106,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setMargin(margin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
     }
 
     /**
@@ -129,7 +129,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isCollideSeparationRayEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, segment)
     }
 
     /**
@@ -142,7 +142,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, segment, enabled)
     }
 
     /**
@@ -153,7 +153,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getExcludeBodies(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, segment)
     }
 
     /**
@@ -164,7 +164,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setExcludeBodies(excludeList: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, handle, excludeList)
+        ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, segment, excludeList)
     }
 
     /**
@@ -175,7 +175,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getExcludeObjects(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, segment)
     }
 
     /**
@@ -186,7 +186,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setExcludeObjects(excludeList: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, handle, excludeList)
+        ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, segment, excludeList)
     }
 
     /**
@@ -199,7 +199,7 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isRecoveryAsCollisionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, segment)
     }
 
     /**
@@ -212,16 +212,16 @@ class PhysicsTestMotionParameters2D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, segment, enabled)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsTestMotionParameters2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsTestMotionParameters2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsTestMotionParameters2D? =
-            if (handle.address() == 0L) null else PhysicsTestMotionParameters2D(handle)
+            if (handle.address() == 0L) null else PhysicsTestMotionParameters2D(GodotHandle(handle))
 
         private const val GET_FROM_HASH = 3814499831L
         private val getFromBind by lazy {

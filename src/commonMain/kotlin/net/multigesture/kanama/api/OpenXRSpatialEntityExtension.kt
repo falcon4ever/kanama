@@ -11,109 +11,109 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: OpenXRSpatialEntityExtension
  */
-class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapper(handle) {
+class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     fun supportsCapability(capability: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(supportsCapabilityBind, handle, capability)
+        return ObjectCalls.ptrcallWithLongArgRetBool(supportsCapabilityBind, segment, capability)
     }
 
     fun supportsComponentType(capability: Long, componentType: Long): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(supportsComponentTypeBind, handle, capability, componentType)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(supportsComponentTypeBind, segment, capability, componentType)
     }
 
     fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithObjectListObjectCallableArgsRetObject(createSpatialContextBind, handle, capabilityConfigurations, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithObjectListObjectCallableArgsRetObject(createSpatialContextBind, segment, capabilityConfigurations, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.segment, userCallback.method))
     }
 
     fun getSpatialContextReady(spatialContext: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(getSpatialContextReadyBind, handle, spatialContext)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(getSpatialContextReadyBind, segment, spatialContext)
     }
 
     fun freeSpatialContext(spatialContext: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeSpatialContextBind, handle, spatialContext)
+        ObjectCalls.ptrcallWithRIDArg(freeSpatialContextBind, segment, spatialContext)
     }
 
     fun getSpatialContextHandle(spatialContext: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialContextHandleBind, handle, spatialContext)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialContextHandleBind, segment, spatialContext)
     }
 
     fun discoverSpatialEntitiesWithComponentData(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListObjectCallableArgsRetObject(discoverSpatialEntitiesWithComponentDataBind, handle, spatialContext, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListObjectCallableArgsRetObject(discoverSpatialEntitiesWithComponentDataBind, segment, spatialContext, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.segment, userCallback.method))
     }
 
     fun discoverSpatialEntities(spatialContext: RID, componentTypes: List<Long>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject(discoverSpatialEntitiesBind, handle, spatialContext, componentTypes, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject(discoverSpatialEntitiesBind, segment, spatialContext, componentTypes, next?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.segment, userCallback.method))
     }
 
     fun updateSpatialEntities(spatialContext: RID, entities: List<RID>, componentTypes: List<Long>, next: OpenXRStructureBase?): RID {
-        return ObjectCalls.ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID(updateSpatialEntitiesBind, handle, spatialContext, entities, componentTypes, next?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID(updateSpatialEntitiesBind, segment, spatialContext, entities, componentTypes, next?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun freeSpatialSnapshot(spatialSnapshot: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeSpatialSnapshotBind, handle, spatialSnapshot)
+        ObjectCalls.ptrcallWithRIDArg(freeSpatialSnapshotBind, segment, spatialSnapshot)
     }
 
     fun getSpatialSnapshotHandle(spatialSnapshot: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialSnapshotHandleBind, handle, spatialSnapshot)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialSnapshotHandleBind, segment, spatialSnapshot)
     }
 
     fun getSpatialSnapshotContext(spatialSnapshot: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(getSpatialSnapshotContextBind, handle, spatialSnapshot)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(getSpatialSnapshotContextBind, segment, spatialSnapshot)
     }
 
     fun querySnapshot(spatialSnapshot: RID, componentData: List<OpenXRSpatialComponentData>, next: OpenXRStructureBase?): Boolean {
-        return ObjectCalls.ptrcallWithRIDObjectListObjectArgsRetBool(querySnapshotBind, handle, spatialSnapshot, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithRIDObjectListObjectArgsRetBool(querySnapshotBind, segment, spatialSnapshot, componentData, next?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getString(spatialSnapshot: RID, bufferId: Long): String {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(getStringBind, handle, spatialSnapshot, bufferId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetString(getStringBind, segment, spatialSnapshot, bufferId)
     }
 
     fun getUint8Buffer(spatialSnapshot: RID, bufferId: Long): ByteArray {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetByteArray(getUint8BufferBind, handle, spatialSnapshot, bufferId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetByteArray(getUint8BufferBind, segment, spatialSnapshot, bufferId)
     }
 
     fun getUint16Buffer(spatialSnapshot: RID, bufferId: Long): List<Int> {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getUint16BufferBind, handle, spatialSnapshot, bufferId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getUint16BufferBind, segment, spatialSnapshot, bufferId)
     }
 
     fun getUint32Buffer(spatialSnapshot: RID, bufferId: Long): List<Int> {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getUint32BufferBind, handle, spatialSnapshot, bufferId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getUint32BufferBind, segment, spatialSnapshot, bufferId)
     }
 
     fun getFloatBuffer(spatialSnapshot: RID, bufferId: Long): List<Float> {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedFloat32List(getFloatBufferBind, handle, spatialSnapshot, bufferId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedFloat32List(getFloatBufferBind, segment, spatialSnapshot, bufferId)
     }
 
     fun getVector2Buffer(spatialSnapshot: RID, bufferId: Long): List<Vector2> {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(getVector2BufferBind, handle, spatialSnapshot, bufferId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(getVector2BufferBind, segment, spatialSnapshot, bufferId)
     }
 
     fun getVector3Buffer(spatialSnapshot: RID, bufferId: Long): List<Vector3> {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector3List(getVector3BufferBind, handle, spatialSnapshot, bufferId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector3List(getVector3BufferBind, segment, spatialSnapshot, bufferId)
     }
 
     fun findSpatialEntity(entityId: Long): RID {
-        return ObjectCalls.ptrcallWithLongArgRetRID(findSpatialEntityBind, handle, entityId)
+        return ObjectCalls.ptrcallWithLongArgRetRID(findSpatialEntityBind, segment, entityId)
     }
 
     fun addSpatialEntity(spatialContext: RID, entityId: Long, entity: Long): RID {
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(addSpatialEntityBind, handle, spatialContext, entityId, entity)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetRID(addSpatialEntityBind, segment, spatialContext, entityId, entity)
     }
 
     fun makeSpatialEntity(spatialContext: RID, entityId: Long): RID {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(makeSpatialEntityBind, handle, spatialContext, entityId)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(makeSpatialEntityBind, segment, spatialContext, entityId)
     }
 
     fun getSpatialEntityId(entity: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialEntityIdBind, handle, entity)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(getSpatialEntityIdBind, segment, entity)
     }
 
     fun getSpatialEntityContext(entity: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(getSpatialEntityContextBind, handle, entity)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(getSpatialEntityContextBind, segment, entity)
     }
 
     fun freeSpatialEntity(entity: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeSpatialEntityBind, handle, entity)
+        ObjectCalls.ptrcallWithRIDArg(freeSpatialEntityBind, segment, entity)
     }
 
     object Signals {
@@ -140,11 +140,11 @@ class OpenXRSpatialEntityExtension(handle: MemorySegment) : OpenXRExtensionWrapp
         const val COMPONENT_TYPE_PERSISTENCE: Long = 1000763000L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialEntityExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialEntityExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialEntityExtension? =
-            if (handle.address() == 0L) null else OpenXRSpatialEntityExtension(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialEntityExtension(GodotHandle(handle))
 
         private const val SUPPORTS_CAPABILITY_HASH = 1940837202L
         private val supportsCapabilityBind by lazy {

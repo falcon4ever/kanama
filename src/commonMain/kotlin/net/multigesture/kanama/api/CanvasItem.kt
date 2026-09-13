@@ -16,7 +16,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CanvasItem
  */
-open class CanvasItem(handle: MemorySegment) : Node(handle) {
+open class CanvasItem(handle: GodotHandle) : Node(handle) {
     var visible: Boolean
         @JvmName("visibleProperty")
         get() = isVisible()
@@ -119,7 +119,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas_item
      */
     fun getCanvasItem(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasItemBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasItemBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
     }
 
     /**
@@ -145,7 +145,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
     }
 
     /**
@@ -160,7 +160,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_visible_in_tree
      */
     fun isVisibleInTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, handle)
+        ObjectCalls.ptrcallNoArgs(showBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, handle)
+        ObjectCalls.ptrcallNoArgs(hideBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.queue_redraw
      */
     fun queueRedraw() {
-        ObjectCalls.ptrcallNoArgs(queueRedrawBind, handle)
+        ObjectCalls.ptrcallNoArgs(queueRedrawBind, segment)
     }
 
     /**
@@ -202,7 +202,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.move_to_front
      */
     fun moveToFront() {
-        ObjectCalls.ptrcallNoArgs(moveToFrontBind, handle)
+        ObjectCalls.ptrcallNoArgs(moveToFrontBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_as_top_level
      */
     fun setAsTopLevel(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, segment, enable)
     }
 
     /**
@@ -226,7 +226,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_set_as_top_level
      */
     fun isSetAsTopLevel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_light_mask
      */
     fun setLightMask(lightMask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLightMaskBind, handle, lightMask)
+        ObjectCalls.ptrcallWithIntArg(setLightMaskBind, segment, lightMask)
     }
 
     /**
@@ -244,7 +244,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_light_mask
      */
     fun getLightMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLightMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLightMaskBind, segment)
     }
 
     /**
@@ -254,7 +254,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, modulate)
+        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
     }
 
     /**
@@ -264,7 +264,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
     }
 
     /**
@@ -277,7 +277,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_self_modulate
      */
     fun setSelfModulate(selfModulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setSelfModulateBind, handle, selfModulate)
+        ObjectCalls.ptrcallWithColorArg(setSelfModulateBind, segment, selfModulate)
     }
 
     /**
@@ -290,7 +290,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_self_modulate
      */
     fun getSelfModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getSelfModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSelfModulateBind, segment)
     }
 
     /**
@@ -303,7 +303,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_z_index
      */
     fun setZIndex(zIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZIndexBind, handle, zIndex)
+        ObjectCalls.ptrcallWithIntArg(setZIndexBind, segment, zIndex)
     }
 
     /**
@@ -316,7 +316,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_z_index
      */
     fun getZIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getZIndexBind, segment)
     }
 
     /**
@@ -327,7 +327,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_z_as_relative
      */
     fun setZAsRelative(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setZAsRelativeBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setZAsRelativeBind, segment, enable)
     }
 
     /**
@@ -338,7 +338,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_z_relative
      */
     fun isZRelative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isZRelativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isZRelativeBind, segment)
     }
 
     /**
@@ -353,7 +353,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_y_sort_enabled
      */
     fun setYSortEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setYSortEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setYSortEnabledBind, segment, enabled)
     }
 
     /**
@@ -368,7 +368,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_y_sort_enabled
      */
     fun isYSortEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isYSortEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isYSortEnabledBind, segment)
     }
 
     /**
@@ -377,7 +377,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_draw_behind_parent
      */
     fun setDrawBehindParent(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawBehindParentBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawBehindParentBind, segment, enable)
     }
 
     /**
@@ -386,7 +386,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_draw_behind_parent_enabled
      */
     fun isDrawBehindParentEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawBehindParentEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawBehindParentEnabledBind, segment)
     }
 
     /**
@@ -400,7 +400,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_line
      */
     fun drawLine(from: Vector2, to: Vector2, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoVector2ColorDoubleBoolArgs(drawLineBind, handle, from, to, color, width, antialiased)
+        ObjectCalls.ptrcallWithTwoVector2ColorDoubleBoolArgs(drawLineBind, segment, from, to, color, width, antialiased)
     }
 
     /**
@@ -421,7 +421,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_dashed_line
      */
     fun drawDashedLine(from: Vector2, to: Vector2, color: Color, width: Double = -1.0, dash: Double = 2.0, aligned: Boolean = true, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoVector2ColorTwoDoubleTwoBoolArgs(drawDashedLineBind, handle, from, to, color, width, dash, aligned, antialiased)
+        ObjectCalls.ptrcallWithTwoVector2ColorTwoDoubleTwoBoolArgs(drawDashedLineBind, segment, from, to, color, width, dash, aligned, antialiased)
     }
 
     /**
@@ -437,7 +437,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_polyline
      */
     fun drawPolyline(points: List<Vector2>, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(drawPolylineBind, handle, points, color, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(drawPolylineBind, segment, points, color, width, antialiased)
     }
 
     /**
@@ -454,7 +454,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_polyline_colors
      */
     fun drawPolylineColors(points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(drawPolylineColorsBind, handle, points, colors, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(drawPolylineColorsBind, segment, points, colors, width, antialiased)
     }
 
     /**
@@ -473,7 +473,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_ellipse_arc
      */
     fun drawEllipseArc(center: Vector2, major: Double, minor: Double, startAngle: Double, endAngle: Double, pointCount: Int, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2FourDoubleIntColorDoubleBoolArgs(drawEllipseArcBind, handle, center, major, minor, startAngle, endAngle, pointCount, color, width, antialiased)
+        ObjectCalls.ptrcallWithVector2FourDoubleIntColorDoubleBoolArgs(drawEllipseArcBind, segment, center, major, minor, startAngle, endAngle, pointCount, color, width, antialiased)
     }
 
     /**
@@ -492,7 +492,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_arc
      */
     fun drawArc(center: Vector2, radius: Double, startAngle: Double, endAngle: Double, pointCount: Int, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2ThreeDoubleIntColorDoubleBoolArgs(drawArcBind, handle, center, radius, startAngle, endAngle, pointCount, color, width, antialiased)
+        ObjectCalls.ptrcallWithVector2ThreeDoubleIntColorDoubleBoolArgs(drawArcBind, segment, center, radius, startAngle, endAngle, pointCount, color, width, antialiased)
     }
 
     /**
@@ -508,7 +508,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline
      */
     fun drawMultiline(points: List<Vector2>, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(drawMultilineBind, handle, points, color, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(drawMultilineBind, segment, points, color, width, antialiased)
     }
 
     /**
@@ -525,7 +525,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline_colors
      */
     fun drawMultilineColors(points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(drawMultilineColorsBind, handle, points, colors, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(drawMultilineColorsBind, segment, points, colors, width, antialiased)
     }
 
     /**
@@ -543,7 +543,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_rect
      */
     fun drawRect(rect: Rect2, color: Color, filled: Boolean = true, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRect2ColorBoolDoubleBoolArgs(drawRectBind, handle, rect, color, filled, width, antialiased)
+        ObjectCalls.ptrcallWithRect2ColorBoolDoubleBoolArgs(drawRectBind, segment, rect, color, filled, width, antialiased)
     }
 
     /**
@@ -559,7 +559,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_circle
      */
     fun drawCircle(position: Vector2, radius: Double, color: Color, filled: Boolean = true, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2DoubleColorBoolDoubleBoolArgs(drawCircleBind, handle, position, radius, color, filled, width, antialiased)
+        ObjectCalls.ptrcallWithVector2DoubleColorBoolDoubleBoolArgs(drawCircleBind, segment, position, radius, color, filled, width, antialiased)
     }
 
     /**
@@ -576,7 +576,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_ellipse
      */
     fun drawEllipse(position: Vector2, major: Double, minor: Double, color: Color, filled: Boolean = true, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs(drawEllipseBind, handle, position, major, minor, color, filled, width, antialiased)
+        ObjectCalls.ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs(drawEllipseBind, segment, position, major, minor, color, filled, width, antialiased)
     }
 
     /**
@@ -589,7 +589,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_texture
      */
     fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color) {
-        ObjectCalls.ptrcallWithObjectVector2AndColorArgs(drawTextureBind, handle, texture.requireOpenHandle(), position, modulate)
+        ObjectCalls.ptrcallWithObjectVector2AndColorArgs(drawTextureBind, segment, texture.requireOpenHandle(), position, modulate)
     }
 
     /**
@@ -604,7 +604,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_texture_rect
      */
     fun drawTextureRect(texture: Texture2D, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectRect2BoolColorBoolArgs(drawTextureRectBind, handle, texture.requireOpenHandle(), rect, tile, modulate, transpose)
+        ObjectCalls.ptrcallWithObjectRect2BoolColorBoolArgs(drawTextureRectBind, segment, texture.requireOpenHandle(), rect, tile, modulate, transpose)
     }
 
     /**
@@ -619,7 +619,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_texture_rect_region
      */
     fun drawTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectTwoRect2ColorTwoBoolArgs(drawTextureRectRegionBind, handle, texture.requireOpenHandle(), rect, srcRect, modulate, transpose, clipUv)
+        ObjectCalls.ptrcallWithObjectTwoRect2ColorTwoBoolArgs(drawTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, transpose, clipUv)
     }
 
     /**
@@ -637,7 +637,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_msdf_texture_rect_region
      */
     fun drawMsdfTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, outline: Double = 0.0, pixelRange: Double = 4.0, scale: Double = 1.0) {
-        ObjectCalls.ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(drawMsdfTextureRectRegionBind, handle, texture.requireOpenHandle(), rect, srcRect, modulate, outline, pixelRange, scale)
+        ObjectCalls.ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(drawMsdfTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, outline, pixelRange, scale)
     }
 
     /**
@@ -648,7 +648,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_lcd_texture_rect_region
      */
     fun drawLcdTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color) {
-        ObjectCalls.ptrcallWithObjectTwoRect2AndColorArgs(drawLcdTextureRectRegionBind, handle, texture.requireOpenHandle(), rect, srcRect, modulate)
+        ObjectCalls.ptrcallWithObjectTwoRect2AndColorArgs(drawLcdTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate)
     }
 
     /**
@@ -661,7 +661,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_style_box
      */
     fun drawStyleBox(styleBox: StyleBox, rect: Rect2) {
-        ObjectCalls.ptrcallWithObjectAndRect2Arg(drawStyleBoxBind, handle, styleBox.requireOpenHandle(), rect)
+        ObjectCalls.ptrcallWithObjectAndRect2Arg(drawStyleBoxBind, segment, styleBox.requireOpenHandle(), rect)
     }
 
     /**
@@ -677,7 +677,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_primitive
      */
     fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPrimitiveBind, handle, points, colors, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPrimitiveBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -696,7 +696,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_polygon
      */
     fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPolygonBind, handle, points, colors, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPolygonBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -713,7 +713,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_colored_polygon
      */
     fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(drawColoredPolygonBind, handle, points, color, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(drawColoredPolygonBind, segment, points, color, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -726,7 +726,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_string
      */
     fun drawString(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -739,7 +739,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline_string
      */
     fun drawMultilineString(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -752,7 +752,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_string_outline
      */
     fun drawStringOutline(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -765,7 +765,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline_string_outline
      */
     fun drawMultilineStringOutline(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, handle, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -776,7 +776,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_char
      */
     fun drawChar(font: Font, pos: Vector2, char: String, fontSize: Int = 16, modulate: Color, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringIntColorDoubleArgs(drawCharBind, handle, font.requireOpenHandle(), pos, char, fontSize, modulate, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringIntColorDoubleArgs(drawCharBind, segment, font.requireOpenHandle(), pos, char, fontSize, modulate, oversampling)
     }
 
     /**
@@ -787,7 +787,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_char_outline
      */
     fun drawCharOutline(font: Font, pos: Vector2, char: String, fontSize: Int = 16, size: Int = -1, modulate: Color, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(drawCharOutlineBind, handle, font.requireOpenHandle(), pos, char, fontSize, size, modulate, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(drawCharOutlineBind, segment, font.requireOpenHandle(), pos, char, fontSize, size, modulate, oversampling)
     }
 
     /**
@@ -801,7 +801,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_mesh
      */
     fun drawMesh(mesh: Mesh, texture: Texture2D?, transform: Transform2D, modulate: Color) {
-        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(drawMeshBind, handle, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL, transform, modulate)
+        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(drawMeshBind, segment, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL, transform, modulate)
     }
 
     /**
@@ -814,7 +814,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multimesh
      */
     fun drawMultimesh(multimesh: MultiMesh, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(drawMultimeshBind, handle, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectArgs(drawMultimeshBind, segment, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -831,7 +831,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_set_transform
      */
     fun drawSetTransform(position: Vector2, rotation: Double = 0.0, scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2DoubleVector2Args(drawSetTransformBind, handle, position, rotation, scale)
+        ObjectCalls.ptrcallWithVector2DoubleVector2Args(drawSetTransformBind, segment, position, rotation, scale)
     }
 
     /**
@@ -841,7 +841,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_set_transform_matrix
      */
     fun drawSetTransformMatrix(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(drawSetTransformMatrixBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(drawSetTransformMatrixBind, segment, xform)
     }
 
     /**
@@ -852,7 +852,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_animation_slice
      */
     fun drawAnimationSlice(animationLength: Double, sliceBegin: Double, sliceEnd: Double, offset: Double = 0.0) {
-        ObjectCalls.ptrcallWithFourDoubleArgs(drawAnimationSliceBind, handle, animationLength, sliceBegin, sliceEnd, offset)
+        ObjectCalls.ptrcallWithFourDoubleArgs(drawAnimationSliceBind, segment, animationLength, sliceBegin, sliceEnd, offset)
     }
 
     /**
@@ -864,7 +864,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_end_animation
      */
     fun drawEndAnimation() {
-        ObjectCalls.ptrcallNoArgs(drawEndAnimationBind, handle)
+        ObjectCalls.ptrcallNoArgs(drawEndAnimationBind, segment)
     }
 
     /**
@@ -873,7 +873,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_transform
      */
     fun getTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
     }
 
     /**
@@ -884,7 +884,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_global_transform
      */
     fun getGlobalTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalTransformBind, segment)
     }
 
     /**
@@ -894,7 +894,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_global_transform_with_canvas
      */
     fun getGlobalTransformWithCanvas(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalTransformWithCanvasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalTransformWithCanvasBind, segment)
     }
 
     /**
@@ -905,7 +905,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_viewport_transform
      */
     fun getViewportTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getViewportTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getViewportTransformBind, segment)
     }
 
     /**
@@ -914,7 +914,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_viewport_rect
      */
     fun getViewportRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getViewportRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getViewportRectBind, segment)
     }
 
     /**
@@ -924,7 +924,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas_transform
      */
     fun getCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, segment)
     }
 
     /**
@@ -936,7 +936,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_screen_transform
      */
     fun getScreenTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, segment)
     }
 
     /**
@@ -946,7 +946,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_local_mouse_position
      */
     fun getLocalMousePosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePositionBind, segment)
     }
 
     /**
@@ -957,7 +957,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_global_mouse_position
      */
     fun getGlobalMousePosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalMousePositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalMousePositionBind, segment)
     }
 
     /**
@@ -967,7 +967,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas
      */
     fun getCanvas(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, segment)
     }
 
     /**
@@ -977,7 +977,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas_layer_node
      */
     fun getCanvasLayerNode(): CanvasLayer? {
-        return CanvasLayer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCanvasLayerNodeBind, handle))
+        return CanvasLayer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCanvasLayerNodeBind, segment))
     }
 
     /**
@@ -987,7 +987,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_world_2d
      */
     fun getWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, handle))
+        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
     }
 
     /**
@@ -996,7 +996,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1005,7 +1005,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     /**
@@ -1020,7 +1020,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_instance_shader_parameter
      */
     fun setInstanceShaderParameter(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, segment, name, value)
     }
 
     /**
@@ -1029,7 +1029,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_instance_shader_parameter
      */
     fun getInstanceShaderParameter(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInstanceShaderParameterBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInstanceShaderParameterBind, segment, name)
     }
 
     /**
@@ -1038,7 +1038,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_use_parent_material
      */
     fun setUseParentMaterial(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseParentMaterialBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseParentMaterialBind, segment, enable)
     }
 
     /**
@@ -1047,7 +1047,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_use_parent_material
      */
     fun getUseParentMaterial(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseParentMaterialBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseParentMaterialBind, segment)
     }
 
     /**
@@ -1058,7 +1058,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_notify_local_transform
      */
     fun setNotifyLocalTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, segment, enable)
     }
 
     /**
@@ -1068,7 +1068,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_local_transform_notification_enabled
      */
     fun isLocalTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -1079,7 +1079,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_notify_transform
      */
     fun setNotifyTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, segment, enable)
     }
 
     /**
@@ -1089,7 +1089,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_transform_notification_enabled
      */
     fun isTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -1102,7 +1102,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.force_update_transform
      */
     fun forceUpdateTransform() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, segment)
     }
 
     /**
@@ -1112,7 +1112,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.make_canvas_position_local
      */
     fun makeCanvasPositionLocal(viewportPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(makeCanvasPositionLocalBind, handle, viewportPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(makeCanvasPositionLocalBind, segment, viewportPoint)
     }
 
     /**
@@ -1122,7 +1122,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.make_input_local
      */
     fun makeInputLocal(event: InputEvent): InputEvent? {
-        return InputEvent.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, handle, event.requireOpenHandle()))
+        return InputEvent.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, segment, event.requireOpenHandle()))
     }
 
     /**
@@ -1139,7 +1139,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_visibility_layer
      */
     fun setVisibilityLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setVisibilityLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(setVisibilityLayerBind, segment, layer)
     }
 
     /**
@@ -1156,7 +1156,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_visibility_layer
      */
     fun getVisibilityLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVisibilityLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getVisibilityLayerBind, segment)
     }
 
     /**
@@ -1166,7 +1166,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_visibility_layer_bit
      */
     fun setVisibilityLayerBit(layer: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setVisibilityLayerBitBind, handle, layer, enabled)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setVisibilityLayerBitBind, segment, layer, enabled)
     }
 
     /**
@@ -1175,7 +1175,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_visibility_layer_bit
      */
     fun getVisibilityLayerBit(layer: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getVisibilityLayerBitBind, handle, layer)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getVisibilityLayerBitBind, segment, layer)
     }
 
     /**
@@ -1184,7 +1184,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_texture_filter
      */
     fun setTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
     }
 
     /**
@@ -1193,7 +1193,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_texture_filter
      */
     fun getTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
     }
 
     /**
@@ -1206,7 +1206,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_texture_repeat
      */
     fun setTextureRepeat(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, mode)
     }
 
     /**
@@ -1219,7 +1219,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_texture_repeat
      */
     fun getTextureRepeat(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment)
     }
 
     /**
@@ -1231,7 +1231,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_clip_children_mode
      */
     fun setClipChildrenMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setClipChildrenModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setClipChildrenModeBind, segment, mode)
     }
 
     /**
@@ -1243,7 +1243,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_clip_children_mode
      */
     fun getClipChildrenMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getClipChildrenModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getClipChildrenModeBind, segment)
     }
 
     /**
@@ -1252,7 +1252,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_oversampling_with_scale
      */
     fun setOversamplingWithScale(enabled: Long) {
-        ObjectCalls.ptrcallWithLongArg(setOversamplingWithScaleBind, handle, enabled)
+        ObjectCalls.ptrcallWithLongArg(setOversamplingWithScaleBind, segment, enabled)
     }
 
     /**
@@ -1261,7 +1261,7 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_oversampling_with_scale
      */
     fun getOversamplingWithScale(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getOversamplingWithScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOversamplingWithScaleBind, segment)
     }
 
     object Signals {
@@ -1302,11 +1302,11 @@ open class CanvasItem(handle: MemorySegment) : Node(handle) {
         const val OVERSAMPLING_WITH_SCALE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CanvasItem? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CanvasItem? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CanvasItem? =
-            if (handle.address() == 0L) null else CanvasItem(handle)
+            if (handle.address() == 0L) null else CanvasItem(GodotHandle(handle))
 
         private const val GET_CANVAS_ITEM_HASH = 2944877500L
         private val getCanvasItemBind by lazy {

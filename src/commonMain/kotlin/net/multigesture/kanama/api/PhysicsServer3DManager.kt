@@ -23,7 +23,7 @@ object PhysicsServer3DManager {
      */
     @JvmStatic
     fun registerServer(name: String, createCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringCallableArgs(registerServerBind, singleton, name, createCallback.target.handle, createCallback.method)
+        ObjectCalls.ptrcallWithStringCallableArgs(registerServerBind, singleton, name, createCallback.target.segment, createCallback.method)
     }
 
     /**
@@ -38,8 +38,8 @@ object PhysicsServer3DManager {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): PhysicsServer3DManager? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): PhysicsServer3DManager? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): PhysicsServer3DManager? =
         if (handle.address() == 0L) null else this

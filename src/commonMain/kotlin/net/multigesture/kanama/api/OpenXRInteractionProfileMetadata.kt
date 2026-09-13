@@ -8,34 +8,34 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRInteractionProfileMetadata
  */
-class OpenXRInteractionProfileMetadata(handle: MemorySegment) : GodotObject(handle) {
+class OpenXRInteractionProfileMetadata(handle: GodotHandle) : GodotObject(handle) {
     fun registerProfileRename(oldName: String, newName: String) {
-        ObjectCalls.ptrcallWithTwoStringArgs(registerProfileRenameBind, handle, oldName, newName)
+        ObjectCalls.ptrcallWithTwoStringArgs(registerProfileRenameBind, segment, oldName, newName)
     }
 
     fun registerPathRename(oldName: String, newName: String) {
-        ObjectCalls.ptrcallWithTwoStringArgs(registerPathRenameBind, handle, oldName, newName)
+        ObjectCalls.ptrcallWithTwoStringArgs(registerPathRenameBind, segment, oldName, newName)
     }
 
     fun registerTopLevelPath(displayName: String, openxrPath: String, openxrExtensionNames: String) {
-        ObjectCalls.ptrcallWithThreeStringArgs(registerTopLevelPathBind, handle, displayName, openxrPath, openxrExtensionNames)
+        ObjectCalls.ptrcallWithThreeStringArgs(registerTopLevelPathBind, segment, displayName, openxrPath, openxrExtensionNames)
     }
 
     fun registerInteractionProfile(displayName: String, openxrPath: String, openxrExtensionNames: String) {
-        ObjectCalls.ptrcallWithThreeStringArgs(registerInteractionProfileBind, handle, displayName, openxrPath, openxrExtensionNames)
+        ObjectCalls.ptrcallWithThreeStringArgs(registerInteractionProfileBind, segment, displayName, openxrPath, openxrExtensionNames)
     }
 
     fun registerIoPath(interactionProfile: String, displayName: String, toplevelPath: String, openxrPath: String, openxrExtensionNames: String, actionType: Long) {
-        ObjectCalls.ptrcallWithStringStringStringStringStringLongArgs(registerIoPathBind, handle, interactionProfile, displayName, toplevelPath, openxrPath, openxrExtensionNames, actionType)
+        ObjectCalls.ptrcallWithStringStringStringStringStringLongArgs(registerIoPathBind, segment, interactionProfile, displayName, toplevelPath, openxrPath, openxrExtensionNames, actionType)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRInteractionProfileMetadata? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRInteractionProfileMetadata? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRInteractionProfileMetadata? =
-            if (handle.address() == 0L) null else OpenXRInteractionProfileMetadata(handle)
+            if (handle.address() == 0L) null else OpenXRInteractionProfileMetadata(GodotHandle(handle))
 
         private const val REGISTER_PROFILE_RENAME_HASH = 3186203200L
         private val registerProfileRenameBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTexture
  */
-class VisualShaderNodeTexture(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
     var source: Long
         @JvmName("sourceProperty")
         get() = getSource()
@@ -30,32 +30,32 @@ class VisualShaderNodeTexture(handle: MemorySegment) : VisualShaderNode(handle) 
 
     fun setSource(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, handle, value)
+        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value)
     }
 
     fun getSource(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment)
     }
 
     fun setTexture(value: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     fun setTextureType(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, value)
+        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, value)
     }
 
     fun getTextureType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment)
     }
 
     companion object {
@@ -74,11 +74,11 @@ class VisualShaderNodeTexture(handle: MemorySegment) : VisualShaderNode(handle) 
         const val TYPE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTexture? =
-            if (handle.address() == 0L) null else VisualShaderNodeTexture(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTexture(GodotHandle(handle))
 
         private const val SET_SOURCE_HASH = 905262939L
         private val setSourceBind by lazy {

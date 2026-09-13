@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: Sprite3D
  */
-class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
+class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
     var texture: Texture2D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -63,7 +63,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -73,7 +73,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -82,7 +82,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_region_enabled
      */
     fun setRegionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRegionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRegionEnabledBind, segment, enabled)
     }
 
     /**
@@ -91,7 +91,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.is_region_enabled
      */
     fun isRegionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRegionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRegionEnabledBind, segment)
     }
 
     /**
@@ -100,7 +100,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_region_rect
      */
     fun setRegionRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, handle, rect)
+        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, segment, rect)
     }
 
     /**
@@ -109,7 +109,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_region_rect
      */
     fun getRegionRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_frame
      */
     fun setFrame(frame: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, handle, frame)
+        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
     }
 
     /**
@@ -131,7 +131,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_frame
      */
     fun getFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
     }
 
     /**
@@ -141,7 +141,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_frame_coords
      */
     fun setFrameCoords(coords: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setFrameCoordsBind, handle, coords)
+        ObjectCalls.ptrcallWithVector2iArg(setFrameCoordsBind, segment, coords)
     }
 
     /**
@@ -151,7 +151,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_frame_coords
      */
     fun getFrameCoords(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getFrameCoordsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getFrameCoordsBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_vframes
      */
     fun setVframes(vframes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVframesBind, handle, vframes)
+        ObjectCalls.ptrcallWithIntArg(setVframesBind, segment, vframes)
     }
 
     /**
@@ -173,7 +173,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_vframes
      */
     fun getVframes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVframesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVframesBind, segment)
     }
 
     /**
@@ -184,7 +184,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_hframes
      */
     fun setHframes(hframes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setHframesBind, handle, hframes)
+        ObjectCalls.ptrcallWithIntArg(setHframesBind, segment, hframes)
     }
 
     /**
@@ -195,7 +195,7 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_hframes
      */
     fun getHframes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHframesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHframesBind, segment)
     }
 
     object Signals {
@@ -205,11 +205,11 @@ class Sprite3D(handle: MemorySegment) : SpriteBase3D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Sprite3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Sprite3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Sprite3D? =
-            if (handle.address() == 0L) null else Sprite3D(handle)
+            if (handle.address() == 0L) null else Sprite3D(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {

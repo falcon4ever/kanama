@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JavaScriptObject
  */
-class JavaScriptObject(handle: MemorySegment) : RefCounted(handle) {
+class JavaScriptObject(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JavaScriptObject? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JavaScriptObject? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JavaScriptObject? =
-            if (handle.address() == 0L) null else JavaScriptObject(handle)
+            if (handle.address() == 0L) null else JavaScriptObject(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

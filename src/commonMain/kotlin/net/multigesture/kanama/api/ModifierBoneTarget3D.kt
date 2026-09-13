@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ModifierBoneTarget3D
  */
-class ModifierBoneTarget3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var boneName: String
         @JvmName("boneNameProperty")
         get() = getBoneName()
@@ -30,7 +30,7 @@ class ModifierBoneTarget3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, handle, boneName)
+        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -39,7 +39,7 @@ class ModifierBoneTarget3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
     }
 
     /**
@@ -48,7 +48,7 @@ class ModifierBoneTarget3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.set_bone
      */
     fun setBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneBind, handle, bone)
+        ObjectCalls.ptrcallWithIntArg(setBoneBind, segment, bone)
     }
 
     /**
@@ -57,16 +57,16 @@ class ModifierBoneTarget3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.get_bone
      */
     fun getBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ModifierBoneTarget3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ModifierBoneTarget3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ModifierBoneTarget3D? =
-            if (handle.address() == 0L) null else ModifierBoneTarget3D(handle)
+            if (handle.address() == 0L) null else ModifierBoneTarget3D(GodotHandle(handle))
 
         private const val SET_BONE_NAME_HASH = 83702148L
         private val setBoneNameBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: GPUParticlesCollision3D
  */
-open class GPUParticlesCollision3D(handle: MemorySegment) : VisualInstance3D(handle) {
+open class GPUParticlesCollision3D(handle: GodotHandle) : VisualInstance3D(handle) {
     var cullMask: Long
         @JvmName("cullMaskProperty")
         get() = getCullMask()
@@ -32,7 +32,7 @@ open class GPUParticlesCollision3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesCollision3D.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
     }
 
     /**
@@ -49,16 +49,16 @@ open class GPUParticlesCollision3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesCollision3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GPUParticlesCollision3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GPUParticlesCollision3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GPUParticlesCollision3D? =
-            if (handle.address() == 0L) null else GPUParticlesCollision3D(handle)
+            if (handle.address() == 0L) null else GPUParticlesCollision3D(GodotHandle(handle))
 
         private const val SET_CULL_MASK_HASH = 1286410249L
         private val setCullMaskBind by lazy {

@@ -8,19 +8,19 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationMicroQrCode
  */
-class OpenXRSpatialCapabilityConfigurationMicroQrCode(handle: MemorySegment) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
+class OpenXRSpatialCapabilityConfigurationMicroQrCode(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
-            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationMicroQrCode(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationMicroQrCode(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
         private val getEnabledComponentsBind by lazy {

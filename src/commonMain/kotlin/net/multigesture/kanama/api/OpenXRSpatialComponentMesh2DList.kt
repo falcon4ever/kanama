@@ -11,29 +11,29 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: OpenXRSpatialComponentMesh2DList
  */
-class OpenXRSpatialComponentMesh2DList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+class OpenXRSpatialComponentMesh2DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getTransform(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, segment, index)
     }
 
     fun getVertices(snapshot: RID, index: Long): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(getVerticesBind, handle, snapshot, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(getVerticesBind, segment, snapshot, index)
     }
 
     fun getIndices(snapshot: RID, index: Long): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getIndicesBind, handle, snapshot, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedInt32List(getIndicesBind, segment, snapshot, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentMesh2DList? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentMesh2DList? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentMesh2DList? =
-            if (handle.address() == 0L) null else OpenXRSpatialComponentMesh2DList(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialComponentMesh2DList(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 1965739696L
         private val getTransformBind by lazy {

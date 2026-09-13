@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PlaceholderMaterial
  */
-class PlaceholderMaterial(handle: MemorySegment) : Material(handle) {
+class PlaceholderMaterial(handle: GodotHandle) : Material(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PlaceholderMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaceholderMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaceholderMaterial? =
-            if (handle.address() == 0L) null else PlaceholderMaterial(handle)
+            if (handle.address() == 0L) null else PlaceholderMaterial(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: UDSServer
  */
-class UDSServer(handle: MemorySegment) : SocketServer(handle) {
+class UDSServer(handle: GodotHandle) : SocketServer(handle) {
     /**
      * Listens on the socket at `path`. The socket file will be created at the specified path. Note:
      * The socket file must not already exist at the specified path. You may need to remove any
@@ -20,7 +20,7 @@ class UDSServer(handle: MemorySegment) : SocketServer(handle) {
      */
     fun listen(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(listenBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(listenBind, segment, path)
     }
 
     /**
@@ -30,16 +30,16 @@ class UDSServer(handle: MemorySegment) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerUDS? {
         checkOpen()
-        return StreamPeerUDS.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, handle))
+        return StreamPeerUDS.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): UDSServer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): UDSServer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): UDSServer? =
-            if (handle.address() == 0L) null else UDSServer(handle)
+            if (handle.address() == 0L) null else UDSServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 166001499L
         private val listenBind by lazy {

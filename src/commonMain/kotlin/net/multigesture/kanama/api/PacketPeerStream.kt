@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PacketPeerStream
  */
-class PacketPeerStream(handle: MemorySegment) : PacketPeer(handle) {
+class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
     var inputBufferMaxSize: Int
         @JvmName("inputBufferMaxSizeProperty")
         get() = getInputBufferMaxSize()
@@ -37,7 +37,7 @@ class PacketPeerStream(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun setStreamPeer(peer: StreamPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setStreamPeerBind, handle, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setStreamPeerBind, segment, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -47,36 +47,36 @@ class PacketPeerStream(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getStreamPeer(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, handle))
+        return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, segment))
     }
 
     fun setInputBufferMaxSize(maxSizeBytes: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInputBufferMaxSizeBind, handle, maxSizeBytes)
+        ObjectCalls.ptrcallWithIntArg(setInputBufferMaxSizeBind, segment, maxSizeBytes)
     }
 
     fun setOutputBufferMaxSize(maxSizeBytes: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOutputBufferMaxSizeBind, handle, maxSizeBytes)
+        ObjectCalls.ptrcallWithIntArg(setOutputBufferMaxSizeBind, segment, maxSizeBytes)
     }
 
     fun getInputBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInputBufferMaxSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInputBufferMaxSizeBind, segment)
     }
 
     fun getOutputBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutputBufferMaxSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutputBufferMaxSizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PacketPeerStream? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PacketPeerStream? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PacketPeerStream? =
-            if (handle.address() == 0L) null else PacketPeerStream(handle)
+            if (handle.address() == 0L) null else PacketPeerStream(GodotHandle(handle))
 
         private const val SET_STREAM_PEER_HASH = 3281897016L
         private val setStreamPeerBind by lazy {

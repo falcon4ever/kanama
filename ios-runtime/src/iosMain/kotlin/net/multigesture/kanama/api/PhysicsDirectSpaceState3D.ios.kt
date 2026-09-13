@@ -13,10 +13,10 @@ import net.multigesture.kanama.binding.runtime.*
 // raw handle into a GodotObject so scripts can `hit["collider"] as? GodotObject`.
 fun PhysicsDirectSpaceState3D.intersectRay(parameters: PhysicsRayQueryParameters3D?): Map<String, Any?> {
     val query = parameters ?: return emptyMap()
-    val raw = ObjectCalls.ptrcallIntersectRay(intersectRayBind, handle, query.handle)
+    val raw = ObjectCalls.ptrcallIntersectRay(intersectRayBind, segment, query.segment)
     if (raw.isEmpty()) return emptyMap()
     val result = raw.toMutableMap()
-    (raw["collider"] as? MemorySegment)?.let { result["collider"] = GodotObject(it) }
+    (raw["collider"] as? MemorySegment)?.let { result["collider"] = GodotObject(GodotHandle(it)) }
     return result
 }
 

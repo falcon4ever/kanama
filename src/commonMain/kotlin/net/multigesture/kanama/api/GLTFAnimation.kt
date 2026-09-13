@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFAnimation
  */
-class GLTFAnimation(handle: MemorySegment) : Resource(handle) {
+class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
     var originalName: String
         @JvmName("originalNameProperty")
         get() = getOriginalName()
@@ -24,41 +24,41 @@ class GLTFAnimation(handle: MemorySegment) : Resource(handle) {
 
     fun getOriginalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, segment)
     }
 
     fun setOriginalName(originalName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, handle, originalName)
+        ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, segment, originalName)
     }
 
     fun getLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getLoopBind, segment)
     }
 
     fun setLoop(loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
+        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, segment, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFAnimation? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFAnimation? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFAnimation? =
-            if (handle.address() == 0L) null else GLTFAnimation(handle)
+            if (handle.address() == 0L) null else GLTFAnimation(GodotHandle(handle))
 
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L
         private val getOriginalNameBind by lazy {

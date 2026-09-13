@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorSelection
  */
-class EditorSelection(handle: MemorySegment) : GodotObject(handle) {
+class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Clear the selection.
      *
      * Generated from Godot docs: EditorSelection.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -27,7 +27,7 @@ class EditorSelection(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.add_node
      */
     fun addNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addNodeBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addNodeBind, segment, listOf(node.segment))
     }
 
     /**
@@ -36,7 +36,7 @@ class EditorSelection(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.remove_node
      */
     fun removeNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeNodeBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeNodeBind, segment, listOf(node.segment))
     }
 
     /**
@@ -45,7 +45,7 @@ class EditorSelection(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.get_selected_nodes
      */
     fun getSelectedNodes(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSelectedNodesBind, handle, Node::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSelectedNodesBind, segment, Node::wrap)
     }
 
     /**
@@ -58,7 +58,7 @@ class EditorSelection(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.get_top_selected_nodes
      */
     fun getTopSelectedNodes(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTopSelectedNodesBind, handle, Node::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTopSelectedNodesBind, segment, Node::wrap)
     }
 
     /**
@@ -68,7 +68,7 @@ class EditorSelection(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.get_transformable_selected_nodes
      */
     fun getTransformableSelectedNodes(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTransformableSelectedNodesBind, handle, Node::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTransformableSelectedNodesBind, segment, Node::wrap)
     }
 
     object Signals {
@@ -77,11 +77,11 @@ class EditorSelection(handle: MemorySegment) : GodotObject(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorSelection? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorSelection? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorSelection? =
-            if (handle.address() == 0L) null else EditorSelection(handle)
+            if (handle.address() == 0L) null else EditorSelection(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {

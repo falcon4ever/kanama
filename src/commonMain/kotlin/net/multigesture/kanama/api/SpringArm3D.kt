@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: SpringArm3D
  */
-class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
+class SpringArm3D(handle: GodotHandle) : Node3D(handle) {
     var collisionMask: Long
         @JvmName("collisionMaskProperty")
         get() = getCollisionMask()
@@ -43,7 +43,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.get_hit_length
      */
     fun getHitLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHitLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHitLengthBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.set_length
      */
     fun setLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, length)
     }
 
     /**
@@ -67,7 +67,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.get_length
      */
     fun getLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.set_shape
      */
     fun setShape(shape: Shape3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -87,7 +87,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.get_shape
      */
     fun getShape(): Shape3D? {
-        return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
+        return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**
@@ -97,7 +97,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.add_excluded_object
      */
     fun addExcludedObject(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(addExcludedObjectBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(addExcludedObjectBind, segment, rid)
     }
 
     /**
@@ -107,7 +107,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.remove_excluded_object
      */
     fun removeExcludedObject(rid: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(removeExcludedObjectBind, handle, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(removeExcludedObjectBind, segment, rid)
     }
 
     /**
@@ -116,7 +116,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.clear_excluded_objects
      */
     fun clearExcludedObjects() {
-        ObjectCalls.ptrcallNoArgs(clearExcludedObjectsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearExcludedObjectsBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -138,7 +138,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.set_margin
      */
     fun setMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
     }
 
     /**
@@ -164,16 +164,16 @@ class SpringArm3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.get_margin
      */
     fun getMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpringArm3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpringArm3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpringArm3D? =
-            if (handle.address() == 0L) null else SpringArm3D(handle)
+            if (handle.address() == 0L) null else SpringArm3D(GodotHandle(handle))
 
         private const val GET_HIT_LENGTH_HASH = 191475506L
         private val getHitLengthBind by lazy {

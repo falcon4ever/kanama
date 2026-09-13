@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: LinkButton
  */
-class LinkButton(handle: MemorySegment) : BaseButton(handle) {
+class LinkButton(handle: GodotHandle) : BaseButton(handle) {
     var text: String
         @JvmName("textProperty")
         get() = getText()
@@ -72,7 +72,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -81,7 +81,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     /**
@@ -90,7 +90,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
     }
 
     /**
@@ -99,7 +99,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_ellipsis_char
      */
     fun setEllipsisChar(char: String) {
-        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
+        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, segment, char)
     }
 
     /**
@@ -117,7 +117,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_ellipsis_char
      */
     fun getEllipsisChar(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, segment)
     }
 
     /**
@@ -126,7 +126,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -135,7 +135,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_text_direction
      */
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -155,7 +155,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_uri
      */
     fun setUri(uri: String) {
-        ObjectCalls.ptrcallWithStringArg(setUriBind, handle, uri)
+        ObjectCalls.ptrcallWithStringArg(setUriBind, segment, uri)
     }
 
     /**
@@ -179,7 +179,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_uri
      */
     fun getUri(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getUriBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getUriBind, segment)
     }
 
     /**
@@ -188,7 +188,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_underline_mode
      */
     fun setUnderlineMode(underlineMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setUnderlineModeBind, handle, underlineMode)
+        ObjectCalls.ptrcallWithLongArg(setUnderlineModeBind, segment, underlineMode)
     }
 
     /**
@@ -197,7 +197,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_underline_mode
      */
     fun getUnderlineMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getUnderlineModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getUnderlineModeBind, segment)
     }
 
     /**
@@ -206,7 +206,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     /**
@@ -215,7 +215,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
     }
 
     /**
@@ -224,7 +224,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -233,7 +233,7 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     companion object {
@@ -242,11 +242,11 @@ class LinkButton(handle: MemorySegment) : BaseButton(handle) {
         const val UNDERLINE_MODE_NEVER: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LinkButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LinkButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LinkButton? =
-            if (handle.address() == 0L) null else LinkButton(handle)
+            if (handle.address() == 0L) null else LinkButton(GodotHandle(handle))
 
         private const val SET_TEXT_HASH = 83702148L
         private val setTextBind by lazy {

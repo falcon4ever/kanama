@@ -2,7 +2,6 @@ package net.multigesture.kanama.example
 
 // Desktop-only wrapper members are extensions in `<Class>.jvm.kt` companions (task 103), so a
 // script that calls them needs the package import, not just the class imports below.
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.*
 import net.multigesture.kanama.api.AnimatedSprite2D
@@ -30,6 +29,7 @@ import net.multigesture.kanama.api.EditorSceneFormatImporter
 import net.multigesture.kanama.api.EditorScenePostImport
 import net.multigesture.kanama.api.EditorScenePostImportPlugin
 import net.multigesture.kanama.api.EditorVCSInterface
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.GridMap
 import net.multigesture.kanama.api.ImageFormatLoaderExtension
@@ -75,7 +75,7 @@ import net.multigesture.kanama.types.Vector3
 
 @Suppress("unused")
 @ScriptClass(attachTo = "Node")
-class WrapperConvenienceProbe(val godotObject: MemorySegment) {
+class WrapperConvenienceProbe(val godotObject: GodotHandle) {
   fun node3dConveniences(node: Node3D) {
     node.lookAt(Vector3.ZERO)
     node.lookAtFromPosition(Vector3.ZERO, Vector3.UP)

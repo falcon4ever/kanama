@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StyleBoxEmpty
  */
-class StyleBoxEmpty(handle: MemorySegment) : StyleBox(handle) {
+class StyleBoxEmpty(handle: GodotHandle) : StyleBox(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StyleBoxEmpty? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StyleBoxEmpty? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StyleBoxEmpty? =
-            if (handle.address() == 0L) null else StyleBoxEmpty(handle)
+            if (handle.address() == 0L) null else StyleBoxEmpty(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

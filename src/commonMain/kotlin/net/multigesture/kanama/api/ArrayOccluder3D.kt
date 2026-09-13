@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: ArrayOccluder3D
  */
-class ArrayOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
+class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     /**
      * Sets `indices` and `vertices`, while updating the final occluder only once after both values are
      * set.
@@ -20,7 +20,7 @@ class ArrayOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun setArrays(vertices: List<Vector3>, indices: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListAndPackedInt32ListArgs(setArraysBind, handle, vertices, indices)
+        ObjectCalls.ptrcallWithPackedVector3ListAndPackedInt32ListArgs(setArraysBind, segment, vertices, indices)
     }
 
     /**
@@ -32,7 +32,7 @@ class ArrayOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun setVertices(vertices: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, segment, vertices)
     }
 
     /**
@@ -45,16 +45,16 @@ class ArrayOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun setIndices(indices: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, handle, indices)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, segment, indices)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ArrayOccluder3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ArrayOccluder3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ArrayOccluder3D? =
-            if (handle.address() == 0L) null else ArrayOccluder3D(handle)
+            if (handle.address() == 0L) null else ArrayOccluder3D(GodotHandle(handle))
 
         private const val SET_ARRAYS_HASH = 3233972621L
         private val setArraysBind by lazy {

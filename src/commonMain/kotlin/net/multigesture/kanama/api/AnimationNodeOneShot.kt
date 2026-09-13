@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeOneShot
  */
-class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
+class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     var mixMode: Long
         @JvmName("mixModeProperty")
         get() = getMixMode()
@@ -81,7 +81,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setFadeinTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFadeinTimeBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(setFadeinTimeBind, segment, time)
     }
 
     /**
@@ -93,7 +93,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun getFadeinTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeinTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeinTimeBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setFadeinCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -115,7 +115,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun getFadeinCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, segment))
     }
 
     /**
@@ -127,7 +127,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setFadeoutTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFadeoutTimeBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(setFadeoutTimeBind, segment, time)
     }
 
     /**
@@ -139,7 +139,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun getFadeoutTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeoutTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeoutTimeBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setFadeoutCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -161,7 +161,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun getFadeoutCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, segment))
     }
 
     /**
@@ -172,7 +172,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setBreakLoopAtEnd(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, segment, enable)
     }
 
     /**
@@ -183,7 +183,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun isLoopBrokenAtEnd(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setAbortOnReset(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAbortOnResetBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAbortOnResetBind, segment, enable)
     }
 
     /**
@@ -203,7 +203,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun isAbortedOnReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbortedOnResetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAbortedOnResetBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setAutorestart(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAutorestartBind, handle, active)
+        ObjectCalls.ptrcallWithBoolArg(setAutorestartBind, segment, active)
     }
 
     /**
@@ -231,7 +231,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun hasAutorestart(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutorestartBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasAutorestartBind, segment)
     }
 
     /**
@@ -241,7 +241,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setAutorestartDelay(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutorestartDelayBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(setAutorestartDelayBind, segment, time)
     }
 
     /**
@@ -251,7 +251,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun getAutorestartDelay(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartDelayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartDelayBind, segment)
     }
 
     /**
@@ -262,7 +262,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setAutorestartRandomDelay(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutorestartRandomDelayBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(setAutorestartRandomDelayBind, segment, time)
     }
 
     /**
@@ -273,7 +273,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun getAutorestartRandomDelay(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartRandomDelayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartRandomDelayBind, segment)
     }
 
     /**
@@ -283,7 +283,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun setMixMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMixModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMixModeBind, segment, mode)
     }
 
     /**
@@ -293,7 +293,7 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
      */
     fun getMixMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, segment)
     }
 
     companion object {
@@ -305,11 +305,11 @@ class AnimationNodeOneShot(handle: MemorySegment) : AnimationNodeSync(handle) {
         const val MIX_MODE_ADD: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeOneShot? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeOneShot? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeOneShot? =
-            if (handle.address() == 0L) null else AnimationNodeOneShot(handle)
+            if (handle.address() == 0L) null else AnimationNodeOneShot(GodotHandle(handle))
 
         private const val SET_FADEIN_TIME_HASH = 373806689L
         private val setFadeinTimeBind by lazy {

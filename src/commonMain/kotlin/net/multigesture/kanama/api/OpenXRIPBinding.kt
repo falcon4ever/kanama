@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRIPBinding
  */
-class OpenXRIPBinding(handle: MemorySegment) : Resource(handle) {
+class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     var action: OpenXRAction?
         @JvmName("actionProperty")
         get() = getAction()
@@ -36,81 +36,81 @@ class OpenXRIPBinding(handle: MemorySegment) : Resource(handle) {
 
     fun setAction(action: OpenXRAction?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setActionBind, handle, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setActionBind, segment, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getAction(): OpenXRAction? {
         checkOpen()
-        return OpenXRAction.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionBind, handle))
+        return OpenXRAction.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionBind, segment))
     }
 
     fun setBindingPath(bindingPath: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setBindingPathBind, handle, bindingPath)
+        ObjectCalls.ptrcallWithStringArg(setBindingPathBind, segment, bindingPath)
     }
 
     fun getBindingPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getBindingPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBindingPathBind, segment)
     }
 
     fun getBindingModifierCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, segment)
     }
 
     fun getBindingModifier(index: Int): OpenXRActionBindingModifier? {
         checkOpen()
-        return OpenXRActionBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, handle, index))
+        return OpenXRActionBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, segment, index))
     }
 
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBindingModifiersBind, handle, bindingModifiers)
+        ObjectCalls.ptrcallWithArrayArg(setBindingModifiersBind, segment, bindingModifiers)
     }
 
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, segment)
     }
 
     fun setPaths(paths: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setPathsBind, handle, paths)
+        ObjectCalls.ptrcallWithPackedStringListArg(setPathsBind, segment, paths)
     }
 
     fun getPaths(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPathsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPathsBind, segment)
     }
 
     fun getPathCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPathCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPathCountBind, segment)
     }
 
     fun hasPath(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasPathBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasPathBind, segment, path)
     }
 
     fun addPath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addPathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addPathBind, segment, path)
     }
 
     fun removePath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removePathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(removePathBind, segment, path)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRIPBinding? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRIPBinding? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRIPBinding? =
-            if (handle.address() == 0L) null else OpenXRIPBinding(handle)
+            if (handle.address() == 0L) null else OpenXRIPBinding(GodotHandle(handle))
 
         private const val SET_ACTION_HASH = 349361333L
         private val setActionBind by lazy {

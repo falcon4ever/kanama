@@ -135,8 +135,8 @@ object IP {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): IP? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): IP? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): IP? =
         if (handle.address() == 0L) null else this

@@ -43,8 +43,9 @@ the project checkout:
 
 1. **`<project>/kotlin-src/`** — the shared script root, the same files the
    desktop build compiles. A script is directly Wasm-compatible when written
-   portably: the constructor takes `GodotHandle` (a typealias for
-   `MemorySegment` on the JVM, so desktop semantics are unchanged); numeric
+   portably: the constructor takes `GodotHandle` (a zero-cost value class over the
+   backend's own handle — an FFM `MemorySegment` on JVM/Android and iOS, a
+   generation-tagged registry id on Web); numeric
    reads of vector fields go through `.toDouble()` where the value is passed
    as a parameter (desktop fields are single-precision `real_t`, Web's are
    `Double` — mixed arithmetic widens automatically, bare parameter passes do

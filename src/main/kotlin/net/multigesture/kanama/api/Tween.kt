@@ -8,7 +8,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: Tween
  */
-class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
+class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Creates and appends a `PropertyTweener`. This method tweens a `property` of an `object` between
@@ -28,8 +28,8 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
         return PropertyTweener.wrap(
             ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
                 tweenPropertyBind,
-                handle,
-                target.handle,
+                segment,
+                target.segment,
                 property,
                 finalValue,
                 duration,
@@ -47,7 +47,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun tweenInterval(time: Double): IntervalTweener? {
         checkOpen()
-        return IntervalTweener.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(tweenIntervalBind, handle, time))
+        return IntervalTweener.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(tweenIntervalBind, segment, time))
     }
 
     /**
@@ -59,7 +59,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
     fun tweenCallback(target: GodotObject, method: String): CallbackTweener? {
         checkOpen()
         return CallbackTweener.wrap(
-            ObjectCalls.ptrcallWithCallableArgRetObject(tweenCallbackBind, handle, target.handle, method),
+            ObjectCalls.ptrcallWithCallableArgRetObject(tweenCallbackBind, segment, target.segment, method),
         )
     }
 
@@ -84,8 +84,8 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
         return MethodTweener.wrap(
             ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(
                 tweenMethodBind,
-                handle,
-                target.handle,
+                segment,
+                target.segment,
                 method,
                 from,
                 to,
@@ -105,7 +105,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
         return SubtweenTweener.wrap(
             ObjectCalls.ptrcallWithObjectArgRetObject(
                 tweenSubtweenBind,
-                handle,
+                segment,
                 subtween?.requireOpenHandle() ?: MemorySegment.NULL,
             ),
         )
@@ -124,7 +124,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
     fun tweenAwait(signal: GodotSignal): AwaitTweener? {
         checkOpen()
         return AwaitTweener.wrap(
-            ObjectCalls.ptrcallWithSignalArgRetObject(tweenAwaitBind, handle, signal.owner.handle, signal.name),
+            ObjectCalls.ptrcallWithSignalArgRetObject(tweenAwaitBind, segment, signal.owner.segment, signal.name),
         )
     }
 
@@ -138,7 +138,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun customStep(delta: Double): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetBool(customStepBind, handle, delta)
+        return ObjectCalls.ptrcallWithDoubleArgRetBool(customStepBind, segment, delta)
     }
 
     /**
@@ -150,7 +150,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun pause() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pauseBind, handle)
+        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun play() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(playBind, handle)
+        ObjectCalls.ptrcallNoArgs(playBind, segment)
     }
 
     /**
@@ -182,7 +182,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun kill() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(killBind, handle)
+        ObjectCalls.ptrcallNoArgs(killBind, segment)
     }
 
     /**
@@ -195,7 +195,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTotalElapsedTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalElapsedTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalElapsedTimeBind, segment)
     }
 
     /**
@@ -205,7 +205,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isRunning(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, segment)
     }
 
     /**
@@ -218,7 +218,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isValid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isValidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isValidBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun bindNode(node: Node): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, handle, node.handle))
+        return wrapOrThis(ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment))
     }
 
     /**
@@ -244,7 +244,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setProcessMode(mode: Long): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setProcessModeBind, handle, mode))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setProcessModeBind, segment, mode))
     }
 
     /**
@@ -255,7 +255,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPauseMode(mode: Long): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setPauseModeBind, handle, mode))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setPauseModeBind, segment, mode))
     }
 
     /**
@@ -266,7 +266,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setIgnoreTimeScale(ignore: Boolean = true): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setIgnoreTimeScaleBind, handle, ignore))
+        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setIgnoreTimeScaleBind, segment, ignore))
     }
 
     /**
@@ -278,7 +278,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setParallel(parallel: Boolean = true): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setParallelBind, handle, parallel))
+        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setParallelBind, segment, parallel))
     }
 
     /**
@@ -295,7 +295,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLoops(loops: Long = 0): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithIntArgRetObject(setLoopsBind, handle, loops.toInt()))
+        return wrapOrThis(ObjectCalls.ptrcallWithIntArgRetObject(setLoopsBind, segment, loops.toInt()))
     }
 
     /**
@@ -307,7 +307,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLoopsLeft(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLoopsLeftBind, handle).toLong()
+        return ObjectCalls.ptrcallNoArgsRetInt(getLoopsLeftBind, segment).toLong()
     }
 
     /**
@@ -317,7 +317,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSpeedScale(speed: Double): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithDoubleArgRetObject(setSpeedScaleBind, handle, speed))
+        return wrapOrThis(ObjectCalls.ptrcallWithDoubleArgRetObject(setSpeedScaleBind, segment, speed))
     }
 
     /**
@@ -328,7 +328,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTrans(trans: Long): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, handle, trans))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans))
     }
 
     /**
@@ -339,7 +339,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEase(ease: Long): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease))
     }
 
     /**
@@ -349,7 +349,7 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun parallel(): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(parallelBind, handle))
+        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(parallelBind, segment))
     }
 
     /**
@@ -359,17 +359,17 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
      */
     fun chain(): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(chainBind, handle))
+        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(chainBind, segment))
     }
 
     private fun wrapOrThis(value: MemorySegment): Tween =
         if (value.address() == 0L) {
             this
-        } else if (value.address() == handle.address()) {
+        } else if (value.address() == segment.address()) {
             releaseHandle(value)
             this
         } else {
-            Tween(value)
+            Tween(GodotHandle(value))
         }
 
     object Signals {
@@ -568,6 +568,6 @@ class Tween internal constructor(handle: MemorySegment) : RefCounted(handle) {
         }
 
         internal fun wrap(handle: MemorySegment): Tween? =
-            if (handle.address() == 0L) null else Tween(handle)
+            if (handle.address() == 0L) null else Tween(GodotHandle(handle))
     }
 }

@@ -746,7 +746,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture3dGet(texture: RID): List<Image> {
-        return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(texture3dGetBind, singleton, texture, Image::fromHandle)
+        return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(texture3dGetBind, singleton, texture, Image::wrap)
     }
 
     /**
@@ -3356,7 +3356,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun visibilityNotifierSetCallbacks(notifier: RID, enterCallable: GodotCallable, exitCallable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDTwoCallableArgs(visibilityNotifierSetCallbacksBind, singleton, notifier, enterCallable.target.handle, enterCallable.method, exitCallable.target.handle, exitCallable.method)
+        ObjectCalls.ptrcallWithRIDTwoCallableArgs(visibilityNotifierSetCallbacksBind, singleton, notifier, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
     }
 
     /**
@@ -4247,7 +4247,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun compositorEffectSetCallback(effect: RID, callbackType: Long, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(compositorEffectSetCallbackBind, singleton, effect, callbackType, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(compositorEffectSetCallbackBind, singleton, effect, callbackType, callback.target.segment, callback.method)
     }
 
     /**
@@ -5179,7 +5179,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun bakeRenderUv2(base: RID, materialOverrides: List<RID>, imageSize: Vector2i): List<Image> {
-        return ObjectCalls.ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(bakeRenderUv2Bind, singleton, base, materialOverrides, imageSize, Image::fromHandle)
+        return ObjectCalls.ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(bakeRenderUv2Bind, singleton, base, materialOverrides, imageSize, Image::wrap)
     }
 
     /**
@@ -5871,7 +5871,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetVisibilityNotifier(item: RID, enable: Boolean, area: Rect2, enterCallable: GodotCallable, exitCallable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDBoolRect2TwoCallableArgs(canvasItemSetVisibilityNotifierBind, singleton, item, enable, area, enterCallable.target.handle, enterCallable.method, exitCallable.target.handle, exitCallable.method)
+        ObjectCalls.ptrcallWithRIDBoolRect2TwoCallableArgs(canvasItemSetVisibilityNotifierBind, singleton, item, enable, area, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
     }
 
     /**
@@ -6393,7 +6393,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun requestFrameDrawnCallback(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(requestFrameDrawnCallbackBind, singleton, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(requestFrameDrawnCallbackBind, singleton, callable.target.segment, callable.method)
     }
 
     /**
@@ -6724,7 +6724,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun callOnRenderThread(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(callOnRenderThreadBind, singleton, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(callOnRenderThreadBind, singleton, callable.target.segment, callable.method)
     }
 
     /**
@@ -6743,8 +6743,8 @@ object RenderingServer {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): RenderingServer? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): RenderingServer? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): RenderingServer? =
         if (handle.address() == 0L) null else this

@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: Node3D
  */
-open class Node3D(handle: MemorySegment) : Node(handle) {
+open class Node3D(handle: GodotHandle) : Node(handle) {
     var transform: Transform3D
         @JvmName("transformProperty")
         get() = getTransform()
@@ -118,287 +118,287 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
         set(value) = setVisibilityParent(value)
 
     fun setTransform(local: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, local)
+        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, local)
     }
 
     fun getTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
     }
 
     fun setPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, segment, position)
     }
 
     fun getPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, segment)
     }
 
     fun setRotation(eulerRadians: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setRotationBind, handle, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(setRotationBind, segment, eulerRadians)
     }
 
     fun getRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationBind, segment)
     }
 
     fun setRotationDegrees(eulerDegrees: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setRotationDegreesBind, handle, eulerDegrees)
+        ObjectCalls.ptrcallWithVector3Arg(setRotationDegreesBind, segment, eulerDegrees)
     }
 
     fun getRotationDegrees(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationDegreesBind, segment)
     }
 
     fun setRotationOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, handle, order)
+        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, segment, order)
     }
 
     fun getRotationOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, segment)
     }
 
     fun setRotationEditMode(editMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, handle, editMode)
+        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, segment, editMode)
     }
 
     fun getRotationEditMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, segment)
     }
 
     fun setScale(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(setScaleBind, segment, scale)
     }
 
     fun getScale(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, segment)
     }
 
     fun setQuaternion(quaternion: Quaternion) {
-        ObjectCalls.ptrcallWithQuaternionArg(setQuaternionBind, handle, quaternion)
+        ObjectCalls.ptrcallWithQuaternionArg(setQuaternionBind, segment, quaternion)
     }
 
     fun getQuaternion(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getQuaternionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getQuaternionBind, segment)
     }
 
     fun setBasis(basis: Basis) {
-        ObjectCalls.ptrcallWithBasisArg(setBasisBind, handle, basis)
+        ObjectCalls.ptrcallWithBasisArg(setBasisBind, segment, basis)
     }
 
     fun getBasis(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getBasisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBasis(getBasisBind, segment)
     }
 
     fun setGlobalTransform(global: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setGlobalTransformBind, handle, global)
+        ObjectCalls.ptrcallWithTransform3DArg(setGlobalTransformBind, segment, global)
     }
 
     fun getGlobalTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformBind, segment)
     }
 
     fun getGlobalTransformInterpolated(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformInterpolatedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformInterpolatedBind, segment)
     }
 
     fun setGlobalPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalPositionBind, segment, position)
     }
 
     fun getGlobalPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalPositionBind, segment)
     }
 
     fun setGlobalBasis(basis: Basis) {
-        ObjectCalls.ptrcallWithBasisArg(setGlobalBasisBind, handle, basis)
+        ObjectCalls.ptrcallWithBasisArg(setGlobalBasisBind, segment, basis)
     }
 
     fun getGlobalBasis(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getGlobalBasisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBasis(getGlobalBasisBind, segment)
     }
 
     fun setGlobalRotation(eulerRadians: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationBind, handle, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationBind, segment, eulerRadians)
     }
 
     fun getGlobalRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationBind, segment)
     }
 
     fun setGlobalRotationDegrees(eulerDegrees: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationDegreesBind, handle, eulerDegrees)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationDegreesBind, segment, eulerDegrees)
     }
 
     fun getGlobalRotationDegrees(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationDegreesBind, segment)
     }
 
     fun getParentNode3d(): Node3D? {
-        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentNode3dBind, handle))
+        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentNode3dBind, segment))
     }
 
     fun setIgnoreTransformNotification(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreTransformNotificationBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreTransformNotificationBind, segment, enabled)
     }
 
     fun setAsTopLevel(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, segment, enable)
     }
 
     fun isSetAsTopLevel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, segment)
     }
 
     fun setDisableScale(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableScaleBind, handle, disable)
+        ObjectCalls.ptrcallWithBoolArg(setDisableScaleBind, segment, disable)
     }
 
     fun isScaleDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScaleDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScaleDisabledBind, segment)
     }
 
     fun getWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, handle))
+        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
     }
 
     fun forceUpdateTransform() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, segment)
     }
 
     fun setVisibilityParent(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setVisibilityParentBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setVisibilityParentBind, segment, path)
     }
 
     fun getVisibilityParent(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getVisibilityParentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getVisibilityParentBind, segment)
     }
 
     fun updateGizmos() {
-        ObjectCalls.ptrcallNoArgs(updateGizmosBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateGizmosBind, segment)
     }
 
     fun addGizmo(gizmo: Node3DGizmo?) {
-        ObjectCalls.ptrcallWithObjectArgs(addGizmoBind, handle, listOf(gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addGizmoBind, segment, listOf(gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getGizmos(): List<Node3DGizmo> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getGizmosBind, handle, Node3DGizmo::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getGizmosBind, segment, Node3DGizmo::wrap)
     }
 
     fun clearGizmos() {
-        ObjectCalls.ptrcallNoArgs(clearGizmosBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearGizmosBind, segment)
     }
 
     fun setSubgizmoSelection(gizmo: Node3DGizmo?, id: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(setSubgizmoSelectionBind, handle, gizmo?.requireOpenHandle() ?: MemorySegment.NULL, id, transform)
+        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(setSubgizmoSelectionBind, segment, gizmo?.requireOpenHandle() ?: MemorySegment.NULL, id, transform)
     }
 
     fun clearSubgizmoSelection() {
-        ObjectCalls.ptrcallNoArgs(clearSubgizmoSelectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSubgizmoSelectionBind, segment)
     }
 
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
     }
 
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
     }
 
     fun isVisibleInTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, segment)
     }
 
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, handle)
+        ObjectCalls.ptrcallNoArgs(showBind, segment)
     }
 
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, handle)
+        ObjectCalls.ptrcallNoArgs(hideBind, segment)
     }
 
     fun setNotifyLocalTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, segment, enable)
     }
 
     fun isLocalTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, segment)
     }
 
     fun setNotifyTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, segment, enable)
     }
 
     fun isTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, segment)
     }
 
     fun rotate(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateBind, handle, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateBind, segment, axis, angle)
     }
 
     fun globalRotate(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(globalRotateBind, handle, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(globalRotateBind, segment, axis, angle)
     }
 
     fun globalScale(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(globalScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(globalScaleBind, segment, scale)
     }
 
     fun globalTranslate(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(globalTranslateBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(globalTranslateBind, segment, offset)
     }
 
     fun rotateObjectLocal(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateObjectLocalBind, handle, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateObjectLocalBind, segment, axis, angle)
     }
 
     fun scaleObjectLocal(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(scaleObjectLocalBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(scaleObjectLocalBind, segment, scale)
     }
 
     fun translateObjectLocal(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(translateObjectLocalBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(translateObjectLocalBind, segment, offset)
     }
 
     fun rotateX(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateXBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(rotateXBind, segment, angle)
     }
 
     fun rotateY(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateYBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(rotateYBind, segment, angle)
     }
 
     fun rotateZ(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateZBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(rotateZBind, segment, angle)
     }
 
     fun translate(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(translateBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(translateBind, segment, offset)
     }
 
     fun orthonormalize() {
-        ObjectCalls.ptrcallNoArgs(orthonormalizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(orthonormalizeBind, segment)
     }
 
     fun setIdentity() {
-        ObjectCalls.ptrcallNoArgs(setIdentityBind, handle)
+        ObjectCalls.ptrcallNoArgs(setIdentityBind, segment)
     }
 
     fun lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(lookAtBind, handle, target, up, useModelFront)
+        ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(lookAtBind, segment, target, up, useModelFront)
     }
 
     fun lookAtFromPosition(position: Vector3, target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
-        ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(lookAtFromPositionBind, handle, position, target, up, useModelFront)
+        ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(lookAtFromPositionBind, segment, position, target, up, useModelFront)
     }
 
     fun toLocal(globalPoint: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toLocalBind, handle, globalPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toLocalBind, segment, globalPoint)
     }
 
     fun toGlobal(localPoint: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toGlobalBind, handle, localPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toGlobalBind, segment, localPoint)
     }
 
     object Signals {
@@ -416,11 +416,11 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
         const val ROTATION_EDIT_MODE_BASIS: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Node3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Node3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Node3D? =
-            if (handle.address() == 0L) null else Node3D(handle)
+            if (handle.address() == 0L) null else Node3D(GodotHandle(handle))
 
         private const val SET_TRANSFORM_HASH = 2952846383L
         private val setTransformBind by lazy {

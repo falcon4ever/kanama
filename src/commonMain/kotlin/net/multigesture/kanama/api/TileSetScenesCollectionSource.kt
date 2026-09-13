@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TileSetScenesCollectionSource
  */
-class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handle) {
+class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle) {
     /**
      * Returns the number or scene tiles this TileSet source has.
      *
@@ -18,7 +18,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun getSceneTilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSceneTilesCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSceneTilesCountBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun getSceneTileId(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSceneTileIdBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSceneTileIdBind, segment, index)
     }
 
     /**
@@ -38,7 +38,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun hasSceneTileId(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSceneTileIdBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasSceneTileIdBind, segment, id)
     }
 
     /**
@@ -48,7 +48,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun createSceneTile(packedScene: PackedScene?, idOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(createSceneTileBind, handle, packedScene?.requireOpenHandle() ?: MemorySegment.NULL, idOverride)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(createSceneTileBind, segment, packedScene?.requireOpenHandle() ?: MemorySegment.NULL, idOverride)
     }
 
     /**
@@ -59,7 +59,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun setSceneTileId(id: Int, newId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setSceneTileIdBind, handle, id, newId)
+        ObjectCalls.ptrcallWithTwoIntArgs(setSceneTileIdBind, segment, id, newId)
     }
 
     /**
@@ -71,7 +71,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun setSceneTileScene(id: Int, packedScene: PackedScene?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSceneTileSceneBind, handle, id, packedScene?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSceneTileSceneBind, segment, id, packedScene?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -81,7 +81,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun getSceneTileScene(id: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSceneTileSceneBind, handle, id))
+        return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSceneTileSceneBind, segment, id))
     }
 
     /**
@@ -92,7 +92,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun setSceneTileDisplayPlaceholder(id: Int, displayPlaceholder: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSceneTileDisplayPlaceholderBind, handle, id, displayPlaceholder)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setSceneTileDisplayPlaceholderBind, segment, id, displayPlaceholder)
     }
 
     /**
@@ -102,7 +102,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun getSceneTileDisplayPlaceholder(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getSceneTileDisplayPlaceholderBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getSceneTileDisplayPlaceholderBind, segment, id)
     }
 
     /**
@@ -112,7 +112,7 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun removeSceneTile(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeSceneTileBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(removeSceneTileBind, segment, id)
     }
 
     /**
@@ -122,16 +122,16 @@ class TileSetScenesCollectionSource(handle: MemorySegment) : TileSetSource(handl
      */
     fun getNextSceneTileId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNextSceneTileIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getNextSceneTileIdBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TileSetScenesCollectionSource? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TileSetScenesCollectionSource? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TileSetScenesCollectionSource? =
-            if (handle.address() == 0L) null else TileSetScenesCollectionSource(handle)
+            if (handle.address() == 0L) null else TileSetScenesCollectionSource(GodotHandle(handle))
 
         private const val GET_SCENE_TILES_COUNT_HASH = 2455072627L
         private val getSceneTilesCountBind by lazy {

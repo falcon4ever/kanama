@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RenderSceneBuffers
  */
-open class RenderSceneBuffers(handle: MemorySegment) : RefCounted(handle) {
+open class RenderSceneBuffers(handle: GodotHandle) : RefCounted(handle) {
     /**
      * This method is called by the rendering server when the associated viewport's configuration is
      * changed. It will discard the old buffers and recreate the internal buffers used.
@@ -19,16 +19,16 @@ open class RenderSceneBuffers(handle: MemorySegment) : RefCounted(handle) {
      */
     fun configure(config: RenderSceneBuffersConfiguration?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(configureBind, handle, listOf(config?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(configureBind, segment, listOf(config?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderSceneBuffers? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderSceneBuffers? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderSceneBuffers? =
-            if (handle.address() == 0L) null else RenderSceneBuffers(handle)
+            if (handle.address() == 0L) null else RenderSceneBuffers(GodotHandle(handle))
 
         private const val CONFIGURE_HASH = 3072623270L
         private val configureBind by lazy {

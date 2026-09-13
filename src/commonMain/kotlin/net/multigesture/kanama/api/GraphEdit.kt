@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: GraphEdit
  */
-class GraphEdit(handle: MemorySegment) : Control(handle) {
+class GraphEdit(handle: GodotHandle) : Control(handle) {
     var scrollOffset: Vector2
         @JvmName("scrollOffsetProperty")
         get() = getScrollOffset()
@@ -173,7 +173,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.connect_node
      */
     fun connectNode(fromNode: String, fromPort: Int, toNode: String, toPort: Int, keepAlive: Boolean = false): Long {
-        return ObjectCalls.ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(connectNodeBind, handle, fromNode, fromPort, toNode, toPort, keepAlive)
+        return ObjectCalls.ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(connectNodeBind, segment, fromNode, fromPort, toNode, toPort, keepAlive)
     }
 
     /**
@@ -183,7 +183,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_node_connected
      */
     fun isNodeConnected(fromNode: String, fromPort: Int, toNode: String, toPort: Int): Boolean {
-        return ObjectCalls.ptrcallWithStringNameIntStringNameIntArgsRetBool(isNodeConnectedBind, handle, fromNode, fromPort, toNode, toPort)
+        return ObjectCalls.ptrcallWithStringNameIntStringNameIntArgsRetBool(isNodeConnectedBind, segment, fromNode, fromPort, toNode, toPort)
     }
 
     /**
@@ -193,7 +193,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.disconnect_node
      */
     fun disconnectNode(fromNode: String, fromPort: Int, toNode: String, toPort: Int) {
-        ObjectCalls.ptrcallWithStringNameIntStringNameIntArgs(disconnectNodeBind, handle, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.ptrcallWithStringNameIntStringNameIntArgs(disconnectNodeBind, segment, fromNode, fromPort, toNode, toPort)
     }
 
     /**
@@ -204,7 +204,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_activity
      */
     fun setConnectionActivity(fromNode: String, fromPort: Int, toNode: String, toPort: Int, amount: Double) {
-        ObjectCalls.ptrcallWithStringNameIntStringNameIntDoubleArgs(setConnectionActivityBind, handle, fromNode, fromPort, toNode, toPort, amount)
+        ObjectCalls.ptrcallWithStringNameIntStringNameIntDoubleArgs(setConnectionActivityBind, segment, fromNode, fromPort, toNode, toPort, amount)
     }
 
     /**
@@ -214,7 +214,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connections
      */
     fun setConnections(connections: List<Map<String, Any?>>) {
-        ObjectCalls.ptrcallWithDictionaryListArg(setConnectionsBind, handle, connections)
+        ObjectCalls.ptrcallWithDictionaryListArg(setConnectionsBind, segment, connections)
     }
 
     /**
@@ -224,7 +224,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_list
      */
     fun getConnectionList(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getConnectionListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getConnectionListBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_count
      */
     fun getConnectionCount(fromNode: String, fromPort: Int): Int {
-        return ObjectCalls.ptrcallWithStringNameAndIntArgRetInt(getConnectionCountBind, handle, fromNode, fromPort)
+        return ObjectCalls.ptrcallWithStringNameAndIntArgRetInt(getConnectionCountBind, segment, fromNode, fromPort)
     }
 
     /**
@@ -244,7 +244,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_closest_connection_at_point
      */
     fun getClosestConnectionAtPoint(point: Vector2, maxDistance: Double = 4.0): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetDictionary(getClosestConnectionAtPointBind, handle, point, maxDistance)
+        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetDictionary(getClosestConnectionAtPointBind, segment, point, maxDistance)
     }
 
     /**
@@ -254,7 +254,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_list_from_node
      */
     fun getConnectionListFromNode(node: String): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(getConnectionListFromNodeBind, handle, node)
+        return ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(getConnectionListFromNodeBind, segment, node)
     }
 
     /**
@@ -264,7 +264,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connections_intersecting_with_rect
      */
     fun getConnectionsIntersectingWithRect(rect: Rect2): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithRect2ArgRetDictionaryList(getConnectionsIntersectingWithRectBind, handle, rect)
+        return ObjectCalls.ptrcallWithRect2ArgRetDictionaryList(getConnectionsIntersectingWithRectBind, segment, rect)
     }
 
     /**
@@ -273,7 +273,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.clear_connections
      */
     fun clearConnections() {
-        ObjectCalls.ptrcallNoArgs(clearConnectionsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearConnectionsBind, segment)
     }
 
     /**
@@ -286,7 +286,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.force_connection_drag_end
      */
     fun forceConnectionDragEnd() {
-        ObjectCalls.ptrcallNoArgs(forceConnectionDragEndBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceConnectionDragEndBind, segment)
     }
 
     /**
@@ -295,7 +295,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_scroll_offset
      */
     fun getScrollOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollOffsetBind, segment)
     }
 
     /**
@@ -304,7 +304,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_scroll_offset
      */
     fun setScrollOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScrollOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setScrollOffsetBind, segment, offset)
     }
 
     /**
@@ -314,7 +314,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.add_valid_right_disconnect_type
      */
     fun addValidRightDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(addValidRightDisconnectTypeBind, handle, type)
+        ObjectCalls.ptrcallWithIntArg(addValidRightDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -325,7 +325,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.remove_valid_right_disconnect_type
      */
     fun removeValidRightDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeValidRightDisconnectTypeBind, handle, type)
+        ObjectCalls.ptrcallWithIntArg(removeValidRightDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -335,7 +335,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.add_valid_left_disconnect_type
      */
     fun addValidLeftDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(addValidLeftDisconnectTypeBind, handle, type)
+        ObjectCalls.ptrcallWithIntArg(addValidLeftDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -346,7 +346,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.remove_valid_left_disconnect_type
      */
     fun removeValidLeftDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeValidLeftDisconnectTypeBind, handle, type)
+        ObjectCalls.ptrcallWithIntArg(removeValidLeftDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -357,7 +357,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.add_valid_connection_type
      */
     fun addValidConnectionType(fromType: Int, toType: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(addValidConnectionTypeBind, handle, fromType, toType)
+        ObjectCalls.ptrcallWithTwoIntArgs(addValidConnectionTypeBind, segment, fromType, toType)
     }
 
     /**
@@ -368,7 +368,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.remove_valid_connection_type
      */
     fun removeValidConnectionType(fromType: Int, toType: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(removeValidConnectionTypeBind, handle, fromType, toType)
+        ObjectCalls.ptrcallWithTwoIntArgs(removeValidConnectionTypeBind, segment, fromType, toType)
     }
 
     /**
@@ -380,7 +380,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_valid_connection_type
      */
     fun isValidConnectionType(fromType: Int, toType: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isValidConnectionTypeBind, handle, fromType, toType)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isValidConnectionTypeBind, segment, fromType, toType)
     }
 
     /**
@@ -389,7 +389,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_line
      */
     fun getConnectionLine(fromNode: Vector2, toNode: Vector2): List<Vector2> {
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getConnectionLineBind, handle, fromNode, toNode)
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getConnectionLineBind, segment, fromNode, toNode)
     }
 
     /**
@@ -398,7 +398,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.attach_graph_element_to_frame
      */
     fun attachGraphElementToFrame(element: String, frame: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(attachGraphElementToFrameBind, handle, element, frame)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(attachGraphElementToFrameBind, segment, element, frame)
     }
 
     /**
@@ -407,7 +407,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.detach_graph_element_from_frame
      */
     fun detachGraphElementFromFrame(element: String) {
-        ObjectCalls.ptrcallWithStringNameArg(detachGraphElementFromFrameBind, handle, element)
+        ObjectCalls.ptrcallWithStringNameArg(detachGraphElementFromFrameBind, segment, element)
     }
 
     /**
@@ -416,7 +416,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_element_frame
      */
     fun getElementFrame(element: String): GraphFrame? {
-        return GraphFrame.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getElementFrameBind, handle, element))
+        return GraphFrame.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getElementFrameBind, segment, element))
     }
 
     /**
@@ -425,7 +425,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_attached_nodes_of_frame
      */
     fun getAttachedNodesOfFrame(frame: String): List<String> {
-        return ObjectCalls.ptrcallWithStringNameArgRetStringNameList(getAttachedNodesOfFrameBind, handle, frame)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringNameList(getAttachedNodesOfFrameBind, segment, frame)
     }
 
     /**
@@ -434,7 +434,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_panning_scheme
      */
     fun setPanningScheme(scheme: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPanningSchemeBind, handle, scheme)
+        ObjectCalls.ptrcallWithLongArg(setPanningSchemeBind, segment, scheme)
     }
 
     /**
@@ -443,7 +443,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_panning_scheme
      */
     fun getPanningScheme(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPanningSchemeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPanningSchemeBind, segment)
     }
 
     /**
@@ -452,7 +452,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom
      */
     fun setZoom(zoom: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomBind, handle, zoom)
+        ObjectCalls.ptrcallWithDoubleArg(setZoomBind, segment, zoom)
     }
 
     /**
@@ -461,7 +461,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom
      */
     fun getZoom(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomBind, segment)
     }
 
     /**
@@ -470,7 +470,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom_min
      */
     fun setZoomMin(zoomMin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomMinBind, handle, zoomMin)
+        ObjectCalls.ptrcallWithDoubleArg(setZoomMinBind, segment, zoomMin)
     }
 
     /**
@@ -479,7 +479,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom_min
      */
     fun getZoomMin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomMinBind, segment)
     }
 
     /**
@@ -488,7 +488,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom_max
      */
     fun setZoomMax(zoomMax: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomMaxBind, handle, zoomMax)
+        ObjectCalls.ptrcallWithDoubleArg(setZoomMaxBind, segment, zoomMax)
     }
 
     /**
@@ -497,7 +497,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom_max
      */
     fun getZoomMax(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomMaxBind, segment)
     }
 
     /**
@@ -506,7 +506,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom_step
      */
     fun setZoomStep(zoomStep: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomStepBind, handle, zoomStep)
+        ObjectCalls.ptrcallWithDoubleArg(setZoomStepBind, segment, zoomStep)
     }
 
     /**
@@ -515,7 +515,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom_step
      */
     fun getZoomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomStepBind, segment)
     }
 
     /**
@@ -524,7 +524,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_grid
      */
     fun setShowGrid(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowGridBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setShowGridBind, segment, enable)
     }
 
     /**
@@ -533,7 +533,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_grid
      */
     fun isShowingGrid(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingGridBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingGridBind, segment)
     }
 
     /**
@@ -542,7 +542,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_grid_pattern
      */
     fun setGridPattern(pattern: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGridPatternBind, handle, pattern)
+        ObjectCalls.ptrcallWithLongArg(setGridPatternBind, segment, pattern)
     }
 
     /**
@@ -551,7 +551,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_grid_pattern
      */
     fun getGridPattern(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGridPatternBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getGridPatternBind, segment)
     }
 
     /**
@@ -560,7 +560,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_snapping_enabled
      */
     fun setSnappingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnappingEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSnappingEnabledBind, segment, enable)
     }
 
     /**
@@ -569,7 +569,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_snapping_enabled
      */
     fun isSnappingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnappingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSnappingEnabledBind, segment)
     }
 
     /**
@@ -578,7 +578,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_snapping_distance
      */
     fun setSnappingDistance(pixels: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSnappingDistanceBind, handle, pixels)
+        ObjectCalls.ptrcallWithIntArg(setSnappingDistanceBind, segment, pixels)
     }
 
     /**
@@ -587,7 +587,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_snapping_distance
      */
     fun getSnappingDistance(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSnappingDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSnappingDistanceBind, segment)
     }
 
     /**
@@ -596,7 +596,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_lines_curvature
      */
     fun setConnectionLinesCurvature(curvature: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setConnectionLinesCurvatureBind, handle, curvature)
+        ObjectCalls.ptrcallWithDoubleArg(setConnectionLinesCurvatureBind, segment, curvature)
     }
 
     /**
@@ -605,7 +605,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_lines_curvature
      */
     fun getConnectionLinesCurvature(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConnectionLinesCurvatureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getConnectionLinesCurvatureBind, segment)
     }
 
     /**
@@ -614,7 +614,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_lines_thickness
      */
     fun setConnectionLinesThickness(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setConnectionLinesThicknessBind, handle, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(setConnectionLinesThicknessBind, segment, pixels)
     }
 
     /**
@@ -623,7 +623,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_lines_thickness
      */
     fun getConnectionLinesThickness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConnectionLinesThicknessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getConnectionLinesThicknessBind, segment)
     }
 
     /**
@@ -632,7 +632,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_lines_antialiased
      */
     fun setConnectionLinesAntialiased(pixels: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setConnectionLinesAntialiasedBind, handle, pixels)
+        ObjectCalls.ptrcallWithBoolArg(setConnectionLinesAntialiasedBind, segment, pixels)
     }
 
     /**
@@ -641,7 +641,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_connection_lines_antialiased
      */
     fun isConnectionLinesAntialiased(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionLinesAntialiasedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionLinesAntialiasedBind, segment)
     }
 
     /**
@@ -651,7 +651,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_minimap_size
      */
     fun setMinimapSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMinimapSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setMinimapSizeBind, segment, size)
     }
 
     /**
@@ -661,7 +661,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_minimap_size
      */
     fun getMinimapSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimapSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimapSizeBind, segment)
     }
 
     /**
@@ -670,7 +670,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_minimap_opacity
      */
     fun setMinimapOpacity(opacity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMinimapOpacityBind, handle, opacity)
+        ObjectCalls.ptrcallWithDoubleArg(setMinimapOpacityBind, segment, opacity)
     }
 
     /**
@@ -679,7 +679,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_minimap_opacity
      */
     fun getMinimapOpacity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinimapOpacityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinimapOpacityBind, segment)
     }
 
     /**
@@ -688,7 +688,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_minimap_enabled
      */
     fun setMinimapEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMinimapEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMinimapEnabledBind, segment, enable)
     }
 
     /**
@@ -697,7 +697,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_minimap_enabled
      */
     fun isMinimapEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMinimapEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMinimapEnabledBind, segment)
     }
 
     /**
@@ -706,7 +706,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_menu
      */
     fun setShowMenu(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowMenuBind, handle, hidden)
+        ObjectCalls.ptrcallWithBoolArg(setShowMenuBind, segment, hidden)
     }
 
     /**
@@ -715,7 +715,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_menu
      */
     fun isShowingMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingMenuBind, segment)
     }
 
     /**
@@ -725,7 +725,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_zoom_label
      */
     fun setShowZoomLabel(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowZoomLabelBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setShowZoomLabelBind, segment, enable)
     }
 
     /**
@@ -735,7 +735,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_zoom_label
      */
     fun isShowingZoomLabel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingZoomLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingZoomLabelBind, segment)
     }
 
     /**
@@ -744,7 +744,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_grid_buttons
      */
     fun setShowGridButtons(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowGridButtonsBind, handle, hidden)
+        ObjectCalls.ptrcallWithBoolArg(setShowGridButtonsBind, segment, hidden)
     }
 
     /**
@@ -753,7 +753,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_grid_buttons
      */
     fun isShowingGridButtons(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingGridButtonsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingGridButtonsBind, segment)
     }
 
     /**
@@ -762,7 +762,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_zoom_buttons
      */
     fun setShowZoomButtons(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowZoomButtonsBind, handle, hidden)
+        ObjectCalls.ptrcallWithBoolArg(setShowZoomButtonsBind, segment, hidden)
     }
 
     /**
@@ -771,7 +771,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_zoom_buttons
      */
     fun isShowingZoomButtons(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingZoomButtonsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingZoomButtonsBind, segment)
     }
 
     /**
@@ -780,7 +780,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_minimap_button
      */
     fun setShowMinimapButton(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowMinimapButtonBind, handle, hidden)
+        ObjectCalls.ptrcallWithBoolArg(setShowMinimapButtonBind, segment, hidden)
     }
 
     /**
@@ -789,7 +789,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_minimap_button
      */
     fun isShowingMinimapButton(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingMinimapButtonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingMinimapButtonBind, segment)
     }
 
     /**
@@ -798,7 +798,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_arrange_button
      */
     fun setShowArrangeButton(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowArrangeButtonBind, handle, hidden)
+        ObjectCalls.ptrcallWithBoolArg(setShowArrangeButtonBind, segment, hidden)
     }
 
     /**
@@ -807,7 +807,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_arrange_button
      */
     fun isShowingArrangeButton(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingArrangeButtonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingArrangeButtonBind, segment)
     }
 
     /**
@@ -817,7 +817,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_right_disconnects
      */
     fun setRightDisconnects(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRightDisconnectsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setRightDisconnectsBind, segment, enable)
     }
 
     /**
@@ -827,7 +827,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_right_disconnects_enabled
      */
     fun isRightDisconnectsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRightDisconnectsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRightDisconnectsEnabledBind, segment)
     }
 
     /**
@@ -836,7 +836,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_type_names
      */
     fun setTypeNames(typeNames: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithDictionaryArg(setTypeNamesBind, handle, typeNames)
+        ObjectCalls.ptrcallWithDictionaryArg(setTypeNamesBind, segment, typeNames)
     }
 
     /**
@@ -845,7 +845,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_type_names
      */
     fun getTypeNames(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getTypeNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getTypeNamesBind, segment)
     }
 
     /**
@@ -857,7 +857,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_menu_hbox
      */
     fun getMenuHbox(): HBoxContainer? {
-        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuHboxBind, handle))
+        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuHboxBind, segment))
     }
 
     /**
@@ -867,7 +867,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.arrange_nodes
      */
     fun arrangeNodes() {
-        ObjectCalls.ptrcallNoArgs(arrangeNodesBind, handle)
+        ObjectCalls.ptrcallNoArgs(arrangeNodesBind, segment)
     }
 
     /**
@@ -876,7 +876,7 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_selected
      */
     fun setSelected(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setSelectedBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setSelectedBind, segment, listOf(node.segment))
     }
 
     object Signals {
@@ -908,11 +908,11 @@ class GraphEdit(handle: MemorySegment) : Control(handle) {
         const val GRID_PATTERN_DOTS: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GraphEdit? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GraphEdit? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GraphEdit? =
-            if (handle.address() == 0L) null else GraphEdit(handle)
+            if (handle.address() == 0L) null else GraphEdit(GodotHandle(handle))
 
         private const val CONNECT_NODE_HASH = 1376144231L
         private val connectNodeBind by lazy {

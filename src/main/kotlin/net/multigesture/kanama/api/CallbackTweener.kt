@@ -8,7 +8,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: CallbackTweener
  */
-class CallbackTweener internal constructor(handle: MemorySegment) : Tweener(handle) {
+class CallbackTweener internal constructor(handle: GodotHandle) : Tweener(handle) {
 
     /**
      * Makes the callback call delayed by given time in seconds.
@@ -17,14 +17,14 @@ class CallbackTweener internal constructor(handle: MemorySegment) : Tweener(hand
      */
     fun setDelay(delay: Double): CallbackTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
         return if (ret.address() == 0L) {
             this
-        } else if (ret.address() == handle.address()) {
+        } else if (ret.address() == segment.address()) {
             releaseHandle(ret)
             this
         } else {
-            CallbackTweener(ret)
+            CallbackTweener(GodotHandle(ret))
         }
     }
 
@@ -36,6 +36,6 @@ class CallbackTweener internal constructor(handle: MemorySegment) : Tweener(hand
         }
 
         internal fun wrap(handle: MemorySegment): CallbackTweener? =
-            if (handle.address() == 0L) null else CallbackTweener(handle)
+            if (handle.address() == 0L) null else CallbackTweener(GodotHandle(handle))
     }
 }

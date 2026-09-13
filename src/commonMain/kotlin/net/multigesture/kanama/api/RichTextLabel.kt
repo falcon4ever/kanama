@@ -17,7 +17,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: RichTextLabel
  */
-class RichTextLabel(handle: MemorySegment) : Control(handle) {
+class RichTextLabel(handle: GodotHandle) : Control(handle) {
     var bbcodeEnabled: Boolean
         @JvmName("bbcodeEnabledProperty")
         get() = isUsingBbcode()
@@ -204,7 +204,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_parsed_text
      */
     fun getParsedText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.add_text
      */
     fun addText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(addTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(addTextBind, segment, text)
     }
 
     /**
@@ -227,7 +227,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -238,7 +238,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.add_hr
      */
     fun addHr(width: Int = 90, height: Int = 2, color: Color, alignment: Long = 1L, widthInPercent: Boolean = true, heightInPercent: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(addHrBind, handle, width, height, color, alignment, widthInPercent, heightInPercent)
+        ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(addHrBind, segment, width, height, color, alignment, widthInPercent, heightInPercent)
     }
 
     /**
@@ -255,7 +255,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.add_image
      */
     fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L, altText: String = "") {
-        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, key, pad, tooltip, widthUnit, heightUnit, altText)
+        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, key, pad, tooltip, widthUnit, heightUnit, altText)
     }
 
     /**
@@ -265,7 +265,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.update_image
      */
     fun updateImage(key: Any?, mask: Long, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L) {
-        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, handle, key, mask, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
+        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, segment, key, mask, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
     }
 
     /**
@@ -274,7 +274,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.newline
      */
     fun newline() {
-        ObjectCalls.ptrcallNoArgs(newlineBind, handle)
+        ObjectCalls.ptrcallNoArgs(newlineBind, segment)
     }
 
     /**
@@ -288,7 +288,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.remove_paragraph
      */
     fun removeParagraph(paragraph: Int, noInvalidate: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithIntAndBoolArgsRetBool(removeParagraphBind, handle, paragraph, noInvalidate)
+        return ObjectCalls.ptrcallWithIntAndBoolArgsRetBool(removeParagraphBind, segment, paragraph, noInvalidate)
     }
 
     /**
@@ -297,7 +297,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.invalidate_paragraph
      */
     fun invalidateParagraph(paragraph: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(invalidateParagraphBind, handle, paragraph)
+        return ObjectCalls.ptrcallWithIntArgRetBool(invalidateParagraphBind, segment, paragraph)
     }
 
     /**
@@ -307,7 +307,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_font
      */
     fun pushFont(font: Font?, fontSize: Int = 0) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(pushFontBind, handle, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize)
+        ObjectCalls.ptrcallWithObjectAndIntArg(pushFontBind, segment, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize)
     }
 
     /**
@@ -316,7 +316,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_font_size
      */
     fun pushFontSize(fontSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(pushFontSizeBind, handle, fontSize)
+        ObjectCalls.ptrcallWithIntArg(pushFontSizeBind, segment, fontSize)
     }
 
     /**
@@ -325,7 +325,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_normal
      */
     fun pushNormal() {
-        ObjectCalls.ptrcallNoArgs(pushNormalBind, handle)
+        ObjectCalls.ptrcallNoArgs(pushNormalBind, segment)
     }
 
     /**
@@ -335,7 +335,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_bold
      */
     fun pushBold() {
-        ObjectCalls.ptrcallNoArgs(pushBoldBind, handle)
+        ObjectCalls.ptrcallNoArgs(pushBoldBind, segment)
     }
 
     /**
@@ -344,7 +344,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_bold_italics
      */
     fun pushBoldItalics() {
-        ObjectCalls.ptrcallNoArgs(pushBoldItalicsBind, handle)
+        ObjectCalls.ptrcallNoArgs(pushBoldItalicsBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_italics
      */
     fun pushItalics() {
-        ObjectCalls.ptrcallNoArgs(pushItalicsBind, handle)
+        ObjectCalls.ptrcallNoArgs(pushItalicsBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_mono
      */
     fun pushMono() {
-        ObjectCalls.ptrcallNoArgs(pushMonoBind, handle)
+        ObjectCalls.ptrcallNoArgs(pushMonoBind, segment)
     }
 
     /**
@@ -372,7 +372,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_color
      */
     fun pushColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(pushColorBind, segment, color)
     }
 
     /**
@@ -382,7 +382,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_outline_size
      */
     fun pushOutlineSize(outlineSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(pushOutlineSizeBind, handle, outlineSize)
+        ObjectCalls.ptrcallWithIntArg(pushOutlineSizeBind, segment, outlineSize)
     }
 
     /**
@@ -391,7 +391,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_outline_color
      */
     fun pushOutlineColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushOutlineColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(pushOutlineColorBind, segment, color)
     }
 
     /**
@@ -400,7 +400,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_paragraph
      */
     fun pushParagraph(alignment: Long, baseDirection: Long = 0L, language: String = "", stParser: Long = 0L, justificationFlags: Long = 163L, tabStops: List<Float>) {
-        ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, handle, alignment, baseDirection, language, stParser, justificationFlags, tabStops)
+        ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, segment, alignment, baseDirection, language, stParser, justificationFlags, tabStops)
     }
 
     /**
@@ -410,7 +410,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_indent
      */
     fun pushIndent(level: Int) {
-        ObjectCalls.ptrcallWithIntArg(pushIndentBind, handle, level)
+        ObjectCalls.ptrcallWithIntArg(pushIndentBind, segment, level)
     }
 
     /**
@@ -420,7 +420,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_list
      */
     fun pushList(level: Int, type: Long, capitalize: Boolean, bullet: String = "•") {
-        ObjectCalls.ptrcallWithIntLongBoolStringArgs(pushListBind, handle, level, type, capitalize, bullet)
+        ObjectCalls.ptrcallWithIntLongBoolStringArgs(pushListBind, segment, level, type, capitalize, bullet)
     }
 
     /**
@@ -433,7 +433,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_meta
      */
     fun pushMeta(data: Any?, underlineMode: Long = 1L, tooltip: String = "") {
-        ObjectCalls.ptrcallWithVariantLongStringArgs(pushMetaBind, handle, data, underlineMode, tooltip)
+        ObjectCalls.ptrcallWithVariantLongStringArgs(pushMetaBind, segment, data, underlineMode, tooltip)
     }
 
     /**
@@ -442,7 +442,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_hint
      */
     fun pushHint(description: String) {
-        ObjectCalls.ptrcallWithStringArg(pushHintBind, handle, description)
+        ObjectCalls.ptrcallWithStringArg(pushHintBind, segment, description)
     }
 
     /**
@@ -451,7 +451,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_language
      */
     fun pushLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(pushLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(pushLanguageBind, segment, language)
     }
 
     /**
@@ -461,7 +461,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_underline
      */
     fun pushUnderline(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushUnderlineBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(pushUnderlineBind, segment, color)
     }
 
     /**
@@ -471,7 +471,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_strikethrough
      */
     fun pushStrikethrough(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushStrikethroughBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(pushStrikethroughBind, segment, color)
     }
 
     /**
@@ -482,7 +482,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_table
      */
     fun pushTable(columns: Int, inlineAlign: Long = 0L, alignToRow: Int = -1, name: String = "") {
-        ObjectCalls.ptrcallWithIntLongIntStringArgs(pushTableBind, handle, columns, inlineAlign, alignToRow, name)
+        ObjectCalls.ptrcallWithIntLongIntStringArgs(pushTableBind, segment, columns, inlineAlign, alignToRow, name)
     }
 
     /**
@@ -492,7 +492,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_dropcap
      */
     fun pushDropcap(string: String, font: Font?, size: Int, dropcapMargins: Rect2, color: Color, outlineSize: Int = 0, outlineColor: Color) {
-        ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(pushDropcapBind, handle, string, font?.requireOpenHandle() ?: MemorySegment.NULL, size, dropcapMargins, color, outlineSize, outlineColor)
+        ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(pushDropcapBind, segment, string, font?.requireOpenHandle() ?: MemorySegment.NULL, size, dropcapMargins, color, outlineSize, outlineColor)
     }
 
     /**
@@ -504,7 +504,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_table_column_expand
      */
     fun setTableColumnExpand(column: Int, expand: Boolean, ratio: Int = 1, shrink: Boolean = true) {
-        ObjectCalls.ptrcallWithIntBoolIntBoolArgs(setTableColumnExpandBind, handle, column, expand, ratio, shrink)
+        ObjectCalls.ptrcallWithIntBoolIntBoolArgs(setTableColumnExpandBind, segment, column, expand, ratio, shrink)
     }
 
     /**
@@ -513,7 +513,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_table_column_name
      */
     fun setTableColumnName(column: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTableColumnNameBind, handle, column, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTableColumnNameBind, segment, column, name)
     }
 
     /**
@@ -522,7 +522,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_row_background_color
      */
     fun setCellRowBackgroundColor(oddRowBg: Color, evenRowBg: Color) {
-        ObjectCalls.ptrcallWithTwoColorArgs(setCellRowBackgroundColorBind, handle, oddRowBg, evenRowBg)
+        ObjectCalls.ptrcallWithTwoColorArgs(setCellRowBackgroundColorBind, segment, oddRowBg, evenRowBg)
     }
 
     /**
@@ -531,7 +531,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_border_color
      */
     fun setCellBorderColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setCellBorderColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setCellBorderColorBind, segment, color)
     }
 
     /**
@@ -540,7 +540,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_size_override
      */
     fun setCellSizeOverride(minSize: Vector2, maxSize: Vector2) {
-        ObjectCalls.ptrcallWithTwoVector2Args(setCellSizeOverrideBind, handle, minSize, maxSize)
+        ObjectCalls.ptrcallWithTwoVector2Args(setCellSizeOverrideBind, segment, minSize, maxSize)
     }
 
     /**
@@ -549,7 +549,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_padding
      */
     fun setCellPadding(padding: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setCellPaddingBind, handle, padding)
+        ObjectCalls.ptrcallWithRect2Arg(setCellPaddingBind, segment, padding)
     }
 
     /**
@@ -561,7 +561,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_cell
      */
     fun pushCell() {
-        ObjectCalls.ptrcallNoArgs(pushCellBind, handle)
+        ObjectCalls.ptrcallNoArgs(pushCellBind, segment)
     }
 
     /**
@@ -573,7 +573,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_fgcolor
      */
     fun pushFgcolor(fgcolor: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushFgcolorBind, handle, fgcolor)
+        ObjectCalls.ptrcallWithColorArg(pushFgcolorBind, segment, fgcolor)
     }
 
     /**
@@ -585,7 +585,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_bgcolor
      */
     fun pushBgcolor(bgcolor: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushBgcolorBind, handle, bgcolor)
+        ObjectCalls.ptrcallWithColorArg(pushBgcolorBind, segment, bgcolor)
     }
 
     /**
@@ -595,7 +595,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_customfx
      */
     fun pushCustomfx(effect: RichTextEffect?, env: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithObjectAndDictionaryArg(pushCustomfxBind, handle, effect?.requireOpenHandle() ?: MemorySegment.NULL, env)
+        ObjectCalls.ptrcallWithObjectAndDictionaryArg(pushCustomfxBind, segment, effect?.requireOpenHandle() ?: MemorySegment.NULL, env)
     }
 
     /**
@@ -604,7 +604,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_context
      */
     fun pushContext() {
-        ObjectCalls.ptrcallNoArgs(pushContextBind, handle)
+        ObjectCalls.ptrcallNoArgs(pushContextBind, segment)
     }
 
     /**
@@ -614,7 +614,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.pop_context
      */
     fun popContext() {
-        ObjectCalls.ptrcallNoArgs(popContextBind, handle)
+        ObjectCalls.ptrcallNoArgs(popContextBind, segment)
     }
 
     /**
@@ -624,7 +624,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.pop
      */
     fun pop() {
-        ObjectCalls.ptrcallNoArgs(popBind, handle)
+        ObjectCalls.ptrcallNoArgs(popBind, segment)
     }
 
     /**
@@ -633,7 +633,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.pop_all
      */
     fun popAll() {
-        ObjectCalls.ptrcallNoArgs(popAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(popAllBind, segment)
     }
 
     /**
@@ -644,7 +644,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -653,7 +653,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     /**
@@ -662,7 +662,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
     }
 
     /**
@@ -671,7 +671,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -680,7 +680,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -689,7 +689,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -698,7 +698,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_text_direction
      */
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     /**
@@ -708,7 +708,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -718,7 +718,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -728,7 +728,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -738,7 +738,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
     }
 
     /**
@@ -747,7 +747,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_vertical_alignment
      */
     fun setVerticalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -756,7 +756,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_vertical_alignment
      */
     fun getVerticalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
     }
 
     /**
@@ -765,7 +765,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_justification_flags
      */
     fun setJustificationFlags(justificationFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
     }
 
     /**
@@ -774,7 +774,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_justification_flags
      */
     fun getJustificationFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
     }
 
     /**
@@ -783,7 +783,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_tab_stops
      */
     fun setTabStops(tabStops: List<Float>) {
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setTabStopsBind, handle, tabStops)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setTabStopsBind, segment, tabStops)
     }
 
     /**
@@ -792,7 +792,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_tab_stops
      */
     fun getTabStops(): List<Float> {
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getTabStopsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getTabStopsBind, segment)
     }
 
     /**
@@ -805,7 +805,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
     }
 
     /**
@@ -818,7 +818,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_autowrap_mode
      */
     fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
     }
 
     /**
@@ -828,7 +828,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
     }
 
     /**
@@ -838,7 +838,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
     }
 
     /**
@@ -848,7 +848,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_meta_underline
      */
     fun setMetaUnderline(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMetaUnderlineBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMetaUnderlineBind, segment, enable)
     }
 
     /**
@@ -858,7 +858,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_meta_underlined
      */
     fun isMetaUnderlined(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMetaUnderlinedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMetaUnderlinedBind, segment)
     }
 
     /**
@@ -867,7 +867,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_hint_underline
      */
     fun setHintUnderline(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHintUnderlineBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHintUnderlineBind, segment, enable)
     }
 
     /**
@@ -876,7 +876,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_hint_underlined
      */
     fun isHintUnderlined(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHintUnderlinedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHintUnderlinedBind, segment)
     }
 
     /**
@@ -886,7 +886,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_scroll_active
      */
     fun setScrollActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollActiveBind, handle, active)
+        ObjectCalls.ptrcallWithBoolArg(setScrollActiveBind, segment, active)
     }
 
     /**
@@ -896,7 +896,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_scroll_active
      */
     fun isScrollActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollActiveBind, segment)
     }
 
     /**
@@ -906,7 +906,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_scroll_follow_visible_characters
      */
     fun setScrollFollowVisibleCharacters(follow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollFollowVisibleCharactersBind, handle, follow)
+        ObjectCalls.ptrcallWithBoolArg(setScrollFollowVisibleCharactersBind, segment, follow)
     }
 
     /**
@@ -916,7 +916,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_scroll_following_visible_characters
      */
     fun isScrollFollowingVisibleCharacters(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingVisibleCharactersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingVisibleCharactersBind, segment)
     }
 
     /**
@@ -925,7 +925,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_scroll_follow
      */
     fun setScrollFollow(follow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollFollowBind, handle, follow)
+        ObjectCalls.ptrcallWithBoolArg(setScrollFollowBind, segment, follow)
     }
 
     /**
@@ -934,7 +934,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_scroll_following
      */
     fun isScrollFollowing(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingBind, segment)
     }
 
     /**
@@ -945,7 +945,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
     }
 
     /**
@@ -954,7 +954,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.scroll_to_line
      */
     fun scrollToLine(line: Int) {
-        ObjectCalls.ptrcallWithIntArg(scrollToLineBind, handle, line)
+        ObjectCalls.ptrcallWithIntArg(scrollToLineBind, segment, line)
     }
 
     /**
@@ -963,7 +963,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.scroll_to_paragraph
      */
     fun scrollToParagraph(paragraph: Int) {
-        ObjectCalls.ptrcallWithIntArg(scrollToParagraphBind, handle, paragraph)
+        ObjectCalls.ptrcallWithIntArg(scrollToParagraphBind, segment, paragraph)
     }
 
     /**
@@ -972,7 +972,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.scroll_to_selection
      */
     fun scrollToSelection() {
-        ObjectCalls.ptrcallNoArgs(scrollToSelectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(scrollToSelectionBind, segment)
     }
 
     /**
@@ -982,7 +982,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_tab_size
      */
     fun setTabSize(spaces: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabSizeBind, handle, spaces)
+        ObjectCalls.ptrcallWithIntArg(setTabSizeBind, segment, spaces)
     }
 
     /**
@@ -992,7 +992,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_tab_size
      */
     fun getTabSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, segment)
     }
 
     /**
@@ -1005,7 +1005,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_fit_content
      */
     fun setFitContent(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitContentBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFitContentBind, segment, enabled)
     }
 
     /**
@@ -1018,7 +1018,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_fit_content_enabled
      */
     fun isFitContentEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentEnabledBind, segment)
     }
 
     /**
@@ -1027,7 +1027,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_selection_enabled
      */
     fun setSelectionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSelectionEnabledBind, segment, enabled)
     }
 
     /**
@@ -1036,7 +1036,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_selection_enabled
      */
     fun isSelectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectionEnabledBind, segment)
     }
 
     /**
@@ -1045,7 +1045,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_context_menu_enabled
      */
     fun setContextMenuEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, segment, enabled)
     }
 
     /**
@@ -1054,7 +1054,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_context_menu_enabled
      */
     fun isContextMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, segment)
     }
 
     /**
@@ -1064,7 +1064,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_shortcut_keys_enabled
      */
     fun setShortcutKeysEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, segment, enabled)
     }
 
     /**
@@ -1074,7 +1074,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_shortcut_keys_enabled
      */
     fun isShortcutKeysEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, segment)
     }
 
     /**
@@ -1083,7 +1083,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_deselect_on_focus_loss_enabled
      */
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, segment, enable)
     }
 
     /**
@@ -1092,7 +1092,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_deselect_on_focus_loss_enabled
      */
     fun isDeselectOnFocusLossEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, segment)
     }
 
     /**
@@ -1101,7 +1101,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_drag_and_drop_selection_enabled
      */
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, segment, enable)
     }
 
     /**
@@ -1110,7 +1110,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_drag_and_drop_selection_enabled
      */
     fun isDragAndDropSelectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, segment)
     }
 
     /**
@@ -1120,7 +1120,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selection_from
      */
     fun getSelectionFrom(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromBind, segment)
     }
 
     /**
@@ -1130,7 +1130,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selection_to
      */
     fun getSelectionTo(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionToBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionToBind, segment)
     }
 
     /**
@@ -1139,7 +1139,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selection_line_offset
      */
     fun getSelectionLineOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSelectionLineOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSelectionLineOffsetBind, segment)
     }
 
     /**
@@ -1148,7 +1148,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.select_all
      */
     fun selectAll() {
-        ObjectCalls.ptrcallNoArgs(selectAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(selectAllBind, segment)
     }
 
     /**
@@ -1157,7 +1157,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selected_text
      */
     fun getSelectedText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, segment)
     }
 
     /**
@@ -1166,7 +1166,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.deselect
      */
     fun deselect() {
-        ObjectCalls.ptrcallNoArgs(deselectBind, handle)
+        ObjectCalls.ptrcallNoArgs(deselectBind, segment)
     }
 
     /**
@@ -1175,7 +1175,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.parse_bbcode
      */
     fun parseBbcode(bbcode: String) {
-        ObjectCalls.ptrcallWithStringArg(parseBbcodeBind, handle, bbcode)
+        ObjectCalls.ptrcallWithStringArg(parseBbcodeBind, segment, bbcode)
     }
 
     /**
@@ -1188,7 +1188,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.append_text
      */
     fun appendText(bbcode: String) {
-        ObjectCalls.ptrcallWithStringArg(appendTextBind, handle, bbcode)
+        ObjectCalls.ptrcallWithStringArg(appendTextBind, segment, bbcode)
     }
 
     /**
@@ -1202,7 +1202,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     /**
@@ -1212,7 +1212,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_ready
      */
     fun isReady(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReadyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isReadyBind, segment)
     }
 
     /**
@@ -1222,7 +1222,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_finished
      */
     fun isFinished(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFinishedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFinishedBind, segment)
     }
 
     /**
@@ -1231,7 +1231,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_threaded
      */
     fun setThreaded(threaded: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setThreadedBind, handle, threaded)
+        ObjectCalls.ptrcallWithBoolArg(setThreadedBind, segment, threaded)
     }
 
     /**
@@ -1240,7 +1240,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_threaded
      */
     fun isThreaded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isThreadedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isThreadedBind, segment)
     }
 
     /**
@@ -1250,7 +1250,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_progress_bar_delay
      */
     fun setProgressBarDelay(delayMs: Int) {
-        ObjectCalls.ptrcallWithIntArg(setProgressBarDelayBind, handle, delayMs)
+        ObjectCalls.ptrcallWithIntArg(setProgressBarDelayBind, segment, delayMs)
     }
 
     /**
@@ -1260,7 +1260,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_progress_bar_delay
      */
     fun getProgressBarDelay(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProgressBarDelayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getProgressBarDelayBind, segment)
     }
 
     /**
@@ -1273,7 +1273,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_visible_characters
      */
     fun setVisibleCharacters(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVisibleCharactersBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setVisibleCharactersBind, segment, amount)
     }
 
     /**
@@ -1286,7 +1286,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_characters
      */
     fun getVisibleCharacters(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleCharactersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleCharactersBind, segment)
     }
 
     /**
@@ -1295,7 +1295,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_characters_behavior
      */
     fun getVisibleCharactersBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, segment)
     }
 
     /**
@@ -1304,7 +1304,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_visible_characters_behavior
      */
     fun setVisibleCharactersBehavior(behavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, handle, behavior)
+        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, segment, behavior)
     }
 
     /**
@@ -1316,7 +1316,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_visible_ratio
      */
     fun setVisibleRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibleRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibleRatioBind, segment, ratio)
     }
 
     /**
@@ -1328,7 +1328,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_ratio
      */
     fun getVisibleRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibleRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibleRatioBind, segment)
     }
 
     /**
@@ -1339,7 +1339,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_character_line
      */
     fun getCharacterLine(character: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterLineBind, handle, character)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterLineBind, segment, character)
     }
 
     /**
@@ -1351,7 +1351,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_character_paragraph
      */
     fun getCharacterParagraph(character: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterParagraphBind, handle, character)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterParagraphBind, segment, character)
     }
 
     /**
@@ -1360,7 +1360,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_total_character_count
      */
     fun getTotalCharacterCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTotalCharacterCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTotalCharacterCountBind, segment)
     }
 
     /**
@@ -1370,7 +1370,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_use_bbcode
      */
     fun setUseBbcode(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseBbcodeBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseBbcodeBind, segment, enable)
     }
 
     /**
@@ -1380,7 +1380,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_using_bbcode
      */
     fun isUsingBbcode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingBbcodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingBbcodeBind, segment)
     }
 
     /**
@@ -1391,7 +1391,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_count
      */
     fun getLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
     }
 
     /**
@@ -1404,7 +1404,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_range
      */
     fun getLineRange(line: Int): Vector2i {
-        return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, segment, line)
     }
 
     /**
@@ -1416,7 +1416,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_line_count
      */
     fun getVisibleLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, segment)
     }
 
     /**
@@ -1426,7 +1426,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_paragraph_count
      */
     fun getParagraphCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getParagraphCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getParagraphCountBind, segment)
     }
 
     /**
@@ -1438,7 +1438,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_paragraph_count
      */
     fun getVisibleParagraphCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleParagraphCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleParagraphCountBind, segment)
     }
 
     /**
@@ -1451,7 +1451,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_content_height
      */
     fun getContentHeight(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContentHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getContentHeightBind, segment)
     }
 
     /**
@@ -1464,7 +1464,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_content_width
      */
     fun getContentWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContentWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getContentWidthBind, segment)
     }
 
     /**
@@ -1475,7 +1475,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_height
      */
     fun getLineHeight(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLineHeightBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getLineHeightBind, segment, line)
     }
 
     /**
@@ -1486,7 +1486,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_width
      */
     fun getLineWidth(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLineWidthBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getLineWidthBind, segment, line)
     }
 
     /**
@@ -1496,7 +1496,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_content_rect
      */
     fun getVisibleContentRect(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getVisibleContentRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(getVisibleContentRectBind, segment)
     }
 
     /**
@@ -1507,7 +1507,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_offset
      */
     fun getLineOffset(line: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineOffsetBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineOffsetBind, segment, line)
     }
 
     /**
@@ -1518,7 +1518,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_paragraph_offset
      */
     fun getParagraphOffset(paragraph: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getParagraphOffsetBind, handle, paragraph)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getParagraphOffsetBind, segment, paragraph)
     }
 
     /**
@@ -1527,7 +1527,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.parse_expressions_for_values
      */
     fun parseExpressionsForValues(expressions: List<String>): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(parseExpressionsForValuesBind, handle, expressions)
+        return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(parseExpressionsForValuesBind, segment, expressions)
     }
 
     /**
@@ -1537,7 +1537,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_effects
      */
     fun setEffects(effects: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setEffectsBind, handle, effects)
+        ObjectCalls.ptrcallWithArrayArg(setEffectsBind, segment, effects)
     }
 
     /**
@@ -1547,7 +1547,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_effects
      */
     fun getEffects(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getEffectsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getEffectsBind, segment)
     }
 
     /**
@@ -1557,7 +1557,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.install_effect
      */
     fun installEffect(effect: Any?) {
-        ObjectCalls.ptrcallWithVariantArg(installEffectBind, handle, effect)
+        ObjectCalls.ptrcallWithVariantArg(installEffectBind, segment, effect)
     }
 
     /**
@@ -1566,7 +1566,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.reload_effects
      */
     fun reloadEffects() {
-        ObjectCalls.ptrcallNoArgs(reloadEffectsBind, handle)
+        ObjectCalls.ptrcallNoArgs(reloadEffectsBind, segment)
     }
 
     /**
@@ -1577,7 +1577,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_menu
      */
     fun getMenu(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, handle))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, segment))
     }
 
     /**
@@ -1587,7 +1587,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_menu_visible
      */
     fun isMenuVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, segment)
     }
 
     /**
@@ -1596,7 +1596,7 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.menu_option
      */
     fun menuOption(option: Int) {
-        ObjectCalls.ptrcallWithIntArg(menuOptionBind, handle, option)
+        ObjectCalls.ptrcallWithIntArg(menuOptionBind, segment, option)
     }
 
     object Signals {
@@ -1630,11 +1630,11 @@ class RichTextLabel(handle: MemorySegment) : Control(handle) {
         const val IMAGE_UNIT_EM: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RichTextLabel? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RichTextLabel? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RichTextLabel? =
-            if (handle.address() == 0L) null else RichTextLabel(handle)
+            if (handle.address() == 0L) null else RichTextLabel(GodotHandle(handle))
 
         private const val GET_PARSED_TEXT_HASH = 201670096L
         private val getParsedTextBind by lazy {

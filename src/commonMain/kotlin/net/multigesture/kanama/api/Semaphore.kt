@@ -10,10 +10,10 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Semaphore
  */
-class Semaphore(handle: MemorySegment) : RefCounted(handle) {
+class Semaphore(handle: GodotHandle) : RefCounted(handle) {
     fun waitBlocking() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(waitBlockingBind, handle)
+        ObjectCalls.ptrcallNoArgs(waitBlockingBind, segment)
     }
 
     /**
@@ -24,7 +24,7 @@ class Semaphore(handle: MemorySegment) : RefCounted(handle) {
      */
     fun tryWait(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(tryWaitBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(tryWaitBind, segment)
     }
 
     /**
@@ -34,16 +34,16 @@ class Semaphore(handle: MemorySegment) : RefCounted(handle) {
      */
     fun post(count: Int = 1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(postBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(postBind, segment, count)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Semaphore? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Semaphore? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Semaphore? =
-            if (handle.address() == 0L) null else Semaphore(handle)
+            if (handle.address() == 0L) null else Semaphore(GodotHandle(handle))
 
         private const val WAIT_HASH = 3218959716L
         private val waitBlockingBind by lazy {

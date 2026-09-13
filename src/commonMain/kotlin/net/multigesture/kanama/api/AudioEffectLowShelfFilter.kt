@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectLowShelfFilter
  */
-class AudioEffectLowShelfFilter(handle: MemorySegment) : AudioEffectFilter(handle) {
+class AudioEffectLowShelfFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectLowShelfFilter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectLowShelfFilter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectLowShelfFilter? =
-            if (handle.address() == 0L) null else AudioEffectLowShelfFilter(handle)
+            if (handle.address() == 0L) null else AudioEffectLowShelfFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: LightmapGIData
  */
-class LightmapGIData(handle: MemorySegment) : Resource(handle) {
+class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     var lightmapTextures: List<TextureLayered>
         @JvmName("lightmapTexturesProperty")
         get() = getLightmapTextures()
@@ -45,7 +45,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setLightmapTextures(lightTextures: List<TextureLayered>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setLightmapTexturesBind, handle, lightTextures)
+        ObjectCalls.ptrcallWithObjectListArg(setLightmapTexturesBind, segment, lightTextures)
     }
 
     /**
@@ -55,7 +55,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getLightmapTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightmapTexturesBind, handle, TextureLayered::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightmapTexturesBind, segment, TextureLayered::wrap)
     }
 
     /**
@@ -65,7 +65,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setShadowmaskTextures(shadowmaskTextures: List<TextureLayered>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setShadowmaskTexturesBind, handle, shadowmaskTextures)
+        ObjectCalls.ptrcallWithObjectListArg(setShadowmaskTexturesBind, segment, shadowmaskTextures)
     }
 
     /**
@@ -75,7 +75,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getShadowmaskTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getShadowmaskTexturesBind, handle, TextureLayered::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getShadowmaskTexturesBind, segment, TextureLayered::wrap)
     }
 
     /**
@@ -89,7 +89,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setUsesSphericalHarmonics(usesSphericalHarmonics: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUsesSphericalHarmonicsBind, handle, usesSphericalHarmonics)
+        ObjectCalls.ptrcallWithBoolArg(setUsesSphericalHarmonicsBind, segment, usesSphericalHarmonics)
     }
 
     /**
@@ -99,7 +99,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun isUsingSphericalHarmonics(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSphericalHarmonicsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSphericalHarmonicsBind, segment)
     }
 
     /**
@@ -109,7 +109,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun addUser(path: NodePath, uvScale: Rect2, sliceIndex: Int, subInstance: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathRect2TwoIntArgs(addUserBind, handle, path, uvScale, sliceIndex, subInstance)
+        ObjectCalls.ptrcallWithNodePathRect2TwoIntArgs(addUserBind, segment, path, uvScale, sliceIndex, subInstance)
     }
 
     /**
@@ -119,7 +119,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getUserCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUserCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getUserCountBind, segment)
     }
 
     /**
@@ -129,7 +129,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getUserPath(userIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getUserPathBind, handle, userIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getUserPathBind, segment, userIdx)
     }
 
     /**
@@ -139,7 +139,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun clearUsers() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearUsersBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearUsersBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setLightTexture(lightTexture: TextureLayered?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setLightTextureBind, handle, listOf(lightTexture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setLightTextureBind, segment, listOf(lightTexture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -159,7 +159,7 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getLightTexture(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, handle))
+        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, segment))
     }
 
     companion object {
@@ -168,11 +168,11 @@ class LightmapGIData(handle: MemorySegment) : Resource(handle) {
         const val SHADOWMASK_MODE_OVERLAY: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LightmapGIData? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LightmapGIData? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LightmapGIData? =
-            if (handle.address() == 0L) null else LightmapGIData(handle)
+            if (handle.address() == 0L) null else LightmapGIData(GodotHandle(handle))
 
         private const val SET_LIGHTMAP_TEXTURES_HASH = 381264803L
         private val setLightmapTexturesBind by lazy {

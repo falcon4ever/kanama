@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: BoneAttachment3D
  */
-class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
+class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
     var boneName: String
         @JvmName("boneNameProperty")
         get() = getBoneName()
@@ -50,7 +50,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_skeleton
      */
     fun getSkeleton(): Skeleton3D? {
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, segment))
     }
 
     /**
@@ -59,7 +59,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, handle, boneName)
+        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -68,7 +68,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_bone_idx
      */
     fun setBoneIdx(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneIdxBind, handle, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(setBoneIdxBind, segment, boneIdx)
     }
 
     /**
@@ -86,7 +86,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_bone_idx
      */
     fun getBoneIdx(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdxBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.on_skeleton_update
      */
     fun onSkeletonUpdate() {
-        ObjectCalls.ptrcallNoArgs(onSkeletonUpdateBind, handle)
+        ObjectCalls.ptrcallNoArgs(onSkeletonUpdateBind, segment)
     }
 
     /**
@@ -110,7 +110,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_override_pose
      */
     fun setOverridePose(overridePose: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOverridePoseBind, handle, overridePose)
+        ObjectCalls.ptrcallWithBoolArg(setOverridePoseBind, segment, overridePose)
     }
 
     /**
@@ -123,7 +123,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_override_pose
      */
     fun getOverridePose(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOverridePoseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getOverridePoseBind, segment)
     }
 
     /**
@@ -134,7 +134,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_use_external_skeleton
      */
     fun setUseExternalSkeleton(useExternalSkeleton: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseExternalSkeletonBind, handle, useExternalSkeleton)
+        ObjectCalls.ptrcallWithBoolArg(setUseExternalSkeletonBind, segment, useExternalSkeleton)
     }
 
     /**
@@ -145,7 +145,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_use_external_skeleton
      */
     fun getUseExternalSkeleton(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseExternalSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseExternalSkeletonBind, segment)
     }
 
     /**
@@ -154,7 +154,7 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_external_skeleton
      */
     fun setExternalSkeleton(externalSkeleton: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setExternalSkeletonBind, handle, externalSkeleton)
+        ObjectCalls.ptrcallWithNodePathArg(setExternalSkeletonBind, segment, externalSkeleton)
     }
 
     /**
@@ -163,16 +163,16 @@ class BoneAttachment3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_external_skeleton
      */
     fun getExternalSkeleton(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getExternalSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getExternalSkeletonBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BoneAttachment3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BoneAttachment3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BoneAttachment3D? =
-            if (handle.address() == 0L) null else BoneAttachment3D(handle)
+            if (handle.address() == 0L) null else BoneAttachment3D(GodotHandle(handle))
 
         private const val GET_SKELETON_HASH = 1814733083L
         private val getSkeletonBind by lazy {

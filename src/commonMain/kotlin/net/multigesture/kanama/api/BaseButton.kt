@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: BaseButton
  */
-open class BaseButton(handle: MemorySegment) : Control(handle) {
+open class BaseButton(handle: GodotHandle) : Control(handle) {
     var disabled: Boolean
         @JvmName("disabledProperty")
         get() = isDisabled()
@@ -81,7 +81,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_pressed
      */
     fun setPressed(pressed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
     }
 
     /**
@@ -93,7 +93,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_pressed
      */
     fun isPressed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_pressed_no_signal
      */
     fun setPressedNoSignal(pressed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPressedNoSignalBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setPressedNoSignalBind, segment, pressed)
     }
 
     /**
@@ -114,7 +114,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_hovered
      */
     fun isHovered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHoveredBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHoveredBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_toggle_mode
      */
     fun setToggleMode(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, segment, enabled)
     }
 
     /**
@@ -134,7 +134,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_toggle_mode
      */
     fun isToggleMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, segment)
     }
 
     /**
@@ -146,7 +146,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_shortcut_in_tooltip
      */
     fun setShortcutInTooltip(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutInTooltipBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShortcutInTooltipBind, segment, enabled)
     }
 
     /**
@@ -158,7 +158,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_shortcut_in_tooltip_enabled
      */
     fun isShortcutInTooltipEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutInTooltipEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutInTooltipEnabledBind, segment)
     }
 
     /**
@@ -168,7 +168,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_disabled
      */
     fun setDisabled(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, disabled)
     }
 
     /**
@@ -178,7 +178,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
     }
 
     /**
@@ -187,7 +187,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_action_mode
      */
     fun setActionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setActionModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setActionModeBind, segment, mode)
     }
 
     /**
@@ -196,7 +196,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_action_mode
      */
     fun getActionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getActionModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getActionModeBind, segment)
     }
 
     /**
@@ -206,7 +206,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_button_mask
      */
     fun setButtonMask(mask: Long) {
-        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, mask)
     }
 
     /**
@@ -216,7 +216,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_button_mask
      */
     fun getButtonMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment)
     }
 
     /**
@@ -227,7 +227,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_draw_mode
      */
     fun getDrawMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDrawModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDrawModeBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_keep_pressed_outside
      */
     fun setKeepPressedOutside(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeepPressedOutsideBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setKeepPressedOutsideBind, segment, enabled)
     }
 
     /**
@@ -249,7 +249,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_keep_pressed_outside
      */
     fun isKeepPressedOutside(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isKeepPressedOutsideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isKeepPressedOutsideBind, segment)
     }
 
     /**
@@ -259,7 +259,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_shortcut_feedback
      */
     fun setShortcutFeedback(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutFeedbackBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShortcutFeedbackBind, segment, enabled)
     }
 
     /**
@@ -269,7 +269,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_shortcut_feedback
      */
     fun isShortcutFeedback(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutFeedbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutFeedbackBind, segment)
     }
 
     /**
@@ -278,7 +278,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_shortcut
      */
     fun setShortcut(shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, handle, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -287,7 +287,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_shortcut
      */
     fun getShortcut(): Shortcut? {
-        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, handle))
+        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
     }
 
     /**
@@ -297,7 +297,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_button_group
      */
     fun setButtonGroup(buttonGroup: ButtonGroup?) {
-        ObjectCalls.ptrcallWithObjectArgs(setButtonGroupBind, handle, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setButtonGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -307,7 +307,7 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_button_group
      */
     fun getButtonGroup(): ButtonGroup? {
-        return ButtonGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonGroupBind, handle))
+        return ButtonGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonGroupBind, segment))
     }
 
     object Signals {
@@ -327,11 +327,11 @@ open class BaseButton(handle: MemorySegment) : Control(handle) {
         const val ACTION_MODE_BUTTON_RELEASE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BaseButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BaseButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BaseButton? =
-            if (handle.address() == 0L) null else BaseButton(handle)
+            if (handle.address() == 0L) null else BaseButton(GodotHandle(handle))
 
         private const val SET_PRESSED_HASH = 2586408642L
         private val setPressedBind by lazy {

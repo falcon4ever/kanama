@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: Occluder3D
  */
-open class Occluder3D(handle: MemorySegment) : Resource(handle) {
+open class Occluder3D(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns the occluder shape's vertex positions.
      *
@@ -19,7 +19,7 @@ open class Occluder3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getVertices(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, segment)
     }
 
     /**
@@ -29,16 +29,16 @@ open class Occluder3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getIndices(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Occluder3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Occluder3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Occluder3D? =
-            if (handle.address() == 0L) null else Occluder3D(handle)
+            if (handle.address() == 0L) null else Occluder3D(GodotHandle(handle))
 
         private const val GET_VERTICES_HASH = 497664490L
         private val getVerticesBind by lazy {

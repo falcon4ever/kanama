@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFTexture
  */
-class GLTFTexture(handle: MemorySegment) : Resource(handle) {
+class GLTFTexture(handle: GodotHandle) : Resource(handle) {
     var srcImage: Int
         @JvmName("srcImageProperty")
         get() = getSrcImage()
@@ -24,31 +24,31 @@ class GLTFTexture(handle: MemorySegment) : Resource(handle) {
 
     fun getSrcImage(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSrcImageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSrcImageBind, segment)
     }
 
     fun setSrcImage(srcImage: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSrcImageBind, handle, srcImage)
+        ObjectCalls.ptrcallWithIntArg(setSrcImageBind, segment, srcImage)
     }
 
     fun getSampler(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSamplerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSamplerBind, segment)
     }
 
     fun setSampler(sampler: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSamplerBind, handle, sampler)
+        ObjectCalls.ptrcallWithIntArg(setSamplerBind, segment, sampler)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFTexture? =
-            if (handle.address() == 0L) null else GLTFTexture(handle)
+            if (handle.address() == 0L) null else GLTFTexture(GodotHandle(handle))
 
         private const val GET_SRC_IMAGE_HASH = 3905245786L
         private val getSrcImageBind by lazy {

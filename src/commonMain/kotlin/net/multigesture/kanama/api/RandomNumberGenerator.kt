@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RandomNumberGenerator
  */
-class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
+class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
     var seed: Long
         @JvmName("seedProperty")
         get() = getSeed()
@@ -38,7 +38,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSeed(seed: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSeedBind, handle, seed)
+        ObjectCalls.ptrcallWithLongArg(setSeedBind, segment, seed)
     }
 
     /**
@@ -55,7 +55,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSeed(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSeedBind, segment)
     }
 
     /**
@@ -66,7 +66,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setState(state: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStateBind, handle, state)
+        ObjectCalls.ptrcallWithLongArg(setStateBind, segment, state)
     }
 
     /**
@@ -77,7 +77,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getState(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, segment)
     }
 
     /**
@@ -87,7 +87,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun randi(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(randiBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(randiBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun randf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(randfBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(randfBind, segment)
     }
 
     /**
@@ -110,7 +110,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun randfn(mean: Double = 0.0, deviation: Double = 1.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfnBind, handle, mean, deviation)
+        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfnBind, segment, mean, deviation)
     }
 
     /**
@@ -120,7 +120,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun randfRange(from: Double, to: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfRangeBind, handle, from, to)
+        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfRangeBind, segment, from, to)
     }
 
     /**
@@ -130,7 +130,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun randiRange(from: Int, to: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(randiRangeBind, handle, from, to)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(randiRangeBind, segment, from, to)
     }
 
     /**
@@ -147,7 +147,7 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun randWeighted(weights: List<Float>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedFloat32ListArgRetLong(randWeightedBind, handle, weights)
+        return ObjectCalls.ptrcallWithPackedFloat32ListArgRetLong(randWeightedBind, segment, weights)
     }
 
     /**
@@ -159,16 +159,16 @@ class RandomNumberGenerator(handle: MemorySegment) : RefCounted(handle) {
      */
     fun randomize() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(randomizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(randomizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RandomNumberGenerator? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RandomNumberGenerator? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RandomNumberGenerator? =
-            if (handle.address() == 0L) null else RandomNumberGenerator(handle)
+            if (handle.address() == 0L) null else RandomNumberGenerator(GodotHandle(handle))
 
         private const val SET_SEED_HASH = 1286410249L
         private val setSeedBind by lazy {

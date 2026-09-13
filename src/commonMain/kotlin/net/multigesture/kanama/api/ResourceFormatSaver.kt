@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ResourceFormatSaver
  */
-class ResourceFormatSaver(handle: MemorySegment) : RefCounted(handle) {
+class ResourceFormatSaver(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceFormatSaver? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceFormatSaver? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceFormatSaver? =
-            if (handle.address() == 0L) null else ResourceFormatSaver(handle)
+            if (handle.address() == 0L) null else ResourceFormatSaver(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

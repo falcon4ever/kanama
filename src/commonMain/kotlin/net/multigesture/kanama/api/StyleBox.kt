@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: StyleBox
  */
-open class StyleBox(handle: MemorySegment) : Resource(handle) {
+open class StyleBox(handle: GodotHandle) : Resource(handle) {
     var contentMarginLeft: Double
         @JvmName("contentMarginLeftProperty")
         get() = getContentMargin(0L)
@@ -46,7 +46,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun getMinimumSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun setContentMargin(margin: Long, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setContentMarginBind, handle, margin, offset)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setContentMarginBind, segment, margin, offset)
     }
 
     /**
@@ -68,7 +68,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun setContentMarginAll(offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setContentMarginAllBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setContentMarginAllBind, segment, offset)
     }
 
     /**
@@ -80,7 +80,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun getContentMargin(margin: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getContentMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getContentMarginBind, segment, margin)
     }
 
     /**
@@ -91,7 +91,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun getMargin(margin: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getMarginBind, segment, margin)
     }
 
     /**
@@ -102,7 +102,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -115,7 +115,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun draw(canvasItem: RID, rect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndRect2Arg(drawBind, handle, canvasItem, rect)
+        ObjectCalls.ptrcallWithRIDAndRect2Arg(drawBind, segment, canvasItem, rect)
     }
 
     /**
@@ -126,7 +126,7 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun getCurrentItemDrawn(): CanvasItem? {
         checkOpen()
-        return CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentItemDrawnBind, handle))
+        return CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentItemDrawnBind, segment))
     }
 
     /**
@@ -136,16 +136,16 @@ open class StyleBox(handle: MemorySegment) : Resource(handle) {
      */
     fun testMask(point: Vector2, rect: Rect2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(testMaskBind, handle, point, rect)
+        return ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(testMaskBind, segment, point, rect)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StyleBox? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StyleBox? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StyleBox? =
-            if (handle.address() == 0L) null else StyleBox(handle)
+            if (handle.address() == 0L) null else StyleBox(GodotHandle(handle))
 
         private const val GET_MINIMUM_SIZE_HASH = 3341600327L
         private val getMinimumSizeBind by lazy {

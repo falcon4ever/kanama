@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: RDPipelineShader
  */
-class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
+class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
     var shader: RID
         @JvmName("shaderProperty")
         get() = getShader()
@@ -32,7 +32,7 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setShader(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setShaderBind, handle, pMember)
+        ObjectCalls.ptrcallWithRIDArg(setShaderBind, segment, pMember)
     }
 
     /**
@@ -42,7 +42,7 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getShader(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getShaderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getShaderBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSpecializationConstants(specializationConstants: List<RDPipelineSpecializationConstant>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setSpecializationConstantsBind, handle, specializationConstants)
+        ObjectCalls.ptrcallWithObjectListArg(setSpecializationConstantsBind, segment, specializationConstants)
     }
 
     /**
@@ -62,16 +62,16 @@ class RDPipelineShader(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSpecializationConstants(): List<RDPipelineSpecializationConstant> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, handle, RDPipelineSpecializationConstant::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, segment, RDPipelineSpecializationConstant::wrap)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDPipelineShader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDPipelineShader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDPipelineShader? =
-            if (handle.address() == 0L) null else RDPipelineShader(handle)
+            if (handle.address() == 0L) null else RDPipelineShader(GodotHandle(handle))
 
         private const val SET_SHADER_HASH = 2722037293L
         private val setShaderBind by lazy {

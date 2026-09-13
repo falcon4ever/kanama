@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CompositorEffect
  */
-class CompositorEffect(handle: MemorySegment) : Resource(handle) {
+class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = getEnabled()
@@ -61,7 +61,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -71,7 +71,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, segment)
     }
 
     /**
@@ -82,7 +82,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun setEffectCallbackType(effectCallbackType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, handle, effectCallbackType)
+        ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, segment, effectCallbackType)
     }
 
     /**
@@ -93,7 +93,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun getEffectCallbackType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun setAccessResolvedColor(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAccessResolvedColorBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAccessResolvedColorBind, segment, enable)
     }
 
     /**
@@ -115,7 +115,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun getAccessResolvedColor(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedColorBind, segment)
     }
 
     /**
@@ -126,7 +126,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun setAccessResolvedDepth(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAccessResolvedDepthBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAccessResolvedDepthBind, segment, enable)
     }
 
     /**
@@ -137,7 +137,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun getAccessResolvedDepth(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedDepthBind, segment)
     }
 
     /**
@@ -148,7 +148,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun setNeedsMotionVectors(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeedsMotionVectorsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNeedsMotionVectorsBind, segment, enable)
     }
 
     /**
@@ -159,7 +159,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun getNeedsMotionVectors(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsMotionVectorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsMotionVectorsBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun setNeedsNormalRoughness(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeedsNormalRoughnessBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNeedsNormalRoughnessBind, segment, enable)
     }
 
     /**
@@ -183,7 +183,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun getNeedsNormalRoughness(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsNormalRoughnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsNormalRoughnessBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun setNeedsSeparateSpecular(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeedsSeparateSpecularBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNeedsSeparateSpecularBind, segment, enable)
     }
 
     /**
@@ -205,7 +205,7 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
      */
     fun getNeedsSeparateSpecular(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, segment)
     }
 
     companion object {
@@ -217,11 +217,11 @@ class CompositorEffect(handle: MemorySegment) : Resource(handle) {
         const val EFFECT_CALLBACK_TYPE_MAX: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CompositorEffect? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CompositorEffect? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CompositorEffect? =
-            if (handle.address() == 0L) null else CompositorEffect(handle)
+            if (handle.address() == 0L) null else CompositorEffect(GodotHandle(handle))
 
         private const val SET_ENABLED_HASH = 2586408642L
         private val setEnabledBind by lazy {

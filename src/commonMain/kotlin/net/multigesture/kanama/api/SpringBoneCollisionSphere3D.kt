@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SpringBoneCollisionSphere3D
  */
-class SpringBoneCollisionSphere3D(handle: MemorySegment) : SpringBoneCollision3D(handle) {
+class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -30,7 +30,7 @@ class SpringBoneCollisionSphere3D(handle: MemorySegment) : SpringBoneCollision3D
      * Generated from Godot docs: SpringBoneCollisionSphere3D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -39,7 +39,7 @@ class SpringBoneCollisionSphere3D(handle: MemorySegment) : SpringBoneCollision3D
      * Generated from Godot docs: SpringBoneCollisionSphere3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -48,7 +48,7 @@ class SpringBoneCollisionSphere3D(handle: MemorySegment) : SpringBoneCollision3D
      * Generated from Godot docs: SpringBoneCollisionSphere3D.set_inside
      */
     fun setInside(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInsideBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setInsideBind, segment, enabled)
     }
 
     /**
@@ -57,16 +57,16 @@ class SpringBoneCollisionSphere3D(handle: MemorySegment) : SpringBoneCollision3D
      * Generated from Godot docs: SpringBoneCollisionSphere3D.is_inside
      */
     fun isInside(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInsideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInsideBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpringBoneCollisionSphere3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpringBoneCollisionSphere3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpringBoneCollisionSphere3D? =
-            if (handle.address() == 0L) null else SpringBoneCollisionSphere3D(handle)
+            if (handle.address() == 0L) null else SpringBoneCollisionSphere3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

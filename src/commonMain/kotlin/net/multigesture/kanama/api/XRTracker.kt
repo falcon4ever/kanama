@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XRTracker
  */
-open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
+open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
     var type: Long
         @JvmName("typeProperty")
         get() = getTrackerType()
@@ -37,7 +37,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTrackerType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerTypeBind, segment)
     }
 
     /**
@@ -47,7 +47,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTrackerType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackerTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setTrackerTypeBind, segment, type)
     }
 
     /**
@@ -65,7 +65,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTrackerName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerNameBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTrackerName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setTrackerNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setTrackerNameBind, segment, name)
     }
 
     /**
@@ -93,7 +93,7 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTrackerDesc(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getTrackerDescBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTrackerDescBind, segment)
     }
 
     /**
@@ -103,16 +103,16 @@ open class XRTracker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTrackerDesc(description: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setTrackerDescBind, handle, description)
+        ObjectCalls.ptrcallWithStringArg(setTrackerDescBind, segment, description)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRTracker? =
-            if (handle.address() == 0L) null else XRTracker(handle)
+            if (handle.address() == 0L) null else XRTracker(GodotHandle(handle))
 
         private const val GET_TRACKER_TYPE_HASH = 2784508102L
         private val getTrackerTypeBind by lazy {

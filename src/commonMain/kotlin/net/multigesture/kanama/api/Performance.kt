@@ -101,7 +101,7 @@ object Performance {
      */
     @JvmStatic
     fun addCustomMonitor(id: String, callable: GodotCallable, arguments: List<Any?> = emptyList(), type: Long = 0L) {
-        ObjectCalls.ptrcallWithStringNameCallableArrayLongArgs(addCustomMonitorBind, singleton, id, callable.target.handle, callable.method, arguments, type)
+        ObjectCalls.ptrcallWithStringNameCallableArrayLongArgs(addCustomMonitorBind, singleton, id, callable.target.segment, callable.method, arguments, type)
     }
 
     /**
@@ -167,8 +167,8 @@ object Performance {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): Performance? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): Performance? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): Performance? =
         if (handle.address() == 0L) null else this

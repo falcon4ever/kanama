@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PackedDataContainer
  */
-class PackedDataContainer(handle: MemorySegment) : Resource(handle) {
+class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
     /**
      * Packs the given container into a binary representation. The `value` must be either `Array` or
      * `Dictionary`, any other type will result in invalid data error. Note: Subsequent calls to this
@@ -20,7 +20,7 @@ class PackedDataContainer(handle: MemorySegment) : Resource(handle) {
      */
     fun pack(value: Any?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetLong(packBind, handle, value)
+        return ObjectCalls.ptrcallWithVariantArgRetLong(packBind, segment, value)
     }
 
     /**
@@ -30,16 +30,16 @@ class PackedDataContainer(handle: MemorySegment) : Resource(handle) {
      */
     fun size(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PackedDataContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PackedDataContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PackedDataContainer? =
-            if (handle.address() == 0L) null else PackedDataContainer(handle)
+            if (handle.address() == 0L) null else PackedDataContainer(GodotHandle(handle))
 
         private const val PACK_HASH = 966674026L
         private val packBind by lazy {

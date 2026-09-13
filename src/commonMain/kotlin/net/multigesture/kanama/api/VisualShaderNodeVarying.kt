@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeVarying
  */
-open class VisualShaderNodeVarying(handle: MemorySegment) : VisualShaderNode(handle) {
+open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handle) {
     var varyingName: String
         @JvmName("varyingNameProperty")
         get() = getVaryingName()
@@ -24,31 +24,31 @@ open class VisualShaderNodeVarying(handle: MemorySegment) : VisualShaderNode(han
 
     fun setVaryingName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setVaryingNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setVaryingNameBind, segment, name)
     }
 
     fun getVaryingName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getVaryingNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getVaryingNameBind, segment)
     }
 
     fun setVaryingType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVaryingTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setVaryingTypeBind, segment, type)
     }
 
     fun getVaryingType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVaryingTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVaryingTypeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeVarying? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeVarying? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeVarying? =
-            if (handle.address() == 0L) null else VisualShaderNodeVarying(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeVarying(GodotHandle(handle))
 
         private const val SET_VARYING_NAME_HASH = 83702148L
         private val setVaryingNameBind by lazy {

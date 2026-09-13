@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  *
  * Generated from Godot docs: MethodTweener
  */
-class MethodTweener(handle: MemorySegment) : Tweener(handle) {
+class MethodTweener(handle: GodotHandle) : Tweener(handle) {
     /**
      * Sets the time in seconds after which the `MethodTweener` will start interpolating. By default
      * there's no delay.
@@ -18,8 +18,8 @@ class MethodTweener(handle: MemorySegment) : Tweener(handle) {
      */
     fun setDelay(delay: Double): MethodTweener? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -34,8 +34,8 @@ class MethodTweener(handle: MemorySegment) : Tweener(handle) {
      */
     fun setTrans(trans: Long): MethodTweener? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, handle, trans)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -50,8 +50,8 @@ class MethodTweener(handle: MemorySegment) : Tweener(handle) {
      */
     fun setEase(ease: Long): MethodTweener? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -60,11 +60,11 @@ class MethodTweener(handle: MemorySegment) : Tweener(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MethodTweener? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MethodTweener? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MethodTweener? =
-            if (handle.address() == 0L) null else MethodTweener(handle)
+            if (handle.address() == 0L) null else MethodTweener(GodotHandle(handle))
 
         private const val SET_DELAY_HASH = 266477812L
         private val setDelayBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeMix
  */
-class VisualShaderNodeMix(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeMix(handle: GodotHandle) : VisualShaderNode(handle) {
     var opType: Long
         @JvmName("opTypeProperty")
         get() = getOpType()
@@ -18,12 +18,12 @@ class VisualShaderNodeMix(handle: MemorySegment) : VisualShaderNode(handle) {
 
     fun setOpType(opType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, opType)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, opType)
     }
 
     fun getOpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
     }
 
     companion object {
@@ -37,11 +37,11 @@ class VisualShaderNodeMix(handle: MemorySegment) : VisualShaderNode(handle) {
         const val OP_TYPE_MAX: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeMix? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeMix? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeMix? =
-            if (handle.address() == 0L) null else VisualShaderNodeMix(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeMix(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 3397501671L
         private val setOpTypeBind by lazy {

@@ -12,7 +12,7 @@ you need inspector metadata.
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
-class Player(godotObject: MemorySegment) :
+class Player(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
     @ExportCategory("Tuning")
     @ExportGroup("Movement")
@@ -62,7 +62,7 @@ the hint form as follows:
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
-class Tuning(godotObject: MemorySegment) :
+class Tuning(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
     @Export(hint = PropertyHint.RANGE, hintString = "0,100,1,or_greater")
     var health: Long = 100
@@ -92,7 +92,7 @@ dropdown of the entry names:
 enum class Difficulty { EASY, NORMAL, HARD }
 
 @ScriptClass(attachTo = "Node")
-class GameRules(godotObject: MemorySegment) :
+class GameRules(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
     @ScriptProperty
     var difficulty = Difficulty.NORMAL
@@ -190,7 +190,7 @@ show a clickable button in the inspector:
 ```kotlin
 @ScriptClass(attachTo = "Node")
 @Tool
-class Spawner(godotObject: MemorySegment) :
+class Spawner(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
     @ToolButton(text = "Rebuild", icon = "Reload")
     fun rebuild() {
@@ -331,7 +331,7 @@ attach it with `@ScriptClass(attachTo = "Resource")`:
 ```kotlin
 @ScriptClass(attachTo = "Resource")
 @GlobalClass
-class Weapon(val godotObject: MemorySegment) {
+class Weapon(val godotObject: GodotHandle) {
     @Export
     var damage: Long = 10
 
@@ -372,7 +372,7 @@ do not accept it directly. Wrap the script's own `godotObject` handle with
 ```kotlin
 @ScriptClass(attachTo = "Node")
 @Tool
-class WeaponForge(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+class WeaponForge(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
     @Export
     var weapon: Weapon? = null
 

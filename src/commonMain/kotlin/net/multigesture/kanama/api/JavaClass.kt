@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JavaClass
  */
-class JavaClass(handle: MemorySegment) : RefCounted(handle) {
+class JavaClass(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the Java class name.
      *
@@ -18,7 +18,7 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getJavaClassName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getJavaClassNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getJavaClassNameBind, segment)
     }
 
     /**
@@ -29,7 +29,7 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getJavaMethodList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getJavaMethodListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getJavaMethodListBind, segment)
     }
 
     /**
@@ -39,8 +39,8 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getJavaParentClass(): JavaClass? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getJavaParentClassBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getJavaParentClassBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -54,16 +54,16 @@ class JavaClass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasJavaMethod(method: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, segment, method)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JavaClass? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JavaClass? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JavaClass? =
-            if (handle.address() == 0L) null else JavaClass(handle)
+            if (handle.address() == 0L) null else JavaClass(GodotHandle(handle))
 
         private const val GET_JAVA_CLASS_NAME_HASH = 201670096L
         private val getJavaClassNameBind by lazy {

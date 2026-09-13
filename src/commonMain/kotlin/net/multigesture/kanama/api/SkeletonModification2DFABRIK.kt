@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: SkeletonModification2DFABRIK
  */
-class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification2D(handle) {
+class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D(handle) {
     var targetNodepath: NodePath
         @JvmName("targetNodepathProperty")
         get() = getTargetNode()
@@ -34,7 +34,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -45,7 +45,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun setFabrikDataChainLength(length: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFabrikDataChainLengthBind, handle, length)
+        ObjectCalls.ptrcallWithIntArg(setFabrikDataChainLengthBind, segment, length)
     }
 
     /**
@@ -65,7 +65,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun getFabrikDataChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFabrikDataChainLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFabrikDataChainLengthBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun setFabrikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setFabrikJointBone2dNodeBind, handle, jointIdx, bone2dNodepath)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setFabrikJointBone2dNodeBind, segment, jointIdx, bone2dNodepath)
     }
 
     /**
@@ -85,7 +85,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun getFabrikJointBone2dNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getFabrikJointBone2dNodeBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getFabrikJointBone2dNodeBind, segment, jointIdx)
     }
 
     /**
@@ -96,7 +96,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun setFabrikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setFabrikJointBoneIndexBind, handle, jointIdx, boneIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(setFabrikJointBoneIndexBind, segment, jointIdx, boneIdx)
     }
 
     /**
@@ -106,7 +106,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun getFabrikJointBoneIndex(jointIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getFabrikJointBoneIndexBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getFabrikJointBoneIndexBind, segment, jointIdx)
     }
 
     /**
@@ -116,7 +116,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun setFabrikJointMagnetPosition(jointIdx: Int, magnetPosition: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setFabrikJointMagnetPositionBind, handle, jointIdx, magnetPosition)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setFabrikJointMagnetPositionBind, segment, jointIdx, magnetPosition)
     }
 
     /**
@@ -126,7 +126,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun getFabrikJointMagnetPosition(jointIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getFabrikJointMagnetPositionBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getFabrikJointMagnetPositionBind, segment, jointIdx)
     }
 
     /**
@@ -138,7 +138,7 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun setFabrikJointUseTargetRotation(jointIdx: Int, useTargetRotation: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setFabrikJointUseTargetRotationBind, handle, jointIdx, useTargetRotation)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setFabrikJointUseTargetRotationBind, segment, jointIdx, useTargetRotation)
     }
 
     /**
@@ -149,16 +149,16 @@ class SkeletonModification2DFABRIK(handle: MemorySegment) : SkeletonModification
      */
     fun getFabrikJointUseTargetRotation(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getFabrikJointUseTargetRotationBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getFabrikJointUseTargetRotationBind, segment, jointIdx)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2DFABRIK? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2DFABRIK? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2DFABRIK? =
-            if (handle.address() == 0L) null else SkeletonModification2DFABRIK(handle)
+            if (handle.address() == 0L) null else SkeletonModification2DFABRIK(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L
         private val setTargetNodeBind by lazy {

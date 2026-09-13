@@ -102,8 +102,8 @@ object TextServerManager {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): TextServerManager? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): TextServerManager? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): TextServerManager? =
         if (handle.address() == 0L) null else this

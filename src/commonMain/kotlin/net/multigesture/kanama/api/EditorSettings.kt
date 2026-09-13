@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorSettings
  */
-class EditorSettings(handle: MemorySegment) : Resource(handle) {
+class EditorSettings(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns `true` if the setting specified by `name` exists, `false` otherwise.
      *
@@ -18,7 +18,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun hasSetting(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasSettingBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasSettingBind, segment, name)
     }
 
     /**
@@ -29,7 +29,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setSetting(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndVariantArg(setSettingBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(setSettingBind, segment, name, value)
     }
 
     /**
@@ -40,7 +40,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getSetting(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getSettingBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getSettingBind, segment, name)
     }
 
     /**
@@ -50,7 +50,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun erase(property: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(eraseBind, handle, property)
+        ObjectCalls.ptrcallWithStringArg(eraseBind, segment, property)
     }
 
     /**
@@ -62,7 +62,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setInitialValue(name: String, value: Any?, updateCurrent: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameVariantBoolArgs(setInitialValueBind, handle, name, value, updateCurrent)
+        ObjectCalls.ptrcallWithStringNameVariantBoolArgs(setInitialValueBind, segment, name, value, updateCurrent)
     }
 
     /**
@@ -74,7 +74,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun addPropertyInfo(info: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(addPropertyInfoBind, handle, info)
+        ObjectCalls.ptrcallWithDictionaryArg(addPropertyInfoBind, segment, info)
     }
 
     /**
@@ -86,7 +86,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setProjectMetadata(section: String, key: String, data: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setProjectMetadataBind, handle, section, key, data)
+        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setProjectMetadataBind, segment, section, key, data)
     }
 
     /**
@@ -97,7 +97,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getProjectMetadata(section: String, key: String, default: Any? = null): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getProjectMetadataBind, handle, section, key, default)
+        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getProjectMetadataBind, segment, section, key, default)
     }
 
     /**
@@ -107,7 +107,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setFavorites(dirs: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setFavoritesBind, handle, dirs)
+        ObjectCalls.ptrcallWithPackedStringListArg(setFavoritesBind, segment, dirs)
     }
 
     /**
@@ -117,7 +117,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getFavorites(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoritesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoritesBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setRecentDirs(dirs: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setRecentDirsBind, handle, dirs)
+        ObjectCalls.ptrcallWithPackedStringListArg(setRecentDirsBind, segment, dirs)
     }
 
     /**
@@ -137,7 +137,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getRecentDirs(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentDirsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentDirsBind, segment)
     }
 
     /**
@@ -147,7 +147,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setBuiltinActionOverride(name: String, actionsList: List<InputEvent>) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndObjectListArgs(setBuiltinActionOverrideBind, handle, name, actionsList)
+        ObjectCalls.ptrcallWithStringAndObjectListArgs(setBuiltinActionOverrideBind, segment, name, actionsList)
     }
 
     /**
@@ -166,7 +166,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun addShortcut(path: String, shortcut: Shortcut?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndObjectArg(addShortcutBind, handle, path, shortcut?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndObjectArg(addShortcutBind, segment, path, shortcut?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -176,7 +176,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun removeShortcut(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeShortcutBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(removeShortcutBind, segment, path)
     }
 
     /**
@@ -187,7 +187,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun isShortcut(path: String, event: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(isShortcutBind, handle, path, event?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(isShortcutBind, segment, path, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -197,7 +197,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun hasShortcut(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasShortcutBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasShortcutBind, segment, path)
     }
 
     /**
@@ -209,7 +209,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getShortcut(path: String): Shortcut? {
         checkOpen()
-        return Shortcut.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getShortcutBind, handle, path))
+        return Shortcut.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getShortcutBind, segment, path))
     }
 
     /**
@@ -219,7 +219,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getShortcutList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getShortcutListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getShortcutListBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun checkChangedSettingsInGroup(settingPrefix: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(checkChangedSettingsInGroupBind, handle, settingPrefix)
+        return ObjectCalls.ptrcallWithStringArgRetBool(checkChangedSettingsInGroupBind, segment, settingPrefix)
     }
 
     /**
@@ -242,7 +242,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getChangedSettings(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getChangedSettingsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getChangedSettingsBind, segment)
     }
 
     /**
@@ -253,7 +253,7 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun markSettingChanged(setting: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(markSettingChangedBind, handle, setting)
+        ObjectCalls.ptrcallWithStringArg(markSettingChangedBind, segment, setting)
     }
 
     object Signals {
@@ -264,11 +264,11 @@ class EditorSettings(handle: MemorySegment) : Resource(handle) {
         const val NOTIFICATION_EDITOR_SETTINGS_CHANGED: Long = 10000L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorSettings? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorSettings? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorSettings? =
-            if (handle.address() == 0L) null else EditorSettings(handle)
+            if (handle.address() == 0L) null else EditorSettings(GodotHandle(handle))
 
         private const val HAS_SETTING_HASH = 3927539163L
         private val hasSettingBind by lazy {

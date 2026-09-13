@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 /**
  * Generated from Godot docs: TextureRect
  */
-class TextureRect(handle: MemorySegment) : Control(handle) {
+class TextureRect(handle: GodotHandle) : Control(handle) {
     var texture: Texture2D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -40,43 +40,43 @@ class TextureRect(handle: MemorySegment) : Control(handle) {
         set(value) = setFlipV(value)
 
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     fun setExpandMode(expandMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setExpandModeBind, handle, expandMode)
+        ObjectCalls.ptrcallWithLongArg(setExpandModeBind, segment, expandMode)
     }
 
     fun getExpandMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, segment)
     }
 
     fun setFlipH(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, enable)
     }
 
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
     }
 
     fun setFlipV(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, enable)
     }
 
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
     }
 
     fun setStretchMode(stretchMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, handle, stretchMode)
+        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode)
     }
 
     fun getStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment)
     }
 
     companion object {
@@ -95,11 +95,11 @@ class TextureRect(handle: MemorySegment) : Control(handle) {
         const val STRETCH_KEEP_ASPECT_COVERED: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextureRect? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextureRect? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextureRect? =
-            if (handle.address() == 0L) null else TextureRect(handle)
+            if (handle.address() == 0L) null else TextureRect(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {

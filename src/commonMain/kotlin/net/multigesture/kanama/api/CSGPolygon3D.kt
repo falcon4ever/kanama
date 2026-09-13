@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: CSGPolygon3D
  */
-class CSGPolygon3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
+class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     var polygon: List<Vector2>
         @JvmName("polygonProperty")
         get() = getPolygon()
@@ -115,139 +115,139 @@ class CSGPolygon3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
     }
 
     fun getPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
     fun setMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
     }
 
     fun getMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
     }
 
     fun setDepth(depth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
     }
 
     fun getDepth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
     }
 
     fun setSpinDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpinDegreesBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setSpinDegreesBind, segment, degrees)
     }
 
     fun getSpinDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpinDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpinDegreesBind, segment)
     }
 
     fun setSpinSides(spinSides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSpinSidesBind, handle, spinSides)
+        ObjectCalls.ptrcallWithIntArg(setSpinSidesBind, segment, spinSides)
     }
 
     fun getSpinSides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSpinSidesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSpinSidesBind, segment)
     }
 
     fun setPathNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setPathNodeBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setPathNodeBind, segment, path)
     }
 
     fun getPathNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getPathNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getPathNodeBind, segment)
     }
 
     fun setPathIntervalType(intervalType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathIntervalTypeBind, handle, intervalType)
+        ObjectCalls.ptrcallWithLongArg(setPathIntervalTypeBind, segment, intervalType)
     }
 
     fun getPathIntervalType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathIntervalTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPathIntervalTypeBind, segment)
     }
 
     fun setPathInterval(interval: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathIntervalBind, handle, interval)
+        ObjectCalls.ptrcallWithDoubleArg(setPathIntervalBind, segment, interval)
     }
 
     fun getPathInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathIntervalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathIntervalBind, segment)
     }
 
     fun setPathSimplifyAngle(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathSimplifyAngleBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setPathSimplifyAngleBind, segment, degrees)
     }
 
     fun getPathSimplifyAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSimplifyAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSimplifyAngleBind, segment)
     }
 
     fun setPathRotation(pathRotation: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathRotationBind, handle, pathRotation)
+        ObjectCalls.ptrcallWithLongArg(setPathRotationBind, segment, pathRotation)
     }
 
     fun getPathRotation(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPathRotationBind, segment)
     }
 
     fun setPathRotationAccurate(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathRotationAccurateBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPathRotationAccurateBind, segment, enable)
     }
 
     fun getPathRotationAccurate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPathRotationAccurateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPathRotationAccurateBind, segment)
     }
 
     fun setPathLocal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathLocalBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPathLocalBind, segment, enable)
     }
 
     fun isPathLocal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPathLocalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPathLocalBind, segment)
     }
 
     fun setPathContinuousU(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathContinuousUBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPathContinuousUBind, segment, enable)
     }
 
     fun isPathContinuousU(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPathContinuousUBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPathContinuousUBind, segment)
     }
 
     fun setPathUDistance(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathUDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setPathUDistanceBind, segment, distance)
     }
 
     fun getPathUDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathUDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathUDistanceBind, segment)
     }
 
     fun setPathJoined(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathJoinedBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPathJoinedBind, segment, enable)
     }
 
     fun isPathJoined(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPathJoinedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPathJoinedBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, handle, smoothFaces)
+        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, segment, smoothFaces)
     }
 
     fun getSmoothFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
     }
 
     companion object {
@@ -261,11 +261,11 @@ class CSGPolygon3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         const val PATH_INTERVAL_SUBDIVIDE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGPolygon3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGPolygon3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGPolygon3D? =
-            if (handle.address() == 0L) null else CSGPolygon3D(handle)
+            if (handle.address() == 0L) null else CSGPolygon3D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L
         private val setPolygonBind by lazy {

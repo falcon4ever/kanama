@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: GPUParticlesAttractorBox3D
  */
-class GPUParticlesAttractorBox3D(handle: MemorySegment) : GPUParticlesAttractor3D(handle) {
+class GPUParticlesAttractorBox3D(handle: GodotHandle) : GPUParticlesAttractor3D(handle) {
     var size: Vector3
         @JvmName("sizeProperty")
         get() = getSize()
@@ -25,7 +25,7 @@ class GPUParticlesAttractorBox3D(handle: MemorySegment) : GPUParticlesAttractor3
      * Generated from Godot docs: GPUParticlesAttractorBox3D.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -34,16 +34,16 @@ class GPUParticlesAttractorBox3D(handle: MemorySegment) : GPUParticlesAttractor3
      * Generated from Godot docs: GPUParticlesAttractorBox3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GPUParticlesAttractorBox3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GPUParticlesAttractorBox3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GPUParticlesAttractorBox3D? =
-            if (handle.address() == 0L) null else GPUParticlesAttractorBox3D(handle)
+            if (handle.address() == 0L) null else GPUParticlesAttractorBox3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {

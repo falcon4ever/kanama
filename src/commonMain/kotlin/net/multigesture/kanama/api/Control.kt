@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Control
  */
-open class Control(handle: MemorySegment) : CanvasItem(handle) {
+open class Control(handle: GodotHandle) : CanvasItem(handle) {
     var customMinimumSize: Vector2
         @JvmName("customMinimumSizeProperty")
         get() = getCustomMinimumSize()
@@ -388,7 +388,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.accept_event
      */
     fun acceptEvent() {
-        ObjectCalls.ptrcallNoArgs(acceptEventBind, handle)
+        ObjectCalls.ptrcallNoArgs(acceptEventBind, segment)
     }
 
     /**
@@ -397,7 +397,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_maximum_size
      */
     fun getMaximumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMaximumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMaximumSizeBind, segment)
     }
 
     /**
@@ -408,7 +408,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_combined_maximum_size
      */
     fun getCombinedMaximumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedMaximumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedMaximumSizeBind, segment)
     }
 
     /**
@@ -417,7 +417,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_minimum_size
      */
     fun getMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, segment)
     }
 
     /**
@@ -426,7 +426,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_combined_minimum_size
      */
     fun getCombinedMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedMinimumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedMinimumSizeBind, segment)
     }
 
     /**
@@ -436,7 +436,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_propagate_maximum_size
      */
     fun setPropagateMaximumSize(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPropagateMaximumSizeBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPropagateMaximumSizeBind, segment, enable)
     }
 
     /**
@@ -446,7 +446,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_propagating_maximum_size
      */
     fun isPropagatingMaximumSize(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPropagatingMaximumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPropagatingMaximumSizeBind, segment)
     }
 
     /**
@@ -458,7 +458,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_bound_minimum_size
      */
     fun getBoundMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundMinimumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundMinimumSizeBind, segment)
     }
 
     /**
@@ -469,7 +469,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchors_preset
      */
     fun setAnchorsPreset(preset: Long, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setAnchorsPresetBind, handle, preset, keepOffsets)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setAnchorsPresetBind, segment, preset, keepOffsets)
     }
 
     /**
@@ -482,7 +482,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offsets_preset
      */
     fun setOffsetsPreset(preset: Long, resizeMode: Long = 0L, margin: Int = 0) {
-        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setOffsetsPresetBind, handle, preset, resizeMode, margin)
+        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setOffsetsPresetBind, segment, preset, resizeMode, margin)
     }
 
     /**
@@ -491,7 +491,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchors_and_offsets_preset
      */
     fun setAnchorsAndOffsetsPreset(preset: Long, resizeMode: Long = 0L, margin: Int = 0) {
-        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setAnchorsAndOffsetsPresetBind, handle, preset, resizeMode, margin)
+        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setAnchorsAndOffsetsPresetBind, segment, preset, resizeMode, margin)
     }
 
     /**
@@ -505,7 +505,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchor
      */
     fun setAnchor(side: Long, anchor: Double, keepOffset: Boolean = false, pushOppositeAnchor: Boolean = true) {
-        ObjectCalls.ptrcallWithLongDoubleTwoBoolArgs(setAnchorBind, handle, side, anchor, keepOffset, pushOppositeAnchor)
+        ObjectCalls.ptrcallWithLongDoubleTwoBoolArgs(setAnchorBind, segment, side, anchor, keepOffset, pushOppositeAnchor)
     }
 
     /**
@@ -516,7 +516,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_anchor
      */
     fun getAnchor(side: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getAnchorBind, handle, side)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getAnchorBind, segment, side)
     }
 
     /**
@@ -528,7 +528,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset
      */
     fun setOffset(side: Long, offset: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setOffsetBind, handle, side, offset)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setOffsetBind, segment, side, offset)
     }
 
     /**
@@ -540,7 +540,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset
      */
     fun getOffset(offset: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getOffsetBind, handle, offset)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getOffsetBind, segment, offset)
     }
 
     /**
@@ -550,7 +550,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchor_and_offset
      */
     fun setAnchorAndOffset(side: Long, anchor: Double, offset: Double, pushOppositeAnchor: Boolean = false) {
-        ObjectCalls.ptrcallWithLongTwoDoubleAndBoolArgs(setAnchorAndOffsetBind, handle, side, anchor, offset, pushOppositeAnchor)
+        ObjectCalls.ptrcallWithLongTwoDoubleAndBoolArgs(setAnchorAndOffsetBind, segment, side, anchor, offset, pushOppositeAnchor)
     }
 
     /**
@@ -559,7 +559,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_begin
      */
     fun setBegin(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setBeginBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setBeginBind, segment, position)
     }
 
     /**
@@ -568,7 +568,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_end
      */
     fun setEnd(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setEndBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setEndBind, segment, position)
     }
 
     /**
@@ -578,7 +578,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_position
      */
     fun setPosition(position: Vector2, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2AndBoolArg(setPositionBind, handle, position, keepOffsets)
+        ObjectCalls.ptrcallWithVector2AndBoolArg(setPositionBind, segment, position, keepOffsets)
     }
 
     /**
@@ -588,7 +588,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_size
      */
     fun setSize(size: Vector2, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2AndBoolArg(setSizeBind, handle, size, keepOffsets)
+        ObjectCalls.ptrcallWithVector2AndBoolArg(setSizeBind, segment, size, keepOffsets)
     }
 
     /**
@@ -598,7 +598,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.reset_size
      */
     fun resetSize() {
-        ObjectCalls.ptrcallNoArgs(resetSizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetSizeBind, segment)
     }
 
     /**
@@ -617,7 +617,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_custom_maximum_size
      */
     fun setCustomMaximumSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setCustomMaximumSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setCustomMaximumSizeBind, segment, size)
     }
 
     /**
@@ -633,7 +633,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_custom_minimum_size
      */
     fun setCustomMinimumSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setCustomMinimumSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setCustomMinimumSizeBind, segment, size)
     }
 
     /**
@@ -643,7 +643,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_global_position
      */
     fun setGlobalPosition(position: Vector2, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2AndBoolArg(setGlobalPositionBind, handle, position, keepOffsets)
+        ObjectCalls.ptrcallWithVector2AndBoolArg(setGlobalPositionBind, segment, position, keepOffsets)
     }
 
     /**
@@ -654,7 +654,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_rotation
      */
     fun setRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, segment, radians)
     }
 
     /**
@@ -663,7 +663,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_rotation_degrees
      */
     fun setRotationDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationDegreesBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setRotationDegreesBind, segment, degrees)
     }
 
     /**
@@ -687,7 +687,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_scale
      */
     fun setScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, segment, scale)
     }
 
     /**
@@ -698,7 +698,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_pivot_offset
      */
     fun setPivotOffset(pivotOffset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPivotOffsetBind, handle, pivotOffset)
+        ObjectCalls.ptrcallWithVector2Arg(setPivotOffsetBind, segment, pivotOffset)
     }
 
     /**
@@ -710,7 +710,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_pivot_offset_ratio
      */
     fun setPivotOffsetRatio(ratio: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPivotOffsetRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithVector2Arg(setPivotOffsetRatioBind, segment, ratio)
     }
 
     /**
@@ -719,7 +719,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_begin
      */
     fun getBegin(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getBeginBind, segment)
     }
 
     /**
@@ -728,7 +728,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_end
      */
     fun getEnd(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getEndBind, segment)
     }
 
     /**
@@ -738,7 +738,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_position
      */
     fun getPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
     }
 
     /**
@@ -748,7 +748,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_size
      */
     fun getSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
     }
 
     /**
@@ -759,7 +759,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_rotation
      */
     fun getRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, segment)
     }
 
     /**
@@ -768,7 +768,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_rotation_degrees
      */
     fun getRotationDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationDegreesBind, segment)
     }
 
     /**
@@ -792,7 +792,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_scale
      */
     fun getScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, segment)
     }
 
     /**
@@ -803,7 +803,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_pivot_offset
      */
     fun getPivotOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPivotOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPivotOffsetBind, segment)
     }
 
     /**
@@ -815,7 +815,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_pivot_offset_ratio
      */
     fun getPivotOffsetRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPivotOffsetRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPivotOffsetRatioBind, segment)
     }
 
     /**
@@ -825,7 +825,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_combined_pivot_offset
      */
     fun getCombinedPivotOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedPivotOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedPivotOffsetBind, segment)
     }
 
     /**
@@ -844,7 +844,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_custom_maximum_size
      */
     fun getCustomMaximumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCustomMaximumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCustomMaximumSizeBind, segment)
     }
 
     /**
@@ -860,7 +860,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_custom_minimum_size
      */
     fun getCustomMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCustomMinimumSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCustomMinimumSizeBind, segment)
     }
 
     /**
@@ -869,7 +869,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_parent_area_size
      */
     fun getParentAreaSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getParentAreaSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getParentAreaSizeBind, segment)
     }
 
     /**
@@ -878,7 +878,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_global_position
      */
     fun getGlobalPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, segment)
     }
 
     /**
@@ -889,7 +889,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_screen_position
      */
     fun getScreenPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenPositionBind, segment)
     }
 
     /**
@@ -901,7 +901,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
     }
 
     /**
@@ -914,7 +914,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_global_rect
      */
     fun getGlobalRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getGlobalRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getGlobalRectBind, segment)
     }
 
     /**
@@ -926,7 +926,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_mode
      */
     fun setFocusMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFocusModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setFocusModeBind, segment, mode)
     }
 
     /**
@@ -938,7 +938,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_mode
      */
     fun getFocusMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFocusModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFocusModeBind, segment)
     }
 
     /**
@@ -950,7 +950,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_mode_with_override
      */
     fun getFocusModeWithOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFocusModeWithOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFocusModeWithOverrideBind, segment)
     }
 
     /**
@@ -961,7 +961,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_behavior_recursive
      */
     fun setFocusBehaviorRecursive(focusBehaviorRecursive: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFocusBehaviorRecursiveBind, handle, focusBehaviorRecursive)
+        ObjectCalls.ptrcallWithLongArg(setFocusBehaviorRecursiveBind, segment, focusBehaviorRecursive)
     }
 
     /**
@@ -972,7 +972,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_behavior_recursive
      */
     fun getFocusBehaviorRecursive(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFocusBehaviorRecursiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFocusBehaviorRecursiveBind, segment)
     }
 
     /**
@@ -984,7 +984,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_focus
      */
     fun hasFocus(ignoreHiddenFocus: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithBoolArgRetBool(hasFocusBind, handle, ignoreHiddenFocus)
+        return ObjectCalls.ptrcallWithBoolArgRetBool(hasFocusBind, segment, ignoreHiddenFocus)
     }
 
     /**
@@ -998,7 +998,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.grab_focus
      */
     fun grabFocus(hideFocus: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(grabFocusBind, handle, hideFocus)
+        ObjectCalls.ptrcallWithBoolArg(grabFocusBind, segment, hideFocus)
     }
 
     /**
@@ -1007,7 +1007,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.release_focus
      */
     fun releaseFocus() {
-        ObjectCalls.ptrcallNoArgs(releaseFocusBind, handle)
+        ObjectCalls.ptrcallNoArgs(releaseFocusBind, segment)
     }
 
     /**
@@ -1016,7 +1016,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.find_prev_valid_focus
      */
     fun findPrevValidFocus(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(findPrevValidFocusBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(findPrevValidFocusBind, segment))
     }
 
     /**
@@ -1025,7 +1025,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.find_next_valid_focus
      */
     fun findNextValidFocus(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(findNextValidFocusBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(findNextValidFocusBind, segment))
     }
 
     /**
@@ -1035,7 +1035,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.find_valid_focus_neighbor
      */
     fun findValidFocusNeighbor(side: Long): Control? {
-        return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(findValidFocusNeighborBind, handle, side))
+        return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(findValidFocusNeighborBind, segment, side))
     }
 
     /**
@@ -1046,7 +1046,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_h_size_flags
      */
     fun setHSizeFlags(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHSizeFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setHSizeFlagsBind, segment, flags)
     }
 
     /**
@@ -1057,7 +1057,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_h_size_flags
      */
     fun getHSizeFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHSizeFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHSizeFlagsBind, segment)
     }
 
     /**
@@ -1069,7 +1069,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_stretch_ratio
      */
     fun setStretchRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStretchRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setStretchRatioBind, segment, ratio)
     }
 
     /**
@@ -1081,7 +1081,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_stretch_ratio
      */
     fun getStretchRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStretchRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStretchRatioBind, segment)
     }
 
     /**
@@ -1092,7 +1092,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_v_size_flags
      */
     fun setVSizeFlags(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVSizeFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setVSizeFlagsBind, segment, flags)
     }
 
     /**
@@ -1103,7 +1103,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_v_size_flags
      */
     fun getVSizeFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVSizeFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVSizeFlagsBind, segment)
     }
 
     /**
@@ -1113,7 +1113,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_enabled
      */
     fun setOffsetTransformEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOffsetTransformEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setOffsetTransformEnabledBind, segment, enabled)
     }
 
     /**
@@ -1123,7 +1123,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_offset_transform_enabled
      */
     fun isOffsetTransformEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOffsetTransformEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOffsetTransformEnabledBind, segment)
     }
 
     /**
@@ -1133,7 +1133,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_position
      */
     fun setOffsetTransformPosition(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPositionBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPositionBind, segment, offset)
     }
 
     /**
@@ -1143,7 +1143,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_position
      */
     fun getOffsetTransformPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPositionBind, segment)
     }
 
     /**
@@ -1155,7 +1155,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_position_ratio
      */
     fun setOffsetTransformPositionRatio(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPositionRatioBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPositionRatioBind, segment, offset)
     }
 
     /**
@@ -1167,7 +1167,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_position_ratio
      */
     fun getOffsetTransformPositionRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPositionRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPositionRatioBind, segment)
     }
 
     /**
@@ -1177,7 +1177,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_scale
      */
     fun setOffsetTransformScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformScaleBind, segment, scale)
     }
 
     /**
@@ -1187,7 +1187,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_scale
      */
     fun getOffsetTransformScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformScaleBind, segment)
     }
 
     /**
@@ -1197,7 +1197,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_rotation
      */
     fun setOffsetTransformRotation(rotation: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOffsetTransformRotationBind, handle, rotation)
+        ObjectCalls.ptrcallWithDoubleArg(setOffsetTransformRotationBind, segment, rotation)
     }
 
     /**
@@ -1207,7 +1207,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_rotation
      */
     fun getOffsetTransformRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOffsetTransformRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOffsetTransformRotationBind, segment)
     }
 
     /**
@@ -1218,7 +1218,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_pivot
      */
     fun setOffsetTransformPivot(pivot: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPivotBind, handle, pivot)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPivotBind, segment, pivot)
     }
 
     /**
@@ -1229,7 +1229,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_pivot
      */
     fun getOffsetTransformPivot(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPivotBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPivotBind, segment)
     }
 
     /**
@@ -1241,7 +1241,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_pivot_ratio
      */
     fun setOffsetTransformPivotRatio(pivot: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPivotRatioBind, handle, pivot)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPivotRatioBind, segment, pivot)
     }
 
     /**
@@ -1253,7 +1253,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_pivot_ratio
      */
     fun getOffsetTransformPivotRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPivotRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPivotRatioBind, segment)
     }
 
     /**
@@ -1266,7 +1266,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_visual_only
      */
     fun setOffsetTransformVisualOnly(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOffsetTransformVisualOnlyBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setOffsetTransformVisualOnlyBind, segment, enabled)
     }
 
     /**
@@ -1279,7 +1279,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_offset_transform_visual_only
      */
     fun isOffsetTransformVisualOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOffsetTransformVisualOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOffsetTransformVisualOnlyBind, segment)
     }
 
     /**
@@ -1290,7 +1290,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_theme
      */
     fun setTheme(theme: Theme?) {
-        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, handle, listOf(theme?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1301,7 +1301,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme
      */
     fun getTheme(): Theme? {
-        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, handle))
+        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, segment))
     }
 
     /**
@@ -1319,7 +1319,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_theme_type_variation
      */
     fun setThemeTypeVariation(themeType: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setThemeTypeVariationBind, handle, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(setThemeTypeVariationBind, segment, themeType)
     }
 
     /**
@@ -1337,7 +1337,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_type_variation
      */
     fun getThemeTypeVariation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getThemeTypeVariationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getThemeTypeVariationBind, segment)
     }
 
     /**
@@ -1347,7 +1347,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.begin_bulk_theme_override
      */
     fun beginBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(beginBulkThemeOverrideBind, handle)
+        ObjectCalls.ptrcallNoArgs(beginBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1356,7 +1356,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.end_bulk_theme_override
      */
     fun endBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, handle)
+        ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1367,7 +1367,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_icon_override
      */
     fun addThemeIconOverride(name: String, texture: Texture2D) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, handle, name, texture.requireOpenHandle())
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, segment, name, texture.requireOpenHandle())
     }
 
     /**
@@ -1378,7 +1378,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_stylebox_override
      */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, handle, name, stylebox.requireOpenHandle())
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, segment, name, stylebox.requireOpenHandle())
     }
 
     /**
@@ -1389,7 +1389,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_font_override
      */
     fun addThemeFontOverride(name: String, font: Font) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, handle, name, font.requireOpenHandle())
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, segment, name, font.requireOpenHandle())
     }
 
     /**
@@ -1400,7 +1400,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_font_size_override
      */
     fun addThemeFontSizeOverride(name: String, fontSize: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeFontSizeOverrideBind, handle, name, fontSize)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeFontSizeOverrideBind, segment, name, fontSize)
     }
 
     /**
@@ -1411,7 +1411,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_color_override
      */
     fun addThemeColorOverride(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringNameAndColorArg(addThemeColorOverrideBind, handle, name, color)
+        ObjectCalls.ptrcallWithStringNameAndColorArg(addThemeColorOverrideBind, segment, name, color)
     }
 
     /**
@@ -1422,7 +1422,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_constant_override
      */
     fun addThemeConstantOverride(name: String, constant: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeConstantOverrideBind, handle, name, constant)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeConstantOverrideBind, segment, name, constant)
     }
 
     /**
@@ -1432,7 +1432,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_icon_override
      */
     fun removeThemeIconOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeIconOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1442,7 +1442,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_stylebox_override
      */
     fun removeThemeStyleboxOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeStyleboxOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1452,7 +1452,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_font_override
      */
     fun removeThemeFontOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1462,7 +1462,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_font_size_override
      */
     fun removeThemeFontSizeOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontSizeOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1472,7 +1472,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_color_override
      */
     fun removeThemeColorOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeColorOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1482,7 +1482,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_constant_override
      */
     fun removeThemeConstantOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeConstantOverrideBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1492,7 +1492,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_icon
      */
     fun getThemeIcon(name: String, themeType: String = ""): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, handle, name, themeType))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, segment, name, themeType))
     }
 
     /**
@@ -1502,7 +1502,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_stylebox
      */
     fun getThemeStylebox(name: String, themeType: String = ""): StyleBox? {
-        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, handle, name, themeType))
+        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -1512,7 +1512,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_font
      */
     fun getThemeFont(name: String, themeType: String = ""): Font? {
-        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, handle, name, themeType))
+        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, segment, name, themeType))
     }
 
     /**
@@ -1522,7 +1522,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_font_size
      */
     fun getThemeFontSize(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeFontSizeBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1540,7 +1540,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_color
      */
     fun getThemeColor(name: String, themeType: String = ""): Color {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getThemeColorBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1550,7 +1550,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_constant
      */
     fun getThemeConstant(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeConstantBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1560,7 +1560,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_icon_override
      */
     fun hasThemeIconOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeIconOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1570,7 +1570,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_stylebox_override
      */
     fun hasThemeStyleboxOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeStyleboxOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1580,7 +1580,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font_override
      */
     fun hasThemeFontOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1590,7 +1590,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font_size_override
      */
     fun hasThemeFontSizeOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontSizeOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1600,7 +1600,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_color_override
      */
     fun hasThemeColorOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeColorOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1610,7 +1610,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_constant_override
      */
     fun hasThemeConstantOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeConstantOverrideBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1620,7 +1620,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_icon
      */
     fun hasThemeIcon(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeIconBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeIconBind, segment, name, themeType)
     }
 
     /**
@@ -1630,7 +1630,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_stylebox
      */
     fun hasThemeStylebox(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeStyleboxBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -1640,7 +1640,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font
      */
     fun hasThemeFont(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontBind, segment, name, themeType)
     }
 
     /**
@@ -1650,7 +1650,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font_size
      */
     fun hasThemeFontSize(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontSizeBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1660,7 +1660,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_color
      */
     fun hasThemeColor(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeColorBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1670,7 +1670,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_constant
      */
     fun hasThemeConstant(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeConstantBind, handle, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1680,7 +1680,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_default_base_scale
      */
     fun getThemeDefaultBaseScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThemeDefaultBaseScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getThemeDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -1690,7 +1690,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_default_font
      */
     fun getThemeDefaultFont(): Font? {
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, handle))
+        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, segment))
     }
 
     /**
@@ -1700,7 +1700,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_default_font_size
      */
     fun getThemeDefaultFontSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getThemeDefaultFontSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getThemeDefaultFontSizeBind, segment)
     }
 
     /**
@@ -1709,7 +1709,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_parent_control
      */
     fun getParentControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentControlBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentControlBind, segment))
     }
 
     /**
@@ -1720,7 +1720,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_h_grow_direction
      */
     fun setHGrowDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHGrowDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setHGrowDirectionBind, segment, direction)
     }
 
     /**
@@ -1731,7 +1731,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_h_grow_direction
      */
     fun getHGrowDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHGrowDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHGrowDirectionBind, segment)
     }
 
     /**
@@ -1742,7 +1742,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_v_grow_direction
      */
     fun setVGrowDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVGrowDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setVGrowDirectionBind, segment, direction)
     }
 
     /**
@@ -1753,7 +1753,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_v_grow_direction
      */
     fun getVGrowDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVGrowDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVGrowDirectionBind, segment)
     }
 
     /**
@@ -1765,7 +1765,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_tooltip_auto_translate_mode
      */
     fun setTooltipAutoTranslateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTooltipAutoTranslateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTooltipAutoTranslateModeBind, segment, mode)
     }
 
     /**
@@ -1777,7 +1777,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_tooltip_auto_translate_mode
      */
     fun getTooltipAutoTranslateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTooltipAutoTranslateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTooltipAutoTranslateModeBind, segment)
     }
 
     /**
@@ -1795,7 +1795,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_tooltip_text
      */
     fun setTooltipText(hint: String) {
-        ObjectCalls.ptrcallWithStringArg(setTooltipTextBind, handle, hint)
+        ObjectCalls.ptrcallWithStringArg(setTooltipTextBind, segment, hint)
     }
 
     /**
@@ -1813,7 +1813,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_tooltip_text
      */
     fun getTooltipText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTooltipTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTooltipTextBind, segment)
     }
 
     /**
@@ -1826,7 +1826,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_tooltip
      */
     fun getTooltip(atPosition: Vector2 = Vector2(0f, 0f)): String {
-        return ObjectCalls.ptrcallWithVector2ArgRetString(getTooltipBind, handle, atPosition)
+        return ObjectCalls.ptrcallWithVector2ArgRetString(getTooltipBind, segment, atPosition)
     }
 
     /**
@@ -1836,7 +1836,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_translation_context
      */
     fun setTranslationContext(context: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTranslationContextBind, handle, context)
+        ObjectCalls.ptrcallWithStringNameArg(setTranslationContextBind, segment, context)
     }
 
     /**
@@ -1846,7 +1846,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_translation_context
      */
     fun getTranslationContext(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTranslationContextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getTranslationContextBind, segment)
     }
 
     /**
@@ -1857,7 +1857,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_default_cursor_shape
      */
     fun setDefaultCursorShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, segment, shape)
     }
 
     /**
@@ -1868,7 +1868,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_default_cursor_shape
      */
     fun getDefaultCursorShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCursorShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCursorShapeBind, segment)
     }
 
     /**
@@ -1880,7 +1880,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_cursor_shape
      */
     fun getCursorShape(atPosition: Vector2 = Vector2(0f, 0f)): Long {
-        return ObjectCalls.ptrcallWithVector2ArgRetLong(getCursorShapeBind, handle, atPosition)
+        return ObjectCalls.ptrcallWithVector2ArgRetLong(getCursorShapeBind, segment, atPosition)
     }
 
     /**
@@ -1892,7 +1892,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_neighbor
      */
     fun setFocusNeighbor(side: Long, neighbor: NodePath) {
-        ObjectCalls.ptrcallWithLongAndNodePathArg(setFocusNeighborBind, handle, side, neighbor)
+        ObjectCalls.ptrcallWithLongAndNodePathArg(setFocusNeighborBind, segment, side, neighbor)
     }
 
     /**
@@ -1904,7 +1904,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_neighbor
      */
     fun getFocusNeighbor(side: Long): NodePath {
-        return ObjectCalls.ptrcallWithLongArgRetNodePath(getFocusNeighborBind, handle, side)
+        return ObjectCalls.ptrcallWithLongArgRetNodePath(getFocusNeighborBind, segment, side)
     }
 
     /**
@@ -1916,7 +1916,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_next
      */
     fun setFocusNext(next: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setFocusNextBind, handle, next)
+        ObjectCalls.ptrcallWithNodePathArg(setFocusNextBind, segment, next)
     }
 
     /**
@@ -1928,7 +1928,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_next
      */
     fun getFocusNext(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getFocusNextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getFocusNextBind, segment)
     }
 
     /**
@@ -1940,7 +1940,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_previous
      */
     fun setFocusPrevious(previous: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setFocusPreviousBind, handle, previous)
+        ObjectCalls.ptrcallWithNodePathArg(setFocusPreviousBind, segment, previous)
     }
 
     /**
@@ -1952,7 +1952,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_previous
      */
     fun getFocusPrevious(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getFocusPreviousBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getFocusPreviousBind, segment)
     }
 
     /**
@@ -1964,7 +1964,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.force_drag
      */
     fun forceDrag(data: Any?, preview: Control) {
-        ObjectCalls.ptrcallWithVariantAndObjectArg(forceDragBind, handle, data, preview.handle)
+        ObjectCalls.ptrcallWithVariantAndObjectArg(forceDragBind, segment, data, preview.segment)
     }
 
     /**
@@ -1973,7 +1973,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.accessibility_drag
      */
     fun accessibilityDrag() {
-        ObjectCalls.ptrcallNoArgs(accessibilityDragBind, handle)
+        ObjectCalls.ptrcallNoArgs(accessibilityDragBind, segment)
     }
 
     /**
@@ -1982,7 +1982,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.accessibility_drop
      */
     fun accessibilityDrop() {
-        ObjectCalls.ptrcallNoArgs(accessibilityDropBind, handle)
+        ObjectCalls.ptrcallNoArgs(accessibilityDropBind, segment)
     }
 
     /**
@@ -1991,7 +1991,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_name
      */
     fun setAccessibilityName(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setAccessibilityNameBind, segment, name)
     }
 
     /**
@@ -2000,7 +2000,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_name
      */
     fun getAccessibilityName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityNameBind, segment)
     }
 
     /**
@@ -2009,7 +2009,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_description
      */
     fun setAccessibilityDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityDescriptionBind, handle, description)
+        ObjectCalls.ptrcallWithStringArg(setAccessibilityDescriptionBind, segment, description)
     }
 
     /**
@@ -2018,7 +2018,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_description
      */
     fun getAccessibilityDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityDescriptionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityDescriptionBind, segment)
     }
 
     /**
@@ -2028,7 +2028,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_live
      */
     fun setAccessibilityLive(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAccessibilityLiveBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setAccessibilityLiveBind, segment, mode)
     }
 
     /**
@@ -2038,7 +2038,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_live
      */
     fun getAccessibilityLive(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessibilityLiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAccessibilityLiveBind, segment)
     }
 
     /**
@@ -2047,7 +2047,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_controls_nodes
      */
     fun setAccessibilityControlsNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityControlsNodesBind, handle, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityControlsNodesBind, segment, nodePath)
     }
 
     /**
@@ -2056,7 +2056,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_controls_nodes
      */
     fun getAccessibilityControlsNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityControlsNodesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityControlsNodesBind, segment)
     }
 
     /**
@@ -2065,7 +2065,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_described_by_nodes
      */
     fun setAccessibilityDescribedByNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityDescribedByNodesBind, handle, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityDescribedByNodesBind, segment, nodePath)
     }
 
     /**
@@ -2074,7 +2074,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_described_by_nodes
      */
     fun getAccessibilityDescribedByNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityDescribedByNodesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityDescribedByNodesBind, segment)
     }
 
     /**
@@ -2083,7 +2083,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_labeled_by_nodes
      */
     fun setAccessibilityLabeledByNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityLabeledByNodesBind, handle, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityLabeledByNodesBind, segment, nodePath)
     }
 
     /**
@@ -2092,7 +2092,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_labeled_by_nodes
      */
     fun getAccessibilityLabeledByNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityLabeledByNodesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityLabeledByNodesBind, segment)
     }
 
     /**
@@ -2101,7 +2101,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_flow_to_nodes
      */
     fun setAccessibilityFlowToNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityFlowToNodesBind, handle, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityFlowToNodesBind, segment, nodePath)
     }
 
     /**
@@ -2110,7 +2110,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_flow_to_nodes
      */
     fun getAccessibilityFlowToNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityFlowToNodesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityFlowToNodesBind, segment)
     }
 
     /**
@@ -2123,7 +2123,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_mouse_filter
      */
     fun setMouseFilter(filter: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMouseFilterBind, handle, filter)
+        ObjectCalls.ptrcallWithLongArg(setMouseFilterBind, segment, filter)
     }
 
     /**
@@ -2136,7 +2136,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_mouse_filter
      */
     fun getMouseFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterBind, segment)
     }
 
     /**
@@ -2148,7 +2148,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_mouse_filter_with_override
      */
     fun getMouseFilterWithOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterWithOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterWithOverrideBind, segment)
     }
 
     /**
@@ -2159,7 +2159,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_mouse_behavior_recursive
      */
     fun setMouseBehaviorRecursive(mouseBehaviorRecursive: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMouseBehaviorRecursiveBind, handle, mouseBehaviorRecursive)
+        ObjectCalls.ptrcallWithLongArg(setMouseBehaviorRecursiveBind, segment, mouseBehaviorRecursive)
     }
 
     /**
@@ -2170,7 +2170,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_mouse_behavior_recursive
      */
     fun getMouseBehaviorRecursive(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseBehaviorRecursiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMouseBehaviorRecursiveBind, segment)
     }
 
     /**
@@ -2183,7 +2183,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_force_pass_scroll_events
      */
     fun setForcePassScrollEvents(forcePassScrollEvents: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setForcePassScrollEventsBind, handle, forcePassScrollEvents)
+        ObjectCalls.ptrcallWithBoolArg(setForcePassScrollEventsBind, segment, forcePassScrollEvents)
     }
 
     /**
@@ -2196,7 +2196,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_force_pass_scroll_events
      */
     fun isForcePassScrollEvents(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isForcePassScrollEventsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isForcePassScrollEventsBind, segment)
     }
 
     /**
@@ -2207,7 +2207,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_clip_contents
      */
     fun setClipContents(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipContentsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setClipContentsBind, segment, enable)
     }
 
     /**
@@ -2218,7 +2218,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_clipping_contents
      */
     fun isClippingContents(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClippingContentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isClippingContentsBind, segment)
     }
 
     /**
@@ -2228,7 +2228,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.grab_click_focus
      */
     fun grabClickFocus() {
-        ObjectCalls.ptrcallNoArgs(grabClickFocusBind, handle)
+        ObjectCalls.ptrcallNoArgs(grabClickFocusBind, segment)
     }
 
     /**
@@ -2242,7 +2242,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_drag_forwarding
      */
     fun setDragForwarding(dragFunc: GodotCallable, canDropFunc: GodotCallable, dropFunc: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeCallableArgs(setDragForwardingBind, handle, dragFunc.target.handle, dragFunc.method, canDropFunc.target.handle, canDropFunc.method, dropFunc.target.handle, dropFunc.method)
+        ObjectCalls.ptrcallWithThreeCallableArgs(setDragForwardingBind, segment, dragFunc.target.segment, dragFunc.method, canDropFunc.target.segment, canDropFunc.method, dropFunc.target.segment, dropFunc.method)
     }
 
     /**
@@ -2254,7 +2254,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_drag_preview
      */
     fun setDragPreview(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(setDragPreviewBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setDragPreviewBind, segment, listOf(control.segment))
     }
 
     /**
@@ -2264,7 +2264,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_drag_successful
      */
     fun isDragSuccessful(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragSuccessfulBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragSuccessfulBind, segment)
     }
 
     /**
@@ -2275,7 +2275,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.warp_mouse
      */
     fun warpMouse(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, segment, position)
     }
 
     /**
@@ -2286,7 +2286,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_shortcut_context
      */
     fun setShortcutContext(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setShortcutContextBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setShortcutContextBind, segment, listOf(node.segment))
     }
 
     /**
@@ -2297,7 +2297,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_shortcut_context
      */
     fun getShortcutContext(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutContextBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutContextBind, segment))
     }
 
     /**
@@ -2310,7 +2310,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.update_maximum_size
      */
     fun updateMaximumSize() {
-        ObjectCalls.ptrcallNoArgs(updateMaximumSizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateMaximumSizeBind, segment)
     }
 
     /**
@@ -2321,7 +2321,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.update_minimum_size
      */
     fun updateMinimumSize() {
-        ObjectCalls.ptrcallNoArgs(updateMinimumSizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateMinimumSizeBind, segment)
     }
 
     /**
@@ -2331,7 +2331,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_layout_direction
      */
     fun setLayoutDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction)
     }
 
     /**
@@ -2341,7 +2341,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_layout_direction
      */
     fun getLayoutDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment)
     }
 
     /**
@@ -2350,7 +2350,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_layout_rtl
      */
     fun isLayoutRtl(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLayoutRtlBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLayoutRtlBind, segment)
     }
 
     /**
@@ -2360,7 +2360,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_auto_translate
      */
     fun setAutoTranslate(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoTranslateBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoTranslateBind, segment, enable)
     }
 
     /**
@@ -2370,7 +2370,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_auto_translating
      */
     fun isAutoTranslating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTranslatingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTranslatingBind, segment)
     }
 
     /**
@@ -2382,7 +2382,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_localize_numeral_system
      */
     fun setLocalizeNumeralSystem(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLocalizeNumeralSystemBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setLocalizeNumeralSystemBind, segment, enable)
     }
 
     /**
@@ -2394,7 +2394,7 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_localizing_numeral_system
      */
     fun isLocalizingNumeralSystem(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalizingNumeralSystemBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLocalizingNumeralSystemBind, segment)
     }
 
     object Signals {
@@ -2496,11 +2496,11 @@ open class Control(handle: MemorySegment) : CanvasItem(handle) {
         const val TEXT_DIRECTION_RTL: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Control? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Control? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Control? =
-            if (handle.address() == 0L) null else Control(handle)
+            if (handle.address() == 0L) null else Control(GodotHandle(handle))
 
         private const val ACCEPT_EVENT_HASH = 3218959716L
         private val acceptEventBind by lazy {

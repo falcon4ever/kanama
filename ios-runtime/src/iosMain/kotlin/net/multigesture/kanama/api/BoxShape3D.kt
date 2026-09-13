@@ -9,7 +9,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: BoxShape3D
  */
-class BoxShape3D(handle: MemorySegment) : Shape3D(handle) {
+class BoxShape3D(handle: GodotHandle) : Shape3D(handle) {
     var size: Vector3
         @JvmName("sizeProperty")
         get() = getSize()
@@ -18,25 +18,25 @@ class BoxShape3D(handle: MemorySegment) : Shape3D(handle) {
 
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     companion object {
         // KANAMA-IOS-SUGAR: [glue] desktop-parity constructor sugar (the desktop wrapper's
         // MemorySegment constructor is internal, so shared game code uses create()).
         fun create(): BoxShape3D =
-            BoxShape3D(ObjectCalls.constructObject("BoxShape3D"))
+            BoxShape3D(GodotHandle(ObjectCalls.constructObject("BoxShape3D")))
 
-        fun fromHandle(handle: MemorySegment): BoxShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BoxShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BoxShape3D? =
-            if (handle.address() == 0L) null else BoxShape3D(handle)
+            if (handle.address() == 0L) null else BoxShape3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {

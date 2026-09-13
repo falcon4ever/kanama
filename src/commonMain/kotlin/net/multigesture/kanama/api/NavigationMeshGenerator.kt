@@ -22,7 +22,7 @@ object NavigationMeshGenerator {
      */
     @JvmStatic
     fun bake(navigationMesh: NavigationMesh?, rootNode: Node) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(bakeBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.handle)
+        ObjectCalls.ptrcallWithTwoObjectArgs(bakeBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.segment)
     }
 
     /**
@@ -50,7 +50,7 @@ object NavigationMeshGenerator {
      */
     @JvmStatic
     fun parseSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, rootNode: Node, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.handle, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.segment, callback.target.segment, callback.method)
     }
 
     /**
@@ -61,12 +61,12 @@ object NavigationMeshGenerator {
      */
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): NavigationMeshGenerator? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): NavigationMeshGenerator? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): NavigationMeshGenerator? =
         if (handle.address() == 0L) null else this

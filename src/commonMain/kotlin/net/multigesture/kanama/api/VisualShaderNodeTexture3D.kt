@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTexture3D
  */
-class VisualShaderNodeTexture3D(handle: MemorySegment) : VisualShaderNodeSample3D(handle) {
+class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(handle) {
     var texture: Texture3D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -18,21 +18,21 @@ class VisualShaderNodeTexture3D(handle: MemorySegment) : VisualShaderNodeSample3
 
     fun setTexture(value: Texture3D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getTexture(): Texture3D? {
         checkOpen()
-        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTexture3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTexture3D? =
-            if (handle.address() == 0L) null else VisualShaderNodeTexture3D(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTexture3D(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 1188404210L
         private val setTextureBind by lazy {

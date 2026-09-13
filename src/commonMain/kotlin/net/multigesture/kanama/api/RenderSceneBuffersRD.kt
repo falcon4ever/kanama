@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: RenderSceneBuffersRD
  */
-class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
+class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
     /**
      * Returns `true` if a cached texture exists for this name.
      *
@@ -20,7 +20,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun hasTexture(context: String, name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTextureBind, handle, context, name)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTextureBind, segment, context, name)
     }
 
     /**
@@ -31,7 +31,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun createTexture(context: String, name: String, dataFormat: Long, usageBits: Long, textureSamples: Long, size: Vector2i, layers: Long, mipmaps: Long, unique: Boolean, discardable: Boolean): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(createTextureBind, handle, context, name, dataFormat, usageBits, textureSamples, size, layers, mipmaps, unique, discardable)
+        return ObjectCalls.ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(createTextureBind, segment, context, name, dataFormat, usageBits, textureSamples, size, layers, mipmaps, unique, discardable)
     }
 
     /**
@@ -42,7 +42,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun createTextureFromFormat(context: String, name: String, format: RDTextureFormat?, view: RDTextureView?, unique: Boolean): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(createTextureFromFormatBind, handle, context, name, format?.requireOpenHandle() ?: MemorySegment.NULL, view?.requireOpenHandle() ?: MemorySegment.NULL, unique)
+        return ObjectCalls.ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(createTextureFromFormatBind, segment, context, name, format?.requireOpenHandle() ?: MemorySegment.NULL, view?.requireOpenHandle() ?: MemorySegment.NULL, unique)
     }
 
     /**
@@ -54,7 +54,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun createTextureView(context: String, name: String, viewName: String, view: RDTextureView?): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeStringNameObjectArgsRetRID(createTextureViewBind, handle, context, name, viewName, view?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithThreeStringNameObjectArgsRetRID(createTextureViewBind, segment, context, name, viewName, view?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -64,7 +64,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getTexture(context: String, name: String): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetRID(getTextureBind, handle, context, name)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetRID(getTextureBind, segment, context, name)
     }
 
     /**
@@ -74,7 +74,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getTextureFormat(context: String, name: String): RDTextureFormat? {
         checkOpen()
-        return RDTextureFormat.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getTextureFormatBind, handle, context, name))
+        return RDTextureFormat.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getTextureFormatBind, segment, context, name))
     }
 
     /**
@@ -84,7 +84,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getTextureSlice(context: String, name: String, layer: Long, mipmap: Long, layers: Long, mipmaps: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ArgsRetRID(getTextureSliceBind, handle, context, name, layer, mipmap, layers, mipmaps)
+        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ArgsRetRID(getTextureSliceBind, segment, context, name, layer, mipmap, layers, mipmaps)
     }
 
     /**
@@ -94,7 +94,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getTextureSliceView(context: String, name: String, layer: Long, mipmap: Long, layers: Long, mipmaps: Long, view: RDTextureView?): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(getTextureSliceViewBind, handle, context, name, layer, mipmap, layers, mipmaps, view?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(getTextureSliceViewBind, segment, context, name, layer, mipmap, layers, mipmaps, view?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -104,7 +104,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getTextureSliceSize(context: String, name: String, mipmap: Long): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameUInt32ArgRetVector2i(getTextureSliceSizeBind, handle, context, name, mipmap)
+        return ObjectCalls.ptrcallWithTwoStringNameUInt32ArgRetVector2i(getTextureSliceSizeBind, segment, context, name, mipmap)
     }
 
     /**
@@ -114,7 +114,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun clearContext(context: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(clearContextBind, handle, context)
+        ObjectCalls.ptrcallWithStringNameArg(clearContextBind, segment, context)
     }
 
     /**
@@ -126,7 +126,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getColorTexture(msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetRID(getColorTextureBind, handle, msaa)
+        return ObjectCalls.ptrcallWithBoolArgRetRID(getColorTextureBind, segment, msaa)
     }
 
     /**
@@ -137,7 +137,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getColorLayer(layer: Long, msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getColorLayerBind, handle, layer, msaa)
+        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getColorLayerBind, segment, layer, msaa)
     }
 
     /**
@@ -149,7 +149,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getDepthTexture(msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetRID(getDepthTextureBind, handle, msaa)
+        return ObjectCalls.ptrcallWithBoolArgRetRID(getDepthTextureBind, segment, msaa)
     }
 
     /**
@@ -160,7 +160,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getDepthLayer(layer: Long, msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getDepthLayerBind, handle, layer, msaa)
+        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getDepthLayerBind, segment, layer, msaa)
     }
 
     /**
@@ -172,7 +172,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getVelocityTexture(msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetRID(getVelocityTextureBind, handle, msaa)
+        return ObjectCalls.ptrcallWithBoolArgRetRID(getVelocityTextureBind, segment, msaa)
     }
 
     /**
@@ -182,7 +182,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getVelocityLayer(layer: Long, msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getVelocityLayerBind, handle, layer, msaa)
+        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getVelocityLayerBind, segment, layer, msaa)
     }
 
     /**
@@ -192,7 +192,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getRenderTarget(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, segment)
     }
 
     /**
@@ -202,7 +202,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getInternalSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getTargetSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getScaling3dMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
     }
 
     /**
@@ -244,7 +244,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getFsrSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
     }
 
     /**
@@ -254,7 +254,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getMsaa3d(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
     }
 
     /**
@@ -264,7 +264,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getTextureSamples(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureSamplesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureSamplesBind, segment)
     }
 
     /**
@@ -274,7 +274,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getScreenSpaceAa(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
     }
 
     /**
@@ -284,7 +284,7 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getUseTaa(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseTaaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseTaaBind, segment)
     }
 
     /**
@@ -294,16 +294,16 @@ class RenderSceneBuffersRD(handle: MemorySegment) : RenderSceneBuffers(handle) {
      */
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderSceneBuffersRD? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderSceneBuffersRD? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderSceneBuffersRD? =
-            if (handle.address() == 0L) null else RenderSceneBuffersRD(handle)
+            if (handle.address() == 0L) null else RenderSceneBuffersRD(GodotHandle(handle))
 
         private const val HAS_TEXTURE_HASH = 471820014L
         private val hasTextureBind by lazy {

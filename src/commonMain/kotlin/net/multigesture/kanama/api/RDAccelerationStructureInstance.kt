@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Transform3D
  *
  * Generated from Godot docs: RDAccelerationStructureInstance
  */
-class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle) {
+class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) {
     var transform: Transform3D
         @JvmName("transformProperty")
         get() = getTransform()
@@ -57,7 +57,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun setTransform(pMember: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, pMember)
+        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, pMember)
     }
 
     /**
@@ -67,7 +67,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun setId(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setIdBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setIdBind, segment, pMember)
     }
 
     /**
@@ -87,7 +87,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun getId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getIdBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun setMask(pMember: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaskBind, handle, pMember)
+        ObjectCalls.ptrcallWithIntArg(setMaskBind, segment, pMember)
     }
 
     /**
@@ -107,7 +107,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun getMask(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaskBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun setHitSbtRange(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHitSbtRangeBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setHitSbtRangeBind, segment, pMember)
     }
 
     /**
@@ -129,7 +129,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun getHitSbtRange(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHitSbtRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHitSbtRangeBind, segment)
     }
 
     /**
@@ -139,7 +139,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun setFlags(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember)
     }
 
     /**
@@ -149,7 +149,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun getFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
     }
 
     /**
@@ -160,7 +160,7 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun setBlas(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setBlasBind, handle, pMember)
+        ObjectCalls.ptrcallWithRIDArg(setBlasBind, segment, pMember)
     }
 
     /**
@@ -171,16 +171,16 @@ class RDAccelerationStructureInstance(handle: MemorySegment) : RefCounted(handle
      */
     fun getBlas(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getBlasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getBlasBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDAccelerationStructureInstance? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDAccelerationStructureInstance? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDAccelerationStructureInstance? =
-            if (handle.address() == 0L) null else RDAccelerationStructureInstance(handle)
+            if (handle.address() == 0L) null else RDAccelerationStructureInstance(GodotHandle(handle))
 
         private const val SET_TRANSFORM_HASH = 2952846383L
         private val setTransformBind by lazy {

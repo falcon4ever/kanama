@@ -9,7 +9,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: BoxMesh
  */
-class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle) {
+class BoxMesh internal constructor(handle: GodotHandle) : PrimitiveMesh(handle) {
 
     /**
      * The box's width, height and depth.
@@ -18,7 +18,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -28,7 +28,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun setSubdivideWidth(subdivideWidth: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, subdivideWidth.toInt())
+        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, segment, subdivideWidth.toInt())
     }
 
     /**
@@ -48,7 +48,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun getSubdivideWidth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle).toLong()
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, segment).toLong()
     }
 
     /**
@@ -58,7 +58,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun setSubdivideHeight(subdivideHeight: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, handle, subdivideHeight.toInt())
+        ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, segment, subdivideHeight.toInt())
     }
 
     /**
@@ -68,7 +68,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun getSubdivideHeight(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, handle).toLong()
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, segment).toLong()
     }
 
     /**
@@ -78,7 +78,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun setSubdivideDepth(subdivideDepth: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, subdivideDepth.toInt())
+        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, segment, subdivideDepth.toInt())
     }
 
     /**
@@ -88,7 +88,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
      */
     fun getSubdivideDepth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle).toLong()
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, segment).toLong()
     }
 
     companion object {
@@ -131,7 +131,7 @@ class BoxMesh internal constructor(handle: MemorySegment) : PrimitiveMesh(handle
 
         @JvmStatic
         fun create(): BoxMesh =
-            BoxMesh(ObjectCalls.constructObject("BoxMesh"))
+            BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh")))
 
     }
 }

@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ScriptLanguage
  */
-open class ScriptLanguage(handle: MemorySegment) : GodotObject(handle) {
+open class ScriptLanguage(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -19,11 +19,11 @@ open class ScriptLanguage(handle: MemorySegment) : GodotObject(handle) {
         const val SCRIPT_NAME_CASING_CAMEL_CASE: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScriptLanguage? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScriptLanguage? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScriptLanguage? =
-            if (handle.address() == 0L) null else ScriptLanguage(handle)
+            if (handle.address() == 0L) null else ScriptLanguage(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: OptimizedTranslation
  */
-class OptimizedTranslation(handle: MemorySegment) : Translation(handle) {
+class OptimizedTranslation(handle: GodotHandle) : Translation(handle) {
     /**
      * Generates and sets an optimized translation from the given `Translation` resource. Returns
      * `true` if successful. Note: Messages in `from` should not use context or plural forms. Note:
@@ -21,16 +21,16 @@ class OptimizedTranslation(handle: MemorySegment) : Translation(handle) {
      */
     fun generate(from: Translation?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(generateBind, handle, from?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(generateBind, segment, from?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OptimizedTranslation? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OptimizedTranslation? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OptimizedTranslation? =
-            if (handle.address() == 0L) null else OptimizedTranslation(handle)
+            if (handle.address() == 0L) null else OptimizedTranslation(GodotHandle(handle))
 
         private const val GENERATE_HASH = 2141509306L
         private val generateBind by lazy {

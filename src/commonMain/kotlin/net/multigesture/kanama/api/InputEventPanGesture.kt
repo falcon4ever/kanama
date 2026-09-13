@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: InputEventPanGesture
  */
-class InputEventPanGesture(handle: MemorySegment) : InputEventGesture(handle) {
+class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
     var delta: Vector2
         @JvmName("deltaProperty")
         get() = getDelta()
@@ -26,7 +26,7 @@ class InputEventPanGesture(handle: MemorySegment) : InputEventGesture(handle) {
      */
     fun setDelta(delta: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setDeltaBind, handle, delta)
+        ObjectCalls.ptrcallWithVector2Arg(setDeltaBind, segment, delta)
     }
 
     /**
@@ -36,16 +36,16 @@ class InputEventPanGesture(handle: MemorySegment) : InputEventGesture(handle) {
      */
     fun getDelta(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getDeltaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getDeltaBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventPanGesture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventPanGesture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventPanGesture? =
-            if (handle.address() == 0L) null else InputEventPanGesture(handle)
+            if (handle.address() == 0L) null else InputEventPanGesture(GodotHandle(handle))
 
         private const val SET_DELTA_HASH = 743155724L
         private val setDeltaBind by lazy {

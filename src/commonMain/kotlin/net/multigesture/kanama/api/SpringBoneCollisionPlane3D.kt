@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SpringBoneCollisionPlane3D
  */
-class SpringBoneCollisionPlane3D(handle: MemorySegment) : SpringBoneCollision3D(handle) {
+class SpringBoneCollisionPlane3D(handle: GodotHandle) : SpringBoneCollision3D(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpringBoneCollisionPlane3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpringBoneCollisionPlane3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpringBoneCollisionPlane3D? =
-            if (handle.address() == 0L) null else SpringBoneCollisionPlane3D(handle)
+            if (handle.address() == 0L) null else SpringBoneCollisionPlane3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: LimitAngularVelocityModifier3D
  */
-class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class LimitAngularVelocityModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var maxAngularVelocity: Double
         @JvmName("maxAngularVelocityProperty")
         get() = getMaxAngularVelocity()
@@ -36,7 +36,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_root_bone_name
      */
     fun setRootBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -45,7 +45,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.get_root_bone_name
      */
     fun getRootBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, segment, index)
     }
 
     /**
@@ -54,7 +54,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_root_bone
      */
     fun setRootBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, segment, index, bone)
     }
 
     /**
@@ -63,7 +63,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.get_root_bone
      */
     fun getRootBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, segment, index)
     }
 
     /**
@@ -73,7 +73,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_end_bone_name
      */
     fun setEndBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -82,7 +82,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.get_end_bone_name
      */
     fun getEndBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, segment, index)
     }
 
     /**
@@ -91,7 +91,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_end_bone
      */
     fun setEndBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, segment, index, bone)
     }
 
     /**
@@ -100,7 +100,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.get_end_bone
      */
     fun getEndBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, segment, index)
     }
 
     /**
@@ -109,7 +109,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_chain_count
      */
     fun setChainCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setChainCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setChainCountBind, segment, count)
     }
 
     /**
@@ -118,7 +118,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.get_chain_count
      */
     fun getChainCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getChainCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getChainCountBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.clear_chains
      */
     fun clearChains() {
-        ObjectCalls.ptrcallNoArgs(clearChainsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearChainsBind, segment)
     }
 
     /**
@@ -136,7 +136,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_max_angular_velocity
      */
     fun setMaxAngularVelocity(angularVelocity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxAngularVelocityBind, handle, angularVelocity)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxAngularVelocityBind, segment, angularVelocity)
     }
 
     /**
@@ -145,7 +145,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.get_max_angular_velocity
      */
     fun getMaxAngularVelocity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxAngularVelocityBind, segment)
     }
 
     /**
@@ -155,7 +155,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.set_exclude
      */
     fun setExclude(exclude: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExcludeBind, handle, exclude)
+        ObjectCalls.ptrcallWithBoolArg(setExcludeBind, segment, exclude)
     }
 
     /**
@@ -165,7 +165,7 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.is_exclude
      */
     fun isExclude(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isExcludeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isExcludeBind, segment)
     }
 
     /**
@@ -176,16 +176,16 @@ class LimitAngularVelocityModifier3D(handle: MemorySegment) : SkeletonModifier3D
      * Generated from Godot docs: LimitAngularVelocityModifier3D.reset
      */
     fun reset() {
-        ObjectCalls.ptrcallNoArgs(resetBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LimitAngularVelocityModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LimitAngularVelocityModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LimitAngularVelocityModifier3D? =
-            if (handle.address() == 0L) null else LimitAngularVelocityModifier3D(handle)
+            if (handle.address() == 0L) null else LimitAngularVelocityModifier3D(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L
         private val setRootBoneNameBind by lazy {

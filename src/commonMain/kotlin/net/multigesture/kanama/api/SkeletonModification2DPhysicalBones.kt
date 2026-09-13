@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: SkeletonModification2DPhysicalBones
  */
-class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModification2D(handle) {
+class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModification2D(handle) {
     var physicalBoneChainLength: Int
         @JvmName("physicalBoneChainLengthProperty")
         get() = getPhysicalBoneChainLength()
@@ -26,7 +26,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      */
     fun setPhysicalBoneChainLength(length: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPhysicalBoneChainLengthBind, handle, length)
+        ObjectCalls.ptrcallWithIntArg(setPhysicalBoneChainLengthBind, segment, length)
     }
 
     /**
@@ -36,7 +36,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      */
     fun getPhysicalBoneChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicalBoneChainLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicalBoneChainLengthBind, segment)
     }
 
     /**
@@ -47,7 +47,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      */
     fun setPhysicalBoneNode(jointIdx: Int, physicalbone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setPhysicalBoneNodeBind, handle, jointIdx, physicalbone2dNode)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setPhysicalBoneNodeBind, segment, jointIdx, physicalbone2dNode)
     }
 
     /**
@@ -57,7 +57,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      */
     fun getPhysicalBoneNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPhysicalBoneNodeBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPhysicalBoneNodeBind, segment, jointIdx)
     }
 
     /**
@@ -68,7 +68,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      */
     fun fetchPhysicalBones() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(fetchPhysicalBonesBind, handle)
+        ObjectCalls.ptrcallNoArgs(fetchPhysicalBonesBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      */
     fun startSimulation(bones: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameListArg(startSimulationBind, handle, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(startSimulationBind, segment, bones)
     }
 
     /**
@@ -92,16 +92,16 @@ class SkeletonModification2DPhysicalBones(handle: MemorySegment) : SkeletonModif
      */
     fun stopSimulation(bones: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameListArg(stopSimulationBind, handle, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(stopSimulationBind, segment, bones)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2DPhysicalBones? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2DPhysicalBones? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2DPhysicalBones? =
-            if (handle.address() == 0L) null else SkeletonModification2DPhysicalBones(handle)
+            if (handle.address() == 0L) null else SkeletonModification2DPhysicalBones(GodotHandle(handle))
 
         private const val SET_PHYSICAL_BONE_CHAIN_LENGTH_HASH = 1286410249L
         private val setPhysicalBoneChainLengthBind by lazy {

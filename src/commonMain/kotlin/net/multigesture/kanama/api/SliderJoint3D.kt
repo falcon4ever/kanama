@@ -11,14 +11,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SliderJoint3D
  */
-class SliderJoint3D(handle: MemorySegment) : Joint3D(handle) {
+class SliderJoint3D(handle: GodotHandle) : Joint3D(handle) {
     /**
      * A factor applied to the movement across axes orthogonal to the slider.
      *
      * Generated from Godot docs: SliderJoint3D.set_param
      */
     fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
     }
 
     /**
@@ -27,7 +27,7 @@ class SliderJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: SliderJoint3D.get_param
      */
     fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
     }
 
     companion object {
@@ -56,11 +56,11 @@ class SliderJoint3D(handle: MemorySegment) : Joint3D(handle) {
         const val PARAM_MAX: Long = 22L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SliderJoint3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SliderJoint3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SliderJoint3D? =
-            if (handle.address() == 0L) null else SliderJoint3D(handle)
+            if (handle.address() == 0L) null else SliderJoint3D(GodotHandle(handle))
 
         private const val SET_PARAM_HASH = 918243683L
         private val setParamBind by lazy {

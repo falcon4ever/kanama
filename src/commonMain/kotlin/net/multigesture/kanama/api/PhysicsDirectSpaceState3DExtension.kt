@@ -12,18 +12,18 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: PhysicsDirectSpaceState3DExtension
  */
-class PhysicsDirectSpaceState3DExtension(handle: MemorySegment) : PhysicsDirectSpaceState3D(handle) {
+class PhysicsDirectSpaceState3DExtension(handle: GodotHandle) : PhysicsDirectSpaceState3D(handle) {
     fun isBodyExcludedFromQuery(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(isBodyExcludedFromQueryBind, handle, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(isBodyExcludedFromQueryBind, segment, body)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsDirectSpaceState3DExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsDirectSpaceState3DExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsDirectSpaceState3DExtension? =
-            if (handle.address() == 0L) null else PhysicsDirectSpaceState3DExtension(handle)
+            if (handle.address() == 0L) null else PhysicsDirectSpaceState3DExtension(GodotHandle(handle))
 
         private const val IS_BODY_EXCLUDED_FROM_QUERY_HASH = 4155700596L
         private val isBodyExcludedFromQueryBind by lazy {

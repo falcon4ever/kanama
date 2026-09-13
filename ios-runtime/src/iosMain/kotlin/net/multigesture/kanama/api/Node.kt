@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: Node
  */
-open class Node(handle: MemorySegment) : GodotObject(handle) {
+open class Node(handle: GodotHandle) : GodotObject(handle) {
     var name: String
         @JvmName("nameProperty")
         get() = getName()
@@ -95,471 +95,471 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         set(value) = setEditorDescription(value)
 
     fun addSibling(sibling: Node, forceReadableName: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addSiblingBind, handle, sibling.handle, forceReadableName)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(addSiblingBind, segment, sibling.segment, forceReadableName)
     }
 
     fun setName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setNameBind, segment, name)
     }
 
     fun getName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, segment)
     }
 
     fun addChild(node: Node, forceReadableName: Boolean = false, internalValue: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectBoolLongArgs(addChildBind, handle, node.handle, forceReadableName, internalValue)
+        ObjectCalls.ptrcallWithObjectBoolLongArgs(addChildBind, segment, node.segment, forceReadableName, internalValue)
     }
 
     fun removeChild(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeChildBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeChildBind, segment, listOf(node.segment))
     }
 
     fun reparent(newParent: Node, keepGlobalTransform: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(reparentBind, handle, newParent.handle, keepGlobalTransform)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(reparentBind, segment, newParent.segment, keepGlobalTransform)
     }
 
     fun getChildCount(includeInternal: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithBoolArgRetInt(getChildCountBind, handle, includeInternal)
+        return ObjectCalls.ptrcallWithBoolArgRetInt(getChildCountBind, segment, includeInternal)
     }
 
     fun getChildren(includeInternal: Boolean = false): List<Node> {
-        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(getChildrenBind, handle, includeInternal, Node::fromHandle)
+        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(getChildrenBind, segment, includeInternal, Node::wrap)
     }
 
     fun getChild(idx: Int, includeInternal: Boolean = false): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithIntAndBoolArgsRetObject(getChildBind, handle, idx, includeInternal))
+        return Node.wrap(ObjectCalls.ptrcallWithIntAndBoolArgsRetObject(getChildBind, segment, idx, includeInternal))
     }
 
     fun hasNode(path: NodePath): Boolean {
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeBind, segment, path)
     }
 
     fun getNode(path: NodePath): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeBind, handle, path))
+        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeBind, segment, path))
     }
 
     fun getNodeOrNull(path: NodePath): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeOrNullBind, handle, path))
+        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeOrNullBind, segment, path))
     }
 
     fun getParent(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment))
     }
 
     fun findChild(pattern: String, recursive: Boolean = true, owned: Boolean = true): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithStringAndTwoBoolArgsRetObject(findChildBind, handle, pattern, recursive, owned))
+        return Node.wrap(ObjectCalls.ptrcallWithStringAndTwoBoolArgsRetObject(findChildBind, segment, pattern, recursive, owned))
     }
 
     fun findChildren(pattern: String, type: String = "", recursive: Boolean = true, owned: Boolean = true): List<Node> {
-        return ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(findChildrenBind, handle, pattern, type, recursive, owned, Node::fromHandle)
+        return ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(findChildrenBind, segment, pattern, type, recursive, owned, Node::wrap)
     }
 
     fun findParent(pattern: String): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findParentBind, handle, pattern))
+        return Node.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findParentBind, segment, pattern))
     }
 
     fun hasNodeAndResource(path: NodePath): Boolean {
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeAndResourceBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeAndResourceBind, segment, path)
     }
 
     fun getNodeAndResource(path: NodePath): List<Any?> {
-        return ObjectCalls.ptrcallWithNodePathArgRetArray(getNodeAndResourceBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetArray(getNodeAndResourceBind, segment, path)
     }
 
     fun isInsideTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInsideTreeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInsideTreeBind, segment)
     }
 
     fun isPartOfEditedScene(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPartOfEditedSceneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPartOfEditedSceneBind, segment)
     }
 
     fun isAncestorOf(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isAncestorOfBind, handle, node.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isAncestorOfBind, segment, node.segment)
     }
 
     fun isGreaterThan(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isGreaterThanBind, handle, node.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isGreaterThanBind, segment, node.segment)
     }
 
     fun getPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getPathBind, segment)
     }
 
     fun getPathTo(node: Node, useUniquePath: Boolean = false): NodePath {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getPathToBind, handle, node.handle, useUniquePath)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getPathToBind, segment, node.segment, useUniquePath)
     }
 
     fun addToGroup(group: String, persistent: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(addToGroupBind, handle, group, persistent)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(addToGroupBind, segment, group, persistent)
     }
 
     fun removeFromGroup(group: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeFromGroupBind, handle, group)
+        ObjectCalls.ptrcallWithStringNameArg(removeFromGroupBind, segment, group)
     }
 
     fun isInGroup(group: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isInGroupBind, handle, group)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(isInGroupBind, segment, group)
     }
 
     fun moveChild(childNode: Node, toIndex: Int) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(moveChildBind, handle, childNode.handle, toIndex)
+        ObjectCalls.ptrcallWithObjectAndIntArg(moveChildBind, segment, childNode.segment, toIndex)
     }
 
     fun getGroups(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getGroupsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getGroupsBind, segment)
     }
 
     fun setOwner(owner: Node?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, handle, listOf(owner?.handle ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, segment, listOf(owner?.segment ?: MemorySegment.NULL))
     }
 
     fun getOwner(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnerBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnerBind, segment))
     }
 
     fun getIndex(includeInternal: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithBoolArgRetInt(getIndexBind, handle, includeInternal)
+        return ObjectCalls.ptrcallWithBoolArgRetInt(getIndexBind, segment, includeInternal)
     }
 
     fun printTree() {
-        ObjectCalls.ptrcallNoArgs(printTreeBind, handle)
+        ObjectCalls.ptrcallNoArgs(printTreeBind, segment)
     }
 
     fun printTreePretty() {
-        ObjectCalls.ptrcallNoArgs(printTreePrettyBind, handle)
+        ObjectCalls.ptrcallNoArgs(printTreePrettyBind, segment)
     }
 
     fun getTreeString(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTreeStringBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTreeStringBind, segment)
     }
 
     fun getTreeStringPretty(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTreeStringPrettyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTreeStringPrettyBind, segment)
     }
 
     fun setSceneFilePath(sceneFilePath: String) {
-        ObjectCalls.ptrcallWithStringArg(setSceneFilePathBind, handle, sceneFilePath)
+        ObjectCalls.ptrcallWithStringArg(setSceneFilePathBind, segment, sceneFilePath)
     }
 
     fun getSceneFilePath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSceneFilePathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSceneFilePathBind, segment)
     }
 
     fun propagateNotification(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(propagateNotificationBind, handle, what)
+        ObjectCalls.ptrcallWithIntArg(propagateNotificationBind, segment, what)
     }
 
     fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameArrayBoolArgs(propagateCallBind, handle, method, args, parentFirst)
+        ObjectCalls.ptrcallWithStringNameArrayBoolArgs(propagateCallBind, segment, method, args, parentFirst)
     }
 
     fun setPhysicsProcess(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessBind, segment, enable)
     }
 
     fun getPhysicsProcessDeltaTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPhysicsProcessDeltaTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPhysicsProcessDeltaTimeBind, segment)
     }
 
     fun isPhysicsProcessing(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingBind, segment)
     }
 
     fun getProcessDeltaTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProcessDeltaTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getProcessDeltaTimeBind, segment)
     }
 
     fun setProcess(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessBind, segment, enable)
     }
 
     fun setProcessPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setProcessPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setProcessPriorityBind, segment, priority)
     }
 
     fun getProcessPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProcessPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getProcessPriorityBind, segment)
     }
 
     fun setPhysicsProcessPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPhysicsProcessPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setPhysicsProcessPriorityBind, segment, priority)
     }
 
     fun getPhysicsProcessPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsProcessPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsProcessPriorityBind, segment)
     }
 
     fun isProcessing(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingBind, segment)
     }
 
     fun setProcessInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessInputBind, segment, enable)
     }
 
     fun isProcessingInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingInputBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingInputBind, segment)
     }
 
     fun setProcessShortcutInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessShortcutInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessShortcutInputBind, segment, enable)
     }
 
     fun isProcessingShortcutInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingShortcutInputBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingShortcutInputBind, segment)
     }
 
     fun setProcessUnhandledInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledInputBind, segment, enable)
     }
 
     fun isProcessingUnhandledInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledInputBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledInputBind, segment)
     }
 
     fun setProcessUnhandledKeyInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledKeyInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledKeyInputBind, segment, enable)
     }
 
     fun isProcessingUnhandledKeyInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledKeyInputBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledKeyInputBind, segment)
     }
 
     fun setProcessMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, segment, mode)
     }
 
     fun getProcessMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, segment)
     }
 
     fun canProcess(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(canProcessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(canProcessBind, segment)
     }
 
     fun setProcessThreadGroup(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadGroupBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessThreadGroupBind, segment, mode)
     }
 
     fun getProcessThreadGroup(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadGroupBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadGroupBind, segment)
     }
 
     fun setProcessThreadMessages(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadMessagesBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setProcessThreadMessagesBind, segment, flags)
     }
 
     fun getProcessThreadMessages(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadMessagesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadMessagesBind, segment)
     }
 
     fun setProcessThreadGroupOrder(order: Int) {
-        ObjectCalls.ptrcallWithIntArg(setProcessThreadGroupOrderBind, handle, order)
+        ObjectCalls.ptrcallWithIntArg(setProcessThreadGroupOrderBind, segment, order)
     }
 
     fun getProcessThreadGroupOrder(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProcessThreadGroupOrderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getProcessThreadGroupOrderBind, segment)
     }
 
     fun queueAccessibilityUpdate() {
-        ObjectCalls.ptrcallNoArgs(queueAccessibilityUpdateBind, handle)
+        ObjectCalls.ptrcallNoArgs(queueAccessibilityUpdateBind, segment)
     }
 
     fun getAccessibilityElement(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getAccessibilityElementBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getAccessibilityElementBind, segment)
     }
 
     fun setDisplayFolded(fold: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisplayFoldedBind, handle, fold)
+        ObjectCalls.ptrcallWithBoolArg(setDisplayFoldedBind, segment, fold)
     }
 
     fun isDisplayedFolded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisplayedFoldedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDisplayedFoldedBind, segment)
     }
 
     fun setProcessInternal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessInternalBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessInternalBind, segment, enable)
     }
 
     fun isProcessingInternal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingInternalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingInternalBind, segment)
     }
 
     fun setPhysicsProcessInternal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessInternalBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessInternalBind, segment, enable)
     }
 
     fun isPhysicsProcessingInternal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingInternalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingInternalBind, segment)
     }
 
     fun setPhysicsInterpolationMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationModeBind, segment, mode)
     }
 
     fun getPhysicsInterpolationMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationModeBind, segment)
     }
 
     fun isPhysicsInterpolated(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedBind, segment)
     }
 
     fun isPhysicsInterpolatedAndEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedAndEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedAndEnabledBind, segment)
     }
 
     fun resetPhysicsInterpolation() {
-        ObjectCalls.ptrcallNoArgs(resetPhysicsInterpolationBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetPhysicsInterpolationBind, segment)
     }
 
     fun setAutoTranslateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoTranslateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setAutoTranslateModeBind, segment, mode)
     }
 
     fun getAutoTranslateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoTranslateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutoTranslateModeBind, segment)
     }
 
     fun canAutoTranslate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(canAutoTranslateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(canAutoTranslateBind, segment)
     }
 
     fun setTranslationDomainInherited() {
-        ObjectCalls.ptrcallNoArgs(setTranslationDomainInheritedBind, handle)
+        ObjectCalls.ptrcallNoArgs(setTranslationDomainInheritedBind, segment)
     }
 
     fun getWindow(): Window? {
-        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWindowBind, handle))
+        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWindowBind, segment))
     }
 
     fun getLastExclusiveWindow(): Window? {
-        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastExclusiveWindowBind, handle))
+        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastExclusiveWindowBind, segment))
     }
 
     fun duplicate(flags: Int = 15): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(duplicateBind, handle, flags))
+        return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(duplicateBind, segment, flags))
     }
 
     fun replaceBy(node: Node, keepGroups: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(replaceByBind, handle, node.handle, keepGroups)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(replaceByBind, segment, node.segment, keepGroups)
     }
 
     fun setSceneInstanceLoadPlaceholder(loadPlaceholder: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSceneInstanceLoadPlaceholderBind, handle, loadPlaceholder)
+        ObjectCalls.ptrcallWithBoolArg(setSceneInstanceLoadPlaceholderBind, segment, loadPlaceholder)
     }
 
     fun getSceneInstanceLoadPlaceholder(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSceneInstanceLoadPlaceholderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSceneInstanceLoadPlaceholderBind, segment)
     }
 
     fun setEditableInstance(node: Node, isEditable: Boolean) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(setEditableInstanceBind, handle, node.handle, isEditable)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(setEditableInstanceBind, segment, node.segment, isEditable)
     }
 
     fun isEditableInstance(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isEditableInstanceBind, handle, node.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isEditableInstanceBind, segment, node.segment)
     }
 
     fun getViewport(): Viewport? {
-        return Viewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(getViewportBind, handle))
+        return Viewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(getViewportBind, segment))
     }
 
     fun queueFree() {
-        ObjectCalls.ptrcallNoArgs(queueFreeBind, handle)
+        ObjectCalls.ptrcallNoArgs(queueFreeBind, segment)
     }
 
     fun requestReady() {
-        ObjectCalls.ptrcallNoArgs(requestReadyBind, handle)
+        ObjectCalls.ptrcallNoArgs(requestReadyBind, segment)
     }
 
     fun isNodeReady(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNodeReadyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNodeReadyBind, segment)
     }
 
     fun setMultiplayerAuthority(id: Int, recursive: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setMultiplayerAuthorityBind, handle, id, recursive)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setMultiplayerAuthorityBind, segment, id, recursive)
     }
 
     fun getMultiplayerAuthority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMultiplayerAuthorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMultiplayerAuthorityBind, segment)
     }
 
     fun isMultiplayerAuthority(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultiplayerAuthorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMultiplayerAuthorityBind, segment)
     }
 
     fun getMultiplayer(): MultiplayerAPI? {
-        return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, handle))
+        return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, segment))
     }
 
     fun rpcConfig(method: String, config: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(rpcConfigBind, handle, method, config)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(rpcConfigBind, segment, method, config)
     }
 
     fun getNodeRpcConfig(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getNodeRpcConfigBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getNodeRpcConfigBind, segment)
     }
 
     fun setEditorDescription(editorDescription: String) {
-        ObjectCalls.ptrcallWithStringArg(setEditorDescriptionBind, handle, editorDescription)
+        ObjectCalls.ptrcallWithStringArg(setEditorDescriptionBind, segment, editorDescription)
     }
 
     fun getEditorDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getEditorDescriptionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEditorDescriptionBind, segment)
     }
 
     fun setUniqueNameInOwner(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUniqueNameInOwnerBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUniqueNameInOwnerBind, segment, enable)
     }
 
     fun isUniqueNameInOwner(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUniqueNameInOwnerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUniqueNameInOwnerBind, segment)
     }
 
     fun atr(message: String, context: String = ""): String {
-        return ObjectCalls.ptrcallWithStringAndStringNameArgRetString(atrBind, handle, message, context)
+        return ObjectCalls.ptrcallWithStringAndStringNameArgRetString(atrBind, segment, message, context)
     }
 
     fun atrN(message: String, pluralMessage: String, n: Int, context: String = ""): String {
-        return ObjectCalls.ptrcallWithStringStringNameIntStringNameArgsRetString(atrNBind, handle, message, pluralMessage, n, context)
+        return ObjectCalls.ptrcallWithStringStringNameIntStringNameArgsRetString(atrNBind, segment, message, pluralMessage, n, context)
     }
 
     fun rpc(method: String, vararg extraArgs: Any?): Long {
-        return (ObjectCalls.callWithVariantArgs(rpcBind, handle, listOf(method, *extraArgs)) as Number).toLong()
+        return (ObjectCalls.callWithVariantArgs(rpcBind, segment, listOf(method, *extraArgs)) as Number).toLong()
     }
 
     fun rpcId(peerId: Long, method: String, vararg extraArgs: Any?): Long {
-        return (ObjectCalls.callWithVariantArgs(rpcIdBind, handle, listOf(peerId, method, *extraArgs)) as Number).toLong()
+        return (ObjectCalls.callWithVariantArgs(rpcIdBind, segment, listOf(peerId, method, *extraArgs)) as Number).toLong()
     }
 
     fun updateConfigurationWarnings() {
-        ObjectCalls.ptrcallNoArgs(updateConfigurationWarningsBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateConfigurationWarningsBind, segment)
     }
 
     fun callDeferredThreadGroup(method: String, vararg extraArgs: Any?): Any? {
-        return ObjectCalls.callWithVariantArgs(callDeferredThreadGroupBind, handle, listOf(method, *extraArgs))
+        return ObjectCalls.callWithVariantArgs(callDeferredThreadGroupBind, segment, listOf(method, *extraArgs))
     }
 
     fun setDeferredThreadGroup(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredThreadGroupBind, handle, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredThreadGroupBind, segment, property, value)
     }
 
     fun notifyDeferredThreadGroup(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(notifyDeferredThreadGroupBind, handle, what)
+        ObjectCalls.ptrcallWithIntArg(notifyDeferredThreadGroupBind, segment, what)
     }
 
     fun callThreadSafe(method: String, vararg extraArgs: Any?): Any? {
-        return ObjectCalls.callWithVariantArgs(callThreadSafeBind, handle, listOf(method, *extraArgs))
+        return ObjectCalls.callWithVariantArgs(callThreadSafeBind, segment, listOf(method, *extraArgs))
     }
 
     fun setThreadSafe(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setThreadSafeBind, handle, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setThreadSafeBind, segment, property, value)
     }
 
     fun notifyThreadSafe(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(notifyThreadSafeBind, handle, what)
+        ObjectCalls.ptrcallWithIntArg(notifyThreadSafeBind, segment, what)
     }
 
     // ── Kanama iOS sugar (generator custom-section, not from Godot docs) ───────
@@ -567,34 +567,34 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     // return type), so it is intentionally not duplicated here.
 
     fun getTree(): SceneTree =
-        SceneTree(MemorySegment.ofAddress(IosGodot.nodeGetTree(handle.address())))
+        SceneTree(GodotHandle(MemorySegment.ofAddress(IosGodot.nodeGetTree(segment.address()))))
 
     fun getNodeOrNull(path: String): Node? =
-        IosGodot.nodeGetNodeOrNull(handle.address(), path).takeIf { it != 0L }?.let {
-            Node(MemorySegment.ofAddress(it))
+        IosGodot.nodeGetNodeOrNull(segment.address(), path).takeIf { it != 0L }?.let {
+            Node(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
-    fun <T : Node> getAsOrNull(path: String, ctor: (MemorySegment) -> T): T? =
+    fun <T : Node> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
         getNodeOrNull(path)?.let { ctor(it.handle) }
 
-    fun <T : Node> getAsOrNull(path: NodePath, ctor: (MemorySegment) -> T): T? =
+    fun <T : Node> getAsOrNull(path: NodePath, ctor: (GodotHandle) -> T): T? =
         getAsOrNull(path.path, ctor)
 
-    fun <T : Node> requireAs(path: String, ctor: (MemorySegment) -> T): T =
+    fun <T : Node> requireAs(path: String, ctor: (GodotHandle) -> T): T =
         getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
 
-    fun <T : Node> requireAs(path: NodePath, ctor: (MemorySegment) -> T): T =
+    fun <T : Node> requireAs(path: NodePath, ctor: (GodotHandle) -> T): T =
         requireAs(path.path, ctor)
 
-    fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (MemorySegment) -> T): T? =
+    fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (GodotHandle) -> T): T? =
         getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
 
     // `open` so the hand-written SceneTree subclass (IosGodotApi.kt) can override createTween() with
     // the correct SceneTree.create_tween bind — the FPS F2 fix. Generated here so a regen preserves
     // the openness instead of silently dropping it (which would re-break the SIGSEGV path).
     open fun createTween(): Tween? =
-        IosGodot.nodeCreateTween(handle.address()).takeIf { it != 0L }?.let {
-            Tween(MemorySegment.ofAddress(it))
+        IosGodot.nodeCreateTween(segment.address()).takeIf { it != 0L }?.let {
+            Tween(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
     // String overloads for the NodePath-typed accessors (desktop exposes both), so demo code can
@@ -713,11 +713,11 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         const val AUTO_TRANSLATE_MODE_DISABLED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Node? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Node? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Node? =
-            if (handle.address() == 0L) null else Node(handle)
+            if (handle.address() == 0L) null else Node(GodotHandle(handle))
 
         private const val PRINT_ORPHAN_NODES_HASH = 3218959716L
         private val printOrphanNodesBind by lazy {

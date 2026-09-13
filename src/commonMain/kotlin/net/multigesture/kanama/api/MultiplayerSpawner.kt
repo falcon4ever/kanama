@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: MultiplayerSpawner
  */
-class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
+class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
     var spawnPath: NodePath
         @JvmName("spawnPathProperty")
         get() = getSpawnPath()
@@ -28,47 +28,47 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
         get() = getSpawnFunction()
 
     fun addSpawnableScene(path: String) {
-        ObjectCalls.ptrcallWithStringArg(addSpawnableSceneBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addSpawnableSceneBind, segment, path)
     }
 
     fun getSpawnableSceneCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSpawnableSceneCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSpawnableSceneCountBind, segment)
     }
 
     fun getSpawnableScene(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getSpawnableSceneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getSpawnableSceneBind, segment, index)
     }
 
     fun clearSpawnableScenes() {
-        ObjectCalls.ptrcallNoArgs(clearSpawnableScenesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSpawnableScenesBind, segment)
     }
 
     fun spawn(data: Any? = null): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithVariantArgRetObject(spawnBind, handle, data))
+        return Node.wrap(ObjectCalls.ptrcallWithVariantArgRetObject(spawnBind, segment, data))
     }
 
     fun getSpawnPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSpawnPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getSpawnPathBind, segment)
     }
 
     fun setSpawnPath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSpawnPathBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setSpawnPathBind, segment, path)
     }
 
     fun getSpawnLimit(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSpawnLimitBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getSpawnLimitBind, segment)
     }
 
     fun setSpawnLimit(limit: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSpawnLimitBind, handle, limit)
+        ObjectCalls.ptrcallWithUInt32Arg(setSpawnLimitBind, segment, limit)
     }
 
     fun getSpawnFunction(): GodotCallable? {
-        return ObjectCalls.ptrcallNoArgsRetCallable(getSpawnFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetCallable(getSpawnFunctionBind, segment)
     }
 
     fun setSpawnFunction(spawnFunction: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(setSpawnFunctionBind, handle, spawnFunction.target.handle, spawnFunction.method)
+        ObjectCalls.ptrcallWithCallableArg(setSpawnFunctionBind, segment, spawnFunction.target.segment, spawnFunction.method)
     }
 
     object Signals {
@@ -78,11 +78,11 @@ class MultiplayerSpawner(handle: MemorySegment) : Node(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiplayerSpawner? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiplayerSpawner? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiplayerSpawner? =
-            if (handle.address() == 0L) null else MultiplayerSpawner(handle)
+            if (handle.address() == 0L) null else MultiplayerSpawner(GodotHandle(handle))
 
         private const val ADD_SPAWNABLE_SCENE_HASH = 83702148L
         private val addSpawnableSceneBind by lazy {

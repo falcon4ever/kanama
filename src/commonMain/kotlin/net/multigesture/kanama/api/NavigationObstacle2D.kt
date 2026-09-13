@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: NavigationObstacle2D
  */
-class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
+class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -63,7 +63,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_avoidance_enabled
      */
     fun setAvoidanceEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, segment, enabled)
     }
 
     /**
@@ -81,7 +81,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_avoidance_enabled
      */
     fun getAvoidanceEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -105,7 +105,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -114,7 +114,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -123,7 +123,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -134,7 +134,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_velocity
      */
     fun setVelocity(velocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
     }
 
     /**
@@ -145,7 +145,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_velocity
      */
     fun getVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_vertices
      */
     fun setVertices(vertices: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, handle, vertices)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, segment, vertices)
     }
 
     /**
@@ -169,7 +169,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_vertices
      */
     fun getVertices(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, segment)
     }
 
     /**
@@ -179,7 +179,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_avoidance_layers
      */
     fun setAvoidanceLayers(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, handle, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, segment, layers)
     }
 
     /**
@@ -189,7 +189,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_avoidance_layers
      */
     fun getAvoidanceLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_avoidance_layer_value
      */
     fun setAvoidanceLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -209,7 +209,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_avoidance_layer_value
      */
     fun getAvoidanceLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -219,7 +219,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_affect_navigation_mesh
      */
     fun setAffectNavigationMesh(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAffectNavigationMeshBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAffectNavigationMeshBind, segment, enabled)
     }
 
     /**
@@ -229,7 +229,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_affect_navigation_mesh
      */
     fun getAffectNavigationMesh(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAffectNavigationMeshBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAffectNavigationMeshBind, segment)
     }
 
     /**
@@ -241,7 +241,7 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_carve_navigation_mesh
      */
     fun setCarveNavigationMesh(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCarveNavigationMeshBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCarveNavigationMeshBind, segment, enabled)
     }
 
     /**
@@ -253,16 +253,16 @@ class NavigationObstacle2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_carve_navigation_mesh
      */
     fun getCarveNavigationMesh(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCarveNavigationMeshBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCarveNavigationMeshBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationObstacle2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationObstacle2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationObstacle2D? =
-            if (handle.address() == 0L) null else NavigationObstacle2D(handle)
+            if (handle.address() == 0L) null else NavigationObstacle2D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L
         private val getRidBind by lazy {

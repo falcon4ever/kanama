@@ -10,7 +10,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: AnimationPlayer
  */
-class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
+class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
     var currentAnimation: String
         @JvmName("currentAnimationProperty")
         get() = getCurrentAnimation()
@@ -85,7 +85,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.animation_set_next
      */
     fun animationSetNext(animationFrom: String, animationTo: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(animationSetNextBind, handle, animationFrom, animationTo)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(animationSetNextBind, segment, animationFrom, animationTo)
     }
 
     /**
@@ -94,7 +94,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.animation_get_next
      */
     fun animationGetNext(animationFrom: String): String {
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(animationGetNextBind, handle, animationFrom)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(animationGetNextBind, segment, animationFrom)
     }
 
     /**
@@ -103,7 +103,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_blend_time
      */
     fun setBlendTime(animationFrom: String, animationTo: String, sec: Double) {
-        ObjectCalls.ptrcallWithTwoStringNameAndDoubleArg(setBlendTimeBind, handle, animationFrom, animationTo, sec)
+        ObjectCalls.ptrcallWithTwoStringNameAndDoubleArg(setBlendTimeBind, segment, animationFrom, animationTo, sec)
     }
 
     /**
@@ -112,7 +112,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_blend_time
      */
     fun getBlendTime(animationFrom: String, animationTo: String): Double {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(getBlendTimeBind, handle, animationFrom, animationTo)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(getBlendTimeBind, segment, animationFrom, animationTo)
     }
 
     /**
@@ -121,7 +121,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_default_blend_time
      */
     fun setDefaultBlendTime(sec: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDefaultBlendTimeBind, handle, sec)
+        ObjectCalls.ptrcallWithDoubleArg(setDefaultBlendTimeBind, segment, sec)
     }
 
     /**
@@ -130,7 +130,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_default_blend_time
      */
     fun getDefaultBlendTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBlendTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBlendTimeBind, segment)
     }
 
     /**
@@ -142,7 +142,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture
      */
     fun setAutoCapture(autoCapture: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoCaptureBind, handle, autoCapture)
+        ObjectCalls.ptrcallWithBoolArg(setAutoCaptureBind, segment, autoCapture)
     }
 
     /**
@@ -154,7 +154,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_auto_capture
      */
     fun isAutoCapture(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoCaptureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoCaptureBind, segment)
     }
 
     /**
@@ -165,7 +165,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_duration
      */
     fun setAutoCaptureDuration(autoCaptureDuration: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAutoCaptureDurationBind, handle, autoCaptureDuration)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoCaptureDurationBind, segment, autoCaptureDuration)
     }
 
     /**
@@ -176,7 +176,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_duration
      */
     fun getAutoCaptureDuration(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoCaptureDurationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoCaptureDurationBind, segment)
     }
 
     /**
@@ -185,7 +185,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_transition_type
      */
     fun setAutoCaptureTransitionType(autoCaptureTransitionType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureTransitionTypeBind, handle, autoCaptureTransitionType)
+        ObjectCalls.ptrcallWithLongArg(setAutoCaptureTransitionTypeBind, segment, autoCaptureTransitionType)
     }
 
     /**
@@ -194,7 +194,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_transition_type
      */
     fun getAutoCaptureTransitionType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureTransitionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureTransitionTypeBind, segment)
     }
 
     /**
@@ -203,7 +203,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_ease_type
      */
     fun setAutoCaptureEaseType(autoCaptureEaseType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureEaseTypeBind, handle, autoCaptureEaseType)
+        ObjectCalls.ptrcallWithLongArg(setAutoCaptureEaseTypeBind, segment, autoCaptureEaseType)
     }
 
     /**
@@ -212,7 +212,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_ease_type
      */
     fun getAutoCaptureEaseType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play
      */
     fun play(name: String = "", customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameDoubleDoubleBoolArgs(playBind, handle, name, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameDoubleDoubleBoolArgs(playBind, segment, name, customBlend, customSpeed, fromEnd)
     }
 
     /**
@@ -242,7 +242,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section_with_markers
      */
     fun playSectionWithMarkers(name: String, startMarker: String, endMarker: String, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithThreeStringNameTwoDoubleBoolArgs(playSectionWithMarkersBind, handle, name, startMarker, endMarker, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithThreeStringNameTwoDoubleBoolArgs(playSectionWithMarkersBind, segment, name, startMarker, endMarker, customBlend, customSpeed, fromEnd)
     }
 
     /**
@@ -255,7 +255,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section
      */
     fun playSection(name: String, startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameFourDoubleBoolArgs(playSectionBind, handle, name, startTime, endTime, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameFourDoubleBoolArgs(playSectionBind, segment, name, startTime, endTime, customBlend, customSpeed, fromEnd)
     }
 
     /**
@@ -265,7 +265,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_backwards
      */
     fun playBackwards(name: String, customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(playBackwardsBind, handle, name, customBlend)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(playBackwardsBind, segment, name, customBlend)
     }
 
     /**
@@ -276,7 +276,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section_with_markers_backwards
      */
     fun playSectionWithMarkersBackwards(name: String, startMarker: String, endMarker: String, customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithThreeStringNameAndDoubleArg(playSectionWithMarkersBackwardsBind, handle, name, startMarker, endMarker, customBlend)
+        ObjectCalls.ptrcallWithThreeStringNameAndDoubleArg(playSectionWithMarkersBackwardsBind, segment, name, startMarker, endMarker, customBlend)
     }
 
     /**
@@ -287,7 +287,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section_backwards
      */
     fun playSectionBackwards(name: String, startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithStringNameAndThreeDoubleArgs(playSectionBackwardsBind, handle, name, startTime, endTime, customBlend)
+        ObjectCalls.ptrcallWithStringNameAndThreeDoubleArgs(playSectionBackwardsBind, segment, name, startTime, endTime, customBlend)
     }
 
     /**
@@ -298,7 +298,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_with_capture
      */
     fun playWithCapture(name: String, duration: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false, transType: Long = 0L, easeType: Long = 0L) {
-        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, handle, name, duration, customBlend, customSpeed, fromEnd, transType, easeType)
+        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, segment, name, duration, customBlend, customSpeed, fromEnd, transType, easeType)
     }
 
     /**
@@ -309,7 +309,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, handle)
+        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
     }
 
     /**
@@ -321,7 +321,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.stop
      */
     fun stop(keepState: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(stopBind, handle, keepState)
+        ObjectCalls.ptrcallWithBoolArg(stopBind, segment, keepState)
     }
 
     /**
@@ -331,7 +331,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     /**
@@ -342,7 +342,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_animation_active
      */
     fun isAnimationActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAnimationActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAnimationActiveBind, segment)
     }
 
     /**
@@ -356,7 +356,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_current_animation
      */
     fun setCurrentAnimation(animation: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setCurrentAnimationBind, handle, animation)
+        ObjectCalls.ptrcallWithStringNameArg(setCurrentAnimationBind, segment, animation)
     }
 
     /**
@@ -370,7 +370,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_current_animation
      */
     fun getCurrentAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentAnimationBind, segment)
     }
 
     /**
@@ -381,7 +381,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_assigned_animation
      */
     fun setAssignedAnimation(animation: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAssignedAnimationBind, handle, animation)
+        ObjectCalls.ptrcallWithStringNameArg(setAssignedAnimationBind, segment, animation)
     }
 
     /**
@@ -392,7 +392,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_assigned_animation
      */
     fun getAssignedAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAssignedAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAssignedAnimationBind, segment)
     }
 
     /**
@@ -403,7 +403,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.queue
      */
     fun queue(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(queueBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(queueBind, segment, name)
     }
 
     /**
@@ -412,7 +412,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_queue
      */
     fun getQueue(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getQueueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getQueueBind, segment)
     }
 
     /**
@@ -421,7 +421,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.clear_queue
      */
     fun clearQueue() {
-        ObjectCalls.ptrcallNoArgs(clearQueueBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearQueueBind, segment)
     }
 
     /**
@@ -433,7 +433,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_speed_scale
      */
     fun setSpeedScale(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, speed)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speed)
     }
 
     /**
@@ -445,7 +445,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     /**
@@ -456,7 +456,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_playing_speed
      */
     fun getPlayingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
     }
 
     /**
@@ -465,7 +465,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_autoplay
      */
     fun setAutoplay(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAutoplayBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setAutoplayBind, segment, name)
     }
 
     /**
@@ -474,7 +474,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_autoplay
      */
     fun getAutoplay(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAutoplayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAutoplayBind, segment)
     }
 
     /**
@@ -487,7 +487,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_movie_quit_on_finish_enabled
      */
     fun setMovieQuitOnFinishEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMovieQuitOnFinishEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setMovieQuitOnFinishEnabledBind, segment, enabled)
     }
 
     /**
@@ -500,7 +500,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_movie_quit_on_finish_enabled
      */
     fun isMovieQuitOnFinishEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMovieQuitOnFinishEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMovieQuitOnFinishEnabledBind, segment)
     }
 
     /**
@@ -509,7 +509,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_current_animation_position
      */
     fun getCurrentAnimationPosition(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationPositionBind, segment)
     }
 
     /**
@@ -518,7 +518,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_current_animation_length
      */
     fun getCurrentAnimationLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationLengthBind, segment)
     }
 
     /**
@@ -530,7 +530,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_section_with_markers
      */
     fun setSectionWithMarkers(startMarker: String, endMarker: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(setSectionWithMarkersBind, handle, startMarker, endMarker)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(setSectionWithMarkersBind, segment, startMarker, endMarker)
     }
 
     /**
@@ -540,7 +540,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_section
      */
     fun setSection(startTime: Double = -1.0, endTime: Double = -1.0) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(setSectionBind, handle, startTime, endTime)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(setSectionBind, segment, startTime, endTime)
     }
 
     /**
@@ -549,7 +549,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.reset_section
      */
     fun resetSection() {
-        ObjectCalls.ptrcallNoArgs(resetSectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetSectionBind, segment)
     }
 
     /**
@@ -558,7 +558,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_section_start_time
      */
     fun getSectionStartTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionStartTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionStartTimeBind, segment)
     }
 
     /**
@@ -567,7 +567,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_section_end_time
      */
     fun getSectionEndTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionEndTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionEndTimeBind, segment)
     }
 
     /**
@@ -576,7 +576,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.has_section
      */
     fun hasSection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasSectionBind, segment)
     }
 
     /**
@@ -590,7 +590,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.seek
      */
     fun seek(seconds: Double, update: Boolean = false, updateOnly: Boolean = false) {
-        ObjectCalls.ptrcallWithDoubleAndTwoBoolArgs(seekBind, handle, seconds, update, updateOnly)
+        ObjectCalls.ptrcallWithDoubleAndTwoBoolArgs(seekBind, segment, seconds, update, updateOnly)
     }
 
     /**
@@ -599,7 +599,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_process_callback
      */
     fun setProcessCallback(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode)
     }
 
     /**
@@ -608,7 +608,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_process_callback
      */
     fun getProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment)
     }
 
     /**
@@ -617,7 +617,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_method_call_mode
      */
     fun setMethodCallMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMethodCallModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMethodCallModeBind, segment, mode)
     }
 
     /**
@@ -626,7 +626,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_method_call_mode
      */
     fun getMethodCallMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, segment)
     }
 
     /**
@@ -635,7 +635,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_root
      */
     fun setRoot(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setRootBind, segment, path)
     }
 
     /**
@@ -644,7 +644,7 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_root
      */
     fun getRoot(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootBind, segment)
     }
 
     object Signals {
@@ -661,11 +661,11 @@ class AnimationPlayer(handle: MemorySegment) : AnimationMixer(handle) {
         const val ANIMATION_METHOD_CALL_IMMEDIATE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationPlayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationPlayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationPlayer? =
-            if (handle.address() == 0L) null else AnimationPlayer(handle)
+            if (handle.address() == 0L) null else AnimationPlayer(GodotHandle(handle))
 
         private const val ANIMATION_SET_NEXT_HASH = 3740211285L
         private val animationSetNextBind by lazy {

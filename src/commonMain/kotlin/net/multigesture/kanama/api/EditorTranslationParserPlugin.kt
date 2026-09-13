@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorTranslationParserPlugin
  */
-class EditorTranslationParserPlugin(handle: MemorySegment) : RefCounted(handle) {
+class EditorTranslationParserPlugin(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorTranslationParserPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorTranslationParserPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorTranslationParserPlugin? =
-            if (handle.address() == 0L) null else EditorTranslationParserPlugin(handle)
+            if (handle.address() == 0L) null else EditorTranslationParserPlugin(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

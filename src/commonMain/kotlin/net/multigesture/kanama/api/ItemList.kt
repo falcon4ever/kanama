@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: ItemList
  */
-class ItemList(handle: MemorySegment) : Control(handle) {
+class ItemList(handle: GodotHandle) : Control(handle) {
     var selectMode: Long
         @JvmName("selectModeProperty")
         get() = getSelectMode()
@@ -132,7 +132,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.add_item
      */
     fun addItem(text: String, icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(addItemBind, handle, text, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
+        return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(addItemBind, segment, text, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
     }
 
     /**
@@ -141,7 +141,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.add_icon_item
      */
     fun addIconItem(icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(addIconItemBind, handle, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(addIconItemBind, segment, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
     }
 
     /**
@@ -150,7 +150,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_text
      */
     fun setItemText(idx: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, handle, idx, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, segment, idx, text)
     }
 
     /**
@@ -159,7 +159,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_text
      */
     fun getItemText(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, segment, idx)
     }
 
     /**
@@ -168,7 +168,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon
      */
     fun setItemIcon(idx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, handle, idx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -177,7 +177,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_icon
      */
     fun getItemIcon(idx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, handle, idx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, idx))
     }
 
     /**
@@ -186,7 +186,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_text_direction
      */
     fun setItemTextDirection(idx: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, handle, idx, direction)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, idx, direction)
     }
 
     /**
@@ -195,7 +195,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_text_direction
      */
     fun getItemTextDirection(idx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, idx)
     }
 
     /**
@@ -206,7 +206,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_language
      */
     fun setItemLanguage(idx: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, handle, idx, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, segment, idx, language)
     }
 
     /**
@@ -215,7 +215,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_language
      */
     fun getItemLanguage(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, segment, idx)
     }
 
     /**
@@ -226,7 +226,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_auto_translate_mode
      */
     fun setItemAutoTranslateMode(idx: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, idx, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode)
     }
 
     /**
@@ -235,7 +235,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_auto_translate_mode
      */
     fun getItemAutoTranslateMode(idx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx)
     }
 
     /**
@@ -244,7 +244,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon_transposed
      */
     fun setItemIconTransposed(idx: Int, transposed: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemIconTransposedBind, handle, idx, transposed)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemIconTransposedBind, segment, idx, transposed)
     }
 
     /**
@@ -253,7 +253,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_icon_transposed
      */
     fun isItemIconTransposed(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemIconTransposedBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemIconTransposedBind, segment, idx)
     }
 
     /**
@@ -262,7 +262,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon_region
      */
     fun setItemIconRegion(idx: Int, rect: Rect2) {
-        ObjectCalls.ptrcallWithIntAndRect2Arg(setItemIconRegionBind, handle, idx, rect)
+        ObjectCalls.ptrcallWithIntAndRect2Arg(setItemIconRegionBind, segment, idx, rect)
     }
 
     /**
@@ -271,7 +271,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_icon_region
      */
     fun getItemIconRegion(idx: Int): Rect2 {
-        return ObjectCalls.ptrcallWithIntArgRetRect2(getItemIconRegionBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetRect2(getItemIconRegionBind, segment, idx)
     }
 
     /**
@@ -280,7 +280,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon_modulate
      */
     fun setItemIconModulate(idx: Int, modulate: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, handle, idx, modulate)
+        ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, segment, idx, modulate)
     }
 
     /**
@@ -289,7 +289,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_icon_modulate
      */
     fun getItemIconModulate(idx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, segment, idx)
     }
 
     /**
@@ -298,7 +298,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_selectable
      */
     fun setItemSelectable(idx: Int, selectable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemSelectableBind, handle, idx, selectable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemSelectableBind, segment, idx, selectable)
     }
 
     /**
@@ -307,7 +307,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_selectable
      */
     fun isItemSelectable(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSelectableBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSelectableBind, segment, idx)
     }
 
     /**
@@ -317,7 +317,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_disabled
      */
     fun setItemDisabled(idx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, handle, idx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, segment, idx, disabled)
     }
 
     /**
@@ -326,7 +326,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_disabled
      */
     fun isItemDisabled(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, segment, idx)
     }
 
     /**
@@ -335,7 +335,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_metadata
      */
     fun setItemMetadata(idx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, idx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, segment, idx, metadata)
     }
 
     /**
@@ -344,7 +344,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_metadata
      */
     fun getItemMetadata(idx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, segment, idx)
     }
 
     /**
@@ -353,7 +353,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_custom_bg_color
      */
     fun setItemCustomBgColor(idx: Int, customBgColor: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomBgColorBind, handle, idx, customBgColor)
+        ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomBgColorBind, segment, idx, customBgColor)
     }
 
     /**
@@ -362,7 +362,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_custom_bg_color
      */
     fun getItemCustomBgColor(idx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomBgColorBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomBgColorBind, segment, idx)
     }
 
     /**
@@ -371,7 +371,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_custom_fg_color
      */
     fun setItemCustomFgColor(idx: Int, customFgColor: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomFgColorBind, handle, idx, customFgColor)
+        ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomFgColorBind, segment, idx, customFgColor)
     }
 
     /**
@@ -380,7 +380,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_custom_fg_color
      */
     fun getItemCustomFgColor(idx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomFgColorBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomFgColorBind, segment, idx)
     }
 
     /**
@@ -392,7 +392,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_rect
      */
     fun getItemRect(idx: Int, expand: Boolean = true): Rect2 {
-        return ObjectCalls.ptrcallWithIntAndBoolArgRetRect2(getItemRectBind, handle, idx, expand)
+        return ObjectCalls.ptrcallWithIntAndBoolArgRetRect2(getItemRectBind, segment, idx, expand)
     }
 
     /**
@@ -401,7 +401,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_tooltip_enabled
      */
     fun setItemTooltipEnabled(idx: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemTooltipEnabledBind, handle, idx, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemTooltipEnabledBind, segment, idx, enable)
     }
 
     /**
@@ -410,7 +410,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_tooltip_enabled
      */
     fun isItemTooltipEnabled(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemTooltipEnabledBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemTooltipEnabledBind, segment, idx)
     }
 
     /**
@@ -419,7 +419,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_tooltip
      */
     fun setItemTooltip(idx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, idx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, idx, tooltip)
     }
 
     /**
@@ -428,7 +428,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_tooltip
      */
     fun getItemTooltip(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, idx)
     }
 
     /**
@@ -438,7 +438,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.select
      */
     fun select(idx: Int, single: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(selectBind, handle, idx, single)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(selectBind, segment, idx, single)
     }
 
     /**
@@ -447,7 +447,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.deselect
      */
     fun deselect(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(deselectBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(deselectBind, segment, idx)
     }
 
     /**
@@ -456,7 +456,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.deselect_all
      */
     fun deselectAll() {
-        ObjectCalls.ptrcallNoArgs(deselectAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(deselectAllBind, segment)
     }
 
     /**
@@ -465,7 +465,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_selected
      */
     fun isSelected(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSelectedBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isSelectedBind, segment, idx)
     }
 
     /**
@@ -474,7 +474,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_selected_items
      */
     fun getSelectedItems(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSelectedItemsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSelectedItemsBind, segment)
     }
 
     /**
@@ -483,7 +483,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.move_item
      */
     fun moveItem(fromIdx: Int, toIdx: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(moveItemBind, handle, fromIdx, toIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveItemBind, segment, fromIdx, toIdx)
     }
 
     /**
@@ -492,7 +492,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_count
      */
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
     }
 
     /**
@@ -501,7 +501,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_count
      */
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
     /**
@@ -510,7 +510,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.remove_item
      */
     fun removeItem(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, idx)
     }
 
     /**
@@ -519,7 +519,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -528,7 +528,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.sort_items_by_text
      */
     fun sortItemsByText() {
-        ObjectCalls.ptrcallNoArgs(sortItemsByTextBind, handle)
+        ObjectCalls.ptrcallNoArgs(sortItemsByTextBind, segment)
     }
 
     /**
@@ -538,7 +538,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_fixed_column_width
      */
     fun setFixedColumnWidth(width: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFixedColumnWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setFixedColumnWidthBind, segment, width)
     }
 
     /**
@@ -548,7 +548,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_fixed_column_width
      */
     fun getFixedColumnWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedColumnWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFixedColumnWidthBind, segment)
     }
 
     /**
@@ -558,7 +558,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_same_column_width
      */
     fun setSameColumnWidth(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSameColumnWidthBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSameColumnWidthBind, segment, enable)
     }
 
     /**
@@ -568,7 +568,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_same_column_width
      */
     fun isSameColumnWidth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSameColumnWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSameColumnWidthBind, segment)
     }
 
     /**
@@ -579,7 +579,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_max_text_lines
      */
     fun setMaxTextLines(lines: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxTextLinesBind, handle, lines)
+        ObjectCalls.ptrcallWithIntArg(setMaxTextLinesBind, segment, lines)
     }
 
     /**
@@ -590,7 +590,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_max_text_lines
      */
     fun getMaxTextLines(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextLinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextLinesBind, segment)
     }
 
     /**
@@ -601,7 +601,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_max_columns
      */
     fun setMaxColumns(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxColumnsBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setMaxColumnsBind, segment, amount)
     }
 
     /**
@@ -612,7 +612,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_max_columns
      */
     fun getMaxColumns(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxColumnsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxColumnsBind, segment)
     }
 
     /**
@@ -621,7 +621,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_select_mode
      */
     fun setSelectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode)
     }
 
     /**
@@ -630,7 +630,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_select_mode
      */
     fun getSelectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment)
     }
 
     /**
@@ -639,7 +639,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_icon_mode
      */
     fun setIconMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setIconModeBind, segment, mode)
     }
 
     /**
@@ -648,7 +648,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_icon_mode
      */
     fun getIconMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getIconModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getIconModeBind, segment)
     }
 
     /**
@@ -658,7 +658,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_fixed_icon_size
      */
     fun setFixedIconSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setFixedIconSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setFixedIconSizeBind, segment, size)
     }
 
     /**
@@ -668,7 +668,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_fixed_icon_size
      */
     fun getFixedIconSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getFixedIconSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getFixedIconSizeBind, segment)
     }
 
     /**
@@ -677,7 +677,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_icon_scale
      */
     fun setIconScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setIconScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setIconScaleBind, segment, scale)
     }
 
     /**
@@ -686,7 +686,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_icon_scale
      */
     fun getIconScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getIconScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getIconScaleBind, segment)
     }
 
     /**
@@ -695,7 +695,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_allow_rmb_select
      */
     fun setAllowRmbSelect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, segment, allow)
     }
 
     /**
@@ -704,7 +704,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_allow_rmb_select
      */
     fun getAllowRmbSelect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, segment)
     }
 
     /**
@@ -713,7 +713,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_allow_reselect
      */
     fun setAllowReselect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, segment, allow)
     }
 
     /**
@@ -722,7 +722,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_allow_reselect
      */
     fun getAllowReselect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, segment)
     }
 
     /**
@@ -731,7 +731,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_allow_search
      */
     fun setAllowSearch(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, segment, allow)
     }
 
     /**
@@ -740,7 +740,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_allow_search
      */
     fun getAllowSearch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, segment)
     }
 
     /**
@@ -749,7 +749,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_auto_width
      */
     fun setAutoWidth(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoWidthBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoWidthBind, segment, enable)
     }
 
     /**
@@ -758,7 +758,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.has_auto_width
      */
     fun hasAutoWidth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoWidthBind, segment)
     }
 
     /**
@@ -767,7 +767,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_auto_height
      */
     fun setAutoHeight(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoHeightBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoHeightBind, segment, enable)
     }
 
     /**
@@ -776,7 +776,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.has_auto_height
      */
     fun hasAutoHeight(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoHeightBind, segment)
     }
 
     /**
@@ -785,7 +785,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_anything_selected
      */
     fun isAnythingSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAnythingSelectedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAnythingSelectedBind, segment)
     }
 
     /**
@@ -797,7 +797,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_at_position
      */
     fun getItemAtPosition(position: Vector2, exact: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithVector2AndBoolArgRetInt(getItemAtPositionBind, handle, position, exact)
+        return ObjectCalls.ptrcallWithVector2AndBoolArgRetInt(getItemAtPositionBind, segment, position, exact)
     }
 
     /**
@@ -807,7 +807,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.ensure_current_is_visible
      */
     fun ensureCurrentIsVisible() {
-        ObjectCalls.ptrcallNoArgs(ensureCurrentIsVisibleBind, handle)
+        ObjectCalls.ptrcallNoArgs(ensureCurrentIsVisibleBind, segment)
     }
 
     /**
@@ -819,7 +819,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.center_on_current
      */
     fun centerOnCurrent(centerVerically: Boolean = true, centerHorizontally: Boolean = true) {
-        ObjectCalls.ptrcallWithTwoBoolArgs(centerOnCurrentBind, handle, centerVerically, centerHorizontally)
+        ObjectCalls.ptrcallWithTwoBoolArgs(centerOnCurrentBind, segment, centerVerically, centerHorizontally)
     }
 
     /**
@@ -830,7 +830,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
     }
 
     /**
@@ -841,7 +841,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_h_scroll_bar
      */
     fun getHScrollBar(): HScrollBar? {
-        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, handle))
+        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, segment))
     }
 
     /**
@@ -851,7 +851,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_scroll_hint_mode
      */
     fun setScrollHintMode(scrollHintMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, handle, scrollHintMode)
+        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode)
     }
 
     /**
@@ -861,7 +861,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_scroll_hint_mode
      */
     fun getScrollHintMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment)
     }
 
     /**
@@ -870,7 +870,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_tile_scroll_hint
      */
     fun setTileScrollHint(tileScrollHint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, handle, tileScrollHint)
+        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, segment, tileScrollHint)
     }
 
     /**
@@ -879,7 +879,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.is_scroll_hint_tiled
      */
     fun isScrollHintTiled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, segment)
     }
 
     /**
@@ -888,7 +888,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
     }
 
     /**
@@ -897,7 +897,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
     }
 
     /**
@@ -908,7 +908,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.set_wraparound_items
      */
     fun setWraparoundItems(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setWraparoundItemsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setWraparoundItemsBind, segment, enable)
     }
 
     /**
@@ -919,7 +919,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.has_wraparound_items
      */
     fun hasWraparoundItems(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasWraparoundItemsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasWraparoundItemsBind, segment)
     }
 
     /**
@@ -930,7 +930,7 @@ class ItemList(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ItemList.force_update_list_size
      */
     fun forceUpdateListSize() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateListSizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceUpdateListSizeBind, segment)
     }
 
     object Signals {
@@ -953,11 +953,11 @@ class ItemList(handle: MemorySegment) : Control(handle) {
         const val SCROLL_HINT_MODE_BOTTOM: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ItemList? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ItemList? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ItemList? =
-            if (handle.address() == 0L) null else ItemList(handle)
+            if (handle.address() == 0L) null else ItemList(GodotHandle(handle))
 
         private const val ADD_ITEM_HASH = 359861678L
         private val addItemBind by lazy {

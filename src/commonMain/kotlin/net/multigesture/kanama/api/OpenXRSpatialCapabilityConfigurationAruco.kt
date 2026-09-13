@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco
  */
-class OpenXRSpatialCapabilityConfigurationAruco(handle: MemorySegment) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
+class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
     var arucoDict: Long
         @JvmName("arucoDictProperty")
         get() = getArucoDict()
@@ -18,17 +18,17 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: MemorySegment) : OpenXRS
 
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
     }
 
     fun setArucoDict(arucoDict: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setArucoDictBind, handle, arucoDict)
+        ObjectCalls.ptrcallWithLongArg(setArucoDictBind, segment, arucoDict)
     }
 
     fun getArucoDict(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getArucoDictBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getArucoDictBind, segment)
     }
 
     companion object {
@@ -50,11 +50,11 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: MemorySegment) : OpenXRS
         const val ARUCO_DICT_7X7_1000: Long = 16L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAruco? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAruco? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAruco? =
-            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAruco(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAruco(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
         private val getEnabledComponentsBind by lazy {

@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorToaster
  */
-class EditorToaster(handle: MemorySegment) : HBoxContainer(handle) {
+class EditorToaster(handle: GodotHandle) : HBoxContainer(handle) {
     /**
      * Pushes a toast notification to the editor for display.
      *
      * Generated from Godot docs: EditorToaster.push_toast
      */
     fun pushToast(message: String, severity: Long = 0L, tooltip: String = "") {
-        ObjectCalls.ptrcallWithStringLongStringArgs(pushToastBind, handle, message, severity, tooltip)
+        ObjectCalls.ptrcallWithStringLongStringArgs(pushToastBind, segment, message, severity, tooltip)
     }
 
     companion object {
@@ -26,11 +26,11 @@ class EditorToaster(handle: MemorySegment) : HBoxContainer(handle) {
         const val SEVERITY_ERROR: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorToaster? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorToaster? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorToaster? =
-            if (handle.address() == 0L) null else EditorToaster(handle)
+            if (handle.address() == 0L) null else EditorToaster(GodotHandle(handle))
 
         private const val PUSH_TOAST_HASH = 1813923476L
         private val pushToastBind by lazy {

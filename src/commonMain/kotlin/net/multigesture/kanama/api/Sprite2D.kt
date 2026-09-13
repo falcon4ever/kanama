@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: Sprite2D
  */
-class Sprite2D(handle: MemorySegment) : Node2D(handle) {
+class Sprite2D(handle: GodotHandle) : Node2D(handle) {
     var texture: Texture2D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -93,7 +93,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -102,7 +102,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -115,7 +115,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_centered
      */
     fun setCentered(centered: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, handle, centered)
+        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, segment, centered)
     }
 
     /**
@@ -128,7 +128,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.is_centered
      */
     fun isCentered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -148,7 +148,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_flip_h
      */
     fun setFlipH(flipH: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, flipH)
+        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, flipH)
     }
 
     /**
@@ -166,7 +166,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
     }
 
     /**
@@ -175,7 +175,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_flip_v
      */
     fun setFlipV(flipV: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, flipV)
+        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, flipV)
     }
 
     /**
@@ -184,7 +184,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_region_enabled
      */
     fun setRegionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRegionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRegionEnabledBind, segment, enabled)
     }
 
     /**
@@ -210,7 +210,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.is_region_enabled
      */
     fun isRegionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRegionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRegionEnabledBind, segment)
     }
 
     /**
@@ -221,7 +221,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.is_pixel_opaque
      */
     fun isPixelOpaque(pos: Vector2): Boolean {
-        return ObjectCalls.ptrcallWithVector2ArgRetBool(isPixelOpaqueBind, handle, pos)
+        return ObjectCalls.ptrcallWithVector2ArgRetBool(isPixelOpaqueBind, segment, pos)
     }
 
     /**
@@ -230,7 +230,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_region_rect
      */
     fun setRegionRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, handle, rect)
+        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, segment, rect)
     }
 
     /**
@@ -239,7 +239,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_region_rect
      */
     fun getRegionRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, segment)
     }
 
     /**
@@ -249,7 +249,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_region_filter_clip_enabled
      */
     fun setRegionFilterClipEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRegionFilterClipEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRegionFilterClipEnabledBind, segment, enabled)
     }
 
     /**
@@ -259,7 +259,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.is_region_filter_clip_enabled
      */
     fun isRegionFilterClipEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRegionFilterClipEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRegionFilterClipEnabledBind, segment)
     }
 
     /**
@@ -270,7 +270,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_frame
      */
     fun setFrame(frame: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, handle, frame)
+        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
     }
 
     /**
@@ -281,7 +281,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_frame
      */
     fun getFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
     }
 
     /**
@@ -291,7 +291,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_frame_coords
      */
     fun setFrameCoords(coords: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setFrameCoordsBind, handle, coords)
+        ObjectCalls.ptrcallWithVector2iArg(setFrameCoordsBind, segment, coords)
     }
 
     /**
@@ -301,7 +301,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_frame_coords
      */
     fun getFrameCoords(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getFrameCoordsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getFrameCoordsBind, segment)
     }
 
     /**
@@ -312,7 +312,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_vframes
      */
     fun setVframes(vframes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVframesBind, handle, vframes)
+        ObjectCalls.ptrcallWithIntArg(setVframesBind, segment, vframes)
     }
 
     /**
@@ -323,7 +323,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_vframes
      */
     fun getVframes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVframesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVframesBind, segment)
     }
 
     /**
@@ -334,7 +334,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_hframes
      */
     fun setHframes(hframes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setHframesBind, handle, hframes)
+        ObjectCalls.ptrcallWithIntArg(setHframesBind, segment, hframes)
     }
 
     /**
@@ -345,7 +345,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_hframes
      */
     fun getHframes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHframesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHframesBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
     }
 
     object Signals {
@@ -364,15 +364,15 @@ class Sprite2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Sprite2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Sprite2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Sprite2D? =
-            if (handle.address() == 0L) null else Sprite2D(handle)
+            if (handle.address() == 0L) null else Sprite2D(GodotHandle(handle))
 
         @JvmStatic
         fun create(): Sprite2D =
-            Sprite2D(ObjectCalls.constructObject("Sprite2D"))
+            Sprite2D(GodotHandle(ObjectCalls.constructObject("Sprite2D")))
 
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {

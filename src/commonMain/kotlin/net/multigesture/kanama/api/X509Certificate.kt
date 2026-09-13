@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: X509Certificate
  */
-class X509Certificate(handle: MemorySegment) : Resource(handle) {
+class X509Certificate(handle: GodotHandle) : Resource(handle) {
     /**
      * Saves a certificate to the given `path` (should be a "*.crt" file).
      *
@@ -18,7 +18,7 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      */
     fun save(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path)
     }
 
     /**
@@ -28,7 +28,7 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      */
     fun load(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
     }
 
     /**
@@ -39,7 +39,7 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      */
     fun saveToString(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(saveToStringBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(saveToStringBind, segment)
     }
 
     /**
@@ -49,16 +49,16 @@ class X509Certificate(handle: MemorySegment) : Resource(handle) {
      */
     fun loadFromString(string: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, handle, string)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, segment, string)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): X509Certificate? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): X509Certificate? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): X509Certificate? =
-            if (handle.address() == 0L) null else X509Certificate(handle)
+            if (handle.address() == 0L) null else X509Certificate(GodotHandle(handle))
 
         private const val SAVE_HASH = 166001499L
         private val saveBind by lazy {

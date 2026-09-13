@@ -40,7 +40,7 @@ Declare members in this order within a script class:
 ```kotlin
 @ScriptClass(attachTo = "CharacterBody3D")
 @GlobalClass
-class Player(godotObject: MemorySegment) :
+class Player(godotObject: GodotHandle) :
     KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
 
     // 1. Exports
@@ -82,7 +82,7 @@ Apply class-level annotations top-down in this order:
 @ScriptClass(attachTo = "Node")
 @GlobalClass
 @Tool
-class MyEditorTool(val godotObject: MemorySegment)
+class MyEditorTool(val godotObject: GodotHandle)
 ```
 
 ## Naming
@@ -106,8 +106,8 @@ Name the Godot handle `godotObject` consistently:
 
 ```kotlin
 // Correct
-class Player(val godotObject: MemorySegment)
-class Player(godotObject: MemorySegment) : KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D)
+class Player(val godotObject: GodotHandle)
+class Player(godotObject: GodotHandle) : KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D)
 ```
 
 Avoid alternative names (`obj`, `handle`, `segment`). Documentation and tooling
@@ -242,7 +242,7 @@ nodes, or resources owned by the current scene:
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
-class Door(godotObject: MemorySegment) :
+class Door(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node),
     KanamaCoroutineOwner {
 

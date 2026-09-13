@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorFileSystem
  */
-class EditorFileSystem(handle: MemorySegment) : Node(handle) {
+class EditorFileSystem(handle: GodotHandle) : Node(handle) {
     /**
      * Gets the root directory object.
      *
      * Generated from Godot docs: EditorFileSystem.get_filesystem
      */
     fun getFilesystem(): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFilesystemBind, handle))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFilesystemBind, segment))
     }
 
     /**
@@ -26,7 +26,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.is_scanning
      */
     fun isScanning(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScanningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScanningBind, segment)
     }
 
     /**
@@ -35,7 +35,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.is_importing
      */
     fun isImporting(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isImportingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isImportingBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.get_scanning_progress
      */
     fun getScanningProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScanningProgressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getScanningProgressBind, segment)
     }
 
     /**
@@ -53,7 +53,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.scan
      */
     fun scan() {
-        ObjectCalls.ptrcallNoArgs(scanBind, handle)
+        ObjectCalls.ptrcallNoArgs(scanBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.scan_sources
      */
     fun scanSources() {
-        ObjectCalls.ptrcallNoArgs(scanSourcesBind, handle)
+        ObjectCalls.ptrcallNoArgs(scanSourcesBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.update_file
      */
     fun updateFile(path: String) {
-        ObjectCalls.ptrcallWithStringArg(updateFileBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(updateFileBind, segment, path)
     }
 
     /**
@@ -82,7 +82,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.get_filesystem_path
      */
     fun getFilesystemPath(path: String): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getFilesystemPathBind, handle, path))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getFilesystemPathBind, segment, path))
     }
 
     /**
@@ -92,7 +92,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.get_file_type
      */
     fun getFileType(path: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(getFileTypeBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(getFileTypeBind, segment, path)
     }
 
     /**
@@ -106,7 +106,7 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.reimport_files
      */
     fun reimportFiles(files: List<String>) {
-        ObjectCalls.ptrcallWithPackedStringListArg(reimportFilesBind, handle, files)
+        ObjectCalls.ptrcallWithPackedStringListArg(reimportFilesBind, segment, files)
     }
 
     object Signals {
@@ -120,11 +120,11 @@ class EditorFileSystem(handle: MemorySegment) : Node(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorFileSystem? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorFileSystem? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorFileSystem? =
-            if (handle.address() == 0L) null else EditorFileSystem(handle)
+            if (handle.address() == 0L) null else EditorFileSystem(GodotHandle(handle))
 
         private const val GET_FILESYSTEM_HASH = 842323275L
         private val getFilesystemBind by lazy {

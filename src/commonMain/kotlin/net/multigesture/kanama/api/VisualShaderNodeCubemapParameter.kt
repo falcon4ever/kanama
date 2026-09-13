@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeCubemapParameter
  */
-class VisualShaderNodeCubemapParameter(handle: MemorySegment) : VisualShaderNodeTextureParameter(handle) {
+class VisualShaderNodeCubemapParameter(handle: GodotHandle) : VisualShaderNodeTextureParameter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeCubemapParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeCubemapParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeCubemapParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeCubemapParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeCubemapParameter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

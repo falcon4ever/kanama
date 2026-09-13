@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: ParallaxBackground
  */
-class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
+class ParallaxBackground(handle: GodotHandle) : CanvasLayer(handle) {
     var scrollOffset: Vector2
         @JvmName("scrollOffsetProperty")
         get() = getScrollOffset()
@@ -56,7 +56,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.set_scroll_offset
      */
     fun setScrollOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScrollOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setScrollOffsetBind, segment, offset)
     }
 
     /**
@@ -66,7 +66,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.get_scroll_offset
      */
     fun getScrollOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollOffsetBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.set_scroll_base_offset
      */
     fun setScrollBaseOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScrollBaseOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setScrollBaseOffsetBind, segment, offset)
     }
 
     /**
@@ -84,7 +84,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.get_scroll_base_offset
      */
     fun getScrollBaseOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBaseOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBaseOffsetBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.set_scroll_base_scale
      */
     fun setScrollBaseScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScrollBaseScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector2Arg(setScrollBaseScaleBind, segment, scale)
     }
 
     /**
@@ -102,7 +102,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.get_scroll_base_scale
      */
     fun getScrollBaseScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBaseScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBaseScaleBind, segment)
     }
 
     /**
@@ -112,7 +112,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.set_limit_begin
      */
     fun setLimitBegin(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setLimitBeginBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setLimitBeginBind, segment, offset)
     }
 
     /**
@@ -122,7 +122,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.get_limit_begin
      */
     fun getLimitBegin(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLimitBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getLimitBeginBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.set_limit_end
      */
     fun setLimitEnd(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setLimitEndBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setLimitEndBind, segment, offset)
     }
 
     /**
@@ -142,7 +142,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.get_limit_end
      */
     fun getLimitEnd(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLimitEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getLimitEndBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.set_ignore_camera_zoom
      */
     fun setIgnoreCameraZoom(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreCameraZoomBind, handle, ignore)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreCameraZoomBind, segment, ignore)
     }
 
     /**
@@ -160,16 +160,16 @@ class ParallaxBackground(handle: MemorySegment) : CanvasLayer(handle) {
      * Generated from Godot docs: ParallaxBackground.is_ignore_camera_zoom
      */
     fun isIgnoreCameraZoom(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoreCameraZoomBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoreCameraZoomBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ParallaxBackground? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ParallaxBackground? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ParallaxBackground? =
-            if (handle.address() == 0L) null else ParallaxBackground(handle)
+            if (handle.address() == 0L) null else ParallaxBackground(GodotHandle(handle))
 
         private const val SET_SCROLL_OFFSET_HASH = 743155724L
         private val setScrollOffsetBind by lazy {

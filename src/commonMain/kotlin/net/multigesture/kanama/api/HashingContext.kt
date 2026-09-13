@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HashingContext
  */
-class HashingContext(handle: MemorySegment) : RefCounted(handle) {
+class HashingContext(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Starts a new hash computation of the given `type` (e.g. `HASH_SHA256` to start computation of an
      * SHA-256).
@@ -19,7 +19,7 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun start(type: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(startBind, handle, type)
+        return ObjectCalls.ptrcallWithLongArgRetLong(startBind, segment, type)
     }
 
     /**
@@ -29,7 +29,7 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun update(chunk: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, handle, chunk)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, chunk)
     }
 
     /**
@@ -39,7 +39,7 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun finish(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, segment)
     }
 
     companion object {
@@ -48,11 +48,11 @@ class HashingContext(handle: MemorySegment) : RefCounted(handle) {
         const val HASH_SHA256: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HashingContext? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HashingContext? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HashingContext? =
-            if (handle.address() == 0L) null else HashingContext(handle)
+            if (handle.address() == 0L) null else HashingContext(GodotHandle(handle))
 
         private const val START_HASH = 3940338335L
         private val startBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: TextMesh
  */
-class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var text: String
         @JvmName("textProperty")
         get() = getText()
@@ -129,7 +129,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setHorizontalAlignment(alignment: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -140,7 +140,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getHorizontalAlignment(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setVerticalAlignment(alignment: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -160,7 +160,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getVerticalAlignment(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setText(text: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -184,7 +184,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -204,7 +204,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
+        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
     }
 
     /**
@@ -219,7 +219,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setFontSize(fontSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, fontSize)
+        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, segment, fontSize)
     }
 
     /**
@@ -234,7 +234,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, segment)
     }
 
     /**
@@ -245,7 +245,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setLineSpacing(lineSpacing: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
+        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, segment, lineSpacing)
     }
 
     /**
@@ -256,7 +256,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, segment)
     }
 
     /**
@@ -268,7 +268,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setAutowrapMode(autowrapMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
     }
 
     /**
@@ -280,7 +280,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getAutowrapMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
     }
 
     /**
@@ -290,7 +290,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setJustificationFlags(justificationFlags: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
     }
 
     /**
@@ -300,7 +300,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getJustificationFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
     }
 
     /**
@@ -311,7 +311,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setDepth(depth: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
     }
 
     /**
@@ -322,7 +322,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
     }
 
     /**
@@ -332,7 +332,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setWidth(width: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
     }
 
     /**
@@ -342,7 +342,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
     }
 
     /**
@@ -355,7 +355,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setPixelSize(pixelSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, handle, pixelSize)
+        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, segment, pixelSize)
     }
 
     /**
@@ -368,7 +368,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getPixelSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, segment)
     }
 
     /**
@@ -380,7 +380,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -392,7 +392,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -405,7 +405,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setCurveStep(curveStep: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCurveStepBind, handle, curveStep)
+        ObjectCalls.ptrcallWithDoubleArg(setCurveStepBind, segment, curveStep)
     }
 
     /**
@@ -418,7 +418,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getCurveStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurveStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCurveStepBind, segment)
     }
 
     /**
@@ -428,7 +428,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setTextDirection(direction: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -438,7 +438,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getTextDirection(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     /**
@@ -449,7 +449,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setLanguage(language: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -460,7 +460,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getLanguage(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -470,7 +470,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setStructuredTextBidiOverride(parser: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     /**
@@ -480,7 +480,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getStructuredTextBidiOverride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
     }
 
     /**
@@ -490,7 +490,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -500,7 +500,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -510,7 +510,7 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setUppercase(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, segment, enable)
     }
 
     /**
@@ -520,16 +520,16 @@ class TextMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun isUppercase(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextMesh? =
-            if (handle.address() == 0L) null else TextMesh(handle)
+            if (handle.address() == 0L) null else TextMesh(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
         private val setHorizontalAlignmentBind by lazy {

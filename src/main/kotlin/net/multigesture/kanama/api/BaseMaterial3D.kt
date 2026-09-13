@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: BaseMaterial3D
  */
-open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
+open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     var transparency: Long
         @JvmName("transparencyProperty")
         get() = getTransparency()
@@ -808,7 +808,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAlbedo(albedo: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setAlbedoBind, handle, albedo)
+        ObjectCalls.ptrcallWithColorArg(setAlbedoBind, segment, albedo)
     }
 
     /**
@@ -821,7 +821,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, segment)
     }
 
     /**
@@ -833,7 +833,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setTransparency(transparency: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransparencyBind, handle, transparency)
+        ObjectCalls.ptrcallWithLongArg(setTransparencyBind, segment, transparency)
     }
 
     /**
@@ -845,7 +845,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getTransparency(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransparencyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTransparencyBind, segment)
     }
 
     /**
@@ -855,7 +855,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAlphaAntialiasing(alphaAa: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, handle, alphaAa)
+        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa)
     }
 
     /**
@@ -865,7 +865,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAlphaAntialiasing(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment)
     }
 
     /**
@@ -875,7 +875,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAlphaAntialiasingEdge(edge: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, handle, edge)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, segment, edge)
     }
 
     /**
@@ -885,7 +885,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAlphaAntialiasingEdge(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, segment)
     }
 
     /**
@@ -897,7 +897,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setShadingMode(shadingMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setShadingModeBind, handle, shadingMode)
+        ObjectCalls.ptrcallWithLongArg(setShadingModeBind, segment, shadingMode)
     }
 
     /**
@@ -909,7 +909,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getShadingMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadingModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShadingModeBind, segment)
     }
 
     /**
@@ -924,7 +924,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setSpecular(specular: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpecularBind, handle, specular)
+        ObjectCalls.ptrcallWithDoubleArg(setSpecularBind, segment, specular)
     }
 
     /**
@@ -939,7 +939,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getSpecular(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularBind, segment)
     }
 
     /**
@@ -955,7 +955,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setMetallic(metallic: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMetallicBind, handle, metallic)
+        ObjectCalls.ptrcallWithDoubleArg(setMetallicBind, segment, metallic)
     }
 
     /**
@@ -971,7 +971,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getMetallic(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMetallicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMetallicBind, segment)
     }
 
     /**
@@ -982,7 +982,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setRoughness(roughness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRoughnessBind, handle, roughness)
+        ObjectCalls.ptrcallWithDoubleArg(setRoughnessBind, segment, roughness)
     }
 
     /**
@@ -993,7 +993,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getRoughness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRoughnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRoughnessBind, segment)
     }
 
     /**
@@ -1003,7 +1003,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setEmission(emission: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setEmissionBind, handle, emission)
+        ObjectCalls.ptrcallWithColorArg(setEmissionBind, segment, emission)
     }
 
     /**
@@ -1013,7 +1013,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, segment)
     }
 
     /**
@@ -1023,7 +1023,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionEnergyMultiplier(emissionEnergyMultiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyMultiplierBind, handle, emissionEnergyMultiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyMultiplierBind, segment, emissionEnergyMultiplier)
     }
 
     /**
@@ -1033,7 +1033,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyMultiplierBind, segment)
     }
 
     /**
@@ -1045,7 +1045,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionIntensity(emissionEnergyMultiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionIntensityBind, handle, emissionEnergyMultiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionIntensityBind, segment, emissionEnergyMultiplier)
     }
 
     /**
@@ -1057,7 +1057,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionIntensityBind, segment)
     }
 
     /**
@@ -1067,7 +1067,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setNormalScale(normalScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setNormalScaleBind, handle, normalScale)
+        ObjectCalls.ptrcallWithDoubleArg(setNormalScaleBind, segment, normalScale)
     }
 
     /**
@@ -1077,7 +1077,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getNormalScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalScaleBind, segment)
     }
 
     /**
@@ -1087,7 +1087,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setRim(rim: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRimBind, handle, rim)
+        ObjectCalls.ptrcallWithDoubleArg(setRimBind, segment, rim)
     }
 
     /**
@@ -1097,7 +1097,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getRim(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRimBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRimBind, segment)
     }
 
     /**
@@ -1108,7 +1108,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setRimTint(rimTint: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRimTintBind, handle, rimTint)
+        ObjectCalls.ptrcallWithDoubleArg(setRimTintBind, segment, rimTint)
     }
 
     /**
@@ -1119,7 +1119,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getRimTint(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRimTintBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRimTintBind, segment)
     }
 
     /**
@@ -1130,7 +1130,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setClearcoat(clearcoat: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setClearcoatBind, handle, clearcoat)
+        ObjectCalls.ptrcallWithDoubleArg(setClearcoatBind, segment, clearcoat)
     }
 
     /**
@@ -1141,7 +1141,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getClearcoat(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatBind, segment)
     }
 
     /**
@@ -1152,7 +1152,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setClearcoatRoughness(clearcoatRoughness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setClearcoatRoughnessBind, handle, clearcoatRoughness)
+        ObjectCalls.ptrcallWithDoubleArg(setClearcoatRoughnessBind, segment, clearcoatRoughness)
     }
 
     /**
@@ -1163,7 +1163,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getClearcoatRoughness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatRoughnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatRoughnessBind, segment)
     }
 
     /**
@@ -1174,7 +1174,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAnisotropy(anisotropy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAnisotropyBind, handle, anisotropy)
+        ObjectCalls.ptrcallWithDoubleArg(setAnisotropyBind, segment, anisotropy)
     }
 
     /**
@@ -1185,7 +1185,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAnisotropy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyBind, segment)
     }
 
     /**
@@ -1205,7 +1205,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setHeightmapScale(heightmapScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightmapScaleBind, handle, heightmapScale)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightmapScaleBind, segment, heightmapScale)
     }
 
     /**
@@ -1225,7 +1225,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getHeightmapScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightmapScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightmapScaleBind, segment)
     }
 
     /**
@@ -1237,7 +1237,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setSubsurfaceScatteringStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSubsurfaceScatteringStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setSubsurfaceScatteringStrengthBind, segment, strength)
     }
 
     /**
@@ -1249,7 +1249,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getSubsurfaceScatteringStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSubsurfaceScatteringStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSubsurfaceScatteringStrengthBind, segment)
     }
 
     /**
@@ -1260,7 +1260,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setTransmittanceColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setTransmittanceColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setTransmittanceColorBind, segment, color)
     }
 
     /**
@@ -1271,7 +1271,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getTransmittanceColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getTransmittanceColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getTransmittanceColorBind, segment)
     }
 
     /**
@@ -1281,7 +1281,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setTransmittanceDepth(depth: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTransmittanceDepthBind, handle, depth)
+        ObjectCalls.ptrcallWithDoubleArg(setTransmittanceDepthBind, segment, depth)
     }
 
     /**
@@ -1291,7 +1291,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getTransmittanceDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceDepthBind, segment)
     }
 
     /**
@@ -1301,7 +1301,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setTransmittanceBoost(boost: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTransmittanceBoostBind, handle, boost)
+        ObjectCalls.ptrcallWithDoubleArg(setTransmittanceBoostBind, segment, boost)
     }
 
     /**
@@ -1311,7 +1311,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getTransmittanceBoost(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceBoostBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceBoostBind, segment)
     }
 
     /**
@@ -1321,7 +1321,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setBacklight(backlight: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBacklightBind, handle, backlight)
+        ObjectCalls.ptrcallWithColorArg(setBacklightBind, segment, backlight)
     }
 
     /**
@@ -1331,7 +1331,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getBacklight(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBacklightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getBacklightBind, segment)
     }
 
     /**
@@ -1341,7 +1341,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setRefraction(refraction: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRefractionBind, handle, refraction)
+        ObjectCalls.ptrcallWithDoubleArg(setRefractionBind, segment, refraction)
     }
 
     /**
@@ -1351,7 +1351,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getRefraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRefractionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRefractionBind, segment)
     }
 
     /**
@@ -1361,7 +1361,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setPointSize(pointSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPointSizeBind, handle, pointSize)
+        ObjectCalls.ptrcallWithDoubleArg(setPointSizeBind, segment, pointSize)
     }
 
     /**
@@ -1371,7 +1371,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getPointSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPointSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPointSizeBind, segment)
     }
 
     /**
@@ -1381,7 +1381,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDetailUv(detailUv: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDetailUvBind, handle, detailUv)
+        ObjectCalls.ptrcallWithLongArg(setDetailUvBind, segment, detailUv)
     }
 
     /**
@@ -1391,7 +1391,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDetailUv(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDetailUvBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDetailUvBind, segment)
     }
 
     /**
@@ -1402,7 +1402,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setBlendMode(blendMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, blendMode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode)
     }
 
     /**
@@ -1413,7 +1413,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getBlendMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
     }
 
     /**
@@ -1423,7 +1423,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDepthDrawMode(depthDrawMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthDrawModeBind, handle, depthDrawMode)
+        ObjectCalls.ptrcallWithLongArg(setDepthDrawModeBind, segment, depthDrawMode)
     }
 
     /**
@@ -1433,7 +1433,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDepthDrawMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDepthDrawModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDepthDrawModeBind, segment)
     }
 
     /**
@@ -1445,7 +1445,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDepthTest(depthTest: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthTestBind, handle, depthTest)
+        ObjectCalls.ptrcallWithLongArg(setDepthTestBind, segment, depthTest)
     }
 
     /**
@@ -1457,7 +1457,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDepthTest(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDepthTestBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDepthTestBind, segment)
     }
 
     /**
@@ -1468,7 +1468,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setCullMode(cullMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, cullMode)
+        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, cullMode)
     }
 
     /**
@@ -1479,7 +1479,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getCullMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment)
     }
 
     /**
@@ -1489,7 +1489,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDiffuseMode(diffuseMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDiffuseModeBind, handle, diffuseMode)
+        ObjectCalls.ptrcallWithLongArg(setDiffuseModeBind, segment, diffuseMode)
     }
 
     /**
@@ -1499,7 +1499,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDiffuseMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDiffuseModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDiffuseModeBind, segment)
     }
 
     /**
@@ -1512,7 +1512,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setSpecularMode(specularMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSpecularModeBind, handle, specularMode)
+        ObjectCalls.ptrcallWithLongArg(setSpecularModeBind, segment, specularMode)
     }
 
     /**
@@ -1525,7 +1525,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getSpecularMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSpecularModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSpecularModeBind, segment)
     }
 
     /**
@@ -1535,7 +1535,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setFlag(flag: Long, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, handle, flag, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag, enable)
     }
 
     /**
@@ -1545,7 +1545,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getFlag(flag: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag)
     }
 
     /**
@@ -1558,7 +1558,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setTextureFilter(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
     }
 
     /**
@@ -1571,7 +1571,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getTextureFilter(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
     }
 
     /**
@@ -1582,7 +1582,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setFeature(feature: Long, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFeatureBind, handle, feature, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFeatureBind, segment, feature, enable)
     }
 
     /**
@@ -1593,7 +1593,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getFeature(feature: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFeatureBind, handle, feature)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFeatureBind, segment, feature)
     }
 
     /**
@@ -1604,7 +1604,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setTexture(param: Long, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, handle, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -1615,7 +1615,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getTexture(param: Long): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, handle, param))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, param))
     }
 
     /**
@@ -1625,7 +1625,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDetailBlendMode(detailBlendMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDetailBlendModeBind, handle, detailBlendMode)
+        ObjectCalls.ptrcallWithLongArg(setDetailBlendModeBind, segment, detailBlendMode)
     }
 
     /**
@@ -1635,7 +1635,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDetailBlendMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDetailBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDetailBlendModeBind, segment)
     }
 
     /**
@@ -1646,7 +1646,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setUv1Scale(scale: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv1ScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(setUv1ScaleBind, segment, scale)
     }
 
     /**
@@ -1657,7 +1657,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getUv1Scale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv1ScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getUv1ScaleBind, segment)
     }
 
     /**
@@ -1669,7 +1669,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setUv1Offset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv1OffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(setUv1OffsetBind, segment, offset)
     }
 
     /**
@@ -1681,7 +1681,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getUv1Offset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv1OffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getUv1OffsetBind, segment)
     }
 
     /**
@@ -1693,7 +1693,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setUv1TriplanarBlendSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setUv1TriplanarBlendSharpnessBind, handle, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(setUv1TriplanarBlendSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1705,7 +1705,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getUv1TriplanarBlendSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUv1TriplanarBlendSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getUv1TriplanarBlendSharpnessBind, segment)
     }
 
     /**
@@ -1716,7 +1716,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setUv2Scale(scale: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv2ScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(setUv2ScaleBind, segment, scale)
     }
 
     /**
@@ -1727,7 +1727,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getUv2Scale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv2ScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getUv2ScaleBind, segment)
     }
 
     /**
@@ -1739,7 +1739,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setUv2Offset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv2OffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(setUv2OffsetBind, segment, offset)
     }
 
     /**
@@ -1751,7 +1751,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getUv2Offset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv2OffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getUv2OffsetBind, segment)
     }
 
     /**
@@ -1763,7 +1763,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setUv2TriplanarBlendSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setUv2TriplanarBlendSharpnessBind, handle, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(setUv2TriplanarBlendSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1775,7 +1775,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getUv2TriplanarBlendSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUv2TriplanarBlendSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getUv2TriplanarBlendSharpnessBind, segment)
     }
 
     /**
@@ -1788,7 +1788,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setBillboardMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode)
     }
 
     /**
@@ -1801,7 +1801,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getBillboardMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment)
     }
 
     /**
@@ -1812,7 +1812,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setParticlesAnimHFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, handle, frames)
+        ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, segment, frames)
     }
 
     /**
@@ -1823,7 +1823,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getParticlesAnimHFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, segment)
     }
 
     /**
@@ -1834,7 +1834,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setParticlesAnimVFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, handle, frames)
+        ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, segment, frames)
     }
 
     /**
@@ -1845,7 +1845,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getParticlesAnimVFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, segment)
     }
 
     /**
@@ -1856,7 +1856,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setParticlesAnimLoop(loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, handle, loop)
+        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, segment, loop)
     }
 
     /**
@@ -1867,7 +1867,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getParticlesAnimLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, segment)
     }
 
     /**
@@ -1880,7 +1880,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setHeightmapDeepParallax(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxBind, segment, enable)
     }
 
     /**
@@ -1893,7 +1893,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun isHeightmapDeepParallaxEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHeightmapDeepParallaxEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHeightmapDeepParallaxEnabledBind, segment)
     }
 
     /**
@@ -1907,7 +1907,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setHeightmapDeepParallaxMinLayers(layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMinLayersBind, handle, layer)
+        ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMinLayersBind, segment, layer)
     }
 
     /**
@@ -1921,7 +1921,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getHeightmapDeepParallaxMinLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMinLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMinLayersBind, segment)
     }
 
     /**
@@ -1935,7 +1935,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setHeightmapDeepParallaxMaxLayers(layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMaxLayersBind, handle, layer)
+        ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMaxLayersBind, segment, layer)
     }
 
     /**
@@ -1949,7 +1949,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getHeightmapDeepParallaxMaxLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMaxLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMaxLayersBind, segment)
     }
 
     /**
@@ -1961,7 +1961,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setHeightmapDeepParallaxFlipTangent(flip: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipTangentBind, handle, flip)
+        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipTangentBind, segment, flip)
     }
 
     /**
@@ -1973,7 +1973,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getHeightmapDeepParallaxFlipTangent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipTangentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipTangentBind, segment)
     }
 
     /**
@@ -1985,7 +1985,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setHeightmapDeepParallaxFlipBinormal(flip: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipBinormalBind, handle, flip)
+        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipBinormalBind, segment, flip)
     }
 
     /**
@@ -1997,7 +1997,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getHeightmapDeepParallaxFlipBinormal(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipBinormalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipBinormalBind, segment)
     }
 
     /**
@@ -2007,7 +2007,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setGrow(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGrowBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setGrowBind, segment, amount)
     }
 
     /**
@@ -2017,7 +2017,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getGrow(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBind, segment)
     }
 
     /**
@@ -2027,7 +2027,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionOperator(operator: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEmissionOperatorBind, handle, operator)
+        ObjectCalls.ptrcallWithLongArg(setEmissionOperatorBind, segment, operator)
     }
 
     /**
@@ -2037,7 +2037,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionOperator(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionOperatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionOperatorBind, segment)
     }
 
     /**
@@ -2050,7 +2050,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAoLightAffect(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAoLightAffectBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setAoLightAffectBind, segment, amount)
     }
 
     /**
@@ -2063,7 +2063,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAoLightAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAoLightAffectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAoLightAffectBind, segment)
     }
 
     /**
@@ -2076,7 +2076,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAlphaScissorThreshold(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, segment, threshold)
     }
 
     /**
@@ -2089,7 +2089,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAlphaScissorThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, segment)
     }
 
     /**
@@ -2099,7 +2099,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAlphaHashScale(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, segment, threshold)
     }
 
     /**
@@ -2109,7 +2109,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAlphaHashScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, segment)
     }
 
     /**
@@ -2125,7 +2125,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setGrowEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGrowEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setGrowEnabledBind, segment, enable)
     }
 
     /**
@@ -2141,7 +2141,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun isGrowEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGrowEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isGrowEnabledBind, segment)
     }
 
     /**
@@ -2154,7 +2154,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setMetallicTextureChannel(channel: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMetallicTextureChannelBind, handle, channel)
+        ObjectCalls.ptrcallWithLongArg(setMetallicTextureChannelBind, segment, channel)
     }
 
     /**
@@ -2167,7 +2167,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getMetallicTextureChannel(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMetallicTextureChannelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMetallicTextureChannelBind, segment)
     }
 
     /**
@@ -2180,7 +2180,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setRoughnessTextureChannel(channel: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRoughnessTextureChannelBind, handle, channel)
+        ObjectCalls.ptrcallWithLongArg(setRoughnessTextureChannelBind, segment, channel)
     }
 
     /**
@@ -2193,7 +2193,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getRoughnessTextureChannel(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRoughnessTextureChannelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRoughnessTextureChannelBind, segment)
     }
 
     /**
@@ -2206,7 +2206,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setAoTextureChannel(channel: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAoTextureChannelBind, handle, channel)
+        ObjectCalls.ptrcallWithLongArg(setAoTextureChannelBind, segment, channel)
     }
 
     /**
@@ -2219,7 +2219,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getAoTextureChannel(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAoTextureChannelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAoTextureChannelBind, segment)
     }
 
     /**
@@ -2232,7 +2232,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setRefractionTextureChannel(channel: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRefractionTextureChannelBind, handle, channel)
+        ObjectCalls.ptrcallWithLongArg(setRefractionTextureChannelBind, segment, channel)
     }
 
     /**
@@ -2245,7 +2245,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getRefractionTextureChannel(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRefractionTextureChannelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRefractionTextureChannelBind, segment)
     }
 
     /**
@@ -2256,7 +2256,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setProximityFadeEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setProximityFadeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setProximityFadeEnabledBind, segment, enabled)
     }
 
     /**
@@ -2267,7 +2267,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun isProximityFadeEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isProximityFadeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isProximityFadeEnabledBind, segment)
     }
 
     /**
@@ -2278,7 +2278,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setProximityFadeDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setProximityFadeDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setProximityFadeDistanceBind, segment, distance)
     }
 
     /**
@@ -2289,7 +2289,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getProximityFadeDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProximityFadeDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getProximityFadeDistanceBind, segment)
     }
 
     /**
@@ -2300,7 +2300,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setMsdfPixelRange(range: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMsdfPixelRangeBind, handle, range)
+        ObjectCalls.ptrcallWithDoubleArg(setMsdfPixelRangeBind, segment, range)
     }
 
     /**
@@ -2311,7 +2311,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getMsdfPixelRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfPixelRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfPixelRangeBind, segment)
     }
 
     /**
@@ -2321,7 +2321,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setMsdfOutlineSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMsdfOutlineSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setMsdfOutlineSizeBind, segment, size)
     }
 
     /**
@@ -2331,7 +2331,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getMsdfOutlineSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfOutlineSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfOutlineSizeBind, segment)
     }
 
     /**
@@ -2341,7 +2341,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDistanceFade(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDistanceFadeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDistanceFadeBind, segment, mode)
     }
 
     /**
@@ -2351,7 +2351,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDistanceFade(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDistanceFadeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDistanceFadeBind, segment)
     }
 
     /**
@@ -2364,7 +2364,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDistanceFadeMaxDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMaxDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -2377,7 +2377,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDistanceFadeMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMaxDistanceBind, segment)
     }
 
     /**
@@ -2391,7 +2391,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setDistanceFadeMinDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMinDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMinDistanceBind, segment, distance)
     }
 
     /**
@@ -2405,7 +2405,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getDistanceFadeMinDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMinDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMinDistanceBind, segment)
     }
 
     /**
@@ -2419,7 +2419,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setZClipScale(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setZClipScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setZClipScaleBind, segment, scale)
     }
 
     /**
@@ -2433,7 +2433,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getZClipScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZClipScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getZClipScaleBind, segment)
     }
 
     /**
@@ -2446,7 +2446,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setFovOverride(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFovOverrideBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setFovOverrideBind, segment, scale)
     }
 
     /**
@@ -2459,7 +2459,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getFovOverride(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFovOverrideBind, segment)
     }
 
     /**
@@ -2469,7 +2469,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setStencilMode(stencilMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStencilModeBind, handle, stencilMode)
+        ObjectCalls.ptrcallWithLongArg(setStencilModeBind, segment, stencilMode)
     }
 
     /**
@@ -2479,7 +2479,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getStencilMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStencilModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStencilModeBind, segment)
     }
 
     /**
@@ -2489,7 +2489,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setStencilFlags(stencilFlags: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStencilFlagsBind, handle, stencilFlags)
+        ObjectCalls.ptrcallWithIntArg(setStencilFlagsBind, segment, stencilFlags)
     }
 
     /**
@@ -2499,7 +2499,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getStencilFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStencilFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStencilFlagsBind, segment)
     }
 
     /**
@@ -2509,7 +2509,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setStencilCompare(stencilCompare: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStencilCompareBind, handle, stencilCompare)
+        ObjectCalls.ptrcallWithLongArg(setStencilCompareBind, segment, stencilCompare)
     }
 
     /**
@@ -2519,7 +2519,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getStencilCompare(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStencilCompareBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStencilCompareBind, segment)
     }
 
     /**
@@ -2529,7 +2529,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setStencilReference(stencilReference: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStencilReferenceBind, handle, stencilReference)
+        ObjectCalls.ptrcallWithIntArg(setStencilReferenceBind, segment, stencilReference)
     }
 
     /**
@@ -2539,7 +2539,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getStencilReference(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStencilReferenceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStencilReferenceBind, segment)
     }
 
     /**
@@ -2549,7 +2549,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setStencilEffectColor(stencilColor: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setStencilEffectColorBind, handle, stencilColor)
+        ObjectCalls.ptrcallWithColorArg(setStencilEffectColorBind, segment, stencilColor)
     }
 
     /**
@@ -2559,7 +2559,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getStencilEffectColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getStencilEffectColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getStencilEffectColorBind, segment)
     }
 
     /**
@@ -2569,7 +2569,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun setStencilEffectOutlineThickness(stencilOutlineThickness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStencilEffectOutlineThicknessBind, handle, stencilOutlineThickness)
+        ObjectCalls.ptrcallWithDoubleArg(setStencilEffectOutlineThicknessBind, segment, stencilOutlineThickness)
     }
 
     /**
@@ -2579,7 +2579,7 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
      */
     fun getStencilEffectOutlineThickness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStencilEffectOutlineThicknessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStencilEffectOutlineThicknessBind, segment)
     }
 
     companion object {
@@ -2716,15 +2716,15 @@ open class BaseMaterial3D(handle: MemorySegment) : Material(handle) {
         const val STENCIL_COMPARE_GREATER_OR_EQUAL: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BaseMaterial3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BaseMaterial3D? =
+            wrap(handle.segment)
 
         @JvmStatic
         fun fromMaterial(value: Material): BaseMaterial3D? =
             if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null
 
         internal fun wrap(handle: MemorySegment): BaseMaterial3D? =
-            if (handle.address() == 0L) null else BaseMaterial3D(handle)
+            if (handle.address() == 0L) null else BaseMaterial3D(GodotHandle(handle))
 
         private const val SET_ALBEDO_HASH = 2920490490L
         private val setAlbedoBind by lazy {

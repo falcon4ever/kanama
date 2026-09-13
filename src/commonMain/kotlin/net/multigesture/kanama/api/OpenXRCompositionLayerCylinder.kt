@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRCompositionLayerCylinder
  */
-class OpenXRCompositionLayerCylinder(handle: MemorySegment) : OpenXRCompositionLayer(handle) {
+class OpenXRCompositionLayerCylinder(handle: GodotHandle) : OpenXRCompositionLayer(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -35,44 +35,44 @@ class OpenXRCompositionLayerCylinder(handle: MemorySegment) : OpenXRCompositionL
         set(value) = setFallbackSegments(value)
 
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     fun setAspectRatio(aspectRatio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAspectRatioBind, handle, aspectRatio)
+        ObjectCalls.ptrcallWithDoubleArg(setAspectRatioBind, segment, aspectRatio)
     }
 
     fun getAspectRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAspectRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAspectRatioBind, segment)
     }
 
     fun setCentralAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCentralAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setCentralAngleBind, segment, angle)
     }
 
     fun getCentralAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCentralAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCentralAngleBind, segment)
     }
 
     fun setFallbackSegments(segments: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setFallbackSegmentsBind, handle, segments)
+        ObjectCalls.ptrcallWithUInt32Arg(setFallbackSegmentsBind, segment, segments)
     }
 
     fun getFallbackSegments(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getFallbackSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getFallbackSegmentsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayerCylinder? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRCompositionLayerCylinder? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRCompositionLayerCylinder? =
-            if (handle.address() == 0L) null else OpenXRCompositionLayerCylinder(handle)
+            if (handle.address() == 0L) null else OpenXRCompositionLayerCylinder(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

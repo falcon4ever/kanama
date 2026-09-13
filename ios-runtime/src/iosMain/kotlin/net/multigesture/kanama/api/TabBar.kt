@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: TabBar
  */
-class TabBar(handle: MemorySegment) : Control(handle) {
+class TabBar(handle: GodotHandle) : Control(handle) {
     var currentTab: Int
         @JvmName("currentTabProperty")
         get() = getCurrentTab()
@@ -97,243 +97,243 @@ class TabBar(handle: MemorySegment) : Control(handle) {
         set(value) = setTabCount(value)
 
     fun setTabCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setTabCountBind, segment, count)
     }
 
     fun getTabCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, segment)
     }
 
     fun setCurrentTab(tabIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, segment, tabIdx)
     }
 
     fun getCurrentTab(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, segment)
     }
 
     fun getPreviousTab(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, segment)
     }
 
     fun selectPreviousAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, segment)
     }
 
     fun selectNextAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, segment)
     }
 
     fun setTabTitle(tabIdx: Int, title: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, handle, tabIdx, title)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, segment, tabIdx, title)
     }
 
     fun getTabTitle(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, segment, tabIdx)
     }
 
     fun setTabTooltip(tabIdx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, handle, tabIdx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, segment, tabIdx, tooltip)
     }
 
     fun getTabTooltip(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, segment, tabIdx)
     }
 
     fun setTabTextDirection(tabIdx: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTabTextDirectionBind, handle, tabIdx, direction)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setTabTextDirectionBind, segment, tabIdx, direction)
     }
 
     fun getTabTextDirection(tabIdx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getTabTextDirectionBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getTabTextDirectionBind, segment, tabIdx)
     }
 
     fun setTabLanguage(tabIdx: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabLanguageBind, handle, tabIdx, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabLanguageBind, segment, tabIdx, language)
     }
 
     fun getTabLanguage(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabLanguageBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabLanguageBind, segment, tabIdx)
     }
 
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, handle, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getTabIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, handle, tabIdx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, segment, tabIdx))
     }
 
     fun setTabIconMaxWidth(tabIdx: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, handle, tabIdx, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, segment, tabIdx, width)
     }
 
     fun getTabIconMaxWidth(tabIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, segment, tabIdx)
     }
 
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, handle, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getTabButtonIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, handle, tabIdx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, segment, tabIdx))
     }
 
     fun setTabDisabled(tabIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, handle, tabIdx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, segment, tabIdx, disabled)
     }
 
     fun isTabDisabled(tabIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, segment, tabIdx)
     }
 
     fun setTabHidden(tabIdx: Int, hidden: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, handle, tabIdx, hidden)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, segment, tabIdx, hidden)
     }
 
     fun isTabHidden(tabIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, segment, tabIdx)
     }
 
     fun setTabMetadata(tabIdx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, handle, tabIdx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, segment, tabIdx, metadata)
     }
 
     fun getTabMetadata(tabIdx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, segment, tabIdx)
     }
 
     fun removeTab(tabIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeTabBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArg(removeTabBind, segment, tabIdx)
     }
 
     fun addTab(title: String = "", icon: Texture2D?) {
-        ObjectCalls.ptrcallWithStringAndObjectArg(addTabBind, handle, title, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndObjectArg(addTabBind, segment, title, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getTabIdxAtPoint(point: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, handle, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, segment, point)
     }
 
     fun setTabAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment)
     }
 
     fun getTabAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment)
     }
 
     fun setClipTabs(clipTabs: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, handle, clipTabs)
+        ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, segment, clipTabs)
     }
 
     fun getClipTabs(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, segment)
     }
 
     fun getTabOffset(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTabOffsetBind, segment)
     }
 
     fun getOffsetButtonsVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOffsetButtonsVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getOffsetButtonsVisibleBind, segment)
     }
 
     fun ensureTabVisible(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(ensureTabVisibleBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(ensureTabVisibleBind, segment, idx)
     }
 
     fun getTabRect(tabIdx: Int): Rect2 {
-        return ObjectCalls.ptrcallWithIntArgRetRect2(getTabRectBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetRect2(getTabRectBind, segment, tabIdx)
     }
 
     fun moveTab(from: Int, to: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(moveTabBind, handle, from, to)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveTabBind, segment, from, to)
     }
 
     fun setCloseWithMiddleMouse(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCloseWithMiddleMouseBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCloseWithMiddleMouseBind, segment, enabled)
     }
 
     fun getCloseWithMiddleMouse(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCloseWithMiddleMouseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCloseWithMiddleMouseBind, segment)
     }
 
     fun setTabCloseDisplayPolicy(policy: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabCloseDisplayPolicyBind, handle, policy)
+        ObjectCalls.ptrcallWithLongArg(setTabCloseDisplayPolicyBind, segment, policy)
     }
 
     fun getTabCloseDisplayPolicy(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabCloseDisplayPolicyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTabCloseDisplayPolicyBind, segment)
     }
 
     fun setMaxTabWidth(width: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxTabWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setMaxTabWidthBind, segment, width)
     }
 
     fun getMaxTabWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTabWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTabWidthBind, segment)
     }
 
     fun setScrollingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollingEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setScrollingEnabledBind, segment, enabled)
     }
 
     fun getScrollingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getScrollingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getScrollingEnabledBind, segment)
     }
 
     fun setDragToRearrangeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, segment, enabled)
     }
 
     fun getDragToRearrangeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, segment)
     }
 
     fun setSwitchOnDragHover(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, segment, enabled)
     }
 
     fun getSwitchOnDragHover(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, segment)
     }
 
     fun setTabsRearrangeGroup(groupId: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, handle, groupId)
+        ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, segment, groupId)
     }
 
     fun getTabsRearrangeGroup(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, segment)
     }
 
     fun setScrollToSelected(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollToSelectedBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setScrollToSelectedBind, segment, enabled)
     }
 
     fun getScrollToSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getScrollToSelectedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getScrollToSelectedBind, segment)
     }
 
     fun setSelectWithRmb(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectWithRmbBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSelectWithRmbBind, segment, enabled)
     }
 
     fun getSelectWithRmb(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSelectWithRmbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSelectWithRmbBind, segment)
     }
 
     fun setDeselectEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, segment, enabled)
     }
 
     fun getDeselectEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, segment)
     }
 
     fun clearTabs() {
-        ObjectCalls.ptrcallNoArgs(clearTabsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearTabsBind, segment)
     }
 
     object Signals {
@@ -358,11 +358,11 @@ class TabBar(handle: MemorySegment) : Control(handle) {
         const val CLOSE_BUTTON_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TabBar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TabBar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TabBar? =
-            if (handle.address() == 0L) null else TabBar(handle)
+            if (handle.address() == 0L) null else TabBar(GodotHandle(handle))
 
         private const val SET_TAB_COUNT_HASH = 1286410249L
         private val setTabCountBind by lazy {

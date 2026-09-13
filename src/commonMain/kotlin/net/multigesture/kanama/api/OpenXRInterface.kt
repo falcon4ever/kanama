@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: OpenXRInterface
  */
-class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
+class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     var displayRefreshRate: Double
         @JvmName("displayRefreshRateProperty")
         get() = getDisplayRefreshRate()
@@ -56,182 +56,182 @@ class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
 
     fun getSessionState(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSessionStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSessionStateBind, segment)
     }
 
     fun isUserPresenceSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresenceSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresenceSupportedBind, segment)
     }
 
     fun isUserPresent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresentBind, segment)
     }
 
     fun getDisplayRefreshRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayRefreshRateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayRefreshRateBind, segment)
     }
 
     fun setDisplayRefreshRate(refreshRate: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDisplayRefreshRateBind, handle, refreshRate)
+        ObjectCalls.ptrcallWithDoubleArg(setDisplayRefreshRateBind, segment, refreshRate)
     }
 
     fun getRenderTargetSizeMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderTargetSizeMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderTargetSizeMultiplierBind, segment)
     }
 
     fun setRenderTargetSizeMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRenderTargetSizeMultiplierBind, handle, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setRenderTargetSizeMultiplierBind, segment, multiplier)
     }
 
     fun isFoveationSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFoveationSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFoveationSupportedBind, segment)
     }
 
     fun getFoveationLevel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFoveationLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFoveationLevelBind, segment)
     }
 
     fun setFoveationLevel(foveationLevel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFoveationLevelBind, handle, foveationLevel)
+        ObjectCalls.ptrcallWithIntArg(setFoveationLevelBind, segment, foveationLevel)
     }
 
     fun getFoveationDynamic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFoveationDynamicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFoveationDynamicBind, segment)
     }
 
     fun setFoveationDynamic(foveationDynamic: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFoveationDynamicBind, handle, foveationDynamic)
+        ObjectCalls.ptrcallWithBoolArg(setFoveationDynamicBind, segment, foveationDynamic)
     }
 
     fun getFoveationWithSubsampledImages(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFoveationWithSubsampledImagesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFoveationWithSubsampledImagesBind, segment)
     }
 
     fun setFoveationWithSubsampledImages(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFoveationWithSubsampledImagesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFoveationWithSubsampledImagesBind, segment, enabled)
     }
 
     fun isActionSetActive(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isActionSetActiveBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(isActionSetActiveBind, segment, name)
     }
 
     fun setActionSetActive(name: String, active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndBoolArg(setActionSetActiveBind, handle, name, active)
+        ObjectCalls.ptrcallWithStringAndBoolArg(setActionSetActiveBind, segment, name, active)
     }
 
     fun getActionSets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getActionSetsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getActionSetsBind, segment)
     }
 
     fun getAvailableDisplayRefreshRates(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, segment)
     }
 
     fun setMotionRange(hand: Long, motionRange: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setMotionRangeBind, handle, hand, motionRange)
+        ObjectCalls.ptrcallWithTwoLongArgs(setMotionRangeBind, segment, hand, motionRange)
     }
 
     fun getMotionRange(hand: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getMotionRangeBind, handle, hand)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getMotionRangeBind, segment, hand)
     }
 
     fun getHandTrackingSource(hand: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getHandTrackingSourceBind, handle, hand)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getHandTrackingSourceBind, segment, hand)
     }
 
     fun getHandJointFlags(hand: Long, joint: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetLong(getHandJointFlagsBind, handle, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetLong(getHandJointFlagsBind, segment, hand, joint)
     }
 
     fun getHandJointRotation(hand: Long, joint: Long): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(getHandJointRotationBind, handle, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(getHandJointRotationBind, segment, hand, joint)
     }
 
     fun getHandJointPosition(hand: Long, joint: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointPositionBind, handle, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointPositionBind, segment, hand, joint)
     }
 
     fun getHandJointRadius(hand: Long, joint: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetDouble(getHandJointRadiusBind, handle, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetDouble(getHandJointRadiusBind, segment, hand, joint)
     }
 
     fun getHandJointLinearVelocity(hand: Long, joint: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointLinearVelocityBind, handle, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointLinearVelocityBind, segment, hand, joint)
     }
 
     fun getHandJointAngularVelocity(hand: Long, joint: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointAngularVelocityBind, handle, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointAngularVelocityBind, segment, hand, joint)
     }
 
     fun isHandTrackingSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHandTrackingSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHandTrackingSupportedBind, segment)
     }
 
     fun isHandInteractionSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHandInteractionSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHandInteractionSupportedBind, segment)
     }
 
     fun isEyeGazeInteractionSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEyeGazeInteractionSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEyeGazeInteractionSupportedBind, segment)
     }
 
     fun getVrsMinRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, segment)
     }
 
     fun setVrsMinRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, segment, radius)
     }
 
     fun getVrsStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, segment)
     }
 
     fun setVrsStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, segment, strength)
     }
 
     fun setCpuLevel(level: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCpuLevelBind, handle, level)
+        ObjectCalls.ptrcallWithLongArg(setCpuLevelBind, segment, level)
     }
 
     fun setGpuLevel(level: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setGpuLevelBind, handle, level)
+        ObjectCalls.ptrcallWithLongArg(setGpuLevelBind, segment, level)
     }
 
     object Signals {
@@ -315,11 +315,11 @@ class OpenXRInterface(handle: MemorySegment) : XRInterface(handle) {
         const val HAND_JOINT_ANGULAR_VELOCITY_VALID: Long = 32L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRInterface? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRInterface? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRInterface? =
-            if (handle.address() == 0L) null else OpenXRInterface(handle)
+            if (handle.address() == 0L) null else OpenXRInterface(GodotHandle(handle))
 
         private const val GET_SESSION_STATE_HASH = 896364779L
         private val getSessionStateBind by lazy {

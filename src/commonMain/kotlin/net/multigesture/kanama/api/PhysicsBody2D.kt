@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: PhysicsBody2D
  */
-open class PhysicsBody2D(handle: MemorySegment) : CollisionObject2D(handle) {
+open class PhysicsBody2D(handle: GodotHandle) : CollisionObject2D(handle) {
     /**
      * Moves the body along the vector `motion`. In order to be frame rate independent in
      * `Node._physics_process` or `Node._process`, `motion` should be computed using `delta`. Returns a
@@ -26,7 +26,7 @@ open class PhysicsBody2D(handle: MemorySegment) : CollisionObject2D(handle) {
      * Generated from Godot docs: PhysicsBody2D.move_and_collide
      */
     fun moveAndCollide(motion: Vector2, testOnly: Boolean = false, safeMargin: Double = 0.08, recoveryAsCollision: Boolean = false): KinematicCollision2D? {
-        return KinematicCollision2D.wrap(ObjectCalls.ptrcallWithVector2BoolFloatBoolArgsRetObject(moveAndCollideBind, handle, motion, testOnly, safeMargin, recoveryAsCollision))
+        return KinematicCollision2D.wrap(ObjectCalls.ptrcallWithVector2BoolFloatBoolArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision))
     }
 
     /**
@@ -44,7 +44,7 @@ open class PhysicsBody2D(handle: MemorySegment) : CollisionObject2D(handle) {
      * Generated from Godot docs: PhysicsBody2D.test_move
      */
     fun testMove(from: Transform2D, motion: Vector2, collision: KinematicCollision2D?, safeMargin: Double = 0.08, recoveryAsCollision: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool(testMoveBind, handle, from, motion, collision?.requireOpenHandle() ?: MemorySegment.NULL, safeMargin, recoveryAsCollision)
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool(testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: MemorySegment.NULL, safeMargin, recoveryAsCollision)
     }
 
     /**
@@ -54,7 +54,7 @@ open class PhysicsBody2D(handle: MemorySegment) : CollisionObject2D(handle) {
      * Generated from Godot docs: PhysicsBody2D.get_gravity
      */
     fun getGravity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ open class PhysicsBody2D(handle: MemorySegment) : CollisionObject2D(handle) {
      * Generated from Godot docs: PhysicsBody2D.get_collision_exceptions
      */
     fun getCollisionExceptions(): List<PhysicsBody2D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, handle, PhysicsBody2D::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, segment, PhysicsBody2D::wrap)
     }
 
     /**
@@ -72,7 +72,7 @@ open class PhysicsBody2D(handle: MemorySegment) : CollisionObject2D(handle) {
      * Generated from Godot docs: PhysicsBody2D.add_collision_exception_with
      */
     fun addCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     /**
@@ -81,16 +81,16 @@ open class PhysicsBody2D(handle: MemorySegment) : CollisionObject2D(handle) {
      * Generated from Godot docs: PhysicsBody2D.remove_collision_exception_with
      */
     fun removeCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsBody2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsBody2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsBody2D? =
-            if (handle.address() == 0L) null else PhysicsBody2D(handle)
+            if (handle.address() == 0L) null else PhysicsBody2D(GodotHandle(handle))
 
         private const val MOVE_AND_COLLIDE_HASH = 3681923724L
         private val moveAndCollideBind by lazy {

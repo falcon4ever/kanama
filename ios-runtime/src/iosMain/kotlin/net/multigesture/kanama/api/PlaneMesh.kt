@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: PlaneMesh
  */
-open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var size: Vector2
         @JvmName("sizeProperty")
         get() = getSize()
@@ -43,52 +43,52 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
 
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
     }
 
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
     }
 
     fun setSubdivideWidth(subdivide: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, subdivide)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, segment, subdivide)
     }
 
     fun getSubdivideWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, segment)
     }
 
     fun setSubdivideDepth(subdivide: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, subdivide)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, segment, subdivide)
     }
 
     fun getSubdivideDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, segment)
     }
 
     fun setCenterOffset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setCenterOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(setCenterOffsetBind, segment, offset)
     }
 
     fun getCenterOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOffsetBind, segment)
     }
 
     fun setOrientation(orientation: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
+        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation)
     }
 
     fun getOrientation(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment)
     }
 
     companion object {
@@ -96,11 +96,11 @@ open class PlaneMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         const val FACE_Y: Long = 1L
         const val FACE_Z: Long = 2L
 
-        fun fromHandle(handle: MemorySegment): PlaneMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaneMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaneMesh? =
-            if (handle.address() == 0L) null else PlaneMesh(handle)
+            if (handle.address() == 0L) null else PlaneMesh(GodotHandle(handle))
 
         // KANAMA-IOS-SUGAR: [glue] downcast a Resource (null if not), mirroring the desktop
         // helper and the ShaderMaterial.fromResource pattern. Re-add after regeneration.

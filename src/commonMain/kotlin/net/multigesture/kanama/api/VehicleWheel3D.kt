@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: VehicleWheel3D
  */
-class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
+class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
     var engineForce: Double
         @JvmName("engineForceProperty")
         get() = getEngineForce()
@@ -103,7 +103,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_radius
      */
     fun setRadius(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, length)
     }
 
     /**
@@ -112,7 +112,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_rest_length
      */
     fun setSuspensionRestLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionRestLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setSuspensionRestLengthBind, segment, length)
     }
 
     /**
@@ -136,7 +136,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_rest_length
      */
     fun getSuspensionRestLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionRestLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionRestLengthBind, segment)
     }
 
     /**
@@ -146,7 +146,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_travel
      */
     fun setSuspensionTravel(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionTravelBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setSuspensionTravelBind, segment, length)
     }
 
     /**
@@ -156,7 +156,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_travel
      */
     fun getSuspensionTravel(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionTravelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionTravelBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_stiffness
      */
     fun setSuspensionStiffness(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionStiffnessBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setSuspensionStiffnessBind, segment, length)
     }
 
     /**
@@ -178,7 +178,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_stiffness
      */
     fun getSuspensionStiffness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionStiffnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionStiffnessBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_max_force
      */
     fun setSuspensionMaxForce(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionMaxForceBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setSuspensionMaxForceBind, segment, length)
     }
 
     /**
@@ -200,7 +200,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_max_force
      */
     fun getSuspensionMaxForce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionMaxForceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionMaxForceBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_damping_compression
      */
     fun setDampingCompression(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDampingCompressionBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setDampingCompressionBind, segment, length)
     }
 
     /**
@@ -226,7 +226,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_damping_compression
      */
     fun getDampingCompression(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingCompressionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingCompressionBind, segment)
     }
 
     /**
@@ -239,7 +239,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_damping_relaxation
      */
     fun setDampingRelaxation(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDampingRelaxationBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setDampingRelaxationBind, segment, length)
     }
 
     /**
@@ -252,7 +252,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_damping_relaxation
      */
     fun getDampingRelaxation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingRelaxationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingRelaxationBind, segment)
     }
 
     /**
@@ -263,7 +263,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_use_as_traction
      */
     fun setUseAsTraction(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAsTractionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseAsTractionBind, segment, enable)
     }
 
     /**
@@ -274,7 +274,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.is_used_as_traction
      */
     fun isUsedAsTraction(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsedAsTractionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsedAsTractionBind, segment)
     }
 
     /**
@@ -284,7 +284,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_use_as_steering
      */
     fun setUseAsSteering(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAsSteeringBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseAsSteeringBind, segment, enable)
     }
 
     /**
@@ -294,7 +294,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.is_used_as_steering
      */
     fun isUsedAsSteering(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsedAsSteeringBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsedAsSteeringBind, segment)
     }
 
     /**
@@ -306,7 +306,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_friction_slip
      */
     fun setFrictionSlip(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrictionSlipBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setFrictionSlipBind, segment, length)
     }
 
     /**
@@ -318,7 +318,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_friction_slip
      */
     fun getFrictionSlip(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionSlipBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionSlipBind, segment)
     }
 
     /**
@@ -327,7 +327,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.is_in_contact
      */
     fun isInContact(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInContactBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInContactBind, segment)
     }
 
     /**
@@ -338,7 +338,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_contact_body
      */
     fun getContactBody(): Node3D? {
-        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getContactBodyBind, handle))
+        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getContactBodyBind, segment))
     }
 
     /**
@@ -349,7 +349,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_contact_point
      */
     fun getContactPoint(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getContactPointBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getContactPointBind, segment)
     }
 
     /**
@@ -360,7 +360,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_contact_normal
      */
     fun getContactNormal(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getContactNormalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getContactNormalBind, segment)
     }
 
     /**
@@ -370,7 +370,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_roll_influence
      */
     fun setRollInfluence(rollInfluence: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRollInfluenceBind, handle, rollInfluence)
+        ObjectCalls.ptrcallWithDoubleArg(setRollInfluenceBind, segment, rollInfluence)
     }
 
     /**
@@ -380,7 +380,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_roll_influence
      */
     fun getRollInfluence(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRollInfluenceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRollInfluenceBind, segment)
     }
 
     /**
@@ -391,7 +391,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_skidinfo
      */
     fun getSkidinfo(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkidinfoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSkidinfoBind, segment)
     }
 
     /**
@@ -400,7 +400,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_rpm
      */
     fun getRpm(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRpmBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRpmBind, segment)
     }
 
     /**
@@ -414,7 +414,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_engine_force
      */
     fun setEngineForce(engineForce: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEngineForceBind, handle, engineForce)
+        ObjectCalls.ptrcallWithDoubleArg(setEngineForceBind, segment, engineForce)
     }
 
     /**
@@ -428,7 +428,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_engine_force
      */
     fun getEngineForce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEngineForceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEngineForceBind, segment)
     }
 
     /**
@@ -440,7 +440,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_brake
      */
     fun setBrake(brake: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBrakeBind, handle, brake)
+        ObjectCalls.ptrcallWithDoubleArg(setBrakeBind, segment, brake)
     }
 
     /**
@@ -452,7 +452,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_brake
      */
     fun getBrake(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBrakeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBrakeBind, segment)
     }
 
     /**
@@ -462,7 +462,7 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_steering
      */
     fun setSteering(steering: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSteeringBind, handle, steering)
+        ObjectCalls.ptrcallWithDoubleArg(setSteeringBind, segment, steering)
     }
 
     /**
@@ -472,16 +472,16 @@ class VehicleWheel3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_steering
      */
     fun getSteering(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSteeringBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSteeringBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VehicleWheel3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VehicleWheel3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VehicleWheel3D? =
-            if (handle.address() == 0L) null else VehicleWheel3D(handle)
+            if (handle.address() == 0L) null else VehicleWheel3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

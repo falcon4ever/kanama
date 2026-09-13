@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OggPacketSequence
  */
-class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
+class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
     var packetData: List<List<Any?>>
         @JvmName("packetDataProperty")
         get() = getPacketData()
@@ -30,46 +30,46 @@ class OggPacketSequence(handle: MemorySegment) : Resource(handle) {
 
     fun setPacketData(packetData: List<List<Any?>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayListArg(setPacketDataBind, handle, packetData)
+        ObjectCalls.ptrcallWithArrayListArg(setPacketDataBind, segment, packetData)
     }
 
     fun getPacketData(): List<List<Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArrayList(getPacketDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArrayList(getPacketDataBind, segment)
     }
 
     fun setPacketGranulePositions(granulePositions: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt64ListArg(setPacketGranulePositionsBind, handle, granulePositions)
+        ObjectCalls.ptrcallWithPackedInt64ListArg(setPacketGranulePositionsBind, segment, granulePositions)
     }
 
     fun getPacketGranulePositions(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPacketGranulePositionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPacketGranulePositionsBind, segment)
     }
 
     fun setSamplingRate(samplingRate: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSamplingRateBind, handle, samplingRate)
+        ObjectCalls.ptrcallWithDoubleArg(setSamplingRateBind, segment, samplingRate)
     }
 
     fun getSamplingRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSamplingRateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSamplingRateBind, segment)
     }
 
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OggPacketSequence? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OggPacketSequence? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OggPacketSequence? =
-            if (handle.address() == 0L) null else OggPacketSequence(handle)
+            if (handle.address() == 0L) null else OggPacketSequence(GodotHandle(handle))
 
         private const val SET_PACKET_DATA_HASH = 381264803L
         private val setPacketDataBind by lazy {

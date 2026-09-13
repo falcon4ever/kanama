@@ -8,54 +8,54 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GDScriptWorkspace
  */
-class GDScriptWorkspace(handle: MemorySegment) : RefCounted(handle) {
+class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
     fun applyNewSignal(obj: GodotObject, function: String, args: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectStringAndPackedStringListArgs(applyNewSignalBind, handle, obj.handle, function, args)
+        ObjectCalls.ptrcallWithObjectStringAndPackedStringListArgs(applyNewSignalBind, segment, obj.segment, function, args)
     }
 
     fun getFilePath(uri: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getFilePathBind, handle, uri)
+        return ObjectCalls.ptrcallWithStringArgRetString(getFilePathBind, segment, uri)
     }
 
     fun getFileUri(path: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getFileUriBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(getFileUriBind, segment, path)
     }
 
     fun generateScriptApi(path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetDictionary(generateScriptApiBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetDictionary(generateScriptApiBind, segment, path)
     }
 
     fun didDeleteFiles(params: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(didDeleteFilesBind, handle, params)
+        ObjectCalls.ptrcallWithDictionaryArg(didDeleteFilesBind, segment, params)
     }
 
     fun parseScript(path: String, content: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, handle, path, content)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, segment, path, content)
     }
 
     fun parseLocalScript(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(parseLocalScriptBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(parseLocalScriptBind, segment, path)
     }
 
     fun publishDiagnostics(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(publishDiagnosticsBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(publishDiagnosticsBind, segment, path)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GDScriptWorkspace? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GDScriptWorkspace? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GDScriptWorkspace? =
-            if (handle.address() == 0L) null else GDScriptWorkspace(handle)
+            if (handle.address() == 0L) null else GDScriptWorkspace(GodotHandle(handle))
 
         private const val APPLY_NEW_SIGNAL_HASH = 3682583557L
         private val applyNewSignalBind by lazy {

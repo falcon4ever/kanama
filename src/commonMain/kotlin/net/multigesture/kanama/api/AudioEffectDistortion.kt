@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectDistortion
  */
-class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     var mode: Long
         @JvmName("modeProperty")
         get() = getMode()
@@ -50,7 +50,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
     }
 
     /**
@@ -60,7 +60,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPreGain(preGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPreGainBind, handle, preGain)
+        ObjectCalls.ptrcallWithDoubleArg(setPreGainBind, segment, preGain)
     }
 
     /**
@@ -80,7 +80,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPreGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setKeepHfHz(keepHfHz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setKeepHfHzBind, handle, keepHfHz)
+        ObjectCalls.ptrcallWithDoubleArg(setKeepHfHzBind, segment, keepHfHz)
     }
 
     /**
@@ -102,7 +102,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getKeepHfHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getKeepHfHzBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getKeepHfHzBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setDrive(drive: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDriveBind, handle, drive)
+        ObjectCalls.ptrcallWithDoubleArg(setDriveBind, segment, drive)
     }
 
     /**
@@ -124,7 +124,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getDrive(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDriveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDriveBind, segment)
     }
 
     /**
@@ -134,7 +134,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPostGain(postGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPostGainBind, handle, postGain)
+        ObjectCalls.ptrcallWithDoubleArg(setPostGainBind, segment, postGain)
     }
 
     /**
@@ -144,7 +144,7 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPostGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, segment)
     }
 
     companion object {
@@ -155,11 +155,11 @@ class AudioEffectDistortion(handle: MemorySegment) : AudioEffect(handle) {
         const val MODE_WAVESHAPE: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectDistortion? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectDistortion? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectDistortion? =
-            if (handle.address() == 0L) null else AudioEffectDistortion(handle)
+            if (handle.address() == 0L) null else AudioEffectDistortion(GodotHandle(handle))
 
         private const val SET_MODE_HASH = 1314744793L
         private val setModeBind by lazy {

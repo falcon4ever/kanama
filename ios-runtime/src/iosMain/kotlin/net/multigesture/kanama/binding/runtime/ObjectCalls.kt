@@ -30,6 +30,7 @@ import kotlinx.cinterop.set
 import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
@@ -1532,7 +1533,7 @@ object ObjectCalls {
       }
       is GodotObject -> {
         val c = alloc<LongVar>()
-        c.value = value.handle.address()
+        c.value = value.segment.address()
         desc.tag = PT_OBJECT
         desc.ptr = c.ptr
       }
@@ -2254,7 +2255,7 @@ object ObjectCalls {
     packTypedArrayDesc(
       VT_NIL_TYPE,
       null,
-      values.map { Pair(PT_OBJECT, int64Bytes(it.handle.address())) },
+      values.map { Pair(PT_OBJECT, int64Bytes(it.segment.address())) },
     )
 
   // task 100 (parcel 10) — typed arrays whose ELEMENTS are containers or packed arrays. A
@@ -2534,7 +2535,7 @@ object ObjectCalls {
 
   // ---- typed-object-array (Array[Object]) returns -> List<T> ----
   // GENERIC over the element wrapper via a `fromHandle: (MemorySegment) -> T?` factory passed by
-  // the api-layer caller (e.g. Node::fromHandle). Keeping the wrapper type out of the helper
+  // the api-layer caller (e.g. Node::wrap). Keeping the wrapper type out of the helper
   // signature avoids inverting the binding.runtime -> api dependency: the generated wrapper owns
   // its concrete List<Node> return type, the runtime only maps raw handles. The C entry drives a
   // ptrcall whose return is a Godot Array (8-byte opaque), reads each element's object handle via
@@ -3077,7 +3078,8 @@ object ObjectCalls {
       VT_OBJECT ->
         if (outInt.value != 0L) {
           val handle = MemorySegment.ofAddress(outInt.value)
-          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(handle) else handle
+          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(GodotHandle(handle))
+          else handle
         } else {
           null
         }
@@ -3241,7 +3243,7 @@ object ObjectCalls {
         }
         is GodotObject -> {
           val c = alloc<LongVar>()
-          c.value = a.handle.address()
+          c.value = a.segment.address()
           tags[i] = PT_OBJECT
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
@@ -3406,7 +3408,7 @@ object ObjectCalls {
       )
     when {
       handle == 0L -> null
-      isRefCounted.value != 0 -> RefCounted(MemorySegment.ofAddress(handle))
+      isRefCounted.value != 0 -> RefCounted(GodotHandle(MemorySegment.ofAddress(handle)))
       else -> MemorySegment.ofAddress(handle)
     }
   }
@@ -4877,18 +4879,19 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.ptrcallWithObjectListArg(
     ObjectCalls.getMethodBind("GLTFState", "set_nodes", 381264803L),
     typedGltf,
-    listOf(RefCounted(typedNodeA), RefCounted(typedNodeB)),
+    listOf(RefCounted(GodotHandle(typedNodeA)), RefCounted(GodotHandle(typedNodeB))),
   )
   val typedNodesBack =
     ObjectCalls.ptrcallNoArgsRetTypedObjectList(
       ObjectCalls.getMethodBind("GLTFState", "get_nodes", 3995934104L),
       typedGltf,
     ) {
-      RefCounted(it)
+      RefCounted(GodotHandle(it))
     }
   check(
     "arg-typed(GLTFState.set_nodes Array[GLTFNode] round-trip by handle)",
-    typedNodesBack.map { it.handle.address() } == listOf(typedNodeA.address(), typedNodeB.address()),
+    typedNodesBack.map { it.segment.address() } ==
+      listOf(typedNodeA.address(), typedNodeB.address()),
   )
   ObjectCalls.destroyObject(typedGltf)
 
@@ -5739,7 +5742,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.callWithVariantArgs(
     callBind,
     callNode,
-    listOf("set_meta", "kobj", GodotObject(metaObj)),
+    listOf("set_meta", "kobj", GodotObject(GodotHandle(metaObj))),
   )
   val gotObj = ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kobj"))
   check(
@@ -6036,12 +6039,13 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // (unreference -> zero -> object_destroy). A wrong convention shows up as refcount != 1
   // (probe fails) or a double-free crash right here.
   run {
-    val res = net.multigesture.kanama.api.Resource(ObjectCalls.constructObject("Resource"))
+    val res =
+      net.multigesture.kanama.api.Resource(GodotHandle(ObjectCalls.constructObject("Resource")))
     val dup = res.duplicate()
     check("refcounted-ret-owns-plus1", dup != null && dup.getReferenceCount() == 1)
     dup?.close() // unreference() -> true at zero -> destroyObject; crash/guardrail-noise = fail
     dup?.close() // second close must be a released-guard no-op, not a double unreference
-    ObjectCalls.destroyObject(res.handle) // probe object was never referenced (rc 0)
+    ObjectCalls.destroyObject(res.segment) // probe object was never referenced (rc 0)
   }
 
   // Task 61 / issue #91 (iOS ownership guard): unlike the desktop/JVM backend (which constructs via
@@ -6092,7 +6096,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     val back = ObjectCalls.ptrcallNoArgsRetCallable(getBind, spawner)
     check(
       "ret-callable(MultiplayerSpawner.get_spawn_function target handle round-trip)",
-      back != null && back.target.handle.address() == spawner.address(),
+      back != null && back.target.segment.address() == spawner.address(),
     )
     check(
       "ret-callable(MultiplayerSpawner.get_spawn_function method name round-trip)",
@@ -6107,7 +6111,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       "ret-callable(MultiplayerSpawner.get_spawn_function 602-byte method via pending slot)",
       backLong != null &&
         backLong.method == longName &&
-        backLong.target.handle.address() == spawner.address(),
+        backLong.target.segment.address() == spawner.address(),
     )
     ObjectCalls.destroyObject(spawner)
     // A RID-argument shape on a singleton: NativeMenu has no popup for an invalid RID, so the

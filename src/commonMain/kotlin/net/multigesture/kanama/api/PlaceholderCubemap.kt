@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PlaceholderCubemap
  */
-class PlaceholderCubemap(handle: MemorySegment) : PlaceholderTextureLayered(handle) {
+class PlaceholderCubemap(handle: GodotHandle) : PlaceholderTextureLayered(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PlaceholderCubemap? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaceholderCubemap? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaceholderCubemap? =
-            if (handle.address() == 0L) null else PlaceholderCubemap(handle)
+            if (handle.address() == 0L) null else PlaceholderCubemap(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

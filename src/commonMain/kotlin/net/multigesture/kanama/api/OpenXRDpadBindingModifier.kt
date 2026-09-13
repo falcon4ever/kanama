@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRDpadBindingModifier
  */
-class OpenXRDpadBindingModifier(handle: MemorySegment) : OpenXRIPBindingModifier(handle) {
+class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(handle) {
     var actionSet: OpenXRActionSet?
         @JvmName("actionSetProperty")
         get() = getActionSet()
@@ -66,101 +66,101 @@ class OpenXRDpadBindingModifier(handle: MemorySegment) : OpenXRIPBindingModifier
 
     fun setActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setActionSetBind, handle, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getActionSet(): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionSetBind, handle))
+        return OpenXRActionSet.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionSetBind, segment))
     }
 
     fun setInputPath(inputPath: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setInputPathBind, handle, inputPath)
+        ObjectCalls.ptrcallWithStringArg(setInputPathBind, segment, inputPath)
     }
 
     fun getInputPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInputPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getInputPathBind, segment)
     }
 
     fun setThreshold(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, segment, threshold)
     }
 
     fun getThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, segment)
     }
 
     fun setThresholdReleased(thresholdReleased: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setThresholdReleasedBind, handle, thresholdReleased)
+        ObjectCalls.ptrcallWithDoubleArg(setThresholdReleasedBind, segment, thresholdReleased)
     }
 
     fun getThresholdReleased(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdReleasedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdReleasedBind, segment)
     }
 
     fun setCenterRegion(centerRegion: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCenterRegionBind, handle, centerRegion)
+        ObjectCalls.ptrcallWithDoubleArg(setCenterRegionBind, segment, centerRegion)
     }
 
     fun getCenterRegion(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCenterRegionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCenterRegionBind, segment)
     }
 
     fun setWedgeAngle(wedgeAngle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWedgeAngleBind, handle, wedgeAngle)
+        ObjectCalls.ptrcallWithDoubleArg(setWedgeAngleBind, segment, wedgeAngle)
     }
 
     fun getWedgeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWedgeAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWedgeAngleBind, segment)
     }
 
     fun setIsSticky(isSticky: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsStickyBind, handle, isSticky)
+        ObjectCalls.ptrcallWithBoolArg(setIsStickyBind, segment, isSticky)
     }
 
     fun getIsSticky(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsStickyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsStickyBind, segment)
     }
 
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, handle, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, handle))
+        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, segment))
     }
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, handle, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, handle))
+        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRDpadBindingModifier? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRDpadBindingModifier? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRDpadBindingModifier? =
-            if (handle.address() == 0L) null else OpenXRDpadBindingModifier(handle)
+            if (handle.address() == 0L) null else OpenXRDpadBindingModifier(GodotHandle(handle))
 
         private const val SET_ACTION_SET_HASH = 2093310581L
         private val setActionSetBind by lazy {

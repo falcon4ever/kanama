@@ -10,7 +10,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: LightmapGI
  */
-class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
+class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     var quality: Long
         @JvmName("qualityProperty")
         get() = getBakeQuality()
@@ -150,7 +150,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_light_data
      */
     fun setLightData(data: LightmapGIData?) {
-        ObjectCalls.ptrcallWithObjectArgs(setLightDataBind, handle, listOf(data?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setLightDataBind, segment, listOf(data?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -160,7 +160,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_light_data
      */
     fun getLightData(): LightmapGIData? {
-        return LightmapGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, handle))
+        return LightmapGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, segment))
     }
 
     /**
@@ -172,7 +172,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_bake_quality
      */
     fun setBakeQuality(bakeQuality: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, handle, bakeQuality)
+        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, segment, bakeQuality)
     }
 
     /**
@@ -184,7 +184,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_bake_quality
      */
     fun getBakeQuality(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, segment)
     }
 
     /**
@@ -195,7 +195,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_bounces
      */
     fun setBounces(bounces: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBouncesBind, handle, bounces)
+        ObjectCalls.ptrcallWithIntArg(setBouncesBind, segment, bounces)
     }
 
     /**
@@ -206,7 +206,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_bounces
      */
     fun getBounces(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBouncesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBouncesBind, segment)
     }
 
     /**
@@ -220,7 +220,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_bounce_indirect_energy
      */
     fun setBounceIndirectEnergy(bounceIndirectEnergy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBounceIndirectEnergyBind, handle, bounceIndirectEnergy)
+        ObjectCalls.ptrcallWithDoubleArg(setBounceIndirectEnergyBind, segment, bounceIndirectEnergy)
     }
 
     /**
@@ -234,7 +234,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_bounce_indirect_energy
      */
     fun getBounceIndirectEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceIndirectEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceIndirectEnergyBind, segment)
     }
 
     /**
@@ -248,7 +248,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_generate_probes
      */
     fun setGenerateProbes(subdivision: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, handle, subdivision)
+        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, segment, subdivision)
     }
 
     /**
@@ -262,7 +262,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_generate_probes
      */
     fun getGenerateProbes(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, segment)
     }
 
     /**
@@ -273,7 +273,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_bias
      */
     fun setBias(bias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, segment, bias)
     }
 
     /**
@@ -284,7 +284,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_bias
      */
     fun getBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, segment)
     }
 
     /**
@@ -293,7 +293,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_environment_mode
      */
     fun setEnvironmentMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, segment, mode)
     }
 
     /**
@@ -302,7 +302,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_environment_mode
      */
     fun getEnvironmentMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, segment)
     }
 
     /**
@@ -312,7 +312,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_environment_custom_sky
      */
     fun setEnvironmentCustomSky(sky: Sky?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentCustomSkyBind, handle, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentCustomSkyBind, segment, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -322,7 +322,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_environment_custom_sky
      */
     fun getEnvironmentCustomSky(): Sky? {
-        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, handle))
+        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, segment))
     }
 
     /**
@@ -332,7 +332,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_environment_custom_color
      */
     fun setEnvironmentCustomColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setEnvironmentCustomColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setEnvironmentCustomColorBind, segment, color)
     }
 
     /**
@@ -342,7 +342,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_environment_custom_color
      */
     fun getEnvironmentCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getEnvironmentCustomColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getEnvironmentCustomColorBind, segment)
     }
 
     /**
@@ -352,7 +352,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_environment_custom_energy
      */
     fun setEnvironmentCustomEnergy(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnvironmentCustomEnergyBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setEnvironmentCustomEnergyBind, segment, energy)
     }
 
     /**
@@ -362,7 +362,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_environment_custom_energy
      */
     fun getEnvironmentCustomEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnvironmentCustomEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnvironmentCustomEnergyBind, segment)
     }
 
     /**
@@ -376,7 +376,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_texel_scale
      */
     fun setTexelScale(texelScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTexelScaleBind, handle, texelScale)
+        ObjectCalls.ptrcallWithDoubleArg(setTexelScaleBind, segment, texelScale)
     }
 
     /**
@@ -390,7 +390,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_texel_scale
      */
     fun getTexelScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTexelScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTexelScaleBind, segment)
     }
 
     /**
@@ -401,7 +401,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_max_texture_size
      */
     fun setMaxTextureSize(maxTextureSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxTextureSizeBind, handle, maxTextureSize)
+        ObjectCalls.ptrcallWithIntArg(setMaxTextureSizeBind, segment, maxTextureSize)
     }
 
     /**
@@ -412,7 +412,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_max_texture_size
      */
     fun getMaxTextureSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextureSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextureSizeBind, segment)
     }
 
     /**
@@ -426,7 +426,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_supersampling_enabled
      */
     fun setSupersamplingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSupersamplingEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSupersamplingEnabledBind, segment, enable)
     }
 
     /**
@@ -440,7 +440,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.is_supersampling_enabled
      */
     fun isSupersamplingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSupersamplingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSupersamplingEnabledBind, segment)
     }
 
     /**
@@ -452,7 +452,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_supersampling_factor
      */
     fun setSupersamplingFactor(factor: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSupersamplingFactorBind, handle, factor)
+        ObjectCalls.ptrcallWithDoubleArg(setSupersamplingFactorBind, segment, factor)
     }
 
     /**
@@ -464,7 +464,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_supersampling_factor
      */
     fun getSupersamplingFactor(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSupersamplingFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSupersamplingFactorBind, segment)
     }
 
     /**
@@ -476,7 +476,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_use_denoiser
      */
     fun setUseDenoiser(useDenoiser: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseDenoiserBind, handle, useDenoiser)
+        ObjectCalls.ptrcallWithBoolArg(setUseDenoiserBind, segment, useDenoiser)
     }
 
     /**
@@ -488,7 +488,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.is_using_denoiser
      */
     fun isUsingDenoiser(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDenoiserBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDenoiserBind, segment)
     }
 
     /**
@@ -499,7 +499,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_denoiser_strength
      */
     fun setDenoiserStrength(denoiserStrength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDenoiserStrengthBind, handle, denoiserStrength)
+        ObjectCalls.ptrcallWithDoubleArg(setDenoiserStrengthBind, segment, denoiserStrength)
     }
 
     /**
@@ -510,7 +510,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_denoiser_strength
      */
     fun getDenoiserStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDenoiserStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDenoiserStrengthBind, segment)
     }
 
     /**
@@ -522,7 +522,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_denoiser_range
      */
     fun setDenoiserRange(denoiserRange: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDenoiserRangeBind, handle, denoiserRange)
+        ObjectCalls.ptrcallWithIntArg(setDenoiserRangeBind, segment, denoiserRange)
     }
 
     /**
@@ -534,7 +534,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_denoiser_range
      */
     fun getDenoiserRange(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDenoiserRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDenoiserRangeBind, segment)
     }
 
     /**
@@ -543,7 +543,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_interior
      */
     fun setInterior(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInteriorBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setInteriorBind, segment, enable)
     }
 
     /**
@@ -552,7 +552,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.is_interior
      */
     fun isInterior(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, segment)
     }
 
     /**
@@ -569,7 +569,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_directional
      */
     fun setDirectional(directional: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDirectionalBind, handle, directional)
+        ObjectCalls.ptrcallWithBoolArg(setDirectionalBind, segment, directional)
     }
 
     /**
@@ -586,7 +586,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.is_directional
      */
     fun isDirectional(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDirectionalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDirectionalBind, segment)
     }
 
     /**
@@ -602,7 +602,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_shadowmask_mode
      */
     fun setShadowmaskMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, segment, mode)
     }
 
     /**
@@ -618,7 +618,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_shadowmask_mode
      */
     fun getShadowmaskMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, segment)
     }
 
     /**
@@ -632,7 +632,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_use_texture_for_bounces
      */
     fun setUseTextureForBounces(useTextureForBounces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseTextureForBouncesBind, handle, useTextureForBounces)
+        ObjectCalls.ptrcallWithBoolArg(setUseTextureForBouncesBind, segment, useTextureForBounces)
     }
 
     /**
@@ -646,7 +646,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.is_using_texture_for_bounces
      */
     fun isUsingTextureForBounces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTextureForBouncesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTextureForBouncesBind, segment)
     }
 
     /**
@@ -658,7 +658,7 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.set_camera_attributes
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -670,13 +670,13 @@ class LightmapGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
+        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun create(): LightmapGI =
-            LightmapGI(ObjectCalls.constructObject("LightmapGI"))
+            LightmapGI(GodotHandle(ObjectCalls.constructObject("LightmapGI")))
 
         private const val SET_LIGHT_DATA_HASH = 1790597277L
         private val setLightDataBind by lazy {

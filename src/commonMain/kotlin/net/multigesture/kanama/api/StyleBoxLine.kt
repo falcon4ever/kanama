@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: StyleBoxLine
  */
-class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
+class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
     var color: Color
         @JvmName("colorProperty")
         get() = getColor()
@@ -50,7 +50,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -60,7 +60,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setThickness(thickness: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setThicknessBind, handle, thickness)
+        ObjectCalls.ptrcallWithIntArg(setThicknessBind, segment, thickness)
     }
 
     /**
@@ -80,7 +80,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getThickness(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getThicknessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getThicknessBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setGrowBegin(offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGrowBeginBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setGrowBeginBind, segment, offset)
     }
 
     /**
@@ -102,7 +102,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getGrowBegin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBeginBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setGrowEnd(offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGrowEndBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setGrowEndBind, segment, offset)
     }
 
     /**
@@ -124,7 +124,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getGrowEnd(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowEndBind, segment)
     }
 
     /**
@@ -134,7 +134,7 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setVertical(vertical: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
+        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
     }
 
     /**
@@ -144,16 +144,16 @@ class StyleBoxLine(handle: MemorySegment) : StyleBox(handle) {
      */
     fun isVertical(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StyleBoxLine? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StyleBoxLine? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StyleBoxLine? =
-            if (handle.address() == 0L) null else StyleBoxLine(handle)
+            if (handle.address() == 0L) null else StyleBoxLine(GodotHandle(handle))
 
         private const val SET_COLOR_HASH = 2920490490L
         private val setColorBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: World2D
  */
-class World2D(handle: MemorySegment) : Resource(handle) {
+class World2D(handle: GodotHandle) : Resource(handle) {
     val canvas: RID
         @JvmName("canvasProperty")
         get() = getCanvas()
@@ -36,7 +36,7 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getCanvas(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, segment)
     }
 
     /**
@@ -46,7 +46,7 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getNavigationMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -57,7 +57,7 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getSpace(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, segment)
     }
 
     /**
@@ -69,16 +69,16 @@ class World2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState2D? {
         checkOpen()
-        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
+        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): World2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): World2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): World2D? =
-            if (handle.address() == 0L) null else World2D(handle)
+            if (handle.address() == 0L) null else World2D(GodotHandle(handle))
 
         private const val GET_CANVAS_HASH = 2944877500L
         private val getCanvasBind by lazy {

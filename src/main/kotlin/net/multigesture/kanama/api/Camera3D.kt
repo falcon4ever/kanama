@@ -15,7 +15,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Camera3D
  */
-open class Camera3D(handle: MemorySegment) : Node3D(handle) {
+open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     var keepAspect: Long
         @JvmName("keepAspectProperty")
         get() = getKeepAspectMode()
@@ -114,7 +114,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_ray_normal
      */
     fun projectRayNormal(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayNormalBind, handle, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayNormalBind, segment, screenPoint)
     }
 
     /**
@@ -124,7 +124,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_local_ray_normal
      */
     fun projectLocalRayNormal(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectLocalRayNormalBind, handle, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectLocalRayNormalBind, segment, screenPoint)
     }
 
     /**
@@ -135,7 +135,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_ray_origin
      */
     fun projectRayOrigin(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayOriginBind, handle, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayOriginBind, segment, screenPoint)
     }
 
     /**
@@ -146,7 +146,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.unproject_position
      */
     fun unprojectPosition(worldPoint: Vector3): Vector2 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector2(unprojectPositionBind, handle, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector2(unprojectPositionBind, segment, worldPoint)
     }
 
     /**
@@ -159,7 +159,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.is_position_behind
      */
     fun isPositionBehind(worldPoint: Vector3): Boolean {
-        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionBehindBind, handle, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionBehindBind, segment, worldPoint)
     }
 
     /**
@@ -169,7 +169,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_position
      */
     fun projectPosition(screenPoint: Vector2, zDepth: Double): Vector3 {
-        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetVector3(projectPositionBind, handle, screenPoint, zDepth)
+        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetVector3(projectPositionBind, segment, screenPoint, zDepth)
     }
 
     /**
@@ -180,7 +180,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_perspective
      */
     fun setPerspective(fov: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithThreeDoubleArgs(setPerspectiveBind, handle, fov, zNear, zFar)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(setPerspectiveBind, segment, fov, zNear, zFar)
     }
 
     /**
@@ -191,7 +191,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_orthogonal
      */
     fun setOrthogonal(size: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithThreeDoubleArgs(setOrthogonalBind, handle, size, zNear, zFar)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(setOrthogonalBind, segment, size, zNear, zFar)
     }
 
     /**
@@ -203,7 +203,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_frustum
      */
     fun setFrustum(size: Double, offset: Vector2, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithDoubleVector2TwoDoubleArgs(setFrustumBind, handle, size, offset, zNear, zFar)
+        ObjectCalls.ptrcallWithDoubleVector2TwoDoubleArgs(setFrustumBind, segment, size, offset, zNear, zFar)
     }
 
     /**
@@ -213,7 +213,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
+        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.clear_current
      */
     fun clearCurrent(enableNext: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(clearCurrentBind, handle, enableNext)
+        ObjectCalls.ptrcallWithBoolArg(clearCurrentBind, segment, enableNext)
     }
 
     /**
@@ -235,7 +235,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_current
      */
     fun setCurrent(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, segment, enabled)
     }
 
     /**
@@ -247,7 +247,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
     }
 
     /**
@@ -258,7 +258,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_camera_transform
      */
     fun getCameraTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getCameraTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getCameraTransformBind, segment)
     }
 
     /**
@@ -268,7 +268,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_camera_projection
      */
     fun getCameraProjection(): Projection {
-        return ObjectCalls.ptrcallNoArgsRetProjection(getCameraProjectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetProjection(getCameraProjectionBind, segment)
     }
 
     /**
@@ -281,7 +281,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_fov
      */
     fun getFov(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, segment)
     }
 
     /**
@@ -292,7 +292,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_frustum_offset
      */
     fun getFrustumOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFrustumOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getFrustumOffsetBind, segment)
     }
 
     /**
@@ -302,7 +302,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_size
      */
     fun getSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, segment)
     }
 
     /**
@@ -313,7 +313,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_far
      */
     fun getFar(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, segment)
     }
 
     /**
@@ -325,7 +325,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_near
      */
     fun getNear(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, segment)
     }
 
     /**
@@ -338,7 +338,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_fov
      */
     fun setFov(fov: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFovBind, handle, fov)
+        ObjectCalls.ptrcallWithDoubleArg(setFovBind, segment, fov)
     }
 
     /**
@@ -349,7 +349,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_frustum_offset
      */
     fun setFrustumOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setFrustumOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setFrustumOffsetBind, segment, offset)
     }
 
     /**
@@ -359,7 +359,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_size
      */
     fun setSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, segment, size)
     }
 
     /**
@@ -370,7 +370,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_far
      */
     fun setFar(far: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFarBind, handle, far)
+        ObjectCalls.ptrcallWithDoubleArg(setFarBind, segment, far)
     }
 
     /**
@@ -382,7 +382,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_near
      */
     fun setNear(near: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNearBind, handle, near)
+        ObjectCalls.ptrcallWithDoubleArg(setNearBind, segment, near)
     }
 
     /**
@@ -392,7 +392,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_projection
      */
     fun getProjection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, segment)
     }
 
     /**
@@ -402,7 +402,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_projection
      */
     fun setProjection(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProjectionBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProjectionBind, segment, mode)
     }
 
     /**
@@ -411,7 +411,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_h_offset
      */
     fun setHOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, segment, offset)
     }
 
     /**
@@ -420,7 +420,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_h_offset
      */
     fun getHOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, segment)
     }
 
     /**
@@ -429,7 +429,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_v_offset
      */
     fun setVOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, segment, offset)
     }
 
     /**
@@ -438,7 +438,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_v_offset
      */
     fun getVOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, segment)
     }
 
     /**
@@ -456,7 +456,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
     }
 
     /**
@@ -474,7 +474,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     /**
@@ -483,7 +483,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_environment
      */
     fun setEnvironment(env: Environment?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -492,7 +492,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_environment
      */
     fun getEnvironment(): Environment? {
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
+        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
     }
 
     /**
@@ -501,7 +501,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_attributes
      */
     fun setAttributes(env: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setAttributesBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAttributesBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -510,7 +510,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_attributes
      */
     fun getAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAttributesBind, handle))
+        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAttributesBind, segment))
     }
 
     /**
@@ -519,7 +519,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_compositor
      */
     fun setCompositor(compositor: Compositor?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, handle, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -528,7 +528,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_compositor
      */
     fun getCompositor(): Compositor? {
-        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, handle))
+        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
     }
 
     /**
@@ -537,7 +537,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_keep_aspect_mode
      */
     fun setKeepAspectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, segment, mode)
     }
 
     /**
@@ -546,7 +546,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_keep_aspect_mode
      */
     fun getKeepAspectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, segment)
     }
 
     /**
@@ -559,7 +559,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_doppler_tracking
      */
     fun setDopplerTracking(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode)
     }
 
     /**
@@ -572,7 +572,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_doppler_tracking
      */
     fun getDopplerTracking(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment)
     }
 
     /**
@@ -582,7 +582,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_frustum
      */
     fun getFrustum(): List<Plane> {
-        return ObjectCalls.ptrcallNoArgsRetPlaneList(getFrustumBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPlaneList(getFrustumBind, segment)
     }
 
     /**
@@ -594,7 +594,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.is_position_in_frustum
      */
     fun isPositionInFrustum(worldPoint: Vector3): Boolean {
-        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionInFrustumBind, handle, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionInFrustumBind, segment, worldPoint)
     }
 
     /**
@@ -603,7 +603,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_camera_rid
      */
     fun getCameraRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCameraRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCameraRidBind, segment)
     }
 
     /**
@@ -613,7 +613,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_pyramid_shape_rid
      */
     fun getPyramidShapeRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getPyramidShapeRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getPyramidShapeRidBind, segment)
     }
 
     /**
@@ -623,7 +623,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_cull_mask_value
      */
     fun setCullMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCullMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCullMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -633,7 +633,7 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_cull_mask_value
      */
     fun getCullMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCullMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCullMaskValueBind, segment, layerNumber)
     }
 
     companion object {
@@ -647,15 +647,15 @@ open class Camera3D(handle: MemorySegment) : Node3D(handle) {
         const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Camera3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Camera3D? =
+            wrap(handle.segment)
 
         @JvmStatic
         fun create(): Camera3D =
-            Camera3D(ObjectCalls.constructObject("Camera3D"))
+            Camera3D(GodotHandle(ObjectCalls.constructObject("Camera3D")))
 
         internal fun wrap(handle: MemorySegment): Camera3D? =
-            if (handle.address() == 0L) null else Camera3D(handle)
+            if (handle.address() == 0L) null else Camera3D(GodotHandle(handle))
 
         private const val PROJECT_RAY_NORMAL_HASH = 1718073306L
         private val projectRayNormalBind by lazy {

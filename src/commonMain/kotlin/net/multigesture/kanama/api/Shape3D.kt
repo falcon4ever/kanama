@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Shape3D
  */
-open class Shape3D(handle: MemorySegment) : Resource(handle) {
+open class Shape3D(handle: GodotHandle) : Resource(handle) {
     var customSolverBias: Double
         @JvmName("customSolverBiasProperty")
         get() = getCustomSolverBias()
@@ -34,7 +34,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setCustomSolverBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, segment, bias)
     }
 
     /**
@@ -47,7 +47,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getCustomSolverBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setMargin(margin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
     }
 
     /**
@@ -75,7 +75,7 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
     }
 
     /**
@@ -85,16 +85,16 @@ open class Shape3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getDebugMesh(): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDebugMeshBind, handle))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDebugMeshBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Shape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Shape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Shape3D? =
-            if (handle.address() == 0L) null else Shape3D(handle)
+            if (handle.address() == 0L) null else Shape3D(GodotHandle(handle))
 
         private const val SET_CUSTOM_SOLVER_BIAS_HASH = 373806689L
         private val setCustomSolverBiasBind by lazy {

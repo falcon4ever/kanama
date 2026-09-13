@@ -16,7 +16,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: Animation
  */
-class Animation(handle: MemorySegment) : Resource(handle) {
+class Animation(handle: GodotHandle) : Resource(handle) {
     var length: Double
         @JvmName("lengthProperty")
         get() = getLength()
@@ -46,7 +46,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun addTrack(type: Long, atPosition: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(addTrackBind, handle, type, atPosition)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(addTrackBind, segment, type, atPosition)
     }
 
     /**
@@ -56,7 +56,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun removeTrack(trackIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeTrackBind, handle, trackIdx)
+        ObjectCalls.ptrcallWithIntArg(removeTrackBind, segment, trackIdx)
     }
 
     /**
@@ -66,7 +66,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getTrackCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTrackCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTrackCountBind, segment)
     }
 
     /**
@@ -76,7 +76,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetType(trackIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(trackGetTypeBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(trackGetTypeBind, segment, trackIdx)
     }
 
     /**
@@ -86,7 +86,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetPath(trackIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(trackGetPathBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(trackGetPathBind, segment, trackIdx)
     }
 
     /**
@@ -99,7 +99,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetPath(trackIdx: Int, path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(trackSetPathBind, handle, trackIdx, path)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(trackSetPathBind, segment, trackIdx, path)
     }
 
     /**
@@ -109,7 +109,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun findTrack(path: NodePath, type: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(findTrackBind, handle, path, type)
+        return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(findTrackBind, segment, path, type)
     }
 
     /**
@@ -119,7 +119,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackMoveUp(trackIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(trackMoveUpBind, handle, trackIdx)
+        ObjectCalls.ptrcallWithIntArg(trackMoveUpBind, segment, trackIdx)
     }
 
     /**
@@ -129,7 +129,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackMoveDown(trackIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(trackMoveDownBind, handle, trackIdx)
+        ObjectCalls.ptrcallWithIntArg(trackMoveDownBind, segment, trackIdx)
     }
 
     /**
@@ -139,7 +139,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackMoveTo(trackIdx: Int, toIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(trackMoveToBind, handle, trackIdx, toIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(trackMoveToBind, segment, trackIdx, toIdx)
     }
 
     /**
@@ -149,7 +149,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSwap(trackIdx: Int, withIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(trackSwapBind, handle, trackIdx, withIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(trackSwapBind, segment, trackIdx, withIdx)
     }
 
     /**
@@ -159,7 +159,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetImported(trackIdx: Int, imported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetImportedBind, handle, trackIdx, imported)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetImportedBind, segment, trackIdx, imported)
     }
 
     /**
@@ -169,7 +169,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackIsImported(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsImportedBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsImportedBind, segment, trackIdx)
     }
 
     /**
@@ -179,7 +179,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetEnabled(trackIdx: Int, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetEnabledBind, handle, trackIdx, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetEnabledBind, segment, trackIdx, enabled)
     }
 
     /**
@@ -189,7 +189,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackIsEnabled(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsEnabledBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsEnabledBind, segment, trackIdx)
     }
 
     /**
@@ -199,7 +199,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun positionTrackInsertKey(trackIdx: Int, time: Double, position: Vector3): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(positionTrackInsertKeyBind, handle, trackIdx, time, position)
+        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(positionTrackInsertKeyBind, segment, trackIdx, time, position)
     }
 
     /**
@@ -209,7 +209,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun rotationTrackInsertKey(trackIdx: Int, time: Double, rotation: Quaternion): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(rotationTrackInsertKeyBind, handle, trackIdx, time, rotation)
+        return ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(rotationTrackInsertKeyBind, segment, trackIdx, time, rotation)
     }
 
     /**
@@ -219,7 +219,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun scaleTrackInsertKey(trackIdx: Int, time: Double, scale: Vector3): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(scaleTrackInsertKeyBind, handle, trackIdx, time, scale)
+        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(scaleTrackInsertKeyBind, segment, trackIdx, time, scale)
     }
 
     /**
@@ -229,7 +229,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun blendShapeTrackInsertKey(trackIdx: Int, time: Double, amount: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(blendShapeTrackInsertKeyBind, handle, trackIdx, time, amount)
+        return ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(blendShapeTrackInsertKeyBind, segment, trackIdx, time, amount)
     }
 
     /**
@@ -240,7 +240,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun positionTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(positionTrackInterpolateBind, handle, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(positionTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -251,7 +251,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun rotationTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(rotationTrackInterpolateBind, handle, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(rotationTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -262,7 +262,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun scaleTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(scaleTrackInterpolateBind, handle, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(scaleTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -273,7 +273,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun blendShapeTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(blendShapeTrackInterpolateBind, handle, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(blendShapeTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -283,7 +283,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackInsertKey(trackIdx: Int, time: Double, key: Any?, transition: Double = 1.0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(trackInsertKeyBind, handle, trackIdx, time, key, transition)
+        return ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(trackInsertKeyBind, segment, trackIdx, time, key, transition)
     }
 
     /**
@@ -293,7 +293,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackRemoveKey(trackIdx: Int, keyIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(trackRemoveKeyBind, handle, trackIdx, keyIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(trackRemoveKeyBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -303,7 +303,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackRemoveKeyAtTime(trackIdx: Int, time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(trackRemoveKeyAtTimeBind, handle, trackIdx, time)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(trackRemoveKeyAtTimeBind, segment, trackIdx, time)
     }
 
     /**
@@ -313,7 +313,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetKeyValue(trackIdx: Int, key: Int, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndVariantArg(trackSetKeyValueBind, handle, trackIdx, key, value)
+        ObjectCalls.ptrcallWithTwoIntAndVariantArg(trackSetKeyValueBind, segment, trackIdx, key, value)
     }
 
     /**
@@ -324,7 +324,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetKeyTransition(trackIdx: Int, keyIdx: Int, transition: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTransitionBind, handle, trackIdx, keyIdx, transition)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTransitionBind, segment, trackIdx, keyIdx, transition)
     }
 
     /**
@@ -334,7 +334,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetKeyTime(trackIdx: Int, keyIdx: Int, time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTimeBind, handle, trackIdx, keyIdx, time)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTimeBind, segment, trackIdx, keyIdx, time)
     }
 
     /**
@@ -345,7 +345,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetKeyTransition(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTransitionBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTransitionBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -355,7 +355,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetKeyCount(trackIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(trackGetKeyCountBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(trackGetKeyCountBind, segment, trackIdx)
     }
 
     /**
@@ -365,7 +365,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetKeyValue(trackIdx: Int, keyIdx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(trackGetKeyValueBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(trackGetKeyValueBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -375,7 +375,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetKeyTime(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTimeBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTimeBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -390,7 +390,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackFindKey(trackIdx: Int, time: Double, findMode: Long = 0L, limit: Boolean = false, backward: Boolean = false): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(trackFindKeyBind, handle, trackIdx, time, findMode, limit, backward)
+        return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(trackFindKeyBind, segment, trackIdx, time, findMode, limit, backward)
     }
 
     /**
@@ -400,7 +400,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetInterpolationType(trackIdx: Int, interpolation: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(trackSetInterpolationTypeBind, handle, trackIdx, interpolation)
+        ObjectCalls.ptrcallWithIntAndLongArgs(trackSetInterpolationTypeBind, segment, trackIdx, interpolation)
     }
 
     /**
@@ -410,7 +410,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetInterpolationType(trackIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(trackGetInterpolationTypeBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(trackGetInterpolationTypeBind, segment, trackIdx)
     }
 
     /**
@@ -420,7 +420,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackSetInterpolationLoopWrap(trackIdx: Int, interpolation: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetInterpolationLoopWrapBind, handle, trackIdx, interpolation)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetInterpolationLoopWrapBind, segment, trackIdx, interpolation)
     }
 
     /**
@@ -431,7 +431,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackGetInterpolationLoopWrap(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackGetInterpolationLoopWrapBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(trackGetInterpolationLoopWrapBind, segment, trackIdx)
     }
 
     /**
@@ -441,7 +441,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun trackIsCompressed(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsCompressedBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsCompressedBind, segment, trackIdx)
     }
 
     /**
@@ -451,7 +451,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun valueTrackSetUpdateMode(trackIdx: Int, mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(valueTrackSetUpdateModeBind, handle, trackIdx, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(valueTrackSetUpdateModeBind, segment, trackIdx, mode)
     }
 
     /**
@@ -461,7 +461,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun valueTrackGetUpdateMode(trackIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, segment, trackIdx)
     }
 
     /**
@@ -475,7 +475,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun valueTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(valueTrackInterpolateBind, handle, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(valueTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -485,7 +485,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun methodTrackGetName(trackIdx: Int, keyIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(methodTrackGetNameBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(methodTrackGetNameBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -495,7 +495,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun methodTrackGetParams(trackIdx: Int, keyIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(methodTrackGetParamsBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(methodTrackGetParamsBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -507,7 +507,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0f, 0f), outHandle: Vector2 = Vector2(0f, 0f)): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(bezierTrackInsertKeyBind, handle, trackIdx, time, value, inHandle, outHandle)
+        return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(bezierTrackInsertKeyBind, segment, trackIdx, time, value, inHandle, outHandle)
     }
 
     /**
@@ -518,7 +518,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackSetKeyValue(trackIdx: Int, keyIdx: Int, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(bezierTrackSetKeyValueBind, handle, trackIdx, keyIdx, value)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(bezierTrackSetKeyValueBind, segment, trackIdx, keyIdx, value)
     }
 
     /**
@@ -529,7 +529,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackSetKeyInHandle(trackIdx: Int, keyIdx: Int, inHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyInHandleBind, handle, trackIdx, keyIdx, inHandle, balancedValueTimeRatio)
+        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyInHandleBind, segment, trackIdx, keyIdx, inHandle, balancedValueTimeRatio)
     }
 
     /**
@@ -540,7 +540,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackSetKeyOutHandle(trackIdx: Int, keyIdx: Int, outHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyOutHandleBind, handle, trackIdx, keyIdx, outHandle, balancedValueTimeRatio)
+        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyOutHandleBind, segment, trackIdx, keyIdx, outHandle, balancedValueTimeRatio)
     }
 
     /**
@@ -551,7 +551,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackGetKeyValue(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(bezierTrackGetKeyValueBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(bezierTrackGetKeyValueBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -562,7 +562,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackGetKeyInHandle(trackIdx: Int, keyIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyInHandleBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyInHandleBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -573,7 +573,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackGetKeyOutHandle(trackIdx: Int, keyIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyOutHandleBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyOutHandleBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -584,7 +584,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun bezierTrackInterpolate(trackIdx: Int, time: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(bezierTrackInterpolateBind, handle, trackIdx, time)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(bezierTrackInterpolateBind, segment, trackIdx, time)
     }
 
     /**
@@ -596,7 +596,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackInsertKey(trackIdx: Int, time: Double, stream: Resource?, startOffset: Double = 0.0, endOffset: Double = 0.0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(audioTrackInsertKeyBind, handle, trackIdx, time, stream?.requireOpenHandle() ?: MemorySegment.NULL, startOffset, endOffset)
+        return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(audioTrackInsertKeyBind, segment, trackIdx, time, stream?.requireOpenHandle() ?: MemorySegment.NULL, startOffset, endOffset)
     }
 
     /**
@@ -607,7 +607,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackSetKeyStream(trackIdx: Int, keyIdx: Int, stream: Resource?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(audioTrackSetKeyStreamBind, handle, trackIdx, keyIdx, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(audioTrackSetKeyStreamBind, segment, trackIdx, keyIdx, stream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -618,7 +618,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackSetKeyStartOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyStartOffsetBind, handle, trackIdx, keyIdx, offset)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyStartOffsetBind, segment, trackIdx, keyIdx, offset)
     }
 
     /**
@@ -629,7 +629,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackSetKeyEndOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyEndOffsetBind, handle, trackIdx, keyIdx, offset)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyEndOffsetBind, segment, trackIdx, keyIdx, offset)
     }
 
     /**
@@ -640,8 +640,8 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackGetKeyStream(trackIdx: Int, keyIdx: Int): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetObject(audioTrackGetKeyStreamBind, handle, trackIdx, keyIdx)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetObject(audioTrackGetKeyStreamBind, segment, trackIdx, keyIdx)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -657,7 +657,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackGetKeyStartOffset(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyStartOffsetBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyStartOffsetBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -668,7 +668,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackGetKeyEndOffset(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyEndOffsetBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyEndOffsetBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -679,7 +679,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackSetUseBlend(trackIdx: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(audioTrackSetUseBlendBind, handle, trackIdx, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(audioTrackSetUseBlendBind, segment, trackIdx, enable)
     }
 
     /**
@@ -689,7 +689,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun audioTrackIsUseBlend(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(audioTrackIsUseBlendBind, handle, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(audioTrackIsUseBlendBind, segment, trackIdx)
     }
 
     /**
@@ -700,7 +700,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun animationTrackInsertKey(trackIdx: Int, time: Double, animation: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(animationTrackInsertKeyBind, handle, trackIdx, time, animation)
+        return ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(animationTrackInsertKeyBind, segment, trackIdx, time, animation)
     }
 
     /**
@@ -711,7 +711,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun animationTrackSetKeyAnimation(trackIdx: Int, keyIdx: Int, animation: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndStringNameArg(animationTrackSetKeyAnimationBind, handle, trackIdx, keyIdx, animation)
+        ObjectCalls.ptrcallWithTwoIntAndStringNameArg(animationTrackSetKeyAnimationBind, segment, trackIdx, keyIdx, animation)
     }
 
     /**
@@ -722,7 +722,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun animationTrackGetKeyAnimation(trackIdx: Int, keyIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(animationTrackGetKeyAnimationBind, handle, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(animationTrackGetKeyAnimationBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -732,7 +732,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun addMarker(name: String, time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(addMarkerBind, handle, name, time)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(addMarkerBind, segment, name, time)
     }
 
     /**
@@ -742,7 +742,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun removeMarker(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeMarkerBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeMarkerBind, segment, name)
     }
 
     /**
@@ -752,7 +752,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun hasMarker(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasMarkerBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasMarkerBind, segment, name)
     }
 
     /**
@@ -762,7 +762,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getMarkerAtTime(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(getMarkerAtTimeBind, handle, time)
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(getMarkerAtTimeBind, segment, time)
     }
 
     /**
@@ -773,7 +773,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getNextMarker(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(getNextMarkerBind, handle, time)
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(getNextMarkerBind, segment, time)
     }
 
     /**
@@ -784,7 +784,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getPrevMarker(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(getPrevMarkerBind, handle, time)
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(getPrevMarkerBind, segment, time)
     }
 
     /**
@@ -794,7 +794,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getMarkerTime(name: String): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getMarkerTimeBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getMarkerTimeBind, segment, name)
     }
 
     /**
@@ -804,7 +804,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getMarkerNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMarkerNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMarkerNamesBind, segment)
     }
 
     /**
@@ -814,7 +814,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getMarkerColor(name: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetColor(getMarkerColorBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetColor(getMarkerColorBind, segment, name)
     }
 
     /**
@@ -824,7 +824,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun setMarkerColor(name: String, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndColorArg(setMarkerColorBind, handle, name, color)
+        ObjectCalls.ptrcallWithStringNameAndColorArg(setMarkerColorBind, segment, name, color)
     }
 
     /**
@@ -835,7 +835,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun setLength(timeSec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, timeSec)
+        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, timeSec)
     }
 
     /**
@@ -846,7 +846,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
     }
 
     /**
@@ -858,7 +858,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun setLoopMode(loopMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
+        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode)
     }
 
     /**
@@ -870,7 +870,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getLoopMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment)
     }
 
     /**
@@ -880,7 +880,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun setStep(sizeSec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStepBind, handle, sizeSec)
+        ObjectCalls.ptrcallWithDoubleArg(setStepBind, segment, sizeSec)
     }
 
     /**
@@ -890,7 +890,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun getStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
     }
 
     /**
@@ -900,7 +900,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -910,7 +910,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun copyTrack(trackIdx: Int, toAnimation: Animation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(copyTrackBind, handle, trackIdx, toAnimation?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(copyTrackBind, segment, trackIdx, toAnimation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -921,7 +921,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun optimize(allowedVelocityErr: Double = 0.01, allowedAngularErr: Double = 0.01, precision: Int = 3) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoDoubleAndIntArgs(optimizeBind, handle, allowedVelocityErr, allowedAngularErr, precision)
+        ObjectCalls.ptrcallWithTwoDoubleAndIntArgs(optimizeBind, segment, allowedVelocityErr, allowedAngularErr, precision)
     }
 
     /**
@@ -936,7 +936,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun compress(pageSize: Long = 8192L, fps: Long = 120L, splitTolerance: Double = 4.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoUInt32AndDoubleArg(compressBind, handle, pageSize, fps, splitTolerance)
+        ObjectCalls.ptrcallWithTwoUInt32AndDoubleArg(compressBind, segment, pageSize, fps, splitTolerance)
     }
 
     /**
@@ -947,7 +947,7 @@ class Animation(handle: MemorySegment) : Resource(handle) {
      */
     fun isCaptureIncluded(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaptureIncludedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCaptureIncludedBind, segment)
     }
 
     companion object {
@@ -979,11 +979,11 @@ class Animation(handle: MemorySegment) : Resource(handle) {
         const val FIND_MODE_EXACT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Animation? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Animation? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Animation? =
-            if (handle.address() == 0L) null else Animation(handle)
+            if (handle.address() == 0L) null else Animation(GodotHandle(handle))
 
         private const val ADD_TRACK_HASH = 3843682357L
         private val addTrackBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: LineEdit
  */
-class LineEdit(handle: MemorySegment) : Control(handle) {
+class LineEdit(handle: GodotHandle) : Control(handle) {
     var text: String
         @JvmName("textProperty")
         get() = getText()
@@ -227,391 +227,391 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
         set(value) = setRightIconScale(value)
 
     fun hasImeText(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, segment)
     }
 
     fun cancelIme() {
-        ObjectCalls.ptrcallNoArgs(cancelImeBind, handle)
+        ObjectCalls.ptrcallNoArgs(cancelImeBind, segment)
     }
 
     fun applyIme() {
-        ObjectCalls.ptrcallNoArgs(applyImeBind, handle)
+        ObjectCalls.ptrcallNoArgs(applyImeBind, segment)
     }
 
     fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
     }
 
     fun edit(hideFocus: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(editBind, handle, hideFocus)
+        ObjectCalls.ptrcallWithBoolArg(editBind, segment, hideFocus)
     }
 
     fun unedit() {
-        ObjectCalls.ptrcallNoArgs(uneditBind, handle)
+        ObjectCalls.ptrcallNoArgs(uneditBind, segment)
     }
 
     fun isEditing(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditingBind, segment)
     }
 
     fun setKeepEditingOnTextSubmit(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeepEditingOnTextSubmitBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setKeepEditingOnTextSubmitBind, segment, enable)
     }
 
     fun isEditingKeptOnTextSubmit(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingKeptOnTextSubmitBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditingKeptOnTextSubmitBind, segment)
     }
 
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun select(from: Int = 0, to: Int = -1) {
-        ObjectCalls.ptrcallWithTwoIntArgs(selectBind, handle, from, to)
+        ObjectCalls.ptrcallWithTwoIntArgs(selectBind, segment, from, to)
     }
 
     fun selectAll() {
-        ObjectCalls.ptrcallNoArgs(selectAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(selectAllBind, segment)
     }
 
     fun deselect() {
-        ObjectCalls.ptrcallNoArgs(deselectBind, handle)
+        ObjectCalls.ptrcallNoArgs(deselectBind, segment)
     }
 
     fun hasUndo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, segment)
     }
 
     fun hasRedo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, segment)
     }
 
     fun hasSelection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSelectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasSelectionBind, segment)
     }
 
     fun getSelectedText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, segment)
     }
 
     fun getSelectionFromColumn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromColumnBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromColumnBind, segment)
     }
 
     fun getSelectionToColumn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionToColumnBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionToColumnBind, segment)
     }
 
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     fun getDrawControlChars(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, segment)
     }
 
     fun setDrawControlChars(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, segment, enable)
     }
 
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
     }
 
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     fun setPlaceholder(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, segment, text)
     }
 
     fun getPlaceholder(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, segment)
     }
 
     fun setCaretColumn(position: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCaretColumnBind, handle, position)
+        ObjectCalls.ptrcallWithIntArg(setCaretColumnBind, segment, position)
     }
 
     fun getCaretColumn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCaretColumnBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCaretColumnBind, segment)
     }
 
     fun getNextCompositeCharacterColumn(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getNextCompositeCharacterColumnBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getNextCompositeCharacterColumnBind, segment, column)
     }
 
     fun getPreviousCompositeCharacterColumn(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getPreviousCompositeCharacterColumnBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getPreviousCompositeCharacterColumnBind, segment, column)
     }
 
     fun getScrollOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScrollOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getScrollOffsetBind, segment)
     }
 
     fun setExpandToTextLengthEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpandToTextLengthEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setExpandToTextLengthEnabledBind, segment, enabled)
     }
 
     fun isExpandToTextLengthEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isExpandToTextLengthEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isExpandToTextLengthEnabledBind, segment)
     }
 
     fun setCaretBlinkEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, segment, enabled)
     }
 
     fun isCaretBlinkEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, segment)
     }
 
     fun setCaretMidGraphemeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, segment, enabled)
     }
 
     fun isCaretMidGraphemeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, segment)
     }
 
     fun setCaretForceDisplayed(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretForceDisplayedBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCaretForceDisplayedBind, segment, enabled)
     }
 
     fun isCaretForceDisplayed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaretForceDisplayedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCaretForceDisplayedBind, segment)
     }
 
     fun setCaretBlinkInterval(interval: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, handle, interval)
+        ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, segment, interval)
     }
 
     fun getCaretBlinkInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, segment)
     }
 
     fun setMaxLength(chars: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxLengthBind, handle, chars)
+        ObjectCalls.ptrcallWithIntArg(setMaxLengthBind, segment, chars)
     }
 
     fun getMaxLength(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxLengthBind, segment)
     }
 
     fun insertTextAtCaret(text: String) {
-        ObjectCalls.ptrcallWithStringArg(insertTextAtCaretBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(insertTextAtCaretBind, segment, text)
     }
 
     fun deleteCharAtCaret() {
-        ObjectCalls.ptrcallNoArgs(deleteCharAtCaretBind, handle)
+        ObjectCalls.ptrcallNoArgs(deleteCharAtCaretBind, segment)
     }
 
     fun deleteText(fromColumn: Int, toColumn: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(deleteTextBind, handle, fromColumn, toColumn)
+        ObjectCalls.ptrcallWithTwoIntArgs(deleteTextBind, segment, fromColumn, toColumn)
     }
 
     fun setEditable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enabled)
     }
 
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     }
 
     fun setSecret(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSecretBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSecretBind, segment, enabled)
     }
 
     fun isSecret(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSecretBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSecretBind, segment)
     }
 
     fun setSecretCharacter(character: String) {
-        ObjectCalls.ptrcallWithStringArg(setSecretCharacterBind, handle, character)
+        ObjectCalls.ptrcallWithStringArg(setSecretCharacterBind, segment, character)
     }
 
     fun getSecretCharacter(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSecretCharacterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSecretCharacterBind, segment)
     }
 
     fun menuOption(option: Int) {
-        ObjectCalls.ptrcallWithIntArg(menuOptionBind, handle, option)
+        ObjectCalls.ptrcallWithIntArg(menuOptionBind, segment, option)
     }
 
     fun getMenu(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, handle))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, segment))
     }
 
     fun isMenuVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, segment)
     }
 
     fun setContextMenuEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, segment, enable)
     }
 
     fun isContextMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, segment)
     }
 
     fun setEmojiMenuEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, segment, enable)
     }
 
     fun isEmojiMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, segment)
     }
 
     fun setBackspaceDeletesCompositeCharacterEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, segment, enable)
     }
 
     fun isBackspaceDeletesCompositeCharacterEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, segment)
     }
 
     fun setVirtualKeyboardEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, segment, enable)
     }
 
     fun isVirtualKeyboardEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, segment)
     }
 
     fun setVirtualKeyboardShowOnFocus(showOnFocus: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, handle, showOnFocus)
+        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, segment, showOnFocus)
     }
 
     fun getVirtualKeyboardShowOnFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, segment)
     }
 
     fun setVirtualKeyboardType(type: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVirtualKeyboardTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setVirtualKeyboardTypeBind, segment, type)
     }
 
     fun getVirtualKeyboardType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVirtualKeyboardTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVirtualKeyboardTypeBind, segment)
     }
 
     fun setClearButtonEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClearButtonEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setClearButtonEnabledBind, segment, enable)
     }
 
     fun isClearButtonEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClearButtonEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isClearButtonEnabledBind, segment)
     }
 
     fun setShortcutKeysEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, segment, enable)
     }
 
     fun isShortcutKeysEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, segment)
     }
 
     fun setMiddleMousePasteEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, segment, enable)
     }
 
     fun isMiddleMousePasteEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, segment)
     }
 
     fun setSelectingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, segment, enable)
     }
 
     fun isSelectingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, segment)
     }
 
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, segment, enable)
     }
 
     fun isDeselectOnFocusLossEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, segment)
     }
 
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, segment, enable)
     }
 
     fun isDragAndDropSelectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, segment)
     }
 
     fun setRightIcon(icon: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setRightIconBind, handle, listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setRightIconBind, segment, listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getRightIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRightIconBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRightIconBind, segment))
     }
 
     fun setIconExpandMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconExpandModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setIconExpandModeBind, segment, mode)
     }
 
     fun getIconExpandMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getIconExpandModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getIconExpandModeBind, segment)
     }
 
     fun setRightIconScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRightIconScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setRightIconScaleBind, segment, scale)
     }
 
     fun getRightIconScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRightIconScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRightIconScaleBind, segment)
     }
 
     fun setFlat(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, enabled)
     }
 
     fun isFlat(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
     }
 
     fun setSelectAllOnFocus(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, segment, enabled)
     }
 
     fun isSelectAllOnFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, segment)
     }
 
     object Signals {
@@ -667,11 +667,11 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
         const val EXPAND_MODE_FIT_TO_LINE_EDIT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LineEdit? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LineEdit? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LineEdit? =
-            if (handle.address() == 0L) null else LineEdit(handle)
+            if (handle.address() == 0L) null else LineEdit(GodotHandle(handle))
 
         private const val HAS_IME_TEXT_HASH = 36873697L
         private val hasImeTextBind by lazy {

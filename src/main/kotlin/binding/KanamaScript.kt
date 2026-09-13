@@ -7,6 +7,8 @@ import java.lang.foreign.ValueLayout.JAVA_BYTE
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodType
+import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
@@ -714,7 +716,7 @@ class KanamaScript(
       var success = false
       try {
         withProgrammaticCreate(baseHandle.address()) {
-          net.multigesture.kanama.api.GodotObject(baseHandle).setScript(resolved.script)
+          GodotObject(GodotHandle(baseHandle)).setScript(resolved.script)
         }
         val instance =
           ScriptBridge.kotlinObjectForOwner(baseHandle)
@@ -723,7 +725,7 @@ class KanamaScript(
                 "The script may have failed to attach."
             )
         success = true
-        return instance to net.multigesture.kanama.api.Resource.fromHandle(baseHandle)
+        return instance to net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(baseHandle))
       } finally {
         // The loaded script wrapper is our transient +1 — the base resource holds its own
         // reference via setScript, so release ours (the borrowed fallback stays untouched).
@@ -763,7 +765,10 @@ class KanamaScript(
         }
       }
       return registeredScriptObjectFor(template)?.let {
-        ResolvedScript(net.multigesture.kanama.api.Resource.fromHandle(it), owned = false)
+        ResolvedScript(
+          net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(it)),
+          owned = false,
+        )
       }
     }
 

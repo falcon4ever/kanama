@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: TileSetAtlasSource
  */
-class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
+class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     var texture: Texture2D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -52,7 +52,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -62,7 +62,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -72,7 +72,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setMargins(margins: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setMarginsBind, handle, margins)
+        ObjectCalls.ptrcallWithVector2iArg(setMarginsBind, segment, margins)
     }
 
     /**
@@ -82,7 +82,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getMargins(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getMarginsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getMarginsBind, segment)
     }
 
     /**
@@ -92,7 +92,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setSeparation(separation: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSeparationBind, handle, separation)
+        ObjectCalls.ptrcallWithVector2iArg(setSeparationBind, segment, separation)
     }
 
     /**
@@ -102,7 +102,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getSeparation(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSeparationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSeparationBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTextureRegionSize(textureRegionSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setTextureRegionSizeBind, handle, textureRegionSize)
+        ObjectCalls.ptrcallWithVector2iArg(setTextureRegionSizeBind, segment, textureRegionSize)
     }
 
     /**
@@ -124,7 +124,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTextureRegionSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureRegionSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureRegionSizeBind, segment)
     }
 
     /**
@@ -137,7 +137,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setUseTexturePadding(useTexturePadding: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseTexturePaddingBind, handle, useTexturePadding)
+        ObjectCalls.ptrcallWithBoolArg(setUseTexturePaddingBind, segment, useTexturePadding)
     }
 
     /**
@@ -150,7 +150,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getUseTexturePadding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseTexturePaddingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseTexturePaddingBind, segment)
     }
 
     /**
@@ -160,7 +160,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun createTile(atlasCoords: Vector2i, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoVector2iArgs(createTileBind, handle, atlasCoords, size)
+        ObjectCalls.ptrcallWithTwoVector2iArgs(createTileBind, segment, atlasCoords, size)
     }
 
     /**
@@ -170,7 +170,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun removeTile(atlasCoords: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(removeTileBind, handle, atlasCoords)
+        ObjectCalls.ptrcallWithVector2iArg(removeTileBind, segment, atlasCoords)
     }
 
     /**
@@ -184,7 +184,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun moveTileInAtlas(atlasCoords: Vector2i, newAtlasCoords: Vector2i, newSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeVector2iArgs(moveTileInAtlasBind, handle, atlasCoords, newAtlasCoords, newSize)
+        ObjectCalls.ptrcallWithThreeVector2iArgs(moveTileInAtlasBind, segment, atlasCoords, newAtlasCoords, newSize)
     }
 
     /**
@@ -194,7 +194,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileSizeInAtlas(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileSizeInAtlasBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileSizeInAtlasBind, segment, atlasCoords)
     }
 
     /**
@@ -206,7 +206,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun hasRoomForTile(atlasCoords: Vector2i, size: Vector2i, animationColumns: Int, animationSeparation: Vector2i, framesCount: Int, ignoredTile: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(hasRoomForTileBind, handle, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
+        return ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(hasRoomForTileBind, segment, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
     }
 
     /**
@@ -218,7 +218,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTilesToBeRemovedOnChange(texture: Texture2D?, margins: Vector2i, separation: Vector2i, textureRegionSize: Vector2i): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(getTilesToBeRemovedOnChangeBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, margins, separation, textureRegionSize)
+        return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(getTilesToBeRemovedOnChangeBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, margins, separation, textureRegionSize)
     }
 
     /**
@@ -229,7 +229,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAtCoords(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAtCoordsBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAtCoordsBind, segment, atlasCoords)
     }
 
     /**
@@ -240,7 +240,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun hasTilesOutsideTexture(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasTilesOutsideTextureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasTilesOutsideTextureBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun clearTilesOutsideTexture() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearTilesOutsideTextureBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearTilesOutsideTextureBind, segment)
     }
 
     /**
@@ -263,7 +263,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTileAnimationColumns(atlasCoords: Vector2i, frameColumns: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationColumnsBind, handle, atlasCoords, frameColumns)
+        ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationColumnsBind, segment, atlasCoords, frameColumns)
     }
 
     /**
@@ -273,7 +273,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAnimationColumns(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationColumnsBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationColumnsBind, segment, atlasCoords)
     }
 
     /**
@@ -284,7 +284,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTileAnimationSeparation(atlasCoords: Vector2i, separation: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoVector2iArgs(setTileAnimationSeparationBind, handle, atlasCoords, separation)
+        ObjectCalls.ptrcallWithTwoVector2iArgs(setTileAnimationSeparationBind, segment, atlasCoords, separation)
     }
 
     /**
@@ -295,7 +295,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAnimationSeparation(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAnimationSeparationBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAnimationSeparationBind, segment, atlasCoords)
     }
 
     /**
@@ -305,7 +305,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTileAnimationSpeed(atlasCoords: Vector2i, speed: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndDoubleArg(setTileAnimationSpeedBind, handle, atlasCoords, speed)
+        ObjectCalls.ptrcallWithVector2iAndDoubleArg(setTileAnimationSpeedBind, segment, atlasCoords, speed)
     }
 
     /**
@@ -315,7 +315,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAnimationSpeed(atlasCoords: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationSpeedBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationSpeedBind, segment, atlasCoords)
     }
 
     /**
@@ -326,7 +326,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTileAnimationMode(atlasCoords: Vector2i, mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndLongArg(setTileAnimationModeBind, handle, atlasCoords, mode)
+        ObjectCalls.ptrcallWithVector2iAndLongArg(setTileAnimationModeBind, segment, atlasCoords, mode)
     }
 
     /**
@@ -337,7 +337,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAnimationMode(atlasCoords: Vector2i): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetLong(getTileAnimationModeBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetLong(getTileAnimationModeBind, segment, atlasCoords)
     }
 
     /**
@@ -347,7 +347,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTileAnimationFramesCount(atlasCoords: Vector2i, framesCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationFramesCountBind, handle, atlasCoords, framesCount)
+        ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationFramesCountBind, segment, atlasCoords, framesCount)
     }
 
     /**
@@ -357,7 +357,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAnimationFramesCount(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationFramesCountBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationFramesCountBind, segment, atlasCoords)
     }
 
     /**
@@ -368,7 +368,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int, duration: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iIntDoubleArgs(setTileAnimationFrameDurationBind, handle, atlasCoords, frameIndex, duration)
+        ObjectCalls.ptrcallWithVector2iIntDoubleArgs(setTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex, duration)
     }
 
     /**
@@ -379,7 +379,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(getTileAnimationFrameDurationBind, handle, atlasCoords, frameIndex)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(getTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex)
     }
 
     /**
@@ -390,7 +390,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileAnimationTotalDuration(atlasCoords: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationTotalDurationBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationTotalDurationBind, segment, atlasCoords)
     }
 
     /**
@@ -403,7 +403,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun createAlternativeTile(atlasCoords: Vector2i, alternativeIdOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(createAlternativeTileBind, handle, atlasCoords, alternativeIdOverride)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(createAlternativeTileBind, segment, atlasCoords, alternativeIdOverride)
     }
 
     /**
@@ -414,7 +414,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun removeAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndIntArg(removeAlternativeTileBind, handle, atlasCoords, alternativeTile)
+        ObjectCalls.ptrcallWithVector2iAndIntArg(removeAlternativeTileBind, segment, atlasCoords, alternativeTile)
     }
 
     /**
@@ -425,7 +425,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun setAlternativeTileId(atlasCoords: Vector2i, alternativeTile: Int, newId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndTwoIntArgs(setAlternativeTileIdBind, handle, atlasCoords, alternativeTile, newId)
+        ObjectCalls.ptrcallWithVector2iAndTwoIntArgs(setAlternativeTileIdBind, segment, atlasCoords, alternativeTile, newId)
     }
 
     /**
@@ -435,7 +435,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getNextAlternativeTileId(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getNextAlternativeTileIdBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getNextAlternativeTileIdBind, segment, atlasCoords)
     }
 
     /**
@@ -445,7 +445,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileData(atlasCoords: Vector2i, alternativeTile: Int): TileData? {
         checkOpen()
-        return TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(getTileDataBind, handle, atlasCoords, alternativeTile))
+        return TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(getTileDataBind, segment, atlasCoords, alternativeTile))
     }
 
     /**
@@ -456,7 +456,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getAtlasGridSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getAtlasGridSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getAtlasGridSizeBind, segment)
     }
 
     /**
@@ -467,7 +467,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getTileTextureRegion(atlasCoords: Vector2i, frame: Int = 0): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getTileTextureRegionBind, handle, atlasCoords, frame)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getTileTextureRegionBind, segment, atlasCoords, frame)
     }
 
     /**
@@ -478,7 +478,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getRuntimeTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRuntimeTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRuntimeTextureBind, segment))
     }
 
     /**
@@ -490,7 +490,7 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
      */
     fun getRuntimeTileTextureRegion(atlasCoords: Vector2i, frame: Int): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getRuntimeTileTextureRegionBind, handle, atlasCoords, frame)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getRuntimeTileTextureRegionBind, segment, atlasCoords, frame)
     }
 
     companion object {
@@ -502,11 +502,11 @@ class TileSetAtlasSource(handle: MemorySegment) : TileSetSource(handle) {
         const val TILE_ANIMATION_MODE_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TileSetAtlasSource? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TileSetAtlasSource? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TileSetAtlasSource? =
-            if (handle.address() == 0L) null else TileSetAtlasSource(handle)
+            if (handle.address() == 0L) null else TileSetAtlasSource(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {

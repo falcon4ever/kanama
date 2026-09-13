@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AwaitTweener
  */
-class AwaitTweener(handle: MemorySegment) : Tweener(handle) {
+class AwaitTweener(handle: GodotHandle) : Tweener(handle) {
     /**
      * Sets the maximum time an `AwaitTweener` can wait for the signal. Can be used as a safeguard for
      * signals that may never be emitted. If not specified, the tweener will wait indefinitely.
@@ -19,8 +19,8 @@ class AwaitTweener(handle: MemorySegment) : Tweener(handle) {
      */
     fun setTimeout(timeout: Double): AwaitTweener? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setTimeoutBind, handle, timeout)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setTimeoutBind, segment, timeout)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -29,11 +29,11 @@ class AwaitTweener(handle: MemorySegment) : Tweener(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AwaitTweener? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AwaitTweener? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AwaitTweener? =
-            if (handle.address() == 0L) null else AwaitTweener(handle)
+            if (handle.address() == 0L) null else AwaitTweener(GodotHandle(handle))
 
         private const val SET_TIMEOUT_HASH = 3123469156L
         private val setTimeoutBind by lazy {

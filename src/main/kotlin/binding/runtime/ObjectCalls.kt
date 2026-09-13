@@ -1359,7 +1359,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Node> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Node)
+      BuiltinTypes.readArrayObjects(ret, Node::wrap)
     }
 
   fun ptrcallNoArgsRetTypedNode2DList(
@@ -1367,7 +1367,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Node2D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Node2D)
+      BuiltinTypes.readArrayObjects(ret, Node2D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedNode3DList(
@@ -1375,7 +1375,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Node3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Node3D)
+      BuiltinTypes.readArrayObjects(ret, Node3D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedMaterialList(
@@ -1391,7 +1391,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Area2D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Area2D)
+      BuiltinTypes.readArrayObjects(ret, Area2D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedArea3DList(
@@ -1399,7 +1399,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Area3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Area3D)
+      BuiltinTypes.readArrayObjects(ret, Area3D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedBaseButtonList(
@@ -1407,7 +1407,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<BaseButton> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::BaseButton)
+      BuiltinTypes.readArrayObjects(ret, BaseButton::wrap)
     }
 
   fun ptrcallNoArgsRetTypedPhysicsBody3DList(
@@ -1415,7 +1415,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<PhysicsBody3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::PhysicsBody3D)
+      BuiltinTypes.readArrayObjects(ret, PhysicsBody3D::wrap)
     }
 
   fun ptrcallNoArgsRetVector2iList(
@@ -1557,8 +1557,7 @@ object ObjectCalls {
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
-  ): List<Node> =
-    ptrcallWithBoolArgRetTypedObjectList(methodBind, instance, boolArg, Node::fromHandle)
+  ): List<Node> = ptrcallWithBoolArgRetTypedObjectList(methodBind, instance, boolArg, Node::wrap)
 
   fun ptrcallWithStringAndBoolArgRetObjectList(
     methodBind: MemorySegment,
@@ -1648,7 +1647,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithStringTwoIntArgsRetObjectList(methodBind, instance, text, first, second).mapNotNull {
-      wrapper(it.handle)
+      wrapper(it.segment)
     }
 
   fun ptrcallWithThreeIntTwoBoolArgsRetObjectList(
@@ -1706,7 +1705,7 @@ object ObjectCalls {
         firstBool,
         secondBool,
       )
-      .mapNotNull { wrapper(it.handle) }
+      .mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithThreeIntBoolDoubleBoolArgsRetObjectList(
     methodBind: MemorySegment,
@@ -1769,7 +1768,7 @@ object ObjectCalls {
         value,
         secondBool,
       )
-      .mapNotNull { wrapper(it.handle) }
+      .mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithTwoStringAndTwoBoolArgsRetTypedNodeList(
     methodBind: MemorySegment,
@@ -1795,7 +1794,7 @@ object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, arg2)
         args.setAtIndex(ADDRESS, 3, arg3)
         return callArrayReturn(methodBind, instance, args) { ret ->
-          BuiltinTypes.readArrayObjects(ret, ::Node)
+          BuiltinTypes.readArrayObjects(ret, Node::wrap)
         }
       } finally {
         GodotStrings.destroyString(arg0)
@@ -3826,7 +3825,7 @@ object ObjectCalls {
     value: RID,
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
-    ptrcallWithRIDArgRetObjectList(methodBind, instance, value).mapNotNull { wrapper(it.handle) }
+    ptrcallWithRIDArgRetObjectList(methodBind, instance, value).mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithRIDArgRetPackedInt32List(
     methodBind: MemorySegment,
@@ -11085,7 +11084,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithObjectListIntArgsRetObjectList(methodBind, instance, values, size).mapNotNull {
-      wrapper(it.handle)
+      wrapper(it.segment)
     }
 
   fun ptrcallWithStringAndObjectListArgs(
@@ -19758,7 +19757,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithStringNameArgRetObjectList(methodBind, instance, name).mapNotNull {
-      wrapper(it.handle)
+      wrapper(it.segment)
     }
 
   /** Calls [methodBind] with one StringName argument and decodes Array[Node]. */
@@ -37343,7 +37342,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithRIDRIDListVector2iArgsRetObjectList(methodBind, instance, rid, values, size)
-      .mapNotNull { wrapper(it.handle) }
+      .mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithRIDListObjectListUInt32ArgsRetRID(
     methodBind: MemorySegment,

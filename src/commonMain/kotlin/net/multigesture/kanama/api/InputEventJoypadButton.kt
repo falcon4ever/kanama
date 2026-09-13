@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventJoypadButton
  */
-class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
+class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
     var buttonIndex: Long
         @JvmName("buttonIndexProperty")
         get() = getButtonIndex()
@@ -31,7 +31,7 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setButtonIndex(buttonIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, handle, buttonIndex)
+        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex)
     }
 
     /**
@@ -41,17 +41,17 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getButtonIndex(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, segment)
     }
 
     fun setPressure(pressure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
+        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, segment, pressure)
     }
 
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, segment)
     }
 
     /**
@@ -61,16 +61,16 @@ class InputEventJoypadButton(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventJoypadButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventJoypadButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventJoypadButton? =
-            if (handle.address() == 0L) null else InputEventJoypadButton(handle)
+            if (handle.address() == 0L) null else InputEventJoypadButton(GodotHandle(handle))
 
         private const val SET_BUTTON_INDEX_HASH = 1466368136L
         private val setButtonIndexBind by lazy {

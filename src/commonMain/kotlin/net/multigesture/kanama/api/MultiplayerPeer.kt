@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MultiplayerPeer
  */
-open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
+open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     var refuseNewConnections: Boolean
         @JvmName("refuseNewConnectionsProperty")
         get() = isRefusingNewConnections()
@@ -46,7 +46,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun setTransferChannel(channel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setTransferChannelBind, handle, channel)
+        ObjectCalls.ptrcallWithIntArg(setTransferChannelBind, segment, channel)
     }
 
     /**
@@ -65,7 +65,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getTransferChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTransferChannelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTransferChannelBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun setTransferMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransferModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTransferModeBind, segment, mode)
     }
 
     /**
@@ -85,7 +85,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getTransferMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, segment)
     }
 
     /**
@@ -98,7 +98,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun setTargetPeer(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setTargetPeerBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(setTargetPeerBind, segment, id)
     }
 
     /**
@@ -109,7 +109,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getPacketPeer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketPeerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPacketPeerBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getPacketChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketChannelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPacketChannelBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getPacketMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, segment)
     }
 
     /**
@@ -141,12 +141,12 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun poll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pollBind, handle)
+        ObjectCalls.ptrcallNoArgs(pollBind, segment)
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun disconnectPeer(peer: Int, force: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(disconnectPeerBind, handle, peer, force)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(disconnectPeerBind, segment, peer, force)
     }
 
     /**
@@ -167,7 +167,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getConnectionStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, segment)
     }
 
     /**
@@ -177,7 +177,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun getUniqueId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, segment)
     }
 
     /**
@@ -187,7 +187,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun generateUniqueId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(generateUniqueIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(generateUniqueIdBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun setRefuseNewConnections(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, segment, enable)
     }
 
     /**
@@ -207,7 +207,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun isRefusingNewConnections(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, segment)
     }
 
     /**
@@ -219,7 +219,7 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
      */
     fun isServerRelaySupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerRelaySupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isServerRelaySupportedBind, segment)
     }
 
     object Signals {
@@ -238,11 +238,11 @@ open class MultiplayerPeer(handle: MemorySegment) : PacketPeer(handle) {
         const val TRANSFER_MODE_RELIABLE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiplayerPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiplayerPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiplayerPeer? =
-            if (handle.address() == 0L) null else MultiplayerPeer(handle)
+            if (handle.address() == 0L) null else MultiplayerPeer(GodotHandle(handle))
 
         private const val SET_TRANSFER_CHANNEL_HASH = 1286410249L
         private val setTransferChannelBind by lazy {

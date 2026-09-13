@@ -13,7 +13,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Font
  */
-open class Font(handle: MemorySegment) : Resource(handle) {
+open class Font(handle: GodotHandle) : Resource(handle) {
     var fallbacks: List<Font>
         @JvmName("fallbacksProperty")
         get() = getFallbacks()
@@ -29,7 +29,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun setFallbacks(fallbacks: List<Font>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setFallbacksBind, handle, fallbacks)
+        ObjectCalls.ptrcallWithObjectListArg(setFallbacksBind, segment, fallbacks)
     }
 
     /**
@@ -41,7 +41,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getFallbacks(): List<Font> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, handle, Font::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, segment, Font::wrap)
     }
 
     /**
@@ -51,7 +51,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun findVariation(variationCoordinates: Map<String, Any?>, faceIndex: Int = 0, strength: Double = 0.0, transform: Transform2D, spacingTop: Int = 0, spacingBottom: Int = 0, spacingSpace: Int = 0, spacingGlyph: Int = 0, baselineOffset: Double = 0.0, paletteIndex: Long = 0L, customColors: List<Color>): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(findVariationBind, handle, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
+        return ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(findVariationBind, segment, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
     }
 
     /**
@@ -61,7 +61,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getRids(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getRidsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getRidsBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getHeight(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getHeightBind, handle, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getHeightBind, segment, fontSize)
     }
 
     /**
@@ -86,7 +86,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getAscent(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getAscentBind, handle, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getAscentBind, segment, fontSize)
     }
 
     /**
@@ -99,7 +99,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getDescent(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getDescentBind, handle, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getDescentBind, segment, fontSize)
     }
 
     /**
@@ -111,7 +111,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getUnderlinePosition(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlinePositionBind, handle, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlinePositionBind, segment, fontSize)
     }
 
     /**
@@ -123,7 +123,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getUnderlineThickness(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlineThicknessBind, handle, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlineThicknessBind, segment, fontSize)
     }
 
     /**
@@ -133,7 +133,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFontNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getFontNameBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontStyleName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFontStyleNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getFontStyleNameBind, segment)
     }
 
     /**
@@ -154,7 +154,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getOtNameStrings(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getOtNameStringsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getOtNameStringsBind, segment)
     }
 
     /**
@@ -164,7 +164,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontStyle(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, segment)
     }
 
     /**
@@ -175,7 +175,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontWeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontWeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFontWeightBind, segment)
     }
 
     /**
@@ -186,7 +186,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontStretch(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontStretchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFontStretchBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getSpacing(spacing: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, handle, spacing)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, segment, spacing)
     }
 
     /**
@@ -207,7 +207,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getOpentypeFeatures(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeaturesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeaturesBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun setCacheCapacity(singleLine: Int, multiLine: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setCacheCapacityBind, handle, singleLine, multiLine)
+        ObjectCalls.ptrcallWithTwoIntArgs(setCacheCapacityBind, segment, singleLine, multiLine)
     }
 
     /**
@@ -229,7 +229,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(getStringSizeBind, handle, text, alignment, width, fontSize, justificationFlags, direction, orientation)
+        return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(getStringSizeBind, segment, text, alignment, width, fontSize, justificationFlags, direction, orientation)
     }
 
     /**
@@ -240,7 +240,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getMultilineStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(getMultilineStringSizeBind, handle, text, alignment, width, fontSize, maxLines, brkFlags, justificationFlags, direction, orientation)
+        return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(getMultilineStringSizeBind, segment, text, alignment, width, fontSize, maxLines, brkFlags, justificationFlags, direction, orientation)
     }
 
     /**
@@ -254,7 +254,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun drawString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, handle, canvasItem, pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, canvasItem, pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -269,7 +269,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun drawMultilineString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, handle, canvasItem, pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, canvasItem, pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -283,7 +283,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun drawStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, handle, canvasItem, pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, canvasItem, pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -298,7 +298,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun drawMultilineStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, handle, canvasItem, pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, canvasItem, pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
     }
 
     /**
@@ -311,7 +311,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getCharSize(char: Int, fontSize: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getCharSizeBind, handle, char, fontSize)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getCharSizeBind, segment, char, fontSize)
     }
 
     /**
@@ -325,7 +325,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun drawChar(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, modulate: Color, oversampling: Double = 0.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(drawCharBind, handle, canvasItem, pos, char, fontSize, modulate, oversampling)
+        return ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(drawCharBind, segment, canvasItem, pos, char, fontSize, modulate, oversampling)
     }
 
     /**
@@ -340,7 +340,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun drawCharOutline(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, size: Int = -1, modulate: Color, oversampling: Double = 0.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(drawCharOutlineBind, handle, canvasItem, pos, char, fontSize, size, modulate, oversampling)
+        return ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(drawCharOutlineBind, segment, canvasItem, pos, char, fontSize, size, modulate, oversampling)
     }
 
     /**
@@ -350,7 +350,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun hasChar(char: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasCharBind, handle, char)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasCharBind, segment, char)
     }
 
     /**
@@ -361,7 +361,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getSupportedChars(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSupportedCharsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSupportedCharsBind, segment)
     }
 
     /**
@@ -372,7 +372,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun isLanguageSupported(language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isLanguageSupportedBind, handle, language)
+        return ObjectCalls.ptrcallWithStringArgRetBool(isLanguageSupportedBind, segment, language)
     }
 
     /**
@@ -383,7 +383,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun isScriptSupported(script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isScriptSupportedBind, handle, script)
+        return ObjectCalls.ptrcallWithStringArgRetBool(isScriptSupportedBind, segment, script)
     }
 
     /**
@@ -393,7 +393,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getSupportedFeatureList(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedFeatureListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedFeatureListBind, segment)
     }
 
     /**
@@ -407,7 +407,7 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getSupportedVariationList(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedVariationListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedVariationListBind, segment)
     }
 
     /**
@@ -417,16 +417,16 @@ open class Font(handle: MemorySegment) : Resource(handle) {
      */
     fun getFaceCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFaceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFaceCountBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Font? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Font? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Font? =
-            if (handle.address() == 0L) null else Font(handle)
+            if (handle.address() == 0L) null else Font(GodotHandle(handle))
 
         private const val SET_FALLBACKS_HASH = 381264803L
         private val setFallbacksBind by lazy {

@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeUVPolarCoord
  */
-class VisualShaderNodeUVPolarCoord(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeUVPolarCoord(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeUVPolarCoord? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeUVPolarCoord? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeUVPolarCoord? =
-            if (handle.address() == 0L) null else VisualShaderNodeUVPolarCoord(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeUVPolarCoord(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

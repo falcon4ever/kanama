@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: PlaceholderTextureLayered
  */
-open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
+open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
     var size: Vector2i
         @JvmName("sizeProperty")
         get() = getSize()
@@ -26,7 +26,7 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
      */
     fun setSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
     }
 
     /**
@@ -36,7 +36,7 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     /**
@@ -46,16 +46,16 @@ open class PlaceholderTextureLayered(handle: MemorySegment) : TextureLayered(han
      */
     fun setLayers(layers: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setLayersBind, handle, layers)
+        ObjectCalls.ptrcallWithIntArg(setLayersBind, segment, layers)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PlaceholderTextureLayered? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaceholderTextureLayered? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaceholderTextureLayered? =
-            if (handle.address() == 0L) null else PlaceholderTextureLayered(handle)
+            if (handle.address() == 0L) null else PlaceholderTextureLayered(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 1130785943L
         private val setSizeBind by lazy {

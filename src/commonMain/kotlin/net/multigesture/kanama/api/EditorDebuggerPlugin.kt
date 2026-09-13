@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorDebuggerPlugin
  */
-class EditorDebuggerPlugin(handle: MemorySegment) : RefCounted(handle) {
+class EditorDebuggerPlugin(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the `EditorDebuggerSession` with the given `id`.
      *
@@ -18,7 +18,7 @@ class EditorDebuggerPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSession(id: Int): EditorDebuggerSession? {
         checkOpen()
-        return EditorDebuggerSession.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSessionBind, handle, id))
+        return EditorDebuggerSession.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSessionBind, segment, id))
     }
 
     /**
@@ -29,16 +29,16 @@ class EditorDebuggerPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSessions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getSessionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getSessionsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorDebuggerPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorDebuggerPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorDebuggerPlugin? =
-            if (handle.address() == 0L) null else EditorDebuggerPlugin(handle)
+            if (handle.address() == 0L) null else EditorDebuggerPlugin(GodotHandle(handle))
 
         private const val GET_SESSION_HASH = 3061968499L
         private val getSessionBind by lazy {

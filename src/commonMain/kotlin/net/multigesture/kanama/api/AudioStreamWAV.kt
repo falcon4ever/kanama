@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStreamWAV
  */
-class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     var data: ByteArray
         @JvmName("dataProperty")
         get() = getData()
@@ -69,7 +69,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setData(data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
+        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, segment, data)
     }
 
     /**
@@ -81,7 +81,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setFormat(format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format)
     }
 
     /**
@@ -101,7 +101,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setLoopMode(loopMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
+        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode)
     }
 
     /**
@@ -121,7 +121,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getLoopMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setLoopBegin(loopBegin: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setLoopBeginBind, handle, loopBegin)
+        ObjectCalls.ptrcallWithIntArg(setLoopBeginBind, segment, loopBegin)
     }
 
     /**
@@ -141,7 +141,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getLoopBegin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLoopBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLoopBeginBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setLoopEnd(loopEnd: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setLoopEndBind, handle, loopEnd)
+        ObjectCalls.ptrcallWithIntArg(setLoopEndBind, segment, loopEnd)
     }
 
     /**
@@ -161,7 +161,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getLoopEnd(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLoopEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLoopEndBind, segment)
     }
 
     /**
@@ -177,7 +177,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setMixRate(mixRate: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMixRateBind, handle, mixRate)
+        ObjectCalls.ptrcallWithIntArg(setMixRateBind, segment, mixRate)
     }
 
     /**
@@ -193,7 +193,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getMixRate(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMixRateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMixRateBind, segment)
     }
 
     /**
@@ -203,7 +203,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setStereo(stereo: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setStereoBind, handle, stereo)
+        ObjectCalls.ptrcallWithBoolArg(setStereoBind, segment, stereo)
     }
 
     /**
@@ -213,7 +213,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun isStereo(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isStereoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isStereoBind, segment)
     }
 
     /**
@@ -227,7 +227,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setTags(tags: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, handle, tags)
+        ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, segment, tags)
     }
 
     /**
@@ -241,7 +241,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getTags(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, segment)
     }
 
     /**
@@ -253,7 +253,7 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
      */
     fun saveToWav(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, segment, path)
     }
 
     companion object {
@@ -288,11 +288,11 @@ class AudioStreamWAV(handle: MemorySegment) : AudioStream(handle) {
         const val LOOP_BACKWARD: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamWAV? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamWAV? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamWAV? =
-            if (handle.address() == 0L) null else AudioStreamWAV(handle)
+            if (handle.address() == 0L) null else AudioStreamWAV(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 4266838938L
         private val loadFromBufferBind by lazy {

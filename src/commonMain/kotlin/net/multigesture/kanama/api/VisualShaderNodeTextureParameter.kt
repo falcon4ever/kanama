@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTextureParameter
  */
-open class VisualShaderNodeTextureParameter(handle: MemorySegment) : VisualShaderNodeParameter(handle) {
+open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
     var textureType: Long
         @JvmName("textureTypeProperty")
         get() = getTextureType()
@@ -42,52 +42,52 @@ open class VisualShaderNodeTextureParameter(handle: MemorySegment) : VisualShade
 
     fun setTextureType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, type)
     }
 
     fun getTextureType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment)
     }
 
     fun setColorDefault(color: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setColorDefaultBind, handle, color)
+        ObjectCalls.ptrcallWithLongArg(setColorDefaultBind, segment, color)
     }
 
     fun getColorDefault(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getColorDefaultBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getColorDefaultBind, segment)
     }
 
     fun setTextureFilter(filter: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, filter)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, filter)
     }
 
     fun getTextureFilter(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
     }
 
     fun setTextureRepeat(repeat: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, handle, repeat)
+        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, repeat)
     }
 
     fun getTextureRepeat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment)
     }
 
     fun setTextureSource(source: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureSourceBind, handle, source)
+        ObjectCalls.ptrcallWithLongArg(setTextureSourceBind, segment, source)
     }
 
     fun getTextureSource(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureSourceBind, segment)
     }
 
     companion object {
@@ -119,11 +119,11 @@ open class VisualShaderNodeTextureParameter(handle: MemorySegment) : VisualShade
         const val SOURCE_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTextureParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTextureParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTextureParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeTextureParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTextureParameter(GodotHandle(handle))
 
         private const val SET_TEXTURE_TYPE_HASH = 2227296876L
         private val setTextureTypeBind by lazy {

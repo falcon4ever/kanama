@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeClamp
  */
-class VisualShaderNodeClamp(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
     var opType: Long
         @JvmName("opTypeProperty")
         get() = getOpType()
@@ -18,12 +18,12 @@ class VisualShaderNodeClamp(handle: MemorySegment) : VisualShaderNode(handle) {
 
     fun setOpType(opType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, opType)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, opType)
     }
 
     fun getOpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
     }
 
     companion object {
@@ -36,11 +36,11 @@ class VisualShaderNodeClamp(handle: MemorySegment) : VisualShaderNode(handle) {
         const val OP_TYPE_MAX: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeClamp? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeClamp? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeClamp? =
-            if (handle.address() == 0L) null else VisualShaderNodeClamp(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeClamp(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 405010749L
         private val setOpTypeBind by lazy {

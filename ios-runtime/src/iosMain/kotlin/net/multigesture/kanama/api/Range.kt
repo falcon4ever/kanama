@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: Range
  */
-open class Range(handle: MemorySegment) : Control(handle) {
+open class Range(handle: GodotHandle) : Control(handle) {
     var minValue: Double
         @JvmName("minValueProperty")
         get() = getMin()
@@ -71,95 +71,95 @@ open class Range(handle: MemorySegment) : Control(handle) {
         set(value) = setAllowLesser(value)
 
     fun getValue(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getValueBind, segment)
     }
 
     fun getMin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, segment)
     }
 
     fun getMax(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, segment)
     }
 
     fun getStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
     }
 
     fun getPage(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPageBind, segment)
     }
 
     fun getAsRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAsRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAsRatioBind, segment)
     }
 
     fun setValue(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setValueBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setValueBind, segment, value)
     }
 
     fun setValueNoSignal(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setValueNoSignalBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setValueNoSignalBind, segment, value)
     }
 
     fun setMin(minimum: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMinBind, handle, minimum)
+        ObjectCalls.ptrcallWithDoubleArg(setMinBind, segment, minimum)
     }
 
     fun setMax(maximum: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxBind, handle, maximum)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxBind, segment, maximum)
     }
 
     fun setStep(step: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStepBind, handle, step)
+        ObjectCalls.ptrcallWithDoubleArg(setStepBind, segment, step)
     }
 
     fun setPage(pagesize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPageBind, handle, pagesize)
+        ObjectCalls.ptrcallWithDoubleArg(setPageBind, segment, pagesize)
     }
 
     fun setAsRatio(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAsRatioBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setAsRatioBind, segment, value)
     }
 
     fun setUseRoundedValues(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseRoundedValuesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseRoundedValuesBind, segment, enabled)
     }
 
     fun isUsingRoundedValues(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRoundedValuesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRoundedValuesBind, segment)
     }
 
     fun setExpRatio(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpRatioBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setExpRatioBind, segment, enabled)
     }
 
     fun isRatioExp(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRatioExpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRatioExpBind, segment)
     }
 
     fun setAllowGreater(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowGreaterBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowGreaterBind, segment, allow)
     }
 
     fun isGreaterAllowed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isGreaterAllowedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isGreaterAllowedBind, segment)
     }
 
     fun setAllowLesser(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowLesserBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowLesserBind, segment, allow)
     }
 
     fun isLesserAllowed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLesserAllowedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLesserAllowedBind, segment)
     }
 
     fun share(with: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(shareBind, handle, listOf(with.handle))
+        ObjectCalls.ptrcallWithObjectArgs(shareBind, segment, listOf(with.segment))
     }
 
     fun unshare() {
-        ObjectCalls.ptrcallNoArgs(unshareBind, handle)
+        ObjectCalls.ptrcallNoArgs(unshareBind, segment)
     }
 
     object Signals {
@@ -169,11 +169,11 @@ open class Range(handle: MemorySegment) : Control(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Range? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Range? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Range? =
-            if (handle.address() == 0L) null else Range(handle)
+            if (handle.address() == 0L) null else Range(GodotHandle(handle))
 
         private const val GET_VALUE_HASH = 1740695150L
         private val getValueBind by lazy {

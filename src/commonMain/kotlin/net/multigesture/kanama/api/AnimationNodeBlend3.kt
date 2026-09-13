@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeBlend3
  */
-class AnimationNodeBlend3(handle: MemorySegment) : AnimationNodeSync(handle) {
+class AnimationNodeBlend3(handle: GodotHandle) : AnimationNodeSync(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeBlend3? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeBlend3? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeBlend3? =
-            if (handle.address() == 0L) null else AnimationNodeBlend3(handle)
+            if (handle.address() == 0L) null else AnimationNodeBlend3(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

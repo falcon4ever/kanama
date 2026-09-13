@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: TextureProgressBar
  */
-class TextureProgressBar(handle: MemorySegment) : Range(handle) {
+class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     var fillMode: Int
         @JvmName("fillModeProperty")
         get() = getFillMode()
@@ -116,7 +116,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_under_texture
      */
     fun setUnderTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setUnderTextureBind, handle, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setUnderTextureBind, segment, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -125,7 +125,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_under_texture
      */
     fun getUnderTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getUnderTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getUnderTextureBind, segment))
     }
 
     /**
@@ -137,7 +137,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_progress_texture
      */
     fun setProgressTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProgressTextureBind, handle, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProgressTextureBind, segment, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -149,7 +149,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_progress_texture
      */
     fun getProgressTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProgressTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProgressTextureBind, segment))
     }
 
     /**
@@ -159,7 +159,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_over_texture
      */
     fun setOverTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOverTextureBind, handle, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOverTextureBind, segment, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -169,7 +169,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_over_texture
      */
     fun getOverTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOverTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOverTextureBind, segment))
     }
 
     /**
@@ -178,7 +178,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_fill_mode
      */
     fun setFillMode(mode: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFillModeBind, handle, mode)
+        ObjectCalls.ptrcallWithIntArg(setFillModeBind, segment, mode)
     }
 
     /**
@@ -187,7 +187,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_fill_mode
      */
     fun getFillMode(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_tint_under
      */
     fun setTintUnder(tint: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintUnderBind, handle, tint)
+        ObjectCalls.ptrcallWithColorArg(setTintUnderBind, segment, tint)
     }
 
     /**
@@ -205,7 +205,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_tint_under
      */
     fun getTintUnder(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintUnderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getTintUnderBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_tint_progress
      */
     fun setTintProgress(tint: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintProgressBind, handle, tint)
+        ObjectCalls.ptrcallWithColorArg(setTintProgressBind, segment, tint)
     }
 
     /**
@@ -223,7 +223,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_tint_progress
      */
     fun getTintProgress(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintProgressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getTintProgressBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_tint_over
      */
     fun setTintOver(tint: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintOverBind, handle, tint)
+        ObjectCalls.ptrcallWithColorArg(setTintOverBind, segment, tint)
     }
 
     /**
@@ -243,7 +243,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_tint_over
      */
     fun getTintOver(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintOverBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getTintOverBind, segment)
     }
 
     /**
@@ -253,7 +253,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_texture_progress_offset
      */
     fun setTextureProgressOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTextureProgressOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setTextureProgressOffsetBind, segment, offset)
     }
 
     /**
@@ -263,7 +263,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_texture_progress_offset
      */
     fun getTextureProgressOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureProgressOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureProgressOffsetBind, segment)
     }
 
     /**
@@ -276,7 +276,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_radial_initial_angle
      */
     fun setRadialInitialAngle(mode: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadialInitialAngleBind, handle, mode)
+        ObjectCalls.ptrcallWithDoubleArg(setRadialInitialAngleBind, segment, mode)
     }
 
     /**
@@ -289,7 +289,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_radial_initial_angle
      */
     fun getRadialInitialAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadialInitialAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadialInitialAngleBind, segment)
     }
 
     /**
@@ -301,7 +301,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_radial_center_offset
      */
     fun setRadialCenterOffset(mode: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setRadialCenterOffsetBind, handle, mode)
+        ObjectCalls.ptrcallWithVector2Arg(setRadialCenterOffsetBind, segment, mode)
     }
 
     /**
@@ -313,7 +313,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_radial_center_offset
      */
     fun getRadialCenterOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRadialCenterOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getRadialCenterOffsetBind, segment)
     }
 
     /**
@@ -325,7 +325,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_fill_degrees
      */
     fun setFillDegrees(mode: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFillDegreesBind, handle, mode)
+        ObjectCalls.ptrcallWithDoubleArg(setFillDegreesBind, segment, mode)
     }
 
     /**
@@ -337,7 +337,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_fill_degrees
      */
     fun getFillDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFillDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFillDegreesBind, segment)
     }
 
     /**
@@ -346,7 +346,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_stretch_margin
      */
     fun setStretchMargin(margin: Long, value: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setStretchMarginBind, handle, margin, value)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setStretchMarginBind, segment, margin, value)
     }
 
     /**
@@ -355,7 +355,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_stretch_margin
      */
     fun getStretchMargin(margin: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getStretchMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getStretchMarginBind, segment, margin)
     }
 
     /**
@@ -367,7 +367,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_nine_patch_stretch
      */
     fun setNinePatchStretch(stretch: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNinePatchStretchBind, handle, stretch)
+        ObjectCalls.ptrcallWithBoolArg(setNinePatchStretchBind, segment, stretch)
     }
 
     /**
@@ -379,7 +379,7 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_nine_patch_stretch
      */
     fun getNinePatchStretch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getNinePatchStretchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getNinePatchStretchBind, segment)
     }
 
     companion object {
@@ -394,11 +394,11 @@ class TextureProgressBar(handle: MemorySegment) : Range(handle) {
         const val FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE: Long = 8L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextureProgressBar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextureProgressBar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextureProgressBar? =
-            if (handle.address() == 0L) null else TextureProgressBar(handle)
+            if (handle.address() == 0L) null else TextureProgressBar(GodotHandle(handle))
 
         private const val SET_UNDER_TEXTURE_HASH = 4051416890L
         private val setUnderTextureBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: QuadOccluder3D
  */
-class QuadOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
+class QuadOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     var size: Vector2
         @JvmName("sizeProperty")
         get() = getSize()
@@ -26,7 +26,7 @@ class QuadOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -36,16 +36,16 @@ class QuadOccluder3D(handle: MemorySegment) : Occluder3D(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): QuadOccluder3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): QuadOccluder3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): QuadOccluder3D? =
-            if (handle.address() == 0L) null else QuadOccluder3D(handle)
+            if (handle.address() == 0L) null else QuadOccluder3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L
         private val setSizeBind by lazy {

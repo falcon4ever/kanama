@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.AABB
  *
  * Generated from Godot docs: GeometryInstance3D
  */
-open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
+open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     var materialOverride: Material?
         @JvmName("materialOverrideProperty")
         get() = getMaterialOverride()
@@ -116,7 +116,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_material_override
      */
     fun setMaterialOverride(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialOverrideBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialOverrideBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -126,7 +126,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_material_override
      */
     fun getMaterialOverride(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverrideBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverrideBind, segment))
     }
 
     /**
@@ -136,7 +136,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_material_overlay
      */
     fun setMaterialOverlay(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialOverlayBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialOverlayBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -146,7 +146,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_material_overlay
      */
     fun getMaterialOverlay(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverlayBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverlayBind, segment))
     }
 
     /**
@@ -155,7 +155,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_cast_shadows_setting
      */
     fun setCastShadowsSetting(shadowCastingSetting: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, handle, shadowCastingSetting)
+        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting)
     }
 
     /**
@@ -164,7 +164,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_cast_shadows_setting
      */
     fun getCastShadowsSetting(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment)
     }
 
     /**
@@ -176,7 +176,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_lod_bias
      */
     fun setLodBias(bias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, segment, bias)
     }
 
     /**
@@ -188,7 +188,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_lod_bias
      */
     fun getLodBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, segment)
     }
 
     /**
@@ -207,7 +207,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_transparency
      */
     fun setTransparency(transparency: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTransparencyBind, handle, transparency)
+        ObjectCalls.ptrcallWithDoubleArg(setTransparencyBind, segment, transparency)
     }
 
     /**
@@ -226,7 +226,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_transparency
      */
     fun getTransparency(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTransparencyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTransparencyBind, segment)
     }
 
     /**
@@ -240,7 +240,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_end_margin
      */
     fun setVisibilityRangeEndMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndMarginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndMarginBind, segment, distance)
     }
 
     /**
@@ -254,7 +254,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_end_margin
      */
     fun getVisibilityRangeEndMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndMarginBind, segment)
     }
 
     /**
@@ -264,7 +264,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_end
      */
     fun setVisibilityRangeEnd(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndBind, segment, distance)
     }
 
     /**
@@ -274,7 +274,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_end
      */
     fun getVisibilityRangeEnd(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndBind, segment)
     }
 
     /**
@@ -288,7 +288,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_begin_margin
      */
     fun setVisibilityRangeBeginMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginMarginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginMarginBind, segment, distance)
     }
 
     /**
@@ -302,7 +302,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_begin_margin
      */
     fun getVisibilityRangeBeginMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginMarginBind, segment)
     }
 
     /**
@@ -313,7 +313,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_begin
      */
     fun setVisibilityRangeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginBind, segment, distance)
     }
 
     /**
@@ -324,7 +324,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_begin
      */
     fun getVisibilityRangeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginBind, segment)
     }
 
     /**
@@ -333,7 +333,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_fade_mode
      */
     fun setVisibilityRangeFadeMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode)
     }
 
     /**
@@ -342,7 +342,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_fade_mode
      */
     fun getVisibilityRangeFadeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment)
     }
 
     /**
@@ -358,7 +358,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_instance_shader_parameter
      */
     fun setInstanceShaderParameter(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, segment, name, value)
     }
 
     /**
@@ -367,7 +367,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_instance_shader_parameter
      */
     fun getInstanceShaderParameter(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInstanceShaderParameterBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInstanceShaderParameterBind, segment, name)
     }
 
     /**
@@ -377,7 +377,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_extra_cull_margin
      */
     fun setExtraCullMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setExtraCullMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setExtraCullMarginBind, segment, margin)
     }
 
     /**
@@ -387,7 +387,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_extra_cull_margin
      */
     fun getExtraCullMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExtraCullMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getExtraCullMarginBind, segment)
     }
 
     /**
@@ -403,7 +403,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_lightmap_texel_scale
      */
     fun setLightmapTexelScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLightmapTexelScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setLightmapTexelScaleBind, segment, scale)
     }
 
     /**
@@ -419,7 +419,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_lightmap_texel_scale
      */
     fun getLightmapTexelScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLightmapTexelScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLightmapTexelScaleBind, segment)
     }
 
     /**
@@ -428,7 +428,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_lightmap_scale
      */
     fun setLightmapScale(scale: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLightmapScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithLongArg(setLightmapScaleBind, segment, scale)
     }
 
     /**
@@ -437,7 +437,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_lightmap_scale
      */
     fun getLightmapScale(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLightmapScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLightmapScaleBind, segment)
     }
 
     /**
@@ -448,7 +448,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_gi_mode
      */
     fun setGiMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGiModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setGiModeBind, segment, mode)
     }
 
     /**
@@ -459,7 +459,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_gi_mode
      */
     fun getGiMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGiModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getGiModeBind, segment)
     }
 
     /**
@@ -472,7 +472,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_ignore_occlusion_culling
      */
     fun setIgnoreOcclusionCulling(ignoreCulling: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreOcclusionCullingBind, handle, ignoreCulling)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreOcclusionCullingBind, segment, ignoreCulling)
     }
 
     /**
@@ -485,7 +485,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.is_ignoring_occlusion_culling
      */
     fun isIgnoringOcclusionCulling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringOcclusionCullingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringOcclusionCullingBind, segment)
     }
 
     /**
@@ -500,7 +500,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.set_custom_aabb
      */
     fun setCustomAabb(aabb: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
     }
 
     /**
@@ -515,7 +515,7 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
      * Generated from Godot docs: GeometryInstance3D.get_custom_aabb
      */
     fun getCustomAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
     }
 
     companion object {
@@ -536,11 +536,11 @@ open class GeometryInstance3D(handle: MemorySegment) : VisualInstance3D(handle) 
         const val VISIBILITY_RANGE_FADE_DEPENDENCIES: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GeometryInstance3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GeometryInstance3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GeometryInstance3D? =
-            if (handle.address() == 0L) null else GeometryInstance3D(handle)
+            if (handle.address() == 0L) null else GeometryInstance3D(GodotHandle(handle))
 
         private const val SET_MATERIAL_OVERRIDE_HASH = 2757459619L
         private val setMaterialOverrideBind by lazy {

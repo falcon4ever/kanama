@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: ConcavePolygonShape2D
  */
-class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
+class ConcavePolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
     var segments: List<Vector2>
         @JvmName("segmentsProperty")
         get() = getSegments()
@@ -28,7 +28,7 @@ class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setSegments(segments: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setSegmentsBind, handle, segments)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setSegmentsBind, segment, segments)
     }
 
     /**
@@ -40,16 +40,16 @@ class ConcavePolygonShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getSegments(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getSegmentsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConcavePolygonShape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConcavePolygonShape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConcavePolygonShape2D? =
-            if (handle.address() == 0L) null else ConcavePolygonShape2D(handle)
+            if (handle.address() == 0L) null else ConcavePolygonShape2D(GodotHandle(handle))
 
         private const val SET_SEGMENTS_HASH = 1509147220L
         private val setSegmentsBind by lazy {

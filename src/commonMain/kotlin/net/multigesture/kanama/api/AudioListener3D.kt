@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Transform3D
  *
  * Generated from Godot docs: AudioListener3D
  */
-class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
+class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
     var dopplerTracking: Long
         @JvmName("dopplerTrackingProperty")
         get() = getDopplerTracking()
@@ -25,7 +25,7 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
+        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
     }
 
     /**
@@ -34,7 +34,7 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.clear_current
      */
     fun clearCurrent() {
-        ObjectCalls.ptrcallNoArgs(clearCurrentBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearCurrentBind, segment)
     }
 
     /**
@@ -45,7 +45,7 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
     }
 
     /**
@@ -54,7 +54,7 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.get_listener_transform
      */
     fun getListenerTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getListenerTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getListenerTransformBind, segment)
     }
 
     /**
@@ -67,7 +67,7 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.set_doppler_tracking
      */
     fun setDopplerTracking(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode)
     }
 
     /**
@@ -80,7 +80,7 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.get_doppler_tracking
      */
     fun getDopplerTracking(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment)
     }
 
     companion object {
@@ -89,11 +89,11 @@ class AudioListener3D(handle: MemorySegment) : Node3D(handle) {
         const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioListener3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioListener3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioListener3D? =
-            if (handle.address() == 0L) null else AudioListener3D(handle)
+            if (handle.address() == 0L) null else AudioListener3D(GodotHandle(handle))
 
         private const val MAKE_CURRENT_HASH = 3218959716L
         private val makeCurrentBind by lazy {

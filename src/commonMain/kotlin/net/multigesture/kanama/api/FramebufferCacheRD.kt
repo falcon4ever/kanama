@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: FramebufferCacheRD
  */
-class FramebufferCacheRD(handle: MemorySegment) : GodotObject(handle) {
+class FramebufferCacheRD(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -28,11 +28,11 @@ class FramebufferCacheRD(handle: MemorySegment) : GodotObject(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FramebufferCacheRD? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FramebufferCacheRD? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FramebufferCacheRD? =
-            if (handle.address() == 0L) null else FramebufferCacheRD(handle)
+            if (handle.address() == 0L) null else FramebufferCacheRD(GodotHandle(handle))
 
         private const val GET_CACHE_MULTIPASS_HASH = 3437881813L
         private val getCacheMultipassBind by lazy {

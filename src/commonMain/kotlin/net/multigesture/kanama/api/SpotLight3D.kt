@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SpotLight3D
  */
-class SpotLight3D(handle: MemorySegment) : Light3D(handle) {
+class SpotLight3D(handle: GodotHandle) : Light3D(handle) {
     var spotRange: Double
         @JvmName("spotRangeProperty")
         get() = getParam(4L)
@@ -40,11 +40,11 @@ class SpotLight3D(handle: MemorySegment) : Light3D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpotLight3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpotLight3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpotLight3D? =
-            if (handle.address() == 0L) null else SpotLight3D(handle)
+            if (handle.address() == 0L) null else SpotLight3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

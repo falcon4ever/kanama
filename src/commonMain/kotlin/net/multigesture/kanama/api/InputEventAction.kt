@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventAction
  */
-class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
+class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
     var action: String
         @JvmName("actionProperty")
         get() = getAction()
@@ -38,7 +38,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setAction(action: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setActionBind, handle, action)
+        ObjectCalls.ptrcallWithStringNameArg(setActionBind, segment, action)
     }
 
     /**
@@ -49,7 +49,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getAction(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getActionBind, segment)
     }
 
     /**
@@ -59,7 +59,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
     }
 
     /**
@@ -71,7 +71,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, segment, strength)
     }
 
     /**
@@ -83,7 +83,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, segment)
     }
 
     /**
@@ -95,7 +95,7 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setEventIndex(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setEventIndexBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(setEventIndexBind, segment, index)
     }
 
     /**
@@ -107,16 +107,16 @@ class InputEventAction(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getEventIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEventIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getEventIndexBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventAction? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventAction? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventAction? =
-            if (handle.address() == 0L) null else InputEventAction(handle)
+            if (handle.address() == 0L) null else InputEventAction(GodotHandle(handle))
 
         private const val SET_ACTION_HASH = 3304788590L
         private val setActionBind by lazy {

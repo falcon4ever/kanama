@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: OptionButton
  */
-class OptionButton(handle: MemorySegment) : Button(handle) {
+class OptionButton(handle: GodotHandle) : Button(handle) {
     val selected: Int
         @JvmName("selectedProperty")
         get() = getSelected()
@@ -66,7 +66,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.add_item
      */
     fun addItem(label: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithStringAndIntArg(addItemBind, handle, label, id)
+        ObjectCalls.ptrcallWithStringAndIntArg(addItemBind, segment, label, id)
     }
 
     /**
@@ -77,7 +77,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.add_icon_item
      */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
+        ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
     }
 
     /**
@@ -86,7 +86,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_text
      */
     fun setItemText(idx: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, handle, idx, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, segment, idx, text)
     }
 
     /**
@@ -95,7 +95,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_icon
      */
     fun setItemIcon(idx: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, handle, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -106,7 +106,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_disabled
      */
     fun setItemDisabled(idx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, handle, idx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, segment, idx, disabled)
     }
 
     /**
@@ -115,7 +115,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_id
      */
     fun setItemId(idx: Int, id: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, handle, idx, id)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, segment, idx, id)
     }
 
     /**
@@ -125,7 +125,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_metadata
      */
     fun setItemMetadata(idx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, idx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, segment, idx, metadata)
     }
 
     /**
@@ -134,7 +134,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_tooltip
      */
     fun setItemTooltip(idx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, idx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, idx, tooltip)
     }
 
     /**
@@ -145,7 +145,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_auto_translate_mode
      */
     fun setItemAutoTranslateMode(idx: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, idx, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode)
     }
 
     /**
@@ -156,7 +156,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_search_bar_enabled
      */
     fun setSearchBarEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, segment, enabled)
     }
 
     /**
@@ -166,7 +166,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_search_bar_min_item_count
      */
     fun setSearchBarMinItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, segment, count)
     }
 
     /**
@@ -176,7 +176,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_search_bar_min_item_count
      */
     fun getSearchBarMinItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, segment)
     }
 
     /**
@@ -188,7 +188,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_search_bar_fuzzy_search_enabled
      */
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, segment, enabled)
     }
 
     /**
@@ -200,7 +200,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.is_search_bar_fuzzy_search_enabled
      */
     fun isSearchBarFuzzySearchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, segment)
     }
 
     /**
@@ -211,7 +211,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_search_bar_fuzzy_search_max_misses
      */
     fun setSearchBarFuzzySearchMaxMisses(maxMisses: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, handle, maxMisses)
+        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, segment, maxMisses)
     }
 
     /**
@@ -222,7 +222,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_search_bar_fuzzy_search_max_misses
      */
     fun getSearchBarFuzzySearchMaxMisses(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, segment)
     }
 
     /**
@@ -231,7 +231,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_text
      */
     fun getItemText(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, segment, idx)
     }
 
     /**
@@ -240,7 +240,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_icon
      */
     fun getItemIcon(idx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, handle, idx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, idx))
     }
 
     /**
@@ -249,7 +249,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_id
      */
     fun getItemId(idx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, segment, idx)
     }
 
     /**
@@ -258,7 +258,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_index
      */
     fun getItemIndex(id: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, segment, id)
     }
 
     /**
@@ -268,7 +268,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_metadata
      */
     fun getItemMetadata(idx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, segment, idx)
     }
 
     /**
@@ -277,7 +277,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_tooltip
      */
     fun getItemTooltip(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, idx)
     }
 
     /**
@@ -286,7 +286,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_auto_translate_mode
      */
     fun getItemAutoTranslateMode(idx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx)
     }
 
     /**
@@ -295,7 +295,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.is_item_disabled
      */
     fun isItemDisabled(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, segment, idx)
     }
 
     /**
@@ -304,7 +304,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.is_item_separator
      */
     fun isItemSeparator(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, segment, idx)
     }
 
     /**
@@ -315,7 +315,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.is_search_bar_enabled
      */
     fun isSearchBarEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, segment)
     }
 
     /**
@@ -326,7 +326,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.add_separator
      */
     fun addSeparator(text: String = "") {
-        ObjectCalls.ptrcallWithStringArg(addSeparatorBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(addSeparatorBind, segment, text)
     }
 
     /**
@@ -335,7 +335,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -345,7 +345,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.select
      */
     fun select(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(selectBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(selectBind, segment, idx)
     }
 
     /**
@@ -354,7 +354,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_selected
      */
     fun getSelected(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_selected_id
      */
     fun getSelectedId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedIdBind, segment)
     }
 
     /**
@@ -372,7 +372,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_selected_metadata
      */
     fun getSelectedMetadata(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getSelectedMetadataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getSelectedMetadataBind, segment)
     }
 
     /**
@@ -381,7 +381,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.remove_item
      */
     fun removeItem(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, idx)
     }
 
     /**
@@ -392,7 +392,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_popup
      */
     fun getPopup(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
     }
 
     /**
@@ -402,7 +402,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.show_popup
      */
     fun showPopup() {
-        ObjectCalls.ptrcallNoArgs(showPopupBind, handle)
+        ObjectCalls.ptrcallNoArgs(showPopupBind, segment)
     }
 
     /**
@@ -411,7 +411,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_count
      */
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
     }
 
     /**
@@ -420,7 +420,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_count
      */
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
     /**
@@ -430,7 +430,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.has_selectable_items
      */
     fun hasSelectableItems(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSelectableItemsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasSelectableItemsBind, segment)
     }
 
     /**
@@ -441,7 +441,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_selectable_item
      */
     fun getSelectableItem(fromLast: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithBoolArgRetInt(getSelectableItemBind, handle, fromLast)
+        return ObjectCalls.ptrcallWithBoolArgRetInt(getSelectableItemBind, segment, fromLast)
     }
 
     /**
@@ -453,7 +453,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_fit_to_longest_item
      */
     fun setFitToLongestItem(fit: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitToLongestItemBind, handle, fit)
+        ObjectCalls.ptrcallWithBoolArg(setFitToLongestItemBind, segment, fit)
     }
 
     /**
@@ -465,7 +465,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.is_fit_to_longest_item
      */
     fun isFitToLongestItem(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitToLongestItemBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFitToLongestItemBind, segment)
     }
 
     /**
@@ -474,7 +474,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_allow_reselect
      */
     fun setAllowReselect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, segment, allow)
     }
 
     /**
@@ -483,7 +483,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_allow_reselect
      */
     fun getAllowReselect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, segment)
     }
 
     /**
@@ -492,7 +492,7 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_disable_shortcuts
      */
     fun setDisableShortcuts(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, segment, disabled)
     }
 
     object Signals {
@@ -502,11 +502,11 @@ class OptionButton(handle: MemorySegment) : Button(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OptionButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OptionButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OptionButton? =
-            if (handle.address() == 0L) null else OptionButton(handle)
+            if (handle.address() == 0L) null else OptionButton(GodotHandle(handle))
 
         private const val ADD_ITEM_HASH = 2697778442L
         private val addItemBind by lazy {

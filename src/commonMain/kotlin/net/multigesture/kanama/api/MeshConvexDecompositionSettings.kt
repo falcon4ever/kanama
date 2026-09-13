@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MeshConvexDecompositionSettings
  */
-class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle) {
+class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) {
     var maxConcavity: Double
         @JvmName("maxConcavityProperty")
         get() = getMaxConcavity()
@@ -97,7 +97,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setMaxConcavity(maxConcavity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxConcavityBind, handle, maxConcavity)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxConcavityBind, segment, maxConcavity)
     }
 
     /**
@@ -107,7 +107,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getMaxConcavity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxConcavityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxConcavityBind, segment)
     }
 
     /**
@@ -117,7 +117,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setSymmetryPlanesClippingBias(symmetryPlanesClippingBias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSymmetryPlanesClippingBiasBind, handle, symmetryPlanesClippingBias)
+        ObjectCalls.ptrcallWithDoubleArg(setSymmetryPlanesClippingBiasBind, segment, symmetryPlanesClippingBias)
     }
 
     /**
@@ -127,7 +127,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getSymmetryPlanesClippingBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSymmetryPlanesClippingBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSymmetryPlanesClippingBiasBind, segment)
     }
 
     /**
@@ -137,7 +137,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setRevolutionAxesClippingBias(revolutionAxesClippingBias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRevolutionAxesClippingBiasBind, handle, revolutionAxesClippingBias)
+        ObjectCalls.ptrcallWithDoubleArg(setRevolutionAxesClippingBiasBind, segment, revolutionAxesClippingBias)
     }
 
     /**
@@ -147,7 +147,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getRevolutionAxesClippingBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRevolutionAxesClippingBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRevolutionAxesClippingBiasBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setMinVolumePerConvexHull(minVolumePerConvexHull: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinVolumePerConvexHullBind, handle, minVolumePerConvexHull)
+        ObjectCalls.ptrcallWithDoubleArg(setMinVolumePerConvexHullBind, segment, minVolumePerConvexHull)
     }
 
     /**
@@ -167,7 +167,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getMinVolumePerConvexHull(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinVolumePerConvexHullBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinVolumePerConvexHullBind, segment)
     }
 
     /**
@@ -177,7 +177,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setResolution(minVolumePerConvexHull: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setResolutionBind, handle, minVolumePerConvexHull)
+        ObjectCalls.ptrcallWithUInt32Arg(setResolutionBind, segment, minVolumePerConvexHull)
     }
 
     /**
@@ -187,7 +187,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getResolution(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getResolutionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getResolutionBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setMaxNumVerticesPerConvexHull(maxNumVerticesPerConvexHull: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMaxNumVerticesPerConvexHullBind, handle, maxNumVerticesPerConvexHull)
+        ObjectCalls.ptrcallWithUInt32Arg(setMaxNumVerticesPerConvexHullBind, segment, maxNumVerticesPerConvexHull)
     }
 
     /**
@@ -207,7 +207,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getMaxNumVerticesPerConvexHull(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxNumVerticesPerConvexHullBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxNumVerticesPerConvexHullBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setPlaneDownsampling(planeDownsampling: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setPlaneDownsamplingBind, handle, planeDownsampling)
+        ObjectCalls.ptrcallWithUInt32Arg(setPlaneDownsamplingBind, segment, planeDownsampling)
     }
 
     /**
@@ -227,7 +227,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getPlaneDownsampling(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlaneDownsamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlaneDownsamplingBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setConvexHullDownsampling(convexHullDownsampling: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setConvexHullDownsamplingBind, handle, convexHullDownsampling)
+        ObjectCalls.ptrcallWithUInt32Arg(setConvexHullDownsamplingBind, segment, convexHullDownsampling)
     }
 
     /**
@@ -249,7 +249,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getConvexHullDownsampling(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getConvexHullDownsamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getConvexHullDownsamplingBind, segment)
     }
 
     /**
@@ -259,7 +259,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setNormalizeMesh(normalizeMesh: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizeMeshBind, handle, normalizeMesh)
+        ObjectCalls.ptrcallWithBoolArg(setNormalizeMeshBind, segment, normalizeMesh)
     }
 
     /**
@@ -269,7 +269,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getNormalizeMesh(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNormalizeMeshBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getNormalizeMeshBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
     }
 
     /**
@@ -289,7 +289,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
     }
 
     /**
@@ -299,7 +299,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setConvexHullApproximation(convexHullApproximation: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setConvexHullApproximationBind, handle, convexHullApproximation)
+        ObjectCalls.ptrcallWithBoolArg(setConvexHullApproximationBind, segment, convexHullApproximation)
     }
 
     /**
@@ -309,7 +309,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getConvexHullApproximation(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getConvexHullApproximationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getConvexHullApproximationBind, segment)
     }
 
     /**
@@ -319,7 +319,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setMaxConvexHulls(maxConvexHulls: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMaxConvexHullsBind, handle, maxConvexHulls)
+        ObjectCalls.ptrcallWithUInt32Arg(setMaxConvexHullsBind, segment, maxConvexHulls)
     }
 
     /**
@@ -329,7 +329,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getMaxConvexHulls(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxConvexHullsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxConvexHullsBind, segment)
     }
 
     /**
@@ -340,7 +340,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun setProjectHullVertices(projectHullVertices: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setProjectHullVerticesBind, handle, projectHullVertices)
+        ObjectCalls.ptrcallWithBoolArg(setProjectHullVerticesBind, segment, projectHullVertices)
     }
 
     /**
@@ -351,7 +351,7 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
      */
     fun getProjectHullVertices(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, segment)
     }
 
     companion object {
@@ -359,11 +359,11 @@ class MeshConvexDecompositionSettings(handle: MemorySegment) : RefCounted(handle
         const val CONVEX_DECOMPOSITION_MODE_TETRAHEDRON: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshConvexDecompositionSettings? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshConvexDecompositionSettings? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MeshConvexDecompositionSettings? =
-            if (handle.address() == 0L) null else MeshConvexDecompositionSettings(handle)
+            if (handle.address() == 0L) null else MeshConvexDecompositionSettings(GodotHandle(handle))
 
         private const val SET_MAX_CONCAVITY_HASH = 373806689L
         private val setMaxConcavityBind by lazy {

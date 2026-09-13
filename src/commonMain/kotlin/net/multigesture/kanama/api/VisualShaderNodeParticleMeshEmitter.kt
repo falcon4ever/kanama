@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter
  */
-class VisualShaderNodeParticleMeshEmitter(handle: MemorySegment) : VisualShaderNodeParticleEmitter(handle) {
+class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNodeParticleEmitter(handle) {
     var mesh: Mesh?
         @JvmName("meshProperty")
         get() = getMesh()
@@ -30,41 +30,41 @@ class VisualShaderNodeParticleMeshEmitter(handle: MemorySegment) : VisualShaderN
 
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setUseAllSurfaces(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseAllSurfacesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseAllSurfacesBind, segment, enabled)
     }
 
     fun isUseAllSurfaces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUseAllSurfacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUseAllSurfacesBind, segment)
     }
 
     fun setSurfaceIndex(surfaceIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSurfaceIndexBind, handle, surfaceIndex)
+        ObjectCalls.ptrcallWithIntArg(setSurfaceIndexBind, segment, surfaceIndex)
     }
 
     fun getSurfaceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceIndexBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleMeshEmitter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleMeshEmitter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleMeshEmitter? =
-            if (handle.address() == 0L) null else VisualShaderNodeParticleMeshEmitter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParticleMeshEmitter(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {

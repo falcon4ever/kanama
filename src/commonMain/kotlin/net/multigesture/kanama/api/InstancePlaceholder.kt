@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InstancePlaceholder
  */
-class InstancePlaceholder(handle: MemorySegment) : Node(handle) {
+class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
     /**
      * Returns the list of properties that will be applied to the node when `create_instance` is
      * called. If `with_order` is `true`, a key named `.order` (note the leading period) is added to
@@ -20,7 +20,7 @@ class InstancePlaceholder(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: InstancePlaceholder.get_stored_values
      */
     fun getStoredValues(withOrder: Boolean = false): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithBoolArgRetDictionary(getStoredValuesBind, handle, withOrder)
+        return ObjectCalls.ptrcallWithBoolArgRetDictionary(getStoredValuesBind, segment, withOrder)
     }
 
     /**
@@ -32,7 +32,7 @@ class InstancePlaceholder(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: InstancePlaceholder.create_instance
      */
     fun createInstance(replace: Boolean = false, customScene: PackedScene?): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithBoolObjectArgsRetObject(createInstanceBind, handle, replace, customScene?.requireOpenHandle() ?: MemorySegment.NULL))
+        return Node.wrap(ObjectCalls.ptrcallWithBoolObjectArgsRetObject(createInstanceBind, segment, replace, customScene?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -42,16 +42,16 @@ class InstancePlaceholder(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: InstancePlaceholder.get_instance_path
      */
     fun getInstancePath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getInstancePathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getInstancePathBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InstancePlaceholder? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InstancePlaceholder? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InstancePlaceholder? =
-            if (handle.address() == 0L) null else InstancePlaceholder(handle)
+            if (handle.address() == 0L) null else InstancePlaceholder(GodotHandle(handle))
 
         private const val GET_STORED_VALUES_HASH = 2230153369L
         private val getStoredValuesBind by lazy {

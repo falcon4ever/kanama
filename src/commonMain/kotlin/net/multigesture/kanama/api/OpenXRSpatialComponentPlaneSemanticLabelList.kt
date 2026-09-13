@@ -8,10 +8,10 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialComponentPlaneSemanticLabelList
  */
-class OpenXRSpatialComponentPlaneSemanticLabelList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getPlaneSemanticLabel(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getPlaneSemanticLabelBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getPlaneSemanticLabelBind, segment, index)
     }
 
     companion object {
@@ -22,11 +22,11 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: MemorySegment) : Open
         const val PLANE_SEMANTIC_LABEL_TABLE: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPlaneSemanticLabelList? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
-            if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneSemanticLabelList(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(handle))
 
         private const val GET_PLANE_SEMANTIC_LABEL_HASH = 1889332427L
         private val getPlaneSemanticLabelBind by lazy {

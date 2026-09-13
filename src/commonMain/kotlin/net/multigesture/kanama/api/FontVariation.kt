@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Transform2D
  *
  * Generated from Godot docs: FontVariation
  */
-class FontVariation(handle: MemorySegment) : Font(handle) {
+class FontVariation(handle: GodotHandle) : Font(handle) {
     var baseFont: Font?
         @JvmName("baseFontProperty")
         get() = getBaseFont()
@@ -93,7 +93,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setBaseFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setBaseFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setBaseFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -103,8 +103,8 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getBaseFont(): Font? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseFontBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseFontBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -125,7 +125,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setVariationOpentype(coords: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setVariationOpentypeBind, handle, coords)
+        ObjectCalls.ptrcallWithDictionaryArg(setVariationOpentypeBind, segment, coords)
     }
 
     /**
@@ -142,7 +142,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getVariationOpentype(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getVariationOpentypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getVariationOpentypeBind, segment)
     }
 
     /**
@@ -154,7 +154,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setVariationEmbolden(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVariationEmboldenBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setVariationEmboldenBind, segment, strength)
     }
 
     /**
@@ -166,7 +166,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getVariationEmbolden(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVariationEmboldenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVariationEmboldenBind, segment)
     }
 
     /**
@@ -176,7 +176,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setVariationFaceIndex(faceIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setVariationFaceIndexBind, handle, faceIndex)
+        ObjectCalls.ptrcallWithIntArg(setVariationFaceIndexBind, segment, faceIndex)
     }
 
     /**
@@ -186,7 +186,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getVariationFaceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVariationFaceIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVariationFaceIndexBind, segment)
     }
 
     /**
@@ -198,7 +198,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setVariationTransform(transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setVariationTransformBind, handle, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(setVariationTransformBind, segment, transform)
     }
 
     /**
@@ -210,7 +210,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getVariationTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getVariationTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getVariationTransformBind, segment)
     }
 
     /**
@@ -221,7 +221,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setOpentypeFeatures(features: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeaturesBind, handle, features)
+        ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeaturesBind, segment, features)
     }
 
     /**
@@ -231,7 +231,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setSpacing(spacing: Long, value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setSpacingBind, handle, spacing, value)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setSpacingBind, segment, spacing, value)
     }
 
     /**
@@ -241,7 +241,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setBaselineOffset(baselineOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBaselineOffsetBind, handle, baselineOffset)
+        ObjectCalls.ptrcallWithDoubleArg(setBaselineOffsetBind, segment, baselineOffset)
     }
 
     /**
@@ -251,7 +251,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getBaselineOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBaselineOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBaselineOffsetBind, segment)
     }
 
     /**
@@ -261,7 +261,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getPaletteIndex(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPaletteIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPaletteIndexBind, segment)
     }
 
     /**
@@ -271,7 +271,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setPaletteIndex(paletteIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPaletteIndexBind, handle, paletteIndex)
+        ObjectCalls.ptrcallWithLongArg(setPaletteIndexBind, segment, paletteIndex)
     }
 
     /**
@@ -282,7 +282,7 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun getPaletteCustomColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPaletteCustomColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPaletteCustomColorsBind, segment)
     }
 
     /**
@@ -293,16 +293,16 @@ class FontVariation(handle: MemorySegment) : Font(handle) {
      */
     fun setPaletteCustomColors(colors: List<Color>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedColorListArg(setPaletteCustomColorsBind, handle, colors)
+        ObjectCalls.ptrcallWithPackedColorListArg(setPaletteCustomColorsBind, segment, colors)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FontVariation? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FontVariation? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FontVariation? =
-            if (handle.address() == 0L) null else FontVariation(handle)
+            if (handle.address() == 0L) null else FontVariation(GodotHandle(handle))
 
         private const val SET_BASE_FONT_HASH = 1262170328L
         private val setBaseFontBind by lazy {

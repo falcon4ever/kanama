@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorResourceTooltipPlugin
  */
-class EditorResourceTooltipPlugin(handle: MemorySegment) : RefCounted(handle) {
+class EditorResourceTooltipPlugin(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Requests a thumbnail for the given `TextureRect`. The thumbnail is created asynchronously by
      * `EditorResourcePreview` and automatically set when available.
@@ -19,16 +19,16 @@ class EditorResourceTooltipPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun requestThumbnail(path: String, control: TextureRect) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndObjectArg(requestThumbnailBind, handle, path, control.handle)
+        ObjectCalls.ptrcallWithStringAndObjectArg(requestThumbnailBind, segment, path, control.segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorResourceTooltipPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorResourceTooltipPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorResourceTooltipPlugin? =
-            if (handle.address() == 0L) null else EditorResourceTooltipPlugin(handle)
+            if (handle.address() == 0L) null else EditorResourceTooltipPlugin(GodotHandle(handle))
 
         private const val REQUEST_THUMBNAIL_HASH = 3245519720L
         private val requestThumbnailBind by lazy {

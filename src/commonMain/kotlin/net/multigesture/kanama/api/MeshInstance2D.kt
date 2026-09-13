@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MeshInstance2D
  */
-class MeshInstance2D(handle: MemorySegment) : Node2D(handle) {
+class MeshInstance2D(handle: GodotHandle) : Node2D(handle) {
     var mesh: Mesh?
         @JvmName("meshProperty")
         get() = getMesh()
@@ -30,7 +30,7 @@ class MeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MeshInstance2D.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -39,7 +39,7 @@ class MeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MeshInstance2D.get_mesh
      */
     fun getMesh(): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -49,7 +49,7 @@ class MeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MeshInstance2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -59,7 +59,7 @@ class MeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MeshInstance2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     object Signals {
@@ -68,11 +68,11 @@ class MeshInstance2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshInstance2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshInstance2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MeshInstance2D? =
-            if (handle.address() == 0L) null else MeshInstance2D(handle)
+            if (handle.address() == 0L) null else MeshInstance2D(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {

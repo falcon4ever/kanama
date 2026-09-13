@@ -416,7 +416,7 @@ if ! rg -q 'private var defaultTarget: net\.multigesture\.kanama\.types\.NodePat
   echo "[local_ci] generated default-probe NodePath did not use the source literal" >&2
   exit 1
 fi
-if rg -q 'val defaults = DefaultProbeScript\(MemorySegment\.NULL\)' "$default_probe_registrar"; then
+if rg -q 'val defaults = DefaultProbeScript\(.*MemorySegment\.NULL' "$default_probe_registrar"; then
   echo "[local_ci] default-probe registrar still constructs a NULL-handle default instance" >&2
   exit 1
 fi
@@ -459,7 +459,7 @@ if [[ ! -f "$self_smoke_registrar" ]]; then
   echo "[local_ci] missing generated self-smoke registrar" >&2
   exit 1
 fi
-if ! rg -q 'val kt = SelfSmoke\(godotObject\)' "$self_smoke_registrar"; then
+if ! rg -q 'val kt = SelfSmoke\(net\.multigesture\.kanama\.api\.GodotHandle\(godotObject\)\)' "$self_smoke_registrar"; then
   echo "[local_ci] generated self-smoke registrar does not construct the KanamaScript base-class example" >&2
   exit 1
 fi
@@ -482,11 +482,11 @@ if ! rg -q 'closeKanamaOwned\("smoke_scene", kt\.smokeScene\)' "$hello_script_re
   echo "[local_ci] generated script-property reassignment cleanup is missing" >&2
   exit 1
 fi
-if ! rg -Fq 'kt.smokeResource?.let { BuiltinTypes.releaseRefCounted(it.godotObject) }' "$hello_script_registrar"; then
+if ! rg -Fq 'kt.smokeResource?.let { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }' "$hello_script_registrar"; then
   echo "[local_ci] generated custom Resource property cleanup does not release the retained handle" >&2
   exit 1
 fi
-if ! rg -Fq 'kt.smokeResources.forEach { BuiltinTypes.releaseRefCounted(it.godotObject) }' "$hello_script_registrar"; then
+if ! rg -Fq 'kt.smokeResources.forEach { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }' "$hello_script_registrar"; then
   echo "[local_ci] generated custom Resource array cleanup does not release retained handles" >&2
   exit 1
 fi

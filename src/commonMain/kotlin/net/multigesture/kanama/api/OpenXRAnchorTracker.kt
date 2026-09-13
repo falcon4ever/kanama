@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRAnchorTracker
  */
-class OpenXRAnchorTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(handle) {
+class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handle) {
     var uuid: String
         @JvmName("uuidProperty")
         get() = getUuid()
@@ -18,17 +18,17 @@ class OpenXRAnchorTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
 
     fun hasUuid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasUuidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasUuidBind, segment)
     }
 
     fun setUuid(uuid: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setUuidBind, handle, uuid)
+        ObjectCalls.ptrcallWithStringArg(setUuidBind, segment, uuid)
     }
 
     fun getUuid(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getUuidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getUuidBind, segment)
     }
 
     object Signals {
@@ -37,11 +37,11 @@ class OpenXRAnchorTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRAnchorTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRAnchorTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRAnchorTracker? =
-            if (handle.address() == 0L) null else OpenXRAnchorTracker(handle)
+            if (handle.address() == 0L) null else OpenXRAnchorTracker(GodotHandle(handle))
 
         private const val HAS_UUID_HASH = 36873697L
         private val hasUuidBind by lazy {

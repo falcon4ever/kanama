@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HBoxContainer
  */
-open class HBoxContainer(handle: MemorySegment) : BoxContainer(handle) {
+open class HBoxContainer(handle: GodotHandle) : BoxContainer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HBoxContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HBoxContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HBoxContainer? =
-            if (handle.address() == 0L) null else HBoxContainer(handle)
+            if (handle.address() == 0L) null else HBoxContainer(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Node3DGizmo
  */
-open class Node3DGizmo(handle: MemorySegment) : RefCounted(handle) {
+open class Node3DGizmo(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Node3DGizmo? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Node3DGizmo? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Node3DGizmo? =
-            if (handle.address() == 0L) null else Node3DGizmo(handle)
+            if (handle.address() == 0L) null else Node3DGizmo(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

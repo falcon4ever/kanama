@@ -8,20 +8,20 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OfflineMultiplayerPeer
  */
-class OfflineMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
+class OfflineMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OfflineMultiplayerPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OfflineMultiplayerPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OfflineMultiplayerPeer? =
-            if (handle.address() == 0L) null else OfflineMultiplayerPeer(handle)
+            if (handle.address() == 0L) null else OfflineMultiplayerPeer(GodotHandle(handle))
 
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(ObjectCalls.constructObject("OfflineMultiplayerPeer"))
+            OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer")))
 
         // No MethodBinds emitted yet.
     }

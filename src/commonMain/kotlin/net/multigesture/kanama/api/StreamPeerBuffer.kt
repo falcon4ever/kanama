@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StreamPeerBuffer
  */
-class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
+class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
     var dataArray: ByteArray
         @JvmName("dataArrayProperty")
         get() = getDataArray()
@@ -25,7 +25,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun seek(position: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(seekBind, handle, position)
+        ObjectCalls.ptrcallWithIntArg(seekBind, segment, position)
     }
 
     /**
@@ -35,7 +35,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun getSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSizeBind, segment)
     }
 
     /**
@@ -45,7 +45,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun getPosition(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPositionBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun resize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(resizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(resizeBind, segment, size)
     }
 
     /**
@@ -65,7 +65,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun setDataArray(data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setDataArrayBind, handle, data)
+        ObjectCalls.ptrcallWithByteArrayArg(setDataArrayBind, segment, data)
     }
 
     /**
@@ -75,7 +75,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun getDataArray(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataArrayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataArrayBind, segment)
     }
 
     /**
@@ -85,7 +85,7 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -95,8 +95,8 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun duplicate(): StreamPeerBuffer? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -105,11 +105,11 @@ class StreamPeerBuffer(handle: MemorySegment) : StreamPeer(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeerBuffer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeerBuffer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeerBuffer? =
-            if (handle.address() == 0L) null else StreamPeerBuffer(handle)
+            if (handle.address() == 0L) null else StreamPeerBuffer(GodotHandle(handle))
 
         private const val SEEK_HASH = 1286410249L
         private val seekBind by lazy {

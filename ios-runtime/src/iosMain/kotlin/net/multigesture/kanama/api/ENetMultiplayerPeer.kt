@@ -9,57 +9,57 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ENetMultiplayerPeer
  */
-class ENetMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
+class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     val host: ENetConnection?
         @JvmName("hostProperty")
         get() = getHost()
 
     fun createServer(port: Int, maxClients: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithFiveIntArgsRetLong(createServerBind, handle, port, maxClients, maxChannels, inBandwidth, outBandwidth)
+        return ObjectCalls.ptrcallWithFiveIntArgsRetLong(createServerBind, segment, port, maxClients, maxChannels, inBandwidth, outBandwidth)
     }
 
     fun createClient(address: String, port: Int, channelCount: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0, localPort: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createClientBind, handle, address, port, channelCount, inBandwidth, outBandwidth, localPort)
+        return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createClientBind, segment, address, port, channelCount, inBandwidth, outBandwidth, localPort)
     }
 
     fun createMesh(uniqueId: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(createMeshBind, handle, uniqueId)
+        return ObjectCalls.ptrcallWithIntArgRetLong(createMeshBind, segment, uniqueId)
     }
 
     fun addMeshPeer(peerId: Int, host: ENetConnection?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndObjectArgRetLong(addMeshPeerBind, handle, peerId, host?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithIntAndObjectArgRetLong(addMeshPeerBind, segment, peerId, host?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setBindIp(ip: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setBindIpBind, handle, ip)
+        ObjectCalls.ptrcallWithStringArg(setBindIpBind, segment, ip)
     }
 
     fun getHost(): ENetConnection? {
         checkOpen()
-        return ENetConnection.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHostBind, handle))
+        return ENetConnection.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHostBind, segment))
     }
 
     fun getPeer(id: Int): ENetPacketPeer? {
         checkOpen()
-        return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, handle, id))
+        return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, id))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ENetMultiplayerPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ENetMultiplayerPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ENetMultiplayerPeer? =
-            if (handle.address() == 0L) null else ENetMultiplayerPeer(handle)
+            if (handle.address() == 0L) null else ENetMultiplayerPeer(GodotHandle(handle))
 
         // Instantiate an ENetMultiplayerPeer.
         fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer")))
+            ENetMultiplayerPeer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer"))))
 
         private const val CREATE_SERVER_HASH = 2917761309L
         private val createServerBind by lazy {

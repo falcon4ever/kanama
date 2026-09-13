@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: LabelSettings
  */
-class LabelSettings(handle: MemorySegment) : Resource(handle) {
+class LabelSettings(handle: GodotHandle) : Resource(handle) {
     var lineSpacing: Double
         @JvmName("lineSpacingProperty")
         get() = getLineSpacing()
@@ -94,7 +94,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setLineSpacing(spacing: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, spacing)
+        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, segment, spacing)
     }
 
     /**
@@ -105,7 +105,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, segment)
     }
 
     /**
@@ -115,7 +115,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setParagraphSpacing(spacing: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setParagraphSpacingBind, handle, spacing)
+        ObjectCalls.ptrcallWithDoubleArg(setParagraphSpacingBind, segment, spacing)
     }
 
     /**
@@ -125,7 +125,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getParagraphSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getParagraphSpacingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getParagraphSpacingBind, segment)
     }
 
     /**
@@ -135,7 +135,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -145,7 +145,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
+        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
     }
 
     /**
@@ -155,7 +155,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setFontSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, segment, size)
     }
 
     /**
@@ -165,7 +165,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, segment)
     }
 
     /**
@@ -175,7 +175,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setFontColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setFontColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setFontColorBind, segment, color)
     }
 
     /**
@@ -185,7 +185,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getFontColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getFontColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getFontColorBind, segment)
     }
 
     /**
@@ -195,7 +195,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setOutlineSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, segment, size)
     }
 
     /**
@@ -205,7 +205,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getOutlineSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, segment)
     }
 
     /**
@@ -215,7 +215,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setOutlineColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setOutlineColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setOutlineColorBind, segment, color)
     }
 
     /**
@@ -225,7 +225,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getOutlineColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getOutlineColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getOutlineColorBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setShadowSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, segment, size)
     }
 
     /**
@@ -245,7 +245,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getShadowSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, segment)
     }
 
     /**
@@ -255,7 +255,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setShadowColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, segment, color)
     }
 
     /**
@@ -265,7 +265,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getShadowColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, segment)
     }
 
     /**
@@ -275,7 +275,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setShadowOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, segment, offset)
     }
 
     /**
@@ -285,7 +285,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getShadowOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, segment)
     }
 
     /**
@@ -295,7 +295,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getStackedOutlineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStackedOutlineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStackedOutlineCountBind, segment)
     }
 
     /**
@@ -305,7 +305,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setStackedOutlineCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStackedOutlineCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setStackedOutlineCountBind, segment, count)
     }
 
     /**
@@ -316,7 +316,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun addStackedOutline(index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addStackedOutlineBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(addStackedOutlineBind, segment, index)
     }
 
     /**
@@ -327,7 +327,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun moveStackedOutline(fromIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveStackedOutlineBind, handle, fromIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveStackedOutlineBind, segment, fromIndex, toPosition)
     }
 
     /**
@@ -337,7 +337,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun removeStackedOutline(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeStackedOutlineBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removeStackedOutlineBind, segment, index)
     }
 
     /**
@@ -347,7 +347,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setStackedOutlineSize(index: Int, size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setStackedOutlineSizeBind, handle, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(setStackedOutlineSizeBind, segment, index, size)
     }
 
     /**
@@ -357,7 +357,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getStackedOutlineSize(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getStackedOutlineSizeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getStackedOutlineSizeBind, segment, index)
     }
 
     /**
@@ -367,7 +367,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setStackedOutlineColor(index: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setStackedOutlineColorBind, handle, index, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setStackedOutlineColorBind, segment, index, color)
     }
 
     /**
@@ -377,7 +377,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getStackedOutlineColor(index: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getStackedOutlineColorBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getStackedOutlineColorBind, segment, index)
     }
 
     /**
@@ -387,7 +387,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getStackedShadowCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStackedShadowCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStackedShadowCountBind, segment)
     }
 
     /**
@@ -397,7 +397,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setStackedShadowCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStackedShadowCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setStackedShadowCountBind, segment, count)
     }
 
     /**
@@ -408,7 +408,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun addStackedShadow(index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addStackedShadowBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(addStackedShadowBind, segment, index)
     }
 
     /**
@@ -418,7 +418,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun moveStackedShadow(fromIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveStackedShadowBind, handle, fromIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveStackedShadowBind, segment, fromIndex, toPosition)
     }
 
     /**
@@ -428,7 +428,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun removeStackedShadow(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeStackedShadowBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removeStackedShadowBind, segment, index)
     }
 
     /**
@@ -438,7 +438,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setStackedShadowOffset(index: Int, offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setStackedShadowOffsetBind, handle, index, offset)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setStackedShadowOffsetBind, segment, index, offset)
     }
 
     /**
@@ -448,7 +448,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getStackedShadowOffset(index: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getStackedShadowOffsetBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getStackedShadowOffsetBind, segment, index)
     }
 
     /**
@@ -458,7 +458,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setStackedShadowColor(index: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setStackedShadowColorBind, handle, index, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setStackedShadowColorBind, segment, index, color)
     }
 
     /**
@@ -468,7 +468,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getStackedShadowColor(index: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getStackedShadowColorBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getStackedShadowColorBind, segment, index)
     }
 
     /**
@@ -478,7 +478,7 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun setStackedShadowOutlineSize(index: Int, size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setStackedShadowOutlineSizeBind, handle, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(setStackedShadowOutlineSizeBind, segment, index, size)
     }
 
     /**
@@ -488,16 +488,16 @@ class LabelSettings(handle: MemorySegment) : Resource(handle) {
      */
     fun getStackedShadowOutlineSize(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getStackedShadowOutlineSizeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getStackedShadowOutlineSizeBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LabelSettings? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LabelSettings? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LabelSettings? =
-            if (handle.address() == 0L) null else LabelSettings(handle)
+            if (handle.address() == 0L) null else LabelSettings(GodotHandle(handle))
 
         private const val SET_LINE_SPACING_HASH = 373806689L
         private val setLineSpacingBind by lazy {

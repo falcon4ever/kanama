@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MissingNode
  */
-class MissingNode(handle: MemorySegment) : Node(handle) {
+class MissingNode(handle: GodotHandle) : Node(handle) {
     var originalClass: String
         @JvmName("originalClassProperty")
         get() = getOriginalClass()
@@ -42,7 +42,7 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_original_class
      */
     fun setOriginalClass(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, segment, name)
     }
 
     /**
@@ -51,7 +51,7 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.get_original_class
      */
     fun getOriginalClass(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_original_scene
      */
     fun setOriginalScene(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setOriginalSceneBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setOriginalSceneBind, segment, name)
     }
 
     /**
@@ -69,7 +69,7 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.get_original_scene
      */
     fun getOriginalScene(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalSceneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOriginalSceneBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_recording_properties
      */
     fun setRecordingProperties(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, segment, enable)
     }
 
     /**
@@ -89,7 +89,7 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.is_recording_properties
      */
     fun isRecordingProperties(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, segment)
     }
 
     /**
@@ -99,7 +99,7 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_recording_signals
      */
     fun setRecordingSignals(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRecordingSignalsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setRecordingSignalsBind, segment, enable)
     }
 
     /**
@@ -109,16 +109,16 @@ class MissingNode(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: MissingNode.is_recording_signals
      */
     fun isRecordingSignals(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingSignalsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingSignalsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MissingNode? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MissingNode? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MissingNode? =
-            if (handle.address() == 0L) null else MissingNode(handle)
+            if (handle.address() == 0L) null else MissingNode(GodotHandle(handle))
 
         private const val SET_ORIGINAL_CLASS_HASH = 83702148L
         private val setOriginalClassBind by lazy {

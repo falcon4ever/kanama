@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.GlobalClass
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.ResourceLoader
 
 // Task 56 fixture (outer). A non-@Tool resource created via newScriptInstance(). Its
@@ -14,7 +14,7 @@ import net.multigesture.kanama.api.ResourceLoader
 // false pass).
 @ScriptClass(attachTo = "Resource")
 @GlobalClass
-class ReentrantForgeProbe(val godotObject: MemorySegment) {
+class ReentrantForgeProbe(val godotObject: GodotHandle) {
   init {
     val node = ResourceLoader.loadPackedScene("res://reentrant_inner.tscn")?.instantiate()
     System.err.println("[kanama:kt] ReentrantForgeProbe reentered=${node != null}")

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: StaticBody3D
  */
-open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
+open class StaticBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     var physicsMaterialOverride: PhysicsMaterial?
         @JvmName("physicsMaterialOverrideProperty")
         get() = getPhysicsMaterialOverride()
@@ -38,7 +38,7 @@ open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: StaticBody3D.set_constant_linear_velocity
      */
     fun setConstantLinearVelocity(vel: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantLinearVelocityBind, handle, vel)
+        ObjectCalls.ptrcallWithVector3Arg(setConstantLinearVelocityBind, segment, vel)
     }
 
     /**
@@ -48,7 +48,7 @@ open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: StaticBody3D.set_constant_angular_velocity
      */
     fun setConstantAngularVelocity(vel: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantAngularVelocityBind, handle, vel)
+        ObjectCalls.ptrcallWithVector3Arg(setConstantAngularVelocityBind, segment, vel)
     }
 
     /**
@@ -58,7 +58,7 @@ open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: StaticBody3D.get_constant_linear_velocity
      */
     fun getConstantLinearVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantLinearVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantLinearVelocityBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: StaticBody3D.get_constant_angular_velocity
      */
     fun getConstantAngularVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantAngularVelocityBind, segment)
     }
 
     /**
@@ -78,7 +78,7 @@ open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: StaticBody3D.set_physics_material_override
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, handle, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -88,16 +88,16 @@ open class StaticBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: StaticBody3D.get_physics_material_override
      */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, handle))
+        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StaticBody3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StaticBody3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StaticBody3D? =
-            if (handle.address() == 0L) null else StaticBody3D(handle)
+            if (handle.address() == 0L) null else StaticBody3D(GodotHandle(handle))
 
         private const val SET_CONSTANT_LINEAR_VELOCITY_HASH = 3460891852L
         private val setConstantLinearVelocityBind by lazy {

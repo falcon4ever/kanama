@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: RectangleShape2D
  */
-class RectangleShape2D(handle: MemorySegment) : Shape2D(handle) {
+class RectangleShape2D(handle: GodotHandle) : Shape2D(handle) {
     var size: Vector2
         @JvmName("sizeProperty")
         get() = getSize()
@@ -26,7 +26,7 @@ class RectangleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -36,16 +36,16 @@ class RectangleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RectangleShape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RectangleShape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RectangleShape2D? =
-            if (handle.address() == 0L) null else RectangleShape2D(handle)
+            if (handle.address() == 0L) null else RectangleShape2D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L
         private val setSizeBind by lazy {

@@ -14,7 +14,7 @@ import net.multigesture.kanama.binding.runtime.*
 // Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
 fun PhysicsRayQueryParameters3D.setExclude(exclude: List<RID>) {
     checkOpen()
-    ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
+    ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
 }
 
 // Build a ray query: instantiate and set the scalar/Vector3 properties + the exclude RID-list
@@ -25,7 +25,7 @@ fun PhysicsRayQueryParameters3D.Companion.create(
     collisionMask: Long = 4294967295L,
     exclude: List<RID> = emptyList(),
 ): PhysicsRayQueryParameters3D {
-    val query = PhysicsRayQueryParameters3D(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))
+    val query = PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D")))
     query.from = from
     query.to = to
     query.collisionMask = collisionMask

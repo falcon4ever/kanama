@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Texture3D
  */
-open class Texture3D(handle: MemorySegment) : Texture(handle) {
+open class Texture3D(handle: GodotHandle) : Texture(handle) {
     /**
      * Returns the current format being used by this texture.
      *
@@ -18,7 +18,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
     }
 
     /**
@@ -49,7 +49,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      */
     fun getDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDepthBind, segment)
     }
 
     /**
@@ -59,7 +59,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      */
     fun getData(): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDataBind, handle, Image::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDataBind, segment, Image::wrap)
     }
 
     /**
@@ -80,8 +80,8 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -90,11 +90,11 @@ open class Texture3D(handle: MemorySegment) : Texture(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Texture3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Texture3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Texture3D? =
-            if (handle.address() == 0L) null else Texture3D(handle)
+            if (handle.address() == 0L) null else Texture3D(GodotHandle(handle))
 
         private const val GET_FORMAT_HASH = 3847873762L
         private val getFormatBind by lazy {

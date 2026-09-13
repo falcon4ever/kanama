@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: InputEventGesture
  */
-open class InputEventGesture(handle: MemorySegment) : InputEventWithModifiers(handle) {
+open class InputEventGesture(handle: GodotHandle) : InputEventWithModifiers(handle) {
     var position: Vector2
         @JvmName("positionProperty")
         get() = getPosition()
@@ -27,7 +27,7 @@ open class InputEventGesture(handle: MemorySegment) : InputEventWithModifiers(ha
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
     }
 
     /**
@@ -38,16 +38,16 @@ open class InputEventGesture(handle: MemorySegment) : InputEventWithModifiers(ha
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventGesture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventGesture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventGesture? =
-            if (handle.address() == 0L) null else InputEventGesture(handle)
+            if (handle.address() == 0L) null else InputEventGesture(GodotHandle(handle))
 
         private const val SET_POSITION_HASH = 743155724L
         private val setPositionBind by lazy {

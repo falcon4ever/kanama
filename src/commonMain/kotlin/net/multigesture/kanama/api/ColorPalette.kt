@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: ColorPalette
  */
-class ColorPalette(handle: MemorySegment) : Resource(handle) {
+class ColorPalette(handle: GodotHandle) : Resource(handle) {
     var colors: List<Color>
         @JvmName("colorsProperty")
         get() = getColors()
@@ -27,7 +27,7 @@ class ColorPalette(handle: MemorySegment) : Resource(handle) {
      */
     fun setColors(colors: List<Color>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, handle, colors)
+        ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, segment, colors)
     }
 
     /**
@@ -37,16 +37,16 @@ class ColorPalette(handle: MemorySegment) : Resource(handle) {
      */
     fun getColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ColorPalette? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ColorPalette? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ColorPalette? =
-            if (handle.address() == 0L) null else ColorPalette(handle)
+            if (handle.address() == 0L) null else ColorPalette(GodotHandle(handle))
 
         private const val SET_COLORS_HASH = 3546319833L
         private val setColorsBind by lazy {

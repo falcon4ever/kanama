@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeSync
  */
-open class AnimationNodeSync(handle: MemorySegment) : AnimationNode(handle) {
+open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
     var sync: Boolean
         @JvmName("syncProperty")
         get() = isUsingSync()
@@ -26,7 +26,7 @@ open class AnimationNodeSync(handle: MemorySegment) : AnimationNode(handle) {
      */
     fun setUseSync(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, segment, enable)
     }
 
     /**
@@ -37,16 +37,16 @@ open class AnimationNodeSync(handle: MemorySegment) : AnimationNode(handle) {
      */
     fun isUsingSync(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeSync? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeSync? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeSync? =
-            if (handle.address() == 0L) null else AnimationNodeSync(handle)
+            if (handle.address() == 0L) null else AnimationNodeSync(GodotHandle(handle))
 
         private const val SET_USE_SYNC_HASH = 2586408642L
         private val setUseSyncBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SeparationRayShape3D
  */
-class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
+class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
     var length: Double
         @JvmName("lengthProperty")
         get() = getLength()
@@ -31,7 +31,7 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, length)
     }
 
     /**
@@ -41,7 +41,7 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
     }
 
     /**
@@ -53,7 +53,7 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setSlideOnSlope(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSlideOnSlopeBind, handle, active)
+        ObjectCalls.ptrcallWithBoolArg(setSlideOnSlopeBind, segment, active)
     }
 
     /**
@@ -65,16 +65,16 @@ class SeparationRayShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getSlideOnSlope(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSlideOnSlopeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSlideOnSlopeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SeparationRayShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SeparationRayShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SeparationRayShape3D? =
-            if (handle.address() == 0L) null else SeparationRayShape3D(handle)
+            if (handle.address() == 0L) null else SeparationRayShape3D(GodotHandle(handle))
 
         private const val SET_LENGTH_HASH = 373806689L
         private val setLengthBind by lazy {

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RenderSceneDataExtension
  */
-class RenderSceneDataExtension(handle: MemorySegment) : RenderSceneData(handle) {
+class RenderSceneDataExtension(handle: GodotHandle) : RenderSceneData(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RenderSceneDataExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RenderSceneDataExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RenderSceneDataExtension? =
-            if (handle.address() == 0L) null else RenderSceneDataExtension(handle)
+            if (handle.address() == 0L) null else RenderSceneDataExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

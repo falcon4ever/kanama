@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorScenePostImportPlugin
  */
-class EditorScenePostImportPlugin(handle: MemorySegment) : RefCounted(handle) {
+class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Query the value of an option. This function can only be called from those querying visibility,
      * or processing.
@@ -19,7 +19,7 @@ class EditorScenePostImportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOptionValue(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionValueBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionValueBind, segment, name)
     }
 
     /**
@@ -30,7 +30,7 @@ class EditorScenePostImportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addImportOption(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, segment, name, value)
     }
 
     /**
@@ -41,7 +41,7 @@ class EditorScenePostImportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addImportOptionAdvanced(type: Long, name: String, defaultValue: Any?, hint: Long = 0L, hintString: String = "", usageFlags: Int = 6) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, handle, type, name, defaultValue, hint, hintString, usageFlags)
+        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type, name, defaultValue, hint, hintString, usageFlags)
     }
 
     companion object {
@@ -55,11 +55,11 @@ class EditorScenePostImportPlugin(handle: MemorySegment) : RefCounted(handle) {
         const val INTERNAL_IMPORT_CATEGORY_MAX: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorScenePostImportPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorScenePostImportPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorScenePostImportPlugin? =
-            if (handle.address() == 0L) null else EditorScenePostImportPlugin(handle)
+            if (handle.address() == 0L) null else EditorScenePostImportPlugin(GodotHandle(handle))
 
         private const val GET_OPTION_VALUE_HASH = 2760726917L
         private val getOptionValueBind by lazy {

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStreamMicrophone
  */
-class AudioStreamMicrophone(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamMicrophone(handle: GodotHandle) : AudioStream(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamMicrophone? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamMicrophone? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamMicrophone? =
-            if (handle.address() == 0L) null else AudioStreamMicrophone(handle)
+            if (handle.address() == 0L) null else AudioStreamMicrophone(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: StreamPeerExtension
  */
-class StreamPeerExtension(handle: MemorySegment) : StreamPeer(handle) {
+class StreamPeerExtension(handle: GodotHandle) : StreamPeer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeerExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeerExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeerExtension? =
-            if (handle.address() == 0L) null else StreamPeerExtension(handle)
+            if (handle.address() == 0L) null else StreamPeerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

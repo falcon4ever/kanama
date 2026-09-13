@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PathFollow2D
  */
-class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
+class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
     var progress: Double
         @JvmName("progressProperty")
         get() = getProgress()
@@ -61,7 +61,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_progress
      */
     fun setProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressBind, handle, progress)
+        ObjectCalls.ptrcallWithDoubleArg(setProgressBind, segment, progress)
     }
 
     /**
@@ -71,7 +71,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_progress
      */
     fun getProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_h_offset
      */
     fun setHOffset(hOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, handle, hOffset)
+        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, segment, hOffset)
     }
 
     /**
@@ -89,7 +89,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_h_offset
      */
     fun getHOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, segment)
     }
 
     /**
@@ -98,7 +98,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_v_offset
      */
     fun setVOffset(vOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, handle, vOffset)
+        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, segment, vOffset)
     }
 
     /**
@@ -107,7 +107,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_v_offset
      */
     fun getVOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, segment)
     }
 
     /**
@@ -121,7 +121,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_progress_ratio
      */
     fun setProgressRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setProgressRatioBind, segment, ratio)
     }
 
     /**
@@ -135,7 +135,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_progress_ratio
      */
     fun getProgressRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressRatioBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_rotates
      */
     fun setRotates(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRotatesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRotatesBind, segment, enabled)
     }
 
     /**
@@ -155,7 +155,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.is_rotating
      */
     fun isRotating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRotatingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRotatingBind, segment)
     }
 
     /**
@@ -170,7 +170,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_cubic_interpolation
      */
     fun setCubicInterpolation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCubicInterpolationBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCubicInterpolationBind, segment, enabled)
     }
 
     /**
@@ -185,7 +185,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_cubic_interpolation
      */
     fun getCubicInterpolation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCubicInterpolationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCubicInterpolationBind, segment)
     }
 
     /**
@@ -195,7 +195,7 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_loop
      */
     fun setLoop(loop: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
+        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
     }
 
     /**
@@ -205,16 +205,16 @@ class PathFollow2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.has_loop
      */
     fun hasLoop(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PathFollow2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PathFollow2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PathFollow2D? =
-            if (handle.address() == 0L) null else PathFollow2D(handle)
+            if (handle.address() == 0L) null else PathFollow2D(GodotHandle(handle))
 
         private const val SET_PROGRESS_HASH = 373806689L
         private val setProgressBind by lazy {

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: SpringBoneSimulator3D
  */
-class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var externalForce: Vector3
         @JvmName("externalForceProperty")
         get() = getExternalForce()
@@ -38,7 +38,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_root_bone_name
      */
     fun setRootBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -47,7 +47,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_root_bone_name
      */
     fun getRootBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, segment, index)
     }
 
     /**
@@ -56,7 +56,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_root_bone
      */
     fun setRootBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, segment, index, bone)
     }
 
     /**
@@ -65,7 +65,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_root_bone
      */
     fun getRootBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, segment, index)
     }
 
     /**
@@ -76,7 +76,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_name
      */
     fun setEndBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -85,7 +85,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_name
      */
     fun getEndBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, segment, index)
     }
 
     /**
@@ -94,7 +94,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone
      */
     fun setEndBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, segment, index, bone)
     }
 
     /**
@@ -103,7 +103,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone
      */
     fun getEndBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, segment, index)
     }
 
     /**
@@ -114,7 +114,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_extend_end_bone
      */
     fun setExtendEndBone(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, segment, index, enabled)
     }
 
     /**
@@ -123,7 +123,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.is_end_bone_extended
      */
     fun isEndBoneExtended(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, segment, index)
     }
 
     /**
@@ -132,7 +132,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_direction
      */
     fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, handle, index, boneDirection)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
     }
 
     /**
@@ -142,7 +142,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_direction
      */
     fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
     }
 
     /**
@@ -151,7 +151,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_length
      */
     fun setEndBoneLength(index: Int, length: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, handle, index, length)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, segment, index, length)
     }
 
     /**
@@ -160,7 +160,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_length
      */
     fun getEndBoneLength(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, segment, index)
     }
 
     /**
@@ -173,7 +173,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_center_from
      */
     fun setCenterFrom(index: Int, centerFrom: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCenterFromBind, handle, index, centerFrom)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCenterFromBind, segment, index, centerFrom)
     }
 
     /**
@@ -182,7 +182,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_center_from
      */
     fun getCenterFrom(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCenterFromBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getCenterFromBind, segment, index)
     }
 
     /**
@@ -191,7 +191,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_center_node
      */
     fun setCenterNode(index: Int, nodePath: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setCenterNodeBind, handle, index, nodePath)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setCenterNodeBind, segment, index, nodePath)
     }
 
     /**
@@ -200,7 +200,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_center_node
      */
     fun getCenterNode(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getCenterNodeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getCenterNodeBind, segment, index)
     }
 
     /**
@@ -209,7 +209,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_center_bone_name
      */
     fun setCenterBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setCenterBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setCenterBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -218,7 +218,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_center_bone_name
      */
     fun getCenterBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getCenterBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getCenterBoneNameBind, segment, index)
     }
 
     /**
@@ -227,7 +227,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_center_bone
      */
     fun setCenterBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setCenterBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setCenterBoneBind, segment, index, bone)
     }
 
     /**
@@ -236,7 +236,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_center_bone
      */
     fun getCenterBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCenterBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCenterBoneBind, segment, index)
     }
 
     /**
@@ -247,7 +247,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_radius
      */
     fun setRadius(index: Int, radius: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setRadiusBind, handle, index, radius)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setRadiusBind, segment, index, radius)
     }
 
     /**
@@ -256,7 +256,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_radius
      */
     fun getRadius(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getRadiusBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getRadiusBind, segment, index)
     }
 
     /**
@@ -270,7 +270,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis
      */
     fun setRotationAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setRotationAxisBind, handle, index, axis)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setRotationAxisBind, segment, index, axis)
     }
 
     /**
@@ -279,7 +279,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis
      */
     fun getRotationAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getRotationAxisBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getRotationAxisBind, segment, index)
     }
 
     /**
@@ -291,7 +291,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis_vector
      */
     fun setRotationAxisVector(index: Int, vector: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setRotationAxisVectorBind, handle, index, vector)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setRotationAxisVectorBind, segment, index, vector)
     }
 
     /**
@@ -303,7 +303,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis_vector
      */
     fun getRotationAxisVector(index: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getRotationAxisVectorBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getRotationAxisVectorBind, segment, index)
     }
 
     /**
@@ -312,7 +312,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_radius_damping_curve
      */
     fun setRadiusDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setRadiusDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setRadiusDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -321,7 +321,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_radius_damping_curve
      */
     fun getRadiusDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getRadiusDampingCurveBind, handle, index))
+        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getRadiusDampingCurveBind, segment, index))
     }
 
     /**
@@ -333,7 +333,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_stiffness
      */
     fun setStiffness(index: Int, stiffness: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setStiffnessBind, handle, index, stiffness)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setStiffnessBind, segment, index, stiffness)
     }
 
     /**
@@ -342,7 +342,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_stiffness
      */
     fun getStiffness(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getStiffnessBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getStiffnessBind, segment, index)
     }
 
     /**
@@ -351,7 +351,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_stiffness_damping_curve
      */
     fun setStiffnessDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setStiffnessDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setStiffnessDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -360,7 +360,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_stiffness_damping_curve
      */
     fun getStiffnessDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getStiffnessDampingCurveBind, handle, index))
+        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getStiffnessDampingCurveBind, segment, index))
     }
 
     /**
@@ -371,7 +371,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_drag
      */
     fun setDrag(index: Int, drag: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setDragBind, handle, index, drag)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setDragBind, segment, index, drag)
     }
 
     /**
@@ -380,7 +380,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_drag
      */
     fun getDrag(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getDragBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getDragBind, segment, index)
     }
 
     /**
@@ -389,7 +389,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_drag_damping_curve
      */
     fun setDragDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDragDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setDragDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -398,7 +398,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_drag_damping_curve
      */
     fun getDragDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDragDampingCurveBind, handle, index))
+        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDragDampingCurveBind, segment, index))
     }
 
     /**
@@ -410,7 +410,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_gravity
      */
     fun setGravity(index: Int, gravity: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setGravityBind, handle, index, gravity)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setGravityBind, segment, index, gravity)
     }
 
     /**
@@ -419,7 +419,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_gravity
      */
     fun getGravity(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getGravityBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getGravityBind, segment, index)
     }
 
     /**
@@ -428,7 +428,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_gravity_damping_curve
      */
     fun setGravityDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setGravityDampingCurveBind, handle, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setGravityDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -437,7 +437,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_gravity_damping_curve
      */
     fun getGravityDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getGravityDampingCurveBind, handle, index))
+        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getGravityDampingCurveBind, segment, index))
     }
 
     /**
@@ -447,7 +447,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_gravity_direction
      */
     fun setGravityDirection(index: Int, gravityDirection: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setGravityDirectionBind, handle, index, gravityDirection)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setGravityDirectionBind, segment, index, gravityDirection)
     }
 
     /**
@@ -456,7 +456,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_gravity_direction
      */
     fun getGravityDirection(index: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getGravityDirectionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getGravityDirectionBind, segment, index)
     }
 
     /**
@@ -465,7 +465,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_setting_count
      */
     fun setSettingCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSettingCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setSettingCountBind, segment, count)
     }
 
     /**
@@ -474,7 +474,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_setting_count
      */
     fun getSettingCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, segment)
     }
 
     /**
@@ -483,7 +483,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.clear_settings
      */
     fun clearSettings() {
-        ObjectCalls.ptrcallNoArgs(clearSettingsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSettingsBind, segment)
     }
 
     /**
@@ -492,7 +492,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_individual_config
      */
     fun setIndividualConfig(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setIndividualConfigBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setIndividualConfigBind, segment, index, enabled)
     }
 
     /**
@@ -501,7 +501,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.is_config_individual
      */
     fun isConfigIndividual(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isConfigIndividualBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isConfigIndividualBind, segment, index)
     }
 
     /**
@@ -510,7 +510,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_bone_name
      */
     fun getJointBoneName(index: Int, joint: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, segment, index, joint)
     }
 
     /**
@@ -519,7 +519,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_bone
      */
     fun getJointBone(index: Int, joint: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, segment, index, joint)
     }
 
     /**
@@ -533,7 +533,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis
      */
     fun setJointRotationAxis(index: Int, joint: Int, axis: Long) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, handle, index, joint, axis)
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis)
     }
 
     /**
@@ -542,7 +542,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis
      */
     fun getJointRotationAxis(index: Int, joint: Int): Long {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint)
     }
 
     /**
@@ -554,7 +554,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis_vector
      */
     fun setJointRotationAxisVector(index: Int, joint: Int, vector: Vector3) {
-        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointRotationAxisVectorBind, handle, index, joint, vector)
+        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointRotationAxisVectorBind, segment, index, joint, vector)
     }
 
     /**
@@ -566,7 +566,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis_vector
      */
     fun getJointRotationAxisVector(index: Int, joint: Int): Vector3 {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointRotationAxisVectorBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointRotationAxisVectorBind, segment, index, joint)
     }
 
     /**
@@ -576,7 +576,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_radius
      */
     fun setJointRadius(index: Int, joint: Int, radius: Double) {
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointRadiusBind, handle, index, joint, radius)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointRadiusBind, segment, index, joint, radius)
     }
 
     /**
@@ -585,7 +585,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_radius
      */
     fun getJointRadius(index: Int, joint: Int): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointRadiusBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointRadiusBind, segment, index, joint)
     }
 
     /**
@@ -595,7 +595,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_stiffness
      */
     fun setJointStiffness(index: Int, joint: Int, stiffness: Double) {
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointStiffnessBind, handle, index, joint, stiffness)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointStiffnessBind, segment, index, joint, stiffness)
     }
 
     /**
@@ -604,7 +604,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_stiffness
      */
     fun getJointStiffness(index: Int, joint: Int): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointStiffnessBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointStiffnessBind, segment, index, joint)
     }
 
     /**
@@ -614,7 +614,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_drag
      */
     fun setJointDrag(index: Int, joint: Int, drag: Double) {
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointDragBind, handle, index, joint, drag)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointDragBind, segment, index, joint, drag)
     }
 
     /**
@@ -623,7 +623,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_drag
      */
     fun getJointDrag(index: Int, joint: Int): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointDragBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointDragBind, segment, index, joint)
     }
 
     /**
@@ -633,7 +633,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_gravity
      */
     fun setJointGravity(index: Int, joint: Int, gravity: Double) {
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointGravityBind, handle, index, joint, gravity)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointGravityBind, segment, index, joint, gravity)
     }
 
     /**
@@ -642,7 +642,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_gravity
      */
     fun getJointGravity(index: Int, joint: Int): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointGravityBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointGravityBind, segment, index, joint)
     }
 
     /**
@@ -652,7 +652,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_gravity_direction
      */
     fun setJointGravityDirection(index: Int, joint: Int, gravityDirection: Vector3) {
-        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointGravityDirectionBind, handle, index, joint, gravityDirection)
+        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointGravityDirectionBind, segment, index, joint, gravityDirection)
     }
 
     /**
@@ -661,7 +661,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_gravity_direction
      */
     fun getJointGravityDirection(index: Int, joint: Int): Vector3 {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointGravityDirectionBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointGravityDirectionBind, segment, index, joint)
     }
 
     /**
@@ -670,7 +670,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_count
      */
     fun getJointCount(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, segment, index)
     }
 
     /**
@@ -682,7 +682,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_enable_all_child_collisions
      */
     fun setEnableAllChildCollisions(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setEnableAllChildCollisionsBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setEnableAllChildCollisionsBind, segment, index, enabled)
     }
 
     /**
@@ -692,7 +692,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.are_all_child_collisions_enabled
      */
     fun areAllChildCollisionsEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(areAllChildCollisionsEnabledBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(areAllChildCollisionsEnabledBind, segment, index)
     }
 
     /**
@@ -702,7 +702,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_exclude_collision_path
      */
     fun setExcludeCollisionPath(index: Int, collision: Int, nodePath: NodePath) {
-        ObjectCalls.ptrcallWithTwoIntAndNodePathArg(setExcludeCollisionPathBind, handle, index, collision, nodePath)
+        ObjectCalls.ptrcallWithTwoIntAndNodePathArg(setExcludeCollisionPathBind, segment, index, collision, nodePath)
     }
 
     /**
@@ -712,7 +712,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_exclude_collision_path
      */
     fun getExcludeCollisionPath(index: Int, collision: Int): NodePath {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getExcludeCollisionPathBind, handle, index, collision)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getExcludeCollisionPathBind, segment, index, collision)
     }
 
     /**
@@ -722,7 +722,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_exclude_collision_count
      */
     fun setExcludeCollisionCount(index: Int, count: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setExcludeCollisionCountBind, handle, index, count)
+        ObjectCalls.ptrcallWithTwoIntArgs(setExcludeCollisionCountBind, segment, index, count)
     }
 
     /**
@@ -732,7 +732,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_exclude_collision_count
      */
     fun getExcludeCollisionCount(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getExcludeCollisionCountBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getExcludeCollisionCountBind, segment, index)
     }
 
     /**
@@ -742,7 +742,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.clear_exclude_collisions
      */
     fun clearExcludeCollisions(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(clearExcludeCollisionsBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(clearExcludeCollisionsBind, segment, index)
     }
 
     /**
@@ -752,7 +752,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_collision_path
      */
     fun setCollisionPath(index: Int, collision: Int, nodePath: NodePath) {
-        ObjectCalls.ptrcallWithTwoIntAndNodePathArg(setCollisionPathBind, handle, index, collision, nodePath)
+        ObjectCalls.ptrcallWithTwoIntAndNodePathArg(setCollisionPathBind, segment, index, collision, nodePath)
     }
 
     /**
@@ -762,7 +762,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_collision_path
      */
     fun getCollisionPath(index: Int, collision: Int): NodePath {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getCollisionPathBind, handle, index, collision)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetNodePath(getCollisionPathBind, segment, index, collision)
     }
 
     /**
@@ -772,7 +772,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_collision_count
      */
     fun setCollisionCount(index: Int, count: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setCollisionCountBind, handle, index, count)
+        ObjectCalls.ptrcallWithTwoIntArgs(setCollisionCountBind, segment, index, count)
     }
 
     /**
@@ -782,7 +782,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_collision_count
      */
     fun getCollisionCount(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionCountBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionCountBind, segment, index)
     }
 
     /**
@@ -792,7 +792,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.clear_collisions
      */
     fun clearCollisions(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(clearCollisionsBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(clearCollisionsBind, segment, index)
     }
 
     /**
@@ -803,7 +803,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_external_force
      */
     fun setExternalForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setExternalForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector3Arg(setExternalForceBind, segment, force)
     }
 
     /**
@@ -814,7 +814,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.get_external_force
      */
     fun getExternalForce(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getExternalForceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getExternalForceBind, segment)
     }
 
     /**
@@ -826,7 +826,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.set_mutable_bone_axes
      */
     fun setMutableBoneAxes(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMutableBoneAxesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setMutableBoneAxesBind, segment, enabled)
     }
 
     /**
@@ -838,7 +838,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.are_bone_axes_mutable
      */
     fun areBoneAxesMutable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areBoneAxesMutableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areBoneAxesMutableBind, segment)
     }
 
     /**
@@ -850,7 +850,7 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: SpringBoneSimulator3D.reset
      */
     fun reset() {
-        ObjectCalls.ptrcallNoArgs(resetBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
     companion object {
@@ -859,11 +859,11 @@ class SpringBoneSimulator3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
         const val CENTER_FROM_BONE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpringBoneSimulator3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpringBoneSimulator3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpringBoneSimulator3D? =
-            if (handle.address() == 0L) null else SpringBoneSimulator3D(handle)
+            if (handle.address() == 0L) null else SpringBoneSimulator3D(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L
         private val setRootBoneNameBind by lazy {

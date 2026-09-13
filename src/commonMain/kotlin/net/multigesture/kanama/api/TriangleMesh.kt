@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: TriangleMesh
  */
-class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
+class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Creates the BVH tree from an array of faces. Each 3 vertices of the input `faces` array
      * represent one triangle (face). Returns `true` if the tree is successfully built, `false`
@@ -21,7 +21,7 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      */
     fun createFromFaces(faces: List<Vector3>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(createFromFacesBind, handle, faces)
+        return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(createFromFacesBind, segment, faces)
     }
 
     /**
@@ -32,7 +32,7 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, segment)
     }
 
     /**
@@ -46,7 +46,7 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      */
     fun intersectSegment(begin: Vector3, end: Vector3): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectSegmentBind, handle, begin, end)
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectSegmentBind, segment, begin, end)
     }
 
     /**
@@ -61,16 +61,16 @@ class TriangleMesh(handle: MemorySegment) : RefCounted(handle) {
      */
     fun intersectRay(begin: Vector3, dir: Vector3): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectRayBind, handle, begin, dir)
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectRayBind, segment, begin, dir)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TriangleMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TriangleMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TriangleMesh? =
-            if (handle.address() == 0L) null else TriangleMesh(handle)
+            if (handle.address() == 0L) null else TriangleMesh(GodotHandle(handle))
 
         private const val CREATE_FROM_FACES_HASH = 2637816732L
         private val createFromFacesBind by lazy {

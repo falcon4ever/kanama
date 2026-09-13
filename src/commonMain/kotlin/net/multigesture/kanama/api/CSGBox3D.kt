@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: CSGBox3D
  */
-class CSGBox3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
+class CSGBox3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     var size: Vector3
         @JvmName("sizeProperty")
         get() = getSize()
@@ -24,28 +24,28 @@ class CSGBox3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGBox3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGBox3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGBox3D? =
-            if (handle.address() == 0L) null else CSGBox3D(handle)
+            if (handle.address() == 0L) null else CSGBox3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeIntParameter
  */
-class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodeParameter(handle) {
+class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
     var hint: Long
         @JvmName("hintProperty")
         get() = getHint()
@@ -54,72 +54,72 @@ class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodePara
 
     fun setHint(hint: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintBind, handle, hint)
+        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint)
     }
 
     fun getHint(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment)
     }
 
     fun setMin(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMinBind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(setMinBind, segment, value)
     }
 
     fun getMin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMinBind, segment)
     }
 
     fun setMax(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxBind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(setMaxBind, segment, value)
     }
 
     fun getMax(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxBind, segment)
     }
 
     fun setStep(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStepBind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(setStepBind, segment, value)
     }
 
     fun getStep(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStepBind, segment)
     }
 
     fun setEnumNames(names: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setEnumNamesBind, handle, names)
+        ObjectCalls.ptrcallWithPackedStringListArg(setEnumNamesBind, segment, names)
     }
 
     fun getEnumNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getEnumNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getEnumNamesBind, segment)
     }
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDefaultValueBind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDefaultValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDefaultValueBind, segment)
     }
 
     companion object {
@@ -130,11 +130,11 @@ class VisualShaderNodeIntParameter(handle: MemorySegment) : VisualShaderNodePara
         const val HINT_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeIntParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeIntParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeIntParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeIntParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeIntParameter(GodotHandle(handle))
 
         private const val SET_HINT_HASH = 2540512075L
         private val setHintBind by lazy {

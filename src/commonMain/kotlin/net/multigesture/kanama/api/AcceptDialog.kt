@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AcceptDialog
  */
-open class AcceptDialog(handle: MemorySegment) : Window(handle) {
+open class AcceptDialog(handle: GodotHandle) : Window(handle) {
     var okButtonText: String
         @JvmName("okButtonTextProperty")
         get() = getOkButtonText()
@@ -50,7 +50,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_ok_button
      */
     fun getOkButton(): Button? {
-        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOkButtonBind, handle))
+        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOkButtonBind, segment))
     }
 
     /**
@@ -61,7 +61,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_label
      */
     fun getLabel(): Label? {
-        return Label.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelBind, handle))
+        return Label.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelBind, segment))
     }
 
     /**
@@ -76,7 +76,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_hide_on_ok
      */
     fun setHideOnOk(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnOkBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setHideOnOkBind, segment, enabled)
     }
 
     /**
@@ -91,7 +91,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_hide_on_ok
      */
     fun getHideOnOk(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getHideOnOkBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getHideOnOkBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_close_on_escape
      */
     fun setCloseOnEscape(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCloseOnEscapeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCloseOnEscapeBind, segment, enabled)
     }
 
     /**
@@ -111,7 +111,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_close_on_escape
      */
     fun getCloseOnEscape(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCloseOnEscapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCloseOnEscapeBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.add_button
      */
     fun addButton(text: String, right: Boolean = false, action: String = ""): Button? {
-        return Button.wrap(ObjectCalls.ptrcallWithStringBoolStringArgsRetObject(addButtonBind, handle, text, right, action))
+        return Button.wrap(ObjectCalls.ptrcallWithStringBoolStringArgsRetObject(addButtonBind, segment, text, right, action))
     }
 
     /**
@@ -135,7 +135,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.add_cancel_button
      */
     fun addCancelButton(name: String): Button? {
-        return Button.wrap(ObjectCalls.ptrcallWithStringArgRetObject(addCancelButtonBind, handle, name))
+        return Button.wrap(ObjectCalls.ptrcallWithStringArgRetObject(addCancelButtonBind, segment, name))
     }
 
     /**
@@ -146,7 +146,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.remove_button
      */
     fun removeButton(button: Button) {
-        ObjectCalls.ptrcallWithObjectArgs(removeButtonBind, handle, listOf(button.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeButtonBind, segment, listOf(button.segment))
     }
 
     /**
@@ -156,7 +156,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.register_text_enter
      */
     fun registerTextEnter(lineEdit: LineEdit) {
-        ObjectCalls.ptrcallWithObjectArgs(registerTextEnterBind, handle, listOf(lineEdit.handle))
+        ObjectCalls.ptrcallWithObjectArgs(registerTextEnterBind, segment, listOf(lineEdit.segment))
     }
 
     /**
@@ -165,7 +165,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -174,7 +174,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     /**
@@ -183,7 +183,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_autowrap
      */
     fun setAutowrap(autowrap: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutowrapBind, handle, autowrap)
+        ObjectCalls.ptrcallWithBoolArg(setAutowrapBind, segment, autowrap)
     }
 
     /**
@@ -192,7 +192,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.has_autowrap
      */
     fun hasAutowrap(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutowrapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasAutowrapBind, segment)
     }
 
     /**
@@ -202,7 +202,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_ok_button_text
      */
     fun setOkButtonText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setOkButtonTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setOkButtonTextBind, segment, text)
     }
 
     /**
@@ -212,7 +212,7 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_ok_button_text
      */
     fun getOkButtonText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOkButtonTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOkButtonTextBind, segment)
     }
 
     object Signals {
@@ -223,11 +223,11 @@ open class AcceptDialog(handle: MemorySegment) : Window(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AcceptDialog? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AcceptDialog? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AcceptDialog? =
-            if (handle.address() == 0L) null else AcceptDialog(handle)
+            if (handle.address() == 0L) null else AcceptDialog(GodotHandle(handle))
 
         private const val GET_OK_BUTTON_HASH = 1856205918L
         private val getOkButtonBind by lazy {

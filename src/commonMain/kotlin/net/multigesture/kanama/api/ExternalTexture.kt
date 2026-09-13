@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: ExternalTexture
  */
-class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
+class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
     /**
      * External texture size.
      *
@@ -19,7 +19,7 @@ class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -30,7 +30,7 @@ class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getExternalTextureId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getExternalTextureIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getExternalTextureIdBind, segment)
     }
 
     /**
@@ -41,16 +41,16 @@ class ExternalTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setExternalBufferId(externalBufferId: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setExternalBufferIdBind, handle, externalBufferId)
+        ObjectCalls.ptrcallWithLongArg(setExternalBufferIdBind, segment, externalBufferId)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ExternalTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ExternalTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ExternalTexture? =
-            if (handle.address() == 0L) null else ExternalTexture(handle)
+            if (handle.address() == 0L) null else ExternalTexture(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L
         private val setSizeBind by lazy {

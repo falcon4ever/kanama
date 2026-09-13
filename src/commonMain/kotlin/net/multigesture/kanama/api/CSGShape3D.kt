@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: CSGShape3D
  */
-open class CSGShape3D(handle: MemorySegment) : GeometryInstance3D(handle) {
+open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     var autosmooth: Boolean
         @JvmName("autosmoothProperty")
         get() = isAutosmooth()
@@ -65,107 +65,107 @@ open class CSGShape3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         set(value) = setCollisionPriority(value)
 
     fun isRootShape(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRootShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRootShapeBind, segment)
     }
 
     fun setOperation(operation: Long) {
-        ObjectCalls.ptrcallWithLongArg(setOperationBind, handle, operation)
+        ObjectCalls.ptrcallWithLongArg(setOperationBind, segment, operation)
     }
 
     fun getOperation(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOperationBind, segment)
     }
 
     fun setSnap(snap: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSnapBind, handle, snap)
+        ObjectCalls.ptrcallWithDoubleArg(setSnapBind, segment, snap)
     }
 
     fun getSnap(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSnapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSnapBind, segment)
     }
 
     fun setUseCollision(operation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCollisionBind, handle, operation)
+        ObjectCalls.ptrcallWithBoolArg(setUseCollisionBind, segment, operation)
     }
 
     fun isUsingCollision(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCollisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCollisionBind, segment)
     }
 
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
     }
 
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
     }
 
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
     }
 
     fun setCollisionPriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, segment, priority)
     }
 
     fun getCollisionPriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
     }
 
     fun bakeCollisionShape(): ConcavePolygonShape3D? {
-        return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(bakeCollisionShapeBind, handle))
+        return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(bakeCollisionShapeBind, segment))
     }
 
     fun setCalculateTangents(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCalculateTangentsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCalculateTangentsBind, segment, enabled)
     }
 
     fun isCalculatingTangents(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCalculatingTangentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCalculatingTangentsBind, segment)
     }
 
     fun getMeshes(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getMeshesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getMeshesBind, segment)
     }
 
     fun bakeStaticMesh(): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(bakeStaticMeshBind, handle))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(bakeStaticMeshBind, segment))
     }
 
     fun setAutosmooth(autosmooth: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutosmoothBind, handle, autosmooth)
+        ObjectCalls.ptrcallWithBoolArg(setAutosmoothBind, segment, autosmooth)
     }
 
     fun isAutosmooth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutosmoothBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutosmoothBind, segment)
     }
 
     fun setSmoothingAngle(smoothingAngle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSmoothingAngleBind, handle, smoothingAngle)
+        ObjectCalls.ptrcallWithDoubleArg(setSmoothingAngleBind, segment, smoothingAngle)
     }
 
     fun getSmoothingAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSmoothingAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSmoothingAngleBind, segment)
     }
 
     companion object {
@@ -174,11 +174,11 @@ open class CSGShape3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         const val OPERATION_SUBTRACTION: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGShape3D? =
-            if (handle.address() == 0L) null else CSGShape3D(handle)
+            if (handle.address() == 0L) null else CSGShape3D(GodotHandle(handle))
 
         private const val IS_ROOT_SHAPE_HASH = 36873697L
         private val isRootShapeBind by lazy {

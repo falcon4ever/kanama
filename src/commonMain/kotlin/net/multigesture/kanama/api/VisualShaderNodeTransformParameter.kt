@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: VisualShaderNodeTransformParameter
  */
-class VisualShaderNodeTransformParameter(handle: MemorySegment) : VisualShaderNodeParameter(handle) {
+class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
     var defaultValueEnabled: Boolean
         @JvmName("defaultValueEnabledProperty")
         get() = isDefaultValueEnabled()
@@ -25,31 +25,31 @@ class VisualShaderNodeTransformParameter(handle: MemorySegment) : VisualShaderNo
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setDefaultValueBind, handle, value)
+        ObjectCalls.ptrcallWithTransform3DArg(setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getDefaultValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getDefaultValueBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTransformParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTransformParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeTransformParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTransformParameter(GodotHandle(handle))
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
         private val setDefaultValueEnabledBind by lazy {

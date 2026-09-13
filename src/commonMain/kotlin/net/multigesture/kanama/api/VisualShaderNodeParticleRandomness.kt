@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParticleRandomness
  */
-class VisualShaderNodeParticleRandomness(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode(handle) {
     var opType: Long
         @JvmName("opTypeProperty")
         get() = getOpType()
@@ -18,12 +18,12 @@ class VisualShaderNodeParticleRandomness(handle: MemorySegment) : VisualShaderNo
 
     fun setOpType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type)
     }
 
     fun getOpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
     }
 
     companion object {
@@ -34,11 +34,11 @@ class VisualShaderNodeParticleRandomness(handle: MemorySegment) : VisualShaderNo
         const val OP_TYPE_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleRandomness? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleRandomness? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleRandomness? =
-            if (handle.address() == 0L) null else VisualShaderNodeParticleRandomness(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParticleRandomness(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 2060089061L
         private val setOpTypeBind by lazy {

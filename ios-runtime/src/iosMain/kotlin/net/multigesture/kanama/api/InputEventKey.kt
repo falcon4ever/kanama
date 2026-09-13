@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: InputEventKey
  */
-class InputEventKey(handle: MemorySegment) : InputEventWithModifiers(handle) {
+class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     var keycode: Long
         @JvmName("keycodeProperty")
         get() = getKeycode()
@@ -42,106 +42,106 @@ class InputEventKey(handle: MemorySegment) : InputEventWithModifiers(handle) {
 
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
     }
 
     fun setKeycode(keycode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setKeycodeBind, handle, keycode)
+        ObjectCalls.ptrcallWithLongArg(setKeycodeBind, segment, keycode)
     }
 
     fun getKeycode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeBind, segment)
     }
 
     fun setPhysicalKeycode(physicalKeycode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPhysicalKeycodeBind, handle, physicalKeycode)
+        ObjectCalls.ptrcallWithLongArg(setPhysicalKeycodeBind, segment, physicalKeycode)
     }
 
     fun getPhysicalKeycode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeBind, segment)
     }
 
     fun setKeyLabel(keyLabel: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setKeyLabelBind, handle, keyLabel)
+        ObjectCalls.ptrcallWithLongArg(setKeyLabelBind, segment, keyLabel)
     }
 
     fun getKeyLabel(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelBind, segment)
     }
 
     fun setUnicode(unicode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setUnicodeBind, handle, unicode)
+        ObjectCalls.ptrcallWithIntArg(setUnicodeBind, segment, unicode)
     }
 
     fun getUnicode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUnicodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getUnicodeBind, segment)
     }
 
     fun setLocation(location: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLocationBind, handle, location)
+        ObjectCalls.ptrcallWithLongArg(setLocationBind, segment, location)
     }
 
     fun getLocation(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLocationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLocationBind, segment)
     }
 
     fun setEcho(echo: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEchoBind, handle, echo)
+        ObjectCalls.ptrcallWithBoolArg(setEchoBind, segment, echo)
     }
 
     fun getKeycodeWithModifiers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeWithModifiersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeWithModifiersBind, segment)
     }
 
     fun getPhysicalKeycodeWithModifiers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeWithModifiersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeWithModifiersBind, segment)
     }
 
     fun getKeyLabelWithModifiers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelWithModifiersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelWithModifiersBind, segment)
     }
 
     fun asTextKeycode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextKeycodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(asTextKeycodeBind, segment)
     }
 
     fun asTextPhysicalKeycode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextPhysicalKeycodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(asTextPhysicalKeycodeBind, segment)
     }
 
     fun asTextKeyLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextKeyLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(asTextKeyLabelBind, segment)
     }
 
     fun asTextLocation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextLocationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(asTextLocationBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventKey? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventKey? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventKey? =
-            if (handle.address() == 0L) null else InputEventKey(handle)
+            if (handle.address() == 0L) null else InputEventKey(GodotHandle(handle))
 
         // Godot Key enum constants (subset used by gameplay code; values match @GlobalScope.Key).
         const val KEY_ESCAPE = 4194305L
@@ -161,7 +161,7 @@ class InputEventKey(handle: MemorySegment) : InputEventWithModifiers(handle) {
 
         // Instantiate a blank InputEventKey (for synthesizing input events / InputMap actions).
         fun create(): InputEventKey =
-            InputEventKey(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey")))
+            InputEventKey(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))))
 
         // Cast a generic event to InputEventKey (null if not), mirroring the desktop helper.
         fun from(value: GodotObject): InputEventKey? =

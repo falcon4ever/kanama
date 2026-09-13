@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CurveXYZTexture
  */
-class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
+class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
     var curveX: Curve?
         @JvmName("curveXProperty")
         get() = getCurveX()
@@ -39,7 +39,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
     }
 
     /**
@@ -49,7 +49,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setCurveX(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -59,7 +59,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getCurveX(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, segment))
     }
 
     /**
@@ -69,7 +69,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setCurveY(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -79,7 +79,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getCurveY(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, segment))
     }
 
     /**
@@ -89,7 +89,7 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setCurveZ(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -99,16 +99,16 @@ class CurveXYZTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getCurveZ(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CurveXYZTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CurveXYZTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CurveXYZTexture? =
-            if (handle.address() == 0L) null else CurveXYZTexture(handle)
+            if (handle.address() == 0L) null else CurveXYZTexture(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L
         private val setWidthBind by lazy {

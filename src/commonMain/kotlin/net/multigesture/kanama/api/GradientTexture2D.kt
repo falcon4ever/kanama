@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: GradientTexture2D
  */
-class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
+class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     var gradient: Gradient?
         @JvmName("gradientProperty")
         get() = getGradient()
@@ -56,7 +56,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setGradient(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -66,7 +66,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getGradient(): Gradient? {
         checkOpen()
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
     }
 
     /**
@@ -77,7 +77,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
     }
 
     /**
@@ -88,7 +88,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setHeight(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithIntArg(setHeightBind, segment, height)
     }
 
     /**
@@ -101,7 +101,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setUseHdr(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, segment, enabled)
     }
 
     /**
@@ -114,7 +114,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun isUsingHdr(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFill(fill: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFillBind, handle, fill)
+        ObjectCalls.ptrcallWithLongArg(setFillBind, segment, fill)
     }
 
     /**
@@ -134,7 +134,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getFill(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFillBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFillBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFillFrom(fillFrom: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setFillFromBind, handle, fillFrom)
+        ObjectCalls.ptrcallWithVector2Arg(setFillFromBind, segment, fillFrom)
     }
 
     /**
@@ -154,7 +154,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getFillFrom(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFillFromBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getFillFromBind, segment)
     }
 
     /**
@@ -164,7 +164,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFillTo(fillTo: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setFillToBind, handle, fillTo)
+        ObjectCalls.ptrcallWithVector2Arg(setFillToBind, segment, fillTo)
     }
 
     /**
@@ -174,7 +174,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getFillTo(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFillToBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getFillToBind, segment)
     }
 
     /**
@@ -184,7 +184,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setRepeat(repeat: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatBind, handle, repeat)
+        ObjectCalls.ptrcallWithLongArg(setRepeatBind, segment, repeat)
     }
 
     /**
@@ -194,7 +194,7 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getRepeat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, segment)
     }
 
     companion object {
@@ -207,11 +207,11 @@ class GradientTexture2D(handle: MemorySegment) : Texture2D(handle) {
         const val REPEAT_MIRROR: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GradientTexture2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GradientTexture2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GradientTexture2D? =
-            if (handle.address() == 0L) null else GradientTexture2D(handle)
+            if (handle.address() == 0L) null else GradientTexture2D(GodotHandle(handle))
 
         private const val SET_GRADIENT_HASH = 2756054477L
         private val setGradientBind by lazy {

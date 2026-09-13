@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorExportPlugin
  */
-class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
+class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Adds a shared object or a directory containing only shared objects with the given `tags` and
      * destination `path`. Note: In case of macOS exports, those shared objects will be added to
@@ -21,7 +21,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addSharedObject(path: String, tags: List<String>, target: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringPackedStringListAndStringArgs(addSharedObjectBind, handle, path, tags, target)
+        ObjectCalls.ptrcallWithStringPackedStringListAndStringArgs(addSharedObjectBind, segment, path, tags, target)
     }
 
     /**
@@ -35,7 +35,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addFile(path: String, file: ByteArray, remap: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringByteArrayBoolArgs(addFileBind, handle, path, file, remap)
+        ObjectCalls.ptrcallWithStringByteArrayBoolArgs(addFileBind, segment, path, file, remap)
     }
 
     /**
@@ -45,7 +45,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformProjectStaticLib(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformProjectStaticLibBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformProjectStaticLibBind, segment, path)
     }
 
     /**
@@ -56,7 +56,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformFrameworkBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformFrameworkBind, segment, path)
     }
 
     /**
@@ -69,7 +69,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformEmbeddedFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformEmbeddedFrameworkBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformEmbeddedFrameworkBind, segment, path)
     }
 
     /**
@@ -79,7 +79,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformPlistContent(plistContent: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformPlistContentBind, handle, plistContent)
+        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformPlistContentBind, segment, plistContent)
     }
 
     /**
@@ -89,7 +89,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformLinkerFlags(flags: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformLinkerFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformLinkerFlagsBind, segment, flags)
     }
 
     /**
@@ -99,7 +99,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformBundleFile(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformBundleFileBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformBundleFileBind, segment, path)
     }
 
     /**
@@ -110,7 +110,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformCppCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformCppCodeBind, handle, code)
+        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformCppCodeBind, segment, code)
     }
 
     /**
@@ -120,7 +120,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addIosProjectStaticLib(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosProjectStaticLibBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addIosProjectStaticLibBind, segment, path)
     }
 
     /**
@@ -131,7 +131,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addIosFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosFrameworkBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addIosFrameworkBind, segment, path)
     }
 
     /**
@@ -144,7 +144,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addIosEmbeddedFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosEmbeddedFrameworkBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addIosEmbeddedFrameworkBind, segment, path)
     }
 
     /**
@@ -154,7 +154,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addIosPlistContent(plistContent: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosPlistContentBind, handle, plistContent)
+        ObjectCalls.ptrcallWithStringArg(addIosPlistContentBind, segment, plistContent)
     }
 
     /**
@@ -164,7 +164,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addIosLinkerFlags(flags: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosLinkerFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithStringArg(addIosLinkerFlagsBind, segment, flags)
     }
 
     /**
@@ -174,7 +174,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addIosBundleFile(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosBundleFileBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addIosBundleFileBind, segment, path)
     }
 
     /**
@@ -185,7 +185,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addIosCppCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosCppCodeBind, handle, code)
+        ObjectCalls.ptrcallWithStringArg(addIosCppCodeBind, segment, code)
     }
 
     /**
@@ -196,7 +196,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addMacosPluginFile(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addMacosPluginFileBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(addMacosPluginFileBind, segment, path)
     }
 
     /**
@@ -206,7 +206,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun skip() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(skipBind, handle)
+        ObjectCalls.ptrcallNoArgs(skipBind, segment)
     }
 
     /**
@@ -216,7 +216,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOption(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionBind, segment, name)
     }
 
     /**
@@ -226,7 +226,7 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getExportPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPresetBind, handle))
+        return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPresetBind, segment))
     }
 
     /**
@@ -236,16 +236,16 @@ class EditorExportPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getExportPlatform(): EditorExportPlatform? {
         checkOpen()
-        return EditorExportPlatform.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPlatformBind, handle))
+        return EditorExportPlatform.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPlatformBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorExportPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorExportPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorExportPlugin? =
-            if (handle.address() == 0L) null else EditorExportPlugin(handle)
+            if (handle.address() == 0L) null else EditorExportPlugin(GodotHandle(handle))
 
         private const val ADD_SHARED_OBJECT_HASH = 3098291045L
         private val addSharedObjectBind by lazy {

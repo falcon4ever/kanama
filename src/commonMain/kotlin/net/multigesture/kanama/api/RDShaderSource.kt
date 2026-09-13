@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDShaderSource
  */
-class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
+class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
     var sourceVertex: String
         @JvmName("sourceVertexProperty")
         get() = getStageSource(0L)
@@ -85,7 +85,7 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setStageSource(stage: Long, source: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, handle, stage, source)
+        ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, segment, stage, source)
     }
 
     /**
@@ -95,7 +95,7 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getStageSource(stage: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getStageSourceBind, handle, stage)
+        return ObjectCalls.ptrcallWithLongArgRetString(getStageSourceBind, segment, stage)
     }
 
     /**
@@ -105,7 +105,7 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLanguage(language: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithLongArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -115,16 +115,16 @@ class RDShaderSource(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLanguage(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDShaderSource? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDShaderSource? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDShaderSource? =
-            if (handle.address() == 0L) null else RDShaderSource(handle)
+            if (handle.address() == 0L) null else RDShaderSource(GodotHandle(handle))
 
         private const val SET_STAGE_SOURCE_HASH = 620821314L
         private val setStageSourceBind by lazy {

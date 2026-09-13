@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: BackBufferCopy
  */
-class BackBufferCopy(handle: MemorySegment) : Node2D(handle) {
+class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
     var copyMode: Long
         @JvmName("copyModeProperty")
         get() = getCopyMode()
@@ -31,7 +31,7 @@ class BackBufferCopy(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.set_rect
      */
     fun setRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRectBind, handle, rect)
+        ObjectCalls.ptrcallWithRect2Arg(setRectBind, segment, rect)
     }
 
     /**
@@ -40,7 +40,7 @@ class BackBufferCopy(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
     }
 
     /**
@@ -49,7 +49,7 @@ class BackBufferCopy(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.set_copy_mode
      */
     fun setCopyMode(copyMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCopyModeBind, handle, copyMode)
+        ObjectCalls.ptrcallWithLongArg(setCopyModeBind, segment, copyMode)
     }
 
     /**
@@ -58,7 +58,7 @@ class BackBufferCopy(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.get_copy_mode
      */
     fun getCopyMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCopyModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCopyModeBind, segment)
     }
 
     companion object {
@@ -67,11 +67,11 @@ class BackBufferCopy(handle: MemorySegment) : Node2D(handle) {
         const val COPY_MODE_VIEWPORT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BackBufferCopy? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BackBufferCopy? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BackBufferCopy? =
-            if (handle.address() == 0L) null else BackBufferCopy(handle)
+            if (handle.address() == 0L) null else BackBufferCopy(GodotHandle(handle))
 
         private const val SET_RECT_HASH = 2046264180L
         private val setRectBind by lazy {

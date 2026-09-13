@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: FastNoiseLite
  */
-class FastNoiseLite(handle: MemorySegment) : Noise(handle) {
+class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     var noiseType: Long
         @JvmName("noiseTypeProperty")
         get() = getNoiseType()
@@ -139,212 +139,212 @@ class FastNoiseLite(handle: MemorySegment) : Noise(handle) {
 
     fun setNoiseType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setNoiseTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setNoiseTypeBind, segment, type)
     }
 
     fun getNoiseType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNoiseTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getNoiseTypeBind, segment)
     }
 
     fun setSeed(seed: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSeedBind, handle, seed)
+        ObjectCalls.ptrcallWithIntArg(setSeedBind, segment, seed)
     }
 
     fun getSeed(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSeedBind, segment)
     }
 
     fun setFrequency(freq: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFrequencyBind, handle, freq)
+        ObjectCalls.ptrcallWithDoubleArg(setFrequencyBind, segment, freq)
     }
 
     fun getFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrequencyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFrequencyBind, segment)
     }
 
     fun setOffset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(setOffsetBind, segment, offset)
     }
 
     fun getOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getOffsetBind, segment)
     }
 
     fun setFractalType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFractalTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setFractalTypeBind, segment, type)
     }
 
     fun getFractalType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFractalTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFractalTypeBind, segment)
     }
 
     fun setFractalOctaves(octaveCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFractalOctavesBind, handle, octaveCount)
+        ObjectCalls.ptrcallWithIntArg(setFractalOctavesBind, segment, octaveCount)
     }
 
     fun getFractalOctaves(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFractalOctavesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFractalOctavesBind, segment)
     }
 
     fun setFractalLacunarity(lacunarity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalLacunarityBind, handle, lacunarity)
+        ObjectCalls.ptrcallWithDoubleArg(setFractalLacunarityBind, segment, lacunarity)
     }
 
     fun getFractalLacunarity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalLacunarityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalLacunarityBind, segment)
     }
 
     fun setFractalGain(gain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalGainBind, handle, gain)
+        ObjectCalls.ptrcallWithDoubleArg(setFractalGainBind, segment, gain)
     }
 
     fun getFractalGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalGainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalGainBind, segment)
     }
 
     fun setFractalWeightedStrength(weightedStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalWeightedStrengthBind, handle, weightedStrength)
+        ObjectCalls.ptrcallWithDoubleArg(setFractalWeightedStrengthBind, segment, weightedStrength)
     }
 
     fun getFractalWeightedStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalWeightedStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalWeightedStrengthBind, segment)
     }
 
     fun setFractalPingPongStrength(pingPongStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalPingPongStrengthBind, handle, pingPongStrength)
+        ObjectCalls.ptrcallWithDoubleArg(setFractalPingPongStrengthBind, segment, pingPongStrength)
     }
 
     fun getFractalPingPongStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalPingPongStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalPingPongStrengthBind, segment)
     }
 
     fun setCellularDistanceFunction(func: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellularDistanceFunctionBind, handle, func)
+        ObjectCalls.ptrcallWithLongArg(setCellularDistanceFunctionBind, segment, func)
     }
 
     fun getCellularDistanceFunction(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCellularDistanceFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCellularDistanceFunctionBind, segment)
     }
 
     fun setCellularJitter(jitter: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellularJitterBind, handle, jitter)
+        ObjectCalls.ptrcallWithDoubleArg(setCellularJitterBind, segment, jitter)
     }
 
     fun getCellularJitter(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellularJitterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCellularJitterBind, segment)
     }
 
     fun setCellularReturnType(ret: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellularReturnTypeBind, handle, ret)
+        ObjectCalls.ptrcallWithLongArg(setCellularReturnTypeBind, segment, ret)
     }
 
     fun getCellularReturnType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCellularReturnTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCellularReturnTypeBind, segment)
     }
 
     fun setDomainWarpEnabled(domainWarpEnabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDomainWarpEnabledBind, handle, domainWarpEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setDomainWarpEnabledBind, segment, domainWarpEnabled)
     }
 
     fun isDomainWarpEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDomainWarpEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDomainWarpEnabledBind, segment)
     }
 
     fun setDomainWarpType(domainWarpType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDomainWarpTypeBind, handle, domainWarpType)
+        ObjectCalls.ptrcallWithLongArg(setDomainWarpTypeBind, segment, domainWarpType)
     }
 
     fun getDomainWarpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpTypeBind, segment)
     }
 
     fun setDomainWarpAmplitude(domainWarpAmplitude: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpAmplitudeBind, handle, domainWarpAmplitude)
+        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpAmplitudeBind, segment, domainWarpAmplitude)
     }
 
     fun getDomainWarpAmplitude(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpAmplitudeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpAmplitudeBind, segment)
     }
 
     fun setDomainWarpFrequency(domainWarpFrequency: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFrequencyBind, handle, domainWarpFrequency)
+        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFrequencyBind, segment, domainWarpFrequency)
     }
 
     fun getDomainWarpFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFrequencyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFrequencyBind, segment)
     }
 
     fun setDomainWarpFractalType(domainWarpFractalType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDomainWarpFractalTypeBind, handle, domainWarpFractalType)
+        ObjectCalls.ptrcallWithLongArg(setDomainWarpFractalTypeBind, segment, domainWarpFractalType)
     }
 
     fun getDomainWarpFractalType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpFractalTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpFractalTypeBind, segment)
     }
 
     fun setDomainWarpFractalOctaves(domainWarpOctaveCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDomainWarpFractalOctavesBind, handle, domainWarpOctaveCount)
+        ObjectCalls.ptrcallWithIntArg(setDomainWarpFractalOctavesBind, segment, domainWarpOctaveCount)
     }
 
     fun getDomainWarpFractalOctaves(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDomainWarpFractalOctavesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDomainWarpFractalOctavesBind, segment)
     }
 
     fun setDomainWarpFractalLacunarity(domainWarpLacunarity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFractalLacunarityBind, handle, domainWarpLacunarity)
+        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFractalLacunarityBind, segment, domainWarpLacunarity)
     }
 
     fun getDomainWarpFractalLacunarity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFractalLacunarityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFractalLacunarityBind, segment)
     }
 
     fun setDomainWarpFractalGain(domainWarpGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFractalGainBind, handle, domainWarpGain)
+        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFractalGainBind, segment, domainWarpGain)
     }
 
     fun getDomainWarpFractalGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFractalGainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFractalGainBind, segment)
     }
 
     companion object {
@@ -377,15 +377,15 @@ class FastNoiseLite(handle: MemorySegment) : Noise(handle) {
         const val DOMAIN_WARP_FRACTAL_INDEPENDENT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FastNoiseLite? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FastNoiseLite? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FastNoiseLite? =
-            if (handle.address() == 0L) null else FastNoiseLite(handle)
+            if (handle.address() == 0L) null else FastNoiseLite(GodotHandle(handle))
 
         @JvmStatic
         fun create(): FastNoiseLite =
-            FastNoiseLite(ObjectCalls.constructObject("FastNoiseLite"))
+            FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite")))
 
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =

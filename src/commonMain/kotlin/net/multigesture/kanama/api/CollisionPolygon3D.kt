@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CollisionPolygon3D
  */
-class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
+class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
     var depth: Double
         @JvmName("depthProperty")
         get() = getDepth()
@@ -56,7 +56,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_depth
      */
     fun setDepth(depth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, handle, depth)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
     }
 
     /**
@@ -65,7 +65,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_depth
      */
     fun getDepth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_polygon
      */
     fun setPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
     }
 
     /**
@@ -83,7 +83,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_disabled
      */
     fun setDisabled(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, disabled)
     }
 
     /**
@@ -103,7 +103,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
     }
 
     /**
@@ -115,7 +115,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_debug_color
      */
     fun setDebugColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, segment, color)
     }
 
     /**
@@ -127,7 +127,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_debug_color
      */
     fun getDebugColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, segment)
     }
 
     /**
@@ -137,7 +137,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_enable_debug_fill
      */
     fun setEnableDebugFill(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, segment, enable)
     }
 
     /**
@@ -147,7 +147,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_enable_debug_fill
      */
     fun getEnableDebugFill(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, segment)
     }
 
     /**
@@ -156,7 +156,7 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_margin
      */
     fun setMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
     }
 
     /**
@@ -165,16 +165,16 @@ class CollisionPolygon3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_margin
      */
     fun getMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CollisionPolygon3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CollisionPolygon3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CollisionPolygon3D? =
-            if (handle.address() == 0L) null else CollisionPolygon3D(handle)
+            if (handle.address() == 0L) null else CollisionPolygon3D(GodotHandle(handle))
 
         private const val SET_DEPTH_HASH = 373806689L
         private val setDepthBind by lazy {

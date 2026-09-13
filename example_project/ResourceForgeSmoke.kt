@@ -1,11 +1,11 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.Tool
 import net.multigesture.kanama.api.Engine
 import net.multigesture.kanama.api.FileAccess
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.ResourceLoader
@@ -19,7 +19,7 @@ import net.multigesture.kanama.api.newScriptInstance
 // an inert placeholder, and `newScriptInstance<SmokeResource>()` would fail to cast).
 @ScriptClass(attachTo = "Node")
 @Tool
-class ResourceForgeSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+class ResourceForgeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
 
   @OnReady
   fun ready() {

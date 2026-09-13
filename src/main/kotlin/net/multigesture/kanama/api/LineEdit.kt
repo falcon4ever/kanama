@@ -9,7 +9,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: LineEdit
  */
-class LineEdit(handle: MemorySegment) : Control(handle) {
+class LineEdit(handle: GodotHandle) : Control(handle) {
 
     var horizontalAlignment: Long
         @JvmName("horizontalAlignmentProperty")
@@ -234,7 +234,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.has_ime_text
      */
     fun hasImeText(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, segment)
 
     /**
      * Closes the Input Method Editor (https://en.wikipedia.org/wiki/Input_method) (IME) if it is open.
@@ -243,7 +243,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.cancel_ime
      */
     fun cancelIme() {
-        ObjectCalls.ptrcallNoArgs(cancelImeBind, handle)
+        ObjectCalls.ptrcallNoArgs(cancelImeBind, segment)
     }
 
     /**
@@ -253,7 +253,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.apply_ime
      */
     fun applyIme() {
-        ObjectCalls.ptrcallNoArgs(applyImeBind, handle)
+        ObjectCalls.ptrcallNoArgs(applyImeBind, segment)
     }
 
     /**
@@ -262,7 +262,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -271,7 +271,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
 
     /**
      * Allows entering edit mode whether the `LineEdit` is focused or not. If `hide_focus` is `true`,
@@ -281,7 +281,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.edit
      */
     fun edit(hideFocus: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(editBind, handle, hideFocus)
+        ObjectCalls.ptrcallWithBoolArg(editBind, segment, hideFocus)
     }
 
     /**
@@ -290,7 +290,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.unedit
      */
     fun unedit() {
-        ObjectCalls.ptrcallNoArgs(uneditBind, handle)
+        ObjectCalls.ptrcallNoArgs(uneditBind, segment)
     }
 
     /**
@@ -299,7 +299,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_editing
      */
     fun isEditing(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isEditingBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isEditingBind, segment)
 
     /**
      * If `true`, the `LineEdit` will not exit edit mode when text is submitted by pressing
@@ -308,7 +308,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_keep_editing_on_text_submit
      */
     fun setKeepEditingOnTextSubmit(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeepEditingOnTextSubmitBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setKeepEditingOnTextSubmitBind, segment, enable)
     }
 
     /**
@@ -318,7 +318,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_editing_kept_on_text_submit
      */
     fun isEditingKeptOnTextSubmit(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isEditingKeptOnTextSubmitBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isEditingKeptOnTextSubmitBind, segment)
 
     /**
      * Erases the `LineEdit`'s `text`.
@@ -326,7 +326,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -336,7 +336,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.select
      */
     fun select(from: Int = 0, to: Int = -1) {
-        ObjectCalls.ptrcallWithTwoIntArgs(selectBind, handle, from, to)
+        ObjectCalls.ptrcallWithTwoIntArgs(selectBind, segment, from, to)
     }
 
     /**
@@ -345,7 +345,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.select_all
      */
     fun selectAll() {
-        ObjectCalls.ptrcallNoArgs(selectAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(selectAllBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.deselect
      */
     fun deselect() {
-        ObjectCalls.ptrcallNoArgs(deselectBind, handle)
+        ObjectCalls.ptrcallNoArgs(deselectBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.has_undo
      */
     fun hasUndo(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, segment)
 
     /**
      * Returns `true` if a "redo" action is available.
@@ -371,7 +371,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.has_redo
      */
     fun hasRedo(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, segment)
 
     /**
      * Returns `true` if the user has selected text.
@@ -379,7 +379,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.has_selection
      */
     fun hasSelection(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(hasSelectionBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(hasSelectionBind, segment)
 
     /**
      * Returns the text inside the selection.
@@ -387,7 +387,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_selected_text
      */
     fun getSelectedText(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, segment)
 
     /**
      * Returns the selection begin column.
@@ -395,7 +395,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_selection_from_column
      */
     fun getSelectionFromColumn(): Int =
-        ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromColumnBind, handle)
+        ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromColumnBind, segment)
 
     /**
      * Returns the selection end column.
@@ -403,7 +403,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_selection_to_column
      */
     fun getSelectionToColumn(): Int =
-        ObjectCalls.ptrcallNoArgsRetInt(getSelectionToColumnBind, handle)
+        ObjectCalls.ptrcallNoArgsRetInt(getSelectionToColumnBind, segment)
 
     /**
      * String value of the `LineEdit`. Note: Changing text using this property won't emit the
@@ -412,7 +412,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -422,7 +422,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_text
      */
     fun getText(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
 
     /**
      * If `true`, control characters are displayed.
@@ -430,7 +430,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_draw_control_chars
      */
     fun getDrawControlChars(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, segment)
 
     /**
      * If `true`, control characters are displayed.
@@ -438,7 +438,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_draw_control_chars
      */
     fun setDrawControlChars(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, segment, enable)
     }
 
     /**
@@ -447,7 +447,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -456,7 +456,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_text_direction
      */
     fun getTextDirection(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
 
     /**
      * Language code used for line-breaking and text shaping algorithms. If left empty, the current
@@ -465,7 +465,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -475,7 +475,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_language
      */
     fun getLanguage(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
 
     /**
      * Set BiDi algorithm override for the structured text.
@@ -483,7 +483,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     /**
@@ -492,7 +492,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
 
     /**
      * Set additional options for BiDi override.
@@ -500,7 +500,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -509,7 +509,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> =
-        ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
 
     /**
      * Text shown when the `LineEdit` is empty. It is not the `LineEdit`'s default value (see `text`).
@@ -517,7 +517,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_placeholder
      */
     fun setPlaceholder(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, segment, text)
     }
 
     /**
@@ -526,7 +526,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_placeholder
      */
     fun getPlaceholder(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, segment)
 
     /**
      * The caret's column position inside the `LineEdit`. When set, the text may scroll to accommodate
@@ -535,7 +535,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_caret_column
      */
     fun setCaretColumn(position: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCaretColumnBind, handle, position)
+        ObjectCalls.ptrcallWithIntArg(setCaretColumnBind, segment, position)
     }
 
     /**
@@ -545,7 +545,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_caret_column
      */
     fun getCaretColumn(): Int =
-        ObjectCalls.ptrcallNoArgsRetInt(getCaretColumnBind, handle)
+        ObjectCalls.ptrcallNoArgsRetInt(getCaretColumnBind, segment)
 
     /**
      * Returns the correct column at the end of a composite character like ❤️‍🩹 (mending heart;
@@ -557,7 +557,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_next_composite_character_column
      */
     fun getNextCompositeCharacterColumn(column: Int): Int =
-        ObjectCalls.ptrcallWithIntArgRetInt(getNextCompositeCharacterColumnBind, handle, column)
+        ObjectCalls.ptrcallWithIntArgRetInt(getNextCompositeCharacterColumnBind, segment, column)
 
     /**
      * Returns the correct column at the start of a composite character like ❤️‍🩹 (mending heart;
@@ -569,7 +569,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_previous_composite_character_column
      */
     fun getPreviousCompositeCharacterColumn(column: Int): Int =
-        ObjectCalls.ptrcallWithIntArgRetInt(getPreviousCompositeCharacterColumnBind, handle, column)
+        ObjectCalls.ptrcallWithIntArgRetInt(getPreviousCompositeCharacterColumnBind, segment, column)
 
     /**
      * Returns the scroll offset due to `caret_column`, as a number of characters.
@@ -577,7 +577,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_scroll_offset
      */
     fun getScrollOffset(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getScrollOffsetBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getScrollOffsetBind, segment)
 
     /**
      * If `true`, the `LineEdit` width will increase to stay longer than the `text`. It will not
@@ -586,7 +586,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_expand_to_text_length_enabled
      */
     fun setExpandToTextLengthEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpandToTextLengthEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setExpandToTextLengthEnabledBind, segment, enabled)
     }
 
     /**
@@ -596,7 +596,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_expand_to_text_length_enabled
      */
     fun isExpandToTextLengthEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isExpandToTextLengthEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isExpandToTextLengthEnabledBind, segment)
 
     /**
      * If `true`, makes the caret blink.
@@ -604,7 +604,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_caret_blink_enabled
      */
     fun setCaretBlinkEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, segment, enabled)
     }
 
     /**
@@ -613,7 +613,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_caret_blink_enabled
      */
     fun isCaretBlinkEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, segment)
 
     /**
      * Allow moving caret, selecting and removing the individual composite character components. Note:
@@ -622,7 +622,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_caret_mid_grapheme_enabled
      */
     fun setCaretMidGraphemeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, segment, enabled)
     }
 
     /**
@@ -632,7 +632,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_caret_mid_grapheme_enabled
      */
     fun isCaretMidGraphemeEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, segment)
 
     /**
      * If `true`, the `LineEdit` will always show the caret, even if not editing or focus is lost.
@@ -640,7 +640,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_caret_force_displayed
      */
     fun setCaretForceDisplayed(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretForceDisplayedBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCaretForceDisplayedBind, segment, enabled)
     }
 
     /**
@@ -649,7 +649,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_caret_force_displayed
      */
     fun isCaretForceDisplayed(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isCaretForceDisplayedBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isCaretForceDisplayedBind, segment)
 
     /**
      * The interval at which the caret blinks (in seconds).
@@ -657,7 +657,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_caret_blink_interval
      */
     fun setCaretBlinkInterval(interval: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, handle, interval)
+        ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, segment, interval)
     }
 
     /**
@@ -666,7 +666,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_caret_blink_interval
      */
     fun getCaretBlinkInterval(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, segment)
 
     /**
      * Maximum number of characters that can be entered inside the `LineEdit`. If `0`, there is no
@@ -678,7 +678,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_max_length
      */
     fun setMaxLength(chars: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxLengthBind, handle, chars)
+        ObjectCalls.ptrcallWithIntArg(setMaxLengthBind, segment, chars)
     }
 
     /**
@@ -691,7 +691,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_max_length
      */
     fun getMaxLength(): Int =
-        ObjectCalls.ptrcallNoArgsRetInt(getMaxLengthBind, handle)
+        ObjectCalls.ptrcallNoArgsRetInt(getMaxLengthBind, segment)
 
     /**
      * Inserts `text` at the caret. If the resulting value is longer than `max_length`, nothing
@@ -700,7 +700,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.insert_text_at_caret
      */
     fun insertTextAtCaret(text: String) {
-        ObjectCalls.ptrcallWithStringArg(insertTextAtCaretBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(insertTextAtCaretBind, segment, text)
     }
 
     /**
@@ -709,7 +709,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.delete_char_at_caret
      */
     fun deleteCharAtCaret() {
-        ObjectCalls.ptrcallNoArgs(deleteCharAtCaretBind, handle)
+        ObjectCalls.ptrcallNoArgs(deleteCharAtCaretBind, segment)
     }
 
     /**
@@ -719,7 +719,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.delete_text
      */
     fun deleteText(fromColumn: Int, toColumn: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(deleteTextBind, handle, fromColumn, toColumn)
+        ObjectCalls.ptrcallWithTwoIntArgs(deleteTextBind, segment, fromColumn, toColumn)
     }
 
     /**
@@ -728,7 +728,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_editable
      */
     fun setEditable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enabled)
     }
 
     /**
@@ -737,7 +737,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_editable
      */
     fun isEditable(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
 
     /**
      * If `true`, every character is replaced with the secret character (see `secret_character`).
@@ -745,7 +745,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_secret
      */
     fun setSecret(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSecretBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSecretBind, segment, enabled)
     }
 
     /**
@@ -754,7 +754,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_secret
      */
     fun isSecret(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isSecretBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isSecretBind, segment)
 
     /**
      * The character to use to mask secret input. Only a single character can be used as the secret
@@ -764,7 +764,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_secret_character
      */
     fun setSecretCharacter(character: String) {
-        ObjectCalls.ptrcallWithStringArg(setSecretCharacterBind, handle, character)
+        ObjectCalls.ptrcallWithStringArg(setSecretCharacterBind, segment, character)
     }
 
     /**
@@ -775,7 +775,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_secret_character
      */
     fun getSecretCharacter(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getSecretCharacterBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getSecretCharacterBind, segment)
 
     /**
      * Executes a given action as defined in the `MenuItems` enum.
@@ -783,7 +783,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.menu_option
      */
     fun menuOption(option: Int) {
-        ObjectCalls.ptrcallWithIntArg(menuOptionBind, handle, option)
+        ObjectCalls.ptrcallWithIntArg(menuOptionBind, segment, option)
     }
 
     /**
@@ -794,7 +794,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_menu
      */
     fun getMenu(): PopupMenu =
-        PopupMenu(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, handle))
+        PopupMenu(GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, segment)))
 
     /**
      * Returns whether the menu is visible. Use this instead of `get_menu().visible` to improve
@@ -803,7 +803,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_menu_visible
      */
     fun isMenuVisible(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, segment)
 
     /**
      * If `true`, the context menu will appear when right-clicked.
@@ -811,7 +811,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_context_menu_enabled
      */
     fun setContextMenuEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, segment, enable)
     }
 
     /**
@@ -820,7 +820,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_context_menu_enabled
      */
     fun isContextMenuEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, segment)
 
     /**
      * If `true`, "Emoji and Symbols" menu is enabled.
@@ -828,7 +828,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_emoji_menu_enabled
      */
     fun setEmojiMenuEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, segment, enable)
     }
 
     /**
@@ -837,7 +837,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_emoji_menu_enabled
      */
     fun isEmojiMenuEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, segment)
 
     /**
      * If `true` and `caret_mid_grapheme` is `false`, backspace deletes an entire composite character
@@ -846,7 +846,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_backspace_deletes_composite_character_enabled
      */
     fun setBackspaceDeletesCompositeCharacterEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, segment, enable)
     }
 
     /**
@@ -856,7 +856,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_backspace_deletes_composite_character_enabled
      */
     fun isBackspaceDeletesCompositeCharacterEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, segment)
 
     /**
      * If `true`, the native virtual keyboard is enabled on platforms that support it.
@@ -864,7 +864,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_virtual_keyboard_enabled
      */
     fun setVirtualKeyboardEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, segment, enable)
     }
 
     /**
@@ -873,7 +873,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_virtual_keyboard_enabled
      */
     fun isVirtualKeyboardEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, segment)
 
     /**
      * If `true`, the native virtual keyboard is shown on focus events on platforms that support it.
@@ -881,7 +881,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_virtual_keyboard_show_on_focus
      */
     fun setVirtualKeyboardShowOnFocus(showOnFocus: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, handle, showOnFocus)
+        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, segment, showOnFocus)
     }
 
     /**
@@ -890,7 +890,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_virtual_keyboard_show_on_focus
      */
     fun getVirtualKeyboardShowOnFocus(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, segment)
 
     /**
      * Specifies the type of virtual keyboard to show.
@@ -898,7 +898,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_virtual_keyboard_type
      */
     fun setVirtualKeyboardType(type: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVirtualKeyboardTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setVirtualKeyboardTypeBind, segment, type)
     }
 
     /**
@@ -907,7 +907,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_virtual_keyboard_type
      */
     fun getVirtualKeyboardType(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getVirtualKeyboardTypeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getVirtualKeyboardTypeBind, segment)
 
     /**
      * If `true`, the `LineEdit` will show a clear button if `text` is not empty, which can be used to
@@ -916,7 +916,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_clear_button_enabled
      */
     fun setClearButtonEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClearButtonEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setClearButtonEnabledBind, segment, enable)
     }
 
     /**
@@ -926,7 +926,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_clear_button_enabled
      */
     fun isClearButtonEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isClearButtonEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isClearButtonEnabledBind, segment)
 
     /**
      * If `true`, shortcut keys for context menu items are enabled, even if the context menu is
@@ -935,7 +935,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_shortcut_keys_enabled
      */
     fun setShortcutKeysEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, segment, enable)
     }
 
     /**
@@ -945,7 +945,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_shortcut_keys_enabled
      */
     fun isShortcutKeysEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, segment)
 
     /**
      * If `false`, using middle mouse button to paste clipboard will be disabled. Note: This method is
@@ -954,7 +954,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_middle_mouse_paste_enabled
      */
     fun setMiddleMousePasteEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, segment, enable)
     }
 
     /**
@@ -964,7 +964,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_middle_mouse_paste_enabled
      */
     fun isMiddleMousePasteEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, segment)
 
     /**
      * If `false`, it's impossible to select the text using mouse nor keyboard.
@@ -972,7 +972,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_selecting_enabled
      */
     fun setSelectingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, segment, enable)
     }
 
     /**
@@ -981,7 +981,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_selecting_enabled
      */
     fun isSelectingEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, segment)
 
     /**
      * If `true`, the selected text will be deselected when focus is lost.
@@ -989,7 +989,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_deselect_on_focus_loss_enabled
      */
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, segment, enable)
     }
 
     /**
@@ -998,7 +998,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_deselect_on_focus_loss_enabled
      */
     fun isDeselectOnFocusLossEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, segment)
 
     /**
      * If `true`, allow drag and drop of selected text.
@@ -1006,7 +1006,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_drag_and_drop_selection_enabled
      */
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, segment, enable)
     }
 
     /**
@@ -1015,7 +1015,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_drag_and_drop_selection_enabled
      */
     fun isDragAndDropSelectionEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, segment)
 
     /**
      * Sets the icon that will appear in the right end of the `LineEdit` if there's no `text`, or
@@ -1026,7 +1026,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
     fun setRightIcon(icon: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(
             setRightIconBind,
-            handle,
+            segment,
             listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL),
         )
     }
@@ -1038,7 +1038,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_right_icon
      */
     fun getRightIcon(): Texture2D? =
-        Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRightIconBind, handle))
+        Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRightIconBind, segment))
 
     /**
      * Define the scaling behavior of the `right_icon`.
@@ -1046,7 +1046,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_icon_expand_mode
      */
     fun setIconExpandMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconExpandModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setIconExpandModeBind, segment, mode)
     }
 
     /**
@@ -1055,7 +1055,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_icon_expand_mode
      */
     fun getIconExpandMode(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getIconExpandModeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getIconExpandModeBind, segment)
 
     /**
      * Scale ratio of the icon when `icon_expand_mode` is set to `EXPAND_MODE_FIT_TO_LINE_EDIT`.
@@ -1063,7 +1063,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_right_icon_scale
      */
     fun setRightIconScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRightIconScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setRightIconScaleBind, segment, scale)
     }
 
     /**
@@ -1072,7 +1072,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_right_icon_scale
      */
     fun getRightIconScale(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getRightIconScaleBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getRightIconScaleBind, segment)
 
     /**
      * If `true`, the `LineEdit` doesn't display decoration.
@@ -1080,7 +1080,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_flat
      */
     fun setFlat(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, enabled)
     }
 
     /**
@@ -1089,7 +1089,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_flat
      */
     fun isFlat(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
 
     /**
      * If `true`, the `LineEdit` will select the whole text when it gains focus.
@@ -1097,7 +1097,7 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.set_select_all_on_focus
      */
     fun setSelectAllOnFocus(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, segment, enabled)
     }
 
     /**
@@ -1106,15 +1106,15 @@ class LineEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: LineEdit.is_select_all_on_focus
      */
     fun isSelectAllOnFocus(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, segment)
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LineEdit? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LineEdit? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LineEdit? =
-            if (handle.address() == 0L) null else LineEdit(handle)
+            if (handle.address() == 0L) null else LineEdit(GodotHandle(handle))
 
         private const val NOARGS_VOID_HASH = 3218959716L
         private const val NOARGS_BOOL_HASH = 36873697L

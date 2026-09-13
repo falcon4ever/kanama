@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorSceneFormatImporter
  */
-open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle) {
+open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Add a specific import option (name and default value only). This function can only be called
      * from `_get_import_options`.
@@ -19,7 +19,7 @@ open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle)
      */
     fun addImportOption(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, segment, name, value)
     }
 
     /**
@@ -29,7 +29,7 @@ open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle)
      */
     fun addImportOptionAdvanced(type: Long, name: String, defaultValue: Any?, hint: Long = 0L, hintString: String = "", usageFlags: Int = 6) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, handle, type, name, defaultValue, hint, hintString, usageFlags)
+        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type, name, defaultValue, hint, hintString, usageFlags)
     }
 
     companion object {
@@ -42,11 +42,11 @@ open class EditorSceneFormatImporter(handle: MemorySegment) : RefCounted(handle)
         const val IMPORT_FORCE_DISABLE_MESH_COMPRESSION: Long = 64L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorSceneFormatImporter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorSceneFormatImporter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorSceneFormatImporter? =
-            if (handle.address() == 0L) null else EditorSceneFormatImporter(handle)
+            if (handle.address() == 0L) null else EditorSceneFormatImporter(GodotHandle(handle))
 
         private const val ADD_IMPORT_OPTION_HASH = 402577236L
         private val addImportOptionBind by lazy {

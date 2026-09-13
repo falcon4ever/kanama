@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: BitMap
  */
-class BitMap(handle: MemorySegment) : Resource(handle) {
+class BitMap(handle: GodotHandle) : Resource(handle) {
     /**
      * Creates a bitmap with the specified size, filled with `false`.
      *
@@ -21,7 +21,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun create(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(createBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(createBind, segment, size)
     }
 
     /**
@@ -33,7 +33,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun createFromImageAlpha(image: Image?, threshold: Double = 0.1) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, threshold)
+        ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, threshold)
     }
 
     /**
@@ -43,7 +43,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun setBitv(position: Vector2i, bit: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndBoolArg(setBitvBind, handle, position, bit)
+        ObjectCalls.ptrcallWithVector2iAndBoolArg(setBitvBind, segment, position, bit)
     }
 
     /**
@@ -53,7 +53,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun setBit(x: Int, y: Int, bit: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setBitBind, handle, x, y, bit)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setBitBind, segment, x, y, bit)
     }
 
     /**
@@ -63,7 +63,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun getBitv(position: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(getBitvBind, handle, position)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(getBitvBind, segment, position)
     }
 
     /**
@@ -73,7 +73,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun getBit(x: Int, y: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getBitBind, handle, x, y)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getBitBind, segment, x, y)
     }
 
     /**
@@ -83,7 +83,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun setBitRect(rect: Rect2i, bit: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndBoolArg(setBitRectBind, handle, rect, bit)
+        ObjectCalls.ptrcallWithRect2iAndBoolArg(setBitRectBind, segment, rect, bit)
     }
 
     /**
@@ -93,7 +93,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun getTrueBitCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTrueBitCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTrueBitCountBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun resize(newSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(resizeBind, handle, newSize)
+        ObjectCalls.ptrcallWithVector2iArg(resizeBind, segment, newSize)
     }
 
     /**
@@ -126,7 +126,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun growMask(pixels: Int, rect: Rect2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndRect2iArg(growMaskBind, handle, pixels, rect)
+        ObjectCalls.ptrcallWithIntAndRect2iArg(growMaskBind, segment, pixels, rect)
     }
 
     /**
@@ -138,7 +138,7 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun convertToImage(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, handle))
+        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, segment))
     }
 
     /**
@@ -151,16 +151,16 @@ class BitMap(handle: MemorySegment) : Resource(handle) {
      */
     fun opaqueToPolygons(rect: Rect2i, epsilon: Double = 2.0): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(opaqueToPolygonsBind, handle, rect, epsilon)
+        return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(opaqueToPolygonsBind, segment, rect, epsilon)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BitMap? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BitMap? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BitMap? =
-            if (handle.address() == 0L) null else BitMap(handle)
+            if (handle.address() == 0L) null else BitMap(GodotHandle(handle))
 
         private const val CREATE_HASH = 1130785943L
         private val createBind by lazy {

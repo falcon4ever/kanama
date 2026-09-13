@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XRFaceTracker
  */
-class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
+class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
     var blendShapes: List<Float>
         @JvmName("blendShapesProperty")
         get() = getBlendShapes()
@@ -25,7 +25,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun getBlendShape(blendShape: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, handle, blendShape)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, segment, blendShape)
     }
 
     /**
@@ -35,7 +35,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun setBlendShape(blendShape: Long, weight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, handle, blendShape, weight)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, segment, blendShape, weight)
     }
 
     /**
@@ -45,7 +45,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun getBlendShapes(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendShapesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendShapesBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun setBlendShapes(weights: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, handle, weights)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, segment, weights)
     }
 
     companion object {
@@ -205,11 +205,11 @@ class XRFaceTracker(handle: MemorySegment) : XRTracker(handle) {
         const val FT_MAX: Long = 143L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRFaceTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRFaceTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRFaceTracker? =
-            if (handle.address() == 0L) null else XRFaceTracker(handle)
+            if (handle.address() == 0L) null else XRFaceTracker(GodotHandle(handle))
 
         private const val GET_BLEND_SHAPE_HASH = 330010046L
         private val getBlendShapeBind by lazy {

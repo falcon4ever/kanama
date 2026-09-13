@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HSlider
  */
-class HSlider(handle: MemorySegment) : Slider(handle) {
+class HSlider(handle: GodotHandle) : Slider(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HSlider? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HSlider? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HSlider? =
-            if (handle.address() == 0L) null else HSlider(handle)
+            if (handle.address() == 0L) null else HSlider(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

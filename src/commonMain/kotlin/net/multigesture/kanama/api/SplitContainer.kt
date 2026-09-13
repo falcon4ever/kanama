@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SplitContainer
  */
-open class SplitContainer(handle: MemorySegment) : Container(handle) {
+open class SplitContainer(handle: GodotHandle) : Container(handle) {
     var splitOffsets: List<Int>
         @JvmName("splitOffsetsProperty")
         get() = getSplitOffsets()
@@ -101,7 +101,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_split_offsets
      */
     fun setSplitOffsets(offsets: List<Int>) {
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setSplitOffsetsBind, handle, offsets)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setSplitOffsetsBind, segment, offsets)
     }
 
     /**
@@ -120,7 +120,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_split_offsets
      */
     fun getSplitOffsets(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSplitOffsetsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSplitOffsetsBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.clamp_split_offset
      */
     fun clampSplitOffset(priorityIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(clampSplitOffsetBind, handle, priorityIndex)
+        ObjectCalls.ptrcallWithIntArg(clampSplitOffsetBind, segment, priorityIndex)
     }
 
     /**
@@ -141,7 +141,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_collapsed
      */
     fun setCollapsed(collapsed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollapsedBind, handle, collapsed)
+        ObjectCalls.ptrcallWithBoolArg(setCollapsedBind, segment, collapsed)
     }
 
     /**
@@ -151,7 +151,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_collapsed
      */
     fun isCollapsed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollapsedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollapsedBind, segment)
     }
 
     /**
@@ -161,7 +161,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_dragger_visibility
      */
     fun setDraggerVisibility(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDraggerVisibilityBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDraggerVisibilityBind, segment, mode)
     }
 
     /**
@@ -171,7 +171,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_dragger_visibility
      */
     fun getDraggerVisibility(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDraggerVisibilityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDraggerVisibilityBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_vertical
      */
     fun setVertical(vertical: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
+        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
     }
 
     /**
@@ -191,7 +191,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_vertical
      */
     fun isVertical(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
     }
 
     /**
@@ -200,7 +200,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_dragging_enabled
      */
     fun setDraggingEnabled(draggingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDraggingEnabledBind, handle, draggingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setDraggingEnabledBind, segment, draggingEnabled)
     }
 
     /**
@@ -209,7 +209,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_dragging_enabled
      */
     fun isDraggingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingEnabledBind, segment)
     }
 
     /**
@@ -219,7 +219,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_margin_begin
      */
     fun setDragAreaMarginBegin(margin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragAreaMarginBeginBind, handle, margin)
+        ObjectCalls.ptrcallWithIntArg(setDragAreaMarginBeginBind, segment, margin)
     }
 
     /**
@@ -229,7 +229,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_margin_begin
      */
     fun getDragAreaMarginBegin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaMarginBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaMarginBeginBind, segment)
     }
 
     /**
@@ -239,7 +239,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_margin_end
      */
     fun setDragAreaMarginEnd(margin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragAreaMarginEndBind, handle, margin)
+        ObjectCalls.ptrcallWithIntArg(setDragAreaMarginEndBind, segment, margin)
     }
 
     /**
@@ -249,7 +249,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_margin_end
      */
     fun getDragAreaMarginEnd(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaMarginEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaMarginEndBind, segment)
     }
 
     /**
@@ -259,7 +259,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_offset
      */
     fun setDragAreaOffset(offset: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragAreaOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithIntArg(setDragAreaOffsetBind, segment, offset)
     }
 
     /**
@@ -269,7 +269,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_offset
      */
     fun getDragAreaOffset(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaOffsetBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_highlight_in_editor
      */
     fun setDragAreaHighlightInEditor(dragAreaHighlightInEditor: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAreaHighlightInEditorBind, handle, dragAreaHighlightInEditor)
+        ObjectCalls.ptrcallWithBoolArg(setDragAreaHighlightInEditorBind, segment, dragAreaHighlightInEditor)
     }
 
     /**
@@ -289,7 +289,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_drag_area_highlight_in_editor_enabled
      */
     fun isDragAreaHighlightInEditorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragAreaHighlightInEditorEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragAreaHighlightInEditorEnabledBind, segment)
     }
 
     /**
@@ -301,7 +301,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_controls
      */
     fun getDragAreaControls(): List<Control> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDragAreaControlsBind, handle, Control::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDragAreaControlsBind, segment, Control::wrap)
     }
 
     /**
@@ -313,7 +313,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_touch_dragger_enabled
      */
     fun setTouchDraggerEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTouchDraggerEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setTouchDraggerEnabledBind, segment, enabled)
     }
 
     /**
@@ -325,7 +325,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_touch_dragger_enabled
      */
     fun isTouchDraggerEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTouchDraggerEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTouchDraggerEnabledBind, segment)
     }
 
     /**
@@ -338,7 +338,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_nested_intersections
      */
     fun setDragNestedIntersections(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragNestedIntersectionsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDragNestedIntersectionsBind, segment, enabled)
     }
 
     /**
@@ -351,7 +351,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_dragging_nested_intersections
      */
     fun isDraggingNestedIntersections(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingNestedIntersectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingNestedIntersectionsBind, segment)
     }
 
     /**
@@ -362,7 +362,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_control
      */
     fun getDragAreaControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDragAreaControlBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDragAreaControlBind, segment))
     }
 
     /**
@@ -371,7 +371,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_split_offset
      */
     fun setSplitOffset(offset: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSplitOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithIntArg(setSplitOffsetBind, segment, offset)
     }
 
     /**
@@ -380,7 +380,7 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_split_offset
      */
     fun getSplitOffset(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSplitOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSplitOffsetBind, segment)
     }
 
     object Signals {
@@ -395,11 +395,11 @@ open class SplitContainer(handle: MemorySegment) : Container(handle) {
         const val DRAGGER_HIDDEN_COLLAPSED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SplitContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SplitContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SplitContainer? =
-            if (handle.address() == 0L) null else SplitContainer(handle)
+            if (handle.address() == 0L) null else SplitContainer(GodotHandle(handle))
 
         private const val SET_SPLIT_OFFSETS_HASH = 3614634198L
         private val setSplitOffsetsBind by lazy {

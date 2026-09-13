@@ -8,7 +8,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: ConfigFile
  */
-class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
+class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Assigns a value to the specified key of the specified section. If either the section or the key
      * do not exist, they are created. Passing a `null` value deletes the specified key if it exists,
@@ -18,7 +18,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setValue(section: String, key: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setValueBind, handle, section, key, value)
+        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setValueBind, segment, section, key, value)
     }
 
     /**
@@ -30,7 +30,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getValue(section: String, key: String, default: Any? = null): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getValueBind, handle, section, key, default)
+        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getValueBind, segment, section, key, default)
     }
 
     /**
@@ -40,7 +40,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasSection(section: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, handle, section)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, segment, section)
     }
 
     /**
@@ -50,7 +50,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasSectionKey(section: String, key: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(hasSectionKeyBind, handle, section, key)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(hasSectionKeyBind, segment, section, key)
     }
 
     /**
@@ -60,7 +60,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSections(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, segment)
     }
 
     /**
@@ -71,7 +71,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSectionKeys(section: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getSectionKeysBind, handle, section)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getSectionKeysBind, segment, section)
     }
 
     /**
@@ -82,7 +82,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun eraseSection(section: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(eraseSectionBind, handle, section)
+        ObjectCalls.ptrcallWithStringArg(eraseSectionBind, segment, section)
     }
 
     /**
@@ -93,7 +93,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun eraseSectionKey(section: String, key: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, handle, section, key)
+        ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, segment, section, key)
     }
 
     /**
@@ -105,7 +105,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun load(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
     }
 
     /**
@@ -117,7 +117,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun parse(data: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, handle, data)
+        return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data)
     }
 
     /**
@@ -129,7 +129,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun save(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path)
     }
 
     /**
@@ -139,7 +139,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun encodeToText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun loadEncrypted(path: String, key: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, handle, path, key)
+        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key)
     }
 
     /**
@@ -164,7 +164,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun loadEncryptedPass(path: String, password: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, handle, path, password)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password)
     }
 
     /**
@@ -176,7 +176,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun saveEncrypted(path: String, key: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, handle, path, key)
+        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key)
     }
 
     /**
@@ -188,7 +188,7 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun saveEncryptedPass(path: String, password: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, handle, path, password)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password)
     }
 
     /**
@@ -198,13 +198,13 @@ class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     companion object {
         @JvmStatic
         fun create(): ConfigFile =
-            ConfigFile(ObjectCalls.constructObject("ConfigFile"))
+            ConfigFile(GodotHandle(ObjectCalls.constructObject("ConfigFile")))
 
         private const val SET_VALUE_HASH = 2504492430L
         private val setValueBind by lazy {

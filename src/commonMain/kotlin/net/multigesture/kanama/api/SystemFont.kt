@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SystemFont
  */
-class SystemFont(handle: MemorySegment) : Font(handle) {
+class SystemFont(handle: GodotHandle) : Font(handle) {
     var fontNames: List<String>
         @JvmName("fontNamesProperty")
         get() = getFontNames()
@@ -110,7 +110,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setAntialiasing(antialiasing: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
+        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing)
     }
 
     /**
@@ -120,7 +120,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getAntialiasing(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
+        ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
     }
 
     /**
@@ -142,7 +142,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
+        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, segment, generateMipmaps)
     }
 
     /**
@@ -162,7 +162,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getGenerateMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
+        ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, segment, allowSystemFallback)
     }
 
     /**
@@ -182,7 +182,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun isAllowSystemFallback(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setForceAutohinter(forceAutohinter: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
+        ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, segment, forceAutohinter)
     }
 
     /**
@@ -202,7 +202,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun isForceAutohinter(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setModulateColorGlyphs(modulate: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
+        ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, segment, modulate)
     }
 
     /**
@@ -224,7 +224,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun isModulateColorGlyphs(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setHinting(hinting: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
+        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting)
     }
 
     /**
@@ -244,7 +244,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getHinting(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment)
     }
 
     /**
@@ -256,7 +256,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setSubpixelPositioning(subpixelPositioning: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
+        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning)
     }
 
     /**
@@ -268,7 +268,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getSubpixelPositioning(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment)
     }
 
     /**
@@ -280,7 +280,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
+        ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
     }
 
     /**
@@ -292,7 +292,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getKeepRoundingRemainders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, segment)
     }
 
     /**
@@ -303,7 +303,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
+        ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, segment, msdf)
     }
 
     /**
@@ -314,7 +314,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun isMultichannelSignedDistanceField(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, segment)
     }
 
     /**
@@ -327,7 +327,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
+        ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, segment, msdfPixelRange)
     }
 
     /**
@@ -340,7 +340,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getMsdfPixelRange(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, segment)
     }
 
     /**
@@ -352,7 +352,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setMsdfSize(msdfSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
+        ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, segment, msdfSize)
     }
 
     /**
@@ -364,7 +364,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getMsdfSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, segment)
     }
 
     /**
@@ -376,7 +376,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setOversampling(oversampling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, segment, oversampling)
     }
 
     /**
@@ -388,7 +388,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
     }
 
     /**
@@ -398,7 +398,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getFontNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontNamesBind, segment)
     }
 
     /**
@@ -408,7 +408,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setFontNames(names: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setFontNamesBind, handle, names)
+        ObjectCalls.ptrcallWithPackedStringListArg(setFontNamesBind, segment, names)
     }
 
     /**
@@ -418,7 +418,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun getFontItalic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFontItalicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFontItalicBind, segment)
     }
 
     /**
@@ -428,7 +428,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setFontItalic(italic: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFontItalicBind, handle, italic)
+        ObjectCalls.ptrcallWithBoolArg(setFontItalicBind, segment, italic)
     }
 
     /**
@@ -439,7 +439,7 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setFontWeight(weight: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
+        ObjectCalls.ptrcallWithIntArg(setFontWeightBind, segment, weight)
     }
 
     /**
@@ -450,16 +450,16 @@ class SystemFont(handle: MemorySegment) : Font(handle) {
      */
     fun setFontStretch(stretch: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
+        ObjectCalls.ptrcallWithIntArg(setFontStretchBind, segment, stretch)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SystemFont? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SystemFont? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SystemFont? =
-            if (handle.address() == 0L) null else SystemFont(handle)
+            if (handle.address() == 0L) null else SystemFont(GodotHandle(handle))
 
         private const val SET_ANTIALIASING_HASH = 1669900L
         private val setAntialiasingBind by lazy {

@@ -1123,8 +1123,8 @@ object Input {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): Input? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): Input? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): Input? =
         if (handle.address() == 0L) null else this

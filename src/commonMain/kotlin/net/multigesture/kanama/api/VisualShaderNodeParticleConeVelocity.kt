@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParticleConeVelocity
  */
-class VisualShaderNodeParticleConeVelocity(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeParticleConeVelocity(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleConeVelocity? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleConeVelocity? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleConeVelocity? =
-            if (handle.address() == 0L) null else VisualShaderNodeParticleConeVelocity(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParticleConeVelocity(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -337,8 +337,8 @@ object Geometry2D {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): Geometry2D? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): Geometry2D? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): Geometry2D? =
         if (handle.address() == 0L) null else this

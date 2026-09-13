@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParameterRef
  */
-class VisualShaderNodeParameterRef(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handle) {
     var parameterName: String
         @JvmName("parameterNameProperty")
         get() = getParameterName()
@@ -18,21 +18,21 @@ class VisualShaderNodeParameterRef(handle: MemorySegment) : VisualShaderNode(han
 
     fun setParameterName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setParameterNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setParameterNameBind, segment, name)
     }
 
     fun getParameterName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParameterRef? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParameterRef? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParameterRef? =
-            if (handle.address() == 0L) null else VisualShaderNodeParameterRef(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParameterRef(GodotHandle(handle))
 
         private const val SET_PARAMETER_NAME_HASH = 83702148L
         private val setParameterNameBind by lazy {

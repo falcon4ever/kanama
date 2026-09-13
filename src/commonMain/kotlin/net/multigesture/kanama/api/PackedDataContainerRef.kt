@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PackedDataContainerRef
  */
-class PackedDataContainerRef(handle: MemorySegment) : RefCounted(handle) {
+class PackedDataContainerRef(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the size of the packed container (see `Array.size` and `Dictionary.size`).
      *
@@ -18,16 +18,16 @@ class PackedDataContainerRef(handle: MemorySegment) : RefCounted(handle) {
      */
     fun size(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PackedDataContainerRef? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PackedDataContainerRef? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PackedDataContainerRef? =
-            if (handle.address() == 0L) null else PackedDataContainerRef(handle)
+            if (handle.address() == 0L) null else PackedDataContainerRef(GodotHandle(handle))
 
         private const val SIZE_HASH = 3905245786L
         private val sizeBind by lazy {

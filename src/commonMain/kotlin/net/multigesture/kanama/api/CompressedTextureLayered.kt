@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CompressedTextureLayered
  */
-open class CompressedTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
+open class CompressedTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
     val loadPath: String
         @JvmName("loadPathProperty")
         get() = getLoadPath()
@@ -23,7 +23,7 @@ open class CompressedTextureLayered(handle: MemorySegment) : TextureLayered(hand
      */
     fun load(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
     }
 
     /**
@@ -33,16 +33,16 @@ open class CompressedTextureLayered(handle: MemorySegment) : TextureLayered(hand
      */
     fun getLoadPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CompressedTextureLayered? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CompressedTextureLayered? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CompressedTextureLayered? =
-            if (handle.address() == 0L) null else CompressedTextureLayered(handle)
+            if (handle.address() == 0L) null else CompressedTextureLayered(GodotHandle(handle))
 
         private const val LOAD_HASH = 166001499L
         private val loadBind by lazy {

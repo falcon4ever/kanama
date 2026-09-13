@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ORMMaterial3D
  */
-class ORMMaterial3D(handle: MemorySegment) : BaseMaterial3D(handle) {
+class ORMMaterial3D(handle: GodotHandle) : BaseMaterial3D(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ORMMaterial3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ORMMaterial3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ORMMaterial3D? =
-            if (handle.address() == 0L) null else ORMMaterial3D(handle)
+            if (handle.address() == 0L) null else ORMMaterial3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

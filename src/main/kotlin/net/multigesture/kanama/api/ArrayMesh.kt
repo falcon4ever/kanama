@@ -11,7 +11,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: ArrayMesh
  */
-class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
+class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     var blendShapeMode: Long
         @JvmName("blendShapeModeProperty")
         get() = getBlendShapeMode()
@@ -38,7 +38,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun addBlendShape(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(addBlendShapeBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(addBlendShapeBind, segment, name)
     }
 
     /**
@@ -48,7 +48,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getBlendShapeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getBlendShapeName(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendShapeNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendShapeNameBind, segment, index)
     }
 
     /**
@@ -68,7 +68,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setBlendShapeName(index: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendShapeNameBind, handle, index, name)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendShapeNameBind, segment, index, name)
     }
 
     /**
@@ -78,7 +78,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun clearBlendShapes() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBlendShapesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBlendShapesBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setBlendShapeMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode)
     }
 
     /**
@@ -98,7 +98,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getBlendShapeMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.add_surface_from_arrays
      */
     fun addSurfaceFromArrays(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Long = 0L) {
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, handle, primitive, arrays, blendShapes, lods, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, segment, primitive, arrays, blendShapes, lods, flags)
     }
 
     /**
@@ -140,7 +140,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun clearSurfaces() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSurfacesBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceRemove(surfIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(surfaceRemoveBind, handle, surfIdx)
+        ObjectCalls.ptrcallWithIntArg(surfaceRemoveBind, segment, surfIdx)
     }
 
     /**
@@ -167,7 +167,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceUpdateVertexRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateVertexRegionBind, handle, surfIdx, offset, data)
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateVertexRegionBind, segment, surfIdx, offset, data)
     }
 
     /**
@@ -184,7 +184,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceUpdateAttributeRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateAttributeRegionBind, handle, surfIdx, offset, data)
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateAttributeRegionBind, segment, surfIdx, offset, data)
     }
 
     /**
@@ -200,7 +200,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceUpdateSkinRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateSkinRegionBind, handle, surfIdx, offset, data)
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateSkinRegionBind, segment, surfIdx, offset, data)
     }
 
     /**
@@ -211,7 +211,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceGetArrayLen(surfIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayLenBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayLenBind, segment, surfIdx)
     }
 
     /**
@@ -222,7 +222,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceGetArrayIndexLen(surfIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayIndexLenBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayIndexLenBind, segment, surfIdx)
     }
 
     /**
@@ -232,7 +232,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceGetFormat(surfIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, segment, surfIdx)
     }
 
     /**
@@ -242,7 +242,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceGetPrimitiveType(surfIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, segment, surfIdx)
     }
 
     /**
@@ -253,7 +253,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceFindByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(surfaceFindByNameBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(surfaceFindByNameBind, segment, name)
     }
 
     /**
@@ -263,7 +263,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceSetName(surfIdx: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(surfaceSetNameBind, handle, surfIdx, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(surfaceSetNameBind, segment, surfIdx, name)
     }
 
     /**
@@ -273,7 +273,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceGetName(surfIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(surfaceGetNameBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(surfaceGetNameBind, segment, surfIdx)
     }
 
     /**
@@ -283,7 +283,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun regenNormalMaps() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(regenNormalMapsBind, handle)
+        ObjectCalls.ptrcallNoArgs(regenNormalMapsBind, segment)
     }
 
     /**
@@ -293,7 +293,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun lightmapUnwrap(transform: Transform3D, texelSize: Double): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, handle, transform, texelSize)
+        return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, segment, transform, texelSize)
     }
 
     /**
@@ -304,7 +304,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
     }
 
     /**
@@ -315,7 +315,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
     }
 
     /**
@@ -329,7 +329,7 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setShadowMesh(mesh: ArrayMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -343,20 +343,20 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getShadowMesh(): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, handle))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ArrayMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ArrayMesh? =
+            wrap(handle.segment)
 
         @JvmStatic
         fun fromResource(value: Resource): ArrayMesh? =
             if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
 
         internal fun wrap(handle: MemorySegment): ArrayMesh? =
-            if (handle.address() == 0L) null else ArrayMesh(handle)
+            if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
 
         private const val ADD_BLEND_SHAPE_HASH = 3304788590L
         private val addBlendShapeBind by lazy {

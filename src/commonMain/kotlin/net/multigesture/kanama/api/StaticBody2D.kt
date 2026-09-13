@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: StaticBody2D
  */
-open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
+open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
     var physicsMaterialOverride: PhysicsMaterial?
         @JvmName("physicsMaterialOverrideProperty")
         get() = getPhysicsMaterialOverride()
@@ -39,7 +39,7 @@ open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.set_constant_linear_velocity
      */
     fun setConstantLinearVelocity(vel: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setConstantLinearVelocityBind, handle, vel)
+        ObjectCalls.ptrcallWithVector2Arg(setConstantLinearVelocityBind, segment, vel)
     }
 
     /**
@@ -49,7 +49,7 @@ open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.set_constant_angular_velocity
      */
     fun setConstantAngularVelocity(vel: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setConstantAngularVelocityBind, handle, vel)
+        ObjectCalls.ptrcallWithDoubleArg(setConstantAngularVelocityBind, segment, vel)
     }
 
     /**
@@ -59,7 +59,7 @@ open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.get_constant_linear_velocity
      */
     fun getConstantLinearVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getConstantLinearVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getConstantLinearVelocityBind, segment)
     }
 
     /**
@@ -69,7 +69,7 @@ open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.get_constant_angular_velocity
      */
     fun getConstantAngularVelocity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConstantAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getConstantAngularVelocityBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.set_physics_material_override
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, handle, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -89,16 +89,16 @@ open class StaticBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.get_physics_material_override
      */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, handle))
+        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StaticBody2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StaticBody2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StaticBody2D? =
-            if (handle.address() == 0L) null else StaticBody2D(handle)
+            if (handle.address() == 0L) null else StaticBody2D(GodotHandle(handle))
 
         private const val SET_CONSTANT_LINEAR_VELOCITY_HASH = 743155724L
         private val setConstantLinearVelocityBind by lazy {

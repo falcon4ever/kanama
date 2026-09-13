@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectFilter
  */
-open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
+open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
     var cutoffHz: Double
         @JvmName("cutoffHzProperty")
         get() = getCutoff()
@@ -43,7 +43,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setCutoff(freq: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCutoffBind, handle, freq)
+        ObjectCalls.ptrcallWithDoubleArg(setCutoffBind, segment, freq)
     }
 
     /**
@@ -53,7 +53,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getCutoff(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCutoffBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCutoffBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setResonance(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setResonanceBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setResonanceBind, segment, amount)
     }
 
     /**
@@ -83,7 +83,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getResonance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getResonanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getResonanceBind, segment)
     }
 
     /**
@@ -94,7 +94,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setGain(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGainBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setGainBind, segment, amount)
     }
 
     /**
@@ -105,7 +105,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, segment)
     }
 
     /**
@@ -117,7 +117,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setDb(amount: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDbBind, handle, amount)
+        ObjectCalls.ptrcallWithLongArg(setDbBind, segment, amount)
     }
 
     /**
@@ -129,7 +129,7 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getDb(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDbBind, segment)
     }
 
     companion object {
@@ -139,11 +139,11 @@ open class AudioEffectFilter(handle: MemorySegment) : AudioEffect(handle) {
         const val FILTER_24DB: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectFilter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectFilter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectFilter? =
-            if (handle.address() == 0L) null else AudioEffectFilter(handle)
+            if (handle.address() == 0L) null else AudioEffectFilter(GodotHandle(handle))
 
         private const val SET_CUTOFF_HASH = 373806689L
         private val setCutoffBind by lazy {

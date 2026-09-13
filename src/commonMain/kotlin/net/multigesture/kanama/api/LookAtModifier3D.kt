@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: LookAtModifier3D
  */
-class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var targetNode: NodePath
         @JvmName("targetNodeProperty")
         get() = getTargetNode()
@@ -201,7 +201,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_target_node
      */
     fun setTargetNode(targetNode: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNode)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNode)
     }
 
     /**
@@ -211,7 +211,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_target_node
      */
     fun getTargetNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
     }
 
     /**
@@ -220,7 +220,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, handle, boneName)
+        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -229,7 +229,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_bone
      */
     fun setBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneBind, handle, bone)
+        ObjectCalls.ptrcallWithIntArg(setBoneBind, segment, bone)
     }
 
     /**
@@ -247,7 +247,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_bone
      */
     fun getBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, segment)
     }
 
     /**
@@ -257,7 +257,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_forward_axis
      */
     fun setForwardAxis(forwardAxis: Long) {
-        ObjectCalls.ptrcallWithLongArg(setForwardAxisBind, handle, forwardAxis)
+        ObjectCalls.ptrcallWithLongArg(setForwardAxisBind, segment, forwardAxis)
     }
 
     /**
@@ -267,7 +267,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_forward_axis
      */
     fun getForwardAxis(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getForwardAxisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getForwardAxisBind, segment)
     }
 
     /**
@@ -277,7 +277,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_rotation_axis
      */
     fun setPrimaryRotationAxis(axis: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPrimaryRotationAxisBind, handle, axis)
+        ObjectCalls.ptrcallWithLongArg(setPrimaryRotationAxisBind, segment, axis)
     }
 
     /**
@@ -287,7 +287,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_rotation_axis
      */
     fun getPrimaryRotationAxis(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrimaryRotationAxisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPrimaryRotationAxisBind, segment)
     }
 
     /**
@@ -296,7 +296,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_use_secondary_rotation
      */
     fun setUseSecondaryRotation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseSecondaryRotationBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseSecondaryRotationBind, segment, enabled)
     }
 
     /**
@@ -305,7 +305,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_using_secondary_rotation
      */
     fun isUsingSecondaryRotation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSecondaryRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSecondaryRotationBind, segment)
     }
 
     /**
@@ -318,7 +318,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_relative
      */
     fun setRelative(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRelativeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRelativeBind, segment, enabled)
     }
 
     /**
@@ -331,7 +331,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_relative
      */
     fun isRelative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRelativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRelativeBind, segment)
     }
 
     /**
@@ -342,7 +342,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_safe_margin
      */
     fun setOriginSafeMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOriginSafeMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setOriginSafeMarginBind, segment, margin)
     }
 
     /**
@@ -353,7 +353,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_safe_margin
      */
     fun getOriginSafeMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOriginSafeMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOriginSafeMarginBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_from
      */
     fun setOriginFrom(originFrom: Long) {
-        ObjectCalls.ptrcallWithLongArg(setOriginFromBind, handle, originFrom)
+        ObjectCalls.ptrcallWithLongArg(setOriginFromBind, segment, originFrom)
     }
 
     /**
@@ -373,7 +373,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_from
      */
     fun getOriginFrom(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getOriginFromBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOriginFromBind, segment)
     }
 
     /**
@@ -383,7 +383,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_bone_name
      */
     fun setOriginBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setOriginBoneNameBind, handle, boneName)
+        ObjectCalls.ptrcallWithStringArg(setOriginBoneNameBind, segment, boneName)
     }
 
     /**
@@ -393,7 +393,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_bone_name
      */
     fun getOriginBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginBoneNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOriginBoneNameBind, segment)
     }
 
     /**
@@ -402,7 +402,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_bone
      */
     fun setOriginBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOriginBoneBind, handle, bone)
+        ObjectCalls.ptrcallWithIntArg(setOriginBoneBind, segment, bone)
     }
 
     /**
@@ -411,7 +411,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_bone
      */
     fun getOriginBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOriginBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOriginBoneBind, segment)
     }
 
     /**
@@ -421,7 +421,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_external_node
      */
     fun setOriginExternalNode(externalNode: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setOriginExternalNodeBind, handle, externalNode)
+        ObjectCalls.ptrcallWithNodePathArg(setOriginExternalNodeBind, segment, externalNode)
     }
 
     /**
@@ -431,7 +431,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_external_node
      */
     fun getOriginExternalNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getOriginExternalNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getOriginExternalNodeBind, segment)
     }
 
     /**
@@ -442,7 +442,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_offset
      */
     fun setOriginOffset(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setOriginOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(setOriginOffsetBind, segment, offset)
     }
 
     /**
@@ -453,7 +453,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_offset
      */
     fun getOriginOffset(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOriginOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getOriginOffsetBind, segment)
     }
 
     /**
@@ -467,7 +467,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_duration
      */
     fun setDuration(duration: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDurationBind, handle, duration)
+        ObjectCalls.ptrcallWithDoubleArg(setDurationBind, segment, duration)
     }
 
     /**
@@ -481,7 +481,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_duration
      */
     fun getDuration(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDurationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDurationBind, segment)
     }
 
     /**
@@ -490,7 +490,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_transition_type
      */
     fun setTransitionType(transitionType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTransitionTypeBind, handle, transitionType)
+        ObjectCalls.ptrcallWithLongArg(setTransitionTypeBind, segment, transitionType)
     }
 
     /**
@@ -499,7 +499,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_transition_type
      */
     fun getTransitionType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransitionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTransitionTypeBind, segment)
     }
 
     /**
@@ -508,7 +508,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_ease_type
      */
     fun setEaseType(easeType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEaseTypeBind, handle, easeType)
+        ObjectCalls.ptrcallWithLongArg(setEaseTypeBind, segment, easeType)
     }
 
     /**
@@ -517,7 +517,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_ease_type
      */
     fun getEaseType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEaseTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEaseTypeBind, segment)
     }
 
     /**
@@ -532,7 +532,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_use_angle_limitation
      */
     fun setUseAngleLimitation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAngleLimitationBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseAngleLimitationBind, segment, enabled)
     }
 
     /**
@@ -547,7 +547,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_using_angle_limitation
      */
     fun isUsingAngleLimitation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingAngleLimitationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingAngleLimitationBind, segment)
     }
 
     /**
@@ -557,7 +557,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_symmetry_limitation
      */
     fun setSymmetryLimitation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSymmetryLimitationBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSymmetryLimitationBind, segment, enabled)
     }
 
     /**
@@ -567,7 +567,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_limitation_symmetry
      */
     fun isLimitationSymmetry(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitationSymmetryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLimitationSymmetryBind, segment)
     }
 
     /**
@@ -576,7 +576,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_limit_angle
      */
     fun setPrimaryLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryLimitAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setPrimaryLimitAngleBind, segment, angle)
     }
 
     /**
@@ -585,7 +585,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_limit_angle
      */
     fun getPrimaryLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryLimitAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryLimitAngleBind, segment)
     }
 
     /**
@@ -597,7 +597,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_damp_threshold
      */
     fun setPrimaryDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryDampThresholdBind, handle, power)
+        ObjectCalls.ptrcallWithDoubleArg(setPrimaryDampThresholdBind, segment, power)
     }
 
     /**
@@ -609,7 +609,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_damp_threshold
      */
     fun getPrimaryDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryDampThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryDampThresholdBind, segment)
     }
 
     /**
@@ -619,7 +619,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_positive_limit_angle
      */
     fun setPrimaryPositiveLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveLimitAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveLimitAngleBind, segment, angle)
     }
 
     /**
@@ -629,7 +629,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_positive_limit_angle
      */
     fun getPrimaryPositiveLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveLimitAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveLimitAngleBind, segment)
     }
 
     /**
@@ -638,7 +638,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_positive_damp_threshold
      */
     fun setPrimaryPositiveDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveDampThresholdBind, handle, power)
+        ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveDampThresholdBind, segment, power)
     }
 
     /**
@@ -647,7 +647,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_positive_damp_threshold
      */
     fun getPrimaryPositiveDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveDampThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveDampThresholdBind, segment)
     }
 
     /**
@@ -657,7 +657,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_negative_limit_angle
      */
     fun setPrimaryNegativeLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeLimitAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeLimitAngleBind, segment, angle)
     }
 
     /**
@@ -667,7 +667,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_negative_limit_angle
      */
     fun getPrimaryNegativeLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeLimitAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeLimitAngleBind, segment)
     }
 
     /**
@@ -676,7 +676,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_negative_damp_threshold
      */
     fun setPrimaryNegativeDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeDampThresholdBind, handle, power)
+        ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeDampThresholdBind, segment, power)
     }
 
     /**
@@ -685,7 +685,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_negative_damp_threshold
      */
     fun getPrimaryNegativeDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeDampThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeDampThresholdBind, segment)
     }
 
     /**
@@ -694,7 +694,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_limit_angle
      */
     fun setSecondaryLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryLimitAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setSecondaryLimitAngleBind, segment, angle)
     }
 
     /**
@@ -703,7 +703,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_limit_angle
      */
     fun getSecondaryLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryLimitAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryLimitAngleBind, segment)
     }
 
     /**
@@ -712,7 +712,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_damp_threshold
      */
     fun setSecondaryDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryDampThresholdBind, handle, power)
+        ObjectCalls.ptrcallWithDoubleArg(setSecondaryDampThresholdBind, segment, power)
     }
 
     /**
@@ -721,7 +721,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_damp_threshold
      */
     fun getSecondaryDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryDampThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryDampThresholdBind, segment)
     }
 
     /**
@@ -731,7 +731,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_positive_limit_angle
      */
     fun setSecondaryPositiveLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveLimitAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveLimitAngleBind, segment, angle)
     }
 
     /**
@@ -741,7 +741,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_positive_limit_angle
      */
     fun getSecondaryPositiveLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveLimitAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveLimitAngleBind, segment)
     }
 
     /**
@@ -750,7 +750,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_positive_damp_threshold
      */
     fun setSecondaryPositiveDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveDampThresholdBind, handle, power)
+        ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveDampThresholdBind, segment, power)
     }
 
     /**
@@ -759,7 +759,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_positive_damp_threshold
      */
     fun getSecondaryPositiveDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveDampThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveDampThresholdBind, segment)
     }
 
     /**
@@ -769,7 +769,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_negative_limit_angle
      */
     fun setSecondaryNegativeLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeLimitAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeLimitAngleBind, segment, angle)
     }
 
     /**
@@ -779,7 +779,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_negative_limit_angle
      */
     fun getSecondaryNegativeLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeLimitAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeLimitAngleBind, segment)
     }
 
     /**
@@ -788,7 +788,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_negative_damp_threshold
      */
     fun setSecondaryNegativeDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeDampThresholdBind, handle, power)
+        ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeDampThresholdBind, segment, power)
     }
 
     /**
@@ -797,7 +797,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_negative_damp_threshold
      */
     fun getSecondaryNegativeDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeDampThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeDampThresholdBind, segment)
     }
 
     /**
@@ -806,7 +806,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_interpolation_remaining
      */
     fun getInterpolationRemaining(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInterpolationRemainingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInterpolationRemainingBind, segment)
     }
 
     /**
@@ -817,7 +817,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_interpolating
      */
     fun isInterpolating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInterpolatingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInterpolatingBind, segment)
     }
 
     /**
@@ -829,7 +829,7 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_target_within_limitation
      */
     fun isTargetWithinLimitation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTargetWithinLimitationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTargetWithinLimitationBind, segment)
     }
 
     companion object {
@@ -838,11 +838,11 @@ class LookAtModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         const val ORIGIN_FROM_EXTERNAL_NODE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LookAtModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LookAtModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LookAtModifier3D? =
-            if (handle.address() == 0L) null else LookAtModifier3D(handle)
+            if (handle.address() == 0L) null else LookAtModifier3D(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L
         private val setTargetNodeBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PhysicsMaterial
  */
-class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
+class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
     var friction: Double
         @JvmName("frictionProperty")
         get() = getFriction()
@@ -43,7 +43,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun setFriction(friction: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, handle, friction)
+        ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, segment, friction)
     }
 
     /**
@@ -53,7 +53,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun getFriction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, segment)
     }
 
     /**
@@ -66,7 +66,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun setRough(rough: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRoughBind, handle, rough)
+        ObjectCalls.ptrcallWithBoolArg(setRoughBind, segment, rough)
     }
 
     /**
@@ -79,7 +79,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun isRough(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRoughBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRoughBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun setBounce(bounce: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBounceBind, handle, bounce)
+        ObjectCalls.ptrcallWithDoubleArg(setBounceBind, segment, bounce)
     }
 
     /**
@@ -107,7 +107,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun getBounce(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, segment)
     }
 
     /**
@@ -117,7 +117,7 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun setAbsorbent(absorbent: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAbsorbentBind, handle, absorbent)
+        ObjectCalls.ptrcallWithBoolArg(setAbsorbentBind, segment, absorbent)
     }
 
     /**
@@ -127,16 +127,16 @@ class PhysicsMaterial(handle: MemorySegment) : Resource(handle) {
      */
     fun isAbsorbent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbsorbentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAbsorbentBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsMaterial? =
-            if (handle.address() == 0L) null else PhysicsMaterial(handle)
+            if (handle.address() == 0L) null else PhysicsMaterial(GodotHandle(handle))
 
         private const val SET_FRICTION_HASH = 373806689L
         private val setFrictionBind by lazy {

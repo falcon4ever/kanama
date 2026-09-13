@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: VisualShaderNodeVec3Constant
  */
-class VisualShaderNodeVec3Constant(handle: MemorySegment) : VisualShaderNodeConstant(handle) {
+class VisualShaderNodeVec3Constant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
     var constant: Vector3
         @JvmName("constantProperty")
         get() = getConstant()
@@ -19,21 +19,21 @@ class VisualShaderNodeVec3Constant(handle: MemorySegment) : VisualShaderNodeCons
 
     fun setConstant(constant: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setConstantBind, handle, constant)
+        ObjectCalls.ptrcallWithVector3Arg(setConstantBind, segment, constant)
     }
 
     fun getConstant(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeVec3Constant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeVec3Constant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeVec3Constant? =
-            if (handle.address() == 0L) null else VisualShaderNodeVec3Constant(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeVec3Constant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 3460891852L
         private val setConstantBind by lazy {

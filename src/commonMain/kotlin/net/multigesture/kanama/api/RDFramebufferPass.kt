@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDFramebufferPass
  */
-class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
+class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
     var colorAttachments: List<Int>
         @JvmName("colorAttachmentsProperty")
         get() = getColorAttachments()
@@ -50,7 +50,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setColorAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setColorAttachmentsBind, handle, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setColorAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -61,7 +61,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColorAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getColorAttachmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getColorAttachmentsBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setInputAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setInputAttachmentsBind, handle, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setInputAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -83,7 +83,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getInputAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getInputAttachmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getInputAttachmentsBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setResolveAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setResolveAttachmentsBind, handle, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setResolveAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -103,7 +103,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getResolveAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getResolveAttachmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getResolveAttachmentsBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPreserveAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setPreserveAttachmentsBind, handle, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setPreserveAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -123,7 +123,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPreserveAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPreserveAttachmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPreserveAttachmentsBind, segment)
     }
 
     /**
@@ -133,7 +133,7 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthAttachment(pMember: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDepthAttachmentBind, handle, pMember)
+        ObjectCalls.ptrcallWithIntArg(setDepthAttachmentBind, segment, pMember)
     }
 
     /**
@@ -143,18 +143,18 @@ class RDFramebufferPass(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthAttachment(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDepthAttachmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDepthAttachmentBind, segment)
     }
 
     companion object {
         const val ATTACHMENT_UNUSED: Long = -1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDFramebufferPass? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDFramebufferPass? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDFramebufferPass? =
-            if (handle.address() == 0L) null else RDFramebufferPass(handle)
+            if (handle.address() == 0L) null else RDFramebufferPass(GodotHandle(handle))
 
         private const val SET_COLOR_ATTACHMENTS_HASH = 3614634198L
         private val setColorAttachmentsBind by lazy {

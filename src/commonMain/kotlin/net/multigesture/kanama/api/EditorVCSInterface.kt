@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorVCSInterface
  */
-class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
+class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Helper function to create a `Dictionary` for storing a line diff. `new_line_no` is the line
      * number in the new file (can be `-1` if the line is deleted). `old_line_no` is the line number in
@@ -20,7 +20,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_diff_line
      */
     fun createDiffLine(newLineNo: Int, oldLineNo: Int, content: String, status: String): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithTwoIntTwoStringArgsRetDictionary(createDiffLineBind, handle, newLineNo, oldLineNo, content, status)
+        return ObjectCalls.ptrcallWithTwoIntTwoStringArgsRetDictionary(createDiffLineBind, segment, newLineNo, oldLineNo, content, status)
     }
 
     /**
@@ -31,7 +31,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_diff_hunk
      */
     fun createDiffHunk(oldStart: Int, newStart: Int, oldLines: Int, newLines: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithFourIntArgsRetDictionary(createDiffHunkBind, handle, oldStart, newStart, oldLines, newLines)
+        return ObjectCalls.ptrcallWithFourIntArgsRetDictionary(createDiffHunkBind, segment, oldStart, newStart, oldLines, newLines)
     }
 
     /**
@@ -40,7 +40,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_diff_file
      */
     fun createDiffFile(newFile: String, oldFile: String): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithTwoStringArgsRetDictionary(createDiffFileBind, handle, newFile, oldFile)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetDictionary(createDiffFileBind, segment, newFile, oldFile)
     }
 
     /**
@@ -54,7 +54,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_commit
      */
     fun createCommit(msg: String, author: String, id: String, unixTimestamp: Long, offsetMinutes: Long): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithThreeStringTwoLongArgsRetDictionary(createCommitBind, handle, msg, author, id, unixTimestamp, offsetMinutes)
+        return ObjectCalls.ptrcallWithThreeStringTwoLongArgsRetDictionary(createCommitBind, segment, msg, author, id, unixTimestamp, offsetMinutes)
     }
 
     /**
@@ -63,7 +63,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_status_file
      */
     fun createStatusFile(filePath: String, changeType: Long, area: Long): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringTwoLongArgsRetDictionary(createStatusFileBind, handle, filePath, changeType, area)
+        return ObjectCalls.ptrcallWithStringTwoLongArgsRetDictionary(createStatusFileBind, segment, filePath, changeType, area)
     }
 
     /**
@@ -72,7 +72,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.add_diff_hunks_into_diff_file
      */
     fun addDiffHunksIntoDiffFile(diffFile: Map<String, Any?>, diffHunks: List<Map<String, Any?>>): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addDiffHunksIntoDiffFileBind, handle, diffFile, diffHunks)
+        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addDiffHunksIntoDiffFileBind, segment, diffFile, diffHunks)
     }
 
     /**
@@ -81,7 +81,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.add_line_diffs_into_diff_hunk
      */
     fun addLineDiffsIntoDiffHunk(diffHunk: Map<String, Any?>, lineDiffs: List<Map<String, Any?>>): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addLineDiffsIntoDiffHunkBind, handle, diffHunk, lineDiffs)
+        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addLineDiffsIntoDiffHunkBind, segment, diffHunk, lineDiffs)
     }
 
     /**
@@ -91,7 +91,7 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.popup_error
      */
     fun popupError(msg: String) {
-        ObjectCalls.ptrcallWithStringArg(popupErrorBind, handle, msg)
+        ObjectCalls.ptrcallWithStringArg(popupErrorBind, segment, msg)
     }
 
     companion object {
@@ -106,11 +106,11 @@ class EditorVCSInterface(handle: MemorySegment) : GodotObject(handle) {
         const val TREE_AREA_UNSTAGED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorVCSInterface? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorVCSInterface? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorVCSInterface? =
-            if (handle.address() == 0L) null else EditorVCSInterface(handle)
+            if (handle.address() == 0L) null else EditorVCSInterface(GodotHandle(handle))
 
         private const val CREATE_DIFF_LINE_HASH = 2901184053L
         private val createDiffLineBind by lazy {

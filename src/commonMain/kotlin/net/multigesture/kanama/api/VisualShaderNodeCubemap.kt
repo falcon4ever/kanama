@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeCubemap
  */
-class VisualShaderNodeCubemap(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
     var source: Long
         @JvmName("sourceProperty")
         get() = getSource()
@@ -30,32 +30,32 @@ class VisualShaderNodeCubemap(handle: MemorySegment) : VisualShaderNode(handle) 
 
     fun setSource(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, handle, value)
+        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value)
     }
 
     fun getSource(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment)
     }
 
     fun setCubeMap(value: TextureLayered?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCubeMapBind, handle, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCubeMapBind, segment, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getCubeMap(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCubeMapBind, handle))
+        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCubeMapBind, segment))
     }
 
     fun setTextureType(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, handle, value)
+        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, value)
     }
 
     fun getTextureType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment)
     }
 
     companion object {
@@ -68,11 +68,11 @@ class VisualShaderNodeCubemap(handle: MemorySegment) : VisualShaderNode(handle) 
         const val TYPE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeCubemap? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeCubemap? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeCubemap? =
-            if (handle.address() == 0L) null else VisualShaderNodeCubemap(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeCubemap(GodotHandle(handle))
 
         private const val SET_SOURCE_HASH = 1625400621L
         private val setSourceBind by lazy {

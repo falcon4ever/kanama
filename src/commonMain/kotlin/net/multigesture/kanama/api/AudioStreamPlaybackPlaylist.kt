@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: AudioStreamPlaybackPlaylist
  */
-class AudioStreamPlaybackPlaylist(handle: MemorySegment) : AudioStreamPlayback(handle) {
+class AudioStreamPlaybackPlaylist(handle: GodotHandle) : AudioStreamPlayback(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamPlaybackPlaylist? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamPlaybackPlaylist? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamPlaybackPlaylist? =
-            if (handle.address() == 0L) null else AudioStreamPlaybackPlaylist(handle)
+            if (handle.address() == 0L) null else AudioStreamPlaybackPlaylist(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

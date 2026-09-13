@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SkeletonModification2D
  */
-open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
+open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = getEnabled()
@@ -32,7 +32,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -43,7 +43,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, segment)
     }
 
     /**
@@ -54,7 +54,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getModificationStack(): SkeletonModificationStack2D? {
         checkOpen()
-        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, handle))
+        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, segment))
     }
 
     /**
@@ -66,7 +66,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setIsSetup(isSetup: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsSetupBind, handle, isSetup)
+        ObjectCalls.ptrcallWithBoolArg(setIsSetupBind, segment, isSetup)
     }
 
     /**
@@ -76,7 +76,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getIsSetup(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setExecutionMode(executionMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setExecutionModeBind, handle, executionMode)
+        ObjectCalls.ptrcallWithIntArg(setExecutionModeBind, segment, executionMode)
     }
 
     /**
@@ -100,7 +100,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getExecutionMode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getExecutionModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getExecutionModeBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun clampAngle(angle: Double, min: Double, max: Double, invert: Boolean): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(clampAngleBind, handle, angle, min, max, invert)
+        return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(clampAngleBind, segment, angle, min, max, invert)
     }
 
     /**
@@ -122,7 +122,7 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setEditorDrawGizmo(drawGizmo: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEditorDrawGizmoBind, handle, drawGizmo)
+        ObjectCalls.ptrcallWithBoolArg(setEditorDrawGizmoBind, segment, drawGizmo)
     }
 
     /**
@@ -133,16 +133,16 @@ open class SkeletonModification2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getEditorDrawGizmo(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEditorDrawGizmoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEditorDrawGizmoBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2D? =
-            if (handle.address() == 0L) null else SkeletonModification2D(handle)
+            if (handle.address() == 0L) null else SkeletonModification2D(GodotHandle(handle))
 
         private const val SET_ENABLED_HASH = 2586408642L
         private val setEnabledBind by lazy {

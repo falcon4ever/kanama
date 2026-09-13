@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: TextEdit
  */
-open class TextEdit(handle: MemorySegment) : Control(handle) {
+open class TextEdit(handle: GodotHandle) : Control(handle) {
     var text: String
         @JvmName("textProperty")
         get() = getText()
@@ -305,7 +305,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_ime_text
      */
     fun hasImeText(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, segment)
     }
 
     /**
@@ -315,7 +315,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.cancel_ime
      */
     fun cancelIme() {
-        ObjectCalls.ptrcallNoArgs(cancelImeBind, handle)
+        ObjectCalls.ptrcallNoArgs(cancelImeBind, segment)
     }
 
     /**
@@ -325,7 +325,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.apply_ime
      */
     fun applyIme() {
-        ObjectCalls.ptrcallNoArgs(applyImeBind, handle)
+        ObjectCalls.ptrcallNoArgs(applyImeBind, segment)
     }
 
     /**
@@ -334,7 +334,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_editable
      */
     fun setEditable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enabled)
     }
 
     /**
@@ -343,7 +343,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_editable
      */
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     }
 
     /**
@@ -352,7 +352,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -361,7 +361,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_text_direction
      */
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     /**
@@ -371,7 +371,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -381,7 +381,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -390,7 +390,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     /**
@@ -399,7 +399,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
     }
 
     /**
@@ -408,7 +408,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -417,7 +417,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -426,7 +426,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_tab_size
      */
     fun setTabSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setTabSizeBind, segment, size)
     }
 
     /**
@@ -435,7 +435,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_tab_size
      */
     fun getTabSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, segment)
     }
 
     /**
@@ -444,7 +444,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_indent_wrapped_lines
      */
     fun setIndentWrappedLines(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIndentWrappedLinesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setIndentWrappedLinesBind, segment, enabled)
     }
 
     /**
@@ -453,7 +453,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_indent_wrapped_lines
      */
     fun isIndentWrappedLines(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIndentWrappedLinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIndentWrappedLinesBind, segment)
     }
 
     /**
@@ -463,7 +463,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_tab_input_mode
      */
     fun setTabInputMode(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTabInputModeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setTabInputModeBind, segment, enabled)
     }
 
     /**
@@ -473,7 +473,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_tab_input_mode
      */
     fun getTabInputMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getTabInputModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getTabInputModeBind, segment)
     }
 
     /**
@@ -484,7 +484,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_overtype_mode_enabled
      */
     fun setOvertypeModeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOvertypeModeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setOvertypeModeEnabledBind, segment, enabled)
     }
 
     /**
@@ -493,7 +493,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_overtype_mode_enabled
      */
     fun isOvertypeModeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOvertypeModeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOvertypeModeEnabledBind, segment)
     }
 
     /**
@@ -502,7 +502,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_context_menu_enabled
      */
     fun setContextMenuEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, segment, enabled)
     }
 
     /**
@@ -511,7 +511,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_context_menu_enabled
      */
     fun isContextMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, segment)
     }
 
     /**
@@ -520,7 +520,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_emoji_menu_enabled
      */
     fun setEmojiMenuEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, segment, enable)
     }
 
     /**
@@ -529,7 +529,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_emoji_menu_enabled
      */
     fun isEmojiMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, segment)
     }
 
     /**
@@ -539,7 +539,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_backspace_deletes_composite_character_enabled
      */
     fun setBackspaceDeletesCompositeCharacterEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, segment, enable)
     }
 
     /**
@@ -549,7 +549,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_backspace_deletes_composite_character_enabled
      */
     fun isBackspaceDeletesCompositeCharacterEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, segment)
     }
 
     /**
@@ -559,7 +559,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_shortcut_keys_enabled
      */
     fun setShortcutKeysEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, segment, enabled)
     }
 
     /**
@@ -569,7 +569,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_shortcut_keys_enabled
      */
     fun isShortcutKeysEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, segment)
     }
 
     /**
@@ -578,7 +578,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_virtual_keyboard_enabled
      */
     fun setVirtualKeyboardEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, segment, enabled)
     }
 
     /**
@@ -587,7 +587,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_virtual_keyboard_enabled
      */
     fun isVirtualKeyboardEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, segment)
     }
 
     /**
@@ -596,7 +596,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_virtual_keyboard_show_on_focus
      */
     fun setVirtualKeyboardShowOnFocus(showOnFocus: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, handle, showOnFocus)
+        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, segment, showOnFocus)
     }
 
     /**
@@ -605,7 +605,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_virtual_keyboard_show_on_focus
      */
     fun getVirtualKeyboardShowOnFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, segment)
     }
 
     /**
@@ -615,7 +615,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_middle_mouse_paste_enabled
      */
     fun setMiddleMousePasteEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, segment, enabled)
     }
 
     /**
@@ -625,7 +625,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_middle_mouse_paste_enabled
      */
     fun isMiddleMousePasteEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, segment)
     }
 
     /**
@@ -635,7 +635,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_empty_selection_clipboard_enabled
      */
     fun setEmptySelectionClipboardEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmptySelectionClipboardEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEmptySelectionClipboardEnabledBind, segment, enabled)
     }
 
     /**
@@ -645,7 +645,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_empty_selection_clipboard_enabled
      */
     fun isEmptySelectionClipboardEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptySelectionClipboardEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmptySelectionClipboardEnabledBind, segment)
     }
 
     /**
@@ -654,7 +654,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -663,7 +663,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -672,7 +672,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     /**
@@ -681,7 +681,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_count
      */
     fun getLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
     }
 
     /**
@@ -690,7 +690,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_placeholder
      */
     fun setPlaceholder(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, segment, text)
     }
 
     /**
@@ -699,7 +699,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_placeholder
      */
     fun getPlaceholder(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, segment)
     }
 
     /**
@@ -709,7 +709,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line
      */
     fun setLine(line: Int, newText: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setLineBind, handle, line, newText)
+        ObjectCalls.ptrcallWithIntAndStringArg(setLineBind, segment, line, newText)
     }
 
     /**
@@ -718,7 +718,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line
      */
     fun getLine(line: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getLineBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetString(getLineBind, segment, line)
     }
 
     /**
@@ -727,7 +727,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_with_ime
      */
     fun getLineWithIme(line: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getLineWithImeBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetString(getLineWithImeBind, segment, line)
     }
 
     /**
@@ -736,7 +736,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_width
      */
     fun getLineWidth(line: Int, wrapIndex: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWidthBind, handle, line, wrapIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWidthBind, segment, line, wrapIndex)
     }
 
     /**
@@ -746,7 +746,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_height
      */
     fun getLineHeight(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLineHeightBind, segment)
     }
 
     /**
@@ -756,7 +756,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_indent_level
      */
     fun getIndentLevel(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getIndentLevelBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getIndentLevelBind, segment, line)
     }
 
     /**
@@ -766,7 +766,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_first_non_whitespace_column
      */
     fun getFirstNonWhitespaceColumn(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getFirstNonWhitespaceColumnBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getFirstNonWhitespaceColumnBind, segment, line)
     }
 
     /**
@@ -775,7 +775,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.swap_lines
      */
     fun swapLines(fromLine: Int, toLine: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(swapLinesBind, handle, fromLine, toLine)
+        ObjectCalls.ptrcallWithTwoIntArgs(swapLinesBind, segment, fromLine, toLine)
     }
 
     /**
@@ -784,7 +784,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.insert_line_at
      */
     fun insertLineAt(line: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(insertLineAtBind, handle, line, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(insertLineAtBind, segment, line, text)
     }
 
     /**
@@ -795,7 +795,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_line_at
      */
     fun removeLineAt(line: Int, moveCaretsDown: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(removeLineAtBind, handle, line, moveCaretsDown)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(removeLineAtBind, segment, line, moveCaretsDown)
     }
 
     /**
@@ -804,7 +804,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.insert_text_at_caret
      */
     fun insertTextAtCaret(text: String, caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithStringAndIntArg(insertTextAtCaretBind, handle, text, caretIndex)
+        ObjectCalls.ptrcallWithStringAndIntArg(insertTextAtCaretBind, segment, text, caretIndex)
     }
 
     /**
@@ -817,7 +817,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.insert_text
      */
     fun insertText(text: String, line: Int, column: Int, beforeSelectionBegin: Boolean = true, beforeSelectionEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringTwoIntTwoBoolArgs(insertTextBind, handle, text, line, column, beforeSelectionBegin, beforeSelectionEnd)
+        ObjectCalls.ptrcallWithStringTwoIntTwoBoolArgs(insertTextBind, segment, text, line, column, beforeSelectionBegin, beforeSelectionEnd)
     }
 
     /**
@@ -826,7 +826,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_text
      */
     fun removeText(fromLine: Int, fromColumn: Int, toLine: Int, toColumn: Int) {
-        ObjectCalls.ptrcallWithFourIntArgs(removeTextBind, handle, fromLine, fromColumn, toLine, toColumn)
+        ObjectCalls.ptrcallWithFourIntArgs(removeTextBind, segment, fromLine, fromColumn, toLine, toColumn)
     }
 
     /**
@@ -835,7 +835,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_last_unhidden_line
      */
     fun getLastUnhiddenLine(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnhiddenLineBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnhiddenLineBind, segment)
     }
 
     /**
@@ -846,7 +846,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_next_visible_line_offset_from
      */
     fun getNextVisibleLineOffsetFrom(line: Int, visibleAmount: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextVisibleLineOffsetFromBind, handle, line, visibleAmount)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextVisibleLineOffsetFromBind, segment, line, visibleAmount)
     }
 
     /**
@@ -856,7 +856,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_next_visible_line_index_offset_from
      */
     fun getNextVisibleLineIndexOffsetFrom(line: Int, wrapIndex: Int, visibleAmount: Int): Vector2i {
-        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2i(getNextVisibleLineIndexOffsetFromBind, handle, line, wrapIndex, visibleAmount)
+        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2i(getNextVisibleLineIndexOffsetFromBind, segment, line, wrapIndex, visibleAmount)
     }
 
     /**
@@ -865,7 +865,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.backspace
      */
     fun backspace(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(backspaceBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(backspaceBind, segment, caretIndex)
     }
 
     /**
@@ -874,7 +874,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.cut
      */
     fun cut(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(cutBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(cutBind, segment, caretIndex)
     }
 
     /**
@@ -883,7 +883,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.copy
      */
     fun copy(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(copyBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(copyBind, segment, caretIndex)
     }
 
     /**
@@ -892,7 +892,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.paste
      */
     fun paste(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(pasteBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(pasteBind, segment, caretIndex)
     }
 
     /**
@@ -901,7 +901,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.paste_primary_clipboard
      */
     fun pastePrimaryClipboard(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(pastePrimaryClipboardBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(pastePrimaryClipboardBind, segment, caretIndex)
     }
 
     /**
@@ -912,7 +912,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.start_action
      */
     fun startAction(action: Long) {
-        ObjectCalls.ptrcallWithLongArg(startActionBind, handle, action)
+        ObjectCalls.ptrcallWithLongArg(startActionBind, segment, action)
     }
 
     /**
@@ -921,7 +921,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.end_action
      */
     fun endAction() {
-        ObjectCalls.ptrcallNoArgs(endActionBind, handle)
+        ObjectCalls.ptrcallNoArgs(endActionBind, segment)
     }
 
     /**
@@ -931,7 +931,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.begin_complex_operation
      */
     fun beginComplexOperation() {
-        ObjectCalls.ptrcallNoArgs(beginComplexOperationBind, handle)
+        ObjectCalls.ptrcallNoArgs(beginComplexOperationBind, segment)
     }
 
     /**
@@ -941,7 +941,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.end_complex_operation
      */
     fun endComplexOperation() {
-        ObjectCalls.ptrcallNoArgs(endComplexOperationBind, handle)
+        ObjectCalls.ptrcallNoArgs(endComplexOperationBind, segment)
     }
 
     /**
@@ -950,7 +950,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_undo
      */
     fun hasUndo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, segment)
     }
 
     /**
@@ -959,7 +959,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_redo
      */
     fun hasRedo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, segment)
     }
 
     /**
@@ -968,7 +968,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.undo
      */
     fun undo() {
-        ObjectCalls.ptrcallNoArgs(undoBind, handle)
+        ObjectCalls.ptrcallNoArgs(undoBind, segment)
     }
 
     /**
@@ -977,7 +977,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.redo
      */
     fun redo() {
-        ObjectCalls.ptrcallNoArgs(redoBind, handle)
+        ObjectCalls.ptrcallNoArgs(redoBind, segment)
     }
 
     /**
@@ -986,7 +986,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.clear_undo_history
      */
     fun clearUndoHistory() {
-        ObjectCalls.ptrcallNoArgs(clearUndoHistoryBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearUndoHistoryBind, segment)
     }
 
     /**
@@ -995,7 +995,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.tag_saved_version
      */
     fun tagSavedVersion() {
-        ObjectCalls.ptrcallNoArgs(tagSavedVersionBind, handle)
+        ObjectCalls.ptrcallNoArgs(tagSavedVersionBind, segment)
     }
 
     /**
@@ -1005,7 +1005,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_version
      */
     fun getVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVersionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getVersionBind, segment)
     }
 
     /**
@@ -1014,7 +1014,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_saved_version
      */
     fun getSavedVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSavedVersionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getSavedVersionBind, segment)
     }
 
     /**
@@ -1023,7 +1023,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_search_text
      */
     fun setSearchText(searchText: String) {
-        ObjectCalls.ptrcallWithStringArg(setSearchTextBind, handle, searchText)
+        ObjectCalls.ptrcallWithStringArg(setSearchTextBind, segment, searchText)
     }
 
     /**
@@ -1033,7 +1033,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_search_flags
      */
     fun setSearchFlags(flags: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSearchFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithUInt32Arg(setSearchFlagsBind, segment, flags)
     }
 
     /**
@@ -1044,7 +1044,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.search
      */
     fun search(text: String, flags: Long, fromLine: Int, fromColumn: Int): Vector2i {
-        return ObjectCalls.ptrcallWithStringUInt32TwoIntArgsRetVector2i(searchBind, handle, text, flags, fromLine, fromColumn)
+        return ObjectCalls.ptrcallWithStringUInt32TwoIntArgsRetVector2i(searchBind, segment, text, flags, fromLine, fromColumn)
     }
 
     /**
@@ -1054,7 +1054,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_tooltip_request_func
      */
     fun setTooltipRequestFunc(callback: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(setTooltipRequestFuncBind, handle, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithCallableArg(setTooltipRequestFuncBind, segment, callback.target.segment, callback.method)
     }
 
     /**
@@ -1063,7 +1063,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_local_mouse_pos
      */
     fun getLocalMousePos(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePosBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePosBind, segment)
     }
 
     /**
@@ -1072,7 +1072,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_word_at_pos
      */
     fun getWordAtPos(position: Vector2): String {
-        return ObjectCalls.ptrcallWithVector2ArgRetString(getWordAtPosBind, handle, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetString(getWordAtPosBind, segment, position)
     }
 
     /**
@@ -1084,7 +1084,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_column_at_pos
      */
     fun getLineColumnAtPos(position: Vector2i, clampLine: Boolean = true, clampColumn: Boolean = true): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iAndTwoBoolArgsRetVector2i(getLineColumnAtPosBind, handle, position, clampLine, clampColumn)
+        return ObjectCalls.ptrcallWithVector2iAndTwoBoolArgsRetVector2i(getLineColumnAtPosBind, segment, position, clampLine, clampColumn)
     }
 
     /**
@@ -1096,7 +1096,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_pos_at_line_column
      */
     fun getPosAtLineColumn(line: Int, column: Int): Vector2i {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2i(getPosAtLineColumnBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2i(getPosAtLineColumnBind, segment, line, column)
     }
 
     /**
@@ -1108,7 +1108,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_rect_at_line_column
      */
     fun getRectAtLineColumn(line: Int, column: Int): Rect2i {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetRect2i(getRectAtLineColumnBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetRect2i(getRectAtLineColumnBind, segment, line, column)
     }
 
     /**
@@ -1117,7 +1117,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_minimap_line_at_pos
      */
     fun getMinimapLineAtPos(position: Vector2i): Int {
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getMinimapLineAtPosBind, handle, position)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getMinimapLineAtPosBind, segment, position)
     }
 
     /**
@@ -1126,7 +1126,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_dragging_cursor
      */
     fun isDraggingCursor(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingCursorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingCursorBind, segment)
     }
 
     /**
@@ -1136,7 +1136,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_mouse_over_selection
      */
     fun isMouseOverSelection(edges: Boolean, caretIndex: Int = -1): Boolean {
-        return ObjectCalls.ptrcallWithBoolAndIntArgsRetBool(isMouseOverSelectionBind, handle, edges, caretIndex)
+        return ObjectCalls.ptrcallWithBoolAndIntArgsRetBool(isMouseOverSelectionBind, segment, edges, caretIndex)
     }
 
     /**
@@ -1145,7 +1145,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_type
      */
     fun setCaretType(type: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCaretTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setCaretTypeBind, segment, type)
     }
 
     /**
@@ -1154,7 +1154,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_type
      */
     fun getCaretType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCaretTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCaretTypeBind, segment)
     }
 
     /**
@@ -1163,7 +1163,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_blink_enabled
      */
     fun setCaretBlinkEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, segment, enable)
     }
 
     /**
@@ -1172,7 +1172,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_blink_enabled
      */
     fun isCaretBlinkEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, segment)
     }
 
     /**
@@ -1181,7 +1181,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_blink_interval
      */
     fun setCaretBlinkInterval(interval: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, handle, interval)
+        ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, segment, interval)
     }
 
     /**
@@ -1190,7 +1190,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_blink_interval
      */
     fun getCaretBlinkInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, segment)
     }
 
     /**
@@ -1199,7 +1199,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_caret_when_editable_disabled
      */
     fun setDrawCaretWhenEditableDisabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawCaretWhenEditableDisabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDrawCaretWhenEditableDisabledBind, segment, enable)
     }
 
     /**
@@ -1208,7 +1208,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_caret_when_editable_disabled
      */
     fun isDrawingCaretWhenEditableDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingCaretWhenEditableDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingCaretWhenEditableDisabledBind, segment)
     }
 
     /**
@@ -1218,7 +1218,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_move_caret_on_right_click_enabled
      */
     fun setMoveCaretOnRightClickEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMoveCaretOnRightClickEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMoveCaretOnRightClickEnabledBind, segment, enable)
     }
 
     /**
@@ -1228,7 +1228,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_move_caret_on_right_click_enabled
      */
     fun isMoveCaretOnRightClickEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMoveCaretOnRightClickEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMoveCaretOnRightClickEnabledBind, segment)
     }
 
     /**
@@ -1238,7 +1238,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_mid_grapheme_enabled
      */
     fun setCaretMidGraphemeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, segment, enabled)
     }
 
     /**
@@ -1248,7 +1248,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_mid_grapheme_enabled
      */
     fun isCaretMidGraphemeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, segment)
     }
 
     /**
@@ -1258,7 +1258,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_multiple_carets_enabled
      */
     fun setMultipleCaretsEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMultipleCaretsEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setMultipleCaretsEnabledBind, segment, enabled)
     }
 
     /**
@@ -1268,7 +1268,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_multiple_carets_enabled
      */
     fun isMultipleCaretsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultipleCaretsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMultipleCaretsEnabledBind, segment)
     }
 
     /**
@@ -1278,7 +1278,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_caret
      */
     fun addCaret(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(addCaretBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(addCaretBind, segment, line, column)
     }
 
     /**
@@ -1287,7 +1287,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_caret
      */
     fun removeCaret(caret: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeCaretBind, handle, caret)
+        ObjectCalls.ptrcallWithIntArg(removeCaretBind, segment, caret)
     }
 
     /**
@@ -1296,7 +1296,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_secondary_carets
      */
     fun removeSecondaryCarets() {
-        ObjectCalls.ptrcallNoArgs(removeSecondaryCaretsBind, handle)
+        ObjectCalls.ptrcallNoArgs(removeSecondaryCaretsBind, segment)
     }
 
     /**
@@ -1305,7 +1305,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_count
      */
     fun getCaretCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCaretCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCaretCountBind, segment)
     }
 
     /**
@@ -1315,7 +1315,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_caret_at_carets
      */
     fun addCaretAtCarets(below: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(addCaretAtCaretsBind, handle, below)
+        ObjectCalls.ptrcallWithBoolArg(addCaretAtCaretsBind, segment, below)
     }
 
     /**
@@ -1326,7 +1326,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_sorted_carets
      */
     fun getSortedCarets(includeIgnoredCarets: Boolean = false): List<Int> {
-        return ObjectCalls.ptrcallWithBoolArgRetPackedInt32List(getSortedCaretsBind, handle, includeIgnoredCarets)
+        return ObjectCalls.ptrcallWithBoolArgRetPackedInt32List(getSortedCaretsBind, segment, includeIgnoredCarets)
     }
 
     /**
@@ -1338,7 +1338,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.collapse_carets
      */
     fun collapseCarets(fromLine: Int, fromColumn: Int, toLine: Int, toColumn: Int, inclusive: Boolean = false) {
-        ObjectCalls.ptrcallWithFourIntAndBoolArgs(collapseCaretsBind, handle, fromLine, fromColumn, toLine, toColumn, inclusive)
+        ObjectCalls.ptrcallWithFourIntAndBoolArgs(collapseCaretsBind, segment, fromLine, fromColumn, toLine, toColumn, inclusive)
     }
 
     /**
@@ -1351,7 +1351,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.merge_overlapping_carets
      */
     fun mergeOverlappingCarets() {
-        ObjectCalls.ptrcallNoArgs(mergeOverlappingCaretsBind, handle)
+        ObjectCalls.ptrcallNoArgs(mergeOverlappingCaretsBind, segment)
     }
 
     /**
@@ -1364,7 +1364,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.begin_multicaret_edit
      */
     fun beginMulticaretEdit() {
-        ObjectCalls.ptrcallNoArgs(beginMulticaretEditBind, handle)
+        ObjectCalls.ptrcallNoArgs(beginMulticaretEditBind, segment)
     }
 
     /**
@@ -1374,7 +1374,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.end_multicaret_edit
      */
     fun endMulticaretEdit() {
-        ObjectCalls.ptrcallNoArgs(endMulticaretEditBind, handle)
+        ObjectCalls.ptrcallNoArgs(endMulticaretEditBind, segment)
     }
 
     /**
@@ -1384,7 +1384,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_in_mulitcaret_edit
      */
     fun isInMulitcaretEdit(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInMulitcaretEditBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInMulitcaretEditBind, segment)
     }
 
     /**
@@ -1397,7 +1397,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.multicaret_edit_ignore_caret
      */
     fun multicaretEditIgnoreCaret(caretIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(multicaretEditIgnoreCaretBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(multicaretEditIgnoreCaretBind, segment, caretIndex)
     }
 
     /**
@@ -1414,7 +1414,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_visible
      */
     fun isCaretVisible(caretIndex: Int = 0): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isCaretVisibleBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isCaretVisibleBind, segment, caretIndex)
     }
 
     /**
@@ -1423,7 +1423,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_draw_pos
      */
     fun getCaretDrawPos(caretIndex: Int = 0): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getCaretDrawPosBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getCaretDrawPosBind, segment, caretIndex)
     }
 
     /**
@@ -1439,7 +1439,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_line
      */
     fun setCaretLine(line: Int, adjustViewport: Boolean = true, canBeHidden: Boolean = true, wrapIndex: Int = 0, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntTwoBoolTwoIntArgs(setCaretLineBind, handle, line, adjustViewport, canBeHidden, wrapIndex, caretIndex)
+        ObjectCalls.ptrcallWithIntTwoBoolTwoIntArgs(setCaretLineBind, segment, line, adjustViewport, canBeHidden, wrapIndex, caretIndex)
     }
 
     /**
@@ -1448,7 +1448,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_line
      */
     fun getCaretLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretLineBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretLineBind, segment, caretIndex)
     }
 
     /**
@@ -1459,7 +1459,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_column
      */
     fun setCaretColumn(column: Int, adjustViewport: Boolean = true, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntBoolIntArgs(setCaretColumnBind, handle, column, adjustViewport, caretIndex)
+        ObjectCalls.ptrcallWithIntBoolIntArgs(setCaretColumnBind, segment, column, adjustViewport, caretIndex)
     }
 
     /**
@@ -1468,7 +1468,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_column
      */
     fun getCaretColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretColumnBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1481,7 +1481,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_next_composite_character_column
      */
     fun getNextCompositeCharacterColumn(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextCompositeCharacterColumnBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextCompositeCharacterColumnBind, segment, line, column)
     }
 
     /**
@@ -1494,7 +1494,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_previous_composite_character_column
      */
     fun getPreviousCompositeCharacterColumn(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getPreviousCompositeCharacterColumnBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getPreviousCompositeCharacterColumnBind, segment, line, column)
     }
 
     /**
@@ -1503,7 +1503,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_wrap_index
      */
     fun getCaretWrapIndex(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretWrapIndexBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretWrapIndexBind, segment, caretIndex)
     }
 
     /**
@@ -1512,7 +1512,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_word_under_caret
      */
     fun getWordUnderCaret(caretIndex: Int = -1): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getWordUnderCaretBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(getWordUnderCaretBind, segment, caretIndex)
     }
 
     /**
@@ -1525,7 +1525,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_use_default_word_separators
      */
     fun setUseDefaultWordSeparators(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseDefaultWordSeparatorsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseDefaultWordSeparatorsBind, segment, enabled)
     }
 
     /**
@@ -1538,7 +1538,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_default_word_separators_enabled
      */
     fun isDefaultWordSeparatorsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultWordSeparatorsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultWordSeparatorsEnabledBind, segment)
     }
 
     /**
@@ -1550,7 +1550,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_use_custom_word_separators
      */
     fun setUseCustomWordSeparators(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomWordSeparatorsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseCustomWordSeparatorsBind, segment, enabled)
     }
 
     /**
@@ -1562,7 +1562,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_custom_word_separators_enabled
      */
     fun isCustomWordSeparatorsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCustomWordSeparatorsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCustomWordSeparatorsEnabledBind, segment)
     }
 
     /**
@@ -1572,7 +1572,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_custom_word_separators
      */
     fun setCustomWordSeparators(customWordSeparators: String) {
-        ObjectCalls.ptrcallWithStringArg(setCustomWordSeparatorsBind, handle, customWordSeparators)
+        ObjectCalls.ptrcallWithStringArg(setCustomWordSeparatorsBind, segment, customWordSeparators)
     }
 
     /**
@@ -1582,7 +1582,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_custom_word_separators
      */
     fun getCustomWordSeparators(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCustomWordSeparatorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCustomWordSeparatorsBind, segment)
     }
 
     /**
@@ -1592,7 +1592,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selecting_enabled
      */
     fun setSelectingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, segment, enable)
     }
 
     /**
@@ -1602,7 +1602,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_selecting_enabled
      */
     fun isSelectingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, segment)
     }
 
     /**
@@ -1611,7 +1611,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_deselect_on_focus_loss_enabled
      */
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, segment, enable)
     }
 
     /**
@@ -1620,7 +1620,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_deselect_on_focus_loss_enabled
      */
     fun isDeselectOnFocusLossEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, segment)
     }
 
     /**
@@ -1629,7 +1629,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_drag_and_drop_selection_enabled
      */
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, segment, enable)
     }
 
     /**
@@ -1638,7 +1638,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drag_and_drop_selection_enabled
      */
     fun isDragAndDropSelectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, segment)
     }
 
     /**
@@ -1647,7 +1647,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selection_mode
      */
     fun setSelectionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSelectionModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setSelectionModeBind, segment, mode)
     }
 
     /**
@@ -1656,7 +1656,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_mode
      */
     fun getSelectionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSelectionModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSelectionModeBind, segment)
     }
 
     /**
@@ -1665,7 +1665,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.select_all
      */
     fun selectAll() {
-        ObjectCalls.ptrcallNoArgs(selectAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(selectAllBind, segment)
     }
 
     /**
@@ -1674,7 +1674,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.select_word_under_caret
      */
     fun selectWordUnderCaret(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(selectWordUnderCaretBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(selectWordUnderCaretBind, segment, caretIndex)
     }
 
     /**
@@ -1684,7 +1684,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_selection_for_next_occurrence
      */
     fun addSelectionForNextOccurrence() {
-        ObjectCalls.ptrcallNoArgs(addSelectionForNextOccurrenceBind, handle)
+        ObjectCalls.ptrcallNoArgs(addSelectionForNextOccurrenceBind, segment)
     }
 
     /**
@@ -1694,7 +1694,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.skip_selection_for_next_occurrence
      */
     fun skipSelectionForNextOccurrence() {
-        ObjectCalls.ptrcallNoArgs(skipSelectionForNextOccurrenceBind, handle)
+        ObjectCalls.ptrcallNoArgs(skipSelectionForNextOccurrenceBind, segment)
     }
 
     /**
@@ -1707,7 +1707,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.select
      */
     fun select(originLine: Int, originColumn: Int, caretLine: Int, caretColumn: Int, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithFiveIntArgs(selectBind, handle, originLine, originColumn, caretLine, caretColumn, caretIndex)
+        ObjectCalls.ptrcallWithFiveIntArgs(selectBind, segment, originLine, originColumn, caretLine, caretColumn, caretIndex)
     }
 
     /**
@@ -1716,7 +1716,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_selection
      */
     fun hasSelection(caretIndex: Int = -1): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSelectionBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasSelectionBind, segment, caretIndex)
     }
 
     /**
@@ -1726,7 +1726,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selected_text
      */
     fun getSelectedText(caretIndex: Int = -1): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getSelectedTextBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(getSelectedTextBind, segment, caretIndex)
     }
 
     /**
@@ -1737,7 +1737,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_at_line_column
      */
     fun getSelectionAtLineColumn(line: Int, column: Int, includeEdges: Boolean = true, onlySelections: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithTwoIntTwoBoolArgsRetInt(getSelectionAtLineColumnBind, handle, line, column, includeEdges, onlySelections)
+        return ObjectCalls.ptrcallWithTwoIntTwoBoolArgsRetInt(getSelectionAtLineColumnBind, segment, line, column, includeEdges, onlySelections)
     }
 
     /**
@@ -1751,7 +1751,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_ranges_from_carets
      */
     fun getLineRangesFromCarets(onlySelections: Boolean = false, mergeAdjacent: Boolean = true): List<Vector2i> {
-        return ObjectCalls.ptrcallWithTwoBoolArgsRetVector2iList(getLineRangesFromCaretsBind, handle, onlySelections, mergeAdjacent)
+        return ObjectCalls.ptrcallWithTwoBoolArgsRetVector2iList(getLineRangesFromCaretsBind, segment, onlySelections, mergeAdjacent)
     }
 
     /**
@@ -1760,7 +1760,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_origin_line
      */
     fun getSelectionOriginLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginLineBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginLineBind, segment, caretIndex)
     }
 
     /**
@@ -1769,7 +1769,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_origin_column
      */
     fun getSelectionOriginColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginColumnBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1784,7 +1784,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selection_origin_line
      */
     fun setSelectionOriginLine(line: Int, canBeHidden: Boolean = true, wrapIndex: Int = -1, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntBoolTwoIntArgs(setSelectionOriginLineBind, handle, line, canBeHidden, wrapIndex, caretIndex)
+        ObjectCalls.ptrcallWithIntBoolTwoIntArgs(setSelectionOriginLineBind, segment, line, canBeHidden, wrapIndex, caretIndex)
     }
 
     /**
@@ -1794,7 +1794,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selection_origin_column
      */
     fun setSelectionOriginColumn(column: Int, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setSelectionOriginColumnBind, handle, column, caretIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(setSelectionOriginColumnBind, segment, column, caretIndex)
     }
 
     /**
@@ -1803,7 +1803,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_from_line
      */
     fun getSelectionFromLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromLineBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromLineBind, segment, caretIndex)
     }
 
     /**
@@ -1812,7 +1812,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_from_column
      */
     fun getSelectionFromColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromColumnBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1821,7 +1821,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_to_line
      */
     fun getSelectionToLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToLineBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToLineBind, segment, caretIndex)
     }
 
     /**
@@ -1830,7 +1830,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_to_column
      */
     fun getSelectionToColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToColumnBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1840,7 +1840,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_after_selection_origin
      */
     fun isCaretAfterSelectionOrigin(caretIndex: Int = 0): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isCaretAfterSelectionOriginBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isCaretAfterSelectionOriginBind, segment, caretIndex)
     }
 
     /**
@@ -1849,7 +1849,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.deselect
      */
     fun deselect(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(deselectBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(deselectBind, segment, caretIndex)
     }
 
     /**
@@ -1858,7 +1858,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.delete_selection
      */
     fun deleteSelection(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(deleteSelectionBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(deleteSelectionBind, segment, caretIndex)
     }
 
     /**
@@ -1867,7 +1867,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_wrapping_mode
      */
     fun setLineWrappingMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLineWrappingModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setLineWrappingModeBind, segment, mode)
     }
 
     /**
@@ -1876,7 +1876,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrapping_mode
      */
     fun getLineWrappingMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLineWrappingModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLineWrappingModeBind, segment)
     }
 
     /**
@@ -1885,7 +1885,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
     }
 
     /**
@@ -1894,7 +1894,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_autowrap_mode
      */
     fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
     }
 
     /**
@@ -1903,7 +1903,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_line_wrapped
      */
     fun isLineWrapped(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineWrappedBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineWrappedBind, segment, line)
     }
 
     /**
@@ -1912,7 +1912,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrap_count
      */
     fun getLineWrapCount(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLineWrapCountBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getLineWrapCountBind, segment, line)
     }
 
     /**
@@ -1922,7 +1922,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrap_index_at_column
      */
     fun getLineWrapIndexAtColumn(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWrapIndexAtColumnBind, handle, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWrapIndexAtColumnBind, segment, line, column)
     }
 
     /**
@@ -1931,7 +1931,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrapped_text
      */
     fun getLineWrappedText(line: Int): List<String> {
-        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getLineWrappedTextBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getLineWrappedTextBind, segment, line)
     }
 
     /**
@@ -1940,7 +1940,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_smooth_scroll_enabled
      */
     fun setSmoothScrollEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothScrollEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSmoothScrollEnabledBind, segment, enable)
     }
 
     /**
@@ -1949,7 +1949,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_smooth_scroll_enabled
      */
     fun isSmoothScrollEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSmoothScrollEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSmoothScrollEnabledBind, segment)
     }
 
     /**
@@ -1958,7 +1958,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
     }
 
     /**
@@ -1967,7 +1967,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_h_scroll_bar
      */
     fun getHScrollBar(): HScrollBar? {
-        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, handle))
+        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, segment))
     }
 
     /**
@@ -1977,7 +1977,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_v_scroll
      */
     fun setVScroll(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVScrollBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setVScrollBind, segment, value)
     }
 
     /**
@@ -1987,7 +1987,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_v_scroll
      */
     fun getVScroll(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollBind, segment)
     }
 
     /**
@@ -1997,7 +1997,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_h_scroll
      */
     fun setHScroll(value: Int) {
-        ObjectCalls.ptrcallWithIntArg(setHScrollBind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(setHScrollBind, segment, value)
     }
 
     /**
@@ -2007,7 +2007,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_h_scroll
      */
     fun getHScroll(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, segment)
     }
 
     /**
@@ -2016,7 +2016,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_scroll_past_end_of_file_enabled
      */
     fun setScrollPastEndOfFileEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollPastEndOfFileEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setScrollPastEndOfFileEnabledBind, segment, enable)
     }
 
     /**
@@ -2025,7 +2025,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_scroll_past_end_of_file_enabled
      */
     fun isScrollPastEndOfFileEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollPastEndOfFileEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollPastEndOfFileEnabledBind, segment)
     }
 
     /**
@@ -2034,7 +2034,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_v_scroll_speed
      */
     fun setVScrollSpeed(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVScrollSpeedBind, handle, speed)
+        ObjectCalls.ptrcallWithDoubleArg(setVScrollSpeedBind, segment, speed)
     }
 
     /**
@@ -2043,7 +2043,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_v_scroll_speed
      */
     fun getVScrollSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollSpeedBind, segment)
     }
 
     /**
@@ -2054,7 +2054,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_fit_content_height_enabled
      */
     fun setFitContentHeightEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitContentHeightEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFitContentHeightEnabledBind, segment, enabled)
     }
 
     /**
@@ -2065,7 +2065,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_fit_content_height_enabled
      */
     fun isFitContentHeightEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentHeightEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentHeightEnabledBind, segment)
     }
 
     /**
@@ -2076,7 +2076,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_fit_content_width_enabled
      */
     fun setFitContentWidthEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitContentWidthEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFitContentWidthEnabledBind, segment, enabled)
     }
 
     /**
@@ -2087,7 +2087,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_fit_content_width_enabled
      */
     fun isFitContentWidthEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentWidthEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentWidthEnabledBind, segment)
     }
 
     /**
@@ -2096,7 +2096,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_scroll_pos_for_line
      */
     fun getScrollPosForLine(line: Int, wrapIndex: Int = 0): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getScrollPosForLineBind, handle, line, wrapIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getScrollPosForLineBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2105,7 +2105,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_as_first_visible
      */
     fun setLineAsFirstVisible(line: Int, wrapIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsFirstVisibleBind, handle, line, wrapIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsFirstVisibleBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2114,7 +2114,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_first_visible_line
      */
     fun getFirstVisibleLine(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFirstVisibleLineBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFirstVisibleLineBind, segment)
     }
 
     /**
@@ -2123,7 +2123,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_line_in_viewport
      */
     fun isLineInViewport(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineInViewportBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isLineInViewportBind, segment, line)
     }
 
     /**
@@ -2132,7 +2132,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_as_center_visible
      */
     fun setLineAsCenterVisible(line: Int, wrapIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsCenterVisibleBind, handle, line, wrapIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsCenterVisibleBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2141,7 +2141,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_as_last_visible
      */
     fun setLineAsLastVisible(line: Int, wrapIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsLastVisibleBind, handle, line, wrapIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsLastVisibleBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2150,7 +2150,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_last_full_visible_line
      */
     fun getLastFullVisibleLine(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineBind, segment)
     }
 
     /**
@@ -2159,7 +2159,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_last_full_visible_line_wrap_index
      */
     fun getLastFullVisibleLineWrapIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineWrapIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineWrapIndexBind, segment)
     }
 
     /**
@@ -2168,7 +2168,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_visible_line_count
      */
     fun getVisibleLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, segment)
     }
 
     /**
@@ -2179,7 +2179,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_visible_line_count_in_range
      */
     fun getVisibleLineCountInRange(fromLine: Int, toLine: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getVisibleLineCountInRangeBind, handle, fromLine, toLine)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getVisibleLineCountInRangeBind, segment, fromLine, toLine)
     }
 
     /**
@@ -2191,7 +2191,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_total_visible_line_count
      */
     fun getTotalVisibleLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTotalVisibleLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTotalVisibleLineCountBind, segment)
     }
 
     /**
@@ -2200,7 +2200,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.adjust_viewport_to_caret
      */
     fun adjustViewportToCaret(caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(adjustViewportToCaretBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(adjustViewportToCaretBind, segment, caretIndex)
     }
 
     /**
@@ -2210,7 +2210,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.center_viewport_to_caret
      */
     fun centerViewportToCaret(caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(centerViewportToCaretBind, handle, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(centerViewportToCaretBind, segment, caretIndex)
     }
 
     /**
@@ -2220,7 +2220,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_minimap
      */
     fun setDrawMinimap(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawMinimapBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDrawMinimapBind, segment, enabled)
     }
 
     /**
@@ -2230,7 +2230,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_minimap
      */
     fun isDrawingMinimap(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingMinimapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingMinimapBind, segment)
     }
 
     /**
@@ -2239,7 +2239,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_minimap_width
      */
     fun setMinimapWidth(width: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMinimapWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setMinimapWidthBind, segment, width)
     }
 
     /**
@@ -2248,7 +2248,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_minimap_width
      */
     fun getMinimapWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinimapWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMinimapWidthBind, segment)
     }
 
     /**
@@ -2257,7 +2257,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_minimap_visible_lines
      */
     fun getMinimapVisibleLines(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinimapVisibleLinesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMinimapVisibleLinesBind, segment)
     }
 
     /**
@@ -2267,7 +2267,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_gutter
      */
     fun addGutter(at: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(addGutterBind, handle, at)
+        ObjectCalls.ptrcallWithIntArg(addGutterBind, segment, at)
     }
 
     /**
@@ -2276,7 +2276,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_gutter
      */
     fun removeGutter(gutter: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeGutterBind, handle, gutter)
+        ObjectCalls.ptrcallWithIntArg(removeGutterBind, segment, gutter)
     }
 
     /**
@@ -2285,7 +2285,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_count
      */
     fun getGutterCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getGutterCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getGutterCountBind, segment)
     }
 
     /**
@@ -2294,7 +2294,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_name
      */
     fun setGutterName(gutter: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setGutterNameBind, handle, gutter, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setGutterNameBind, segment, gutter, name)
     }
 
     /**
@@ -2303,7 +2303,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_name
      */
     fun getGutterName(gutter: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getGutterNameBind, handle, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetString(getGutterNameBind, segment, gutter)
     }
 
     /**
@@ -2312,7 +2312,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_type
      */
     fun setGutterType(gutter: Int, type: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setGutterTypeBind, handle, gutter, type)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setGutterTypeBind, segment, gutter, type)
     }
 
     /**
@@ -2322,7 +2322,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_type
      */
     fun getGutterType(gutter: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getGutterTypeBind, handle, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getGutterTypeBind, segment, gutter)
     }
 
     /**
@@ -2331,7 +2331,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_width
      */
     fun setGutterWidth(gutter: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setGutterWidthBind, handle, gutter, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(setGutterWidthBind, segment, gutter, width)
     }
 
     /**
@@ -2340,7 +2340,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_width
      */
     fun getGutterWidth(gutter: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getGutterWidthBind, handle, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getGutterWidthBind, segment, gutter)
     }
 
     /**
@@ -2350,7 +2350,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_draw
      */
     fun setGutterDraw(gutter: Int, draw: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterDrawBind, handle, gutter, draw)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterDrawBind, segment, gutter, draw)
     }
 
     /**
@@ -2359,7 +2359,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_gutter_drawn
      */
     fun isGutterDrawn(gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterDrawnBind, handle, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterDrawnBind, segment, gutter)
     }
 
     /**
@@ -2370,7 +2370,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_clickable
      */
     fun setGutterClickable(gutter: Int, clickable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterClickableBind, handle, gutter, clickable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterClickableBind, segment, gutter, clickable)
     }
 
     /**
@@ -2379,7 +2379,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_gutter_clickable
      */
     fun isGutterClickable(gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterClickableBind, handle, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterClickableBind, segment, gutter)
     }
 
     /**
@@ -2389,7 +2389,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_overwritable
      */
     fun setGutterOverwritable(gutter: Int, overwritable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterOverwritableBind, handle, gutter, overwritable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterOverwritableBind, segment, gutter, overwritable)
     }
 
     /**
@@ -2398,7 +2398,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_gutter_overwritable
      */
     fun isGutterOverwritable(gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterOverwritableBind, handle, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterOverwritableBind, segment, gutter)
     }
 
     /**
@@ -2408,7 +2408,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.merge_gutters
      */
     fun mergeGutters(fromLine: Int, toLine: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(mergeGuttersBind, handle, fromLine, toLine)
+        ObjectCalls.ptrcallWithTwoIntArgs(mergeGuttersBind, segment, fromLine, toLine)
     }
 
     /**
@@ -2419,7 +2419,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_custom_draw
      */
     fun setGutterCustomDraw(column: Int, drawCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithIntCallableArgs(setGutterCustomDrawBind, handle, column, drawCallback.target.handle, drawCallback.method)
+        ObjectCalls.ptrcallWithIntCallableArgs(setGutterCustomDrawBind, segment, column, drawCallback.target.segment, drawCallback.method)
     }
 
     /**
@@ -2428,7 +2428,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_total_gutter_width
      */
     fun getTotalGutterWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTotalGutterWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTotalGutterWidthBind, segment)
     }
 
     /**
@@ -2437,7 +2437,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_metadata
      */
     fun setLineGutterMetadata(line: Int, gutter: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithTwoIntAndVariantArg(setLineGutterMetadataBind, handle, line, gutter, metadata)
+        ObjectCalls.ptrcallWithTwoIntAndVariantArg(setLineGutterMetadataBind, segment, line, gutter, metadata)
     }
 
     /**
@@ -2446,7 +2446,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_metadata
      */
     fun getLineGutterMetadata(line: Int, gutter: Int): Any? {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLineGutterMetadataBind, handle, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLineGutterMetadataBind, segment, line, gutter)
     }
 
     /**
@@ -2456,7 +2456,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_text
      */
     fun setLineGutterText(line: Int, gutter: Int, text: String) {
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setLineGutterTextBind, handle, line, gutter, text)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setLineGutterTextBind, segment, line, gutter, text)
     }
 
     /**
@@ -2466,7 +2466,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_text
      */
     fun getLineGutterText(line: Int, gutter: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLineGutterTextBind, handle, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLineGutterTextBind, segment, line, gutter)
     }
 
     /**
@@ -2476,7 +2476,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_icon
      */
     fun setLineGutterIcon(line: Int, gutter: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setLineGutterIconBind, handle, line, gutter, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setLineGutterIconBind, segment, line, gutter, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -2486,7 +2486,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_icon
      */
     fun getLineGutterIcon(line: Int, gutter: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getLineGutterIconBind, handle, line, gutter))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getLineGutterIconBind, segment, line, gutter))
     }
 
     /**
@@ -2495,7 +2495,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_item_color
      */
     fun setLineGutterItemColor(line: Int, gutter: Int, color: Color) {
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setLineGutterItemColorBind, handle, line, gutter, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(setLineGutterItemColorBind, segment, line, gutter, color)
     }
 
     /**
@@ -2504,7 +2504,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_item_color
      */
     fun getLineGutterItemColor(line: Int, gutter: Int): Color {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getLineGutterItemColorBind, handle, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getLineGutterItemColorBind, segment, line, gutter)
     }
 
     /**
@@ -2515,7 +2515,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_clickable
      */
     fun setLineGutterClickable(line: Int, gutter: Int, clickable: Boolean) {
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setLineGutterClickableBind, handle, line, gutter, clickable)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setLineGutterClickableBind, segment, line, gutter, clickable)
     }
 
     /**
@@ -2525,7 +2525,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_line_gutter_clickable
      */
     fun isLineGutterClickable(line: Int, gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isLineGutterClickableBind, handle, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isLineGutterClickableBind, segment, line, gutter)
     }
 
     /**
@@ -2536,7 +2536,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_background_color
      */
     fun setLineBackgroundColor(line: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setLineBackgroundColorBind, handle, line, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setLineBackgroundColorBind, segment, line, color)
     }
 
     /**
@@ -2546,7 +2546,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_background_color
      */
     fun getLineBackgroundColor(line: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getLineBackgroundColorBind, handle, line)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getLineBackgroundColorBind, segment, line)
     }
 
     /**
@@ -2556,7 +2556,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_syntax_highlighter
      */
     fun setSyntaxHighlighter(syntaxHighlighter: SyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSyntaxHighlighterBind, handle, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -2566,7 +2566,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_syntax_highlighter
      */
     fun getSyntaxHighlighter(): SyntaxHighlighter? {
-        return SyntaxHighlighter.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSyntaxHighlighterBind, handle))
+        return SyntaxHighlighter.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSyntaxHighlighterBind, segment))
     }
 
     /**
@@ -2575,7 +2575,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_highlight_current_line
      */
     fun setHighlightCurrentLine(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHighlightCurrentLineBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setHighlightCurrentLineBind, segment, enabled)
     }
 
     /**
@@ -2584,7 +2584,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_highlight_current_line_enabled
      */
     fun isHighlightCurrentLineEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightCurrentLineEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightCurrentLineEnabledBind, segment)
     }
 
     /**
@@ -2593,7 +2593,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_highlight_all_occurrences
      */
     fun setHighlightAllOccurrences(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHighlightAllOccurrencesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setHighlightAllOccurrencesBind, segment, enabled)
     }
 
     /**
@@ -2602,7 +2602,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_highlight_all_occurrences_enabled
      */
     fun isHighlightAllOccurrencesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightAllOccurrencesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightAllOccurrencesEnabledBind, segment)
     }
 
     /**
@@ -2611,7 +2611,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_draw_control_chars
      */
     fun getDrawControlChars(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, segment)
     }
 
     /**
@@ -2620,7 +2620,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_control_chars
      */
     fun setDrawControlChars(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, segment, enabled)
     }
 
     /**
@@ -2629,7 +2629,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_tabs
      */
     fun setDrawTabs(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawTabsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDrawTabsBind, segment, enabled)
     }
 
     /**
@@ -2638,7 +2638,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_tabs
      */
     fun isDrawingTabs(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingTabsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingTabsBind, segment)
     }
 
     /**
@@ -2647,7 +2647,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_spaces
      */
     fun setDrawSpaces(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawSpacesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDrawSpacesBind, segment, enabled)
     }
 
     /**
@@ -2656,7 +2656,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_spaces
      */
     fun isDrawingSpaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingSpacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingSpacesBind, segment)
     }
 
     /**
@@ -2667,7 +2667,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_menu
      */
     fun getMenu(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, handle))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, segment))
     }
 
     /**
@@ -2677,7 +2677,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_menu_visible
      */
     fun isMenuVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, segment)
     }
 
     /**
@@ -2686,7 +2686,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.menu_option
      */
     fun menuOption(option: Int) {
-        ObjectCalls.ptrcallWithIntArg(menuOptionBind, handle, option)
+        ObjectCalls.ptrcallWithIntArg(menuOptionBind, segment, option)
     }
 
     /**
@@ -2695,7 +2695,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.adjust_carets_after_edit
      */
     fun adjustCaretsAfterEdit(caret: Int, fromLine: Int, fromCol: Int, toLine: Int, toCol: Int) {
-        ObjectCalls.ptrcallWithFiveIntArgs(adjustCaretsAfterEditBind, handle, caret, fromLine, fromCol, toLine, toCol)
+        ObjectCalls.ptrcallWithFiveIntArgs(adjustCaretsAfterEditBind, segment, caret, fromLine, fromCol, toLine, toCol)
     }
 
     /**
@@ -2705,7 +2705,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_index_edit_order
      */
     fun getCaretIndexEditOrder(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getCaretIndexEditOrderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getCaretIndexEditOrderBind, segment)
     }
 
     /**
@@ -2714,7 +2714,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_line
      */
     fun getSelectionLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionLineBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionLineBind, segment, caretIndex)
     }
 
     /**
@@ -2723,7 +2723,7 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_column
      */
     fun getSelectionColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionColumnBind, handle, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionColumnBind, segment, caretIndex)
     }
 
     object Signals {
@@ -2790,11 +2790,11 @@ open class TextEdit(handle: MemorySegment) : Control(handle) {
         const val GUTTER_TYPE_CUSTOM: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextEdit? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextEdit? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextEdit? =
-            if (handle.address() == 0L) null else TextEdit(handle)
+            if (handle.address() == 0L) null else TextEdit(GodotHandle(handle))
 
         private const val HAS_IME_TEXT_HASH = 36873697L
         private val hasImeTextBind by lazy {

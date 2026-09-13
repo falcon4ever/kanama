@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Color
 /**
  * Generated from Godot docs: VisualShaderNodeColorConstant
  */
-class VisualShaderNodeColorConstant(handle: MemorySegment) : VisualShaderNodeConstant(handle) {
+class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
     var constant: Color
         @JvmName("constantProperty")
         get() = getConstant()
@@ -19,21 +19,21 @@ class VisualShaderNodeColorConstant(handle: MemorySegment) : VisualShaderNodeCon
 
     fun setConstant(constant: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setConstantBind, handle, constant)
+        ObjectCalls.ptrcallWithColorArg(setConstantBind, segment, constant)
     }
 
     fun getConstant(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getConstantBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getConstantBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeColorConstant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeColorConstant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeColorConstant? =
-            if (handle.address() == 0L) null else VisualShaderNodeColorConstant(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeColorConstant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 2920490490L
         private val setConstantBind by lazy {

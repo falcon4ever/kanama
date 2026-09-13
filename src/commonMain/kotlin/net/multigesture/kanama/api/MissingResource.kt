@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MissingResource
  */
-class MissingResource(handle: MemorySegment) : Resource(handle) {
+class MissingResource(handle: GodotHandle) : Resource(handle) {
     var originalClass: String
         @JvmName("originalClassProperty")
         get() = getOriginalClass()
@@ -31,7 +31,7 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      */
     fun setOriginalClass(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, segment, name)
     }
 
     /**
@@ -41,7 +41,7 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      */
     fun getOriginalClass(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      */
     fun setRecordingProperties(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, segment, enable)
     }
 
     /**
@@ -63,16 +63,16 @@ class MissingResource(handle: MemorySegment) : Resource(handle) {
      */
     fun isRecordingProperties(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MissingResource? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MissingResource? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MissingResource? =
-            if (handle.address() == 0L) null else MissingResource(handle)
+            if (handle.address() == 0L) null else MissingResource(GodotHandle(handle))
 
         private const val SET_ORIGINAL_CLASS_HASH = 83702148L
         private val setOriginalClassBind by lazy {

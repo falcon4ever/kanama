@@ -136,7 +136,7 @@ object InputMap {
      */
     @JvmStatic
     fun actionGetEvents(action: String): List<InputEvent> {
-        return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(actionGetEventsBind, singleton, action, InputEvent::fromHandle)
+        return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(actionGetEventsBind, singleton, action, InputEvent::wrap)
     }
 
     /**
@@ -168,8 +168,8 @@ object InputMap {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): InputMap? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): InputMap? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): InputMap? =
         if (handle.address() == 0L) null else this

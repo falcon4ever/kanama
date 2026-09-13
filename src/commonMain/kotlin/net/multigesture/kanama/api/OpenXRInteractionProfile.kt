@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRInteractionProfile
  */
-class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
+class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
     var interactionProfilePath: String
         @JvmName("interactionProfilePathProperty")
         get() = getInteractionProfilePath()
@@ -30,61 +30,61 @@ class OpenXRInteractionProfile(handle: MemorySegment) : Resource(handle) {
 
     fun setInteractionProfilePath(interactionProfilePath: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setInteractionProfilePathBind, handle, interactionProfilePath)
+        ObjectCalls.ptrcallWithStringArg(setInteractionProfilePathBind, segment, interactionProfilePath)
     }
 
     fun getInteractionProfilePath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInteractionProfilePathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getInteractionProfilePathBind, segment)
     }
 
     fun getBindingCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindingCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBindingCountBind, segment)
     }
 
     fun getBinding(index: Int): OpenXRIPBinding? {
         checkOpen()
-        return OpenXRIPBinding.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingBind, handle, index))
+        return OpenXRIPBinding.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingBind, segment, index))
     }
 
     fun setBindings(bindings: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBindingsBind, handle, bindings)
+        ObjectCalls.ptrcallWithArrayArg(setBindingsBind, segment, bindings)
     }
 
     fun getBindings(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getBindingsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getBindingsBind, segment)
     }
 
     fun getBindingModifierCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, segment)
     }
 
     fun getBindingModifier(index: Int): OpenXRIPBindingModifier? {
         checkOpen()
-        return OpenXRIPBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, handle, index))
+        return OpenXRIPBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, segment, index))
     }
 
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBindingModifiersBind, handle, bindingModifiers)
+        ObjectCalls.ptrcallWithArrayArg(setBindingModifiersBind, segment, bindingModifiers)
     }
 
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRInteractionProfile? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRInteractionProfile? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRInteractionProfile? =
-            if (handle.address() == 0L) null else OpenXRInteractionProfile(handle)
+            if (handle.address() == 0L) null else OpenXRInteractionProfile(GodotHandle(handle))
 
         private const val SET_INTERACTION_PROFILE_PATH_HASH = 83702148L
         private val setInteractionProfilePathBind by lazy {

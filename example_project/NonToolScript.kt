@@ -1,6 +1,5 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnInput
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
@@ -8,6 +7,7 @@ import net.multigesture.kanama.annotations.OnShortcutInput
 import net.multigesture.kanama.annotations.OnUnhandledInput
 import net.multigesture.kanama.annotations.OnUnhandledKeyInput
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 
 /**
@@ -20,7 +20,7 @@ import net.multigesture.kanama.api.GodotObject
  * but registration is verified by the KSP "virtuals=N" warn line.
  */
 @ScriptClass(attachTo = "Node")
-class NonToolScript(val godotObject: MemorySegment) {
+class NonToolScript(val godotObject: GodotHandle) {
   private var processLogged: Boolean = false
 
   @OnReady

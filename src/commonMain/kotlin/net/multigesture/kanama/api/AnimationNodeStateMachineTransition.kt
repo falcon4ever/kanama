@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeStateMachineTransition
  */
-class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(handle) {
+class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle) {
     var xfadeTime: Double
         @JvmName("xfadeTimeProperty")
         get() = getXfadeTime()
@@ -73,7 +73,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setSwitchMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, segment, mode)
     }
 
     /**
@@ -83,7 +83,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun getSwitchMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, segment)
     }
 
     /**
@@ -95,7 +95,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setAdvanceMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, segment, mode)
     }
 
     /**
@@ -107,7 +107,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun getAdvanceMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, segment)
     }
 
     /**
@@ -121,7 +121,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setAdvanceCondition(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setAdvanceConditionBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setAdvanceConditionBind, segment, name)
     }
 
     /**
@@ -135,7 +135,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun getAdvanceCondition(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAdvanceConditionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAdvanceConditionBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setXfadeTime(secs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, secs)
+        ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, segment, secs)
     }
 
     /**
@@ -163,7 +163,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun getXfadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, segment)
     }
 
     /**
@@ -174,7 +174,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setXfadeCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -185,7 +185,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
     }
 
     /**
@@ -196,7 +196,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setBreakLoopAtEnd(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, segment, enable)
     }
 
     /**
@@ -207,7 +207,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun isLoopBrokenAtEnd(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setReset(reset: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setResetBind, handle, reset)
+        ObjectCalls.ptrcallWithBoolArg(setResetBind, segment, reset)
     }
 
     /**
@@ -227,7 +227,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun isReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isResetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isResetBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setPriority(priority: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setPriorityBind, segment, priority)
     }
 
     /**
@@ -249,7 +249,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun getPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, segment)
     }
 
     /**
@@ -261,7 +261,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun setAdvanceExpression(text: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setAdvanceExpressionBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setAdvanceExpressionBind, segment, text)
     }
 
     /**
@@ -273,7 +273,7 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
      */
     fun getAdvanceExpression(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getAdvanceExpressionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAdvanceExpressionBind, segment)
     }
 
     object Signals {
@@ -289,11 +289,11 @@ class AnimationNodeStateMachineTransition(handle: MemorySegment) : Resource(hand
         const val ADVANCE_MODE_AUTO: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeStateMachineTransition? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeStateMachineTransition? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeStateMachineTransition? =
-            if (handle.address() == 0L) null else AnimationNodeStateMachineTransition(handle)
+            if (handle.address() == 0L) null else AnimationNodeStateMachineTransition(GodotHandle(handle))
 
         private const val SET_SWITCH_MODE_HASH = 2074906633L
         private val setSwitchModeBind by lazy {

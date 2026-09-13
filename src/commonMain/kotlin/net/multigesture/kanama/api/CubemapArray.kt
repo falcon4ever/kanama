@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CubemapArray
  */
-class CubemapArray(handle: MemorySegment) : ImageTextureLayered(handle) {
+class CubemapArray(handle: GodotHandle) : ImageTextureLayered(handle) {
     /**
      * Creates a placeholder version of this resource (`PlaceholderCubemapArray`).
      *
@@ -18,8 +18,8 @@ class CubemapArray(handle: MemorySegment) : ImageTextureLayered(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -28,11 +28,11 @@ class CubemapArray(handle: MemorySegment) : ImageTextureLayered(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CubemapArray? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CubemapArray? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CubemapArray? =
-            if (handle.address() == 0L) null else CubemapArray(handle)
+            if (handle.address() == 0L) null else CubemapArray(GodotHandle(handle))
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L
         private val createPlaceholderBind by lazy {

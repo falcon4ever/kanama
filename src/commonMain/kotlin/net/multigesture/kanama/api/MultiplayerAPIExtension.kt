@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MultiplayerAPIExtension
  */
-class MultiplayerAPIExtension(handle: MemorySegment) : MultiplayerAPI(handle) {
+class MultiplayerAPIExtension(handle: GodotHandle) : MultiplayerAPI(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiplayerAPIExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiplayerAPIExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiplayerAPIExtension? =
-            if (handle.address() == 0L) null else MultiplayerAPIExtension(handle)
+            if (handle.address() == 0L) null else MultiplayerAPIExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

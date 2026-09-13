@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: SkeletonIK3D
  */
-class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var rootBone: String
         @JvmName("rootBoneProperty")
         get() = getRootBone()
@@ -82,7 +82,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_root_bone
      */
     fun setRootBone(rootBone: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, handle, rootBone)
+        ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, segment, rootBone)
     }
 
     /**
@@ -91,7 +91,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_root_bone
      */
     fun getRootBone(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_tip_bone
      */
     fun setTipBone(tipBone: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTipBoneBind, handle, tipBone)
+        ObjectCalls.ptrcallWithStringNameArg(setTipBoneBind, segment, tipBone)
     }
 
     /**
@@ -111,7 +111,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_tip_bone
      */
     fun getTipBone(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTipBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getTipBoneBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_target_transform
      */
     fun setTargetTransform(target: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setTargetTransformBind, handle, target)
+        ObjectCalls.ptrcallWithTransform3DArg(setTargetTransformBind, segment, target)
     }
 
     /**
@@ -133,7 +133,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_target_transform
      */
     fun getTargetTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTargetTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTargetTransformBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_target_node
      */
     fun setTargetNode(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, node)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, node)
     }
 
     /**
@@ -153,7 +153,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_target_node
      */
     fun getTargetNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
     }
 
     /**
@@ -163,7 +163,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_override_tip_basis
      */
     fun setOverrideTipBasis(override: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOverrideTipBasisBind, handle, override)
+        ObjectCalls.ptrcallWithBoolArg(setOverrideTipBasisBind, segment, override)
     }
 
     /**
@@ -173,7 +173,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.is_override_tip_basis
      */
     fun isOverrideTipBasis(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOverrideTipBasisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOverrideTipBasisBind, segment)
     }
 
     /**
@@ -184,7 +184,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_use_magnet
      */
     fun setUseMagnet(use: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseMagnetBind, handle, use)
+        ObjectCalls.ptrcallWithBoolArg(setUseMagnetBind, segment, use)
     }
 
     /**
@@ -195,7 +195,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.is_using_magnet
      */
     fun isUsingMagnet(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingMagnetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingMagnetBind, segment)
     }
 
     /**
@@ -207,7 +207,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_magnet_position
      */
     fun setMagnetPosition(localPosition: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setMagnetPositionBind, handle, localPosition)
+        ObjectCalls.ptrcallWithVector3Arg(setMagnetPositionBind, segment, localPosition)
     }
 
     /**
@@ -219,7 +219,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_magnet_position
      */
     fun getMagnetPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getMagnetPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getMagnetPositionBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_parent_skeleton
      */
     fun getParentSkeleton(): Skeleton3D? {
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentSkeletonBind, handle))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentSkeletonBind, segment))
     }
 
     /**
@@ -241,7 +241,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.is_running
      */
     fun isRunning(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_min_distance
      */
     fun setMinDistance(minDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMinDistanceBind, handle, minDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setMinDistanceBind, segment, minDistance)
     }
 
     /**
@@ -261,7 +261,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_min_distance
      */
     fun getMinDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinDistanceBind, segment)
     }
 
     /**
@@ -271,7 +271,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_max_iterations
      */
     fun setMaxIterations(iterations: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxIterationsBind, handle, iterations)
+        ObjectCalls.ptrcallWithIntArg(setMaxIterationsBind, segment, iterations)
     }
 
     /**
@@ -281,7 +281,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_max_iterations
      */
     fun getMaxIterations(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxIterationsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxIterationsBind, segment)
     }
 
     /**
@@ -292,7 +292,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.start
      */
     fun start(oneTime: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(startBind, handle, oneTime)
+        ObjectCalls.ptrcallWithBoolArg(startBind, segment, oneTime)
     }
 
     /**
@@ -302,7 +302,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -313,7 +313,7 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_interpolation
      */
     fun setInterpolation(interpolation: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInterpolationBind, handle, interpolation)
+        ObjectCalls.ptrcallWithDoubleArg(setInterpolationBind, segment, interpolation)
     }
 
     /**
@@ -324,16 +324,16 @@ class SkeletonIK3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_interpolation
      */
     fun getInterpolation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInterpolationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInterpolationBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonIK3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonIK3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonIK3D? =
-            if (handle.address() == 0L) null else SkeletonIK3D(handle)
+            if (handle.address() == 0L) null else SkeletonIK3D(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_HASH = 3304788590L
         private val setRootBoneBind by lazy {

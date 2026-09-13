@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Expression
  */
-class Expression(handle: MemorySegment) : RefCounted(handle) {
+class Expression(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Parses the expression and returns an `Error` code. You can optionally specify names of variables
      * that may appear in the expression with `input_names`, so that you can bind them when it gets
@@ -20,7 +20,7 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      */
     fun parse(expression: String, inputNames: List<String>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, handle, expression, inputNames)
+        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, segment, expression, inputNames)
     }
 
     /**
@@ -33,7 +33,7 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      */
     fun execute(inputs: List<Any?> = emptyList(), baseInstance: GodotObject, showError: Boolean = true, constCallsOnly: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(executeBind, handle, inputs, baseInstance.handle, showError, constCallsOnly)
+        return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(executeBind, segment, inputs, baseInstance.segment, showError, constCallsOnly)
     }
 
     /**
@@ -43,7 +43,7 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasExecuteFailed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasExecuteFailedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasExecuteFailedBind, segment)
     }
 
     /**
@@ -53,16 +53,16 @@ class Expression(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getErrorText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getErrorTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getErrorTextBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Expression? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Expression? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Expression? =
-            if (handle.address() == 0L) null else Expression(handle)
+            if (handle.address() == 0L) null else Expression(GodotHandle(handle))
 
         private const val PARSE_HASH = 3069722906L
         private val parseBind by lazy {

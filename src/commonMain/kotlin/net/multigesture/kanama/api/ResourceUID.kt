@@ -146,8 +146,8 @@ object ResourceUID {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): ResourceUID? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): ResourceUID? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): ResourceUID? =
         if (handle.address() == 0L) null else this

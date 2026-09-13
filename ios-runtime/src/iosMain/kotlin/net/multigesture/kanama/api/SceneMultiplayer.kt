@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: SceneMultiplayer
  */
-class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
+class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     var rootPath: NodePath
         @JvmName("rootPathProperty")
         get() = getRootPath()
@@ -59,112 +59,112 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
 
     fun setRootPath(path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setRootPathBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setRootPathBind, segment, path)
     }
 
     fun getRootPath(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootPathBind, segment)
     }
 
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun disconnectPeer(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(disconnectPeerBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(disconnectPeerBind, segment, id)
     }
 
     fun getAuthenticatingPeers(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAuthenticatingPeersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAuthenticatingPeersBind, segment)
     }
 
     fun sendAuth(id: Int, data: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(sendAuthBind, handle, id, data)
+        return ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(sendAuthBind, segment, id, data)
     }
 
     fun completeAuth(id: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(completeAuthBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetLong(completeAuthBind, segment, id)
     }
 
     fun setAuthCallback(callback: GodotCallable) {
         checkOpen()
-        ObjectCalls.ptrcallWithCallableArg(setAuthCallbackBind, handle, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithCallableArg(setAuthCallbackBind, segment, callback.target.segment, callback.method)
     }
 
     fun getAuthCallback(): GodotCallable? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetCallable(getAuthCallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetCallable(getAuthCallbackBind, segment)
     }
 
     fun setAuthTimeout(timeout: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAuthTimeoutBind, handle, timeout)
+        ObjectCalls.ptrcallWithDoubleArg(setAuthTimeoutBind, segment, timeout)
     }
 
     fun getAuthTimeout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAuthTimeoutBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAuthTimeoutBind, segment)
     }
 
     fun setRefuseNewConnections(refuse: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, handle, refuse)
+        ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, segment, refuse)
     }
 
     fun isRefusingNewConnections(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, segment)
     }
 
     fun setAllowObjectDecoding(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowObjectDecodingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAllowObjectDecodingBind, segment, enable)
     }
 
     fun isObjectDecodingAllowed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isObjectDecodingAllowedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isObjectDecodingAllowedBind, segment)
     }
 
     fun setServerRelayEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setServerRelayEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setServerRelayEnabledBind, segment, enabled)
     }
 
     fun isServerRelayEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerRelayEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isServerRelayEnabledBind, segment)
     }
 
     fun sendBytes(bytes: ByteArray, id: Int = 0, mode: Long = 2L, channel: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(sendBytesBind, handle, bytes, id, mode, channel)
+        return ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(sendBytesBind, segment, bytes, id, mode, channel)
     }
 
     fun getMaxSyncPacketSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxSyncPacketSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxSyncPacketSizeBind, segment)
     }
 
     fun setMaxSyncPacketSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxSyncPacketSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setMaxSyncPacketSizeBind, segment, size)
     }
 
     fun getMaxDeltaPacketSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxDeltaPacketSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxDeltaPacketSizeBind, segment)
     }
 
     fun setMaxDeltaPacketSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxDeltaPacketSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setMaxDeltaPacketSizeBind, segment, size)
     }
 
     object Signals {
@@ -175,11 +175,11 @@ class SceneMultiplayer(handle: MemorySegment) : MultiplayerAPI(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SceneMultiplayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SceneMultiplayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SceneMultiplayer? =
-            if (handle.address() == 0L) null else SceneMultiplayer(handle)
+            if (handle.address() == 0L) null else SceneMultiplayer(GodotHandle(handle))
 
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not), mirroring the desktop helper.
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =

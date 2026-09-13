@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CameraTexture
  */
-class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
+class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
     var cameraFeedId: Int
         @JvmName("cameraFeedIdProperty")
         get() = getCameraFeedId()
@@ -37,7 +37,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setCameraFeedId(feedId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, handle, feedId)
+        ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, segment, feedId)
     }
 
     /**
@@ -47,7 +47,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setWhichFeed(whichFeed: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, handle, whichFeed)
+        ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, segment, whichFeed)
     }
 
     /**
@@ -69,7 +69,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getWhichFeed(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setCameraActive(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCameraActiveBind, handle, active)
+        ObjectCalls.ptrcallWithBoolArg(setCameraActiveBind, segment, active)
     }
 
     /**
@@ -89,16 +89,16 @@ class CameraTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getCameraActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getCameraActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCameraActiveBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CameraTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CameraTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CameraTexture? =
-            if (handle.address() == 0L) null else CameraTexture(handle)
+            if (handle.address() == 0L) null else CameraTexture(GodotHandle(handle))
 
         private const val SET_CAMERA_FEED_ID_HASH = 1286410249L
         private val setCameraFeedIdBind by lazy {

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: SpringBoneCollision3D
  */
-open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
+open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
     var boneName: String
         @JvmName("boneNameProperty")
         get() = getBoneName()
@@ -44,7 +44,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_skeleton
      */
     fun getSkeleton(): Skeleton3D? {
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, segment))
     }
 
     /**
@@ -53,7 +53,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, handle, boneName)
+        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -62,7 +62,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
     }
 
     /**
@@ -71,7 +71,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_bone
      */
     fun setBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneBind, handle, bone)
+        ObjectCalls.ptrcallWithIntArg(setBoneBind, segment, bone)
     }
 
     /**
@@ -80,7 +80,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_bone
      */
     fun getBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, segment)
     }
 
     /**
@@ -89,7 +89,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_position_offset
      */
     fun setPositionOffset(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setPositionOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(setPositionOffsetBind, segment, offset)
     }
 
     /**
@@ -98,7 +98,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_position_offset
      */
     fun getPositionOffset(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionOffsetBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_rotation_offset
      */
     fun setRotationOffset(offset: Quaternion) {
-        ObjectCalls.ptrcallWithQuaternionArg(setRotationOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithQuaternionArg(setRotationOffsetBind, segment, offset)
     }
 
     /**
@@ -116,16 +116,16 @@ open class SpringBoneCollision3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_rotation_offset
      */
     fun getRotationOffset(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRotationOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRotationOffsetBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpringBoneCollision3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpringBoneCollision3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpringBoneCollision3D? =
-            if (handle.address() == 0L) null else SpringBoneCollision3D(handle)
+            if (handle.address() == 0L) null else SpringBoneCollision3D(GodotHandle(handle))
 
         private const val GET_SKELETON_HASH = 1488626673L
         private val getSkeletonBind by lazy {

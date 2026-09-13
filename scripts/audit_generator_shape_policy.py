@@ -371,7 +371,7 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
             continue
         typed_line, typed_text = typed_result
         if object_helper in typed_text:
-            if ".mapNotNull" not in typed_text or "wrapper(it.handle)" not in typed_text:
+            if ".mapNotNull" not in typed_text or "wrapper(it.segment)" not in typed_text:
                 errors.append(
                     f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
                     f"{typed_helper} does not map through nullable typed wrappers",

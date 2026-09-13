@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OggPacketSequencePlayback
  */
-class OggPacketSequencePlayback(handle: MemorySegment) : RefCounted(handle) {
+class OggPacketSequencePlayback(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OggPacketSequencePlayback? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OggPacketSequencePlayback? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OggPacketSequencePlayback? =
-            if (handle.address() == 0L) null else OggPacketSequencePlayback(handle)
+            if (handle.address() == 0L) null else OggPacketSequencePlayback(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

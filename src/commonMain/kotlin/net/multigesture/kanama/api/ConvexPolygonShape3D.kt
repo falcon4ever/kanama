@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: ConvexPolygonShape3D
  */
-class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
+class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
     var points: List<Vector3>
         @JvmName("pointsProperty")
         get() = getPoints()
@@ -26,7 +26,7 @@ class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setPoints(points: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setPointsBind, handle, points)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setPointsBind, segment, points)
     }
 
     /**
@@ -36,16 +36,16 @@ class ConvexPolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getPoints(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPointsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConvexPolygonShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConvexPolygonShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConvexPolygonShape3D? =
-            if (handle.address() == 0L) null else ConvexPolygonShape3D(handle)
+            if (handle.address() == 0L) null else ConvexPolygonShape3D(GodotHandle(handle))
 
         private const val SET_POINTS_HASH = 334873810L
         private val setPointsBind by lazy {

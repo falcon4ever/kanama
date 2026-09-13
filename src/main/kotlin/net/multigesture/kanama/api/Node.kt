@@ -10,7 +10,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: Node
  */
-open class Node(handle: MemorySegment) : GodotObject(handle) {
+open class Node(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Returns `true` if this node is currently inside a `SceneTree`. See also `get_tree`.
@@ -18,7 +18,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_inside_tree
      */
     fun isInsideTree(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isInsideTreeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isInsideTreeBind, segment)
 
     /**
      * Returns `true` if the node is part of the scene currently opened in the editor.
@@ -26,7 +26,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_part_of_edited_scene
      */
     fun isPartOfEditedScene(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPartOfEditedSceneBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isPartOfEditedSceneBind, segment)
 
     /**
      * The name of the node. This name must be unique among the siblings (other child nodes from the
@@ -38,7 +38,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_name
      */
     fun setName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setNameBind, segment, name)
     }
 
     /**
@@ -51,7 +51,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_name
      */
     fun getName(): String =
-        ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
+        ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, segment)
 
     /**
      * Returns the number of children of this node. If `include_internal` is `false`, internal children
@@ -60,7 +60,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_child_count
      */
     fun getChildCount(includeInternal: Boolean = false): Long =
-        ObjectCalls.ptrcallWithBoolArgRetInt(getChildCountBind, handle, includeInternal).toLong()
+        ObjectCalls.ptrcallWithBoolArgRetInt(getChildCountBind, segment, includeInternal).toLong()
 
     /**
      * Returns all children of this node inside an `Array`. If `include_internal` is `false`, excludes
@@ -69,7 +69,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_children
      */
     fun getChildren(includeInternal: Boolean = false): List<Node> =
-        ObjectCalls.ptrcallWithBoolArgRetTypedNodeList(getChildrenBind, handle, includeInternal)
+        ObjectCalls.ptrcallWithBoolArgRetTypedNodeList(getChildrenBind, segment, includeInternal)
 
     /**
      * Fetches a child node by its index. Each child node has an index relative to its siblings (see
@@ -82,7 +82,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_child
      */
     fun getChild(idx: Int, includeInternal: Boolean = false): Node? =
-        ObjectCalls.ptrcallWithIntAndBoolArgsRetObject(getChildBind, handle, idx, includeInternal).toNodeOrNull()
+        ObjectCalls.ptrcallWithIntAndBoolArgsRetObject(getChildBind, segment, idx, includeInternal).toNodeOrNull()
 
     /**
      * Fetches a child node by its index. Each child node has an index relative to its siblings (see
@@ -115,7 +115,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     fun findChild(pattern: String, recursive: Boolean = true, owned: Boolean = true): Node? =
         ObjectCalls.ptrcallWithStringAndTwoBoolArgsRetObject(
             findChildBind,
-            handle,
+            segment,
             pattern,
             recursive,
             owned,
@@ -144,7 +144,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     ): List<Node> =
         ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgsRetTypedNodeList(
             findChildrenBind,
-            handle,
+            segment,
             pattern,
             type,
             recursive,
@@ -162,7 +162,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.find_parent
      */
     fun findParent(pattern: String): Node? =
-        ObjectCalls.ptrcallWithStringArgRetObject(findParentBind, handle, pattern).toNodeOrNull()
+        ObjectCalls.ptrcallWithStringArgRetObject(findParentBind, segment, pattern).toNodeOrNull()
 
     /**
      * Returns `true` if the `path` points to a valid node. See also `get_node`.
@@ -170,7 +170,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.has_node
      */
     fun hasNode(path: String): Boolean =
-        ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeBind, segment, path)
 
     /**
      * Returns `true` if the `path` points to a valid node. See also `get_node`.
@@ -190,7 +190,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node
      */
     fun getNode(path: String): Node? =
-        ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeBind, handle, path).toNodeOrNull()
+        ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeBind, segment, path).toNodeOrNull()
 
     /**
      * Fetches a node. The `NodePath` can either be a relative path (from this node), or an absolute
@@ -211,7 +211,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node_or_null
      */
     fun getNodeOrNull(path: String): Node? =
-        ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeOrNullBind, handle, path).toNodeOrNull()
+        ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeOrNullBind, segment, path).toNodeOrNull()
 
     /**
      * Fetches a node by `NodePath`. Similar to `get_node`, but does not generate an error if `path`
@@ -230,7 +230,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.has_node_and_resource
      */
     fun hasNodeAndResource(path: String): Boolean =
-        ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeAndResourceBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeAndResourceBind, segment, path)
 
     /**
      * Returns `true` if `path` points to a valid node and its subnames point to a valid `Resource`,
@@ -262,7 +262,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node_and_resource
      */
     fun getNodeAndResource(path: NodePath): List<Any?> =
-        ObjectCalls.ptrcallWithNodePathArgRetArray(getNodeAndResourceBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArgRetArray(getNodeAndResourceBind, segment, path)
 
     /**
      * Returns the node at `path` as `wrapper` when Godot reports that it is an
@@ -277,7 +277,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     fun <T : Node> getNodeAsOrNull(
         path: String,
         expectedClass: String,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T? {
         val node = getNodeOrNull(path) ?: return null
         return if (node.isClass(expectedClass)) wrapper(node.handle) else null
@@ -286,7 +286,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     fun <T : Node> getNodeAsOrNull(
         path: NodePath,
         expectedClass: String,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T? = getNodeAsOrNull(path.path, expectedClass, wrapper)
 
     /**
@@ -308,12 +308,12 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      */
     fun <T : Node> getAsOrNull(
         path: String,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T? = getNodeOrNull(path)?.let { wrapper(it.handle) }
 
     fun <T : Node> getAsOrNull(
         path: NodePath,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T? = getAsOrNull(path.path, wrapper)
 
     /**
@@ -339,13 +339,13 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      */
     fun <T : Node> requireAs(
         path: String,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T = getAsOrNull(path, wrapper)
         ?: error("Required node '$path' was not found under ${describeForErrors()}")
 
     fun <T : Node> requireAs(
         path: NodePath,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T = requireAs(path.path, wrapper)
 
     /**
@@ -355,14 +355,14 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     fun <T : Node> requireNodeAs(
         path: String,
         expectedClass: String,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T = getNodeAsOrNull(path, expectedClass, wrapper)
         ?: error("Required node '$path' was not found under ${describeForErrors()} or is not a $expectedClass")
 
     fun <T : Node> requireNodeAs(
         path: NodePath,
         expectedClass: String,
-        wrapper: (MemorySegment) -> T,
+        wrapper: (GodotHandle) -> T,
     ): T = requireNodeAs(path.path, expectedClass, wrapper)
 
     /**
@@ -371,7 +371,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_parent
      */
     fun getParent(): Node? =
-        ObjectCalls.ptrcallNoArgsRetObject(getParentBind, handle).toNodeOrNull()
+        ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment).toNodeOrNull()
 
     /**
      * Returns `true` if the given `node` is a direct or indirect child of this node.
@@ -379,7 +379,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_ancestor_of
      */
     fun isAncestorOf(node: Node): Boolean =
-        ObjectCalls.ptrcallWithObjectArgRetBool(isAncestorOfBind, handle, node.handle)
+        ObjectCalls.ptrcallWithObjectArgRetBool(isAncestorOfBind, segment, node.segment)
 
     /**
      * Returns `true` if the given `node` occurs later in the scene hierarchy than this node. A node
@@ -388,7 +388,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_greater_than
      */
     fun isGreaterThan(node: Node): Boolean =
-        ObjectCalls.ptrcallWithObjectArgRetBool(isGreaterThanBind, handle, node.handle)
+        ObjectCalls.ptrcallWithObjectArgRetBool(isGreaterThanBind, segment, node.segment)
 
     /**
      * Returns the node's absolute path, relative to the `SceneTree.root`. If the node is not inside
@@ -397,7 +397,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_path
      */
     fun getPath(): NodePath =
-        ObjectCalls.ptrcallNoArgsRetNodePath(getPathBind, handle)
+        ObjectCalls.ptrcallNoArgsRetNodePath(getPathBind, segment)
 
     /**
      * Returns the relative `NodePath` from this node to the specified `node`. Both nodes must be in
@@ -410,7 +410,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_path_to
      */
     fun getPathTo(node: Node, useUniquePath: Boolean = false): NodePath =
-        ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getPathToBind, handle, node.handle, useUniquePath)
+        ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getPathToBind, segment, node.segment, useUniquePath)
 
     /**
      * The owner of this node. The owner must be an ancestor of this node. When packing the owner node
@@ -428,7 +428,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         // null clears the owner (the engine itself calls child->set_owner(nullptr) while replacing
         // nodes). Marshal null as MemorySegment.NULL. Task 52a / issue #60; audited in
         // NULLABLE_OBJECT_PARAM_OVERRIDES in scripts/generate_api_wrapper.py.
-        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, handle, listOf(owner?.handle ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, segment, listOf(owner?.segment ?: MemorySegment.NULL))
     }
 
     /**
@@ -453,7 +453,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_owner
      */
     fun getOwner(): Node? =
-        ObjectCalls.ptrcallNoArgsRetObject(getOwnerBind, handle).toNodeOrNull()
+        ObjectCalls.ptrcallNoArgsRetObject(getOwnerBind, segment).toNodeOrNull()
 
     /**
      * Adds a child `node`. Nodes can have any number of children, but every child must have a unique
@@ -477,7 +477,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         forceReadableName: Boolean = false,
         internalMode: Long = INTERNAL_MODE_DISABLED,
     ) {
-        ObjectCalls.ptrcallWithObjectBoolLongArgs(addChildBind, handle, node.handle, forceReadableName, internalMode)
+        ObjectCalls.ptrcallWithObjectBoolLongArgs(addChildBind, segment, node.segment, forceReadableName, internalMode)
     }
 
     /**
@@ -493,7 +493,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.add_sibling
      */
     fun addSibling(sibling: Node, forceReadableName: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addSiblingBind, handle, sibling.handle, forceReadableName)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(addSiblingBind, segment, sibling.segment, forceReadableName)
     }
 
     /**
@@ -508,7 +508,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.duplicate
      */
     fun duplicate(flags: Long = DUPLICATE_DEFAULT): Node? =
-        ObjectCalls.ptrcallWithIntArgRetObject(duplicateBind, handle, flags.toInt()).toNodeOrNull()
+        ObjectCalls.ptrcallWithIntArgRetObject(duplicateBind, segment, flags.toInt()).toNodeOrNull()
 
     /**
      * Removes a child `node`. The `node`, along with its children, are not deleted. To delete a node,
@@ -519,7 +519,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.remove_child
      */
     fun removeChild(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeChildBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeChildBind, segment, listOf(node.segment))
     }
 
     /**
@@ -535,7 +535,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.reparent
      */
     fun reparent(newParent: Node, keepGlobalTransform: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(reparentBind, handle, newParent.handle, keepGlobalTransform)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(reparentBind, segment, newParent.segment, keepGlobalTransform)
     }
 
     /**
@@ -548,7 +548,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.move_child
      */
     fun moveChild(childNode: Node, toIndex: Int) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(moveChildBind, handle, childNode.handle, toIndex)
+        ObjectCalls.ptrcallWithObjectAndIntArg(moveChildBind, segment, childNode.segment, toIndex)
     }
 
     /**
@@ -559,7 +559,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_index
      */
     fun getIndex(includeInternal: Boolean = false): Long =
-        ObjectCalls.ptrcallWithBoolArgRetInt(getIndexBind, handle, includeInternal).toLong()
+        ObjectCalls.ptrcallWithBoolArgRetInt(getIndexBind, segment, includeInternal).toLong()
 
     /**
      * The original scene's file path, if the node has been instantiated from a `PackedScene` file.
@@ -568,7 +568,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_scene_file_path
      */
     fun getSceneFilePath(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getSceneFilePathBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getSceneFilePathBind, segment)
 
     /**
      * The original scene's file path, if the node has been instantiated from a `PackedScene` file.
@@ -577,7 +577,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_scene_file_path
      */
     fun setSceneFilePath(sceneFilePath: String) {
-        ObjectCalls.ptrcallWithStringArg(setSceneFilePathBind, handle, sceneFilePath)
+        ObjectCalls.ptrcallWithStringArg(setSceneFilePathBind, segment, sceneFilePath)
     }
 
     /**
@@ -588,7 +588,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_tree_string
      */
     fun getTreeString(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getTreeStringBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getTreeStringBind, segment)
 
     /**
      * Similar to `get_tree_string`, this returns the tree as a `String`. This version displays a more
@@ -598,7 +598,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_tree_string_pretty
      */
     fun getTreeStringPretty(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getTreeStringPrettyBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getTreeStringPrettyBind, segment)
 
     /**
      * Prints the node and its children to the console, recursively. The node does not have to be
@@ -608,7 +608,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.print_tree
      */
     fun printTree() {
-        ObjectCalls.ptrcallNoArgs(printTreeBind, handle)
+        ObjectCalls.ptrcallNoArgs(printTreeBind, segment)
     }
 
     /**
@@ -620,7 +620,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.print_tree_pretty
      */
     fun printTreePretty() {
-        ObjectCalls.ptrcallNoArgs(printTreePrettyBind, handle)
+        ObjectCalls.ptrcallNoArgs(printTreePrettyBind, segment)
     }
 
     /**
@@ -629,7 +629,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.propagate_notification
      */
     fun propagateNotification(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(propagateNotificationBind, handle, what)
+        ObjectCalls.ptrcallWithIntArg(propagateNotificationBind, segment, what)
     }
 
     /**
@@ -640,7 +640,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.propagate_call
      */
     fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameArrayBoolArgs(propagateCallBind, handle, method, args, parentFirst)
+        ObjectCalls.ptrcallWithStringNameArrayBoolArgs(propagateCallBind, segment, method, args, parentFirst)
     }
 
     /**
@@ -650,7 +650,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_tree
      */
     fun getTree(): SceneTree {
-        check(ObjectCalls.ptrcallNoArgsRetObject(getTreeBind, handle).address() != 0L) {
+        check(ObjectCalls.ptrcallNoArgsRetObject(getTreeBind, segment).address() != 0L) {
             "Node is not inside a SceneTree"
         }
         return SceneTree
@@ -664,7 +664,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     // `open` on every platform (task 103): the iOS SceneTree is a Node subclass that overrides this
     // with the SceneTree.create_tween bind, and the two hand-shaped Node files carry one openness.
     open fun createTween(): Tween? =
-        Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, handle))
+        Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment))
 
     /**
      * Returns the node's closest `Viewport` ancestor, if the node is inside the tree. Otherwise,
@@ -673,8 +673,8 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_viewport
      */
     fun getViewport(): Viewport? =
-        ObjectCalls.ptrcallNoArgsRetObject(getViewportBind, handle).let {
-            if (it.address() == 0L) null else Viewport(it)
+        ObjectCalls.ptrcallNoArgsRetObject(getViewportBind, segment).let {
+            if (it.address() == 0L) null else Viewport(GodotHandle(it))
         }
 
     /**
@@ -684,7 +684,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_window
      */
     fun getWindow(): Window? =
-        Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWindowBind, handle))
+        Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWindowBind, segment))
 
     /**
      * Returns the `Window` that contains this node, or the last exclusive child in a chain of windows
@@ -693,7 +693,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_last_exclusive_window
      */
     fun getLastExclusiveWindow(): Window? =
-        Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastExclusiveWindowBind, handle))
+        Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastExclusiveWindowBind, segment))
 
     /**
      * Returns `true` if the node can receive processing notifications and input callbacks
@@ -709,7 +709,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.can_process
      */
     fun canProcess(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(canProcessBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(canProcessBind, segment)
 
     /**
      * Returns `true` if processing is enabled (see `set_process`).
@@ -717,7 +717,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing
      */
     fun isProcessing(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isProcessingBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isProcessingBind, segment)
 
     /**
      * Returns `true` if physics processing is enabled (see `set_physics_process`).
@@ -725,7 +725,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_processing
      */
     fun isPhysicsProcessing(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingBind, segment)
 
     /**
      * Returns the time elapsed (in seconds) since the last process callback. This value is identical
@@ -741,7 +741,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_delta_time
      */
     fun getProcessDeltaTime(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getProcessDeltaTimeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getProcessDeltaTimeBind, segment)
 
     /**
      * Returns the time elapsed (in seconds) since the last physics callback. This value is identical
@@ -757,7 +757,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_physics_process_delta_time
      */
     fun getPhysicsProcessDeltaTime(): Double =
-        ObjectCalls.ptrcallNoArgsRetDouble(getPhysicsProcessDeltaTimeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDouble(getPhysicsProcessDeltaTimeBind, segment)
 
     /**
      * Adds the node to the `group`. Groups can be helpful to organize a subset of nodes, for example
@@ -771,7 +771,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.add_to_group
      */
     fun addToGroup(group: String, persistent: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(addToGroupBind, handle, group, persistent)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(addToGroupBind, segment, group, persistent)
     }
 
     /**
@@ -781,7 +781,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.remove_from_group
      */
     fun removeFromGroup(group: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeFromGroupBind, handle, group)
+        ObjectCalls.ptrcallWithStringNameArg(removeFromGroupBind, segment, group)
     }
 
     /**
@@ -791,7 +791,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_in_group
      */
     fun isInGroup(group: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(isInGroupBind, handle, group)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(isInGroupBind, segment, group)
 
     /**
      * Returns an `Array` of group names that the node has been added to. Note: To improve performance,
@@ -803,7 +803,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_groups
      */
     fun getGroups(): List<String> =
-        ObjectCalls.ptrcallNoArgsRetStringNameList(getGroupsBind, handle)
+        ObjectCalls.ptrcallNoArgsRetStringNameList(getGroupsBind, segment)
 
     /**
      * If set to `true`, enables processing. When a node is being processed, it will receive a
@@ -816,7 +816,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process
      */
     fun setProcess(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessBind, segment, enable)
     }
 
     /**
@@ -829,7 +829,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_process
      */
     fun setPhysicsProcess(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessBind, segment, enable)
     }
 
     /**
@@ -840,7 +840,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_input
      */
     fun setProcessInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessInputBind, segment, enable)
     }
 
     /**
@@ -849,7 +849,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_input
      */
     fun isProcessingInput(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isProcessingInputBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isProcessingInputBind, segment)
 
     /**
      * If set to `true`, enables shortcut processing for this node. Note: If `_shortcut_input` is
@@ -858,7 +858,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_shortcut_input
      */
     fun setProcessShortcutInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessShortcutInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessShortcutInputBind, segment, enable)
     }
 
     /**
@@ -867,7 +867,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_shortcut_input
      */
     fun isProcessingShortcutInput(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isProcessingShortcutInputBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isProcessingShortcutInputBind, segment)
 
     /**
      * If set to `true`, enables unhandled input processing. It enables the node to receive all input
@@ -878,7 +878,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_unhandled_input
      */
     fun setProcessUnhandledInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledInputBind, segment, enable)
     }
 
     /**
@@ -887,7 +887,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_unhandled_input
      */
     fun isProcessingUnhandledInput(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledInputBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledInputBind, segment)
 
     /**
      * If set to `true`, enables unhandled key input processing. Note: If `_unhandled_key_input` is
@@ -896,7 +896,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_unhandled_key_input
      */
     fun setProcessUnhandledKeyInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledKeyInputBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledKeyInputBind, segment, enable)
     }
 
     /**
@@ -906,7 +906,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_unhandled_key_input
      */
     fun isProcessingUnhandledKeyInput(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledKeyInputBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledKeyInputBind, segment)
 
     /**
      * Returns `true` if the node is ready, i.e. it's inside scene tree and all its children are
@@ -915,7 +915,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_node_ready
      */
     fun isNodeReady(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isNodeReadyBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isNodeReadyBind, segment)
 
     /**
      * Returns `true` if the local system is the multiplayer authority of this node.
@@ -923,7 +923,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_multiplayer_authority
      */
     fun isMultiplayerAuthority(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isMultiplayerAuthorityBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isMultiplayerAuthorityBind, segment)
 
     /**
      * Sets the node's multiplayer authority to the peer with the given peer `id`. The multiplayer
@@ -938,7 +938,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_multiplayer_authority
      */
     fun setMultiplayerAuthority(id: Int, recursive: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setMultiplayerAuthorityBind, handle, id, recursive)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setMultiplayerAuthorityBind, segment, id, recursive)
     }
 
     /**
@@ -947,7 +947,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_multiplayer_authority
      */
     fun getMultiplayerAuthority(): Long =
-        ObjectCalls.ptrcallNoArgsRetInt(getMultiplayerAuthorityBind, handle).toLong()
+        ObjectCalls.ptrcallNoArgsRetInt(getMultiplayerAuthorityBind, segment).toLong()
 
     /**
      * The `MultiplayerAPI` instance associated with this node. See `SceneTree.get_multiplayer`. Note:
@@ -957,7 +957,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_multiplayer
      */
     fun getMultiplayer(): MultiplayerAPI? =
-        MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, handle))
+        MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, segment))
 
     /**
      * Changes the RPC configuration for the given `method`. `config` should either be `null` to
@@ -972,7 +972,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.rpc_config
      */
     fun rpcConfig(method: String, config: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(rpcConfigBind, handle, method, config)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(rpcConfigBind, segment, method, config)
     }
 
     /**
@@ -983,7 +983,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node_rpc_config
      */
     fun getNodeRpcConfig(): Any? =
-        ObjectCalls.ptrcallNoArgsRetVariantScalar(getNodeRpcConfigBind, handle)
+        ObjectCalls.ptrcallNoArgsRetVariantScalar(getNodeRpcConfigBind, segment)
 
     /**
      * Sends a remote procedure call request for the given `method` to peers on the network (and
@@ -1002,7 +1002,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.rpc
      */
     fun rpc(method: String, vararg extraArgs: Any?): Long =
-        (ObjectCalls.callWithVariantArgs(rpcBind, handle, listOf(method, *extraArgs)) as Number).toLong()
+        (ObjectCalls.callWithVariantArgs(rpcBind, segment, listOf(method, *extraArgs)) as Number).toLong()
 
     /**
      * Sends an RPC and falls back to a local method call if Godot reports that the RPC could not be sent.
@@ -1026,7 +1026,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.rpc_id
      */
     fun rpcId(peerId: Long, method: String, vararg extraArgs: Any?): Long =
-        (ObjectCalls.callWithVariantArgs(rpcIdBind, handle, listOf(peerId, method, *extraArgs)) as Number).toLong()
+        (ObjectCalls.callWithVariantArgs(rpcIdBind, segment, listOf(peerId, method, *extraArgs)) as Number).toLong()
 
     /**
      * The node's execution order of the process callbacks (`_process`, `NOTIFICATION_PROCESS`, and
@@ -1036,7 +1036,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_priority
      */
     fun setProcessPriority(priority: Long) {
-        ObjectCalls.ptrcallWithIntArg(setProcessPriorityBind, handle, priority.toInt())
+        ObjectCalls.ptrcallWithIntArg(setProcessPriorityBind, segment, priority.toInt())
     }
 
     /**
@@ -1047,7 +1047,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_priority
      */
     fun getProcessPriority(): Long =
-        ObjectCalls.ptrcallNoArgsRetInt(getProcessPriorityBind, handle).toLong()
+        ObjectCalls.ptrcallNoArgsRetInt(getProcessPriorityBind, segment).toLong()
 
     /**
      * Similar to `process_priority` but for `NOTIFICATION_PHYSICS_PROCESS`, `_physics_process`, or
@@ -1056,7 +1056,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_process_priority
      */
     fun setPhysicsProcessPriority(priority: Long) {
-        ObjectCalls.ptrcallWithIntArg(setPhysicsProcessPriorityBind, handle, priority.toInt())
+        ObjectCalls.ptrcallWithIntArg(setPhysicsProcessPriorityBind, segment, priority.toInt())
     }
 
     /**
@@ -1066,7 +1066,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_physics_process_priority
      */
     fun getPhysicsProcessPriority(): Long =
-        ObjectCalls.ptrcallNoArgsRetInt(getPhysicsProcessPriorityBind, handle).toLong()
+        ObjectCalls.ptrcallNoArgsRetInt(getPhysicsProcessPriorityBind, segment).toLong()
 
     /**
      * If set to `true`, the node appears folded in the Scene dock. As a result, all of its children
@@ -1076,7 +1076,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_display_folded
      */
     fun setDisplayFolded(fold: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisplayFoldedBind, handle, fold)
+        ObjectCalls.ptrcallWithBoolArg(setDisplayFoldedBind, segment, fold)
     }
 
     /**
@@ -1086,7 +1086,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_displayed_folded
      */
     fun isDisplayedFolded(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isDisplayedFoldedBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isDisplayedFoldedBind, segment)
 
     /**
      * If `true`, the node can be accessed from any node sharing the same `owner` or from the `owner`
@@ -1096,7 +1096,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_unique_name_in_owner
      */
     fun setUniqueNameInOwner(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUniqueNameInOwnerBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUniqueNameInOwnerBind, segment, enable)
     }
 
     /**
@@ -1107,7 +1107,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_unique_name_in_owner
      */
     fun isUniqueNameInOwner(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isUniqueNameInOwnerBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isUniqueNameInOwnerBind, segment)
 
     /**
      * An optional description to the node. It will be displayed as a tooltip when hovering over the
@@ -1116,7 +1116,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_editor_description
      */
     fun setEditorDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(setEditorDescriptionBind, handle, description)
+        ObjectCalls.ptrcallWithStringArg(setEditorDescriptionBind, segment, description)
     }
 
     /**
@@ -1126,7 +1126,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_editor_description
      */
     fun getEditorDescription(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getEditorDescriptionBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getEditorDescriptionBind, segment)
 
     /**
      * The node's processing behavior. To check if the node can process in its current mode, use
@@ -1135,7 +1135,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_mode
      */
     fun setProcessMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, segment, mode)
     }
 
     /**
@@ -1145,7 +1145,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_mode
      */
     fun getProcessMode(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, segment)
 
     /**
      * Set the process thread group for this node (basically, whether it receives
@@ -1170,7 +1170,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_thread_group
      */
     fun setProcessThreadGroup(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadGroupBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessThreadGroupBind, segment, mode)
     }
 
     /**
@@ -1196,7 +1196,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_thread_group
      */
     fun getProcessThreadGroup(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadGroupBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadGroupBind, segment)
 
     /**
      * Set whether the current thread group will process messages (calls to
@@ -1206,7 +1206,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_thread_messages
      */
     fun setProcessThreadMessages(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadMessagesBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setProcessThreadMessagesBind, segment, flags)
     }
 
     /**
@@ -1217,7 +1217,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_thread_messages
      */
     fun getProcessThreadMessages(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadMessagesBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadMessagesBind, segment)
 
     /**
      * Change the process thread group order. Groups with a lesser order will process before groups
@@ -1227,7 +1227,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_thread_group_order
      */
     fun setProcessThreadGroupOrder(order: Long) {
-        ObjectCalls.ptrcallWithIntArg(setProcessThreadGroupOrderBind, handle, order.toInt())
+        ObjectCalls.ptrcallWithIntArg(setProcessThreadGroupOrderBind, segment, order.toInt())
     }
 
     /**
@@ -1238,7 +1238,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_thread_group_order
      */
     fun getProcessThreadGroupOrder(): Long =
-        ObjectCalls.ptrcallNoArgsRetInt(getProcessThreadGroupOrderBind, handle).toLong()
+        ObjectCalls.ptrcallNoArgsRetInt(getProcessThreadGroupOrderBind, segment).toLong()
 
     /**
      * Queues an accessibility information update for this node.
@@ -1246,7 +1246,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.queue_accessibility_update
      */
     fun queueAccessibilityUpdate() {
-        ObjectCalls.ptrcallNoArgs(queueAccessibilityUpdateBind, handle)
+        ObjectCalls.ptrcallNoArgs(queueAccessibilityUpdateBind, segment)
     }
 
     /**
@@ -1256,7 +1256,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_accessibility_element
      */
     fun getAccessibilityElement(): RID =
-        ObjectCalls.ptrcallNoArgsRetRID(getAccessibilityElementBind, handle)
+        ObjectCalls.ptrcallNoArgsRetRID(getAccessibilityElementBind, segment)
 
     /**
      * This function is similar to `Object.call_deferred` except that the call will take place when the
@@ -1268,7 +1268,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.call_deferred_thread_group
      */
     fun callDeferredThreadGroup(method: String, vararg extraArgs: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callDeferredThreadGroupBind, handle, listOf(method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(callDeferredThreadGroupBind, segment, listOf(method, *extraArgs))
 
     /**
      * Similar to `call_deferred_thread_group`, but for setting properties.
@@ -1276,7 +1276,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_deferred_thread_group
      */
     fun setDeferredThreadGroup(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredThreadGroupBind, handle, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredThreadGroupBind, segment, property, value)
     }
 
     /**
@@ -1285,7 +1285,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.notify_deferred_thread_group
      */
     fun notifyDeferredThreadGroup(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(notifyDeferredThreadGroupBind, handle, what)
+        ObjectCalls.ptrcallWithIntArg(notifyDeferredThreadGroupBind, segment, what)
     }
 
     /**
@@ -1296,7 +1296,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.call_thread_safe
      */
     fun callThreadSafe(method: String, vararg extraArgs: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callThreadSafeBind, handle, listOf(method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(callThreadSafeBind, segment, listOf(method, *extraArgs))
 
     /**
      * Similar to `call_thread_safe`, but for setting properties.
@@ -1304,7 +1304,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_thread_safe
      */
     fun setThreadSafe(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setThreadSafeBind, handle, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setThreadSafeBind, segment, property, value)
     }
 
     /**
@@ -1313,7 +1313,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.notify_thread_safe
      */
     fun notifyThreadSafe(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(notifyThreadSafeBind, handle, what)
+        ObjectCalls.ptrcallWithIntArg(notifyThreadSafeBind, segment, what)
     }
 
     /**
@@ -1327,7 +1327,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_internal
      */
     fun setProcessInternal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessInternalBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setProcessInternalBind, segment, enable)
     }
 
     /**
@@ -1336,7 +1336,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_internal
      */
     fun isProcessingInternal(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isProcessingInternalBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isProcessingInternalBind, segment)
 
     /**
      * If set to `true`, enables internal physics for this node. Internal physics processing happens in
@@ -1349,7 +1349,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_process_internal
      */
     fun setPhysicsProcessInternal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessInternalBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessInternalBind, segment, enable)
     }
 
     /**
@@ -1358,7 +1358,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_processing_internal
      */
     fun isPhysicsProcessingInternal(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingInternalBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingInternalBind, segment)
 
     /**
      * The physics interpolation mode to use for this node. Only effective if
@@ -1374,7 +1374,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_interpolation_mode
      */
     fun setPhysicsInterpolationMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationModeBind, segment, mode)
     }
 
     /**
@@ -1391,7 +1391,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_physics_interpolation_mode
      */
     fun getPhysicsInterpolationMode(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationModeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationModeBind, segment)
 
     /**
      * Returns `true` if physics interpolation is enabled for this node (see
@@ -1402,7 +1402,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_interpolated
      */
     fun isPhysicsInterpolated(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedBind, segment)
 
     /**
      * Returns `true` if physics interpolation is enabled (see `physics_interpolation_mode`) and
@@ -1413,7 +1413,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_interpolated_and_enabled
      */
     fun isPhysicsInterpolatedAndEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedAndEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedAndEnabledBind, segment)
 
     /**
      * When physics interpolation is active, moving a node to a radically different transform (such as
@@ -1427,7 +1427,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.reset_physics_interpolation
      */
     fun resetPhysicsInterpolation() {
-        ObjectCalls.ptrcallNoArgs(resetPhysicsInterpolationBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetPhysicsInterpolationBind, segment)
     }
 
     /**
@@ -1442,7 +1442,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.queue_free
      */
     fun queueFree() {
-        ObjectCalls.ptrcallNoArgs(queueFreeBind, handle)
+        ObjectCalls.ptrcallNoArgs(queueFreeBind, segment)
     }
 
     /**
@@ -1455,7 +1455,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_auto_translate_mode
      */
     fun setAutoTranslateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoTranslateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setAutoTranslateModeBind, segment, mode)
     }
 
     /**
@@ -1468,7 +1468,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_auto_translate_mode
      */
     fun getAutoTranslateMode(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getAutoTranslateModeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getAutoTranslateModeBind, segment)
 
     /**
      * Returns `true` if this node can automatically translate messages depending on the current
@@ -1477,7 +1477,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.can_auto_translate
      */
     fun canAutoTranslate(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(canAutoTranslateBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(canAutoTranslateBind, segment)
 
     /**
      * Translates a `message`, using the translation catalogs configured in the Project Settings.
@@ -1492,7 +1492,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.atr
      */
     fun atr(message: String, context: String = ""): String =
-        ObjectCalls.ptrcallWithStringAndStringNameArgRetString(atrBind, handle, message, context)
+        ObjectCalls.ptrcallWithStringAndStringNameArgRetString(atrBind, segment, message, context)
 
     /**
      * Translates a `message` or `plural_message`, using the translation catalogs configured in the
@@ -1512,7 +1512,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
     fun atrN(message: String, pluralMessage: String, n: Int, context: String = ""): String =
         ObjectCalls.ptrcallWithStringStringNameIntStringNameArgsRetString(
             atrNBind,
-            handle,
+            segment,
             message,
             pluralMessage,
             n,
@@ -1527,7 +1527,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_translation_domain_inherited
      */
     fun setTranslationDomainInherited() {
-        ObjectCalls.ptrcallNoArgs(setTranslationDomainInheritedBind, handle)
+        ObjectCalls.ptrcallNoArgs(setTranslationDomainInheritedBind, segment)
     }
 
     /**
@@ -1537,7 +1537,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_scene_instance_load_placeholder
      */
     fun setSceneInstanceLoadPlaceholder(loadPlaceholder: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSceneInstanceLoadPlaceholderBind, handle, loadPlaceholder)
+        ObjectCalls.ptrcallWithBoolArg(setSceneInstanceLoadPlaceholderBind, segment, loadPlaceholder)
     }
 
     /**
@@ -1547,7 +1547,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_scene_instance_load_placeholder
      */
     fun getSceneInstanceLoadPlaceholder(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(getSceneInstanceLoadPlaceholderBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(getSceneInstanceLoadPlaceholderBind, segment)
 
     /**
      * Replaces this node by the given `node`. All children of this node are moved to `node`. If
@@ -1559,7 +1559,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.replace_by
      */
     fun replaceBy(node: Node, keepGroups: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(replaceByBind, handle, node.handle, keepGroups)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(replaceByBind, segment, node.segment, keepGroups)
     }
 
     /**
@@ -1570,7 +1570,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_editable_instance
      */
     fun setEditableInstance(node: Node, isEditable: Boolean) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(setEditableInstanceBind, handle, node.handle, isEditable)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(setEditableInstanceBind, segment, node.segment, isEditable)
     }
 
     /**
@@ -1580,7 +1580,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_editable_instance
      */
     fun isEditableInstance(node: Node): Boolean =
-        ObjectCalls.ptrcallWithObjectArgRetBool(isEditableInstanceBind, handle, node.handle)
+        ObjectCalls.ptrcallWithObjectArgRetBool(isEditableInstanceBind, segment, node.segment)
 
     /**
      * Requests `_ready` to be called again the next time the node enters the tree. Does not
@@ -1592,7 +1592,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.request_ready
      */
     fun requestReady() {
-        ObjectCalls.ptrcallNoArgs(requestReadyBind, handle)
+        ObjectCalls.ptrcallNoArgs(requestReadyBind, segment)
     }
 
     /**
@@ -1602,7 +1602,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: Node.update_configuration_warnings
      */
     fun updateConfigurationWarnings() {
-        ObjectCalls.ptrcallNoArgs(updateConfigurationWarningsBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateConfigurationWarningsBind, segment)
     }
 
     object Signals {
@@ -1641,11 +1641,11 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
             ObjectCalls.ptrcallNoArgsRetLongList(getOrphanNodeIdsBind, MemorySegment.NULL)
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Node? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Node? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Node? =
-            if (handle.address() == 0L) null else Node(handle)
+            if (handle.address() == 0L) null else Node(GodotHandle(handle))
 
         const val NOTIFICATION_ENTER_TREE = 10L
         const val NOTIFICATION_EXIT_TREE = 11L
@@ -1791,7 +1791,7 @@ open class Node(handle: MemorySegment) : GodotObject(handle) {
         private const val CALL_THREAD_GROUP_HASH = 3400424181L
 
         private fun MemorySegment.toNodeOrNull(): Node? =
-            if (address() == 0L) null else Node(this)
+            if (address() == 0L) null else Node(GodotHandle(this))
 
         private val printOrphanNodesBind by lazy {
             ObjectCalls.getMethodBind("Node", "print_orphan_nodes", PRINT_ORPHAN_NODES_HASH)

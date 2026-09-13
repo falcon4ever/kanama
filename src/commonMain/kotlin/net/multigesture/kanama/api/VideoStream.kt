@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: VideoStream
  */
-open class VideoStream(handle: MemorySegment) : Resource(handle) {
+open class VideoStream(handle: GodotHandle) : Resource(handle) {
     var file: String
         @JvmName("fileProperty")
         get() = getFile()
@@ -26,7 +26,7 @@ open class VideoStream(handle: MemorySegment) : Resource(handle) {
      */
     fun setFile(file: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFileBind, handle, file)
+        ObjectCalls.ptrcallWithStringArg(setFileBind, segment, file)
     }
 
     /**
@@ -37,16 +37,16 @@ open class VideoStream(handle: MemorySegment) : Resource(handle) {
      */
     fun getFile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFileBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getFileBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VideoStream? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VideoStream? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VideoStream? =
-            if (handle.address() == 0L) null else VideoStream(handle)
+            if (handle.address() == 0L) null else VideoStream(GodotHandle(handle))
 
         private const val SET_FILE_HASH = 83702148L
         private val setFileBind by lazy {

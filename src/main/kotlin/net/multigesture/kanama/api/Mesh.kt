@@ -12,7 +12,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Mesh
  */
-open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
+open class Mesh internal constructor(handle: GodotHandle) : Resource(handle) {
     var lightmapSizeHint: Vector2i
         @JvmName("lightmapSizeHintProperty")
         get() = getLightmapSizeHint()
@@ -26,7 +26,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun setLightmapSizeHint(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, segment, size)
     }
 
     /**
@@ -36,7 +36,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun getLightmapSizeHint(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, segment)
     }
 
     /**
@@ -47,7 +47,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, segment)
     }
 
     /**
@@ -69,7 +69,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun getSurfaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun surfaceGetArrays(surfIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(surfaceGetArraysBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetArray(surfaceGetArraysBind, segment, surfIdx)
     }
 
     /**
@@ -90,7 +90,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun surfaceGetBlendShapeArrays(surfIdx: Int): List<List<Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArrayList(surfaceGetBlendShapeArraysBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetArrayList(surfaceGetBlendShapeArraysBind, segment, surfIdx)
     }
 
     /**
@@ -106,7 +106,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(
             surfaceSetMaterialBind,
-            handle,
+            segment,
             surfIdx,
             material?.requireOpenHandle() ?: MemorySegment.NULL,
         )
@@ -123,7 +123,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun surfaceGetMaterial(surfIdx: Int): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(surfaceGetMaterialBind, handle, surfIdx))
+        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(surfaceGetMaterialBind, segment, surfIdx))
     }
 
     /**
@@ -133,7 +133,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle))
+        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment))
     }
 
     /**
@@ -143,7 +143,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun createTrimeshShape(): ConcavePolygonShape3D? {
         checkOpen()
-        return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTrimeshShapeBind, handle))
+        return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTrimeshShapeBind, segment))
     }
 
     /**
@@ -157,7 +157,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
     fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
         checkOpen()
         return ConvexPolygonShape3D.wrap(
-            ObjectCalls.ptrcallWithTwoBoolArgsRetObject(createConvexShapeBind, handle, clean, simplify),
+            ObjectCalls.ptrcallWithTwoBoolArgsRetObject(createConvexShapeBind, segment, clean, simplify),
         )
     }
 
@@ -169,7 +169,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun createOutline(margin: Double): Mesh? {
         checkOpen()
-        return wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(createOutlineBind, handle, margin))
+        return wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(createOutlineBind, segment, margin))
     }
 
     /**
@@ -180,7 +180,7 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
      */
     fun generateTriangleMesh(): TriangleMesh? {
         checkOpen()
-        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, handle))
+        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
     companion object {
@@ -247,11 +247,11 @@ open class Mesh internal constructor(handle: MemorySegment) : Resource(handle) {
             if (value.isClass("Mesh")) Mesh(value.handle) else null
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Mesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Mesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Mesh? =
-            if (handle.address() == 0L) null else Mesh(handle)
+            if (handle.address() == 0L) null else Mesh(GodotHandle(handle))
 
         private const val SET_LIGHTMAP_SIZE_HINT_HASH = 1130785943L
         private const val GET_LIGHTMAP_SIZE_HINT_HASH = 3690982128L

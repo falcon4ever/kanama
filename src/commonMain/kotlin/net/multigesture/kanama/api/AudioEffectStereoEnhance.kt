@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectStereoEnhance
  */
-class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
     var panPullout: Double
         @JvmName("panPulloutProperty")
         get() = getPanPullout()
@@ -39,7 +39,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPanPullout(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPanPulloutBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setPanPulloutBind, segment, amount)
     }
 
     /**
@@ -50,7 +50,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPanPullout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPanPulloutBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPanPulloutBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTimePullout(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTimePulloutBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setTimePulloutBind, segment, amount)
     }
 
     /**
@@ -72,7 +72,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getTimePullout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimePulloutBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTimePulloutBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setSurround(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSurroundBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setSurroundBind, segment, amount)
     }
 
     /**
@@ -94,16 +94,16 @@ class AudioEffectStereoEnhance(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getSurround(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSurroundBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSurroundBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectStereoEnhance? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectStereoEnhance? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectStereoEnhance? =
-            if (handle.address() == 0L) null else AudioEffectStereoEnhance(handle)
+            if (handle.address() == 0L) null else AudioEffectStereoEnhance(GodotHandle(handle))
 
         private const val SET_PAN_PULLOUT_HASH = 373806689L
         private val setPanPulloutBind by lazy {

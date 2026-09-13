@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StreamPeerGZIP
  */
-class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
+class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
     /**
      * Start the stream in compression mode with the given `buffer_size`, if `use_deflate` is `true`
      * uses deflate instead of GZIP.
@@ -19,7 +19,7 @@ class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, handle, useDeflate, bufferSize)
+        return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, segment, useDeflate, bufferSize)
     }
 
     /**
@@ -30,7 +30,7 @@ class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, handle, useDeflate, bufferSize)
+        return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, segment, useDeflate, bufferSize)
     }
 
     /**
@@ -41,7 +41,7 @@ class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun finish(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(finishBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(finishBind, segment)
     }
 
     /**
@@ -51,16 +51,16 @@ class StreamPeerGZIP(handle: MemorySegment) : StreamPeer(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeerGZIP? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeerGZIP? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeerGZIP? =
-            if (handle.address() == 0L) null else StreamPeerGZIP(handle)
+            if (handle.address() == 0L) null else StreamPeerGZIP(GodotHandle(handle))
 
         private const val START_COMPRESSION_HASH = 781582770L
         private val startCompressionBind by lazy {

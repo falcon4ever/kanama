@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: GLTFSkin
  */
-class GLTFSkin(handle: MemorySegment) : Resource(handle) {
+class GLTFSkin(handle: GodotHandle) : Resource(handle) {
     var skinRoot: Int
         @JvmName("skinRootProperty")
         get() = getSkinRoot()
@@ -73,111 +73,111 @@ class GLTFSkin(handle: MemorySegment) : Resource(handle) {
 
     fun getSkinRoot(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkinRootBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSkinRootBind, segment)
     }
 
     fun setSkinRoot(skinRoot: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSkinRootBind, handle, skinRoot)
+        ObjectCalls.ptrcallWithIntArg(setSkinRootBind, segment, skinRoot)
     }
 
     fun getJointsOriginal(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsOriginalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsOriginalBind, segment)
     }
 
     fun setJointsOriginal(jointsOriginal: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsOriginalBind, handle, jointsOriginal)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsOriginalBind, segment, jointsOriginal)
     }
 
     fun getInverseBinds(): List<Transform3D> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3DList(getInverseBindsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3DList(getInverseBindsBind, segment)
     }
 
     fun setInverseBinds(inverseBinds: List<Transform3D>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DListArg(setInverseBindsBind, handle, inverseBinds)
+        ObjectCalls.ptrcallWithTransform3DListArg(setInverseBindsBind, segment, inverseBinds)
     }
 
     fun getJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, segment)
     }
 
     fun setJoints(joints: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, handle, joints)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, segment, joints)
     }
 
     fun getNonJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getNonJointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getNonJointsBind, segment)
     }
 
     fun setNonJoints(nonJoints: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setNonJointsBind, handle, nonJoints)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setNonJointsBind, segment, nonJoints)
     }
 
     fun getRoots(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, segment)
     }
 
     fun setRoots(roots: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, handle, roots)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, segment, roots)
     }
 
     fun getSkeleton(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, segment)
     }
 
     fun setSkeleton(skeleton: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSkeletonBind, handle, skeleton)
+        ObjectCalls.ptrcallWithIntArg(setSkeletonBind, segment, skeleton)
     }
 
     fun getJointIToBoneI(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToBoneIBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToBoneIBind, segment)
     }
 
     fun setJointIToBoneI(jointIToBoneI: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setJointIToBoneIBind, handle, jointIToBoneI)
+        ObjectCalls.ptrcallWithDictionaryArg(setJointIToBoneIBind, segment, jointIToBoneI)
     }
 
     fun getJointIToName(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToNameBind, segment)
     }
 
     fun setJointIToName(jointIToName: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setJointIToNameBind, handle, jointIToName)
+        ObjectCalls.ptrcallWithDictionaryArg(setJointIToNameBind, segment, jointIToName)
     }
 
     fun getGodotSkin(): Skin? {
         checkOpen()
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkinBind, handle))
+        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkinBind, segment))
     }
 
     fun setGodotSkin(godotSkin: Skin?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGodotSkinBind, handle, listOf(godotSkin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGodotSkinBind, segment, listOf(godotSkin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFSkin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFSkin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFSkin? =
-            if (handle.address() == 0L) null else GLTFSkin(handle)
+            if (handle.address() == 0L) null else GLTFSkin(GodotHandle(handle))
 
         private const val GET_SKIN_ROOT_HASH = 2455072627L
         private val getSkinRootBind by lazy {

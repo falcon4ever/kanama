@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CompressedCubemapArray
  */
-class CompressedCubemapArray(handle: MemorySegment) : CompressedTextureLayered(handle) {
+class CompressedCubemapArray(handle: GodotHandle) : CompressedTextureLayered(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CompressedCubemapArray? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CompressedCubemapArray? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CompressedCubemapArray? =
-            if (handle.address() == 0L) null else CompressedCubemapArray(handle)
+            if (handle.address() == 0L) null else CompressedCubemapArray(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

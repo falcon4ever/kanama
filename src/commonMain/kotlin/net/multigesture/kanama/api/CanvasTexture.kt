@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: CanvasTexture
  */
-class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
+class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     var diffuseTexture: Texture2D?
         @JvmName("diffuseTextureProperty")
         get() = getDiffuseTexture()
@@ -62,7 +62,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setDiffuseTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -72,8 +72,8 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getDiffuseTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getDiffuseTextureBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getDiffuseTextureBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -90,7 +90,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setNormalTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -103,8 +103,8 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getNormalTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNormalTextureBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNormalTextureBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -121,7 +121,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSpecularTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -134,8 +134,8 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getSpecularTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getSpecularTextureBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getSpecularTextureBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -151,7 +151,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSpecularColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSpecularColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSpecularColorBind, segment, color)
     }
 
     /**
@@ -163,7 +163,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getSpecularColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSpecularColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSpecularColorBind, segment)
     }
 
     /**
@@ -176,7 +176,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSpecularShininess(shininess: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpecularShininessBind, handle, shininess)
+        ObjectCalls.ptrcallWithDoubleArg(setSpecularShininessBind, segment, shininess)
     }
 
     /**
@@ -189,7 +189,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getSpecularShininess(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularShininessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularShininessBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setTextureFilter(filter: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, filter)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, filter)
     }
 
     /**
@@ -209,7 +209,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getTextureFilter(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
     }
 
     /**
@@ -219,7 +219,7 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setTextureRepeat(repeat: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, handle, repeat)
+        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, repeat)
     }
 
     /**
@@ -229,16 +229,16 @@ class CanvasTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getTextureRepeat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CanvasTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CanvasTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CanvasTexture? =
-            if (handle.address() == 0L) null else CanvasTexture(handle)
+            if (handle.address() == 0L) null else CanvasTexture(GodotHandle(handle))
 
         private const val SET_DIFFUSE_TEXTURE_HASH = 4051416890L
         private val setDiffuseTextureBind by lazy {

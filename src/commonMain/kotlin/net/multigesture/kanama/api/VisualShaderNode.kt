@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNode
  */
-open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
+open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     var outputPortForPreview: Int
         @JvmName("outputPortForPreviewProperty")
         get() = getOutputPortForPreview()
@@ -30,57 +30,57 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
 
     fun getDefaultInputPort(type: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getDefaultInputPortBind, handle, type)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getDefaultInputPortBind, segment, type)
     }
 
     fun setOutputPortForPreview(port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOutputPortForPreviewBind, handle, port)
+        ObjectCalls.ptrcallWithIntArg(setOutputPortForPreviewBind, segment, port)
     }
 
     fun getOutputPortForPreview(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortForPreviewBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortForPreviewBind, segment)
     }
 
     fun setInputPortDefaultValue(port: Int, value: Any?, prevValue: Any? = null) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTwoVariantArgs(setInputPortDefaultValueBind, handle, port, value, prevValue)
+        ObjectCalls.ptrcallWithIntAndTwoVariantArgs(setInputPortDefaultValueBind, segment, port, value, prevValue)
     }
 
     fun getInputPortDefaultValue(port: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getInputPortDefaultValueBind, handle, port)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getInputPortDefaultValueBind, segment, port)
     }
 
     fun removeInputPortDefaultValue(port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeInputPortDefaultValueBind, handle, port)
+        ObjectCalls.ptrcallWithIntArg(removeInputPortDefaultValueBind, segment, port)
     }
 
     fun clearDefaultInputValues() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearDefaultInputValuesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearDefaultInputValuesBind, segment)
     }
 
     fun setDefaultInputValues(values: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setDefaultInputValuesBind, handle, values)
+        ObjectCalls.ptrcallWithArrayArg(setDefaultInputValuesBind, segment, values)
     }
 
     fun getDefaultInputValues(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getDefaultInputValuesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getDefaultInputValuesBind, segment)
     }
 
     fun setFrame(frame: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, handle, frame)
+        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
     }
 
     fun getFrame(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
     }
 
     companion object {
@@ -96,11 +96,11 @@ open class VisualShaderNode(handle: MemorySegment) : Resource(handle) {
         const val PORT_TYPE_MAX: Long = 9L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNode? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNode? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNode? =
-            if (handle.address() == 0L) null else VisualShaderNode(handle)
+            if (handle.address() == 0L) null else VisualShaderNode(GodotHandle(handle))
 
         private const val GET_DEFAULT_INPUT_PORT_HASH = 1894493699L
         private val getDefaultInputPortBind by lazy {

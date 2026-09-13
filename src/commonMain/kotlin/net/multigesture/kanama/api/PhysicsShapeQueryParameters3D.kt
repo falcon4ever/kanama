@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicsShapeQueryParameters3D
  */
-class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
+class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     var collisionMask: Long
         @JvmName("collisionMaskProperty")
         get() = getCollisionMask()
@@ -78,7 +78,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setShape(shape: Resource?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -90,7 +90,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getShape(): Resource? {
         checkOpen()
-        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
+        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**
@@ -101,7 +101,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setShapeRid(shape: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setShapeRidBind, handle, shape)
+        ObjectCalls.ptrcallWithRIDArg(setShapeRidBind, segment, shape)
     }
 
     /**
@@ -112,7 +112,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getShapeRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getShapeRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getShapeRidBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setTransform(transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
+        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, transform)
     }
 
     /**
@@ -132,7 +132,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
     }
 
     /**
@@ -142,7 +142,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setMotion(motion: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setMotionBind, handle, motion)
+        ObjectCalls.ptrcallWithVector3Arg(setMotionBind, segment, motion)
     }
 
     /**
@@ -152,7 +152,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getMotion(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getMotionBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setMargin(margin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
     }
 
     /**
@@ -172,7 +172,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
     }
 
     /**
@@ -185,7 +185,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollisionMask(collisionMask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -198,7 +198,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -211,7 +211,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setExclude(exclude: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
+        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
     }
 
     /**
@@ -224,7 +224,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getExclude(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollideWithBodies(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -244,7 +244,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isCollideWithBodiesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -254,7 +254,7 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollideWithAreas(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -264,16 +264,16 @@ class PhysicsShapeQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isCollideWithAreasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsShapeQueryParameters3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsShapeQueryParameters3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsShapeQueryParameters3D? =
-            if (handle.address() == 0L) null else PhysicsShapeQueryParameters3D(handle)
+            if (handle.address() == 0L) null else PhysicsShapeQueryParameters3D(GodotHandle(handle))
 
         private const val SET_SHAPE_HASH = 968641751L
         private val setShapeBind by lazy {

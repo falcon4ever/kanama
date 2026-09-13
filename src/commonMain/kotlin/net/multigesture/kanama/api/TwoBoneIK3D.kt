@@ -12,14 +12,14 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: TwoBoneIK3D
  */
-class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
+class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
     /**
      * Sets the target node that the end bone is trying to reach.
      *
      * Generated from Godot docs: TwoBoneIK3D.set_target_node
      */
     fun setTargetNode(index: Int, targetNode: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setTargetNodeBind, handle, index, targetNode)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setTargetNodeBind, segment, index, targetNode)
     }
 
     /**
@@ -28,7 +28,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_target_node
      */
     fun getTargetNode(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getTargetNodeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getTargetNodeBind, segment, index)
     }
 
     /**
@@ -38,7 +38,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_pole_node
      */
     fun setPoleNode(index: Int, poleNode: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setPoleNodeBind, handle, index, poleNode)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setPoleNodeBind, segment, index, poleNode)
     }
 
     /**
@@ -48,7 +48,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_pole_node
      */
     fun getPoleNode(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPoleNodeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPoleNodeBind, segment, index)
     }
 
     /**
@@ -57,7 +57,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_root_bone_name
      */
     fun setRootBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -66,7 +66,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_root_bone_name
      */
     fun getRootBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, segment, index)
     }
 
     /**
@@ -75,7 +75,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_root_bone
      */
     fun setRootBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, segment, index, bone)
     }
 
     /**
@@ -84,7 +84,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_root_bone
      */
     fun getRootBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, segment, index)
     }
 
     /**
@@ -93,7 +93,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_middle_bone_name
      */
     fun setMiddleBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setMiddleBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setMiddleBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -102,7 +102,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_middle_bone_name
      */
     fun getMiddleBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getMiddleBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getMiddleBoneNameBind, segment, index)
     }
 
     /**
@@ -111,7 +111,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_middle_bone
      */
     fun setMiddleBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setMiddleBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setMiddleBoneBind, segment, index, bone)
     }
 
     /**
@@ -120,7 +120,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_middle_bone
      */
     fun getMiddleBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getMiddleBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getMiddleBoneBind, segment, index)
     }
 
     /**
@@ -131,7 +131,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_pole_direction
      */
     fun setPoleDirection(index: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPoleDirectionBind, handle, index, direction)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPoleDirectionBind, segment, index, direction)
     }
 
     /**
@@ -140,7 +140,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_pole_direction
      */
     fun getPoleDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPoleDirectionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getPoleDirectionBind, segment, index)
     }
 
     /**
@@ -150,7 +150,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_pole_direction_vector
      */
     fun setPoleDirectionVector(index: Int, vector: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setPoleDirectionVectorBind, handle, index, vector)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setPoleDirectionVectorBind, segment, index, vector)
     }
 
     /**
@@ -160,7 +160,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_pole_direction_vector
      */
     fun getPoleDirectionVector(index: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getPoleDirectionVectorBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getPoleDirectionVectorBind, segment, index)
     }
 
     /**
@@ -169,7 +169,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_end_bone_name
      */
     fun setEndBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -178,7 +178,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_end_bone_name
      */
     fun getEndBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, segment, index)
     }
 
     /**
@@ -187,7 +187,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_end_bone
      */
     fun setEndBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, segment, index, bone)
     }
 
     /**
@@ -196,7 +196,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_end_bone
      */
     fun getEndBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, segment, index)
     }
 
     /**
@@ -205,7 +205,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_use_virtual_end
      */
     fun setUseVirtualEnd(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseVirtualEndBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseVirtualEndBind, segment, index, enabled)
     }
 
     /**
@@ -214,7 +214,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.is_using_virtual_end
      */
     fun isUsingVirtualEnd(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingVirtualEndBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingVirtualEndBind, segment, index)
     }
 
     /**
@@ -223,7 +223,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_extend_end_bone
      */
     fun setExtendEndBone(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, segment, index, enabled)
     }
 
     /**
@@ -232,7 +232,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.is_end_bone_extended
      */
     fun isEndBoneExtended(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, segment, index)
     }
 
     /**
@@ -241,7 +241,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_end_bone_direction
      */
     fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, handle, index, boneDirection)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
     }
 
     /**
@@ -250,7 +250,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_end_bone_direction
      */
     fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
     }
 
     /**
@@ -259,7 +259,7 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.set_end_bone_length
      */
     fun setEndBoneLength(index: Int, length: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, handle, index, length)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, segment, index, length)
     }
 
     /**
@@ -268,16 +268,16 @@ class TwoBoneIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: TwoBoneIK3D.get_end_bone_length
      */
     fun getEndBoneLength(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TwoBoneIK3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TwoBoneIK3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TwoBoneIK3D? =
-            if (handle.address() == 0L) null else TwoBoneIK3D(handle)
+            if (handle.address() == 0L) null else TwoBoneIK3D(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 2761262315L
         private val setTargetNodeBind by lazy {

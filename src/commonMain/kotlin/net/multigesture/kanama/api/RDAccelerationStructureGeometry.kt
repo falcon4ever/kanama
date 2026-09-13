@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: RDAccelerationStructureGeometry
  */
-class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle) {
+class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) {
     var flags: Long
         @JvmName("flagsProperty")
         get() = getFlags()
@@ -74,7 +74,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setFlags(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember)
     }
 
     /**
@@ -84,7 +84,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
     }
 
     /**
@@ -94,7 +94,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setVertexBuffer(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setVertexBufferBind, handle, pMember)
+        ObjectCalls.ptrcallWithRIDArg(setVertexBufferBind, segment, pMember)
     }
 
     /**
@@ -104,7 +104,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getVertexBuffer(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getVertexBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getVertexBufferBind, segment)
     }
 
     /**
@@ -114,7 +114,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setVertexOffset(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setVertexOffsetBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setVertexOffsetBind, segment, pMember)
     }
 
     /**
@@ -124,7 +124,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getVertexOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexOffsetBind, segment)
     }
 
     /**
@@ -134,7 +134,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setVertexStride(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setVertexStrideBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setVertexStrideBind, segment, pMember)
     }
 
     /**
@@ -144,7 +144,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getVertexStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexStrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexStrideBind, segment)
     }
 
     /**
@@ -154,7 +154,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setVertexCount(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setVertexCountBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setVertexCountBind, segment, pMember)
     }
 
     /**
@@ -164,7 +164,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getVertexCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexCountBind, segment)
     }
 
     /**
@@ -174,7 +174,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setVertexFormat(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, segment, pMember)
     }
 
     /**
@@ -184,7 +184,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getVertexFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setIndexBuffer(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setIndexBufferBind, handle, pMember)
+        ObjectCalls.ptrcallWithRIDArg(setIndexBufferBind, segment, pMember)
     }
 
     /**
@@ -204,7 +204,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getIndexBuffer(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getIndexBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getIndexBufferBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setIndexOffset(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setIndexOffsetBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setIndexOffsetBind, segment, pMember)
     }
 
     /**
@@ -224,7 +224,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getIndexOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexOffsetBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun setIndexCount(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setIndexCountBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setIndexCountBind, segment, pMember)
     }
 
     /**
@@ -244,16 +244,16 @@ class RDAccelerationStructureGeometry(handle: MemorySegment) : RefCounted(handle
      */
     fun getIndexCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexCountBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDAccelerationStructureGeometry? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDAccelerationStructureGeometry? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDAccelerationStructureGeometry? =
-            if (handle.address() == 0L) null else RDAccelerationStructureGeometry(handle)
+            if (handle.address() == 0L) null else RDAccelerationStructureGeometry(GodotHandle(handle))
 
         private const val SET_FLAGS_HASH = 1046628555L
         private val setFlagsBind by lazy {

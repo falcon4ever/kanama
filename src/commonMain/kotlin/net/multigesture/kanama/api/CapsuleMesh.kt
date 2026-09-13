@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CapsuleMesh
  */
-class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -45,7 +45,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -57,7 +57,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -69,7 +69,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     /**
@@ -81,7 +81,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRadialSegments(segments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, segments)
+        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, segment, segments)
     }
 
     /**
@@ -101,7 +101,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRadialSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRings(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
+        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
     }
 
     /**
@@ -121,16 +121,16 @@ class CapsuleMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CapsuleMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CapsuleMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CapsuleMesh? =
-            if (handle.address() == 0L) null else CapsuleMesh(handle)
+            if (handle.address() == 0L) null else CapsuleMesh(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

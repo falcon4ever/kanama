@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: SkeletonModification2DTwoBoneIK
  */
-class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModification2D(handle) {
+class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModification2D(handle) {
     var targetNodepath: NodePath
         @JvmName("targetNodepathProperty")
         get() = getTargetNode()
@@ -45,7 +45,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -56,7 +56,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setTargetMinimumDistance(minimumDistance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTargetMinimumDistanceBind, handle, minimumDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setTargetMinimumDistanceBind, segment, minimumDistance)
     }
 
     /**
@@ -80,7 +80,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getTargetMinimumDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMinimumDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMinimumDistanceBind, segment)
     }
 
     /**
@@ -92,7 +92,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setTargetMaximumDistance(maximumDistance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTargetMaximumDistanceBind, handle, maximumDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setTargetMaximumDistanceBind, segment, maximumDistance)
     }
 
     /**
@@ -104,7 +104,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getTargetMaximumDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMaximumDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMaximumDistanceBind, segment)
     }
 
     /**
@@ -115,7 +115,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setFlipBendDirection(flipDirection: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFlipBendDirectionBind, handle, flipDirection)
+        ObjectCalls.ptrcallWithBoolArg(setFlipBendDirectionBind, segment, flipDirection)
     }
 
     /**
@@ -126,7 +126,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getFlipBendDirection(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipBendDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFlipBendDirectionBind, segment)
     }
 
     /**
@@ -136,7 +136,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setJointOneBone2dNode(bone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setJointOneBone2dNodeBind, handle, bone2dNode)
+        ObjectCalls.ptrcallWithNodePathArg(setJointOneBone2dNodeBind, segment, bone2dNode)
     }
 
     /**
@@ -146,7 +146,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getJointOneBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getJointOneBone2dNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getJointOneBone2dNodeBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setJointOneBoneIdx(boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setJointOneBoneIdxBind, handle, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(setJointOneBoneIdxBind, segment, boneIdx)
     }
 
     /**
@@ -168,7 +168,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getJointOneBoneIdx(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getJointOneBoneIdxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getJointOneBoneIdxBind, segment)
     }
 
     /**
@@ -178,7 +178,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setJointTwoBone2dNode(bone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setJointTwoBone2dNodeBind, handle, bone2dNode)
+        ObjectCalls.ptrcallWithNodePathArg(setJointTwoBone2dNodeBind, segment, bone2dNode)
     }
 
     /**
@@ -188,7 +188,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getJointTwoBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getJointTwoBone2dNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getJointTwoBone2dNodeBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun setJointTwoBoneIdx(boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setJointTwoBoneIdxBind, handle, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(setJointTwoBoneIdxBind, segment, boneIdx)
     }
 
     /**
@@ -210,16 +210,16 @@ class SkeletonModification2DTwoBoneIK(handle: MemorySegment) : SkeletonModificat
      */
     fun getJointTwoBoneIdx(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getJointTwoBoneIdxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getJointTwoBoneIdxBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2DTwoBoneIK? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2DTwoBoneIK? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2DTwoBoneIK? =
-            if (handle.address() == 0L) null else SkeletonModification2DTwoBoneIK(handle)
+            if (handle.address() == 0L) null else SkeletonModification2DTwoBoneIK(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L
         private val setTargetNodeBind by lazy {
