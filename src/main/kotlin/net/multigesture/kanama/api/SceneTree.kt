@@ -341,11 +341,11 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.set_multiplayer
      */
     @JvmStatic
-    fun setMultiplayer(multiplayerApiObject: MemorySegment, rootPath: String = "") {
+    fun setMultiplayer(multiplayerApiObject: GodotHandle, rootPath: String = "") {
         ObjectCalls.ptrcallWithObjectAndNodePathArg(
             setMultiplayerBind,
             sceneTreeObject(),
-            multiplayerApiObject,
+            multiplayerApiObject.segment,
             rootPath,
         )
     }
@@ -358,8 +358,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.get_multiplayer
      */
     @JvmStatic
-    fun getMultiplayer(forPath: String = ""): MemorySegment =
-        ObjectCalls.ptrcallWithNodePathArgRetObject(getMultiplayerBind, sceneTreeObject(), forPath)
+    fun getMultiplayer(forPath: String = ""): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallWithNodePathArgRetObject(getMultiplayerBind, sceneTreeObject(), forPath))
 
     /**
      * If `true` (default value), enables automatic polling of the `MultiplayerAPI` for this SceneTree
@@ -428,8 +428,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.get_current_scene
      */
     @JvmStatic
-    fun getCurrentScene(): MemorySegment =
-        ObjectCalls.ptrcallNoArgsRetObject(getCurrentSceneBind, sceneTreeObject())
+    fun getCurrentScene(): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getCurrentSceneBind, sceneTreeObject()))
 
     /**
      * The root node of the currently loaded main scene, usually as a direct child of `root`. See also
@@ -440,8 +440,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.set_current_scene
      */
     @JvmStatic
-    fun setCurrentScene(nodeObject: MemorySegment) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurrentSceneBind, sceneTreeObject(), listOf(nodeObject))
+    fun setCurrentScene(nodeObject: GodotHandle) {
+        ObjectCalls.ptrcallWithObjectArgs(setCurrentSceneBind, sceneTreeObject(), listOf(nodeObject.segment))
     }
 
     /**
@@ -451,8 +451,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.get_first_node_in_group
      */
     @JvmStatic
-    fun getFirstNodeInGroup(name: String): MemorySegment =
-        ObjectCalls.ptrcallWithStringNameArgRetObject(getFirstNodeInGroupBind, sceneTreeObject(), name)
+    fun getFirstNodeInGroup(name: String): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallWithStringNameArgRetObject(getFirstNodeInGroupBind, sceneTreeObject(), name))
 
     /**
      * Returns an `Array` containing all nodes inside this tree, that have been added to the given
@@ -471,8 +471,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.queue_delete
      */
     @JvmStatic
-    fun queueDelete(nodeObject: MemorySegment) {
-        ObjectCalls.ptrcallWithObjectArgs(queueDeleteBind, sceneTreeObject(), listOf(nodeObject))
+    fun queueDelete(nodeObject: GodotHandle) {
+        ObjectCalls.ptrcallWithObjectArgs(queueDeleteBind, sceneTreeObject(), listOf(nodeObject.segment))
     }
 
     /**
@@ -484,8 +484,12 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.change_scene_to_packed
      */
     @JvmStatic
-    fun changeSceneToPacked(packedSceneObject: MemorySegment): Long =
-        ObjectCalls.ptrcallWithObjectArgsRetLong(changeSceneToPackedBind, sceneTreeObject(), listOf(packedSceneObject))
+    fun changeSceneToPacked(packedSceneObject: GodotHandle): Long =
+        ObjectCalls.ptrcallWithObjectArgsRetLong(
+            changeSceneToPackedBind,
+            sceneTreeObject(),
+            listOf(packedSceneObject.segment),
+        )
 
     /**
      * Changes the running scene to the provided `Node`. Useful when you want to set up the new scene
@@ -506,8 +510,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.change_scene_to_node
      */
     @JvmStatic
-    fun changeSceneToNode(nodeObject: MemorySegment): Long =
-        ObjectCalls.ptrcallWithObjectArgsRetLong(changeSceneToNodeBind, sceneTreeObject(), listOf(nodeObject))
+    fun changeSceneToNode(nodeObject: GodotHandle): Long =
+        ObjectCalls.ptrcallWithObjectArgsRetLong(changeSceneToNodeBind, sceneTreeObject(), listOf(nodeObject.segment))
 
     /**
      * The root of the scene currently being edited in the editor. This is usually a direct child of
@@ -516,8 +520,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.get_edited_scene_root
      */
     @JvmStatic
-    fun getEditedSceneRoot(): MemorySegment =
-        ObjectCalls.ptrcallNoArgsRetObject(getEditedSceneRootBind, sceneTreeObject())
+    fun getEditedSceneRoot(): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getEditedSceneRootBind, sceneTreeObject()))
 
     /**
      * The root of the scene currently being edited in the editor. This is usually a direct child of
@@ -526,8 +530,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.set_edited_scene_root
      */
     @JvmStatic
-    fun setEditedSceneRoot(nodeObject: MemorySegment) {
-        ObjectCalls.ptrcallWithObjectArgs(setEditedSceneRootBind, sceneTreeObject(), listOf(nodeObject))
+    fun setEditedSceneRoot(nodeObject: GodotHandle) {
+        ObjectCalls.ptrcallWithObjectArgs(setEditedSceneRootBind, sceneTreeObject(), listOf(nodeObject.segment))
     }
 
     /**
@@ -627,8 +631,8 @@ object SceneTree {
     }
 
     @JvmStatic
-    fun createTweenHandle(): MemorySegment =
-        ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, sceneTreeObject())
+    fun createTweenHandle(): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, sceneTreeObject()))
 
     /**
      * Creates and returns a new `Tween` processed in this tree. The Tween will start automatically on
@@ -641,7 +645,7 @@ object SceneTree {
      */
     @JvmStatic
     fun createTween(): Tween? =
-        Tween.wrap(createTweenHandle())
+        Tween.wrap(createTweenHandle().segment)
 
     /**
      * Returns an `Array` of currently existing `Tween`s in the tree, including paused tweens.
@@ -658,13 +662,15 @@ object SceneTree {
         processAlways: Boolean = true,
         processInPhysics: Boolean = false,
         ignoreTimeScale: Boolean = false,
-    ): MemorySegment = ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(
-        createTimerBind,
-        sceneTreeObject(),
-        timeSec,
-        processAlways,
-        processInPhysics,
-        ignoreTimeScale,
+    ): GodotHandle = GodotHandle(
+        ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(
+            createTimerBind,
+            sceneTreeObject(),
+            timeSec,
+            processAlways,
+            processInPhysics,
+            ignoreTimeScale,
+        ),
     )
 
     /**
@@ -685,7 +691,7 @@ object SceneTree {
         processInPhysics: Boolean = false,
         ignoreTimeScale: Boolean = false,
     ): SceneTreeTimer? = SceneTreeTimer.wrap(
-        createTimerHandle(timeSec, processAlways, processInPhysics, ignoreTimeScale),
+        createTimerHandle(timeSec, processAlways, processInPhysics, ignoreTimeScale).segment,
     )
 
     @JvmStatic

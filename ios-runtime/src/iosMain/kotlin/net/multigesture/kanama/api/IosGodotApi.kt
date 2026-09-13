@@ -552,7 +552,7 @@ class SceneTree(handle: GodotHandle) : Node(handle) {
         // Static-call forms: demos written against desktop/Android (where SceneTree is reachable
         // statically) call `SceneTree.quit()` / `SceneTree.unloadCurrentScene()`. Resolve the active
         // tree via Engine.get_main_loop() and delegate to the instance method.
-        private fun active(): SceneTree = SceneTree(GodotHandle(Engine.getMainLoop()))
+        private fun active(): SceneTree = SceneTree(Engine.getMainLoop())
 
         fun quit(exitCode: Int = 0) = active().quit(exitCode)
 

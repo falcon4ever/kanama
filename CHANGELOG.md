@@ -29,7 +29,10 @@ versioning once public releases begin.
   argument-type mismatch inside the generated registrar. Code that reached through the handle
   for a raw pointer (`handle.address()`) has no replacement by design: use `isSameInstance()`,
   and `handle.segment` only from backend glue. The editor's "new script" template, the starter
-  template, the example project and the twelve demos are migrated.
+  template, the example project and the twelve demos are migrated. Three desktop-only helpers
+  keep a `MemorySegment` parameter on purpose, because what they take is a raw native pointer and
+  not an object handle: `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
+  `OpenXRAPIExtension.transformFromPose(pose)` and `OpenXRAPIExtension.setCustomPlaySpace(space)`.
 
 ### Added — Web render-quality, window and glue families (task 64, tps-demo parcel 8)
 

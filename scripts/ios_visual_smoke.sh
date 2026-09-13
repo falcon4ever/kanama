@@ -579,7 +579,6 @@ elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/IosSmokeScript.kt" <<'EOF'
 package net.multigesture.kanama.iossmoke
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnExitTree
 import net.multigesture.kanama.annotations.OnProcess
@@ -589,6 +588,7 @@ import net.multigesture.kanama.annotations.OnUnhandledInput
 import net.multigesture.kanama.annotations.OnUnhandledKeyInput
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.RegisterFunction
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
@@ -605,7 +605,7 @@ import net.multigesture.kanama.types.Vector3
 enum class IosSmokeMode { EASY, NORMAL, HARD }
 
 @ScriptClass(attachTo = "Label")
-class IosSmokeScript(godotObject: MemorySegment) : KanamaScript<Label>(godotObject, ::Label) {
+class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label) {
     @ScriptProperty
     var view: NodePath = NodePath.EMPTY
 
@@ -836,10 +836,10 @@ EOF
   cat >"$project_dir/kotlin-src/ProcessDisableProbe.kt" <<'EOF'
 package net.multigesture.kanama.iossmoke
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 
@@ -847,7 +847,7 @@ import net.multigesture.kanama.api.Node
 // script-instance ENTER_TREE/READY notifications. If a notification re-enables it (the iOS host
 // lifecycle bug), _process fires and the smoke prints "unexpected process".
 @ScriptClass(attachTo = "Node")
-class ProcessDisableProbe(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+class ProcessDisableProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
     @OnReady
     fun ready() {
         self.setProcess(false)
@@ -863,10 +863,10 @@ EOF
   cat >"$project_dir/kotlin-src/ReplicationProbe.kt" <<'EOF'
 package net.multigesture.kanama.iossmoke
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MultiplayerSynchronizer
 import net.multigesture.kanama.types.Vector2
@@ -877,7 +877,7 @@ import net.multigesture.kanama.types.Vector3
 // replicated property. Set the values, then read them back through the engine getter — the exact path
 // that returned nil for value types before the getProperty fix (client couldn't move/shoot).
 @ScriptClass(attachTo = "MultiplayerSynchronizer")
-class ReplicationProbe(godotObject: MemorySegment) :
+class ReplicationProbe(godotObject: GodotHandle) :
     KanamaScript<MultiplayerSynchronizer>(godotObject, ::MultiplayerSynchronizer) {
     @ScriptProperty
     var motion: Vector2 = Vector2.ZERO
@@ -1081,7 +1081,6 @@ elif [[ "$kanama_match3_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/Match3IosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.iosmatch3
 
-import java.lang.foreign.MemorySegment
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
@@ -1092,6 +1091,7 @@ import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.Control
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.InputEventMouseButton
 import net.multigesture.kanama.api.KanamaScript
@@ -1101,7 +1101,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Vector2
 
 @ScriptClass(attachTo = "Control")
-class Match3IosSmoke(godotObject: MemorySegment) : KanamaScript<Control>(godotObject, ::Control) {
+class Match3IosSmoke(godotObject: GodotHandle) : KanamaScript<Control>(godotObject, ::Control) {
     private val width = 8
     private val height = 8
     private val textures = mutableListOf<net.multigesture.kanama.api.Texture2D>()
@@ -1687,15 +1687,15 @@ elif [[ "$kanama_platformer3d_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/Platformer3dIosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.iosplatformer
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node3D
 
 @ScriptClass(attachTo = "Node3D")
-class Platformer3dIosSmoke(godotObject: MemorySegment) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+class Platformer3dIosSmoke(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
     private var frame = 0
 
     @OnReady
@@ -1827,15 +1827,15 @@ elif [[ "$kanama_dodge_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/DodgeIosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.iosdodge
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node2D
 
 @ScriptClass(attachTo = "Node2D")
-class DodgeIosSmoke(godotObject: MemorySegment) : KanamaScript<Node2D>(godotObject, ::Node2D) {
+class DodgeIosSmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotObject, ::Node2D) {
     private var frame = 0
 
     @OnReady
@@ -1873,15 +1873,15 @@ elif [[ "$kanama_squash_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/SquashIosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.iossquash
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node3D
 
 @ScriptClass(attachTo = "Node3D")
-class SquashIosSmoke(godotObject: MemorySegment) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+class SquashIosSmoke(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
     private var frame = 0
 
     @OnReady
@@ -1932,15 +1932,15 @@ elif [[ "$kanama_fps_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/FpsIosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.iosfps
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node3D
 
 @ScriptClass(attachTo = "Node3D")
-class FpsIosSmoke(godotObject: MemorySegment) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+class FpsIosSmoke(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
     private var frame = 0
 
     @OnReady
@@ -1991,15 +1991,15 @@ elif [[ "$kanama_racing_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/RacingIosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.iosracing
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node3D
 
 @ScriptClass(attachTo = "Node3D")
-class RacingIosSmoke(godotObject: MemorySegment) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+class RacingIosSmoke(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
     private var frame = 0
 
     @OnReady
@@ -2050,15 +2050,15 @@ elif [[ "$kanama_character_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/CharacterIosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.ioscharacter
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node3D
 
 @ScriptClass(attachTo = "Node3D")
-class CharacterIosSmoke(godotObject: MemorySegment) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+class CharacterIosSmoke(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
     private var frame = 0
 
     @OnReady
@@ -2109,15 +2109,15 @@ elif [[ "$kanama_thirdperson_probe" -eq 1 ]]; then
   cat >"$project_dir/kotlin-src/ThirdpersonIosSmoke.kt" <<'EOF'
 package net.multigesture.kanama.iosthirdperson
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node3D
 
 @ScriptClass(attachTo = "Node3D")
-class ThirdpersonIosSmoke(godotObject: MemorySegment) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+class ThirdpersonIosSmoke(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
     private var frame = 0
 
     @OnReady

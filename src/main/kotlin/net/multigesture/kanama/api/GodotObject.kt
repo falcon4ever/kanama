@@ -306,7 +306,7 @@ open class GodotObject(val handle: GodotHandle) {
         const val CONNECT_REFERENCE_COUNTED = 8L
         const val CONNECT_APPEND_SOURCE_OBJECT = 16L
 
-        fun wrap(handle: MemorySegment): GodotObject? =
+        internal fun wrap(handle: MemorySegment): GodotObject? =
             if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
 
         private const val NOARGS_STRING_HASH = 201670096L
