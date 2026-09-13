@@ -263,6 +263,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
   private fun buildClassModel(cls: KSClassDeclaration, fqName: String): ClassModel {
     val simpleName = cls.simpleName.asString()
     failOnGeneratedWrapperSupertype(cls, simpleName)
+    failOnMemorySegmentConstructor(cls, simpleName)
     val parent =
       cls.annotations
         .firstOrNull { it.shortName.asString() == "RegisterClass" }
@@ -609,6 +610,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
   private fun buildScriptModel(cls: KSClassDeclaration, fqName: String): ScriptModel {
     val simpleName = cls.simpleName.asString()
     failOnGeneratedWrapperSupertype(cls, simpleName)
+    failOnMemorySegmentConstructor(cls, simpleName)
     val attachTo =
       cls.annotations
         .firstOrNull { it.shortName.asString() == "ScriptClass" }
@@ -970,10 +972,30 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         "$simpleName extends the generated wrapper $superFq. Generated wrappers are " +
           "non-owning views and cannot be subclassed. Declare a plain class and attach " +
           "it instead: @ScriptClass(attachTo = \"$wrapperName\") @GlobalClass " +
-          "class $simpleName(val godotObject: MemorySegment) { @Export var ... }. " +
+          "class $simpleName(val godotObject: GodotHandle) { @Export var ... }. " +
           "See the \"Custom Resources\" section of docs/game-dev/properties-resources.md."
       )
     }
+  }
+
+  // task 104 step 1: `GodotHandle` replaced `java.lang.foreign.MemorySegment` in every public
+  // wrapper and script signature. A script still written against the old type would otherwise fail
+  // deep inside the generated registrar ("argument type mismatch"), naming neither the old type nor
+  // the migration, so refuse it here with the one-line fix.
+  private fun failOnMemorySegmentConstructor(cls: KSClassDeclaration, simpleName: String) {
+    val parameter =
+      cls.primaryConstructor?.parameters?.firstOrNull { parameter ->
+        isLegacyHandleParameterType(
+          runCatching { parameter.type.resolve() }
+            .getOrNull()
+            ?.declaration
+            ?.qualifiedName
+            ?.asString()
+        )
+      } ?: return
+    throw IllegalArgumentException(
+      legacyHandleConstructorMessage(simpleName, parameter.name?.asString() ?: "godotObject")
+    )
   }
 
   private fun warnOnKanamaScriptSelfMismatch(cls: KSClassDeclaration, attachTo: String) {
@@ -1814,12 +1836,14 @@ internal val RESOURCE_WRAPPERS_WITH_FROM_HANDLE =
 internal fun ArgModel.readFromScratch(s: String): String =
   if (objectWrapperFqName != null) {
     if (objectWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) {
-      val value = "$objectWrapperFqName.fromHandle(${s}.get(ADDRESS, 0))"
+      val value =
+        "$objectWrapperFqName.fromHandle(net.multigesture.kanama.api.GodotHandle(${s}.get(ADDRESS, 0)))"
       if (nullable) value else "$value ?: error(\"Expected $objectWrapperFqName argument '$name'\")"
     } else {
       val handle = "${s}.get(ADDRESS, 0)"
-      if (nullable) "if ($handle.address() == 0L) null else $objectWrapperFqName($handle)"
-      else "$objectWrapperFqName($handle)"
+      if (nullable)
+        "if ($handle.address() == 0L) null else $objectWrapperFqName(net.multigesture.kanama.api.GodotHandle($handle))"
+      else "$objectWrapperFqName(net.multigesture.kanama.api.GodotHandle($handle))"
     }
   } else {
     type.readFromScratch(s)
@@ -1829,12 +1853,13 @@ internal fun ArgModel.readPtrcallArg(ptr: String): String =
   if (objectWrapperFqName != null) {
     if (objectWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) {
       val value =
-        "$objectWrapperFqName.fromHandle($ptr.reinterpret(${type.ptrcallSizeBytesExpr}).get(ADDRESS, 0))"
+        "$objectWrapperFqName.fromHandle(net.multigesture.kanama.api.GodotHandle($ptr.reinterpret(${type.ptrcallSizeBytesExpr}).get(ADDRESS, 0)))"
       if (nullable) value else "$value ?: error(\"Expected $objectWrapperFqName argument '$name'\")"
     } else {
       val handle = "$ptr.reinterpret(${type.ptrcallSizeBytesExpr}).get(ADDRESS, 0)"
-      if (nullable) "if ($handle.address() == 0L) null else $objectWrapperFqName($handle)"
-      else "$objectWrapperFqName($handle)"
+      if (nullable)
+        "if ($handle.address() == 0L) null else $objectWrapperFqName(net.multigesture.kanama.api.GodotHandle($handle))"
+      else "$objectWrapperFqName(net.multigesture.kanama.api.GodotHandle($handle))"
     }
   } else {
     type.readPtrcallArg(ptr)
@@ -2371,7 +2396,7 @@ internal enum class TypeMapping(
     "OBJECT",
     "ADDRESS",
     8,
-    "net.multigesture.kanama.api.GodotObject(MemorySegment.ofAddress(1L))",
+    "net.multigesture.kanama.api.GodotObject(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(1L)))",
     "net.multigesture.kanama.api.GodotObject",
   ),
   ARRAY("ARRAY", "JAVA_LONG", 8, "emptyList<Any?>()", "List<Any?>"),
@@ -2638,7 +2663,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
         "    fun $functionName(instance: ${model.simpleName}${if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""}) {"
       )
       sb.appendLine(
-        "        Signals.emit(instance.godotObject, \"${kotlinStringLiteral(s.godotName)}\", $argsExpr)"
+        "        Signals.emit(instance.godotObject.segment, \"${kotlinStringLiteral(s.godotName)}\", $argsExpr)"
       )
       sb.appendLine("    }")
       sb.appendLine()
@@ -3256,7 +3281,7 @@ internal class ScriptCodeEmitter(
         "    fun $functionName(instance: ${model.simpleName}${if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""}) {"
       )
       sb.appendLine(
-        "        Signals.emit(instance.godotObject, \"${kotlinStringLiteral(s.godotName)}\", $argsExpr)"
+        "        Signals.emit(instance.godotObject.segment, \"${kotlinStringLiteral(s.godotName)}\", $argsExpr)"
       )
       sb.appendLine("    }")
       sb.appendLine()
@@ -3766,7 +3791,12 @@ internal class ScriptCodeEmitter(
 
   private fun factory() {
     sb.appendLine("    private fun factory(godotObject: MemorySegment): KanamaScriptInstance {")
-    sb.appendLine("        val kt = ${model.simpleName}(godotObject)")
+    // The parameter stays a raw MemorySegment: it arrives through a MethodHandle, and the
+    // Android source remap rewrites `.invoke(` to `invokeWithArguments(`, which would box a
+    // value class. The GodotHandle is built exactly here, at the script constructor (task 104).
+    sb.appendLine(
+      "        val kt = ${model.simpleName}(net.multigesture.kanama.api.GodotHandle(godotObject))"
+    )
     sb.appendLine("        return KanamaScriptInstance(")
     sb.appendLine("            kotlinObject = kt,")
     sb.appendLine("            ownerObject = godotObject,")
@@ -3987,14 +4017,14 @@ internal class ScriptCodeEmitter(
       // properties are cleaned up by its script instance free path.
       property.customScriptFqName != null -> {
         if (property.customScriptIsResource) {
-          "$valueExpr?.let { BuiltinTypes.releaseRefCounted(it.godotObject) }"
+          "$valueExpr?.let { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }"
         } else {
           "Unit"
         }
       }
       property.arrayElementCustomScriptFqName != null -> {
         if (property.arrayElementCustomScriptIsResource) {
-          "$valueExpr.forEach { BuiltinTypes.releaseRefCounted(it.godotObject) }"
+          "$valueExpr.forEach { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }"
         } else {
           "Unit"
         }
@@ -4003,7 +4033,7 @@ internal class ScriptCodeEmitter(
       // mirroring the array custom-script-resource case above.
       property.mapValueCustomScriptFqName != null -> {
         if (property.mapValueCustomScriptIsResource) {
-          "$valueExpr.values.forEach { BuiltinTypes.releaseRefCounted(it.godotObject) }"
+          "$valueExpr.values.forEach { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }"
         } else {
           "Unit"
         }
@@ -4164,25 +4194,25 @@ internal class ScriptCodeEmitter(
       property.objectWrapperFqName != null -> {
         val wrapperExpr =
           if (property.objectWrapperFqName in RESOURCE_WRAPPER_FROM_HANDLE) {
-            "${property.objectWrapperFqName}::fromHandle"
+            "{ handle -> ${property.objectWrapperFqName}.fromHandle(net.multigesture.kanama.api.GodotHandle(handle)) }"
           } else {
-            "{ handle -> ${property.objectWrapperFqName}(handle) }"
+            "{ handle -> ${property.objectWrapperFqName}(net.multigesture.kanama.api.GodotHandle(handle)) }"
           }
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectRetained($variantPtr, a, $wrapperExpr) }"
       }
       property.arrayElementWrapperFqName != null ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetained($variantPtr, a, ${property.arrayElementWrapperFqName}::fromHandle) }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetained($variantPtr, a) { handle -> ${property.arrayElementWrapperFqName}.fromHandle(net.multigesture.kanama.api.GodotHandle(handle)) } }"
       property.customScriptFqName != null ->
         if (property.customScriptIsResource) {
-          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectRetainedHandle($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.customScriptFqName} ?: ${property.customScriptFqName}(handle) } }"
+          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectRetainedHandle($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.customScriptFqName} ?: ${property.customScriptFqName}(net.multigesture.kanama.api.GodotHandle(handle)) } }"
         } else {
-          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObject($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.customScriptFqName} ?: ${property.customScriptFqName}(handle) } }"
+          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObject($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.customScriptFqName} ?: ${property.customScriptFqName}(net.multigesture.kanama.api.GodotHandle(handle)) } }"
         }
       property.arrayElementCustomScriptFqName != null ->
         if (property.arrayElementCustomScriptIsResource) {
-          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetainedHandles($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.arrayElementCustomScriptFqName} ?: ${property.arrayElementCustomScriptFqName}(handle) } }"
+          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetainedHandles($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.arrayElementCustomScriptFqName} ?: ${property.arrayElementCustomScriptFqName}(net.multigesture.kanama.api.GodotHandle(handle)) } }"
         } else {
-          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArray($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.arrayElementCustomScriptFqName} ?: ${property.arrayElementCustomScriptFqName}(handle) } }"
+          "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArray($variantPtr, a) { handle -> ScriptBridge.kotlinObjectForOwner(handle) as? ${property.arrayElementCustomScriptFqName} ?: ${property.arrayElementCustomScriptFqName}(net.multigesture.kanama.api.GodotHandle(handle)) } }"
         }
       property.arrayElementString ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantStringList($variantPtr, a) }"
@@ -4224,9 +4254,9 @@ internal class ScriptCodeEmitter(
         val wrapper = property.mapValueWrapperFqName
         val wrapperLambda =
           if (wrapper in RESOURCE_WRAPPER_FROM_HANDLE) {
-            "$wrapper::fromHandle"
+            "{ handle -> $wrapper.fromHandle(net.multigesture.kanama.api.GodotHandle(handle)) }"
           } else {
-            "{ handle -> $wrapper(handle) }"
+            "{ handle -> $wrapper(net.multigesture.kanama.api.GodotHandle(handle)) }"
           }
         val reader =
           if (wrapper in RESOURCE_WRAPPER_FROM_HANDLE) {
@@ -4240,7 +4270,7 @@ internal class ScriptCodeEmitter(
       property.mapValueCustomScriptFqName != null -> {
         val fq = property.mapValueCustomScriptFqName
         val resolver =
-          "{ handle -> ScriptBridge.kotlinObjectForOwner(handle) as? $fq ?: $fq(handle) }"
+          "{ handle -> ScriptBridge.kotlinObjectForOwner(handle) as? $fq ?: $fq(net.multigesture.kanama.api.GodotHandle(handle)) }"
         val reader =
           if (property.mapValueCustomScriptIsResource) {
             "readVariantDictionaryObjectValuesRetainedHandles"
@@ -4317,7 +4347,7 @@ internal class ScriptCodeEmitter(
     if (arg.objectWrapperFqName != null) {
       if (arg.objectWrapperFqName in RESOURCE_WRAPPER_FROM_HANDLE) {
         val value =
-          "BuiltinTypes.readVariantObject($variantPtr, a, ${arg.objectWrapperFqName}::fromHandle)"
+          "BuiltinTypes.readVariantObject($variantPtr, a) { handle -> ${arg.objectWrapperFqName}.fromHandle(net.multigesture.kanama.api.GodotHandle(handle)) }"
         if (arg.nullable) {
           "val $localName = Arena.ofConfined().use { a -> $value }"
         } else {
@@ -4325,7 +4355,7 @@ internal class ScriptCodeEmitter(
         }
       } else {
         val value =
-          "BuiltinTypes.readVariantObject($variantPtr, a) { handle -> ${arg.objectWrapperFqName}(handle) }"
+          "BuiltinTypes.readVariantObject($variantPtr, a) { handle -> ${arg.objectWrapperFqName}(net.multigesture.kanama.api.GodotHandle(handle)) }"
         if (arg.nullable) {
           "val $localName = Arena.ofConfined().use { a -> $value }"
         } else {
@@ -4549,3 +4579,24 @@ internal class ScriptCodeEmitter(
         .joinToString("") + "NameValue"
   }
 }
+
+/** The FFM handle type Kanama scripts took before task 104 step 1. */
+internal const val MEMORY_SEGMENT_FQN = "java.lang.foreign.MemorySegment"
+
+/** True when a script/class constructor parameter is still typed as the pre-104 FFM handle. */
+internal fun isLegacyHandleParameterType(fqName: String?): Boolean = fqName == MEMORY_SEGMENT_FQN
+
+/**
+ * Build-failure text for a script still declared as `class X(godotObject: MemorySegment)`.
+ *
+ * Without this the user sees an argument-type mismatch inside the generated registrar, which names
+ * neither the old type nor the fix; this names the three-line migration instead.
+ */
+internal fun legacyHandleConstructorMessage(simpleName: String, parameterName: String): String =
+  "$simpleName takes its Godot object as $MEMORY_SEGMENT_FQN. Kanama scripts take the " +
+    "backend-neutral handle type now: declare " +
+    "`class $simpleName($parameterName: GodotHandle) : KanamaScript<...>($parameterName, ::...)` " +
+    "(or `class $simpleName(val $parameterName: GodotHandle)`), replace " +
+    "`import java.lang.foreign.MemorySegment` with " +
+    "`import net.multigesture.kanama.api.GodotHandle`, and leave every `SomeWrapper(other.handle)` " +
+    "call site as it is. See the CHANGELOG \"Breaking\" entry and docs/game-dev/scripts.md."
