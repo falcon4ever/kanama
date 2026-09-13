@@ -11,15 +11,14 @@ private const val GET_ROTATION_QUATERNION_HASH = 4274879941L
 private const val NO_ARG_SELF_HASH = 594669093L
 private const val DETERMINANT_HASH = 466405837L
 
+// One body for every backend (task 104 step 2). Everything whose result depends on Godot's own
+// orthonormalization, Euler convention or negative-scale handling is computed by the engine through
+// BuiltinCalls; the exact arithmetic is plain Kotlin. At ptrcall a Basis is 9 `real_t` in
+// column-major order — [x.x, y.x, z.x, x.y, y.y, z.y, x.z, y.z, z.z] — which is also the marshal
+// form of the builtin calls below.
 /**
  * A 3×3 matrix for representing 3D rotation and scale. Kanama value types are immutable snapshots;
  * assign a new value back to the Godot property after changing components.
- *
- * One body for every backend (task 104 step 2). Everything whose result depends on Godot's own
- * orthonormalization, Euler convention or negative-scale handling is computed by the engine through
- * [net.multigesture.kanama.binding.runtime.BuiltinCalls]; the exact arithmetic is plain Kotlin. At
- * ptrcall a Basis is 9 `real_t` in column-major order — `[x.x, y.x, z.x, x.y, y.y, z.y, x.z, y.z,
- * z.z]` — which is also the marshal form of the builtin calls below.
  *
  * Generated from Godot docs: Basis
  */

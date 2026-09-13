@@ -7,15 +7,14 @@ private const val INTERPOLATE_WITH_HASH = 1786453358L
 private const val NO_ARG_SELF_HASH = 3816817146L
 private const val VECTOR3_ARG_SELF_HASH = 1405596198L
 
+// One body for every backend (task 104 step 2): every method here is computed by the engine through
+// BuiltinCalls, because each one encodes a Godot convention (the orthonormal-only fast `inverse`,
+// the quaternion slerp inside `interpolate_with`, the discarded rotation in `looking_at`). At
+// ptrcall a Transform3D is 12 `real_t` — the 9 column-major basis components followed by the 3
+// origin components.
 /**
  * A 3×4 matrix representing a 3D transformation. Kanama value types are immutable snapshots; assign
  * a new value back to the Godot property after changing components.
- *
- * One body for every backend (task 104 step 2): every method here is computed by the engine through
- * [net.multigesture.kanama.binding.runtime.BuiltinCalls], because each one encodes a Godot
- * convention (the orthonormal-only fast `inverse`, the quaternion slerp inside `interpolate_with`,
- * the discarded rotation in `looking_at`). At ptrcall a Transform3D is 12 `real_t` — the 9
- * column-major basis components followed by the 3 origin components.
  *
  * Generated from Godot docs: Transform3D
  */
@@ -53,10 +52,11 @@ data class Transform3D(
   operator fun times(vector: Vector3): Vector3 = basis * vector + origin
 
   /**
-   * Returns the inverted version of this transform. See also `Basis.inverse`. Note: For this method
-   * to return correctly, the transform's `basis` needs to be orthonormal (see
-   * `Basis.orthonormalized`). That means, the basis should only represent a rotation. If it does
-   * not, use `affine_inverse` instead.
+   * Returns the inverted version of this transform
+   * (https://en.wikipedia.org/wiki/Invertible_matrix). See also `Basis.inverse`. Note: For this
+   * method to return correctly, the transform's `basis` needs to be orthonormal (see
+   * `orthonormalized`). That means the basis should only represent a rotation. If it does not, use
+   * `affine_inverse` instead.
    *
    * Generated from Godot docs: Transform3D.inverse
    */

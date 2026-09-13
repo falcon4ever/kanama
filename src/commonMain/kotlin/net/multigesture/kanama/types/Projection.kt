@@ -61,7 +61,12 @@ data class Projection(
         Vector4(0f, 0f, 0f, 1f),
       )
 
-    /** A `Projection` with every component zero. */
+    /**
+     * A `Projection` with all values initialized to 0. When applied to other data structures, they
+     * will be zeroed.
+     *
+     * Generated from Godot docs: Projection.ZERO
+     */
     val ZERO = Projection(Vector4.ZERO, Vector4.ZERO, Vector4.ZERO, Vector4.ZERO)
   }
 }

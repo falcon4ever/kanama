@@ -11,14 +11,12 @@ private const val LIMIT_LENGTH_HASH = 2544004089L
 private const val ROTATED_HASH = 2544004089L
 private const val CLAMP_HASH = 318031021L
 
+// One body for every backend (task 104 step 2): methods whose result depends on Godot's own
+// edge-case handling are computed by the engine through BuiltinCalls; exact arithmetic is plain
+// Kotlin. At ptrcall a Vector2 is 2 `real_t` in x, y order.
 /**
  * A 2D vector using floating-point coordinates. Kanama value types are immutable snapshots; assign
  * a new value back to the Godot property after changing components.
- *
- * One body for every backend (task 104 step 2): methods whose result depends on Godot's own
- * edge-case handling are computed by the engine through
- * [net.multigesture.kanama.binding.runtime.BuiltinCalls]; exact arithmetic is plain Kotlin. At
- * ptrcall a Vector2 is 2 `real_t` in x, y order.
  *
  * Generated from Godot docs: Vector2
  */

@@ -7,14 +7,12 @@ private const val SLERP_HASH = 1773590316L
 private const val INVERSE_HASH = 4274879941L
 private const val FROM_EULER_HASH = 4053467903L
 
+// One body for every backend (task 104 step 2): `inverse`, `slerp` and `from_euler` are computed by
+// the engine through BuiltinCalls (their shortest-arc and non-unit handling is the engine's), the
+// rest is exact arithmetic in Kotlin. At ptrcall a Quaternion is 4 `real_t` in x, y, z, w order.
 /**
  * A unit quaternion used for representing 3D rotations. Kanama value types are immutable snapshots;
  * assign a new value back to the Godot property after changing components.
- *
- * One body for every backend (task 104 step 2): `inverse`, `slerp` and `from_euler` are computed by
- * the engine through [net.multigesture.kanama.binding.runtime.BuiltinCalls] (their shortest-arc and
- * non-unit handling is the engine's), the rest is exact arithmetic in Kotlin. At ptrcall a
- * Quaternion is 4 `real_t` in x, y, z, w order.
  *
  * Generated from Godot docs: Quaternion
  */
@@ -197,8 +195,9 @@ data class Quaternion(
     }
 
     /**
-     * Constructs a new `Quaternion` from the given `Vector3` of Euler angles, in radians. This
-     * method always uses the YXZ convention (`EULER_ORDER_YXZ`).
+     * Constructs a new `Quaternion` from the given `Vector3` of Euler angles
+     * (https://en.wikipedia.org/wiki/Euler_angles), in radians. In Godot, Euler angles always use
+     * intrinsic order. This method always uses the intrinsic YXZ convention (`EULER_ORDER_YXZ`).
      *
      * Generated from Godot docs: Quaternion.from_euler
      */

@@ -13,14 +13,12 @@ private const val ROTATED_HASH = 1682608829L
 private const val MOVE_TOWARD_HASH = 1682608829L
 private const val SIGNED_ANGLE_TO_HASH = 2781412522L
 
+// One body for every backend (task 104 step 2): methods whose result depends on Godot's own
+// edge-case handling (epsilons, normalization) are computed by the engine through BuiltinCalls;
+// exact arithmetic is plain Kotlin. At ptrcall a Vector3 is 3 `real_t` in x, y, z order.
 /**
  * A 3D vector using floating-point coordinates. Kanama value types are immutable snapshots; assign
  * a new value back to the Godot property after changing components.
- *
- * One body for every backend (task 104 step 2): methods whose result depends on Godot's own
- * edge-case handling (epsilons, normalization) are computed by the engine through
- * [net.multigesture.kanama.binding.runtime.BuiltinCalls]; exact arithmetic is plain Kotlin. At
- * ptrcall a Vector3 is 3 `real_t` in x, y, z order.
  *
  * Generated from Godot docs: Vector3
  */
@@ -178,8 +176,8 @@ data class Vector3(
   }
 
   /**
-   * Returns the axis of the vector's highest value (`0` = x, `1` = y, `2` = z). If all components
-   * are equal, this method returns the x axis.
+   * Returns the axis of the vector's highest value. See `AXIS_*` constants. If all components are
+   * equal, this method returns `AXIS_X`.
    *
    * Generated from Godot docs: Vector3.max_axis_index
    */
