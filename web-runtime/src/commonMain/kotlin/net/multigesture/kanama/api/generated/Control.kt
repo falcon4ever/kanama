@@ -26,6 +26,20 @@ open class Control(godotObject: GodotHandle) : CanvasItem(godotObject) {
     GodotBackendCalls.invokeNoArgsVoid(D.CONTROL_RELEASE_FOCUS, requireOpenHandle())
   }
 
+  fun setPosition(position: Vector2, keepOffsets: Boolean = false) {
+    require(keepOffsets == false) { "Web Control.set_position supports only keepOffsets = false" }
+    GodotBackendCalls.invokeVector2Arg(
+      D.CONTROL_SET_POSITION,
+      requireOpenHandle(),
+      position.toBackend(),
+    )
+  }
+
+  fun setSize(size: Vector2, keepOffsets: Boolean = false) {
+    require(keepOffsets == false) { "Web Control.set_size supports only keepOffsets = false" }
+    GodotBackendCalls.invokeVector2Arg(D.CONTROL_SET_SIZE, requireOpenHandle(), size.toBackend())
+  }
+
   val position: Vector2
     get() = getPosition()
 
@@ -44,6 +58,12 @@ fun Control.getSize(): Vector2 = getSize()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Control.releaseFocus() = releaseFocus()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Control.setPosition(position: Vector2, keepOffsets: Boolean = false) = setPosition(position, keepOffsets)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Control.setSize(size: Vector2, keepOffsets: Boolean = false) = setSize(size, keepOffsets)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 val Control.position: Vector2

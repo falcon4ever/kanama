@@ -29,6 +29,10 @@ class Viewport(godotObject: GodotHandle) : Node(godotObject) {
       requireOpenHandle(),
     ).toApi()
 
+  fun setInputAsHandled() {
+    GodotBackendCalls.invokeNoArgsVoid(D.VIEWPORT_SET_INPUT_AS_HANDLED, requireOpenHandle())
+  }
+
   companion object {
     const val SCALING_3D_MODE_BILINEAR: Long = 0L
     const val SCALING_3D_MODE_FSR: Long = 1L
@@ -60,3 +64,6 @@ fun Viewport.getCamera3D(): Camera3D? = getCamera3D()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Viewport.getMousePosition(): Vector2 = getMousePosition()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Viewport.setInputAsHandled() = setInputAsHandled()

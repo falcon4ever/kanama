@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 27;
+  const KANAMA_WEB_PROTOCOL_VERSION = 28;
 
   function commandWordCount(opcode) {
     if (
@@ -22,6 +22,8 @@
       // Task 64 DemoPage set: Control.release_focus, SceneTree.unload_current_scene (no payload).
       opcode === 308 ||
       opcode === 311 ||
+      // Task 64 tps-demo parcel 8: Viewport.set_input_as_handled (no payload).
+      opcode === 330 ||
       opcode === 147 ||
       opcode === 251 ||
       opcode === 283 ||
@@ -71,6 +73,9 @@
     ) return 3;
     if (
       opcode === 3 ||
+      // Task 64 tps-demo parcel 8: Control.set_position / set_size (one Vector2 each).
+      opcode === 331 ||
+      opcode === 332 ||
       opcode === 30 ||
       opcode === 43 ||
       opcode === 48 ||
@@ -81,6 +86,9 @@
       // Task 64 DemoPage set: Environment.set_ssil_enabled / set_sdfgi_enabled (one bool word).
       opcode === 309 ||
       opcode === 310 ||
+      // Task 64 tps-demo parcel 8: Environment.set_ssao_enabled / set_volumetric_fog_enabled.
+      opcode === 322 ||
+      opcode === 323 ||
       // Task 64 CameraMode family: Camera3D.set_current (one bool word), set_fov (one double).
       opcode === 315 ||
       opcode === 316 ||

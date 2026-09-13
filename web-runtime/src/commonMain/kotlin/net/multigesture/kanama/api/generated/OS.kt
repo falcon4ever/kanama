@@ -18,6 +18,9 @@ object OS {
   fun getStaticMemoryUsage(): Long =
     GodotBackendCalls.invokeNoArgsRetLongSingleton(D.OS_GET_STATIC_MEMORY_USAGE)
 
+  fun getName(): String =
+    GodotBackendCalls.invokeNoArgsRetStringSingleton(D.OS_GET_NAME)
+
   /** Web ships the release template; debug-gated tooling stays off. */
   fun isDebugBuild(): Boolean = false
 }
@@ -30,3 +33,6 @@ fun OS.shellOpen(uri: String) = shellOpen(uri)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun OS.getStaticMemoryUsage(): Long = getStaticMemoryUsage()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun OS.getName(): String = getName()

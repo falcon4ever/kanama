@@ -111,6 +111,7 @@ enum class GodotCallShape {
   STRINGNAME_RET_STRING,
   DOUBLE_RET_DOUBLE,
   VECTOR3_VECTOR3_LONG_OBJECT_RET_STRING,
+  LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON,
 }
 
 @InternalKanamaBackendApi
@@ -518,6 +519,21 @@ interface GodotBackendSpi {
   /** Singleton Long-argument void call (no receiver): e.g. RenderingServer shadow tuning. */
   fun invokeLongArgSingleton(descriptor: GodotCallDescriptor, callSite: GodotCallSite, value: Long)
 
+  /**
+   * Singleton six-value void call (no receiver): RenderingServer's SSAO/SSIL quality tuning
+   * (quality enum, half_size, adaptive_target, blur_passes, fadeout_from, fadeout_to).
+   */
+  fun invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    quality: Long,
+    halfSize: Boolean,
+    adaptiveTarget: Double,
+    blurPasses: Long,
+    fadeoutFrom: Double,
+    fadeoutTo: Double,
+  )
+
   /** Object-argument fluent call returning a handle: e.g. Tween.bind_node self-return. */
   fun invokeObjectRetHandle(
     descriptor: GodotCallDescriptor,
@@ -719,13 +735,16 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
   ): List<GodotVector3i>
 
-  /** Indexed object write (mesh-library item mesh). */
+  /**
+   * Indexed object write (mesh-library item mesh, mesh surface material). Null clears the slot --
+   * Godot accepts it for both members.
+   */
   fun invokeLongObjectArg(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
     receiver: GodotHandle,
     longValue: Long,
-    objectValue: GodotHandle,
+    objectValue: GodotHandle?,
   )
 
   /** Indexed transform write (mesh-library item transform). */
@@ -1509,6 +1528,30 @@ object GodotBackendCalls {
     selected.invokeLongArgSingleton(descriptor, resolve(selected, descriptor), value)
   }
 
+  fun invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
+    descriptor: GodotCallDescriptor,
+    quality: Long,
+    halfSize: Boolean,
+    adaptiveTarget: Double,
+    blurPasses: Long,
+    fadeoutFrom: Double,
+    fadeoutTo: Double,
+  ) {
+    requireShape(descriptor, GodotCallShape.LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON)
+    require(adaptiveTarget.isFinite() && fadeoutFrom.isFinite() && fadeoutTo.isFinite())
+    val selected = requireBackend()
+    selected.invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
+      descriptor,
+      resolve(selected, descriptor),
+      quality,
+      halfSize,
+      adaptiveTarget,
+      blurPasses,
+      fadeoutFrom,
+      fadeoutTo,
+    )
+  }
+
   fun invokeNoArgsRetLongSingleton(descriptor: GodotCallDescriptor): Long {
     requireShape(descriptor, GodotCallShape.NOARGS_RET_LONG_SINGLETON)
     val selected = requireBackend()
@@ -1729,12 +1772,12 @@ object GodotBackendCalls {
     descriptor: GodotCallDescriptor,
     receiver: GodotHandle,
     longValue: Long,
-    objectValue: GodotHandle,
+    objectValue: GodotHandle?,
   ) {
     requireShape(descriptor, GodotCallShape.LONG_OBJECT_ARG)
     val selected = requireBackend()
     selected.requireLive(receiver)
-    selected.requireLive(objectValue)
+    if (objectValue != null) selected.requireLive(objectValue)
     selected.invokeLongObjectArg(
       descriptor,
       resolve(selected, descriptor),

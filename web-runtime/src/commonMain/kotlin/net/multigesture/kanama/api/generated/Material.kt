@@ -8,7 +8,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-open class Material(godotObject: GodotHandle) : Resource(godotObject) {
+open class Material(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getNextPass(): Material? =
     GodotBackendCalls.invokeNoArgsRetHandle(
@@ -32,7 +32,7 @@ open class Material(godotObject: GodotHandle) : Resource(godotObject) {
   override fun duplicate(deep: Boolean): Material? = super.duplicate(deep)?.let { Material(it.handle) }
 
   /** Releases the owned handle (already-released is an error). */
-  fun close() {
+  override fun close() {
     releaseWebTrackedObject(handle.value)
   }
 

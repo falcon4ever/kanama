@@ -1314,6 +1314,17 @@ class GodotBackendContractTest {
       value: Long,
     ) = unexercised(descriptor)
 
+    override fun invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      quality: Long,
+      halfSize: Boolean,
+      adaptiveTarget: Double,
+      blurPasses: Long,
+      fadeoutFrom: Double,
+      fadeoutTo: Double,
+    ) = unexercised(descriptor)
+
     override fun invokeObjectRetHandle(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,
@@ -1487,7 +1498,7 @@ class GodotBackendContractTest {
       callSite: GodotCallSite,
       receiver: GodotHandle,
       longValue: Long,
-      objectValue: GodotHandle,
+      objectValue: GodotHandle?,
     ) = unexercised(descriptor)
 
     override fun invokeLongTransform3dArg(

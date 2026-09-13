@@ -18,6 +18,60 @@ object RenderingServer {
     )
   }
 
+  fun voxelGiSetQuality(quality: Long) {
+    GodotBackendCalls.invokeLongArgSingleton(D.RENDERINGSERVER_VOXEL_GI_SET_QUALITY, quality)
+  }
+
+  fun environmentSetSdfgiRayCount(rayCount: Long) {
+    GodotBackendCalls.invokeLongArgSingleton(
+      D.RENDERINGSERVER_ENVIRONMENT_SET_SDFGI_RAY_COUNT,
+      rayCount,
+    )
+  }
+
+  fun environmentSetSsaoQuality(
+    quality: Long,
+    halfSize: Boolean,
+    adaptiveTarget: Double,
+    blurPasses: Int,
+    fadeoutFrom: Double,
+    fadeoutTo: Double,
+  ) {
+    GodotBackendCalls.invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
+      D.RENDERINGSERVER_ENVIRONMENT_SET_SSAO_QUALITY,
+      quality,
+      halfSize,
+      adaptiveTarget,
+      blurPasses.toLong(),
+      fadeoutFrom,
+      fadeoutTo,
+    )
+  }
+
+  fun environmentSetSsilQuality(
+    quality: Long,
+    halfSize: Boolean,
+    adaptiveTarget: Double,
+    blurPasses: Int,
+    fadeoutFrom: Double,
+    fadeoutTo: Double,
+  ) {
+    GodotBackendCalls.invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
+      D.RENDERINGSERVER_ENVIRONMENT_SET_SSIL_QUALITY,
+      quality,
+      halfSize,
+      adaptiveTarget,
+      blurPasses.toLong(),
+      fadeoutFrom,
+      fadeoutTo,
+    )
+  }
+
+  fun getCurrentRenderingDriverName(): String =
+    GodotBackendCalls.invokeNoArgsRetStringSingleton(
+      D.RENDERINGSERVER_GET_CURRENT_RENDERING_DRIVER_NAME,
+    )
+
   const val SHADOW_QUALITY_HARD: Long = 0L
   const val SHADOW_QUALITY_SOFT_VERY_LOW: Long = 1L
   const val SHADOW_QUALITY_SOFT_LOW: Long = 2L
@@ -25,6 +79,26 @@ object RenderingServer {
   const val SHADOW_QUALITY_SOFT_HIGH: Long = 4L
   const val SHADOW_QUALITY_SOFT_ULTRA: Long = 5L
   const val SHADOW_QUALITY_MAX: Long = 6L
+  const val ENV_SSAO_QUALITY_VERY_LOW: Long = 0L
+  const val ENV_SSAO_QUALITY_LOW: Long = 1L
+  const val ENV_SSAO_QUALITY_MEDIUM: Long = 2L
+  const val ENV_SSAO_QUALITY_HIGH: Long = 3L
+  const val ENV_SSAO_QUALITY_ULTRA: Long = 4L
+  const val ENV_SSIL_QUALITY_VERY_LOW: Long = 0L
+  const val ENV_SSIL_QUALITY_LOW: Long = 1L
+  const val ENV_SSIL_QUALITY_MEDIUM: Long = 2L
+  const val ENV_SSIL_QUALITY_HIGH: Long = 3L
+  const val ENV_SSIL_QUALITY_ULTRA: Long = 4L
+  const val VOXEL_GI_QUALITY_LOW: Long = 0L
+  const val VOXEL_GI_QUALITY_HIGH: Long = 1L
+  const val ENV_SDFGI_RAY_COUNT_4: Long = 0L
+  const val ENV_SDFGI_RAY_COUNT_8: Long = 1L
+  const val ENV_SDFGI_RAY_COUNT_16: Long = 2L
+  const val ENV_SDFGI_RAY_COUNT_32: Long = 3L
+  const val ENV_SDFGI_RAY_COUNT_64: Long = 4L
+  const val ENV_SDFGI_RAY_COUNT_96: Long = 5L
+  const val ENV_SDFGI_RAY_COUNT_128: Long = 6L
+  const val ENV_SDFGI_RAY_COUNT_MAX: Long = 7L
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -32,3 +106,32 @@ fun RenderingServer.getCurrentRenderingMethod(): String = getCurrentRenderingMet
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun RenderingServer.directionalSoftShadowFilterSetQuality(quality: Long) = directionalSoftShadowFilterSetQuality(quality)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun RenderingServer.voxelGiSetQuality(quality: Long) = voxelGiSetQuality(quality)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun RenderingServer.environmentSetSdfgiRayCount(rayCount: Long) = environmentSetSdfgiRayCount(rayCount)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun RenderingServer.environmentSetSsaoQuality(
+  quality: Long,
+  halfSize: Boolean,
+  adaptiveTarget: Double,
+  blurPasses: Int,
+  fadeoutFrom: Double,
+  fadeoutTo: Double,
+) = environmentSetSsaoQuality(quality, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun RenderingServer.environmentSetSsilQuality(
+  quality: Long,
+  halfSize: Boolean,
+  adaptiveTarget: Double,
+  blurPasses: Int,
+  fadeoutFrom: Double,
+  fadeoutTo: Double,
+) = environmentSetSsilQuality(quality, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun RenderingServer.getCurrentRenderingDriverName(): String = getCurrentRenderingDriverName()

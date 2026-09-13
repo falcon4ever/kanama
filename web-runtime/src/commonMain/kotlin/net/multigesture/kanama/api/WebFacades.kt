@@ -5,6 +5,8 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
+import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Vector2i
 
 /**
  * Hand-shaped facades for families the browser cannot host or the compatibility renderer ignores
@@ -211,9 +213,11 @@ class Window internal constructor() {
   }
 }
 
-private val browserWindow = Window()
-
-fun Node.getWindow(): Window = browserWindow
+/**
+ * The single browser window. `Node.getWindow()` is a generated member since task 64 parcel 8, and
+ * hands this mirror back, so the shared demo sources call it exactly the way desktop does.
+ */
+internal val browserWindow = Window()
 
 object DisplayServer {
   const val VSYNC_DISABLED = 0L
@@ -227,84 +231,32 @@ object DisplayServer {
   fun windowSetVsyncMode(@Suppress("UNUSED_PARAMETER") mode: Long) = Unit
 
   fun windowGetVsyncMode(): Long = VSYNC_ENABLED
+
+  /**
+   * Structural limit (task 64 parcel 8): a browser page has no OS window to measure and no notch
+   * to route around -- the canvas IS the usable area, and Godot's Web DisplayServer answers the
+   * whole window for both. The one caller in the corpus (tps-demo's `SafeArea`, a mobile
+   * notch/cutout helper) returns early on `OS.hasFeature("web")`, so these are never reached on
+   * Web; they fail loud rather than inventing a rectangle a caller would act on.
+   */
+  fun windowGetSize(@Suppress("UNUSED_PARAMETER") windowId: Int = 0): Vector2i =
+    unsupportedWebGameplayFamily("DisplayServer.window_get_size")
+
+  fun getDisplaySafeArea(): Rect2i = unsupportedWebGameplayFamily("DisplayServer.get_display_safe_area")
 }
-
-/**
- * Renderer settings the compatibility renderer has no equivalent for. They stay inert rather than
- * pretending to apply; the settings menu still records the player's choice in the config file.
- */
-object RenderingServerQuality {
-  const val ENV_SDFGI_RAY_COUNT_32 = 2L
-  const val ENV_SDFGI_RAY_COUNT_96 = 5L
-  const val VOXEL_GI_QUALITY_LOW = 0L
-  const val VOXEL_GI_QUALITY_HIGH = 1L
-  const val ENV_SSAO_QUALITY_MEDIUM = 1L
-  const val ENV_SSAO_QUALITY_HIGH = 2L
-  const val ENV_SSIL_QUALITY_MEDIUM = 1L
-  const val ENV_SSIL_QUALITY_HIGH = 2L
-}
-
-fun RenderingServer.getCurrentRenderingDriverName(): String = "opengl3"
-
-fun RenderingServer.environmentSetSdfgiRayCount(@Suppress("UNUSED_PARAMETER") count: Long) = Unit
-
-fun RenderingServer.voxelGiSetQuality(@Suppress("UNUSED_PARAMETER") quality: Long) = Unit
-
-fun RenderingServer.environmentSetSsaoQuality(
-  @Suppress("UNUSED_PARAMETER") quality: Long,
-  @Suppress("UNUSED_PARAMETER") halfSize: Boolean,
-  @Suppress("UNUSED_PARAMETER") adaptiveTarget: Double,
-  @Suppress("UNUSED_PARAMETER") blurPasses: Int,
-  @Suppress("UNUSED_PARAMETER") fadeOutFrom: Double,
-  @Suppress("UNUSED_PARAMETER") fadeOutTo: Double,
-) = Unit
-
-fun RenderingServer.environmentSetSsilQuality(
-  @Suppress("UNUSED_PARAMETER") quality: Long,
-  @Suppress("UNUSED_PARAMETER") halfSize: Boolean,
-  @Suppress("UNUSED_PARAMETER") adaptiveTarget: Double,
-  @Suppress("UNUSED_PARAMETER") blurPasses: Int,
-  @Suppress("UNUSED_PARAMETER") fadeOutFrom: Double,
-  @Suppress("UNUSED_PARAMETER") fadeOutTo: Double,
-) = Unit
-
-/** The browser canvas owns fullscreen; the demo's own toggle stays inert. */
-fun Viewport.setInputAsHandled() = Unit
-
-/**
- * Screen-space effect toggles the compatibility renderer has no implementation for (SSAO,
- * volumetric fog): these stay inert rather than pretending to apply. `ssilEnabled` and
- * `sdfgiEnabled` are real (queued) members since protocol 24 — the engine ignores them on the
- * Compatibility renderer — so the shared DemoPage compiles; their getters are the setter-only
- * coverage markers of the generated wrapper.
- */
-var Environment.ssaoEnabled: Boolean
-  get() = false
-  set(@Suppress("UNUSED_PARAMETER") value) = Unit
-
-var Environment.volumetricFogEnabled: Boolean
-  get() = false
-  set(@Suppress("UNUSED_PARAMETER") value) = Unit
 
 // ---------------------------------------------------------------------------
 // Resource loading facades.
 // ---------------------------------------------------------------------------
 
-/** Baked lightmap data load (the LightmapGI settings path). */
-fun ResourceLoader.loadLightmapGIData(path: String): LightmapGIData? =
-  load(path, "LightmapGIData")?.let { LightmapGIData(it.handle) }
-
 /**
- * Threaded-load facade. The Web export is a `nothreads` build, so a background load would never
- * make progress: the request loads synchronously and then reports LOADED. The demo's loading
- * screen still runs its normal status/progress path, it just completes on the first poll.
+ * Threaded-load store behind `ResourceLoader.loadThreadedRequest` / `loadThreadedGetStatus…` /
+ * `loadThreadedGet…` (generated members since task 64 parcel 8). The Web export is a `nothreads`
+ * build, so a background load would never make progress: the request loads synchronously and
+ * every later poll reports LOADED. The demo's loading screen still runs its normal status /
+ * progress path, it just completes on the first poll.
  */
-object ThreadedLoad {
-  const val THREAD_LOAD_IN_PROGRESS = 0L
-  const val THREAD_LOAD_FAILED = 1L
-  const val THREAD_LOAD_INVALID_RESOURCE = 2L
-  const val THREAD_LOAD_LOADED = 3L
-
+internal object ThreadedLoad {
   private val loaded = mutableMapOf<String, PackedScene?>()
 
   fun request(path: String) {
@@ -313,27 +265,10 @@ object ThreadedLoad {
 
   fun status(path: String): Long =
     when {
-      !loaded.containsKey(path) -> THREAD_LOAD_IN_PROGRESS
-      loaded[path] == null -> THREAD_LOAD_FAILED
-      else -> THREAD_LOAD_LOADED
+      !loaded.containsKey(path) -> ResourceLoader.THREAD_LOAD_IN_PROGRESS
+      loaded[path] == null -> ResourceLoader.THREAD_LOAD_FAILED
+      else -> ResourceLoader.THREAD_LOAD_LOADED
     }
 
   fun take(path: String): PackedScene? = loaded[path]
 }
-
-class ThreadedLoadStatus internal constructor(val status: Long, val progress: Double?)
-
-fun ResourceLoader.loadThreadedRequest(
-  path: String,
-  @Suppress("UNUSED_PARAMETER") typeHint: String = "",
-  @Suppress("UNUSED_PARAMETER") useSubThreads: Boolean = false,
-) {
-  ThreadedLoad.request(path)
-}
-
-fun ResourceLoader.loadThreadedGetStatusWithProgress(path: String): ThreadedLoadStatus {
-  val status = ThreadedLoad.status(path)
-  return ThreadedLoadStatus(status, if (status == ThreadedLoad.THREAD_LOAD_LOADED) 1.0 else 0.0)
-}
-
-fun ResourceLoader.loadThreadedGetPackedScene(path: String): PackedScene? = ThreadedLoad.take(path)

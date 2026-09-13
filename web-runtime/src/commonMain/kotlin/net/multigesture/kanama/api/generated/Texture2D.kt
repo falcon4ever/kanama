@@ -6,7 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class Texture2D(godotObject: GodotHandle) : Texture(godotObject) {
+class Texture2D(godotObject: GodotHandle) : Texture(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   private var closed = false
 
@@ -16,7 +16,7 @@ class Texture2D(godotObject: GodotHandle) : Texture(godotObject) {
   }
 
   /** Releases the owned handle; a second close is a no-op, any later call fails loud. */
-  fun close() {
+  override fun close() {
     if (closed) return
     closed = true
     releaseWebResource(handle.value)

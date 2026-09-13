@@ -26,6 +26,7 @@ import net.multigesture.kanama.api.KanamaCoroutineOwner
 import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
+import net.multigesture.kanama.api.MeshInstance3D
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.OS
@@ -645,6 +646,129 @@ class Main(godotObject: GodotHandle) :
     return mask
   }
 
+  /**
+   * Task-64 tps-demo parcel 8 render-quality probe (protocol 28). tps-demo's Settings / Menu /
+   * Level write these on every graphics-settings apply; the Compatibility renderer the Web export
+   * uses ignores most of them, so the proof is that the call REACHED THE ENGINE, not that a pixel
+   * changed: 324-327 are immediate queries whose GDScript arm answers 1 only after the engine call
+   * returned, so reaching the next line is the observation (a dropped arm throws
+   * "was not applied").
+   *
+   * Bit 1 = `RenderingServer.get_current_rendering_driver_name` (328) answered a non-empty driver
+   * name on the immediate string channel; bit 2 = `OS.get_name` (329) answered "Web"; bit 4 =
+   * `voxel_gi_set_quality` (324) and `environment_set_sdfgi_ray_count` (325) applied; bit 8 = the
+   * six-value `environment_set_ssao_quality` (326) and `environment_set_ssil_quality` (327) applied
+   * (the U+001F payload split engine-side into Godot's full signature); bit 16 = the scene's
+   * Environment took the queued `set_ssao_enabled` / `set_volumetric_fog_enabled` (322/323), both
+   * restored; bit 32 = the queued `Viewport.set_input_as_handled` (330) was issued. A healthy run
+   * returns 63.
+   *
+   * Runs AFTER `generic_probe` (it wraps the viewport, which TRACKS the root window -- the same
+   * coupling `input_map_probe` and `camera_mode_probe` state).
+   */
+  @RegisterFunction("render_settings_probe")
+  fun renderSettingsProbe(value: Long): Long {
+    var mask = 0L
+    if (RenderingServer.getCurrentRenderingDriverName().isNotEmpty()) mask = mask or 1L
+    if (OS.getName() == "Web") mask = mask or 2L
+
+    RenderingServer.voxelGiSetQuality(RenderingServer.VOXEL_GI_QUALITY_LOW)
+    RenderingServer.environmentSetSdfgiRayCount(RenderingServer.ENV_SDFGI_RAY_COUNT_32)
+    mask = mask or 4L
+
+    RenderingServer.environmentSetSsaoQuality(
+      RenderingServer.ENV_SSAO_QUALITY_MEDIUM,
+      true,
+      0.5,
+      2,
+      50.0,
+      300.0,
+    )
+    RenderingServer.environmentSetSsilQuality(
+      RenderingServer.ENV_SSIL_QUALITY_MEDIUM,
+      false,
+      0.5,
+      2,
+      50.0,
+      300.0,
+    )
+    mask = mask or 8L
+
+    val environment = self.getAsOrNull("Environment", ::WorldEnvironment)?.environment
+    if (environment != null) {
+      environment.ssaoEnabled = true
+      environment.volumetricFogEnabled = true
+      environment.ssaoEnabled = false
+      environment.volumetricFogEnabled = false
+      mask = mask or 16L
+    }
+
+    val viewport = self.getViewport()
+    if (viewport != null) {
+      viewport.setInputAsHandled()
+      mask = mask or 32L
+    }
+    return mask
+  }
+
+  /**
+   * Task-64 tps-demo parcel 8 window / Control probe (protocol 28). Bit 1 = `Node.get_window` is a
+   * member on both backends now and answers the browser-window mirror; bit 2 = `Control.set_position`
+   * (331, queued) round-trips through `Control.get_position` (252, immediate -- it flushes the queue
+   * first), bit 4 = the same for `set_size` (332) / `get_size` (253), both restored afterwards;
+   * bit 8 = `Node.propagate_call("set", [property, bool])` narrowed onto the typed propagate_set
+   * arm without throwing; bit 16 = `Mesh.surface_set_material(0, null)` CLEARED the slot -- the
+   * LONG_OBJECT_ARG object slot became nullable in protocol 28 and a null rides as handle id 0 --
+   * and the original material went back. A healthy run returns 31.
+   *
+   * Runs AFTER `generic_probe`, like the other viewport-wrapping probes.
+   */
+  @RegisterFunction("window_family_probe")
+  fun windowFamilyProbe(value: Long): Long {
+    var mask = 0L
+    if (self.getWindow() != null) mask = mask or 1L
+
+    val probeLabel = self.getAsOrNull("MobileControls/ProbeLabel", ::Control)
+    if (probeLabel != null) {
+      val originalPosition = probeLabel.position
+      val originalSize = probeLabel.size
+      probeLabel.setPosition(PROBE_CONTROL_POSITION)
+      if (
+        abs(probeLabel.position.x - PROBE_CONTROL_POSITION.x) < 1e-3 &&
+          abs(probeLabel.position.y - PROBE_CONTROL_POSITION.y) < 1e-3
+      ) {
+        mask = mask or 2L
+      }
+      probeLabel.setSize(PROBE_CONTROL_SIZE)
+      if (
+        abs(probeLabel.size.x - PROBE_CONTROL_SIZE.x) < 1e-3 &&
+          abs(probeLabel.size.y - PROBE_CONTROL_SIZE.y) < 1e-3
+      ) {
+        mask = mask or 4L
+      }
+      probeLabel.setSize(originalSize)
+      probeLabel.setPosition(originalPosition)
+    }
+
+    self.propagateCall("set", listOf("visible", true))
+    mask = mask or 8L
+
+    val box = self.getAsOrNull("Spinner/Box", ::MeshInstance3D)
+    val boxMesh = box?.mesh
+    if (boxMesh != null) {
+      try {
+        val original = boxMesh.surfaceGetMaterial(0)
+        boxMesh.surfaceSetMaterial(0, null)
+        boxMesh.surfaceSetMaterial(0, original)
+        original?.close()
+        mask = mask or 16L
+      } finally {
+        boxMesh.close()
+      }
+    }
+    return mask
+  }
+
   // ---------- Task 80 slice 2: dispatch-shape conformance probe ----------
   //
   // The shapes slice 2 admitted are exercised HERE, through the real crossing, because a shape
@@ -897,6 +1021,8 @@ class Main(godotObject: GodotHandle) :
   }
 
   private companion object {
+    val PROBE_CONTROL_POSITION = Vector2(23.0, 41.0)
+    val PROBE_CONTROL_SIZE = Vector2(320.0, 64.0)
     const val ENTER_TREE_EXPORTED = "web3d-enter-tree"
     const val PROBE_NUMBER = 12.25
     const val PROBE_TEXT = "kanama-packed-return"

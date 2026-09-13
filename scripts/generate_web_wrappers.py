@@ -692,7 +692,15 @@ WRAPPER_POLICY: dict[int, dict] = {
     # Resource.duplicate is open so Material can re-type the copy.
     222: {"open": True},
     # ResourceLoader.load: hand back the typed variants the corpus spells.
-    7: {"typed_loads": {"Texture2D": "loadTexture2D", "PackedScene": "loadPackedScene", "AudioStream": "loadAudioStream"}},
+    7: {
+        "typed_loads": {
+            "Texture2D": "loadTexture2D",
+            "PackedScene": "loadPackedScene",
+            "AudioStream": "loadAudioStream",
+            # Task 64 parcel 8: tps-demo's Level loads its baked lightmap through ResourceLoader.
+            "LightmapGIData": "loadLightmapGIData",
+        }
+    },
 }
 # Per-class hand-shaped content. `custom` is emitted inside the class body, `companion` inside the
 # companion object, `top_level` after the class (import-compat aliases for custom members, private
@@ -760,10 +768,41 @@ CLASS_POLICY: dict[str, dict] = {
   fun setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
+
+  /**
+   * The window this node lives in. Web has exactly one: the handle-less browser-window mirror in
+   * `WebFacades.kt` (mode and 3D scaling are fixed by the canvas, so those writes stay Kotlin-side).
+   * Desktop's nullable return is kept so shared call sites read the same on both backends.
+   */
+  fun getWindow(): Window? = browserWindow
+
+  /**
+   * Web narrows Godot's Variant-array `propagate_call` to the one form the corpus uses,
+   * `propagate_call("set", [property, bool])` -- opcode 279 carries a typed (StringName, bool)
+   * pair. Any other method, argument shape or `parentFirst` fails loud instead of silently
+   * dropping the sweep.
+   */
+  fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
+    val property = args.getOrNull(0)
+    val value = args.getOrNull(1)
+    if (method == "set" && args.size == 2 && property is String && value is Boolean && !parentFirst) {
+      propagateSet(property, value)
+    } else {
+      unsupportedWebGameplayFamily(
+        "Node.propagate_call('$method', ${args.size} args, parentFirst=$parentFirst)"
+      )
+    }
+  }
 """,
         "top_level": """
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getChildren(includeInternal: Boolean = false): List<Node> = getChildren(includeInternal)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node.getWindow(): Window? = getWindow()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) =
+  propagateCall(method, args, parentFirst)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getPhysicsProcessDeltaTime(): Double = getPhysicsProcessDeltaTime()
@@ -1162,7 +1201,9 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
     },
     "InputEventMouseButton": {"from_class_check": True, "enums": ["@GlobalScope.MouseButton"]},
     "InputEventMouseMotion": {"from_class_check": True},
-    "Mesh": {"from_object_checked": True},
+    # Task 64 parcel 8: MeshInstance3D.get_mesh hands back a tracked browser handle; tps-demo's
+    # shared Part reads it once and closes it (`mesh.use { }`), so the wrapper owns a close().
+    "Mesh": {"from_object_checked": True, "release": "tracked"},
     "Material": {
         "from_resource": True,
         "release": "tracked",
@@ -1195,8 +1236,52 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
     "DirectionalLight3D": {"enums": ["SkyMode"]},
     "Animation": {"enums": ["LoopMode"]},
     "GridMap": {"constants": ["INVALID_CELL_ITEM"]},
-    "ResourceLoader": {"enums": ["CacheMode"]},
-    "RenderingServer": {"enums": ["ShadowQuality"]},
+    "ResourceLoader": {
+        "enums": ["CacheMode", "ThreadLoadStatus"],
+        "custom": """
+  /** Desktop's `ResourceLoader.ThreadLoadStatus`: the status enum value and the 0..1 progress. */
+  data class ThreadLoadStatus(val status: Long, val progress: Double?)
+
+  /**
+   * Threaded-load family (task 64 parcel 8) over the synchronous facade in `WebFacades.kt`: the
+   * Web export is a `nothreads` build, so a background load could never make progress. The
+   * request loads at once and every later poll reports THREAD_LOAD_LOADED with progress 1.0
+   * (tps-demo's loading screen completes on its first poll). Desktop's signatures; `typeHint`,
+   * `useSubThreads` and `cacheMode` are accepted and ignored; the result is Godot's OK.
+   */
+  fun loadThreadedRequest(
+    path: String,
+    @Suppress("UNUSED_PARAMETER") typeHint: String = "",
+    @Suppress("UNUSED_PARAMETER") useSubThreads: Boolean = false,
+    @Suppress("UNUSED_PARAMETER") cacheMode: Long = CACHE_MODE_REUSE,
+  ): Long {
+    ThreadedLoad.request(path)
+    return 0L
+  }
+
+  fun loadThreadedGetStatus(path: String): Long = ThreadedLoad.status(path)
+
+  fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+    val status = ThreadedLoad.status(path)
+    return ThreadLoadStatus(status, if (status == THREAD_LOAD_LOADED) 1.0 else 0.0)
+  }
+
+  /** The loaded resource (an owned handle: close it, or hand it to the tree). */
+  fun loadThreadedGet(path: String): Resource? = ThreadedLoad.take(path)
+
+  fun loadThreadedGetPackedScene(path: String): PackedScene? = ThreadedLoad.take(path)
+""",
+    },
+    "RenderingServer": {
+        "enums": [
+            "ShadowQuality",
+            # Task 64 parcel 8: tps-demo's Settings / Menu / Level spell the quality tiers by name.
+            "EnvironmentSSAOQuality",
+            "EnvironmentSSILQuality",
+            "VoxelGIQuality",
+            "EnvironmentSDFGIRayCount",
+        ],
+    },
     "Viewport": {"enums": ["Scaling3DMode", "MSAA", "ScreenSpaceAA"]},
     "PhysicsBody3D": {"enums": ["PhysicsServer3D.BodyAxis"]},
     "OS": {
@@ -1457,7 +1542,12 @@ RELEASE_CALLS = {
 
 
 def emit_release(godot_name: str, class_policy: dict) -> list[str]:
-    """`close()` for owning wrappers; `guard` adds the closed flag + receiver guard (use-after-close)."""
+    """`close()` for owning wrappers; `guard` adds the closed flag + receiver guard (use-after-close).
+
+    Owning wrappers declare `AutoCloseable` (see `render_class`), so the stdlib `use { }` resolves on
+    them without an import -- the shared demo sources spell `resource.use { }` on both backends
+    (task 64 parcel 8; the `MultiplayerPeer` facade set the precedent in parcel 7).
+    """
     kind = class_policy.get("release")
     if not kind:
         return []
@@ -1473,7 +1563,7 @@ def emit_release(godot_name: str, class_policy: dict) -> list[str]:
             "  }",
             "",
             "  /** Releases the owned handle; a second close is a no-op, any later call fails loud. */",
-            "  fun close() {",
+            "  override fun close() {",
             "    if (closed) return",
             "    closed = true",
             f"    {release}(handle.value)",
@@ -1481,7 +1571,7 @@ def emit_release(godot_name: str, class_policy: dict) -> list[str]:
         ]
     return [
         "  /** Releases the owned handle (already-released is an error). */",
-        "  fun close() {",
+        "  override fun close() {",
         f"    {release}(handle.value)",
         "  }",
     ]
@@ -1520,7 +1610,8 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
             lines.append("  /** The live backend handle; guarded wrappers (closeable resources) override this. */")
             lines.append("  internal open fun requireOpenHandle(): BackendGodotHandle = backendHandle")
         else:
-            lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject) {{")
+            closeable = ", AutoCloseable" if class_policy.get("release") else ""
+            lines.append(f"{open_}class {name}(godotObject: GodotHandle) : {kotlin_class_name(parent)}(godotObject){closeable} {{")
             lines.append("  internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())")
     sections: list[list[str]] = [m.body for m in members]
     if class_policy.get("custom"):
