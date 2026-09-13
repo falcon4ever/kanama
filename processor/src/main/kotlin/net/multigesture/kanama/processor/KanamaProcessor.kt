@@ -1881,7 +1881,7 @@ private fun uniqueConstantIdentifier(name: String, seen: MutableSet<String>): St
   }
 }
 
-private fun signalHelperSuffix(godotName: String): String {
+internal fun signalHelperSuffix(godotName: String): String {
   val id = constantIdentifier(godotName).removeSurrounding("`")
   return id.replaceFirstChar { it.uppercase() }
 }

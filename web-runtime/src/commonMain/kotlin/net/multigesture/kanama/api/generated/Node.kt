@@ -177,6 +177,31 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
 
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
+  /**
+   * The window this node lives in. Web has exactly one: the handle-less browser-window mirror in
+   * `WebFacades.kt` (mode and 3D scaling are fixed by the canvas, so those writes stay Kotlin-side).
+   * Desktop's nullable return is kept so shared call sites read the same on both backends.
+   */
+  fun getWindow(): Window? = browserWindow
+
+  /**
+   * Web narrows Godot's Variant-array `propagate_call` to the one form the corpus uses,
+   * `propagate_call("set", [property, bool])` -- opcode 279 carries a typed (StringName, bool)
+   * pair. Any other method, argument shape or `parentFirst` fails loud instead of silently
+   * dropping the sweep.
+   */
+  fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
+    val property = args.getOrNull(0)
+    val value = args.getOrNull(1)
+    if (method == "set" && args.size == 2 && property is String && value is Boolean && !parentFirst) {
+      propagateSet(property, value)
+    } else {
+      unsupportedWebGameplayFamily(
+        "Node.propagate_call('$method', ${args.size} args, parentFirst=$parentFirst)"
+      )
+    }
+  }
+
   companion object {
     const val PROCESS_MODE_INHERIT: Long = 0L
     const val PROCESS_MODE_PAUSABLE: Long = 1L
@@ -270,6 +295,12 @@ var Node.processMode: Long
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getChildren(includeInternal: Boolean = false): List<Node> = getChildren(includeInternal)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun Node.getWindow(): Window? = getWindow()
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Node.propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) =
+  propagateCall(method, args, parentFirst)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getPhysicsProcessDeltaTime(): Double = getPhysicsProcessDeltaTime()

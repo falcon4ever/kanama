@@ -120,6 +120,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
           309,
           310,
           315,
+          322,
+          323,
         )
     )
     val objectId = receiver.webId()
@@ -224,6 +226,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
       3 -> webWriteVector2Snapshot(objectId, WebVector2Slot.POSITION, value)
       30 -> webWriteVector2Snapshot(objectId, WebVector2Slot.SCALE, value)
       60 -> {}
+      331 -> {}
+      332 -> {}
       else -> error("Unsupported Web Vector2 mutation opcode=${descriptor.opcode}")
     }
   }
@@ -1122,13 +1126,27 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     callSite: GodotCallSite,
   ): String {
     requireOpcode(descriptor, callSite)
-    require(descriptor.executionMode == GodotExecutionMode.SNAPSHOT_READ)
-    require(descriptor.opcode == 85)
-    return webRenderingMethodSnapshot(requireActiveWebScriptHandle())
-      ?: error(
-        "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
-          "active script handle"
-      )
+    require(descriptor.opcode in setOf(85, 328, 329))
+    return when (descriptor.executionMode) {
+      GodotExecutionMode.SNAPSHOT_READ -> {
+        require(descriptor.opcode == 85)
+        webRenderingMethodSnapshot(requireActiveWebScriptHandle())
+          ?: error(
+            "Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +
+              "active script handle"
+          )
+      }
+      GodotExecutionMode.IMMEDIATE_RESULT -> {
+        require(descriptor.opcode in setOf(328, 329))
+        commands.flush()
+        immediateWebStringQuery(descriptor.opcode, requireActiveWebScriptHandle(), "")
+      }
+      else ->
+        error(
+          "Unsupported execution mode ${descriptor.executionMode} for " +
+            "${descriptor.className}.${descriptor.methodName}"
+        )
+    }
   }
 
   override fun invokeStringNameArgSingleton(
@@ -1203,10 +1221,33 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    require(descriptor.opcode in setOf(116, 126, 269))
+    require(descriptor.opcode in setOf(116, 126, 269, 324, 325))
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
     commands.flush()
     immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value.toString())
+  }
+
+  override fun invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    quality: Long,
+    halfSize: Boolean,
+    adaptiveTarget: Double,
+    blurPasses: Long,
+    fadeoutFrom: Double,
+    fadeoutTo: Double,
+  ) {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(326, 327))
+    require(quality in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(blurPasses in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
+    require(adaptiveTarget.isFinite() && fadeoutFrom.isFinite() && fadeoutTo.isFinite())
+    val packed =
+      listOf(quality, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
+        .joinToString("\u001f")
+    commands.flush()
+    immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), packed)
   }
 
   override fun invokeObjectRetHandle(
@@ -1524,20 +1565,21 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     callSite: GodotCallSite,
     receiver: GodotHandle,
     longValue: Long,
-    objectValue: GodotHandle,
+    objectValue: GodotHandle?,
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
     require(descriptor.opcode in setOf(210, 245))
     require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())
-    requireWebBrowserHandle(objectValue.webId(), WebBrowserHandleKind.OBJECT)
+    objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.OBJECT) }
     commands.flush()
-    // Item index and object handle packed into one query string (unit separator).
+    // Item index and object handle packed into one query string (unit separator);
+    // handle id 0 clears the slot.
     check(
       immediateWebObjectQuery(
         descriptor.opcode,
         receiver.webId(),
-        longValue.toString() + "" + objectValue.webId().toString(),
+        longValue.toString() + "" + (objectValue?.webId() ?: 0).toString(),
       ) == 1
     ) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"

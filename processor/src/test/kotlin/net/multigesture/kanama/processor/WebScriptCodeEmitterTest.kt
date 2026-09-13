@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 27"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 28"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -448,6 +448,36 @@ class WebScriptCodeEmitterTest {
     // Task 64 tps-demo parcel 7 (protocol 27): SceneTree.create_timer registers a SceneTreeTimer.
     assertTrue(proxy.contains("elif opcode == 321 and value is SceneTree:"))
     assertTrue(proxy.contains("create_timer(float(timer_parts[0]))"))
+    // Task 64 tps-demo parcel 8 (protocol 28): the render-quality settings family, the two
+    // immediate string reads, and the queued Viewport.set_input_as_handled.
+    assertTrue(proxy.contains("elif opcode == 322 and target_object is Environment:"))
+    assertTrue(
+      proxy.contains(
+        "(target_object as Environment).volumetric_fog_enabled = bytes.decode_s32(offset + 8) != 0"
+      )
+    )
+    assertTrue(proxy.contains("RenderingServer.voxel_gi_set_quality(int(String(args[2])))"))
+    assertTrue(
+      proxy.contains("RenderingServer.environment_set_sdfgi_ray_count(int(String(args[2])))")
+    )
+    assertTrue(proxy.contains("elif opcode == 326 or opcode == 327:"))
+    assertTrue(proxy.contains("RenderingServer.environment_set_ssao_quality(int(quality_parts[0])"))
+    assertTrue(proxy.contains("RenderingServer.environment_set_ssil_quality(int(quality_parts[0])"))
+    assertTrue(
+      proxy.contains(
+        "_kanama_bridge.recordImmediateStringResult(RenderingServer.get_current_rendering_driver_name())"
+      )
+    )
+    assertTrue(proxy.contains("_kanama_bridge.recordImmediateStringResult(OS.get_name())"))
+    assertTrue(proxy.contains("elif opcode == 330 and target_object is Viewport:"))
+    assertTrue(proxy.contains("(target_object as Viewport).set_input_as_handled()"))
+    assertTrue(proxy.contains("elif opcode == 331 and target_object is Control:"))
+    assertTrue(proxy.contains("elif opcode == 332 and target_object is Control:"))
+    assertTrue(
+      proxy.contains(
+        "(target_object as Control).size = Vector2(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12))"
+      )
+    )
     assertTrue(proxy.contains("result = int((value as Node).is_inside_tree())"))
     assertTrue(proxy.contains("elif opcode == 320:"))
     assertTrue(proxy.contains("result = int(value.is_queued_for_deletion())"))
@@ -726,7 +756,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 27"))
+    assertTrue(protocol.contains("\"protocolVersion\": 28"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -737,7 +767,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=27\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=28\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1747,7 +1777,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 27"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 28"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(

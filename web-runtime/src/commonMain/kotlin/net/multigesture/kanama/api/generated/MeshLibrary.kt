@@ -9,18 +9,18 @@ import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject) {
+class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun createItem(id: Int) {
     GodotBackendCalls.invokeLongArg(D.MESHLIBRARY_CREATE_ITEM, requireOpenHandle(), id.toLong())
   }
 
-  fun setItemMesh(id: Int, mesh: Mesh) {
+  fun setItemMesh(id: Int, mesh: Mesh?) {
     GodotBackendCalls.invokeLongObjectArg(
       D.MESHLIBRARY_SET_ITEM_MESH,
       requireOpenHandle(),
       id.toLong(),
-      mesh.requireOpenHandle(),
+      mesh?.requireOpenHandle(),
     )
   }
 
@@ -34,7 +34,7 @@ class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject) {
   }
 
   /** Releases the owned handle (already-released is an error). */
-  fun close() {
+  override fun close() {
     releaseWebConstructedObject(handle.value)
   }
 
@@ -49,7 +49,7 @@ class MeshLibrary(godotObject: GodotHandle) : Resource(godotObject) {
 fun MeshLibrary.createItem(id: Int) = createItem(id)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun MeshLibrary.setItemMesh(id: Int, mesh: Mesh) = setItemMesh(id, mesh)
+fun MeshLibrary.setItemMesh(id: Int, mesh: Mesh?) = setItemMesh(id, mesh)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun MeshLibrary.setItemMeshTransform(id: Int, meshTransform: Transform3D) = setItemMeshTransform(id, meshTransform)

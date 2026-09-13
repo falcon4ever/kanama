@@ -8,7 +8,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class Mesh(godotObject: GodotHandle) : Resource(godotObject) {
+class Mesh(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun surfaceGetMaterial(surfIdx: Int): Material? =
     GodotBackendCalls.invokeLongRetHandle(
@@ -17,13 +17,18 @@ class Mesh(godotObject: GodotHandle) : Resource(godotObject) {
       surfIdx.toLong(),
     )?.let { Material(it.toWebId()) }
 
-  fun surfaceSetMaterial(surfIdx: Int, material: Material) {
+  fun surfaceSetMaterial(surfIdx: Int, material: Material?) {
     GodotBackendCalls.invokeLongObjectArg(
       D.MESH_SURFACE_SET_MATERIAL,
       requireOpenHandle(),
       surfIdx.toLong(),
-      material.requireOpenHandle(),
+      material?.requireOpenHandle(),
     )
+  }
+
+  /** Releases the owned handle (already-released is an error). */
+  override fun close() {
+    releaseWebTrackedObject(handle.value)
   }
 
   companion object {
@@ -36,4 +41,4 @@ class Mesh(godotObject: GodotHandle) : Resource(godotObject) {
 fun Mesh.surfaceGetMaterial(surfIdx: Int): Material? = surfaceGetMaterial(surfIdx)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Mesh.surfaceSetMaterial(surfIdx: Int, material: Material) = surfaceSetMaterial(surfIdx, material)
+fun Mesh.surfaceSetMaterial(surfIdx: Int, material: Material?) = surfaceSetMaterial(surfIdx, material)

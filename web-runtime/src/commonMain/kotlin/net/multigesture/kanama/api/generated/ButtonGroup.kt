@@ -6,10 +6,10 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class ButtonGroup(godotObject: GodotHandle) : Resource(godotObject) {
+class ButtonGroup(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   /** Releases the owned handle (already-released is an error). */
-  fun close() {
+  override fun close() {
     releaseWebConstructedObject(handle.value)
   }
 

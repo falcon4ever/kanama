@@ -138,9 +138,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * set) adds opcodes 307-312: `SceneTree.is_paused`, `Control.release_focus`,
      * `Environment.set_ssil_enabled` / `set_sdfgi_enabled`, `SceneTree.unload_current_scene` and
      * `Input.get_connected_joypads` (a new NOARGS_RET_LONG_LIST_SINGLETON shape on the string
-     * channel).
+     * channel). 28 (task 64, tps-demo parcel 8) adds opcodes 322-330: the render-quality settings
+     * (`Environment.set_ssao_enabled` / `set_volumetric_fog_enabled`, RenderingServer's
+     * `voxel_gi_set_quality` / `environment_set_sdfgi_ray_count` and the six-value
+     * `environment_set_ssao_quality` / `environment_set_ssil_quality` on a new
+     * LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON shape), the immediate string reads
+     * `RenderingServer.get_current_rendering_driver_name` / `OS.get_name`,
+     * `Viewport.set_input_as_handled` and the Control window family `Control.set_position` /
+     * `set_size` (331-332). The LONG_OBJECT_ARG slot also became nullable in 28, so
+     * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0).
      */
-    const val PROTOCOL_VERSION = 27
+    const val PROTOCOL_VERSION = 28
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -988,6 +996,67 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("}")
   }
 
+  /**
+   * `object <Script>Rpcs` (task 64 parcel 8): desktop's `appendRpcHelpers` twin, one `rpc…` /
+   * `rpcId…` (and `callLocal…` when the `@Rpc` declares it) per RPC method. Web has a single local
+   * peer (id 1, no transport), so the helpers apply Godot's own rules for an RPC that stays on the
+   * caller: a broadcast or a call addressed to peer 0/1 runs the method locally when `callLocal` is
+   * set, a call to yourself without `callLocal` is the engine's "not allowed by selected mode"
+   * error, and a remote peer id fails loud -- none can exist here. tps-demo's Menu only reaches
+   * these on the lobby paths a Web build never enters; the helpers make the shared file compile.
+   */
+  private fun StringBuilder.appendWebRpcHelpers(model: ScriptModel) {
+    val rpcMethods = model.methods.filter { it.kind == MethodKind.REGULAR && it.rpc != null }
+    if (rpcMethods.isEmpty()) return
+    val fq = model.fqName
+    appendLine()
+    appendLine("object ${model.simpleName}Rpcs {")
+    for (method in rpcMethods) {
+      val suffix = signalHelperSuffix(method.godotName)
+      val kotlinParams = method.args.joinToString(", ") { "${it.name}: ${it.kotlinType}" }
+      val params = if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""
+      val argNames = method.args.joinToString(", ") { it.name }
+      val callLocal = method.rpc?.callLocal == true
+      val godotName = method.godotName
+      val localCall = "instance.${method.kotlinName}($argNames)"
+      val instanceParam =
+        if (callLocal) "instance: $fq" else "@Suppress(\"UNUSED_PARAMETER\") instance: $fq"
+      appendLine(
+        "  /** Broadcast (peer 0): no remote peers on Web, so only the local leg can run. */"
+      )
+      appendLine("  fun rpc$suffix($instanceParam$params): Long {")
+      if (callLocal) appendLine("    $localCall")
+      appendLine("    return 0L")
+      appendLine("  }")
+      appendLine()
+      appendLine("  fun rpcId$suffix(instance: $fq, peerId: Long$params): Long {")
+      appendLine("    if (peerId != 0L && peerId != 1L) {")
+      appendLine(
+        "      error(\"Kanama Web has no remote peers: rpc_id(\$peerId, \\\"$godotName\\\") on ${model.simpleName}\")"
+      )
+      appendLine("    }")
+      if (callLocal) {
+        appendLine("    $localCall")
+      } else {
+        appendLine("    if (peerId == 1L) {")
+        appendLine(
+          "      error(\"RPC \\\"$godotName\\\" on yourself is not allowed by its @Rpc mode (callLocal = false)\")"
+        )
+        appendLine("    }")
+      }
+      appendLine("    return 0L")
+      appendLine("  }")
+      if (callLocal) {
+        appendLine()
+        appendLine("  fun callLocal$suffix(instance: $fq$params) {")
+        appendLine("    $localCall")
+        appendLine("  }")
+      }
+      appendLine()
+    }
+    appendLine("}")
+  }
+
   fun constantsSource(): String = buildString {
     appendLine("package net.multigesture.kanama.generated")
     appendLine()
@@ -1031,6 +1100,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         appendLine("}")
       }
       appendWebMethodHelpers(model)
+      appendWebRpcHelpers(model)
       if (
         model.methods.isNotEmpty() || model.properties.isNotEmpty() || model.signals.isNotEmpty()
       ) {
@@ -2481,6 +2551,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tlast_value = int(position_x)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
+    // Task 64 tps-demo parcel 8 (protocol 28): SafeArea nudges a Control inside the display
+    // safe area; keep_offsets stays Godot's default (the wrapper rejects anything else).
+    appendLine("\t\telif opcode == 331 and target_object is Control:")
+    appendLine(
+      "\t\t\t(target_object as Control).position = Vector2(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 332 and target_object is Control:")
+    appendLine(
+      "\t\t\t(target_object as Control).size = Vector2(bytes.decode_float(offset + 8), bytes.decode_float(offset + 12))"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
     appendLine("\t\telif opcode == 30 and target_object is Node2D:")
     appendLine("\t\t\tvar target := target_object as Node2D")
     appendLine(
@@ -2505,6 +2589,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\telif opcode == 310 and target_object is Environment:")
     appendLine(
       "\t\t\t(target_object as Environment).sdfgi_enabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    // Task 64 tps-demo parcel 8 (protocol 28): the Settings menu's SSAO / volumetric-fog toggles.
+    appendLine("\t\telif opcode == 322 and target_object is Environment:")
+    appendLine(
+      "\t\t\t(target_object as Environment).ssao_enabled = bytes.decode_s32(offset + 8) != 0"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 16")
+    appendLine("\t\telif opcode == 323 and target_object is Environment:")
+    appendLine(
+      "\t\t\t(target_object as Environment).volumetric_fog_enabled = bytes.decode_s32(offset + 8) != 0"
     )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
@@ -2575,6 +2672,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\toffset += 8")
     appendLine("\t\telif opcode == 311 and target_object is SceneTree:")
     appendLine("\t\t\t(target_object as SceneTree).unload_current_scene()")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 8")
+    // Task 64 tps-demo parcel 8 (protocol 28): Settings consumes its fullscreen toggle.
+    appendLine("\t\telif opcode == 330 and target_object is Viewport:")
+    appendLine("\t\t\t(target_object as Viewport).set_input_as_handled()")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 8")
     appendLine("\t\telif opcode == 65 and target_object is PathFollow2D:")
@@ -4259,7 +4361,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t\tvar item_mesh: Mesh = _kanama_object_handles.get(int(item_mesh_parts[1])) as Mesh"
     )
-    appendLine("\t\t\tif item_mesh != null:")
+    appendLine("\t\t\tif item_mesh != null or int(item_mesh_parts[1]) == 0:")
     appendLine("\t\t\t\t(value as MeshLibrary).set_item_mesh(int(item_mesh_parts[0]), item_mesh)")
     appendLine("\t\t\t\tresult = 1")
     appendLine("\t\telif opcode == 211 and value is MeshLibrary:")
@@ -4483,6 +4585,33 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 269:")
     appendLine("\t\t\tEngine.max_fps = int(String(args[2]))")
+    appendLine("\t\t\tresult = 1")
+    // Task 64 tps-demo parcel 8 (protocol 28): the render-quality singleton writes (Compatibility
+    // ignores them, the calls still reach the engine) and the two string reads.
+    appendLine("\t\telif opcode == 324:")
+    appendLine("\t\t\tRenderingServer.voxel_gi_set_quality(int(String(args[2])))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 325:")
+    appendLine("\t\t\tRenderingServer.environment_set_sdfgi_ray_count(int(String(args[2])))")
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 326 or opcode == 327:")
+    appendLine("\t\t\tvar quality_parts := String(args[2]).split(\"\\u001f\")")
+    appendLine("\t\t\tif opcode == 326:")
+    appendLine(
+      "\t\t\t\tRenderingServer.environment_set_ssao_quality(int(quality_parts[0]), quality_parts[1] == \"true\", float(quality_parts[2]), int(quality_parts[3]), float(quality_parts[4]), float(quality_parts[5]))"
+    )
+    appendLine("\t\t\telse:")
+    appendLine(
+      "\t\t\t\tRenderingServer.environment_set_ssil_quality(int(quality_parts[0]), quality_parts[1] == \"true\", float(quality_parts[2]), int(quality_parts[3]), float(quality_parts[4]), float(quality_parts[5]))"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 328:")
+    appendLine(
+      "\t\t\t_kanama_bridge.recordImmediateStringResult(RenderingServer.get_current_rendering_driver_name())"
+    )
+    appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == 329:")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(OS.get_name())")
     appendLine("\t\t\tresult = 1")
     appendLine("\t\telif opcode == 270:")
     appendLine("\t\t\tresult = int(Engine.get_frames_per_second())")

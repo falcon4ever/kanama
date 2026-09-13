@@ -22,11 +22,49 @@ object ResourceLoader {
 
   fun loadAudioStream(path: String, cacheMode: Long = 1L): AudioStream? = load(path, "AudioStream", cacheMode)?.let { AudioStream(it.handle) }
 
+  fun loadLightmapGIData(path: String, cacheMode: Long = 1L): LightmapGIData? = load(path, "LightmapGIData", cacheMode)?.let { LightmapGIData(it.handle) }
+
+  /** Desktop's `ResourceLoader.ThreadLoadStatus`: the status enum value and the 0..1 progress. */
+  data class ThreadLoadStatus(val status: Long, val progress: Double?)
+
+  /**
+   * Threaded-load family (task 64 parcel 8) over the synchronous facade in `WebFacades.kt`: the
+   * Web export is a `nothreads` build, so a background load could never make progress. The
+   * request loads at once and every later poll reports THREAD_LOAD_LOADED with progress 1.0
+   * (tps-demo's loading screen completes on its first poll). Desktop's signatures; `typeHint`,
+   * `useSubThreads` and `cacheMode` are accepted and ignored; the result is Godot's OK.
+   */
+  fun loadThreadedRequest(
+    path: String,
+    @Suppress("UNUSED_PARAMETER") typeHint: String = "",
+    @Suppress("UNUSED_PARAMETER") useSubThreads: Boolean = false,
+    @Suppress("UNUSED_PARAMETER") cacheMode: Long = CACHE_MODE_REUSE,
+  ): Long {
+    ThreadedLoad.request(path)
+    return 0L
+  }
+
+  fun loadThreadedGetStatus(path: String): Long = ThreadedLoad.status(path)
+
+  fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+    val status = ThreadedLoad.status(path)
+    return ThreadLoadStatus(status, if (status == THREAD_LOAD_LOADED) 1.0 else 0.0)
+  }
+
+  /** The loaded resource (an owned handle: close it, or hand it to the tree). */
+  fun loadThreadedGet(path: String): Resource? = ThreadedLoad.take(path)
+
+  fun loadThreadedGetPackedScene(path: String): PackedScene? = ThreadedLoad.take(path)
+
   const val CACHE_MODE_IGNORE: Long = 0L
   const val CACHE_MODE_REUSE: Long = 1L
   const val CACHE_MODE_REPLACE: Long = 2L
   const val CACHE_MODE_IGNORE_DEEP: Long = 3L
   const val CACHE_MODE_REPLACE_DEEP: Long = 4L
+  const val THREAD_LOAD_INVALID_RESOURCE: Long = 0L
+  const val THREAD_LOAD_IN_PROGRESS: Long = 1L
+  const val THREAD_LOAD_FAILED: Long = 2L
+  const val THREAD_LOAD_LOADED: Long = 3L
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -40,3 +78,6 @@ fun ResourceLoader.loadPackedScene(path: String, cacheMode: Long = 1L): PackedSc
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun ResourceLoader.loadAudioStream(path: String, cacheMode: Long = 1L): AudioStream? = loadAudioStream(path, cacheMode)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun ResourceLoader.loadLightmapGIData(path: String, cacheMode: Long = 1L): LightmapGIData? = loadLightmapGIData(path, cacheMode)

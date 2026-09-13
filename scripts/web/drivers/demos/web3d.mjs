@@ -295,6 +295,27 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`nodeLifecycleProbe: mask=${nodeLifecycleProbe}`);
 
+  // Task 64 tps-demo parcel 8 (protocol 28): the render-quality family (322-327) plus the two
+  // immediate string reads (328/329) and the queued Viewport.set_input_as_handled (330).
+  // Runs AFTER generic_probe like the other viewport-wrapping probes. Healthy = 63.
+  const renderSettingsProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("render_settings_probe")}, 0)`,
+    ),
+  );
+  trace(`renderSettingsProbe: mask=${renderSettingsProbe}`);
+
+  // Task 64 tps-demo parcel 8 (protocol 28): Node.get_window as a member, Control.set_position /
+  // set_size (331/332) round-tripped through get_position / get_size, the narrowed
+  // Node.propagate_call, and the now-nullable LONG_OBJECT_ARG slot
+  // (Mesh.surface_set_material(0, null)). Healthy = 31.
+  const windowFamilyProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("window_family_probe")}, 0)`,
+    ),
+  );
+  trace(`windowFamilyProbe: mask=${windowFamilyProbe}`);
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -397,6 +418,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     sceneTreeTimerDelivers: timerMask === 7,
     // Task 64 tps-demo parcel 6: node lifecycle queries (is_inside_tree, is_queued_for_deletion).
     nodeLifecycleDelivers: nodeLifecycleProbe === 15,
+    // Task 64 tps-demo parcel 8: the render-quality family reached the engine (driver name, OS
+    // name, the two Long writes, the two six-value quality writes, the queued Environment
+    // toggles, set_input_as_handled).
+    renderSettingsFamilyDelivers: renderSettingsProbe === 63,
+    // Task 64 tps-demo parcel 8: get_window, Control.set_position / set_size round-trips, the
+    // narrowed propagate_call, and the nullable object slot clearing a mesh surface material.
+    windowFamilyDelivers: windowFamilyProbe === 31,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an
