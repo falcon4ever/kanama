@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: Curve3D
  */
-class Curve3D(handle: MemorySegment) : Resource(handle) {
+class Curve3D(handle: GodotHandle) : Resource(handle) {
     var curveClosed: Boolean
         @JvmName("curveClosedProperty")
         get() = isClosed()
@@ -45,7 +45,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setPointCountBind, segment, count)
     }
 
     /**
@@ -70,7 +70,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun addPoint(position: Vector3, inValue: Vector3, out: Vector3, index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeVector3AndIntArg(addPointBind, handle, position, inValue, out, index)
+        ObjectCalls.ptrcallWithThreeVector3AndIntArg(addPointBind, segment, position, inValue, out, index)
     }
 
     /**
@@ -81,7 +81,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointPosition(idx: Int, position: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setPointPositionBind, handle, idx, position)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setPointPositionBind, segment, idx, position)
     }
 
     /**
@@ -92,7 +92,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointPosition(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointPositionBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointPositionBind, segment, idx)
     }
 
     /**
@@ -105,7 +105,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointTilt(idx: Int, tilt: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointTiltBind, handle, idx, tilt)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointTiltBind, segment, idx, tilt)
     }
 
     /**
@@ -116,7 +116,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointTilt(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointTiltBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointTiltBind, segment, idx)
     }
 
     /**
@@ -127,7 +127,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointIn(idx: Int, position: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setPointInBind, handle, idx, position)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setPointInBind, segment, idx, position)
     }
 
     /**
@@ -139,7 +139,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointIn(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointInBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointInBind, segment, idx)
     }
 
     /**
@@ -150,7 +150,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointOut(idx: Int, position: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setPointOutBind, handle, idx, position)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setPointOutBind, segment, idx, position)
     }
 
     /**
@@ -162,7 +162,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointOut(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointOutBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getPointOutBind, segment, idx)
     }
 
     /**
@@ -172,7 +172,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun removePoint(idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePointBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, idx)
     }
 
     /**
@@ -182,7 +182,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun clearPoints() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearPointsBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun sample(idx: Int, t: Double): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector3(sampleBind, handle, idx, t)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector3(sampleBind, segment, idx, t)
     }
 
     /**
@@ -207,12 +207,12 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun samplef(fofs: Double): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetVector3(samplefBind, handle, fofs)
+        return ObjectCalls.ptrcallWithDoubleArgRetVector3(samplefBind, segment, fofs)
     }
 
     fun setCurveClosed(closed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCurveClosedBind, handle, closed)
+        ObjectCalls.ptrcallWithBoolArg(setCurveClosedBind, segment, closed)
     }
 
     /**
@@ -223,7 +223,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun isClosed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isClosedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isClosedBind, segment)
     }
 
     /**
@@ -236,7 +236,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setBakeInterval(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, segment, distance)
     }
 
     /**
@@ -249,7 +249,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakeInterval(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, segment)
     }
 
     /**
@@ -261,7 +261,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setUpVectorEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUpVectorEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUpVectorEnabledBind, segment, enable)
     }
 
     /**
@@ -273,7 +273,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun isUpVectorEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUpVectorEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUpVectorEnabledBind, segment)
     }
 
     /**
@@ -284,7 +284,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakedLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, segment)
     }
 
     /**
@@ -298,7 +298,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(sampleBakedBind, handle, offset, cubic)
+        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(sampleBakedBind, segment, offset, cubic)
     }
 
     /**
@@ -311,7 +311,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false, applyTilt: Boolean = false): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(sampleBakedWithRotationBind, handle, offset, cubic, applyTilt)
+        return ObjectCalls.ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(sampleBakedWithRotationBind, segment, offset, cubic, applyTilt)
     }
 
     /**
@@ -325,7 +325,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun sampleBakedUpVector(offset: Double, applyTilt: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(sampleBakedUpVectorBind, handle, offset, applyTilt)
+        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector3(sampleBakedUpVectorBind, segment, offset, applyTilt)
     }
 
     /**
@@ -335,7 +335,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakedPoints(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedPointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedPointsBind, segment)
     }
 
     /**
@@ -345,7 +345,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakedTilts(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBakedTiltsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBakedTiltsBind, segment)
     }
 
     /**
@@ -356,7 +356,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakedUpVectors(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedUpVectorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getBakedUpVectorsBind, segment)
     }
 
     /**
@@ -367,7 +367,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getClosestPoint(toPoint: Vector3): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(getClosestPointBind, handle, toPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(getClosestPointBind, segment, toPoint)
     }
 
     /**
@@ -378,7 +378,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getClosestOffset(toPoint: Vector3): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetDouble(getClosestOffsetBind, handle, toPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetDouble(getClosestOffsetBind, segment, toPoint)
     }
 
     /**
@@ -395,7 +395,7 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun tessellate(maxStages: Int = 5, toleranceDegrees: Double = 4.0): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateBind, handle, maxStages, toleranceDegrees)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateBind, segment, maxStages, toleranceDegrees)
     }
 
     /**
@@ -409,16 +409,16 @@ class Curve3D(handle: MemorySegment) : Resource(handle) {
      */
     fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 0.2): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateEvenLengthBind, handle, maxStages, toleranceLength)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector3List(tessellateEvenLengthBind, segment, maxStages, toleranceLength)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Curve3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Curve3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Curve3D? =
-            if (handle.address() == 0L) null else Curve3D(handle)
+            if (handle.address() == 0L) null else Curve3D(GodotHandle(handle))
 
         private const val GET_POINT_COUNT_HASH = 3905245786L
         private val getPointCountBind by lazy {

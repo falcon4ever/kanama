@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: RayCast2D
  */
-class RayCast2D(handle: MemorySegment) : Node2D(handle) {
+class RayCast2D(handle: GodotHandle) : Node2D(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = isEnabled()
@@ -62,7 +62,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -71,7 +71,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_target_position
      */
     fun setTargetPosition(localPoint: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, handle, localPoint)
+        ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, segment, localPoint)
     }
 
     /**
@@ -89,7 +89,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_target_position
      */
     fun getTargetPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, segment)
     }
 
     /**
@@ -99,7 +99,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.is_colliding
      */
     fun isColliding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollidingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollidingBind, segment)
     }
 
     /**
@@ -110,7 +110,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.force_raycast_update
      */
     fun forceRaycastUpdate() {
-        ObjectCalls.ptrcallNoArgs(forceRaycastUpdateBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceRaycastUpdateBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_collider
      */
     fun getCollider(): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, handle))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, segment))
     }
 
     /**
@@ -132,7 +132,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_collider_rid
      */
     fun getColliderRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_collider_shape
      */
     fun getColliderShape(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeBind, segment)
     }
 
     /**
@@ -155,7 +155,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_collision_point
      */
     fun getCollisionPoint(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCollisionPointBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCollisionPointBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_collision_normal
      */
     fun getCollisionNormal(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCollisionNormalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCollisionNormalBind, segment)
     }
 
     /**
@@ -176,7 +176,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.add_exception_rid
      */
     fun addExceptionRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(addExceptionRidBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(addExceptionRidBind, segment, rid)
     }
 
     /**
@@ -185,7 +185,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.add_exception
      */
     fun addException(node: CollisionObject2D) {
-        ObjectCalls.ptrcallWithObjectArgs(addExceptionBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addExceptionBind, segment, listOf(node.segment))
     }
 
     /**
@@ -194,7 +194,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.remove_exception_rid
      */
     fun removeExceptionRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(removeExceptionRidBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(removeExceptionRidBind, segment, rid)
     }
 
     /**
@@ -203,7 +203,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.remove_exception
      */
     fun removeException(node: CollisionObject2D) {
-        ObjectCalls.ptrcallWithObjectArgs(removeExceptionBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeExceptionBind, segment, listOf(node.segment))
     }
 
     /**
@@ -212,7 +212,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.clear_exceptions
      */
     fun clearExceptions() {
-        ObjectCalls.ptrcallNoArgs(clearExceptionsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearExceptionsBind, segment)
     }
 
     /**
@@ -224,7 +224,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -236,7 +236,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -246,7 +246,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -256,7 +256,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -267,7 +267,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_exclude_parent_body
      */
     fun setExcludeParentBody(mask: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExcludeParentBodyBind, handle, mask)
+        ObjectCalls.ptrcallWithBoolArg(setExcludeParentBodyBind, segment, mask)
     }
 
     /**
@@ -278,7 +278,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.get_exclude_parent_body
      */
     fun getExcludeParentBody(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeParentBodyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeParentBodyBind, segment)
     }
 
     /**
@@ -287,7 +287,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_collide_with_areas
      */
     fun setCollideWithAreas(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -296,7 +296,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.is_collide_with_areas_enabled
      */
     fun isCollideWithAreasEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
     }
 
     /**
@@ -305,7 +305,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_collide_with_bodies
      */
     fun setCollideWithBodies(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -314,7 +314,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.is_collide_with_bodies_enabled
      */
     fun isCollideWithBodiesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -324,7 +324,7 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.set_hit_from_inside
      */
     fun setHitFromInside(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, segment, enable)
     }
 
     /**
@@ -334,16 +334,16 @@ class RayCast2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RayCast2D.is_hit_from_inside_enabled
      */
     fun isHitFromInsideEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RayCast2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RayCast2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RayCast2D? =
-            if (handle.address() == 0L) null else RayCast2D(handle)
+            if (handle.address() == 0L) null else RayCast2D(GodotHandle(handle))
 
         private const val SET_ENABLED_HASH = 2586408642L
         private val setEnabledBind by lazy {

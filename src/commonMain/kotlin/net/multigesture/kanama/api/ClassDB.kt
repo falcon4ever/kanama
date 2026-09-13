@@ -175,7 +175,7 @@ object ClassDB {
      */
     @JvmStatic
     fun classGetProperty(objectValue: GodotObject, property: String): Any? {
-        return ObjectCalls.ptrcallWithObjectStringNameArgRetVariantScalar(classGetPropertyBind, singleton, objectValue.handle, property)
+        return ObjectCalls.ptrcallWithObjectStringNameArgRetVariantScalar(classGetPropertyBind, singleton, objectValue.segment, property)
     }
 
     /**
@@ -185,7 +185,7 @@ object ClassDB {
      */
     @JvmStatic
     fun classSetProperty(objectValue: GodotObject, property: String, value: Any?): Long {
-        return ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(classSetPropertyBind, singleton, objectValue.handle, property, value)
+        return ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(classSetPropertyBind, singleton, objectValue.segment, property, value)
     }
 
     /**
@@ -337,8 +337,8 @@ object ClassDB {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): ClassDB? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): ClassDB? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): ClassDB? =
         if (handle.address() == 0L) null else this

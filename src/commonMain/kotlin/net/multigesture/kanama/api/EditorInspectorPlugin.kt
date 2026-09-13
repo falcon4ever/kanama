@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorInspectorPlugin
  */
-class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
+class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Adds a custom control, which is not necessarily a property editor.
      *
@@ -18,7 +18,7 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addCustomControl(control: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addCustomControlBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addCustomControlBind, segment, listOf(control.segment))
     }
 
     /**
@@ -34,7 +34,7 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addPropertyEditor(property: String, editor: Control, addToEnd: Boolean = false, label: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithStringObjectBoolStringArgs(addPropertyEditorBind, handle, property, editor.handle, addToEnd, label)
+        ObjectCalls.ptrcallWithStringObjectBoolStringArgs(addPropertyEditorBind, segment, property, editor.segment, addToEnd, label)
     }
 
     /**
@@ -45,16 +45,16 @@ class EditorInspectorPlugin(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addPropertyEditorForMultipleProperties(label: String, properties: List<String>, editor: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringPackedStringListAndObjectArgs(addPropertyEditorForMultiplePropertiesBind, handle, label, properties, editor.handle)
+        ObjectCalls.ptrcallWithStringPackedStringListAndObjectArgs(addPropertyEditorForMultiplePropertiesBind, segment, label, properties, editor.segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorInspectorPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorInspectorPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorInspectorPlugin? =
-            if (handle.address() == 0L) null else EditorInspectorPlugin(handle)
+            if (handle.address() == 0L) null else EditorInspectorPlugin(GodotHandle(handle))
 
         private const val ADD_CUSTOM_CONTROL_HASH = 1496901182L
         private val addCustomControlBind by lazy {

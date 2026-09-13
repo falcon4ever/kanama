@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CryptoKey
  */
-class CryptoKey(handle: MemorySegment) : Resource(handle) {
+class CryptoKey(handle: GodotHandle) : Resource(handle) {
     /**
      * Saves a key to the given `path`. If `public_only` is `true`, only the public key will be saved.
      * Note: `path` should be a "*.pub" file if `public_only` is `true`, a "*.key" file otherwise.
@@ -19,7 +19,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      */
     fun save(path: String, publicOnly: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(saveBind, handle, path, publicOnly)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(saveBind, segment, path, publicOnly)
     }
 
     /**
@@ -30,7 +30,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      */
     fun load(path: String, publicOnly: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadBind, handle, path, publicOnly)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadBind, segment, path, publicOnly)
     }
 
     /**
@@ -40,7 +40,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      */
     fun isPublicOnly(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPublicOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPublicOnlyBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      */
     fun saveToString(publicOnly: Boolean = false): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetString(saveToStringBind, handle, publicOnly)
+        return ObjectCalls.ptrcallWithBoolArgRetString(saveToStringBind, segment, publicOnly)
     }
 
     /**
@@ -62,16 +62,16 @@ class CryptoKey(handle: MemorySegment) : Resource(handle) {
      */
     fun loadFromString(stringKey: String, publicOnly: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadFromStringBind, handle, stringKey, publicOnly)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadFromStringBind, segment, stringKey, publicOnly)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CryptoKey? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CryptoKey? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CryptoKey? =
-            if (handle.address() == 0L) null else CryptoKey(handle)
+            if (handle.address() == 0L) null else CryptoKey(GodotHandle(handle))
 
         private const val SAVE_HASH = 885841341L
         private val saveBind by lazy {

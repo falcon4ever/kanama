@@ -9,7 +9,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: EditorExportPlatform
  */
-open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
+open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the name of the export operating system handled by this `EditorExportPlatform` class, as
      * a friendly string. Possible return values are `Windows`, `Linux`, `macOS`, `Android`, `iOS`, and
@@ -19,7 +19,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOsName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOsNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOsNameBind, segment)
     }
 
     /**
@@ -29,7 +29,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun createPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, handle))
+        return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, segment))
     }
 
     /**
@@ -42,7 +42,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun findExportTemplate(templateFileName: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetDictionary(findExportTemplateBind, handle, templateFileName)
+        return ObjectCalls.ptrcallWithStringArgRetDictionary(findExportTemplateBind, segment, templateFileName)
     }
 
     /**
@@ -52,7 +52,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCurrentPresets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getCurrentPresetsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getCurrentPresetsBind, segment)
     }
 
     /**
@@ -67,7 +67,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun savePack(preset: EditorExportPreset?, debug: Boolean, path: String, embed: Boolean = false): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(savePackBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, embed)
+        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(savePackBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, embed)
     }
 
     /**
@@ -79,7 +79,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun saveZip(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
     /**
@@ -91,7 +91,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun savePackPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(savePackPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(savePackPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
     /**
@@ -103,7 +103,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun saveZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
     }
 
     /**
@@ -114,7 +114,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun genExportFlags(flags: Long): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(genExportFlagsBind, handle, flags)
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(genExportFlagsBind, segment, flags)
     }
 
     /**
@@ -132,7 +132,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, saveCb.target.handle, saveCb.method, sharedCb.target.handle, sharedCb.method)
+        return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method)
     }
 
     /**
@@ -143,7 +143,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L, notify: Boolean = true): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags, notify)
+        return ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags, notify)
     }
 
     /**
@@ -153,7 +153,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
     }
 
     /**
@@ -163,7 +163,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
     }
 
     /**
@@ -176,7 +176,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
     }
 
     /**
@@ -189,7 +189,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
     }
 
     /**
@@ -199,7 +199,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clearMessages() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearMessagesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearMessagesBind, segment)
     }
 
     /**
@@ -209,7 +209,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addMessage(type: Long, category: String, message: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringArgs(addMessageBind, handle, type, category, message)
+        ObjectCalls.ptrcallWithLongAndTwoStringArgs(addMessageBind, segment, type, category, message)
     }
 
     /**
@@ -219,7 +219,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMessageCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, segment)
     }
 
     /**
@@ -229,7 +229,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMessageType(index: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, segment, index)
     }
 
     /**
@@ -239,7 +239,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMessageCategory(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getMessageCategoryBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getMessageCategoryBind, segment, index)
     }
 
     /**
@@ -249,7 +249,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMessageText(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getMessageTextBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getMessageTextBind, segment, index)
     }
 
     /**
@@ -259,7 +259,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getWorstMessageType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, segment)
     }
 
     /**
@@ -269,7 +269,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      * Generated from Godot docs: EditorExportPlatform.ssh_run_on_remote
      */
     fun sshRunOnRemote(host: String, port: String, sshArg: List<String>, cmdArgs: String, output: List<Any?> = emptyList(), portFwd: Int = -1): Long {
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(sshRunOnRemoteBind, handle, host, port, sshArg, cmdArgs, output, portFwd)
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(sshRunOnRemoteBind, segment, host, port, sshArg, cmdArgs, output, portFwd)
     }
 
     /**
@@ -280,7 +280,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = -1): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(sshRunOnRemoteNoWaitBind, handle, host, port, sshArgs, cmdArgs, portFwd)
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(sshRunOnRemoteNoWaitBind, segment, host, port, sshArgs, cmdArgs, portFwd)
     }
 
     /**
@@ -290,7 +290,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, handle, host, port, scpArgs, srcFile, dstFile)
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, segment, host, port, scpArgs, srcFile, dstFile)
     }
 
     /**
@@ -302,7 +302,7 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getInternalExportFiles(preset: EditorExportPreset?, debug: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, handle, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug)
     }
 
     companion object {
@@ -316,11 +316,11 @@ open class EditorExportPlatform(handle: MemorySegment) : RefCounted(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorExportPlatform? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorExportPlatform? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorExportPlatform? =
-            if (handle.address() == 0L) null else EditorExportPlatform(handle)
+            if (handle.address() == 0L) null else EditorExportPlatform(GodotHandle(handle))
 
         private const val GET_OS_NAME_HASH = 201670096L
         private val getOsNameBind by lazy {

@@ -89,7 +89,7 @@ flowchart TB
     end
 
     subgraph APP["Exported iOS app (.xcframework, device arm64)"]
-        KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, MemorySegment shim"]
+        KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, GodotHandle over the MemorySegment shim"]
         WRAP["Shared generated wrappers<br/>src/commonMain, the same files desktop/Android compile"]
         OC["ObjectCalls (iOS actual)<br/>typed ptrcall helpers"]
         SHIM["C GDExtension shim<br/>entry, get_method_bind, generic ptrcall dispatch"]
@@ -363,12 +363,12 @@ thin abstract base once per unique `attachTo` type:
 
 ```kotlin
 // KSP generates:
-abstract class CharacterBody3DScript(godotObject: MemorySegment) :
+abstract class CharacterBody3DScript(godotObject: GodotHandle) :
     KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D)
 
 // User writes:
 @ScriptClass(attachTo = "CharacterBody3D")
-class Player(godotObject: MemorySegment) : CharacterBody3DScript(godotObject) {
+class Player(godotObject: GodotHandle) : CharacterBody3DScript(godotObject) {
     fun physicsProcess(delta: Double) {
         if (self.isOnFloor()) { ... }   // self. still required
     }
@@ -396,7 +396,7 @@ confusion:
 
 ```kotlin
 @ScriptClass(attachTo = "CharacterBody3D")
-class Player(godotObject: MemorySegment) : CharacterBody3DScript(godotObject) {
+class Player(godotObject: GodotHandle) : CharacterBody3DScript(godotObject) {
     fun physicsProcess(delta: Double) {
         if (isOnFloor()) moveAndSlide()   // no self. needed
     }

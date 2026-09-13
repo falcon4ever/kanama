@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: Resource
  */
-open class Resource(handle: MemorySegment) : RefCounted(handle) {
+open class Resource(handle: GodotHandle) : RefCounted(handle) {
     var resourceLocalToScene: Boolean
         @JvmName("resourceLocalToSceneProperty")
         get() = isLocalToScene()
@@ -37,98 +37,98 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
 
     fun setPath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(setPathBind, segment, path)
     }
 
     fun takeOverPath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(takeOverPathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(takeOverPathBind, segment, path)
     }
 
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, segment)
     }
 
     fun setPathCache(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPathCacheBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(setPathCacheBind, segment, path)
     }
 
     fun setName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setNameBind, segment, name)
     }
 
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
     }
 
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     fun setLocalToScene(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLocalToSceneBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setLocalToSceneBind, segment, enable)
     }
 
     fun isLocalToScene(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalToSceneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLocalToSceneBind, segment)
     }
 
     fun getLocalScene(): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalSceneBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalSceneBind, segment))
     }
 
     fun setupLocalToScene() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(setupLocalToSceneBind, handle)
+        ObjectCalls.ptrcallNoArgs(setupLocalToSceneBind, segment)
     }
 
     fun resetState() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetStateBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetStateBind, segment)
     }
 
     fun setIdForPath(path: String, id: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, handle, path, id)
+        ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, segment, path, id)
     }
 
     fun getIdForPath(path: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, segment, path)
     }
 
     fun isBuiltIn(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, segment)
     }
 
     fun setSceneUniqueId(id: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, handle, id)
+        ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, segment, id)
     }
 
     fun getSceneUniqueId(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, segment)
     }
 
     fun emitChanged() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(emitChangedBind, handle)
+        ObjectCalls.ptrcallNoArgs(emitChangedBind, segment)
     }
 
     fun duplicate(deep: Boolean = false): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, handle, deep)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, segment, deep)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -137,8 +137,8 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
 
     fun duplicateDeep(deepSubresourcesMode: Long = 1L): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, handle, deepSubresourcesMode)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, deepSubresourcesMode)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -147,7 +147,7 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
 
     fun copyFromResource(resource: Resource?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, handle, resource?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     object Signals {
@@ -165,11 +165,11 @@ open class Resource(handle: MemorySegment) : RefCounted(handle) {
         const val DEEP_DUPLICATE_ALL: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Resource =
+        fun fromHandle(handle: GodotHandle): Resource =
             Resource(handle)
 
         internal fun wrap(handle: MemorySegment): Resource? =
-            if (handle.address() == 0L) null else Resource(handle)
+            if (handle.address() == 0L) null else Resource(GodotHandle(handle))
 
         private const val SET_PATH_HASH = 83702148L
         private val setPathBind by lazy {

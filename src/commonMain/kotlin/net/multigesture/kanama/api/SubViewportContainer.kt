@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SubViewportContainer
  */
-class SubViewportContainer(handle: MemorySegment) : Container(handle) {
+class SubViewportContainer(handle: GodotHandle) : Container(handle) {
     var stretch: Boolean
         @JvmName("stretchProperty")
         get() = isStretchEnabled()
@@ -37,7 +37,7 @@ class SubViewportContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.set_stretch
      */
     fun setStretch(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setStretchBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setStretchBind, segment, enable)
     }
 
     /**
@@ -47,7 +47,7 @@ class SubViewportContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.is_stretch_enabled
      */
     fun isStretchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isStretchEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isStretchEnabledBind, segment)
     }
 
     /**
@@ -59,7 +59,7 @@ class SubViewportContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.set_stretch_shrink
      */
     fun setStretchShrink(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setStretchShrinkBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setStretchShrinkBind, segment, amount)
     }
 
     /**
@@ -71,7 +71,7 @@ class SubViewportContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.get_stretch_shrink
      */
     fun getStretchShrink(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getStretchShrinkBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStretchShrinkBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class SubViewportContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.set_mouse_target
      */
     fun setMouseTarget(amount: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMouseTargetBind, handle, amount)
+        ObjectCalls.ptrcallWithBoolArg(setMouseTargetBind, segment, amount)
     }
 
     /**
@@ -97,16 +97,16 @@ class SubViewportContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.is_mouse_target_enabled
      */
     fun isMouseTargetEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMouseTargetEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMouseTargetEnabledBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SubViewportContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SubViewportContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SubViewportContainer? =
-            if (handle.address() == 0L) null else SubViewportContainer(handle)
+            if (handle.address() == 0L) null else SubViewportContainer(GodotHandle(handle))
 
         private const val SET_STRETCH_HASH = 2586408642L
         private val setStretchBind by lazy {

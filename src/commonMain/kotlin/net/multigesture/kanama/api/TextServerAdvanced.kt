@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: TextServerAdvanced
  */
-class TextServerAdvanced(handle: MemorySegment) : TextServerExtension(handle) {
+class TextServerAdvanced(handle: GodotHandle) : TextServerExtension(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextServerAdvanced? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextServerAdvanced? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextServerAdvanced? =
-            if (handle.address() == 0L) null else TextServerAdvanced(handle)
+            if (handle.address() == 0L) null else TextServerAdvanced(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

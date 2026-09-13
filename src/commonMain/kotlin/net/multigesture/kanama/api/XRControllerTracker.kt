@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XRControllerTracker
  */
-class XRControllerTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
+class XRControllerTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRControllerTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRControllerTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRControllerTracker? =
-            if (handle.address() == 0L) null else XRControllerTracker(handle)
+            if (handle.address() == 0L) null else XRControllerTracker(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

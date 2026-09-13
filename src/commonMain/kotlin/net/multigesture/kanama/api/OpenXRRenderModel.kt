@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: OpenXRRenderModel
  */
-class OpenXRRenderModel(handle: MemorySegment) : Node3D(handle) {
+class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
     var renderModel: RID
         @JvmName("renderModelProperty")
         get() = getRenderModel()
@@ -18,15 +18,15 @@ class OpenXRRenderModel(handle: MemorySegment) : Node3D(handle) {
         set(value) = setRenderModel(value)
 
     fun getTopLevelPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTopLevelPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTopLevelPathBind, segment)
     }
 
     fun getRenderModel(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRenderModelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRenderModelBind, segment)
     }
 
     fun setRenderModel(renderModel: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setRenderModelBind, handle, renderModel)
+        ObjectCalls.ptrcallWithRIDArg(setRenderModelBind, segment, renderModel)
     }
 
     object Signals {
@@ -35,11 +35,11 @@ class OpenXRRenderModel(handle: MemorySegment) : Node3D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRRenderModel? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRRenderModel? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRRenderModel? =
-            if (handle.address() == 0L) null else OpenXRRenderModel(handle)
+            if (handle.address() == 0L) null else OpenXRRenderModel(GodotHandle(handle))
 
         private const val GET_TOP_LEVEL_PATH_HASH = 201670096L
         private val getTopLevelPathBind by lazy {

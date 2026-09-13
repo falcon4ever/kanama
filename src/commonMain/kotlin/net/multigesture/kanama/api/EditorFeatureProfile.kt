@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorFeatureProfile
  */
-class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
+class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
     /**
      * If `disable` is `true`, disables the class specified by `class_name`. When disabled, the class
      * won't appear in the Create New Node dialog.
@@ -19,7 +19,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDisableClass(className: String, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassBind, handle, className, disable)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassBind, segment, className, disable)
     }
 
     /**
@@ -30,7 +30,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isClassDisabled(className: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassDisabledBind, handle, className)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassDisabledBind, segment, className)
     }
 
     /**
@@ -42,7 +42,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDisableClassEditor(className: String, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassEditorBind, handle, className, disable)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassEditorBind, segment, className, disable)
     }
 
     /**
@@ -54,7 +54,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isClassEditorDisabled(className: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassEditorDisabledBind, handle, className)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassEditorDisabledBind, segment, className)
     }
 
     /**
@@ -66,7 +66,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDisableClassProperty(className: String, property: String, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndBoolArgs(setDisableClassPropertyBind, handle, className, property, disable)
+        ObjectCalls.ptrcallWithTwoStringNameAndBoolArgs(setDisableClassPropertyBind, segment, className, property, disable)
     }
 
     /**
@@ -78,7 +78,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isClassPropertyDisabled(className: String, property: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isClassPropertyDisabledBind, handle, className, property)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isClassPropertyDisabledBind, segment, className, property)
     }
 
     /**
@@ -89,7 +89,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDisableFeature(feature: Long, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDisableFeatureBind, handle, feature, disable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setDisableFeatureBind, segment, feature, disable)
     }
 
     /**
@@ -100,7 +100,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isFeatureDisabled(feature: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isFeatureDisabledBind, handle, feature)
+        return ObjectCalls.ptrcallWithLongArgRetBool(isFeatureDisabledBind, segment, feature)
     }
 
     /**
@@ -110,7 +110,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFeatureName(feature: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getFeatureNameBind, handle, feature)
+        return ObjectCalls.ptrcallWithLongArgRetString(getFeatureNameBind, segment, feature)
     }
 
     /**
@@ -124,7 +124,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun saveToFile(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveToFileBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(saveToFileBind, segment, path)
     }
 
     /**
@@ -138,7 +138,7 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
      */
     fun loadFromFile(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, segment, path)
     }
 
     companion object {
@@ -156,11 +156,11 @@ class EditorFeatureProfile(handle: MemorySegment) : RefCounted(handle) {
         const val FEATURE_MAX: Long = 11L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorFeatureProfile? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorFeatureProfile? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorFeatureProfile? =
-            if (handle.address() == 0L) null else EditorFeatureProfile(handle)
+            if (handle.address() == 0L) null else EditorFeatureProfile(GodotHandle(handle))
 
         private const val SET_DISABLE_CLASS_HASH = 2524380260L
         private val setDisableClassBind by lazy {

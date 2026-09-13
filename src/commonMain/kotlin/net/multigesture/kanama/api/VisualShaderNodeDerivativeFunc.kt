@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeDerivativeFunc
  */
-class VisualShaderNodeDerivativeFunc(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(handle) {
     var opType: Long
         @JvmName("opTypeProperty")
         get() = getOpType()
@@ -30,32 +30,32 @@ class VisualShaderNodeDerivativeFunc(handle: MemorySegment) : VisualShaderNode(h
 
     fun setOpType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type)
     }
 
     fun getOpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
     }
 
     fun setFunction(func: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
     }
 
     fun getFunction(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
     }
 
     fun setPrecision(precision: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPrecisionBind, handle, precision)
+        ObjectCalls.ptrcallWithLongArg(setPrecisionBind, segment, precision)
     }
 
     fun getPrecision(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrecisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPrecisionBind, segment)
     }
 
     companion object {
@@ -74,11 +74,11 @@ class VisualShaderNodeDerivativeFunc(handle: MemorySegment) : VisualShaderNode(h
         const val PRECISION_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeDerivativeFunc? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeDerivativeFunc? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeDerivativeFunc? =
-            if (handle.address() == 0L) null else VisualShaderNodeDerivativeFunc(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeDerivativeFunc(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 377800221L
         private val setOpTypeBind by lazy {

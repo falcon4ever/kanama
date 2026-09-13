@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: VoxelGIData
  */
-class VoxelGIData(handle: MemorySegment) : Resource(handle) {
+class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     var dynamicRange: Double
         @JvmName("dynamicRangeProperty")
         get() = getDynamicRange()
@@ -66,7 +66,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun allocate(toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(allocateBind, handle, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
+        ObjectCalls.ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(allocateBind, segment, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
     }
 
     /**
@@ -79,7 +79,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getBounds(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, segment)
     }
 
     /**
@@ -92,7 +92,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getOctreeSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOctreeSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getOctreeSizeBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getToCellXform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getToCellXformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getToCellXformBind, segment)
     }
 
     /**
@@ -112,7 +112,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getOctreeCells(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getOctreeCellsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getOctreeCellsBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getDataCells(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataCellsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataCellsBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getLevelCounts(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getLevelCountsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getLevelCountsBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setDynamicRange(dynamicRange: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDynamicRangeBind, handle, dynamicRange)
+        ObjectCalls.ptrcallWithDoubleArg(setDynamicRangeBind, segment, dynamicRange)
     }
 
     /**
@@ -158,7 +158,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getDynamicRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDynamicRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDynamicRangeBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setEnergy(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, segment, energy)
     }
 
     /**
@@ -184,7 +184,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, segment, bias)
     }
 
     /**
@@ -210,7 +210,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setNormalBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setNormalBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setNormalBiasBind, segment, bias)
     }
 
     /**
@@ -236,7 +236,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getNormalBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalBiasBind, segment)
     }
 
     /**
@@ -249,7 +249,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setPropagation(propagation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPropagationBind, handle, propagation)
+        ObjectCalls.ptrcallWithDoubleArg(setPropagationBind, segment, propagation)
     }
 
     /**
@@ -262,7 +262,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun getPropagation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPropagationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPropagationBind, segment)
     }
 
     /**
@@ -274,7 +274,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setInterior(interior: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setInteriorBind, handle, interior)
+        ObjectCalls.ptrcallWithBoolArg(setInteriorBind, segment, interior)
     }
 
     /**
@@ -286,7 +286,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun isInterior(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, segment)
     }
 
     /**
@@ -299,7 +299,7 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun setUseTwoBounces(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseTwoBouncesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseTwoBouncesBind, segment, enable)
     }
 
     /**
@@ -312,16 +312,16 @@ class VoxelGIData(handle: MemorySegment) : Resource(handle) {
      */
     fun isUsingTwoBounces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTwoBouncesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTwoBouncesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VoxelGIData? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VoxelGIData? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VoxelGIData? =
-            if (handle.address() == 0L) null else VoxelGIData(handle)
+            if (handle.address() == 0L) null else VoxelGIData(GodotHandle(handle))
 
         private const val ALLOCATE_HASH = 4041601946L
         private val allocateBind by lazy {

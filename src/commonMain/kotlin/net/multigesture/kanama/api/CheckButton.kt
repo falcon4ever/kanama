@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CheckButton
  */
-class CheckButton(handle: MemorySegment) : Button(handle) {
+class CheckButton(handle: GodotHandle) : Button(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CheckButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CheckButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CheckButton? =
-            if (handle.address() == 0L) null else CheckButton(handle)
+            if (handle.address() == 0L) null else CheckButton(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

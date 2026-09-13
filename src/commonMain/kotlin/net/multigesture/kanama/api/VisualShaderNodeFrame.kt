@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Color
 /**
  * Generated from Godot docs: VisualShaderNodeFrame
  */
-open class VisualShaderNodeFrame(handle: MemorySegment) : VisualShaderNodeResizableBase(handle) {
+open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizableBase(handle) {
     var title: String
         @JvmName("titleProperty")
         get() = getTitle()
@@ -43,71 +43,71 @@ open class VisualShaderNodeFrame(handle: MemorySegment) : VisualShaderNodeResiza
 
     fun setTitle(title: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
+        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
     }
 
     fun getTitle(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
     }
 
     fun setTintColorEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setTintColorEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setTintColorEnabledBind, segment, enable)
     }
 
     fun isTintColorEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isTintColorEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTintColorEnabledBind, segment)
     }
 
     fun setTintColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setTintColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setTintColorBind, segment, color)
     }
 
     fun getTintColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, segment)
     }
 
     fun setAutoshrinkEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAutoshrinkEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoshrinkEnabledBind, segment, enable)
     }
 
     fun isAutoshrinkEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoshrinkEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoshrinkEnabledBind, segment)
     }
 
     fun addAttachedNode(node: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addAttachedNodeBind, handle, node)
+        ObjectCalls.ptrcallWithIntArg(addAttachedNodeBind, segment, node)
     }
 
     fun removeAttachedNode(node: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeAttachedNodeBind, handle, node)
+        ObjectCalls.ptrcallWithIntArg(removeAttachedNodeBind, segment, node)
     }
 
     fun setAttachedNodes(attachedNodes: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setAttachedNodesBind, handle, attachedNodes)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setAttachedNodesBind, segment, attachedNodes)
     }
 
     fun getAttachedNodes(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAttachedNodesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAttachedNodesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeFrame? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeFrame? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeFrame? =
-            if (handle.address() == 0L) null else VisualShaderNodeFrame(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeFrame(GodotHandle(handle))
 
         private const val SET_TITLE_HASH = 83702148L
         private val setTitleBind by lazy {

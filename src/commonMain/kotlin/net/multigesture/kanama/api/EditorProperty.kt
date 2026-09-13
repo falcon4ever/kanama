@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorProperty
  */
-class EditorProperty(handle: MemorySegment) : Container(handle) {
+class EditorProperty(handle: GodotHandle) : Container(handle) {
     var label: String
         @JvmName("labelProperty")
         get() = getLabel()
@@ -90,7 +90,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_label
      */
     fun setLabel(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setLabelBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setLabelBind, segment, text)
     }
 
     /**
@@ -99,7 +99,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_label
      */
     fun getLabel(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_read_only
      */
     fun setReadOnly(readOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, handle, readOnly)
+        ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, segment, readOnly)
     }
 
     /**
@@ -117,7 +117,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_read_only
      */
     fun isReadOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, segment)
     }
 
     /**
@@ -126,7 +126,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_draw_label
      */
     fun setDrawLabel(drawLabel: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawLabelBind, handle, drawLabel)
+        ObjectCalls.ptrcallWithBoolArg(setDrawLabelBind, segment, drawLabel)
     }
 
     /**
@@ -135,7 +135,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_draw_label
      */
     fun isDrawLabel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawLabelBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_draw_background
      */
     fun setDrawBackground(drawBackground: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawBackgroundBind, handle, drawBackground)
+        ObjectCalls.ptrcallWithBoolArg(setDrawBackgroundBind, segment, drawBackground)
     }
 
     /**
@@ -153,7 +153,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_draw_background
      */
     fun isDrawBackground(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawBackgroundBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawBackgroundBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_checkable
      */
     fun setCheckable(checkable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCheckableBind, handle, checkable)
+        ObjectCalls.ptrcallWithBoolArg(setCheckableBind, segment, checkable)
     }
 
     /**
@@ -171,7 +171,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_checkable
      */
     fun isCheckable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCheckableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCheckableBind, segment)
     }
 
     /**
@@ -180,7 +180,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_checked
      */
     fun setChecked(checked: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCheckedBind, handle, checked)
+        ObjectCalls.ptrcallWithBoolArg(setCheckedBind, segment, checked)
     }
 
     /**
@@ -189,7 +189,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_checked
      */
     fun isChecked(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCheckedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCheckedBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_draw_warning
      */
     fun setDrawWarning(drawWarning: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawWarningBind, handle, drawWarning)
+        ObjectCalls.ptrcallWithBoolArg(setDrawWarningBind, segment, drawWarning)
     }
 
     /**
@@ -209,7 +209,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_draw_warning
      */
     fun isDrawWarning(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawWarningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawWarningBind, segment)
     }
 
     /**
@@ -218,7 +218,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_keying
      */
     fun setKeying(keying: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeyingBind, handle, keying)
+        ObjectCalls.ptrcallWithBoolArg(setKeyingBind, segment, keying)
     }
 
     /**
@@ -227,7 +227,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_keying
      */
     fun isKeying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isKeyingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isKeyingBind, segment)
     }
 
     /**
@@ -236,7 +236,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_deletable
      */
     fun setDeletable(deletable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeletableBind, handle, deletable)
+        ObjectCalls.ptrcallWithBoolArg(setDeletableBind, segment, deletable)
     }
 
     /**
@@ -245,7 +245,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_deletable
      */
     fun isDeletable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeletableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDeletableBind, segment)
     }
 
     /**
@@ -257,7 +257,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_edited_property
      */
     fun getEditedProperty(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getEditedPropertyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getEditedPropertyBind, segment)
     }
 
     /**
@@ -268,7 +268,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_edited_object
      */
     fun getEditedObject(): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, handle))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, segment))
     }
 
     /**
@@ -277,7 +277,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.update_property
      */
     fun updateProperty() {
-        ObjectCalls.ptrcallNoArgs(updatePropertyBind, handle)
+        ObjectCalls.ptrcallNoArgs(updatePropertyBind, segment)
     }
 
     /**
@@ -287,7 +287,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.add_focusable
      */
     fun addFocusable(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(addFocusableBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addFocusableBind, segment, listOf(control.segment))
     }
 
     /**
@@ -297,7 +297,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_bottom_editor
      */
     fun setBottomEditor(editor: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(setBottomEditorBind, handle, listOf(editor.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setBottomEditorBind, segment, listOf(editor.segment))
     }
 
     /**
@@ -306,7 +306,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_selectable
      */
     fun setSelectable(selectable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectableBind, handle, selectable)
+        ObjectCalls.ptrcallWithBoolArg(setSelectableBind, segment, selectable)
     }
 
     /**
@@ -315,7 +315,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_selectable
      */
     fun isSelectable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, segment)
     }
 
     /**
@@ -324,7 +324,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_use_folding
      */
     fun setUseFolding(useFolding: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFoldingBind, handle, useFolding)
+        ObjectCalls.ptrcallWithBoolArg(setUseFoldingBind, segment, useFolding)
     }
 
     /**
@@ -333,7 +333,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_using_folding
      */
     fun isUsingFolding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingFoldingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingFoldingBind, segment)
     }
 
     /**
@@ -342,7 +342,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_name_split_ratio
      */
     fun setNameSplitRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNameSplitRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setNameSplitRatioBind, segment, ratio)
     }
 
     /**
@@ -351,7 +351,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_name_split_ratio
      */
     fun getNameSplitRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNameSplitRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNameSplitRatioBind, segment)
     }
 
     /**
@@ -360,7 +360,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.deselect
      */
     fun deselect() {
-        ObjectCalls.ptrcallNoArgs(deselectBind, handle)
+        ObjectCalls.ptrcallNoArgs(deselectBind, segment)
     }
 
     /**
@@ -369,7 +369,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_selected
      */
     fun isSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, segment)
     }
 
     /**
@@ -378,7 +378,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.select
      */
     fun select(focusable: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(selectBind, handle, focusable)
+        ObjectCalls.ptrcallWithIntArg(selectBind, segment, focusable)
     }
 
     /**
@@ -387,7 +387,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_object_and_property
      */
     fun setObjectAndProperty(objectValue: GodotObject, property: String) {
-        ObjectCalls.ptrcallWithObjectAndStringNameArg(setObjectAndPropertyBind, handle, objectValue.handle, property)
+        ObjectCalls.ptrcallWithObjectAndStringNameArg(setObjectAndPropertyBind, segment, objectValue.segment, property)
     }
 
     /**
@@ -397,7 +397,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_label_reference
      */
     fun setLabelReference(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(setLabelReferenceBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setLabelReferenceBind, segment, listOf(control.segment))
     }
 
     /**
@@ -408,7 +408,7 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: EditorProperty.emit_changed
      */
     fun emitChanged(property: String, value: Any?, field: String = "", changing: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameVariantStringNameBoolArgs(emitChangedBind, handle, property, value, field, changing)
+        ObjectCalls.ptrcallWithStringNameVariantStringNameBoolArgs(emitChangedBind, segment, property, value, field, changing)
     }
 
     object Signals {
@@ -429,11 +429,11 @@ class EditorProperty(handle: MemorySegment) : Container(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorProperty? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorProperty? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorProperty? =
-            if (handle.address() == 0L) null else EditorProperty(handle)
+            if (handle.address() == 0L) null else EditorProperty(GodotHandle(handle))
 
         private const val SET_LABEL_HASH = 83702148L
         private val setLabelBind by lazy {

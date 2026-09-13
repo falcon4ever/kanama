@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JointLimitation3D
  */
-open class JointLimitation3D(handle: MemorySegment) : Resource(handle) {
+open class JointLimitation3D(handle: GodotHandle) : Resource(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JointLimitation3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JointLimitation3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JointLimitation3D? =
-            if (handle.address() == 0L) null else JointLimitation3D(handle)
+            if (handle.address() == 0L) null else JointLimitation3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

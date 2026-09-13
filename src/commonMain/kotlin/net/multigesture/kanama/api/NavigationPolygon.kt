@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: NavigationPolygon
  */
-class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
+class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     var vertices: List<Vector2>
         @JvmName("verticesProperty")
         get() = getVertices()
@@ -87,7 +87,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setVertices(vertices: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, handle, vertices)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, segment, vertices)
     }
 
     /**
@@ -97,7 +97,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getVertices(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun addPolygon(polygon: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, segment, polygon)
     }
 
     /**
@@ -117,7 +117,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getPolygonCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getPolygon(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, segment, idx)
     }
 
     /**
@@ -137,7 +137,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun clearPolygons() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearPolygonsBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getNavigationMesh(): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, handle))
+        return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, segment))
     }
 
     /**
@@ -160,7 +160,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun addOutline(outline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(addOutlineBind, handle, outline)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(addOutlineBind, segment, outline)
     }
 
     /**
@@ -171,7 +171,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun addOutlineAtIndex(outline: List<Vector2>, index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(addOutlineAtIndexBind, handle, outline, index)
+        ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(addOutlineAtIndexBind, segment, outline, index)
     }
 
     /**
@@ -181,7 +181,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getOutlineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setOutline(idx: Int, outline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(setOutlineBind, handle, idx, outline)
+        ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(setOutlineBind, segment, idx, outline)
     }
 
     /**
@@ -203,7 +203,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getOutline(idx: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getOutlineBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getOutlineBind, segment, idx)
     }
 
     /**
@@ -214,7 +214,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun removeOutline(idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeOutlineBind, handle, idx)
+        ObjectCalls.ptrcallWithIntArg(removeOutlineBind, segment, idx)
     }
 
     /**
@@ -225,7 +225,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun clearOutlines() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearOutlinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearOutlinesBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun makePolygonsFromOutlines() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(makePolygonsFromOutlinesBind, handle)
+        ObjectCalls.ptrcallNoArgs(makePolygonsFromOutlinesBind, segment)
     }
 
     /**
@@ -246,7 +246,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setCellSize(cellSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
+        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, segment, cellSize)
     }
 
     /**
@@ -257,7 +257,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, segment)
     }
 
     /**
@@ -269,7 +269,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setBorderSize(borderSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
+        ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, segment, borderSize)
     }
 
     /**
@@ -281,7 +281,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getBorderSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, segment)
     }
 
     /**
@@ -291,7 +291,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setSamplePartitionType(samplePartitionType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
+        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType)
     }
 
     /**
@@ -301,7 +301,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getSamplePartitionType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment)
     }
 
     /**
@@ -311,7 +311,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setParsedGeometryType(geometryType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
+        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType)
     }
 
     /**
@@ -321,7 +321,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getParsedGeometryType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment)
     }
 
     /**
@@ -332,7 +332,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setParsedCollisionMask(mask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setParsedCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setParsedCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -343,7 +343,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getParsedCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getParsedCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getParsedCollisionMaskBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setParsedCollisionMaskValue(layerNumber: Int, value: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setParsedCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setParsedCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -365,7 +365,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getParsedCollisionMaskValue(layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getParsedCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getParsedCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -375,7 +375,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setSourceGeometryMode(geometryMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, geometryMode)
+        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, geometryMode)
     }
 
     /**
@@ -385,7 +385,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceGeometryMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment)
     }
 
     /**
@@ -397,7 +397,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setSourceGeometryGroupName(groupName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setSourceGeometryGroupNameBind, handle, groupName)
+        ObjectCalls.ptrcallWithStringNameArg(setSourceGeometryGroupNameBind, segment, groupName)
     }
 
     /**
@@ -409,7 +409,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceGeometryGroupName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGeometryGroupNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGeometryGroupNameBind, segment)
     }
 
     /**
@@ -423,7 +423,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setAgentRadius(agentRadius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
+        ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, segment, agentRadius)
     }
 
     /**
@@ -437,7 +437,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getAgentRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, segment)
     }
 
     /**
@@ -448,7 +448,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setBakingRect(rect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setBakingRectBind, handle, rect)
+        ObjectCalls.ptrcallWithRect2Arg(setBakingRectBind, segment, rect)
     }
 
     /**
@@ -459,7 +459,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakingRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBakingRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getBakingRectBind, segment)
     }
 
     /**
@@ -469,7 +469,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun setBakingRectOffset(rectOffset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setBakingRectOffsetBind, handle, rectOffset)
+        ObjectCalls.ptrcallWithVector2Arg(setBakingRectOffsetBind, segment, rectOffset)
     }
 
     /**
@@ -479,7 +479,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakingRectOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBakingRectOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getBakingRectOffsetBind, segment)
     }
 
     /**
@@ -489,7 +489,7 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     companion object {
@@ -506,11 +506,11 @@ class NavigationPolygon(handle: MemorySegment) : Resource(handle) {
         const val SOURCE_GEOMETRY_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationPolygon? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationPolygon? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationPolygon? =
-            if (handle.address() == 0L) null else NavigationPolygon(handle)
+            if (handle.address() == 0L) null else NavigationPolygon(GodotHandle(handle))
 
         private const val SET_VERTICES_HASH = 1509147220L
         private val setVerticesBind by lazy {

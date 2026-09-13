@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectEQ6
  */
-class AudioEffectEQ6(handle: MemorySegment) : AudioEffectEQ(handle) {
+class AudioEffectEQ6(handle: GodotHandle) : AudioEffectEQ(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectEQ6? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectEQ6? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectEQ6? =
-            if (handle.address() == 0L) null else AudioEffectEQ6(handle)
+            if (handle.address() == 0L) null else AudioEffectEQ6(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

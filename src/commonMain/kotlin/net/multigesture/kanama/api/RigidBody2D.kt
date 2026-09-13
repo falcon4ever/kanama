@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: RigidBody2D
  */
-open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
+open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
     var mass: Double
         @JvmName("massProperty")
         get() = getMass()
@@ -157,7 +157,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_mass
      */
     fun setMass(mass: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
+        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
     }
 
     /**
@@ -166,7 +166,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_mass
      */
     fun getMass(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
     }
 
     /**
@@ -179,7 +179,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_inertia
      */
     fun getInertia(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInertiaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInertiaBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_inertia
      */
     fun setInertia(inertia: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInertiaBind, handle, inertia)
+        ObjectCalls.ptrcallWithDoubleArg(setInertiaBind, segment, inertia)
     }
 
     /**
@@ -201,7 +201,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_center_of_mass_mode
      */
     fun setCenterOfMassMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, segment, mode)
     }
 
     /**
@@ -210,7 +210,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_center_of_mass_mode
      */
     fun getCenterOfMassMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, segment)
     }
 
     /**
@@ -224,7 +224,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_center_of_mass
      */
     fun setCenterOfMass(centerOfMass: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setCenterOfMassBind, handle, centerOfMass)
+        ObjectCalls.ptrcallWithVector2Arg(setCenterOfMassBind, segment, centerOfMass)
     }
 
     /**
@@ -238,7 +238,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_center_of_mass
      */
     fun getCenterOfMass(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCenterOfMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCenterOfMassBind, segment)
     }
 
     /**
@@ -248,7 +248,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_physics_material_override
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, handle, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -258,7 +258,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_physics_material_override
      */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, handle))
+        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, segment))
     }
 
     /**
@@ -269,7 +269,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_gravity_scale
      */
     fun setGravityScale(gravityScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, handle, gravityScale)
+        ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, segment, gravityScale)
     }
 
     /**
@@ -280,7 +280,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_gravity_scale
      */
     fun getGravityScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, segment)
     }
 
     /**
@@ -289,7 +289,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_linear_damp_mode
      */
     fun setLinearDampMode(linearDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, handle, linearDampMode)
+        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode)
     }
 
     /**
@@ -298,7 +298,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_linear_damp_mode
      */
     fun getLinearDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment)
     }
 
     /**
@@ -307,7 +307,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_angular_damp_mode
      */
     fun setAngularDampMode(angularDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, handle, angularDampMode)
+        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode)
     }
 
     /**
@@ -316,7 +316,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_angular_damp_mode
      */
     fun getAngularDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment)
     }
 
     /**
@@ -329,7 +329,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_linear_damp
      */
     fun setLinearDamp(linearDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, handle, linearDamp)
+        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, segment, linearDamp)
     }
 
     /**
@@ -342,7 +342,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_linear_damp
      */
     fun getLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, segment)
     }
 
     /**
@@ -355,7 +355,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_angular_damp
      */
     fun setAngularDamp(angularDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, handle, angularDamp)
+        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, segment, angularDamp)
     }
 
     /**
@@ -368,7 +368,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_angular_damp
      */
     fun getAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, segment)
     }
 
     /**
@@ -379,7 +379,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_linear_velocity
      */
     fun setLinearVelocity(linearVelocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setLinearVelocityBind, handle, linearVelocity)
+        ObjectCalls.ptrcallWithVector2Arg(setLinearVelocityBind, segment, linearVelocity)
     }
 
     /**
@@ -390,7 +390,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_linear_velocity
      */
     fun getLinearVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLinearVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getLinearVelocityBind, segment)
     }
 
     /**
@@ -399,7 +399,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_angular_velocity
      */
     fun setAngularVelocity(angularVelocity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularVelocityBind, handle, angularVelocity)
+        ObjectCalls.ptrcallWithDoubleArg(setAngularVelocityBind, segment, angularVelocity)
     }
 
     /**
@@ -408,7 +408,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_angular_velocity
      */
     fun getAngularVelocity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularVelocityBind, segment)
     }
 
     /**
@@ -422,7 +422,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_max_contacts_reported
      */
     fun setMaxContactsReported(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxContactsReportedBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setMaxContactsReportedBind, segment, amount)
     }
 
     /**
@@ -436,7 +436,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_max_contacts_reported
      */
     fun getMaxContactsReported(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxContactsReportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxContactsReportedBind, segment)
     }
 
     /**
@@ -447,7 +447,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_contact_count
      */
     fun getContactCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, segment)
     }
 
     /**
@@ -459,7 +459,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_use_custom_integrator
      */
     fun setUseCustomIntegrator(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, segment, enable)
     }
 
     /**
@@ -471,7 +471,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.is_using_custom_integrator
      */
     fun isUsingCustomIntegrator(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, segment)
     }
 
     /**
@@ -482,7 +482,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_contact_monitor
      */
     fun setContactMonitor(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContactMonitorBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setContactMonitorBind, segment, enabled)
     }
 
     /**
@@ -493,7 +493,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.is_contact_monitor_enabled
      */
     fun isContactMonitorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isContactMonitorEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isContactMonitorEnabledBind, segment)
     }
 
     /**
@@ -505,7 +505,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_continuous_collision_detection_mode
      */
     fun setContinuousCollisionDetectionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContinuousCollisionDetectionModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setContinuousCollisionDetectionModeBind, segment, mode)
     }
 
     /**
@@ -517,7 +517,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_continuous_collision_detection_mode
      */
     fun getContinuousCollisionDetectionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContinuousCollisionDetectionModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getContinuousCollisionDetectionModeBind, segment)
     }
 
     /**
@@ -527,7 +527,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_axis_velocity
      */
     fun setAxisVelocity(axisVelocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setAxisVelocityBind, handle, axisVelocity)
+        ObjectCalls.ptrcallWithVector2Arg(setAxisVelocityBind, segment, axisVelocity)
     }
 
     /**
@@ -539,7 +539,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.apply_central_impulse
      */
     fun applyCentralImpulse(impulse: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithVector2Arg(applyCentralImpulseBind, handle, impulse)
+        ObjectCalls.ptrcallWithVector2Arg(applyCentralImpulseBind, segment, impulse)
     }
 
     /**
@@ -551,7 +551,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.apply_impulse
      */
     fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithTwoVector2Args(applyImpulseBind, handle, impulse, position)
+        ObjectCalls.ptrcallWithTwoVector2Args(applyImpulseBind, segment, impulse, position)
     }
 
     /**
@@ -564,7 +564,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.apply_torque_impulse
      */
     fun applyTorqueImpulse(torque: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(applyTorqueImpulseBind, handle, torque)
+        ObjectCalls.ptrcallWithDoubleArg(applyTorqueImpulseBind, segment, torque)
     }
 
     /**
@@ -575,7 +575,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.apply_central_force
      */
     fun applyCentralForce(force: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(applyCentralForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector2Arg(applyCentralForceBind, segment, force)
     }
 
     /**
@@ -585,7 +585,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.apply_force
      */
     fun applyForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithTwoVector2Args(applyForceBind, handle, force, position)
+        ObjectCalls.ptrcallWithTwoVector2Args(applyForceBind, segment, force, position)
     }
 
     /**
@@ -596,7 +596,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.apply_torque
      */
     fun applyTorque(torque: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(applyTorqueBind, handle, torque)
+        ObjectCalls.ptrcallWithDoubleArg(applyTorqueBind, segment, torque)
     }
 
     /**
@@ -607,7 +607,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.add_constant_central_force
      */
     fun addConstantCentralForce(force: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(addConstantCentralForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector2Arg(addConstantCentralForceBind, segment, force)
     }
 
     /**
@@ -618,7 +618,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.add_constant_force
      */
     fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithTwoVector2Args(addConstantForceBind, handle, force, position)
+        ObjectCalls.ptrcallWithTwoVector2Args(addConstantForceBind, segment, force, position)
     }
 
     /**
@@ -628,7 +628,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.add_constant_torque
      */
     fun addConstantTorque(torque: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(addConstantTorqueBind, handle, torque)
+        ObjectCalls.ptrcallWithDoubleArg(addConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -638,7 +638,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_constant_force
      */
     fun setConstantForce(force: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setConstantForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector2Arg(setConstantForceBind, segment, force)
     }
 
     /**
@@ -648,7 +648,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_constant_force
      */
     fun getConstantForce(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getConstantForceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getConstantForceBind, segment)
     }
 
     /**
@@ -658,7 +658,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_constant_torque
      */
     fun setConstantTorque(torque: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setConstantTorqueBind, handle, torque)
+        ObjectCalls.ptrcallWithDoubleArg(setConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -668,7 +668,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_constant_torque
      */
     fun getConstantTorque(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConstantTorqueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getConstantTorqueBind, segment)
     }
 
     /**
@@ -678,7 +678,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_sleeping
      */
     fun setSleeping(sleeping: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSleepingBind, handle, sleeping)
+        ObjectCalls.ptrcallWithBoolArg(setSleepingBind, segment, sleeping)
     }
 
     /**
@@ -688,7 +688,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.is_sleeping
      */
     fun isSleeping(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, segment)
     }
 
     /**
@@ -697,7 +697,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_can_sleep
      */
     fun setCanSleep(ableToSleep: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, handle, ableToSleep)
+        ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, segment, ableToSleep)
     }
 
     /**
@@ -706,7 +706,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.is_able_to_sleep
      */
     fun isAbleToSleep(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, segment)
     }
 
     /**
@@ -715,7 +715,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_lock_rotation_enabled
      */
     fun setLockRotationEnabled(lockRotation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLockRotationEnabledBind, handle, lockRotation)
+        ObjectCalls.ptrcallWithBoolArg(setLockRotationEnabledBind, segment, lockRotation)
     }
 
     /**
@@ -724,7 +724,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.is_lock_rotation_enabled
      */
     fun isLockRotationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLockRotationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLockRotationEnabledBind, segment)
     }
 
     /**
@@ -735,7 +735,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_freeze_enabled
      */
     fun setFreezeEnabled(freezeMode: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFreezeEnabledBind, handle, freezeMode)
+        ObjectCalls.ptrcallWithBoolArg(setFreezeEnabledBind, segment, freezeMode)
     }
 
     /**
@@ -746,7 +746,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.is_freeze_enabled
      */
     fun isFreezeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFreezeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFreezeEnabledBind, segment)
     }
 
     /**
@@ -756,7 +756,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.set_freeze_mode
      */
     fun setFreezeMode(freezeMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, handle, freezeMode)
+        ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, segment, freezeMode)
     }
 
     /**
@@ -766,7 +766,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_freeze_mode
      */
     fun getFreezeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, segment)
     }
 
     /**
@@ -778,7 +778,7 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
      * Generated from Godot docs: RigidBody2D.get_colliding_bodies
      */
     fun getCollidingBodies(): List<Node2D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollidingBodiesBind, handle, Node2D::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollidingBodiesBind, segment, Node2D::wrap)
     }
 
     object Signals {
@@ -801,11 +801,11 @@ open class RigidBody2D(handle: MemorySegment) : PhysicsBody2D(handle) {
         const val CCD_MODE_CAST_SHAPE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RigidBody2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RigidBody2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RigidBody2D? =
-            if (handle.address() == 0L) null else RigidBody2D(handle)
+            if (handle.address() == 0L) null else RigidBody2D(GodotHandle(handle))
 
         private const val SET_MASS_HASH = 373806689L
         private val setMassBind by lazy {

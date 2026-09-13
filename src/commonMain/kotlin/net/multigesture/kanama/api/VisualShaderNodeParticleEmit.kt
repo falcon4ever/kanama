@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParticleEmit
  */
-class VisualShaderNodeParticleEmit(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handle) {
     var flags: Long
         @JvmName("flagsProperty")
         get() = getFlags()
@@ -18,12 +18,12 @@ class VisualShaderNodeParticleEmit(handle: MemorySegment) : VisualShaderNode(han
 
     fun setFlags(flags: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags)
     }
 
     fun getFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
     }
 
     companion object {
@@ -34,11 +34,11 @@ class VisualShaderNodeParticleEmit(handle: MemorySegment) : VisualShaderNode(han
         const val EMIT_FLAG_CUSTOM: Long = 16L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleEmit? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleEmit? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleEmit? =
-            if (handle.address() == 0L) null else VisualShaderNodeParticleEmit(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParticleEmit(GodotHandle(handle))
 
         private const val SET_FLAGS_HASH = 3960756792L
         private val setFlagsBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationLibrary
  */
-class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
+class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
     /**
      * Adds the `animation` to the library, accessible by the key `name`.
      *
@@ -18,7 +18,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun addAnimation(name: String, animation: Animation?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, handle, name, animation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, segment, name, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -28,7 +28,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun removeAnimation(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, segment, name)
     }
 
     /**
@@ -38,7 +38,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun renameAnimation(name: String, newname: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, handle, name, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, segment, name, newname)
     }
 
     /**
@@ -48,7 +48,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun hasAnimation(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, segment, name)
     }
 
     /**
@@ -59,7 +59,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getAnimation(name: String): Animation? {
         checkOpen()
-        return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, handle, name))
+        return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
     }
 
     /**
@@ -69,7 +69,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getAnimationList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationListBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getAnimationListSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAnimationListSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAnimationListSizeBind, segment)
     }
 
     object Signals {
@@ -91,11 +91,11 @@ class AnimationLibrary(handle: MemorySegment) : Resource(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationLibrary? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationLibrary? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationLibrary? =
-            if (handle.address() == 0L) null else AnimationLibrary(handle)
+            if (handle.address() == 0L) null else AnimationLibrary(GodotHandle(handle))
 
         private const val ADD_ANIMATION_HASH = 1811855551L
         private val addAnimationBind by lazy {

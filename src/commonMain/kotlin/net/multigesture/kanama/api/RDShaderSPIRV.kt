@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDShaderSPIRV
  */
-class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
+class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
     var bytecodeVertex: ByteArray
         @JvmName("bytecodeVertexProperty")
         get() = getStageBytecode(0L)
@@ -139,7 +139,7 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      */
     fun setStageBytecode(stage: Long, bytecode: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndByteArrayArg(setStageBytecodeBind, handle, stage, bytecode)
+        ObjectCalls.ptrcallWithLongAndByteArrayArg(setStageBytecodeBind, segment, stage, bytecode)
     }
 
     /**
@@ -149,7 +149,7 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      */
     fun getStageBytecode(stage: Long): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, handle, stage)
+        return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, segment, stage)
     }
 
     /**
@@ -160,7 +160,7 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      */
     fun setStageCompileError(stage: Long, compileError: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, handle, stage, compileError)
+        ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, segment, stage, compileError)
     }
 
     /**
@@ -171,16 +171,16 @@ class RDShaderSPIRV(handle: MemorySegment) : Resource(handle) {
      */
     fun getStageCompileError(stage: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, handle, stage)
+        return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, segment, stage)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDShaderSPIRV? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDShaderSPIRV? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDShaderSPIRV? =
-            if (handle.address() == 0L) null else RDShaderSPIRV(handle)
+            if (handle.address() == 0L) null else RDShaderSPIRV(GodotHandle(handle))
 
         private const val SET_STAGE_BYTECODE_HASH = 3514097977L
         private val setStageBytecodeBind by lazy {

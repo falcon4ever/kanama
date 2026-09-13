@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CameraAttributesPhysical
  */
-class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle) {
+class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     var frustumFocusDistance: Double
         @JvmName("frustumFocusDistanceProperty")
         get() = getFocusDistance()
@@ -74,7 +74,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setAperture(aperture: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setApertureBind, handle, aperture)
+        ObjectCalls.ptrcallWithDoubleArg(setApertureBind, segment, aperture)
     }
 
     /**
@@ -91,7 +91,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getAperture(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getApertureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getApertureBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setShutterSpeed(shutterSpeed: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setShutterSpeedBind, handle, shutterSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(setShutterSpeedBind, segment, shutterSpeed)
     }
 
     /**
@@ -117,7 +117,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getShutterSpeed(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getShutterSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getShutterSpeedBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setFocalLength(focalLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFocalLengthBind, handle, focalLength)
+        ObjectCalls.ptrcallWithDoubleArg(setFocalLengthBind, segment, focalLength)
     }
 
     /**
@@ -147,7 +147,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getFocalLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFocalLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFocalLengthBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setFocusDistance(focusDistance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFocusDistanceBind, handle, focusDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setFocusDistanceBind, segment, focusDistance)
     }
 
     /**
@@ -169,7 +169,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getFocusDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFocusDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFocusDistanceBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setNear(near: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setNearBind, handle, near)
+        ObjectCalls.ptrcallWithDoubleArg(setNearBind, segment, near)
     }
 
     /**
@@ -193,7 +193,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, segment)
     }
 
     /**
@@ -205,7 +205,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setFar(far: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFarBind, handle, far)
+        ObjectCalls.ptrcallWithDoubleArg(setFarBind, segment, far)
     }
 
     /**
@@ -217,7 +217,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, segment)
     }
 
     /**
@@ -228,7 +228,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, segment)
     }
 
     /**
@@ -241,7 +241,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setAutoExposureMaxExposureValue(exposureValueMax: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxExposureValueBind, handle, exposureValueMax)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxExposureValueBind, segment, exposureValueMax)
     }
 
     /**
@@ -254,7 +254,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getAutoExposureMaxExposureValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxExposureValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxExposureValueBind, segment)
     }
 
     /**
@@ -267,7 +267,7 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun setAutoExposureMinExposureValue(exposureValueMin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinExposureValueBind, handle, exposureValueMin)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinExposureValueBind, segment, exposureValueMin)
     }
 
     /**
@@ -280,16 +280,16 @@ class CameraAttributesPhysical(handle: MemorySegment) : CameraAttributes(handle)
      */
     fun getAutoExposureMinExposureValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinExposureValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinExposureValueBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CameraAttributesPhysical? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CameraAttributesPhysical? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CameraAttributesPhysical? =
-            if (handle.address() == 0L) null else CameraAttributesPhysical(handle)
+            if (handle.address() == 0L) null else CameraAttributesPhysical(GodotHandle(handle))
 
         private const val SET_APERTURE_HASH = 373806689L
         private val setApertureBind by lazy {

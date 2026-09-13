@@ -10,7 +10,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Light3D
  */
-open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
+open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     var lightTemperature: Double
         @JvmName("lightTemperatureProperty")
         get() = getTemperature()
@@ -108,7 +108,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_editor_only
      */
     fun setEditorOnly(editorOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, handle, editorOnly)
+        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, segment, editorOnly)
     }
 
     /**
@@ -118,7 +118,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.is_editor_only
      */
     fun isEditorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, segment)
     }
 
     /**
@@ -128,7 +128,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_param
      */
     fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
     }
 
     /**
@@ -138,7 +138,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_param
      */
     fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
     }
 
     /**
@@ -149,7 +149,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_shadow
      */
     fun setShadow(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShadowBind, segment, enabled)
     }
 
     /**
@@ -160,7 +160,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.has_shadow
      */
     fun hasShadow(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasShadowBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasShadowBind, segment)
     }
 
     /**
@@ -169,7 +169,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_negative
      */
     fun setNegative(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNegativeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setNegativeBind, segment, enabled)
     }
 
     /**
@@ -178,7 +178,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.is_negative
      */
     fun isNegative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNegativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNegativeBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_cull_mask
      */
     fun setCullMask(cullMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, cullMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, cullMask)
     }
 
     /**
@@ -200,7 +200,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_enable_distance_fade
      */
     fun setEnableDistanceFade(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, segment, enable)
     }
 
     /**
@@ -226,7 +226,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.is_distance_fade_enabled
      */
     fun isDistanceFadeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, segment)
     }
 
     /**
@@ -236,7 +236,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_distance_fade_begin
      */
     fun setDistanceFadeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, segment, distance)
     }
 
     /**
@@ -246,7 +246,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_distance_fade_begin
      */
     fun getDistanceFadeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, segment)
     }
 
     /**
@@ -258,7 +258,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_distance_fade_shadow
      */
     fun setDistanceFadeShadow(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeShadowBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeShadowBind, segment, distance)
     }
 
     /**
@@ -270,7 +270,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_distance_fade_shadow
      */
     fun getDistanceFadeShadow(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeShadowBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeShadowBind, segment)
     }
 
     /**
@@ -281,7 +281,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_distance_fade_length
      */
     fun setDistanceFadeLength(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, segment, distance)
     }
 
     /**
@@ -292,7 +292,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_distance_fade_length
      */
     fun getDistanceFadeLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, segment)
     }
 
     /**
@@ -302,7 +302,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -312,7 +312,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -323,7 +323,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_shadow_reverse_cull_face
      */
     fun setShadowReverseCullFace(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowReverseCullFaceBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setShadowReverseCullFaceBind, segment, enable)
     }
 
     /**
@@ -334,7 +334,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_shadow_reverse_cull_face
      */
     fun getShadowReverseCullFace(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShadowReverseCullFaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getShadowReverseCullFaceBind, segment)
     }
 
     /**
@@ -343,7 +343,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_shadow_caster_mask
      */
     fun setShadowCasterMask(casterMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setShadowCasterMaskBind, handle, casterMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setShadowCasterMaskBind, segment, casterMask)
     }
 
     /**
@@ -352,7 +352,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_shadow_caster_mask
      */
     fun getShadowCasterMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getShadowCasterMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getShadowCasterMaskBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_bake_mode
      */
     fun setBakeMode(bakeMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBakeModeBind, handle, bakeMode)
+        ObjectCalls.ptrcallWithLongArg(setBakeModeBind, segment, bakeMode)
     }
 
     /**
@@ -374,7 +374,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_bake_mode
      */
     fun getBakeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBakeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBakeModeBind, segment)
     }
 
     /**
@@ -389,7 +389,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_projector
      */
     fun setProjector(projector: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProjectorBind, handle, listOf(projector?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProjectorBind, segment, listOf(projector?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -404,7 +404,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_projector
      */
     fun getProjector(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProjectorBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProjectorBind, segment))
     }
 
     /**
@@ -416,7 +416,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_temperature
      */
     fun setTemperature(temperature: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTemperatureBind, handle, temperature)
+        ObjectCalls.ptrcallWithDoubleArg(setTemperatureBind, segment, temperature)
     }
 
     /**
@@ -428,7 +428,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_temperature
      */
     fun getTemperature(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTemperatureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTemperatureBind, segment)
     }
 
     /**
@@ -439,7 +439,7 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_correlated_color
      */
     fun getCorrelatedColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getCorrelatedColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getCorrelatedColorBind, segment)
     }
 
     companion object {
@@ -470,11 +470,11 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
         const val BAKE_DYNAMIC: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Light3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Light3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Light3D? =
-            if (handle.address() == 0L) null else Light3D(handle)
+            if (handle.address() == 0L) null else Light3D(GodotHandle(handle))
 
         private const val SET_EDITOR_ONLY_HASH = 2586408642L
         private val setEditorOnlyBind by lazy {

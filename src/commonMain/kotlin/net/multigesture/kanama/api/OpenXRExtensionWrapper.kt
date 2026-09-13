@@ -8,22 +8,22 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRExtensionWrapper
  */
-open class OpenXRExtensionWrapper(handle: MemorySegment) : GodotObject(handle) {
+open class OpenXRExtensionWrapper(handle: GodotHandle) : GodotObject(handle) {
     fun getOpenxrApi(): OpenXRAPIExtension? {
-        return OpenXRAPIExtension.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOpenxrApiBind, handle))
+        return OpenXRAPIExtension.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOpenxrApiBind, segment))
     }
 
     fun registerExtensionWrapper() {
-        ObjectCalls.ptrcallNoArgs(registerExtensionWrapperBind, handle)
+        ObjectCalls.ptrcallNoArgs(registerExtensionWrapperBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRExtensionWrapper? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRExtensionWrapper? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRExtensionWrapper? =
-            if (handle.address() == 0L) null else OpenXRExtensionWrapper(handle)
+            if (handle.address() == 0L) null else OpenXRExtensionWrapper(GodotHandle(handle))
 
         private const val GET_OPENXR_API_HASH = 1637791613L
         private val getOpenxrApiBind by lazy {

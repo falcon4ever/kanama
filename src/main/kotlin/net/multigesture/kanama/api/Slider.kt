@@ -9,7 +9,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Slider
  */
-open class Slider(handle: MemorySegment) : Range(handle) {
+open class Slider(handle: GodotHandle) : Range(handle) {
     var ticks: Int
         @JvmName("ticksProperty")
         get() = getTicks()
@@ -46,62 +46,62 @@ open class Slider(handle: MemorySegment) : Range(handle) {
      *
      * Generated from Godot docs: Slider.set_ticks
      */
-    fun setTicks(count: Int) { ObjectCalls.ptrcallWithIntArg(setTicksBind, handle, count) }
+    fun setTicks(count: Int) { ObjectCalls.ptrcallWithIntArg(setTicksBind, segment, count) }
     /**
      * Number of ticks displayed on the slider, including border ticks. Ticks are uniformly-distributed
      * value markers.
      *
      * Generated from Godot docs: Slider.get_ticks
      */
-    fun getTicks(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTicksBind, handle)
+    fun getTicks(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTicksBind, segment)
     /**
      * If `true`, the slider will display ticks for minimum and maximum values.
      *
      * Generated from Godot docs: Slider.get_ticks_on_borders
      */
-    fun getTicksOnBorders(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getTicksOnBordersBind, handle)
+    fun getTicksOnBorders(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getTicksOnBordersBind, segment)
     /**
      * If `true`, the slider will display ticks for minimum and maximum values.
      *
      * Generated from Godot docs: Slider.set_ticks_on_borders
      */
-    fun setTicksOnBorders(ticksOnBorder: Boolean) { ObjectCalls.ptrcallWithBoolArg(setTicksOnBordersBind, handle, ticksOnBorder) }
+    fun setTicksOnBorders(ticksOnBorder: Boolean) { ObjectCalls.ptrcallWithBoolArg(setTicksOnBordersBind, segment, ticksOnBorder) }
     /**
      * Sets the position of the ticks. See `TickPosition` for details.
      *
      * Generated from Godot docs: Slider.get_ticks_position
      */
-    fun getTicksPosition(): Long = ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, handle)
+    fun getTicksPosition(): Long = ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, segment)
     /**
      * Sets the position of the ticks. See `TickPosition` for details.
      *
      * Generated from Godot docs: Slider.set_ticks_position
      */
-    fun setTicksPosition(ticksOnBorder: Long) { ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, handle, ticksOnBorder) }
+    fun setTicksPosition(ticksOnBorder: Long) { ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, segment, ticksOnBorder) }
     /**
      * If `true`, the slider can be interacted with. If `false`, the value can be changed only by code.
      *
      * Generated from Godot docs: Slider.set_editable
      */
-    fun setEditable(editable: Boolean) { ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, editable) }
+    fun setEditable(editable: Boolean) { ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, editable) }
     /**
      * If `true`, the slider can be interacted with. If `false`, the value can be changed only by code.
      *
      * Generated from Godot docs: Slider.is_editable
      */
-    fun isEditable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
+    fun isEditable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     /**
      * If `true`, the value can be changed using the mouse wheel.
      *
      * Generated from Godot docs: Slider.set_scrollable
      */
-    fun setScrollable(scrollable: Boolean) { ObjectCalls.ptrcallWithBoolArg(setScrollableBind, handle, scrollable) }
+    fun setScrollable(scrollable: Boolean) { ObjectCalls.ptrcallWithBoolArg(setScrollableBind, segment, scrollable) }
     /**
      * If `true`, the value can be changed using the mouse wheel.
      *
      * Generated from Godot docs: Slider.is_scrollable
      */
-    fun isScrollable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isScrollableBind, handle)
+    fun isScrollable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isScrollableBind, segment)
 
     companion object {
         private const val INT_VOID_HASH = 1286410249L

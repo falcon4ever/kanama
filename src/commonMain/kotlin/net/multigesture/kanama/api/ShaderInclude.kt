@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ShaderInclude
  */
-class ShaderInclude(handle: MemorySegment) : Resource(handle) {
+class ShaderInclude(handle: GodotHandle) : Resource(handle) {
     var code: String
         @JvmName("codeProperty")
         get() = getCode()
@@ -26,7 +26,7 @@ class ShaderInclude(handle: MemorySegment) : Resource(handle) {
      */
     fun setCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
+        ObjectCalls.ptrcallWithStringArg(setCodeBind, segment, code)
     }
 
     /**
@@ -37,16 +37,16 @@ class ShaderInclude(handle: MemorySegment) : Resource(handle) {
      */
     fun getCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ShaderInclude? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ShaderInclude? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ShaderInclude? =
-            if (handle.address() == 0L) null else ShaderInclude(handle)
+            if (handle.address() == 0L) null else ShaderInclude(GodotHandle(handle))
 
         private const val SET_CODE_HASH = 83702148L
         private val setCodeBind by lazy {

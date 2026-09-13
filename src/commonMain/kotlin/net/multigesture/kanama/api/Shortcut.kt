@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Shortcut
  */
-class Shortcut(handle: MemorySegment) : Resource(handle) {
+class Shortcut(handle: GodotHandle) : Resource(handle) {
     var events: List<Any?>
         @JvmName("eventsProperty")
         get() = getEvents()
@@ -26,7 +26,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      */
     fun setEvents(events: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setEventsBind, handle, events)
+        ObjectCalls.ptrcallWithArrayArg(setEventsBind, segment, events)
     }
 
     /**
@@ -37,7 +37,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      */
     fun getEvents(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getEventsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getEventsBind, segment)
     }
 
     /**
@@ -47,7 +47,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      */
     fun hasValidEvent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasValidEventBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasValidEventBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      */
     fun matchesEvent(event: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -68,16 +68,16 @@ class Shortcut(handle: MemorySegment) : Resource(handle) {
      */
     fun getAsText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getAsTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getAsTextBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Shortcut? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Shortcut? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Shortcut? =
-            if (handle.address() == 0L) null else Shortcut(handle)
+            if (handle.address() == 0L) null else Shortcut(GodotHandle(handle))
 
         private const val SET_EVENTS_HASH = 381264803L
         private val setEventsBind by lazy {

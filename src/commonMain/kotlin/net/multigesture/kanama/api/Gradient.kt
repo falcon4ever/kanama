@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: Gradient
  */
-class Gradient(handle: MemorySegment) : Resource(handle) {
+class Gradient(handle: GodotHandle) : Resource(handle) {
     var interpolationMode: Long
         @JvmName("interpolationModeProperty")
         get() = getInterpolationMode()
@@ -44,7 +44,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun addPoint(offset: Double, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleAndColorArg(addPointBind, handle, offset, color)
+        ObjectCalls.ptrcallWithDoubleAndColorArg(addPointBind, segment, offset, color)
     }
 
     /**
@@ -54,7 +54,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun removePoint(point: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePointBind, handle, point)
+        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, point)
     }
 
     /**
@@ -64,7 +64,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun setOffset(point: Int, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setOffsetBind, handle, point, offset)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setOffsetBind, segment, point, offset)
     }
 
     /**
@@ -74,7 +74,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun getOffset(point: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getOffsetBind, handle, point)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getOffsetBind, segment, point)
     }
 
     /**
@@ -86,7 +86,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun reverse() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(reverseBind, handle)
+        ObjectCalls.ptrcallNoArgs(reverseBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun setColor(point: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setColorBind, handle, point, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setColorBind, segment, point, color)
     }
 
     /**
@@ -106,7 +106,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun getColor(point: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getColorBind, handle, point)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getColorBind, segment, point)
     }
 
     /**
@@ -120,7 +120,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun sample(offset: Double): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetColor(sampleBind, handle, offset)
+        return ObjectCalls.ptrcallWithDoubleArgRetColor(sampleBind, segment, offset)
     }
 
     /**
@@ -130,7 +130,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
     }
 
     /**
@@ -141,7 +141,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun setOffsets(offsets: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setOffsetsBind, handle, offsets)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setOffsetsBind, segment, offsets)
     }
 
     /**
@@ -152,7 +152,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun getOffsets(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getOffsetsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getOffsetsBind, segment)
     }
 
     /**
@@ -163,7 +163,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun setColors(colors: List<Color>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, handle, colors)
+        ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, segment, colors)
     }
 
     /**
@@ -174,7 +174,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun getColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, segment)
     }
 
     /**
@@ -184,7 +184,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun setInterpolationMode(interpolationMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, handle, interpolationMode)
+        ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, segment, interpolationMode)
     }
 
     /**
@@ -194,7 +194,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun getInterpolationMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, segment)
     }
 
     /**
@@ -206,7 +206,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun setInterpolationColorSpace(interpolationColorSpace: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, handle, interpolationColorSpace)
+        ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, segment, interpolationColorSpace)
     }
 
     /**
@@ -218,7 +218,7 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
      */
     fun getInterpolationColorSpace(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, segment)
     }
 
     companion object {
@@ -230,11 +230,11 @@ class Gradient(handle: MemorySegment) : Resource(handle) {
         const val GRADIENT_COLOR_SPACE_OKLAB: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Gradient? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Gradient? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Gradient? =
-            if (handle.address() == 0L) null else Gradient(handle)
+            if (handle.address() == 0L) null else Gradient(GodotHandle(handle))
 
         private const val ADD_POINT_HASH = 3629403827L
         private val addPointBind by lazy {

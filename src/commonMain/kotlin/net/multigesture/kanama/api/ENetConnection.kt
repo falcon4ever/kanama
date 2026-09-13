@@ -8,95 +8,95 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ENetConnection
  */
-class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
+class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     fun createHostBound(bindAddress: String, bindPort: Int, maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createHostBoundBind, handle, bindAddress, bindPort, maxPeers, maxChannels, inBandwidth, outBandwidth)
+        return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createHostBoundBind, segment, bindAddress, bindPort, maxPeers, maxChannels, inBandwidth, outBandwidth)
     }
 
     fun createHost(maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithFourIntArgsRetLong(createHostBind, handle, maxPeers, maxChannels, inBandwidth, outBandwidth)
+        return ObjectCalls.ptrcallWithFourIntArgsRetLong(createHostBind, segment, maxPeers, maxChannels, inBandwidth, outBandwidth)
     }
 
     fun destroy() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(destroyBind, handle)
+        ObjectCalls.ptrcallNoArgs(destroyBind, segment)
     }
 
     fun connectToHost(address: String, port: Int, channels: Int = 0, data: Int = 0): ENetPacketPeer? {
         checkOpen()
-        return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(connectToHostBind, handle, address, port, channels, data))
+        return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(connectToHostBind, segment, address, port, channels, data))
     }
 
     fun service(timeout: Int = 0): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(serviceBind, handle, timeout)
+        return ObjectCalls.ptrcallWithIntArgRetArray(serviceBind, segment, timeout)
     }
 
     fun flush() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(flushBind, handle)
+        ObjectCalls.ptrcallNoArgs(flushBind, segment)
     }
 
     fun bandwidthLimit(inBandwidth: Int = 0, outBandwidth: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(bandwidthLimitBind, handle, inBandwidth, outBandwidth)
+        ObjectCalls.ptrcallWithTwoIntArgs(bandwidthLimitBind, segment, inBandwidth, outBandwidth)
     }
 
     fun channelLimit(limit: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(channelLimitBind, handle, limit)
+        ObjectCalls.ptrcallWithIntArg(channelLimitBind, segment, limit)
     }
 
     fun broadcast(channel: Int, packet: ByteArray, flags: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntByteArrayIntArgs(broadcastBind, handle, channel, packet, flags)
+        ObjectCalls.ptrcallWithIntByteArrayIntArgs(broadcastBind, segment, channel, packet, flags)
     }
 
     fun compress(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(compressBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(compressBind, segment, mode)
     }
 
     fun dtlsServerSetup(serverOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(dtlsServerSetupBind, handle, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(dtlsServerSetupBind, segment, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(dtlsClientSetupBind, handle, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun refuseNewConnections(refuse: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(refuseNewConnectionsBind, handle, refuse)
+        ObjectCalls.ptrcallWithBoolArg(refuseNewConnectionsBind, segment, refuse)
     }
 
     fun popStatistic(statistic: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(popStatisticBind, handle, statistic)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(popStatisticBind, segment, statistic)
     }
 
     fun getMaxChannels(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxChannelsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxChannelsBind, segment)
     }
 
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
     }
 
     fun getPeers(): List<ENetPacketPeer> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getPeersBind, handle, ENetPacketPeer::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getPeersBind, segment, ENetPacketPeer::wrap)
     }
 
     fun socketSend(destinationAddress: String, destinationPort: Int, packet: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringIntByteArrayArgs(socketSendBind, handle, destinationAddress, destinationPort, packet)
+        ObjectCalls.ptrcallWithStringIntByteArrayArgs(socketSendBind, segment, destinationAddress, destinationPort, packet)
     }
 
     companion object {
@@ -116,11 +116,11 @@ class ENetConnection(handle: MemorySegment) : RefCounted(handle) {
         const val HOST_TOTAL_RECEIVED_PACKETS: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ENetConnection? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ENetConnection? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ENetConnection? =
-            if (handle.address() == 0L) null else ENetConnection(handle)
+            if (handle.address() == 0L) null else ENetConnection(GodotHandle(handle))
 
         private const val CREATE_HOST_BOUND_HASH = 1515002313L
         private val createHostBoundBind by lazy {

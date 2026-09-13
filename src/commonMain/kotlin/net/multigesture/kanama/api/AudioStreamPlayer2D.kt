@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStreamPlayer2D
  */
-class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
+class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
     var stream: AudioStream?
         @JvmName("streamProperty")
         get() = getStream()
@@ -102,7 +102,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_stream
      */
     fun setStream(stream: AudioStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, handle, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -111,7 +111,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream
      */
     fun getStream(): AudioStream? {
-        return AudioStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle))
+        return AudioStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
     }
 
     /**
@@ -120,7 +120,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_volume_db
      */
     fun setVolumeDb(volumeDb: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, volumeDb)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, segment, volumeDb)
     }
 
     /**
@@ -129,7 +129,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_volume_db
      */
     fun getVolumeDb(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, segment)
     }
 
     /**
@@ -141,7 +141,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_volume_linear
      */
     fun setVolumeLinear(volumeLinear: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, handle, volumeLinear)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, segment, volumeLinear)
     }
 
     /**
@@ -153,7 +153,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_volume_linear
      */
     fun getVolumeLinear(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_pitch_scale
      */
     fun setPitchScale(pitchScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, handle, pitchScale)
+        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, segment, pitchScale)
     }
 
     /**
@@ -171,7 +171,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_pitch_scale
      */
     fun getPitchScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.play
      */
     fun play(fromPosition: Double = 0.0) {
-        ObjectCalls.ptrcallWithDoubleArg(playBind, handle, fromPosition)
+        ObjectCalls.ptrcallWithDoubleArg(playBind, segment, fromPosition)
     }
 
     /**
@@ -190,7 +190,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.seek
      */
     fun seek(toPosition: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(seekBind, handle, toPosition)
+        ObjectCalls.ptrcallWithDoubleArg(seekBind, segment, toPosition)
     }
 
     /**
@@ -199,7 +199,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -208,7 +208,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_playback_position
      */
     fun getPlaybackPosition(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, segment)
     }
 
     /**
@@ -229,7 +229,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_bus
      */
     fun setBus(bus: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setBusBind, handle, bus)
+        ObjectCalls.ptrcallWithStringNameArg(setBusBind, segment, bus)
     }
 
     /**
@@ -241,7 +241,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_bus
      */
     fun getBus(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_autoplay
      */
     fun setAutoplay(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, segment, enable)
     }
 
     /**
@@ -259,7 +259,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.is_autoplay_enabled
      */
     fun isAutoplayEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoplayEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoplayEnabledBind, segment)
     }
 
     /**
@@ -268,7 +268,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_playing
      */
     fun setPlaying(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPlayingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPlayingBind, segment, enable)
     }
 
     /**
@@ -277,7 +277,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_max_distance
      */
     fun setMaxDistance(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, handle, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, segment, pixels)
     }
 
     /**
@@ -286,7 +286,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_max_distance
      */
     fun getMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, segment)
     }
 
     /**
@@ -295,7 +295,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_attenuation
      */
     fun setAttenuation(curve: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAttenuationBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setAttenuationBind, segment, curve)
     }
 
     /**
@@ -304,7 +304,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_attenuation
      */
     fun getAttenuation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAttenuationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAttenuationBind, segment)
     }
 
     /**
@@ -316,7 +316,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_area_mask
      */
     fun setAreaMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAreaMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setAreaMaskBind, segment, mask)
     }
 
     /**
@@ -328,7 +328,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_area_mask
      */
     fun getAreaMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAreaMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getAreaMaskBind, segment)
     }
 
     /**
@@ -337,7 +337,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_stream_paused
      */
     fun setStreamPaused(pause: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setStreamPausedBind, handle, pause)
+        ObjectCalls.ptrcallWithBoolArg(setStreamPausedBind, segment, pause)
     }
 
     /**
@@ -346,7 +346,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream_paused
      */
     fun getStreamPaused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getStreamPausedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getStreamPausedBind, segment)
     }
 
     /**
@@ -356,7 +356,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_max_polyphony
      */
     fun setMaxPolyphony(maxPolyphony: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxPolyphonyBind, handle, maxPolyphony)
+        ObjectCalls.ptrcallWithIntArg(setMaxPolyphonyBind, segment, maxPolyphony)
     }
 
     /**
@@ -366,7 +366,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_max_polyphony
      */
     fun getMaxPolyphony(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPolyphonyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPolyphonyBind, segment)
     }
 
     /**
@@ -377,7 +377,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_panning_strength
      */
     fun setPanningStrength(panningStrength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPanningStrengthBind, handle, panningStrength)
+        ObjectCalls.ptrcallWithDoubleArg(setPanningStrengthBind, segment, panningStrength)
     }
 
     /**
@@ -388,7 +388,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_panning_strength
      */
     fun getPanningStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPanningStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPanningStrengthBind, segment)
     }
 
     /**
@@ -397,7 +397,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.has_stream_playback
      */
     fun hasStreamPlayback(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasStreamPlaybackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasStreamPlaybackBind, segment)
     }
 
     /**
@@ -406,7 +406,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream_playback
      */
     fun getStreamPlayback(): AudioStreamPlayback? {
-        return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, handle))
+        return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, segment))
     }
 
     /**
@@ -416,7 +416,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_playback_type
      */
     fun setPlaybackType(playbackType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, handle, playbackType)
+        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType)
     }
 
     /**
@@ -426,7 +426,7 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_playback_type
      */
     fun getPlaybackType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment)
     }
 
     object Signals {
@@ -435,11 +435,11 @@ class AudioStreamPlayer2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamPlayer2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamPlayer2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamPlayer2D? =
-            if (handle.address() == 0L) null else AudioStreamPlayer2D(handle)
+            if (handle.address() == 0L) null else AudioStreamPlayer2D(GodotHandle(handle))
 
         private const val SET_STREAM_HASH = 2210767741L
         private val setStreamBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: AudioStreamSynchronized
  */
-class AudioStreamSynchronized(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
     var streamCount: Int
         @JvmName("streamCountProperty")
         get() = getStreamCount()
@@ -18,23 +18,23 @@ class AudioStreamSynchronized(handle: MemorySegment) : AudioStream(handle) {
 
     fun setStreamCount(streamCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStreamCountBind, handle, streamCount)
+        ObjectCalls.ptrcallWithIntArg(setStreamCountBind, segment, streamCount)
     }
 
     fun getStreamCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, segment)
     }
 
     fun setSyncStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSyncStreamBind, handle, streamIndex, audioStream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSyncStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getSyncStream(streamIndex: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getSyncStreamBind, handle, streamIndex)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getSyncStreamBind, segment, streamIndex)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -43,23 +43,23 @@ class AudioStreamSynchronized(handle: MemorySegment) : AudioStream(handle) {
 
     fun setSyncStreamVolume(streamIndex: Int, volumeDb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setSyncStreamVolumeBind, handle, streamIndex, volumeDb)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setSyncStreamVolumeBind, segment, streamIndex, volumeDb)
     }
 
     fun getSyncStreamVolume(streamIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getSyncStreamVolumeBind, handle, streamIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getSyncStreamVolumeBind, segment, streamIndex)
     }
 
     companion object {
         const val MAX_STREAMS: Long = 32L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamSynchronized? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamSynchronized? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamSynchronized? =
-            if (handle.address() == 0L) null else AudioStreamSynchronized(handle)
+            if (handle.address() == 0L) null else AudioStreamSynchronized(GodotHandle(handle))
 
         private const val SET_STREAM_COUNT_HASH = 1286410249L
         private val setStreamCountBind by lazy {

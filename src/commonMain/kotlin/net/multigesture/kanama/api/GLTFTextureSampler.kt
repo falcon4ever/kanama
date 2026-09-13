@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFTextureSampler
  */
-class GLTFTextureSampler(handle: MemorySegment) : Resource(handle) {
+class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
     var magFilter: Int
         @JvmName("magFilterProperty")
         get() = getMagFilter()
@@ -36,51 +36,51 @@ class GLTFTextureSampler(handle: MemorySegment) : Resource(handle) {
 
     fun getMagFilter(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMagFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMagFilterBind, segment)
     }
 
     fun setMagFilter(filterMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMagFilterBind, handle, filterMode)
+        ObjectCalls.ptrcallWithIntArg(setMagFilterBind, segment, filterMode)
     }
 
     fun getMinFilter(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMinFilterBind, segment)
     }
 
     fun setMinFilter(filterMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMinFilterBind, handle, filterMode)
+        ObjectCalls.ptrcallWithIntArg(setMinFilterBind, segment, filterMode)
     }
 
     fun getWrapS(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWrapSBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWrapSBind, segment)
     }
 
     fun setWrapS(wrapMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWrapSBind, handle, wrapMode)
+        ObjectCalls.ptrcallWithIntArg(setWrapSBind, segment, wrapMode)
     }
 
     fun getWrapT(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWrapTBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWrapTBind, segment)
     }
 
     fun setWrapT(wrapMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWrapTBind, handle, wrapMode)
+        ObjectCalls.ptrcallWithIntArg(setWrapTBind, segment, wrapMode)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFTextureSampler? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFTextureSampler? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFTextureSampler? =
-            if (handle.address() == 0L) null else GLTFTextureSampler(handle)
+            if (handle.address() == 0L) null else GLTFTextureSampler(GodotHandle(handle))
 
         private const val GET_MAG_FILTER_HASH = 3905245786L
         private val getMagFilterBind by lazy {

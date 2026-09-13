@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HMACContext
  */
-class HMACContext(handle: MemorySegment) : RefCounted(handle) {
+class HMACContext(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Initializes the HMACContext. This method cannot be called again on the same HMACContext until
      * `finish` has been called.
@@ -19,7 +19,7 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun start(hashType: Long, key: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(startBind, handle, hashType, key)
+        return ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(startBind, segment, hashType, key)
     }
 
     /**
@@ -30,7 +30,7 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun update(data: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, handle, data)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, data)
     }
 
     /**
@@ -40,16 +40,16 @@ class HMACContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun finish(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HMACContext? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HMACContext? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HMACContext? =
-            if (handle.address() == 0L) null else HMACContext(handle)
+            if (handle.address() == 0L) null else HMACContext(GodotHandle(handle))
 
         private const val START_HASH = 3537364598L
         private val startBind by lazy {

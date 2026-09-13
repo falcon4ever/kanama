@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: OccluderPolygon2D
  */
-class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
+class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
     var polygonClosed: Boolean
         @JvmName("polygonClosedProperty")
         get() = isPolygonClosed()
@@ -33,12 +33,12 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
 
     fun setPolygonClosed(closed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPolygonClosedBind, handle, closed)
+        ObjectCalls.ptrcallWithBoolArg(setPolygonClosedBind, segment, closed)
     }
 
     fun isPolygonClosed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPolygonClosedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPolygonClosedBind, segment)
     }
 
     /**
@@ -48,7 +48,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setCullMode(cullMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, cullMode)
+        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, cullMode)
     }
 
     /**
@@ -58,7 +58,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getCullMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setPolygon(polygon: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
     }
 
     /**
@@ -78,7 +78,7 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getPolygon(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
     companion object {
@@ -87,11 +87,11 @@ class OccluderPolygon2D(handle: MemorySegment) : Resource(handle) {
         const val CULL_COUNTER_CLOCKWISE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OccluderPolygon2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OccluderPolygon2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OccluderPolygon2D? =
-            if (handle.address() == 0L) null else OccluderPolygon2D(handle)
+            if (handle.address() == 0L) null else OccluderPolygon2D(GodotHandle(handle))
 
         private const val SET_CLOSED_HASH = 2586408642L
         private val setPolygonClosedBind by lazy {

@@ -8,9 +8,9 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRAndroidThreadSettingsExtension
  */
-class OpenXRAndroidThreadSettingsExtension(handle: MemorySegment) : OpenXRExtensionWrapper(handle) {
+class OpenXRAndroidThreadSettingsExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     fun setApplicationThreadType(threadType: Long, threadId: Long = 0L): Boolean {
-        return ObjectCalls.ptrcallWithLongAndUInt32ArgRetBool(setApplicationThreadTypeBind, handle, threadType, threadId)
+        return ObjectCalls.ptrcallWithLongAndUInt32ArgRetBool(setApplicationThreadTypeBind, segment, threadType, threadId)
     }
 
     companion object {
@@ -20,11 +20,11 @@ class OpenXRAndroidThreadSettingsExtension(handle: MemorySegment) : OpenXRExtens
         const val THREAD_TYPE_RENDERER_WORKER: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRAndroidThreadSettingsExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRAndroidThreadSettingsExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRAndroidThreadSettingsExtension? =
-            if (handle.address() == 0L) null else OpenXRAndroidThreadSettingsExtension(handle)
+            if (handle.address() == 0L) null else OpenXRAndroidThreadSettingsExtension(GodotHandle(handle))
 
         private const val SET_APPLICATION_THREAD_TYPE_HASH = 1558751158L
         private val setApplicationThreadTypeBind by lazy {

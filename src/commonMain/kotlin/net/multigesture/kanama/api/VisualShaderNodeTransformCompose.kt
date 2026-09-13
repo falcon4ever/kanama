@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTransformCompose
  */
-class VisualShaderNodeTransformCompose(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeTransformCompose(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTransformCompose? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformCompose? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTransformCompose? =
-            if (handle.address() == 0L) null else VisualShaderNodeTransformCompose(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTransformCompose(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

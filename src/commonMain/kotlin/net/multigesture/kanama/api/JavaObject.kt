@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JavaObject
  */
-class JavaObject(handle: MemorySegment) : RefCounted(handle) {
+class JavaObject(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the `JavaClass` that this object is an instance of.
      *
@@ -18,7 +18,7 @@ class JavaObject(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getJavaClass(): JavaClass? {
         checkOpen()
-        return JavaClass.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, handle))
+        return JavaClass.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, segment))
     }
 
     /**
@@ -28,16 +28,16 @@ class JavaObject(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasJavaMethod(method: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, segment, method)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JavaObject? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JavaObject? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JavaObject? =
-            if (handle.address() == 0L) null else JavaObject(handle)
+            if (handle.address() == 0L) null else JavaObject(GodotHandle(handle))
 
         private const val GET_JAVA_CLASS_HASH = 541536347L
         private val getJavaClassBind by lazy {

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectNotchFilter
  */
-class AudioEffectNotchFilter(handle: MemorySegment) : AudioEffectFilter(handle) {
+class AudioEffectNotchFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectNotchFilter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectNotchFilter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectNotchFilter? =
-            if (handle.address() == 0L) null else AudioEffectNotchFilter(handle)
+            if (handle.address() == 0L) null else AudioEffectNotchFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

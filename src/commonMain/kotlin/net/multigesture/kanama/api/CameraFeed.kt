@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Transform2D
  *
  * Generated from Godot docs: CameraFeed
  */
-class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
+class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     var feedIsActive: Boolean
         @JvmName("feedIsActiveProperty")
         get() = isActive()
@@ -36,7 +36,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, segment)
     }
 
     /**
@@ -46,7 +46,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
     }
 
     /**
@@ -56,7 +56,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setActive(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, handle, active)
+        ObjectCalls.ptrcallWithBoolArg(setActiveBind, segment, active)
     }
 
     /**
@@ -66,7 +66,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
     }
 
     /**
@@ -76,7 +76,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setNameBind, segment, name)
     }
 
     /**
@@ -86,7 +86,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPosition(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPosition(position: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithLongArg(setPositionBind, segment, position)
     }
 
     /**
@@ -106,7 +106,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTransform(transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, transform)
     }
 
     /**
@@ -126,7 +126,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setRgbImage(rgbImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, handle, listOf(rgbImage?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, segment, listOf(rgbImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -136,7 +136,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setYcbcrImage(ycbcrImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, handle, listOf(ycbcrImage?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, segment, listOf(ycbcrImage?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -146,7 +146,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setYcbcrImages(yImage: Image?, cbcrImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, handle, yImage?.requireOpenHandle() ?: MemorySegment.NULL, cbcrImage?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, segment, yImage?.requireOpenHandle() ?: MemorySegment.NULL, cbcrImage?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -156,7 +156,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setExternal(width: Int, height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setExternalBind, handle, width, height)
+        ObjectCalls.ptrcallWithTwoIntArgs(setExternalBind, segment, width, height)
     }
 
     /**
@@ -167,7 +167,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTextureTexId(feedImageType: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, handle, feedImageType)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, segment, feedImageType)
     }
 
     /**
@@ -177,7 +177,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDatatype(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, segment)
     }
 
     /**
@@ -187,7 +187,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFormats(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getFormatsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getFormatsBind, segment)
     }
 
     /**
@@ -201,7 +201,7 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFormat(index: Int, parameters: Map<String, Any?>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(setFormatBind, handle, index, parameters)
+        return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(setFormatBind, segment, index, parameters)
     }
 
     object Signals {
@@ -220,11 +220,11 @@ class CameraFeed(handle: MemorySegment) : RefCounted(handle) {
         const val FEED_BACK: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CameraFeed? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CameraFeed? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CameraFeed? =
-            if (handle.address() == 0L) null else CameraFeed(handle)
+            if (handle.address() == 0L) null else CameraFeed(GodotHandle(handle))
 
         private const val GET_ID_HASH = 3905245786L
         private val getIdBind by lazy {

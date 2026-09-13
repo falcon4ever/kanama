@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Thread
  */
-class Thread(handle: MemorySegment) : RefCounted(handle) {
+class Thread(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Starts a new `Thread` that calls `callable`. If the method takes some arguments, you can pass
      * them using `Callable.bind`. The `priority` of the `Thread` can be changed by passing a value
@@ -20,7 +20,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      */
     fun start(callable: GodotCallable, priority: Long = 1L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithCallableLongArgsRetLong(startBind, handle, callable.target.handle, callable.method, priority)
+        return ObjectCalls.ptrcallWithCallableLongArgsRetLong(startBind, segment, callable.target.segment, callable.method, priority)
     }
 
     /**
@@ -31,7 +31,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getId(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getIdBind, segment)
     }
 
     /**
@@ -43,7 +43,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isStarted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isAlive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAliveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAliveBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
      */
     fun waitToFinish(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(waitToFinishBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(waitToFinishBind, segment)
     }
 
     companion object {
@@ -109,11 +109,11 @@ class Thread(handle: MemorySegment) : RefCounted(handle) {
         const val PRIORITY_HIGH: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Thread? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Thread? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Thread? =
-            if (handle.address() == 0L) null else Thread(handle)
+            if (handle.address() == 0L) null else Thread(GodotHandle(handle))
 
         private const val START_HASH = 1327203254L
         private val startBind by lazy {

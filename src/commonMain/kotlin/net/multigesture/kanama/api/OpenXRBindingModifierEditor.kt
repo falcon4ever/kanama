@@ -8,13 +8,13 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRBindingModifierEditor
  */
-class OpenXRBindingModifierEditor(handle: MemorySegment) : PanelContainer(handle) {
+class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) {
     fun getBindingModifier(): OpenXRBindingModifier? {
-        return OpenXRBindingModifier.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBindingModifierBind, handle))
+        return OpenXRBindingModifier.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBindingModifierBind, segment))
     }
 
     fun setup(actionMap: OpenXRActionMap?, bindingModifier: OpenXRBindingModifier?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(setupBind, handle, actionMap?.requireOpenHandle() ?: MemorySegment.NULL, bindingModifier?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectArgs(setupBind, segment, actionMap?.requireOpenHandle() ?: MemorySegment.NULL, bindingModifier?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     object Signals {
@@ -23,11 +23,11 @@ class OpenXRBindingModifierEditor(handle: MemorySegment) : PanelContainer(handle
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRBindingModifierEditor? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRBindingModifierEditor? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRBindingModifierEditor? =
-            if (handle.address() == 0L) null else OpenXRBindingModifierEditor(handle)
+            if (handle.address() == 0L) null else OpenXRBindingModifierEditor(GodotHandle(handle))
 
         private const val GET_BINDING_MODIFIER_HASH = 2930765082L
         private val getBindingModifierBind by lazy {

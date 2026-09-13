@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: FileSystemDock
  */
-class FileSystemDock(handle: MemorySegment) : EditorDock(handle) {
+class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
     /**
      * Sets the given `path` as currently selected, ensuring that the selected file/directory is
      * visible.
@@ -18,7 +18,7 @@ class FileSystemDock(handle: MemorySegment) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.navigate_to_path
      */
     fun navigateToPath(path: String) {
-        ObjectCalls.ptrcallWithStringArg(navigateToPathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(navigateToPathBind, segment, path)
     }
 
     /**
@@ -27,7 +27,7 @@ class FileSystemDock(handle: MemorySegment) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.add_resource_tooltip_plugin
      */
     fun addResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addResourceTooltipPluginBind, handle, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -36,7 +36,7 @@ class FileSystemDock(handle: MemorySegment) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.remove_resource_tooltip_plugin
      */
     fun removeResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceTooltipPluginBind, handle, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     object Signals {
@@ -54,11 +54,11 @@ class FileSystemDock(handle: MemorySegment) : EditorDock(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FileSystemDock? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FileSystemDock? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FileSystemDock? =
-            if (handle.address() == 0L) null else FileSystemDock(handle)
+            if (handle.address() == 0L) null else FileSystemDock(GodotHandle(handle))
 
         private const val NAVIGATE_TO_PATH_HASH = 83702148L
         private val navigateToPathBind by lazy {

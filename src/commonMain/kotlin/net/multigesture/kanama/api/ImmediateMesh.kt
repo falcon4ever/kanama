@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: ImmediateMesh
  */
-class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
+class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     /**
      * Begin a new surface.
      *
@@ -22,7 +22,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceBegin(primitive: Long, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, handle, primitive, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, segment, primitive, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -32,7 +32,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceSetColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(surfaceSetColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(surfaceSetColorBind, segment, color)
     }
 
     /**
@@ -42,7 +42,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceSetNormal(normal: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(surfaceSetNormalBind, handle, normal)
+        ObjectCalls.ptrcallWithVector3Arg(surfaceSetNormalBind, segment, normal)
     }
 
     /**
@@ -55,7 +55,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceSetTangent(tangent: Plane) {
         checkOpen()
-        ObjectCalls.ptrcallWithPlaneArg(surfaceSetTangentBind, handle, tangent)
+        ObjectCalls.ptrcallWithPlaneArg(surfaceSetTangentBind, segment, tangent)
     }
 
     /**
@@ -65,7 +65,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceSetUv(uv: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(surfaceSetUvBind, handle, uv)
+        ObjectCalls.ptrcallWithVector2Arg(surfaceSetUvBind, segment, uv)
     }
 
     /**
@@ -75,7 +75,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceSetUv2(uv2: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(surfaceSetUv2Bind, handle, uv2)
+        ObjectCalls.ptrcallWithVector2Arg(surfaceSetUv2Bind, segment, uv2)
     }
 
     /**
@@ -85,7 +85,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceAddVertex(vertex: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(surfaceAddVertexBind, handle, vertex)
+        ObjectCalls.ptrcallWithVector3Arg(surfaceAddVertexBind, segment, vertex)
     }
 
     /**
@@ -95,7 +95,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceAddVertex2d(vertex: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(surfaceAddVertex2dBind, handle, vertex)
+        ObjectCalls.ptrcallWithVector2Arg(surfaceAddVertex2dBind, segment, vertex)
     }
 
     /**
@@ -106,7 +106,7 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun surfaceEnd() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(surfaceEndBind, handle)
+        ObjectCalls.ptrcallNoArgs(surfaceEndBind, segment)
     }
 
     /**
@@ -116,16 +116,16 @@ class ImmediateMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun clearSurfaces() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSurfacesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImmediateMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImmediateMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImmediateMesh? =
-            if (handle.address() == 0L) null else ImmediateMesh(handle)
+            if (handle.address() == 0L) null else ImmediateMesh(GodotHandle(handle))
 
         private const val SURFACE_BEGIN_HASH = 2794442543L
         private val surfaceBeginBind by lazy {

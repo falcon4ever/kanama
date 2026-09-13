@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: Image
  */
-class Image(handle: MemorySegment) : Resource(handle) {
+class Image(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns the image's width.
      *
@@ -20,7 +20,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
     }
 
     /**
@@ -30,7 +30,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
     }
 
     /**
@@ -40,7 +40,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getDataSize(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDataSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDataSizeBind, segment)
     }
 
     /**
@@ -90,7 +90,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun convert(format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(convertBind, handle, format)
+        ObjectCalls.ptrcallWithLongArg(convertBind, segment, format)
     }
 
     /**
@@ -102,7 +102,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getMipmapCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getMipmapOffset(mipmap: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getMipmapOffsetBind, handle, mipmap)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getMipmapOffsetBind, segment, mipmap)
     }
 
     /**
@@ -125,7 +125,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun resizeToPo2(square: Boolean = false, interpolation: Long = 1L) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, handle, square, interpolation)
+        ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, segment, square, interpolation)
     }
 
     /**
@@ -138,7 +138,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun resize(width: Int, height: Int, interpolation: Long = 1L) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, handle, width, height, interpolation)
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, segment, width, height, interpolation)
     }
 
     /**
@@ -148,7 +148,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun shrinkX2() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(shrinkX2Bind, handle)
+        ObjectCalls.ptrcallNoArgs(shrinkX2Bind, segment)
     }
 
     /**
@@ -159,7 +159,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun crop(width: Int, height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(cropBind, handle, width, height)
+        ObjectCalls.ptrcallWithTwoIntArgs(cropBind, segment, width, height)
     }
 
     /**
@@ -169,7 +169,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun flipX() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(flipXBind, handle)
+        ObjectCalls.ptrcallNoArgs(flipXBind, segment)
     }
 
     /**
@@ -179,7 +179,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun flipY() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(flipYBind, handle)
+        ObjectCalls.ptrcallNoArgs(flipYBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun generateMipmaps(renormalize: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, handle, renormalize)
+        return ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, segment, renormalize)
     }
 
     /**
@@ -206,7 +206,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun clearMipmaps() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearMipmapsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearMipmapsBind, segment)
     }
 
     /**
@@ -216,7 +216,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun setData(width: Int, height: Int, useMipmaps: Boolean, format: Long, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(setDataBind, handle, width, height, useMipmaps, format, data)
+        ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(setDataBind, segment, width, height, useMipmaps, format, data)
     }
 
     /**
@@ -226,7 +226,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
     }
 
     /**
@@ -241,7 +241,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun load(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
     }
 
     /**
@@ -251,7 +251,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun savePng(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, segment, path)
     }
 
     /**
@@ -261,7 +261,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun savePngToBuffer(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(savePngToBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(savePngToBufferBind, segment)
     }
 
     /**
@@ -276,7 +276,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveJpg(path: String, quality: Double = 0.75): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, handle, path, quality)
+        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, segment, path, quality)
     }
 
     /**
@@ -291,7 +291,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveJpgToBuffer(quality: Double = 0.75): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetByteArray(saveJpgToBufferBind, handle, quality)
+        return ObjectCalls.ptrcallWithDoubleArgRetByteArray(saveJpgToBufferBind, segment, quality)
     }
 
     /**
@@ -309,7 +309,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveExr(path: String, grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, handle, path, grayscale, colorImage, maxLinearValue)
+        return ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, segment, path, grayscale, colorImage, maxLinearValue)
     }
 
     /**
@@ -327,7 +327,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveExrToBuffer(grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoBoolAndDoubleArgRetByteArray(saveExrToBufferBind, handle, grayscale, colorImage, maxLinearValue)
+        return ObjectCalls.ptrcallWithTwoBoolAndDoubleArgRetByteArray(saveExrToBufferBind, segment, grayscale, colorImage, maxLinearValue)
     }
 
     /**
@@ -341,7 +341,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveDds(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, segment, path)
     }
 
     /**
@@ -355,7 +355,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveDdsToBuffer(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(saveDdsToBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(saveDdsToBufferBind, segment)
     }
 
     /**
@@ -369,7 +369,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveWebp(path: String, lossy: Boolean = false, quality: Double = 0.75): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, handle, path, lossy, quality)
+        return ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, segment, path, lossy, quality)
     }
 
     /**
@@ -382,7 +382,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun saveWebpToBuffer(lossy: Boolean = false, quality: Double = 0.75): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolAndDoubleArgRetByteArray(saveWebpToBufferBind, handle, lossy, quality)
+        return ObjectCalls.ptrcallWithBoolAndDoubleArgRetByteArray(saveWebpToBufferBind, segment, lossy, quality)
     }
 
     /**
@@ -394,7 +394,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun detectAlpha(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, segment)
     }
 
     /**
@@ -405,7 +405,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun isInvisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInvisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInvisibleBind, segment)
     }
 
     /**
@@ -416,7 +416,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun detectUsedChannels(source: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, handle, source)
+        return ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, segment, source)
     }
 
     /**
@@ -432,7 +432,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun compress(mode: Long, source: Long = 0L, astcFormat: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, handle, mode, source, astcFormat)
+        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, segment, mode, source, astcFormat)
     }
 
     /**
@@ -449,7 +449,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun compressFromChannels(mode: Long, channels: Long, astcFormat: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, handle, mode, channels, astcFormat)
+        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, segment, mode, channels, astcFormat)
     }
 
     /**
@@ -462,7 +462,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun decompress(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(decompressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(decompressBind, segment)
     }
 
     /**
@@ -472,7 +472,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun isCompressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCompressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCompressedBind, segment)
     }
 
     /**
@@ -484,7 +484,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun rotate90(direction: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(rotate90Bind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(rotate90Bind, segment, direction)
     }
 
     /**
@@ -494,7 +494,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun rotate180() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(rotate180Bind, handle)
+        ObjectCalls.ptrcallNoArgs(rotate180Bind, segment)
     }
 
     /**
@@ -504,7 +504,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun fixAlphaEdges() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(fixAlphaEdgesBind, handle)
+        ObjectCalls.ptrcallNoArgs(fixAlphaEdgesBind, segment)
     }
 
     /**
@@ -515,7 +515,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun premultiplyAlpha() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(premultiplyAlphaBind, handle)
+        ObjectCalls.ptrcallNoArgs(premultiplyAlphaBind, segment)
     }
 
     /**
@@ -529,7 +529,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun srgbToLinear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(srgbToLinearBind, handle)
+        ObjectCalls.ptrcallNoArgs(srgbToLinearBind, segment)
     }
 
     /**
@@ -540,7 +540,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun linearToSrgb() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(linearToSrgbBind, handle)
+        ObjectCalls.ptrcallNoArgs(linearToSrgbBind, segment)
     }
 
     /**
@@ -552,7 +552,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun normalMapToXy() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(normalMapToXyBind, handle)
+        ObjectCalls.ptrcallNoArgs(normalMapToXyBind, segment)
     }
 
     /**
@@ -563,8 +563,8 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun rgbeToSrgb(): Image? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(rgbeToSrgbBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(rgbeToSrgbBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -579,7 +579,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun bumpMapToNormalMap(bumpScale: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(bumpMapToNormalMapBind, handle, bumpScale)
+        ObjectCalls.ptrcallWithDoubleArg(bumpMapToNormalMapBind, segment, bumpScale)
     }
 
     /**
@@ -591,7 +591,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun computeImageMetrics(comparedImage: Image?, useLuma: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(computeImageMetricsBind, handle, comparedImage?.requireOpenHandle() ?: MemorySegment.NULL, useLuma)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(computeImageMetricsBind, segment, comparedImage?.requireOpenHandle() ?: MemorySegment.NULL, useLuma)
     }
 
     /**
@@ -605,7 +605,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun blitRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blitRectBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blitRectBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
     /**
@@ -619,7 +619,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun blitRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blitRectMaskBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blitRectMaskBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
     /**
@@ -631,7 +631,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun blendRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blendRectBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blendRectBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
     /**
@@ -646,7 +646,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun blendRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blendRectMaskBind, handle, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blendRectMaskBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
     }
 
     /**
@@ -656,7 +656,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun fill(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(fillBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(fillBind, segment, color)
     }
 
     /**
@@ -666,7 +666,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun fillRect(rect: Rect2i, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndColorArg(fillRectBind, handle, rect, color)
+        ObjectCalls.ptrcallWithRect2iAndColorArg(fillRectBind, segment, rect, color)
     }
 
     /**
@@ -677,7 +677,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getUsedRect(): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, segment)
     }
 
     /**
@@ -687,8 +687,8 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getRegion(region: Rect2i): Image? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithRect2iArgRetObject(getRegionBind, handle, region)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithRect2iArgRetObject(getRegionBind, segment, region)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -702,7 +702,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun copyFrom(src: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, handle, listOf(src?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, segment, listOf(src?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -713,7 +713,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getPixelv(point: Vector2i): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetColor(getPixelvBind, handle, point)
+        return ObjectCalls.ptrcallWithVector2iArgRetColor(getPixelvBind, segment, point)
     }
 
     /**
@@ -724,7 +724,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun getPixel(x: Int, y: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getPixelBind, handle, x, y)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getPixelBind, segment, x, y)
     }
 
     /**
@@ -734,7 +734,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun setPixelv(point: Vector2i, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndColorArg(setPixelvBind, handle, point, color)
+        ObjectCalls.ptrcallWithVector2iAndColorArg(setPixelvBind, segment, point, color)
     }
 
     /**
@@ -744,7 +744,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun setPixel(x: Int, y: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setPixelBind, handle, x, y, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(setPixelBind, segment, x, y, color)
     }
 
     /**
@@ -755,7 +755,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun adjustBcs(brightness: Double, contrast: Double, saturation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeDoubleArgs(adjustBcsBind, handle, brightness, contrast, saturation)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(adjustBcsBind, segment, brightness, contrast, saturation)
     }
 
     /**
@@ -765,7 +765,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadPngFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, segment, buffer)
     }
 
     /**
@@ -775,7 +775,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadJpgFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadJpgFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadJpgFromBufferBind, segment, buffer)
     }
 
     /**
@@ -785,7 +785,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadWebpFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadWebpFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadWebpFromBufferBind, segment, buffer)
     }
 
     /**
@@ -797,7 +797,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadTgaFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadTgaFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadTgaFromBufferBind, segment, buffer)
     }
 
     /**
@@ -811,7 +811,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadBmpFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadBmpFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadBmpFromBufferBind, segment, buffer)
     }
 
     /**
@@ -826,7 +826,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadKtxFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadKtxFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadKtxFromBufferBind, segment, buffer)
     }
 
     /**
@@ -838,7 +838,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadDdsFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadDdsFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadDdsFromBufferBind, segment, buffer)
     }
 
     /**
@@ -848,7 +848,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadExrFromBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadExrFromBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadExrFromBufferBind, segment, buffer)
     }
 
     /**
@@ -862,7 +862,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadSvgFromBuffer(buffer: ByteArray, scale: Double = 1.0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(loadSvgFromBufferBind, handle, buffer, scale)
+        return ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(loadSvgFromBufferBind, segment, buffer, scale)
     }
 
     /**
@@ -874,7 +874,7 @@ class Image(handle: MemorySegment) : Resource(handle) {
      */
     fun loadSvgFromString(svgStr: String, scale: Double = 1.0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, handle, svgStr, scale)
+        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, segment, svgStr, scale)
     }
 
     companion object {
@@ -994,11 +994,11 @@ class Image(handle: MemorySegment) : Resource(handle) {
         const val ASTC_FORMAT_8x8: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Image? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Image? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Image? =
-            if (handle.address() == 0L) null else Image(handle)
+            if (handle.address() == 0L) null else Image(GodotHandle(handle))
 
         private const val GET_WIDTH_HASH = 3905245786L
         private val getWidthBind by lazy {

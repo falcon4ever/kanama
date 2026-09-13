@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PinJoint2D
  */
-class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
+class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
     var softness: Double
         @JvmName("softnessProperty")
         get() = getSoftness()
@@ -55,7 +55,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_softness
      */
     fun setSoftness(softness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSoftnessBind, handle, softness)
+        ObjectCalls.ptrcallWithDoubleArg(setSoftnessBind, segment, softness)
     }
 
     /**
@@ -64,7 +64,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_softness
      */
     fun getSoftness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftnessBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_angular_limit_lower
      */
     fun setAngularLimitLower(angularLimitLower: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularLimitLowerBind, handle, angularLimitLower)
+        ObjectCalls.ptrcallWithDoubleArg(setAngularLimitLowerBind, segment, angularLimitLower)
     }
 
     /**
@@ -82,7 +82,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_angular_limit_lower
      */
     fun getAngularLimitLower(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitLowerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitLowerBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_angular_limit_upper
      */
     fun setAngularLimitUpper(angularLimitUpper: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularLimitUpperBind, handle, angularLimitUpper)
+        ObjectCalls.ptrcallWithDoubleArg(setAngularLimitUpperBind, segment, angularLimitUpper)
     }
 
     /**
@@ -100,7 +100,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_angular_limit_upper
      */
     fun getAngularLimitUpper(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitUpperBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitUpperBind, segment)
     }
 
     /**
@@ -109,7 +109,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_motor_target_velocity
      */
     fun setMotorTargetVelocity(motorTargetVelocity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMotorTargetVelocityBind, handle, motorTargetVelocity)
+        ObjectCalls.ptrcallWithDoubleArg(setMotorTargetVelocityBind, segment, motorTargetVelocity)
     }
 
     /**
@@ -118,7 +118,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_motor_target_velocity
      */
     fun getMotorTargetVelocity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMotorTargetVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMotorTargetVelocityBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_motor_enabled
      */
     fun setMotorEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMotorEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setMotorEnabledBind, segment, enabled)
     }
 
     /**
@@ -136,7 +136,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.is_motor_enabled
      */
     fun isMotorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMotorEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMotorEnabledBind, segment)
     }
 
     /**
@@ -146,7 +146,7 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_angular_limit_enabled
      */
     fun setAngularLimitEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAngularLimitEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAngularLimitEnabledBind, segment, enabled)
     }
 
     /**
@@ -156,16 +156,16 @@ class PinJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.is_angular_limit_enabled
      */
     fun isAngularLimitEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAngularLimitEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAngularLimitEnabledBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PinJoint2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PinJoint2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PinJoint2D? =
-            if (handle.address() == 0L) null else PinJoint2D(handle)
+            if (handle.address() == 0L) null else PinJoint2D(GodotHandle(handle))
 
         private const val SET_SOFTNESS_HASH = 373806689L
         private val setSoftnessBind by lazy {

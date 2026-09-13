@@ -35,7 +35,7 @@ Kanama scripts are normal Kotlin objects attached to Godot objects:
 package fps
 
 @ScriptClass(attachTo = "CharacterBody3D")
-class Player(godotObject: MemorySegment) :
+class Player(godotObject: GodotHandle) :
     KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
 
     @OnReady
@@ -109,7 +109,7 @@ typed collections:
 ```kotlin
 @ScriptClass(attachTo = "Resource")
 @GlobalClass
-class Weapon(val godotObject: MemorySegment) {
+class Weapon(val godotObject: GodotHandle) {
     @ScriptProperty
     var crosshair: Texture2D? = null
 }

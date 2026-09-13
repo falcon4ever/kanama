@@ -16,7 +16,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Shape2D
  */
-open class Shape2D(handle: MemorySegment) : Resource(handle) {
+open class Shape2D(handle: GodotHandle) : Resource(handle) {
     var customSolverBias: Double
         @JvmName("customSolverBiasProperty")
         get() = getCustomSolverBias()
@@ -32,7 +32,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setCustomSolverBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, segment, bias)
     }
 
     /**
@@ -44,7 +44,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getCustomSolverBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, segment)
     }
 
     /**
@@ -56,7 +56,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun collide(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, handle, localXform, withShape.requireOpenHandle(), shapeXform)
+        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
     /**
@@ -70,7 +70,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, handle, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
     /**
@@ -87,7 +87,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun collideAndGetContacts(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(collideAndGetContactsBind, handle, localXform, withShape.requireOpenHandle(), shapeXform)
+        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(collideAndGetContactsBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
     /**
@@ -106,7 +106,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun collideWithMotionAndGetContacts(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(collideWithMotionAndGetContactsBind, handle, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(collideWithMotionAndGetContactsBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
     /**
@@ -117,7 +117,7 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun draw(canvasItem: RID, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndColorArg(drawBind, handle, canvasItem, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(drawBind, segment, canvasItem, color)
     }
 
     /**
@@ -127,16 +127,16 @@ open class Shape2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Shape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Shape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Shape2D? =
-            if (handle.address() == 0L) null else Shape2D(handle)
+            if (handle.address() == 0L) null else Shape2D(GodotHandle(handle))
 
         private const val SET_CUSTOM_SOLVER_BIAS_HASH = 373806689L
         private val setCustomSolverBiasBind by lazy {

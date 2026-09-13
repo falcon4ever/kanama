@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: Slider
  */
-open class Slider(handle: MemorySegment) : Range(handle) {
+open class Slider(handle: GodotHandle) : Range(handle) {
     var editable: Boolean
         @JvmName("editableProperty")
         get() = isEditable()
@@ -41,43 +41,43 @@ open class Slider(handle: MemorySegment) : Range(handle) {
         set(value) = setTicksPosition(value)
 
     fun setTicks(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTicksBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setTicksBind, segment, count)
     }
 
     fun getTicks(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTicksBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTicksBind, segment)
     }
 
     fun getTicksOnBorders(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getTicksOnBordersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getTicksOnBordersBind, segment)
     }
 
     fun setTicksOnBorders(ticksOnBorder: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTicksOnBordersBind, handle, ticksOnBorder)
+        ObjectCalls.ptrcallWithBoolArg(setTicksOnBordersBind, segment, ticksOnBorder)
     }
 
     fun getTicksPosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, segment)
     }
 
     fun setTicksPosition(ticksOnBorder: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, handle, ticksOnBorder)
+        ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, segment, ticksOnBorder)
     }
 
     fun setEditable(editable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, editable)
+        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, editable)
     }
 
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     }
 
     fun setScrollable(scrollable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollableBind, handle, scrollable)
+        ObjectCalls.ptrcallWithBoolArg(setScrollableBind, segment, scrollable)
     }
 
     fun isScrollable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollableBind, segment)
     }
 
     object Signals {
@@ -92,11 +92,11 @@ open class Slider(handle: MemorySegment) : Range(handle) {
         const val TICK_POSITION_CENTER: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Slider? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Slider? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Slider? =
-            if (handle.address() == 0L) null else Slider(handle)
+            if (handle.address() == 0L) null else Slider(GodotHandle(handle))
 
         private const val SET_TICKS_HASH = 1286410249L
         private val setTicksBind by lazy {

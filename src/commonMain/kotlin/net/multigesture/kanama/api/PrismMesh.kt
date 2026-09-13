@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PrismMesh
  */
-class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var leftToRight: Double
         @JvmName("leftToRightProperty")
         get() = getLeftToRight()
@@ -51,7 +51,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setLeftToRight(leftToRight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLeftToRightBind, handle, leftToRight)
+        ObjectCalls.ptrcallWithDoubleArg(setLeftToRightBind, segment, leftToRight)
     }
 
     /**
@@ -62,7 +62,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getLeftToRight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLeftToRightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLeftToRightBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -82,7 +82,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -92,7 +92,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSubdivideWidth(segments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, segments)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, segment, segments)
     }
 
     /**
@@ -102,7 +102,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSubdivideWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, segment)
     }
 
     /**
@@ -112,7 +112,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSubdivideHeight(segments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, handle, segments)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, segment, segments)
     }
 
     /**
@@ -122,7 +122,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSubdivideHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSubdivideDepth(segments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, segments)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, segment, segments)
     }
 
     /**
@@ -142,16 +142,16 @@ class PrismMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSubdivideDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PrismMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PrismMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PrismMesh? =
-            if (handle.address() == 0L) null else PrismMesh(handle)
+            if (handle.address() == 0L) null else PrismMesh(GodotHandle(handle))
 
         private const val SET_LEFT_TO_RIGHT_HASH = 373806689L
         private val setLeftToRightBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JSON
  */
-class JSON(handle: MemorySegment) : Resource(handle) {
+class JSON(handle: GodotHandle) : Resource(handle) {
     var data: Any?
         @JvmName("dataProperty")
         get() = getData()
@@ -31,7 +31,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      */
     fun parse(jsonText: String, keepText: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, handle, jsonText, keepText)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, segment, jsonText, keepText)
     }
 
     /**
@@ -41,7 +41,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      */
     fun getData(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getDataBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      */
     fun setData(data: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(setDataBind, handle, data)
+        ObjectCalls.ptrcallWithVariantArg(setDataBind, segment, data)
     }
 
     /**
@@ -61,7 +61,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      */
     fun getParsedText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      */
     fun getErrorLine(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getErrorLineBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getErrorLineBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class JSON(handle: MemorySegment) : Resource(handle) {
      */
     fun getErrorMessage(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getErrorMessageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getErrorMessageBind, segment)
     }
 
     companion object {
@@ -142,11 +142,11 @@ class JSON(handle: MemorySegment) : Resource(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JSON? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JSON? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JSON? =
-            if (handle.address() == 0L) null else JSON(handle)
+            if (handle.address() == 0L) null else JSON(GodotHandle(handle))
 
         private const val STRINGIFY_HASH = 462733549L
         private val stringifyBind by lazy {

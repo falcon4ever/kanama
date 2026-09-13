@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ScrollContainer
  */
-open class ScrollContainer(handle: MemorySegment) : Container(handle) {
+open class ScrollContainer(handle: GodotHandle) : Container(handle) {
     var followFocus: Boolean
         @JvmName("followFocusProperty")
         get() = isFollowingFocus()
@@ -92,7 +92,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_h_scroll
      */
     fun setHScroll(value: Int) {
-        ObjectCalls.ptrcallWithIntArg(setHScrollBind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(setHScrollBind, segment, value)
     }
 
     /**
@@ -103,7 +103,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_h_scroll
      */
     fun getHScroll(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_v_scroll
      */
     fun setVScroll(value: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVScrollBind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(setVScrollBind, segment, value)
     }
 
     /**
@@ -123,7 +123,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_v_scroll
      */
     fun getVScroll(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVScrollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVScrollBind, segment)
     }
 
     /**
@@ -133,7 +133,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_horizontal_custom_step
      */
     fun setHorizontalCustomStep(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHorizontalCustomStepBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setHorizontalCustomStepBind, segment, value)
     }
 
     /**
@@ -143,7 +143,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_horizontal_custom_step
      */
     fun getHorizontalCustomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHorizontalCustomStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHorizontalCustomStepBind, segment)
     }
 
     /**
@@ -153,7 +153,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_vertical_custom_step
      */
     fun setVerticalCustomStep(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVerticalCustomStepBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setVerticalCustomStepBind, segment, value)
     }
 
     /**
@@ -163,7 +163,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_vertical_custom_step
      */
     fun getVerticalCustomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVerticalCustomStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVerticalCustomStepBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_horizontal_scroll_mode
      */
     fun setHorizontalScrollMode(enable: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalScrollModeBind, handle, enable)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalScrollModeBind, segment, enable)
     }
 
     /**
@@ -181,7 +181,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_horizontal_scroll_mode
      */
     fun getHorizontalScrollMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalScrollModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalScrollModeBind, segment)
     }
 
     /**
@@ -190,7 +190,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_vertical_scroll_mode
      */
     fun setVerticalScrollMode(enable: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalScrollModeBind, handle, enable)
+        ObjectCalls.ptrcallWithLongArg(setVerticalScrollModeBind, segment, enable)
     }
 
     /**
@@ -199,7 +199,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_vertical_scroll_mode
      */
     fun getVerticalScrollMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalScrollModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalScrollModeBind, segment)
     }
 
     /**
@@ -210,7 +210,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_scroll_horizontal_by_default
      */
     fun setScrollHorizontalByDefault(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollHorizontalByDefaultBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setScrollHorizontalByDefaultBind, segment, enable)
     }
 
     /**
@@ -221,7 +221,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.is_scroll_horizontal_by_default
      */
     fun isScrollHorizontalByDefault(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHorizontalByDefaultBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHorizontalByDefaultBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_deadzone
      */
     fun setDeadzone(deadzone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDeadzoneBind, handle, deadzone)
+        ObjectCalls.ptrcallWithIntArg(setDeadzoneBind, segment, deadzone)
     }
 
     /**
@@ -239,7 +239,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_deadzone
      */
     fun getDeadzone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDeadzoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDeadzoneBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_scroll_hint_mode
      */
     fun setScrollHintMode(scrollHintMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, handle, scrollHintMode)
+        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode)
     }
 
     /**
@@ -261,7 +261,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_scroll_hint_mode
      */
     fun getScrollHintMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment)
     }
 
     /**
@@ -270,7 +270,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_tile_scroll_hint
      */
     fun setTileScrollHint(tileScrollHint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, handle, tileScrollHint)
+        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, segment, tileScrollHint)
     }
 
     /**
@@ -279,7 +279,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.is_scroll_hint_tiled
      */
     fun isScrollHintTiled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, segment)
     }
 
     /**
@@ -289,7 +289,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_follow_focus
      */
     fun setFollowFocus(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowFocusBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFollowFocusBind, segment, enabled)
     }
 
     /**
@@ -299,7 +299,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.is_following_focus
      */
     fun isFollowingFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFollowingFocusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFollowingFocusBind, segment)
     }
 
     /**
@@ -310,7 +310,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_h_scroll_bar
      */
     fun getHScrollBar(): HScrollBar? {
-        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, handle))
+        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, segment))
     }
 
     /**
@@ -321,7 +321,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, handle))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
     }
 
     /**
@@ -333,7 +333,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.ensure_control_visible
      */
     fun ensureControlVisible(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(ensureControlVisibleBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(ensureControlVisibleBind, segment, listOf(control.segment))
     }
 
     /**
@@ -342,7 +342,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_draw_focus_border
      */
     fun setDrawFocusBorder(draw: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawFocusBorderBind, handle, draw)
+        ObjectCalls.ptrcallWithBoolArg(setDrawFocusBorderBind, segment, draw)
     }
 
     /**
@@ -351,7 +351,7 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_draw_focus_border
      */
     fun getDrawFocusBorder(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDrawFocusBorderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDrawFocusBorderBind, segment)
     }
 
     object Signals {
@@ -372,11 +372,11 @@ open class ScrollContainer(handle: MemorySegment) : Container(handle) {
         const val SCROLL_HINT_MODE_BOTTOM_AND_RIGHT: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScrollContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScrollContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScrollContainer? =
-            if (handle.address() == 0L) null else ScrollContainer(handle)
+            if (handle.address() == 0L) null else ScrollContainer(GodotHandle(handle))
 
         private const val SET_H_SCROLL_HASH = 1286410249L
         private val setHScrollBind by lazy {

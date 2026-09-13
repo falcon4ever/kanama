@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: NavigationObstacle3D
  */
-class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
+class NavigationObstacle3D(handle: GodotHandle) : Node3D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -75,7 +75,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_avoidance_enabled
      */
     fun setAvoidanceEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, segment, enabled)
     }
 
     /**
@@ -93,7 +93,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_avoidance_enabled
      */
     fun getAvoidanceEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -117,7 +117,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -126,7 +126,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -135,7 +135,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_height
      */
     fun setHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     /**
@@ -155,7 +155,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_height
      */
     fun getHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     /**
@@ -166,7 +166,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_velocity
      */
     fun setVelocity(velocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(setVelocityBind, segment, velocity)
     }
 
     /**
@@ -177,7 +177,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_velocity
      */
     fun getVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_vertices
      */
     fun setVertices(vertices: List<Vector3>) {
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, segment, vertices)
     }
 
     /**
@@ -201,7 +201,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_vertices
      */
     fun getVertices(): List<Vector3> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, segment)
     }
 
     /**
@@ -211,7 +211,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_avoidance_layers
      */
     fun setAvoidanceLayers(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, handle, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, segment, layers)
     }
 
     /**
@@ -221,7 +221,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_avoidance_layers
      */
     fun getAvoidanceLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, segment)
     }
 
     /**
@@ -231,7 +231,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_avoidance_layer_value
      */
     fun setAvoidanceLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -241,7 +241,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_avoidance_layer_value
      */
     fun getAvoidanceLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -252,7 +252,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_use_3d_avoidance
      */
     fun setUse3dAvoidance(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUse3dAvoidanceBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUse3dAvoidanceBind, segment, enabled)
     }
 
     /**
@@ -263,7 +263,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_use_3d_avoidance
      */
     fun getUse3dAvoidance(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUse3dAvoidanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUse3dAvoidanceBind, segment)
     }
 
     /**
@@ -273,7 +273,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_affect_navigation_mesh
      */
     fun setAffectNavigationMesh(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAffectNavigationMeshBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAffectNavigationMeshBind, segment, enabled)
     }
 
     /**
@@ -283,7 +283,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_affect_navigation_mesh
      */
     fun getAffectNavigationMesh(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAffectNavigationMeshBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAffectNavigationMeshBind, segment)
     }
 
     /**
@@ -295,7 +295,7 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.set_carve_navigation_mesh
      */
     fun setCarveNavigationMesh(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCarveNavigationMeshBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCarveNavigationMeshBind, segment, enabled)
     }
 
     /**
@@ -307,16 +307,16 @@ class NavigationObstacle3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: NavigationObstacle3D.get_carve_navigation_mesh
      */
     fun getCarveNavigationMesh(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCarveNavigationMeshBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCarveNavigationMeshBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationObstacle3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationObstacle3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationObstacle3D? =
-            if (handle.address() == 0L) null else NavigationObstacle3D(handle)
+            if (handle.address() == 0L) null else NavigationObstacle3D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L
         private val getRidBind by lazy {

@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AimModifier3D
  */
-class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
+class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
     /**
      * Sets the forward axis of the bone.
      *
      * Generated from Godot docs: AimModifier3D.set_forward_axis
      */
     fun setForwardAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setForwardAxisBind, handle, index, axis)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setForwardAxisBind, segment, index, axis)
     }
 
     /**
@@ -26,7 +26,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.get_forward_axis
      */
     fun getForwardAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getForwardAxisBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getForwardAxisBind, segment, index)
     }
 
     /**
@@ -37,7 +37,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_use_euler
      */
     fun setUseEuler(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseEulerBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseEulerBind, segment, index, enabled)
     }
 
     /**
@@ -46,7 +46,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.is_using_euler
      */
     fun isUsingEuler(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingEulerBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingEulerBind, segment, index)
     }
 
     /**
@@ -55,7 +55,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_primary_rotation_axis
      */
     fun setPrimaryRotationAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPrimaryRotationAxisBind, handle, index, axis)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPrimaryRotationAxisBind, segment, index, axis)
     }
 
     /**
@@ -64,7 +64,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.get_primary_rotation_axis
      */
     fun getPrimaryRotationAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPrimaryRotationAxisBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getPrimaryRotationAxisBind, segment, index)
     }
 
     /**
@@ -74,7 +74,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_use_secondary_rotation
      */
     fun setUseSecondaryRotation(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseSecondaryRotationBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseSecondaryRotationBind, segment, index, enabled)
     }
 
     /**
@@ -84,7 +84,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.is_using_secondary_rotation
      */
     fun isUsingSecondaryRotation(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingSecondaryRotationBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingSecondaryRotationBind, segment, index)
     }
 
     /**
@@ -95,7 +95,7 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_relative
      */
     fun setRelative(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, segment, index, enabled)
     }
 
     /**
@@ -104,16 +104,16 @@ class AimModifier3D(handle: MemorySegment) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.is_relative
      */
     fun isRelative(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AimModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AimModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AimModifier3D? =
-            if (handle.address() == 0L) null else AimModifier3D(handle)
+            if (handle.address() == 0L) null else AimModifier3D(GodotHandle(handle))
 
         private const val SET_FORWARD_AXIS_HASH = 2496831085L
         private val setForwardAxisBind by lazy {

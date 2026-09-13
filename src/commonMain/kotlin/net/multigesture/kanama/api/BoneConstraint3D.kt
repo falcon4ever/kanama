@@ -11,14 +11,14 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: BoneConstraint3D
  */
-open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Sets the apply amount of the setting at `index` to `amount`.
      *
      * Generated from Godot docs: BoneConstraint3D.set_amount
      */
     fun setAmount(index: Int, amount: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setAmountBind, handle, index, amount)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setAmountBind, segment, index, amount)
     }
 
     /**
@@ -27,7 +27,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_amount
      */
     fun getAmount(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getAmountBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getAmountBind, segment, index)
     }
 
     /**
@@ -36,7 +36,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.set_apply_bone_name
      */
     fun setApplyBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setApplyBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setApplyBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -45,7 +45,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_apply_bone_name
      */
     fun getApplyBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getApplyBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getApplyBoneNameBind, segment, index)
     }
 
     /**
@@ -54,7 +54,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.set_apply_bone
      */
     fun setApplyBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setApplyBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setApplyBoneBind, segment, index, bone)
     }
 
     /**
@@ -63,7 +63,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_apply_bone
      */
     fun getApplyBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getApplyBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getApplyBoneBind, segment, index)
     }
 
     /**
@@ -72,7 +72,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.set_reference_type
      */
     fun setReferenceType(index: Int, type: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTypeBind, handle, index, type)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTypeBind, segment, index, type)
     }
 
     /**
@@ -81,7 +81,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_reference_type
      */
     fun getReferenceType(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTypeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTypeBind, segment, index)
     }
 
     /**
@@ -91,7 +91,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.set_reference_bone_name
      */
     fun setReferenceBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setReferenceBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setReferenceBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -101,7 +101,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_reference_bone_name
      */
     fun getReferenceBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, segment, index)
     }
 
     /**
@@ -111,7 +111,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.set_reference_bone
      */
     fun setReferenceBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setReferenceBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setReferenceBoneBind, segment, index, bone)
     }
 
     /**
@@ -121,7 +121,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_reference_bone
      */
     fun getReferenceBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getReferenceBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getReferenceBoneBind, segment, index)
     }
 
     /**
@@ -131,7 +131,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.set_reference_node
      */
     fun setReferenceNode(index: Int, node: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setReferenceNodeBind, handle, index, node)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setReferenceNodeBind, segment, index, node)
     }
 
     /**
@@ -141,7 +141,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_reference_node
      */
     fun getReferenceNode(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getReferenceNodeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getReferenceNodeBind, segment, index)
     }
 
     /**
@@ -150,7 +150,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.set_setting_count
      */
     fun setSettingCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSettingCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setSettingCountBind, segment, count)
     }
 
     /**
@@ -159,7 +159,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.get_setting_count
      */
     fun getSettingCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, segment)
     }
 
     /**
@@ -168,7 +168,7 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: BoneConstraint3D.clear_setting
      */
     fun clearSetting() {
-        ObjectCalls.ptrcallNoArgs(clearSettingBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSettingBind, segment)
     }
 
     companion object {
@@ -176,11 +176,11 @@ open class BoneConstraint3D(handle: MemorySegment) : SkeletonModifier3D(handle) 
         const val REFERENCE_TYPE_NODE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): BoneConstraint3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BoneConstraint3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BoneConstraint3D? =
-            if (handle.address() == 0L) null else BoneConstraint3D(handle)
+            if (handle.address() == 0L) null else BoneConstraint3D(GodotHandle(handle))
 
         private const val SET_AMOUNT_HASH = 1602489585L
         private val setAmountBind by lazy {

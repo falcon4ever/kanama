@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeMultiplyAdd
  */
-class VisualShaderNodeMultiplyAdd(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeMultiplyAdd(handle: GodotHandle) : VisualShaderNode(handle) {
     var opType: Long
         @JvmName("opTypeProperty")
         get() = getOpType()
@@ -18,12 +18,12 @@ class VisualShaderNodeMultiplyAdd(handle: MemorySegment) : VisualShaderNode(hand
 
     fun setOpType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type)
     }
 
     fun getOpType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
     }
 
     companion object {
@@ -34,11 +34,11 @@ class VisualShaderNodeMultiplyAdd(handle: MemorySegment) : VisualShaderNode(hand
         const val OP_TYPE_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeMultiplyAdd? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeMultiplyAdd? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeMultiplyAdd? =
-            if (handle.address() == 0L) null else VisualShaderNodeMultiplyAdd(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeMultiplyAdd(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 1409862380L
         private val setOpTypeBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: OccluderInstance3D
  */
-class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
+class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     var occluder: Occluder3D?
         @JvmName("occluderProperty")
         get() = getOccluder()
@@ -41,7 +41,7 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_bake_mask
      */
     fun setBakeMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setBakeMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setBakeMaskBind, segment, mask)
     }
 
     /**
@@ -55,7 +55,7 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_bake_mask
      */
     fun getBakeMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBakeMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getBakeMaskBind, segment)
     }
 
     /**
@@ -65,7 +65,7 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_bake_mask_value
      */
     fun setBakeMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setBakeMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setBakeMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -75,7 +75,7 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_bake_mask_value
      */
     fun getBakeMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -96,7 +96,7 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_bake_simplification_distance
      */
     fun setBakeSimplificationDistance(simplificationDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBakeSimplificationDistanceBind, handle, simplificationDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setBakeSimplificationDistanceBind, segment, simplificationDistance)
     }
 
     /**
@@ -117,7 +117,7 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_bake_simplification_distance
      */
     fun getBakeSimplificationDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeSimplificationDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeSimplificationDistanceBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_occluder
      */
     fun setOccluder(occluder: Occluder3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOccluderBind, handle, listOf(occluder?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOccluderBind, segment, listOf(occluder?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -143,16 +143,16 @@ class OccluderInstance3D(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_occluder
      */
     fun getOccluder(): Occluder3D? {
-        return Occluder3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOccluderBind, handle))
+        return Occluder3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOccluderBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OccluderInstance3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OccluderInstance3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OccluderInstance3D? =
-            if (handle.address() == 0L) null else OccluderInstance3D(handle)
+            if (handle.address() == 0L) null else OccluderInstance3D(GodotHandle(handle))
 
         private const val SET_BAKE_MASK_HASH = 1286410249L
         private val setBakeMaskBind by lazy {

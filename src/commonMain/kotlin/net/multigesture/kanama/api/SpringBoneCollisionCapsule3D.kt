@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SpringBoneCollisionCapsule3D
  */
-class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3D(handle) {
+class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -44,7 +44,7 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -55,7 +55,7 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -66,7 +66,7 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_height
      */
     fun setHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     /**
@@ -77,7 +77,7 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.get_height
      */
     fun getHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_mid_height
      */
     fun setMidHeight(midHeight: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, handle, midHeight)
+        ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, segment, midHeight)
     }
 
     /**
@@ -99,7 +99,7 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.get_mid_height
      */
     fun getMidHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_inside
      */
     fun setInside(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInsideBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setInsideBind, segment, enabled)
     }
 
     /**
@@ -117,16 +117,16 @@ class SpringBoneCollisionCapsule3D(handle: MemorySegment) : SpringBoneCollision3
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.is_inside
      */
     fun isInside(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInsideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInsideBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpringBoneCollisionCapsule3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpringBoneCollisionCapsule3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpringBoneCollisionCapsule3D? =
-            if (handle.address() == 0L) null else SpringBoneCollisionCapsule3D(handle)
+            if (handle.address() == 0L) null else SpringBoneCollisionCapsule3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

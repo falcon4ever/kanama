@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: Environment
  */
-class Environment(handle: MemorySegment) : Resource(handle) {
+class Environment(handle: GodotHandle) : Resource(handle) {
     var backgroundMode: Long
         @JvmName("backgroundModeProperty")
         get() = getBackground()
@@ -579,7 +579,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setBackground(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackgroundBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBackgroundBind, segment, mode)
     }
 
     /**
@@ -589,7 +589,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getBackground(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackgroundBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBackgroundBind, segment)
     }
 
     /**
@@ -599,7 +599,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSky(sky: Sky?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSkyBind, handle, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSkyBind, segment, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -609,7 +609,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSky(): Sky? {
         checkOpen()
-        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyBind, handle))
+        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyBind, segment))
     }
 
     /**
@@ -620,7 +620,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSkyCustomFov(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyCustomFovBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setSkyCustomFovBind, segment, scale)
     }
 
     /**
@@ -631,7 +631,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSkyCustomFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCustomFovBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCustomFovBind, segment)
     }
 
     /**
@@ -641,7 +641,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSkyRotation(eulerRadians: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSkyRotationBind, handle, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(setSkyRotationBind, segment, eulerRadians)
     }
 
     /**
@@ -651,7 +651,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSkyRotation(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSkyRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSkyRotationBind, segment)
     }
 
     /**
@@ -662,7 +662,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setBgColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBgColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setBgColorBind, segment, color)
     }
 
     /**
@@ -673,7 +673,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getBgColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, segment)
     }
 
     /**
@@ -684,7 +684,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setBgEnergyMultiplier(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBgEnergyMultiplierBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setBgEnergyMultiplierBind, segment, energy)
     }
 
     /**
@@ -695,7 +695,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getBgEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBgEnergyMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBgEnergyMultiplierBind, segment)
     }
 
     /**
@@ -707,7 +707,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setBgIntensity(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBgIntensityBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setBgIntensityBind, segment, energy)
     }
 
     /**
@@ -719,7 +719,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getBgIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBgIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBgIntensityBind, segment)
     }
 
     /**
@@ -729,7 +729,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setCanvasMaxLayer(layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCanvasMaxLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithIntArg(setCanvasMaxLayerBind, segment, layer)
     }
 
     /**
@@ -739,7 +739,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getCanvasMaxLayer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCanvasMaxLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCanvasMaxLayerBind, segment)
     }
 
     /**
@@ -749,7 +749,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setCameraFeedId(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, segment, id)
     }
 
     /**
@@ -759,7 +759,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, segment)
     }
 
     /**
@@ -770,7 +770,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAmbientLightColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setAmbientLightColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setAmbientLightColorBind, segment, color)
     }
 
     /**
@@ -781,7 +781,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAmbientLightColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getAmbientLightColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getAmbientLightColorBind, segment)
     }
 
     /**
@@ -791,7 +791,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAmbientSource(source: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAmbientSourceBind, handle, source)
+        ObjectCalls.ptrcallWithLongArg(setAmbientSourceBind, segment, source)
     }
 
     /**
@@ -801,7 +801,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAmbientSource(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAmbientSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAmbientSourceBind, segment)
     }
 
     /**
@@ -812,7 +812,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAmbientLightEnergy(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAmbientLightEnergyBind, handle, energy)
+        ObjectCalls.ptrcallWithDoubleArg(setAmbientLightEnergyBind, segment, energy)
     }
 
     /**
@@ -823,7 +823,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAmbientLightEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightEnergyBind, segment)
     }
 
     /**
@@ -838,7 +838,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAmbientLightSkyContribution(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAmbientLightSkyContributionBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setAmbientLightSkyContributionBind, segment, ratio)
     }
 
     /**
@@ -853,7 +853,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAmbientLightSkyContribution(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightSkyContributionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightSkyContributionBind, segment)
     }
 
     /**
@@ -863,7 +863,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setReflectionSource(source: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setReflectionSourceBind, handle, source)
+        ObjectCalls.ptrcallWithLongArg(setReflectionSourceBind, segment, source)
     }
 
     /**
@@ -873,7 +873,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getReflectionSource(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getReflectionSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getReflectionSourceBind, segment)
     }
 
     /**
@@ -884,7 +884,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setTonemapper(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTonemapperBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTonemapperBind, segment, mode)
     }
 
     /**
@@ -895,7 +895,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getTonemapper(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTonemapperBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTonemapperBind, segment)
     }
 
     /**
@@ -909,7 +909,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setTonemapExposure(exposure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapExposureBind, handle, exposure)
+        ObjectCalls.ptrcallWithDoubleArg(setTonemapExposureBind, segment, exposure)
     }
 
     /**
@@ -923,7 +923,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getTonemapExposure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapExposureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapExposureBind, segment)
     }
 
     /**
@@ -941,7 +941,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setTonemapWhite(white: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapWhiteBind, handle, white)
+        ObjectCalls.ptrcallWithDoubleArg(setTonemapWhiteBind, segment, white)
     }
 
     /**
@@ -959,7 +959,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getTonemapWhite(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapWhiteBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapWhiteBind, segment)
     }
 
     /**
@@ -978,7 +978,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setTonemapAgxWhite(white: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxWhiteBind, handle, white)
+        ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxWhiteBind, segment, white)
     }
 
     /**
@@ -997,7 +997,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getTonemapAgxWhite(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxWhiteBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxWhiteBind, segment)
     }
 
     /**
@@ -1009,7 +1009,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setTonemapAgxContrast(contrast: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxContrastBind, handle, contrast)
+        ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxContrastBind, segment, contrast)
     }
 
     /**
@@ -1021,7 +1021,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getTonemapAgxContrast(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxContrastBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxContrastBind, segment)
     }
 
     /**
@@ -1035,7 +1035,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsrEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSsrEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSsrEnabledBind, segment, enabled)
     }
 
     /**
@@ -1049,7 +1049,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isSsrEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSsrEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSsrEnabledBind, segment)
     }
 
     /**
@@ -1059,7 +1059,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsrMaxSteps(maxSteps: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSsrMaxStepsBind, handle, maxSteps)
+        ObjectCalls.ptrcallWithIntArg(setSsrMaxStepsBind, segment, maxSteps)
     }
 
     /**
@@ -1069,7 +1069,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsrMaxSteps(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSsrMaxStepsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSsrMaxStepsBind, segment)
     }
 
     /**
@@ -1081,7 +1081,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsrFadeIn(fadeIn: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsrFadeInBind, handle, fadeIn)
+        ObjectCalls.ptrcallWithDoubleArg(setSsrFadeInBind, segment, fadeIn)
     }
 
     /**
@@ -1093,7 +1093,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsrFadeIn(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeInBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeInBind, segment)
     }
 
     /**
@@ -1105,7 +1105,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsrFadeOut(fadeOut: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsrFadeOutBind, handle, fadeOut)
+        ObjectCalls.ptrcallWithDoubleArg(setSsrFadeOutBind, segment, fadeOut)
     }
 
     /**
@@ -1117,7 +1117,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsrFadeOut(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeOutBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeOutBind, segment)
     }
 
     /**
@@ -1127,7 +1127,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsrDepthTolerance(depthTolerance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsrDepthToleranceBind, handle, depthTolerance)
+        ObjectCalls.ptrcallWithDoubleArg(setSsrDepthToleranceBind, segment, depthTolerance)
     }
 
     /**
@@ -1137,7 +1137,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsrDepthTolerance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrDepthToleranceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrDepthToleranceBind, segment)
     }
 
     /**
@@ -1153,7 +1153,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSsaoEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSsaoEnabledBind, segment, enabled)
     }
 
     /**
@@ -1169,7 +1169,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isSsaoEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSsaoEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSsaoEnabledBind, segment)
     }
 
     /**
@@ -1181,7 +1181,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoRadiusBind, segment, radius)
     }
 
     /**
@@ -1193,7 +1193,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoRadiusBind, segment)
     }
 
     /**
@@ -1204,7 +1204,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoIntensityBind, handle, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoIntensityBind, segment, intensity)
     }
 
     /**
@@ -1215,7 +1215,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoIntensityBind, segment)
     }
 
     /**
@@ -1226,7 +1226,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoPower(power: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoPowerBind, handle, power)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoPowerBind, segment, power)
     }
 
     /**
@@ -1237,7 +1237,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoPower(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoPowerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoPowerBind, segment)
     }
 
     /**
@@ -1249,7 +1249,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoDetail(detail: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoDetailBind, handle, detail)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoDetailBind, segment, detail)
     }
 
     /**
@@ -1261,7 +1261,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoDetail(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDetailBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDetailBind, segment)
     }
 
     /**
@@ -1273,7 +1273,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoHorizon(horizon: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoHorizonBind, handle, horizon)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoHorizonBind, segment, horizon)
     }
 
     /**
@@ -1285,7 +1285,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoHorizon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoHorizonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoHorizonBind, segment)
     }
 
     /**
@@ -1297,7 +1297,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoSharpnessBind, handle, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1309,7 +1309,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoSharpnessBind, segment)
     }
 
     /**
@@ -1321,7 +1321,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoDirectLightAffect(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoDirectLightAffectBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoDirectLightAffectBind, segment, amount)
     }
 
     /**
@@ -1333,7 +1333,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoDirectLightAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDirectLightAffectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDirectLightAffectBind, segment)
     }
 
     /**
@@ -1344,7 +1344,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsaoAoChannelAffect(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoAoChannelAffectBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setSsaoAoChannelAffectBind, segment, amount)
     }
 
     /**
@@ -1355,7 +1355,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsaoAoChannelAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoAoChannelAffectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoAoChannelAffectBind, segment)
     }
 
     /**
@@ -1371,7 +1371,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsilEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSsilEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSsilEnabledBind, segment, enabled)
     }
 
     /**
@@ -1387,7 +1387,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isSsilEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSsilEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSsilEnabledBind, segment)
     }
 
     /**
@@ -1399,7 +1399,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsilRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setSsilRadiusBind, segment, radius)
     }
 
     /**
@@ -1411,7 +1411,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsilRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilRadiusBind, segment)
     }
 
     /**
@@ -1422,7 +1422,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsilIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilIntensityBind, handle, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(setSsilIntensityBind, segment, intensity)
     }
 
     /**
@@ -1433,7 +1433,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsilIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilIntensityBind, segment)
     }
 
     /**
@@ -1445,7 +1445,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsilSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilSharpnessBind, handle, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(setSsilSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1457,7 +1457,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsilSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilSharpnessBind, segment)
     }
 
     /**
@@ -1472,7 +1472,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSsilNormalRejection(normalRejection: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilNormalRejectionBind, handle, normalRejection)
+        ObjectCalls.ptrcallWithDoubleArg(setSsilNormalRejectionBind, segment, normalRejection)
     }
 
     /**
@@ -1487,7 +1487,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSsilNormalRejection(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilNormalRejectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilNormalRejectionBind, segment)
     }
 
     /**
@@ -1509,7 +1509,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSdfgiEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSdfgiEnabledBind, segment, enabled)
     }
 
     /**
@@ -1531,7 +1531,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isSdfgiEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiEnabledBind, segment)
     }
 
     /**
@@ -1544,7 +1544,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiCascades(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSdfgiCascadesBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setSdfgiCascadesBind, segment, amount)
     }
 
     /**
@@ -1557,7 +1557,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiCascades(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSdfgiCascadesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSdfgiCascadesBind, segment)
     }
 
     /**
@@ -1572,7 +1572,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiMinCellSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiMinCellSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setSdfgiMinCellSizeBind, segment, size)
     }
 
     /**
@@ -1587,7 +1587,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiMinCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMinCellSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMinCellSizeBind, segment)
     }
 
     /**
@@ -1600,7 +1600,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiMaxDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiMaxDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setSdfgiMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -1613,7 +1613,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMaxDistanceBind, segment)
     }
 
     /**
@@ -1624,7 +1624,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiCascade0Distance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiCascade0DistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setSdfgiCascade0DistanceBind, segment, distance)
     }
 
     /**
@@ -1635,7 +1635,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiCascade0Distance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiCascade0DistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiCascade0DistanceBind, segment)
     }
 
     /**
@@ -1648,7 +1648,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiYScale(scale: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSdfgiYScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithLongArg(setSdfgiYScaleBind, segment, scale)
     }
 
     /**
@@ -1661,7 +1661,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiYScale(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfgiYScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSdfgiYScaleBind, segment)
     }
 
     /**
@@ -1673,7 +1673,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiUseOcclusion(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSdfgiUseOcclusionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSdfgiUseOcclusionBind, segment, enable)
     }
 
     /**
@@ -1685,7 +1685,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isSdfgiUsingOcclusion(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiUsingOcclusionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiUsingOcclusionBind, segment)
     }
 
     /**
@@ -1700,7 +1700,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiBounceFeedback(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiBounceFeedbackBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setSdfgiBounceFeedbackBind, segment, amount)
     }
 
     /**
@@ -1715,7 +1715,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiBounceFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiBounceFeedbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiBounceFeedbackBind, segment)
     }
 
     /**
@@ -1726,7 +1726,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiReadSkyLight(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSdfgiReadSkyLightBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSdfgiReadSkyLightBind, segment, enable)
     }
 
     /**
@@ -1737,7 +1737,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isSdfgiReadingSkyLight(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiReadingSkyLightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiReadingSkyLightBind, segment)
     }
 
     /**
@@ -1748,7 +1748,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiEnergy(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiEnergyBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setSdfgiEnergyBind, segment, amount)
     }
 
     /**
@@ -1759,7 +1759,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiEnergyBind, segment)
     }
 
     /**
@@ -1770,7 +1770,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiNormalBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiNormalBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setSdfgiNormalBiasBind, segment, bias)
     }
 
     /**
@@ -1781,7 +1781,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiNormalBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiNormalBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiNormalBiasBind, segment)
     }
 
     /**
@@ -1792,7 +1792,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setSdfgiProbeBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiProbeBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setSdfgiProbeBiasBind, segment, bias)
     }
 
     /**
@@ -1803,7 +1803,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getSdfgiProbeBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiProbeBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiProbeBiasBind, segment)
     }
 
     /**
@@ -1820,7 +1820,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGlowEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setGlowEnabledBind, segment, enabled)
     }
 
     /**
@@ -1837,7 +1837,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isGlowEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGlowEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isGlowEnabledBind, segment)
     }
 
     /**
@@ -1849,7 +1849,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowLevel(idx: Int, intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setGlowLevelBind, handle, idx, intensity)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setGlowLevelBind, segment, idx, intensity)
     }
 
     /**
@@ -1861,7 +1861,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowLevel(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getGlowLevelBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getGlowLevelBind, segment, idx)
     }
 
     /**
@@ -1873,7 +1873,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowNormalized(normalize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGlowNormalizedBind, handle, normalize)
+        ObjectCalls.ptrcallWithBoolArg(setGlowNormalizedBind, segment, normalize)
     }
 
     /**
@@ -1885,7 +1885,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isGlowNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGlowNormalizedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isGlowNormalizedBind, segment)
     }
 
     /**
@@ -1897,7 +1897,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowIntensityBind, handle, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowIntensityBind, segment, intensity)
     }
 
     /**
@@ -1909,7 +1909,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowIntensityBind, segment)
     }
 
     /**
@@ -1923,7 +1923,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowStrengthBind, segment, strength)
     }
 
     /**
@@ -1937,7 +1937,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowStrengthBind, segment)
     }
 
     /**
@@ -1951,7 +1951,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowMix(mix: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowMixBind, handle, mix)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowMixBind, segment, mix)
     }
 
     /**
@@ -1965,7 +1965,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowMix(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMixBind, segment)
     }
 
     /**
@@ -1976,7 +1976,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowBloom(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowBloomBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowBloomBind, segment, amount)
     }
 
     /**
@@ -1987,7 +1987,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowBloom(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowBloomBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowBloomBind, segment)
     }
 
     /**
@@ -1998,7 +1998,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowBlendMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setGlowBlendModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setGlowBlendModeBind, segment, mode)
     }
 
     /**
@@ -2009,7 +2009,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowBlendMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getGlowBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getGlowBlendModeBind, segment)
     }
 
     /**
@@ -2022,7 +2022,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowHdrBleedThreshold(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedThresholdBind, segment, threshold)
     }
 
     /**
@@ -2035,7 +2035,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowHdrBleedThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedThresholdBind, segment)
     }
 
     /**
@@ -2047,7 +2047,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowHdrBleedScale(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedScaleBind, segment, scale)
     }
 
     /**
@@ -2059,7 +2059,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowHdrBleedScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedScaleBind, segment)
     }
 
     /**
@@ -2070,7 +2070,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowHdrLuminanceCap(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrLuminanceCapBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrLuminanceCapBind, segment, amount)
     }
 
     /**
@@ -2081,7 +2081,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowHdrLuminanceCap(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrLuminanceCapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrLuminanceCapBind, segment)
     }
 
     /**
@@ -2096,7 +2096,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowMapStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowMapStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setGlowMapStrengthBind, segment, strength)
     }
 
     /**
@@ -2111,7 +2111,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowMapStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMapStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMapStrengthBind, segment)
     }
 
     /**
@@ -2127,7 +2127,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setGlowMap(mode: Texture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGlowMapBind, handle, listOf(mode?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGlowMapBind, segment, listOf(mode?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -2143,7 +2143,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlowMap(): Texture? {
         checkOpen()
-        return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGlowMapBind, handle))
+        return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGlowMapBind, segment))
     }
 
     /**
@@ -2153,7 +2153,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFogEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFogEnabledBind, segment, enabled)
     }
 
     /**
@@ -2163,7 +2163,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isFogEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFogEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFogEnabledBind, segment)
     }
 
     /**
@@ -2173,7 +2173,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFogModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setFogModeBind, segment, mode)
     }
 
     /**
@@ -2183,7 +2183,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFogModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFogModeBind, segment)
     }
 
     /**
@@ -2193,7 +2193,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogLightColor(lightColor: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setFogLightColorBind, handle, lightColor)
+        ObjectCalls.ptrcallWithColorArg(setFogLightColorBind, segment, lightColor)
     }
 
     /**
@@ -2203,7 +2203,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogLightColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getFogLightColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getFogLightColorBind, segment)
     }
 
     /**
@@ -2213,7 +2213,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogLightEnergy(lightEnergy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogLightEnergyBind, handle, lightEnergy)
+        ObjectCalls.ptrcallWithDoubleArg(setFogLightEnergyBind, segment, lightEnergy)
     }
 
     /**
@@ -2223,7 +2223,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogLightEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogLightEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogLightEnergyBind, segment)
     }
 
     /**
@@ -2234,7 +2234,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogSunScatter(sunScatter: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogSunScatterBind, handle, sunScatter)
+        ObjectCalls.ptrcallWithDoubleArg(setFogSunScatterBind, segment, sunScatter)
     }
 
     /**
@@ -2245,7 +2245,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogSunScatter(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogSunScatterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogSunScatterBind, segment)
     }
 
     /**
@@ -2259,7 +2259,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogDensity(density: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDensityBind, handle, density)
+        ObjectCalls.ptrcallWithDoubleArg(setFogDensityBind, segment, density)
     }
 
     /**
@@ -2273,7 +2273,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDensityBind, segment)
     }
 
     /**
@@ -2283,7 +2283,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setFogHeightBind, segment, height)
     }
 
     /**
@@ -2293,7 +2293,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightBind, segment)
     }
 
     /**
@@ -2304,7 +2304,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogHeightDensity(heightDensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogHeightDensityBind, handle, heightDensity)
+        ObjectCalls.ptrcallWithDoubleArg(setFogHeightDensityBind, segment, heightDensity)
     }
 
     /**
@@ -2315,7 +2315,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogHeightDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightDensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightDensityBind, segment)
     }
 
     /**
@@ -2335,7 +2335,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogAerialPerspective(aerialPerspective: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogAerialPerspectiveBind, handle, aerialPerspective)
+        ObjectCalls.ptrcallWithDoubleArg(setFogAerialPerspectiveBind, segment, aerialPerspective)
     }
 
     /**
@@ -2355,7 +2355,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogAerialPerspective(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogAerialPerspectiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogAerialPerspectiveBind, segment)
     }
 
     /**
@@ -2368,7 +2368,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogSkyAffect(skyAffect: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogSkyAffectBind, handle, skyAffect)
+        ObjectCalls.ptrcallWithDoubleArg(setFogSkyAffectBind, segment, skyAffect)
     }
 
     /**
@@ -2381,7 +2381,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogSkyAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogSkyAffectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogSkyAffectBind, segment)
     }
 
     /**
@@ -2392,7 +2392,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogDepthCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDepthCurveBind, handle, curve)
+        ObjectCalls.ptrcallWithDoubleArg(setFogDepthCurveBind, segment, curve)
     }
 
     /**
@@ -2403,7 +2403,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogDepthCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthCurveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthCurveBind, segment)
     }
 
     /**
@@ -2414,7 +2414,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogDepthBegin(begin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDepthBeginBind, handle, begin)
+        ObjectCalls.ptrcallWithDoubleArg(setFogDepthBeginBind, segment, begin)
     }
 
     /**
@@ -2425,7 +2425,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogDepthBegin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthBeginBind, segment)
     }
 
     /**
@@ -2437,7 +2437,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setFogDepthEnd(end: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDepthEndBind, handle, end)
+        ObjectCalls.ptrcallWithDoubleArg(setFogDepthEndBind, segment, end)
     }
 
     /**
@@ -2449,7 +2449,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getFogDepthEnd(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthEndBind, segment)
     }
 
     /**
@@ -2464,7 +2464,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVolumetricFogEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setVolumetricFogEnabledBind, segment, enabled)
     }
 
     /**
@@ -2479,7 +2479,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isVolumetricFogEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogEnabledBind, segment)
     }
 
     /**
@@ -2492,7 +2492,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogEmission(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setVolumetricFogEmissionBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setVolumetricFogEmissionBind, segment, color)
     }
 
     /**
@@ -2505,7 +2505,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogEmissionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogEmissionBind, segment)
     }
 
     /**
@@ -2516,7 +2516,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogAlbedo(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setVolumetricFogAlbedoBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setVolumetricFogAlbedoBind, segment, color)
     }
 
     /**
@@ -2527,7 +2527,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogAlbedoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogAlbedoBind, segment)
     }
 
     /**
@@ -2543,7 +2543,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogDensity(density: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDensityBind, handle, density)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDensityBind, segment, density)
     }
 
     /**
@@ -2559,7 +2559,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDensityBind, segment)
     }
 
     /**
@@ -2569,7 +2569,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogEmissionEnergy(begin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogEmissionEnergyBind, handle, begin)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogEmissionEnergyBind, segment, begin)
     }
 
     /**
@@ -2579,7 +2579,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogEmissionEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogEmissionEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogEmissionEnergyBind, segment)
     }
 
     /**
@@ -2592,7 +2592,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogAnisotropy(anisotropy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAnisotropyBind, handle, anisotropy)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAnisotropyBind, segment, anisotropy)
     }
 
     /**
@@ -2605,7 +2605,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogAnisotropy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAnisotropyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAnisotropyBind, segment)
     }
 
     /**
@@ -2618,7 +2618,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogLengthBind, segment, length)
     }
 
     /**
@@ -2631,7 +2631,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogLengthBind, segment)
     }
 
     /**
@@ -2642,7 +2642,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogDetailSpread(detailSpread: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDetailSpreadBind, handle, detailSpread)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDetailSpreadBind, segment, detailSpread)
     }
 
     /**
@@ -2653,7 +2653,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogDetailSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDetailSpreadBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDetailSpreadBind, segment)
     }
 
     /**
@@ -2669,7 +2669,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogGiInject(giInject: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogGiInjectBind, handle, giInject)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogGiInjectBind, segment, giInject)
     }
 
     /**
@@ -2685,7 +2685,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogGiInject(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogGiInjectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogGiInjectBind, segment)
     }
 
     /**
@@ -2698,7 +2698,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogAmbientInject(enabled: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAmbientInjectBind, handle, enabled)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAmbientInjectBind, segment, enabled)
     }
 
     /**
@@ -2711,7 +2711,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogAmbientInject(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAmbientInjectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAmbientInjectBind, segment)
     }
 
     /**
@@ -2725,7 +2725,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogSkyAffect(skyAffect: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogSkyAffectBind, handle, skyAffect)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogSkyAffectBind, segment, skyAffect)
     }
 
     /**
@@ -2739,7 +2739,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogSkyAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogSkyAffectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogSkyAffectBind, segment)
     }
 
     /**
@@ -2754,7 +2754,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogTemporalReprojectionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVolumetricFogTemporalReprojectionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setVolumetricFogTemporalReprojectionEnabledBind, segment, enabled)
     }
 
     /**
@@ -2769,7 +2769,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isVolumetricFogTemporalReprojectionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogTemporalReprojectionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogTemporalReprojectionEnabledBind, segment)
     }
 
     /**
@@ -2781,7 +2781,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setVolumetricFogTemporalReprojectionAmount(temporalReprojectionAmount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogTemporalReprojectionAmountBind, handle, temporalReprojectionAmount)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogTemporalReprojectionAmountBind, segment, temporalReprojectionAmount)
     }
 
     /**
@@ -2793,7 +2793,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getVolumetricFogTemporalReprojectionAmount(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogTemporalReprojectionAmountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogTemporalReprojectionAmountBind, segment)
     }
 
     /**
@@ -2804,7 +2804,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAdjustmentEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAdjustmentEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAdjustmentEnabledBind, segment, enabled)
     }
 
     /**
@@ -2815,7 +2815,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun isAdjustmentEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAdjustmentEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAdjustmentEnabledBind, segment)
     }
 
     /**
@@ -2827,7 +2827,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAdjustmentBrightness(brightness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentBrightnessBind, handle, brightness)
+        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentBrightnessBind, segment, brightness)
     }
 
     /**
@@ -2839,7 +2839,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAdjustmentBrightness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentBrightnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentBrightnessBind, segment)
     }
 
     /**
@@ -2852,7 +2852,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAdjustmentContrast(contrast: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentContrastBind, handle, contrast)
+        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentContrastBind, segment, contrast)
     }
 
     /**
@@ -2865,7 +2865,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAdjustmentContrast(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentContrastBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentContrastBind, segment)
     }
 
     /**
@@ -2877,7 +2877,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAdjustmentSaturation(saturation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentSaturationBind, handle, saturation)
+        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentSaturationBind, segment, saturation)
     }
 
     /**
@@ -2889,7 +2889,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAdjustmentSaturation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentSaturationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentSaturationBind, segment)
     }
 
     /**
@@ -2902,7 +2902,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun setAdjustmentColorCorrection(colorCorrection: Texture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAdjustmentColorCorrectionBind, handle, listOf(colorCorrection?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAdjustmentColorCorrectionBind, segment, listOf(colorCorrection?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -2915,7 +2915,7 @@ class Environment(handle: MemorySegment) : Resource(handle) {
      */
     fun getAdjustmentColorCorrection(): Texture? {
         checkOpen()
-        return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, handle))
+        return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, segment))
     }
 
     companion object {
@@ -2950,11 +2950,11 @@ class Environment(handle: MemorySegment) : Resource(handle) {
         const val SDFGI_Y_SCALE_100_PERCENT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Environment? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Environment? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Environment? =
-            if (handle.address() == 0L) null else Environment(handle)
+            if (handle.address() == 0L) null else Environment(GodotHandle(handle))
 
         private const val SET_BACKGROUND_HASH = 4071623990L
         private val setBackgroundBind by lazy {

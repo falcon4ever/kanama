@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorInspector
  */
-class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
+class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
     /**
      * Shows the properties of the given `object` in this inspector for editing. To clear the
      * inspector, call this method with `null`. Note: If you want to edit an object in the editor's
@@ -19,7 +19,7 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.edit
      */
     fun edit(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(editBind, handle, listOf(objectValue.handle))
+        ObjectCalls.ptrcallWithObjectArgs(editBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -28,7 +28,7 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.get_selected_path
      */
     fun getSelectedPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSelectedPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSelectedPathBind, segment)
     }
 
     /**
@@ -37,7 +37,7 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.get_edited_object
      */
     fun getEditedObject(): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, handle))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, segment))
     }
 
     /**
@@ -46,7 +46,7 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.collapse_all_folding
      */
     fun collapseAllFolding() {
-        ObjectCalls.ptrcallNoArgs(collapseAllFoldingBind, handle)
+        ObjectCalls.ptrcallNoArgs(collapseAllFoldingBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.expand_all_folding
      */
     fun expandAllFolding() {
-        ObjectCalls.ptrcallNoArgs(expandAllFoldingBind, handle)
+        ObjectCalls.ptrcallNoArgs(expandAllFoldingBind, segment)
     }
 
     /**
@@ -64,7 +64,7 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.expand_revertable
      */
     fun expandRevertable() {
-        ObjectCalls.ptrcallNoArgs(expandRevertableBind, handle)
+        ObjectCalls.ptrcallNoArgs(expandRevertableBind, segment)
     }
 
     object Signals {
@@ -87,7 +87,7 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.instantiate_property_editor
          */
         fun instantiatePropertyEditor(objectValue: GodotObject, type: Long, path: String, hint: Long, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
-            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, MemorySegment.NULL, objectValue.handle, type, path, hint, hintText, usage, wide))
+            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, MemorySegment.NULL, objectValue.segment, type, path, hint, hintText, usage, wide))
         }
 
         /**
@@ -98,15 +98,15 @@ class EditorInspector(handle: MemorySegment) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.create_default_inspector
          */
         fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector? {
-            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createDefaultInspectorBind, MemorySegment.NULL, filterLineEdit.handle))
+            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createDefaultInspectorBind, MemorySegment.NULL, filterLineEdit.segment))
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorInspector? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorInspector? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorInspector? =
-            if (handle.address() == 0L) null else EditorInspector(handle)
+            if (handle.address() == 0L) null else EditorInspector(GodotHandle(handle))
 
         private const val EDIT_HASH = 3975164845L
         private val editBind by lazy {

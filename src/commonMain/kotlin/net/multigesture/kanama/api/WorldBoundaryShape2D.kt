@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: WorldBoundaryShape2D
  */
-class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
+class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
     var normal: Vector2
         @JvmName("normalProperty")
         get() = getNormal()
@@ -33,7 +33,7 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setNormal(normal: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setNormalBind, handle, normal)
+        ObjectCalls.ptrcallWithVector2Arg(setNormalBind, segment, normal)
     }
 
     /**
@@ -44,7 +44,7 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getNormal(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, segment)
     }
 
     /**
@@ -57,7 +57,7 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceBind, segment, distance)
     }
 
     /**
@@ -70,16 +70,16 @@ class WorldBoundaryShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WorldBoundaryShape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WorldBoundaryShape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WorldBoundaryShape2D? =
-            if (handle.address() == 0L) null else WorldBoundaryShape2D(handle)
+            if (handle.address() == 0L) null else WorldBoundaryShape2D(GodotHandle(handle))
 
         private const val SET_NORMAL_HASH = 743155724L
         private val setNormalBind by lazy {

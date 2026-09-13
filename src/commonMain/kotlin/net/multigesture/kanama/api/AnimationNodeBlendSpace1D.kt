@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeBlendSpace1D
  */
-class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handle) {
+class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle) {
     var minSpace: Double
         @JvmName("minSpaceProperty")
         get() = getMinSpace()
@@ -72,7 +72,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun addBlendPoint(node: AnimationRootNode?, pos: Double, atIndex: Int = -1, name: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectDoubleIntStringNameArgs(addBlendPointBind, handle, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex, name)
+        ObjectCalls.ptrcallWithObjectDoubleIntStringNameArgs(addBlendPointBind, segment, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex, name)
     }
 
     /**
@@ -82,7 +82,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setBlendPointPosition(point: Int, pos: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setBlendPointPositionBind, handle, point, pos)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setBlendPointPositionBind, segment, point, pos)
     }
 
     /**
@@ -92,7 +92,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getBlendPointPosition(point: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getBlendPointPositionBind, handle, point)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getBlendPointPositionBind, segment, point)
     }
 
     /**
@@ -102,7 +102,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, handle, point, node?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, segment, point, node?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -112,8 +112,8 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getBlendPointNode(point: Int): AnimationRootNode? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getBlendPointNodeBind, handle, point)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getBlendPointNodeBind, segment, point)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -128,7 +128,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setBlendPointName(point: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendPointNameBind, handle, point, name)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendPointNameBind, segment, point, name)
     }
 
     /**
@@ -138,7 +138,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getBlendPointName(point: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendPointNameBind, handle, point)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendPointNameBind, segment, point)
     }
 
     /**
@@ -149,7 +149,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun findBlendPointByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendPointByNameBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendPointByNameBind, segment, name)
     }
 
     /**
@@ -159,7 +159,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun removeBlendPoint(point: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeBlendPointBind, handle, point)
+        ObjectCalls.ptrcallWithIntArg(removeBlendPointBind, segment, point)
     }
 
     /**
@@ -169,7 +169,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getBlendPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendPointCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBlendPointCountBind, segment)
     }
 
     /**
@@ -180,7 +180,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun reorderBlendPoint(fromIndex: Int, toIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(reorderBlendPointBind, handle, fromIndex, toIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(reorderBlendPointBind, segment, fromIndex, toIndex)
     }
 
     /**
@@ -190,7 +190,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setMinSpace(minSpace: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinSpaceBind, handle, minSpace)
+        ObjectCalls.ptrcallWithDoubleArg(setMinSpaceBind, segment, minSpace)
     }
 
     /**
@@ -200,7 +200,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getMinSpace(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinSpaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinSpaceBind, segment)
     }
 
     /**
@@ -210,7 +210,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setMaxSpace(maxSpace: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxSpaceBind, handle, maxSpace)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxSpaceBind, segment, maxSpace)
     }
 
     /**
@@ -220,7 +220,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getMaxSpace(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxSpaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxSpaceBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setSnap(snap: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSnapBind, handle, snap)
+        ObjectCalls.ptrcallWithDoubleArg(setSnapBind, segment, snap)
     }
 
     /**
@@ -240,7 +240,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getSnap(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSnapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSnapBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setValueLabel(text: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setValueLabelBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setValueLabelBind, segment, text)
     }
 
     /**
@@ -260,7 +260,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getValueLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getValueLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getValueLabelBind, segment)
     }
 
     /**
@@ -270,7 +270,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setBlendMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode)
     }
 
     /**
@@ -280,7 +280,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getBlendMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
     }
 
     /**
@@ -291,7 +291,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setUseSync(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, segment, enable)
     }
 
     /**
@@ -302,7 +302,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun isUsingSync(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, segment)
     }
 
     /**
@@ -312,7 +312,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setSyncMode(syncMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSyncModeBind, handle, syncMode)
+        ObjectCalls.ptrcallWithLongArg(setSyncModeBind, segment, syncMode)
     }
 
     /**
@@ -322,7 +322,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getSyncMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, segment)
     }
 
     /**
@@ -334,7 +334,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun setCyclicLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCyclicLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setCyclicLengthBind, segment, length)
     }
 
     /**
@@ -346,7 +346,7 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
      */
     fun getCyclicLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, segment)
     }
 
     companion object {
@@ -359,11 +359,11 @@ class AnimationNodeBlendSpace1D(handle: MemorySegment) : AnimationRootNode(handl
         const val SYNC_MODE_CYCLIC_CONSTANT: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeBlendSpace1D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeBlendSpace1D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeBlendSpace1D? =
-            if (handle.address() == 0L) null else AnimationNodeBlendSpace1D(handle)
+            if (handle.address() == 0L) null else AnimationNodeBlendSpace1D(GodotHandle(handle))
 
         private const val ADD_BLEND_POINT_HASH = 398361042L
         private val addBlendPointBind by lazy {

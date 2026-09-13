@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: UndoRedo
  */
-class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
+class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
     var maxSteps: Int
         @JvmName("maxStepsProperty")
         get() = getMaxSteps()
@@ -29,7 +29,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.create_action
      */
     fun createAction(name: String, mergeMode: Long = 0L, backwardUndoOps: Boolean = false) {
-        ObjectCalls.ptrcallWithStringLongBoolArgs(createActionBind, handle, name, mergeMode, backwardUndoOps)
+        ObjectCalls.ptrcallWithStringLongBoolArgs(createActionBind, segment, name, mergeMode, backwardUndoOps)
     }
 
     /**
@@ -39,7 +39,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.commit_action
      */
     fun commitAction(execute: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(commitActionBind, handle, execute)
+        ObjectCalls.ptrcallWithBoolArg(commitActionBind, segment, execute)
     }
 
     /**
@@ -49,7 +49,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.is_committing_action
      */
     fun isCommittingAction(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommittingActionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCommittingActionBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_do_method
      */
     fun addDoMethod(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(addDoMethodBind, handle, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(addDoMethodBind, segment, callable.target.segment, callable.method)
     }
 
     /**
@@ -67,7 +67,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_undo_method
      */
     fun addUndoMethod(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(addUndoMethodBind, handle, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(addUndoMethodBind, segment, callable.target.segment, callable.method)
     }
 
     /**
@@ -76,7 +76,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_do_property
      */
     fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, handle, objectValue.handle, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -85,7 +85,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_undo_property
      */
     fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, handle, objectValue.handle, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -97,7 +97,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_do_reference
      */
     fun addDoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addDoReferenceBind, handle, listOf(objectValue.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addDoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -109,7 +109,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_undo_reference
      */
     fun addUndoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addUndoReferenceBind, handle, listOf(objectValue.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addUndoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -120,7 +120,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.start_force_keep_in_merge_ends
      */
     fun startForceKeepInMergeEnds() {
-        ObjectCalls.ptrcallNoArgs(startForceKeepInMergeEndsBind, handle)
+        ObjectCalls.ptrcallNoArgs(startForceKeepInMergeEndsBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.end_force_keep_in_merge_ends
      */
     fun endForceKeepInMergeEnds() {
-        ObjectCalls.ptrcallNoArgs(endForceKeepInMergeEndsBind, handle)
+        ObjectCalls.ptrcallNoArgs(endForceKeepInMergeEndsBind, segment)
     }
 
     /**
@@ -139,7 +139,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_history_count
      */
     fun getHistoryCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHistoryCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHistoryCountBind, segment)
     }
 
     /**
@@ -148,7 +148,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_current_action
      */
     fun getCurrentAction(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentActionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentActionBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_action_name
      */
     fun getActionName(id: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getActionNameBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(getActionNameBind, segment, id)
     }
 
     /**
@@ -167,7 +167,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.clear_history
      */
     fun clearHistory(increaseVersion: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(clearHistoryBind, handle, increaseVersion)
+        ObjectCalls.ptrcallWithBoolArg(clearHistoryBind, segment, increaseVersion)
     }
 
     /**
@@ -176,7 +176,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_current_action_name
      */
     fun getCurrentActionName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentActionNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCurrentActionNameBind, segment)
     }
 
     /**
@@ -185,7 +185,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.has_undo
      */
     fun hasUndo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.has_redo
      */
     fun hasRedo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, segment)
     }
 
     /**
@@ -205,7 +205,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_version
      */
     fun getVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVersionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVersionBind, segment)
     }
 
     /**
@@ -216,7 +216,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.set_max_steps
      */
     fun setMaxSteps(maxSteps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxStepsBind, handle, maxSteps)
+        ObjectCalls.ptrcallWithIntArg(setMaxStepsBind, segment, maxSteps)
     }
 
     /**
@@ -227,7 +227,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_max_steps
      */
     fun getMaxSteps(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxStepsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxStepsBind, segment)
     }
 
     /**
@@ -236,7 +236,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.redo
      */
     fun redo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(redoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(redoBind, segment)
     }
 
     /**
@@ -245,7 +245,7 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.undo
      */
     fun undo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(undoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(undoBind, segment)
     }
 
     object Signals {
@@ -258,11 +258,11 @@ class UndoRedo(handle: MemorySegment) : GodotObject(handle) {
         const val MERGE_ALL: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): UndoRedo? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): UndoRedo? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): UndoRedo? =
-            if (handle.address() == 0L) null else UndoRedo(handle)
+            if (handle.address() == 0L) null else UndoRedo(GodotHandle(handle))
 
         private const val CREATE_ACTION_HASH = 3171901514L
         private val createActionBind by lazy {

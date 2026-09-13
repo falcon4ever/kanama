@@ -349,8 +349,8 @@ object ProjectSettings {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): ProjectSettings? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): ProjectSettings? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): ProjectSettings? =
         if (handle.address() == 0L) null else this

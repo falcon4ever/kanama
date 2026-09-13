@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Color
 /**
  * Generated from Godot docs: Light3D
  */
-open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
+open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     var lightIntensityLumens: Double
         @JvmName("lightIntensityLumensProperty")
         get() = getParam(20L)
@@ -174,127 +174,127 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
         set(value) = setEditorOnly(value)
 
     fun setEditorOnly(editorOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, handle, editorOnly)
+        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, segment, editorOnly)
     }
 
     fun isEditorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, segment)
     }
 
     fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
     }
 
     fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
     }
 
     fun setShadow(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShadowBind, segment, enabled)
     }
 
     fun hasShadow(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasShadowBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasShadowBind, segment)
     }
 
     fun setNegative(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNegativeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setNegativeBind, segment, enabled)
     }
 
     fun isNegative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNegativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNegativeBind, segment)
     }
 
     fun setCullMask(cullMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, cullMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, cullMask)
     }
 
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     fun setEnableDistanceFade(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, segment, enable)
     }
 
     fun isDistanceFadeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, segment)
     }
 
     fun setDistanceFadeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, segment, distance)
     }
 
     fun getDistanceFadeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, segment)
     }
 
     fun setDistanceFadeShadow(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeShadowBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeShadowBind, segment, distance)
     }
 
     fun getDistanceFadeShadow(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeShadowBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeShadowBind, segment)
     }
 
     fun setDistanceFadeLength(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, segment, distance)
     }
 
     fun getDistanceFadeLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, segment)
     }
 
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     fun setShadowReverseCullFace(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowReverseCullFaceBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setShadowReverseCullFaceBind, segment, enable)
     }
 
     fun getShadowReverseCullFace(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShadowReverseCullFaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getShadowReverseCullFaceBind, segment)
     }
 
     fun setShadowCasterMask(casterMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setShadowCasterMaskBind, handle, casterMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setShadowCasterMaskBind, segment, casterMask)
     }
 
     fun getShadowCasterMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getShadowCasterMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getShadowCasterMaskBind, segment)
     }
 
     fun setBakeMode(bakeMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBakeModeBind, handle, bakeMode)
+        ObjectCalls.ptrcallWithLongArg(setBakeModeBind, segment, bakeMode)
     }
 
     fun getBakeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBakeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBakeModeBind, segment)
     }
 
     fun setProjector(projector: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProjectorBind, handle, listOf(projector?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProjectorBind, segment, listOf(projector?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getProjector(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProjectorBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProjectorBind, segment))
     }
 
     fun setTemperature(temperature: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTemperatureBind, handle, temperature)
+        ObjectCalls.ptrcallWithDoubleArg(setTemperatureBind, segment, temperature)
     }
 
     fun getTemperature(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTemperatureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTemperatureBind, segment)
     }
 
     fun getCorrelatedColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getCorrelatedColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getCorrelatedColorBind, segment)
     }
 
     companion object {
@@ -325,11 +325,11 @@ open class Light3D(handle: MemorySegment) : VisualInstance3D(handle) {
         const val BAKE_DYNAMIC: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Light3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Light3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Light3D? =
-            if (handle.address() == 0L) null else Light3D(handle)
+            if (handle.address() == 0L) null else Light3D(GodotHandle(handle))
 
         private const val SET_EDITOR_ONLY_HASH = 2586408642L
         private val setEditorOnlyBind by lazy {

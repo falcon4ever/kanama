@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: XRAnchor3D
  */
-class XRAnchor3D(handle: MemorySegment) : XRNode3D(handle) {
+class XRAnchor3D(handle: GodotHandle) : XRNode3D(handle) {
     /**
      * Returns the estimated size of the plane that was detected. Say when the anchor relates to a
      * table in the real world, this is the estimated size of the surface of that table.
@@ -20,7 +20,7 @@ class XRAnchor3D(handle: MemorySegment) : XRNode3D(handle) {
      * Generated from Godot docs: XRAnchor3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -29,16 +29,16 @@ class XRAnchor3D(handle: MemorySegment) : XRNode3D(handle) {
      * Generated from Godot docs: XRAnchor3D.get_plane
      */
     fun getPlane(): Plane {
-        return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRAnchor3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRAnchor3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRAnchor3D? =
-            if (handle.address() == 0L) null else XRAnchor3D(handle)
+            if (handle.address() == 0L) null else XRAnchor3D(GodotHandle(handle))
 
         private const val GET_SIZE_HASH = 3360562783L
         private val getSizeBind by lazy {

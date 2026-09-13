@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Node2D
  */
-open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
+open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
     var position: Vector2
         @JvmName("positionProperty")
         get() = getPosition()
@@ -80,7 +80,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_position
      */
     fun setPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
     }
 
     /**
@@ -91,7 +91,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_rotation
      */
     fun setRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, segment, radians)
     }
 
     /**
@@ -101,7 +101,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_rotation_degrees
      */
     fun setRotationDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationDegreesBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setRotationDegreesBind, segment, degrees)
     }
 
     /**
@@ -113,7 +113,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_skew
      */
     fun setSkew(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSkewBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setSkewBind, segment, radians)
     }
 
     /**
@@ -126,7 +126,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_scale
      */
     fun setScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, segment, scale)
     }
 
     /**
@@ -135,7 +135,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_position
      */
     fun getPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
     }
 
     /**
@@ -146,7 +146,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_rotation
      */
     fun getRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, segment)
     }
 
     /**
@@ -156,7 +156,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_rotation_degrees
      */
     fun getRotationDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationDegreesBind, segment)
     }
 
     /**
@@ -168,7 +168,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_skew
      */
     fun getSkew(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkewBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSkewBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_scale
      */
     fun getScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, segment)
     }
 
     /**
@@ -191,7 +191,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.rotate
      */
     fun rotate(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(rotateBind, segment, radians)
     }
 
     /**
@@ -201,7 +201,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.move_local_x
      */
     fun moveLocalX(delta: Double, scaled: Boolean = false) {
-        ObjectCalls.ptrcallWithDoubleAndBoolArgs(moveLocalXBind, handle, delta, scaled)
+        ObjectCalls.ptrcallWithDoubleAndBoolArgs(moveLocalXBind, segment, delta, scaled)
     }
 
     /**
@@ -211,7 +211,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.move_local_y
      */
     fun moveLocalY(delta: Double, scaled: Boolean = false) {
-        ObjectCalls.ptrcallWithDoubleAndBoolArgs(moveLocalYBind, handle, delta, scaled)
+        ObjectCalls.ptrcallWithDoubleAndBoolArgs(moveLocalYBind, segment, delta, scaled)
     }
 
     /**
@@ -221,7 +221,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.translate
      */
     fun translate(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(translateBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(translateBind, segment, offset)
     }
 
     /**
@@ -230,7 +230,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.global_translate
      */
     fun globalTranslate(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(globalTranslateBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(globalTranslateBind, segment, offset)
     }
 
     /**
@@ -239,7 +239,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.apply_scale
      */
     fun applyScale(ratio: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(applyScaleBind, handle, ratio)
+        ObjectCalls.ptrcallWithVector2Arg(applyScaleBind, segment, ratio)
     }
 
     /**
@@ -248,7 +248,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_position
      */
     fun setGlobalPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, segment, position)
     }
 
     /**
@@ -257,7 +257,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_position
      */
     fun getGlobalPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, segment)
     }
 
     /**
@@ -266,7 +266,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_rotation
      */
     fun setGlobalRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGlobalRotationBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setGlobalRotationBind, segment, radians)
     }
 
     /**
@@ -276,7 +276,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_rotation_degrees
      */
     fun setGlobalRotationDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGlobalRotationDegreesBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setGlobalRotationDegreesBind, segment, degrees)
     }
 
     /**
@@ -285,7 +285,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_rotation
      */
     fun getGlobalRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalRotationBind, segment)
     }
 
     /**
@@ -295,7 +295,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_rotation_degrees
      */
     fun getGlobalRotationDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalRotationDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalRotationDegreesBind, segment)
     }
 
     /**
@@ -304,7 +304,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_skew
      */
     fun setGlobalSkew(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGlobalSkewBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setGlobalSkewBind, segment, radians)
     }
 
     /**
@@ -313,7 +313,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_skew
      */
     fun getGlobalSkew(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalSkewBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalSkewBind, segment)
     }
 
     /**
@@ -322,7 +322,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_scale
      */
     fun setGlobalScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector2Arg(setGlobalScaleBind, segment, scale)
     }
 
     /**
@@ -331,7 +331,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_scale
      */
     fun getGlobalScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalScaleBind, segment)
     }
 
     /**
@@ -340,7 +340,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_transform
      */
     fun setTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, xform)
     }
 
     /**
@@ -349,7 +349,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_transform
      */
     fun setGlobalTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setGlobalTransformBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(setGlobalTransformBind, segment, xform)
     }
 
     /**
@@ -360,7 +360,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.look_at
      */
     fun lookAt(point: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(lookAtBind, handle, point)
+        ObjectCalls.ptrcallWithVector2Arg(lookAtBind, segment, point)
     }
 
     /**
@@ -371,7 +371,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_angle_to
      */
     fun getAngleTo(point: Vector2): Double {
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getAngleToBind, handle, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getAngleToBind, segment, point)
     }
 
     /**
@@ -383,7 +383,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.to_local
      */
     fun toLocal(globalPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(toLocalBind, handle, globalPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(toLocalBind, segment, globalPoint)
     }
 
     /**
@@ -396,7 +396,7 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.to_global
      */
     fun toGlobal(localPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(toGlobalBind, handle, localPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(toGlobalBind, segment, localPoint)
     }
 
     /**
@@ -405,16 +405,16 @@ open class Node2D(handle: MemorySegment) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_relative_transform_to_parent
      */
     fun getRelativeTransformToParent(parent: Node): Transform2D {
-        return ObjectCalls.ptrcallWithObjectArgRetTransform2D(getRelativeTransformToParentBind, handle, parent.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetTransform2D(getRelativeTransformToParentBind, segment, parent.segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Node2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Node2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Node2D? =
-            if (handle.address() == 0L) null else Node2D(handle)
+            if (handle.address() == 0L) null else Node2D(GodotHandle(handle))
 
         private const val SET_POSITION_HASH = 743155724L
         private val setPositionBind by lazy {

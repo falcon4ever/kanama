@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: SkeletonModification2DJiggle
  */
-class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification2D(handle) {
+class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D(handle) {
     var targetNodepath: NodePath
         @JvmName("targetNodepathProperty")
         get() = getTargetNode()
@@ -64,7 +64,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -75,7 +75,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
     }
 
     /**
@@ -85,7 +85,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleDataChainLength(length: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setJiggleDataChainLengthBind, handle, length)
+        ObjectCalls.ptrcallWithIntArg(setJiggleDataChainLengthBind, segment, length)
     }
 
     /**
@@ -95,7 +95,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleDataChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getJiggleDataChainLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getJiggleDataChainLengthBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setStiffness(stiffness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStiffnessBind, handle, stiffness)
+        ObjectCalls.ptrcallWithDoubleArg(setStiffnessBind, segment, stiffness)
     }
 
     /**
@@ -117,7 +117,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getStiffness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStiffnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStiffnessBind, segment)
     }
 
     /**
@@ -128,7 +128,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setMass(mass: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, handle, mass)
+        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
     }
 
     /**
@@ -139,7 +139,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getMass(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setDamping(damping: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, damping)
+        ObjectCalls.ptrcallWithDoubleArg(setDampingBind, segment, damping)
     }
 
     /**
@@ -161,7 +161,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getDamping(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setUseGravity(useGravity: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseGravityBind, handle, useGravity)
+        ObjectCalls.ptrcallWithBoolArg(setUseGravityBind, segment, useGravity)
     }
 
     /**
@@ -183,7 +183,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getUseGravity(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseGravityBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setGravity(gravity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGravityBind, handle, gravity)
+        ObjectCalls.ptrcallWithVector2Arg(setGravityBind, segment, gravity)
     }
 
     /**
@@ -203,7 +203,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getGravity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setUseColliders(useColliders: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseCollidersBind, handle, useColliders)
+        ObjectCalls.ptrcallWithBoolArg(setUseCollidersBind, segment, useColliders)
     }
 
     /**
@@ -224,7 +224,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getUseColliders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseCollidersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseCollidersBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setCollisionMask(collisionMask: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCollisionMaskBind, handle, collisionMask)
+        ObjectCalls.ptrcallWithIntArg(setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -245,7 +245,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getCollisionMask(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionMaskBind, segment)
     }
 
     /**
@@ -256,7 +256,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun reset() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
     /**
@@ -266,7 +266,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointBone2dNode(jointIdx: Int, bone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setJiggleJointBone2dNodeBind, handle, jointIdx, bone2dNode)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setJiggleJointBone2dNodeBind, segment, jointIdx, bone2dNode)
     }
 
     /**
@@ -276,7 +276,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointBone2dNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getJiggleJointBone2dNodeBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getJiggleJointBone2dNodeBind, segment, jointIdx)
     }
 
     /**
@@ -287,7 +287,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setJiggleJointBoneIndexBind, handle, jointIdx, boneIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(setJiggleJointBoneIndexBind, segment, jointIdx, boneIdx)
     }
 
     /**
@@ -297,7 +297,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointBoneIndex(jointIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getJiggleJointBoneIndexBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getJiggleJointBoneIndexBind, segment, jointIdx)
     }
 
     /**
@@ -309,7 +309,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointOverride(jointIdx: Int, override: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointOverrideBind, handle, jointIdx, override)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointOverrideBind, segment, jointIdx, override)
     }
 
     /**
@@ -320,7 +320,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointOverride(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointOverrideBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointOverrideBind, segment, jointIdx)
     }
 
     /**
@@ -330,7 +330,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointStiffness(jointIdx: Int, stiffness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointStiffnessBind, handle, jointIdx, stiffness)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointStiffnessBind, segment, jointIdx, stiffness)
     }
 
     /**
@@ -340,7 +340,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointStiffness(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointStiffnessBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointStiffnessBind, segment, jointIdx)
     }
 
     /**
@@ -350,7 +350,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointMass(jointIdx: Int, mass: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointMassBind, handle, jointIdx, mass)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointMassBind, segment, jointIdx, mass)
     }
 
     /**
@@ -360,7 +360,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointMass(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointMassBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointMassBind, segment, jointIdx)
     }
 
     /**
@@ -370,7 +370,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointDamping(jointIdx: Int, damping: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointDampingBind, handle, jointIdx, damping)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointDampingBind, segment, jointIdx, damping)
     }
 
     /**
@@ -380,7 +380,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointDamping(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointDampingBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointDampingBind, segment, jointIdx)
     }
 
     /**
@@ -390,7 +390,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointUseGravity(jointIdx: Int, useGravity: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointUseGravityBind, handle, jointIdx, useGravity)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointUseGravityBind, segment, jointIdx, useGravity)
     }
 
     /**
@@ -400,7 +400,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointUseGravity(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointUseGravityBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointUseGravityBind, segment, jointIdx)
     }
 
     /**
@@ -410,7 +410,7 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun setJiggleJointGravity(jointIdx: Int, gravity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setJiggleJointGravityBind, handle, jointIdx, gravity)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setJiggleJointGravityBind, segment, jointIdx, gravity)
     }
 
     /**
@@ -421,16 +421,16 @@ class SkeletonModification2DJiggle(handle: MemorySegment) : SkeletonModification
      */
     fun getJiggleJointGravity(jointIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getJiggleJointGravityBind, handle, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getJiggleJointGravityBind, segment, jointIdx)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2DJiggle? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2DJiggle? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2DJiggle? =
-            if (handle.address() == 0L) null else SkeletonModification2DJiggle(handle)
+            if (handle.address() == 0L) null else SkeletonModification2DJiggle(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L
         private val setTargetNodeBind by lazy {

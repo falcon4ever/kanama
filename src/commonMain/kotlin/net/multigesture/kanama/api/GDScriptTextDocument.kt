@@ -8,109 +8,109 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GDScriptTextDocument
  */
-class GDScriptTextDocument(handle: MemorySegment) : RefCounted(handle) {
+class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
     fun showNativeSymbolInEditor(symbolId: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(showNativeSymbolInEditorBind, handle, symbolId)
+        ObjectCalls.ptrcallWithStringArg(showNativeSymbolInEditorBind, segment, symbolId)
     }
 
     fun didOpen(params: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(didOpenBind, handle, params)
+        ObjectCalls.ptrcallWithVariantArg(didOpenBind, segment, params)
     }
 
     fun didClose(params: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(didCloseBind, handle, params)
+        ObjectCalls.ptrcallWithVariantArg(didCloseBind, segment, params)
     }
 
     fun didChange(params: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(didChangeBind, handle, params)
+        ObjectCalls.ptrcallWithVariantArg(didChangeBind, segment, params)
     }
 
     fun willSaveWaitUntil(params: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(willSaveWaitUntilBind, handle, params)
+        ObjectCalls.ptrcallWithVariantArg(willSaveWaitUntilBind, segment, params)
     }
 
     fun didSave(params: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(didSaveBind, handle, params)
+        ObjectCalls.ptrcallWithVariantArg(didSaveBind, segment, params)
     }
 
     fun nativeSymbol(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(nativeSymbolBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(nativeSymbolBind, segment, params)
     }
 
     fun documentSymbol(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(documentSymbolBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(documentSymbolBind, segment, params)
     }
 
     fun completion(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(completionBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(completionBind, segment, params)
     }
 
     fun prepareRename(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(prepareRenameBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(prepareRenameBind, segment, params)
     }
 
     fun references(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(referencesBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(referencesBind, segment, params)
     }
 
     fun foldingRange(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(foldingRangeBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(foldingRangeBind, segment, params)
     }
 
     fun codeLens(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(codeLensBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(codeLensBind, segment, params)
     }
 
     fun documentLink(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(documentLinkBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(documentLinkBind, segment, params)
     }
 
     fun colorPresentation(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(colorPresentationBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(colorPresentationBind, segment, params)
     }
 
     fun hover(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(hoverBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(hoverBind, segment, params)
     }
 
     fun definition(params: Map<String, Any?>): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetArray(definitionBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetArray(definitionBind, segment, params)
     }
 
     fun declaration(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(declarationBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(declarationBind, segment, params)
     }
 
     fun signatureHelp(params: Map<String, Any?>): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(signatureHelpBind, handle, params)
+        return ObjectCalls.ptrcallWithDictionaryArgRetVariantScalar(signatureHelpBind, segment, params)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GDScriptTextDocument? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GDScriptTextDocument? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GDScriptTextDocument? =
-            if (handle.address() == 0L) null else GDScriptTextDocument(handle)
+            if (handle.address() == 0L) null else GDScriptTextDocument(GodotHandle(handle))
 
         private const val SHOW_NATIVE_SYMBOL_IN_EDITOR_HASH = 83702148L
         private val showNativeSymbolInEditorBind by lazy {

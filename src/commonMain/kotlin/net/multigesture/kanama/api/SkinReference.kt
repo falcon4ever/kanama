@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: SkinReference
  */
-class SkinReference(handle: MemorySegment) : RefCounted(handle) {
+class SkinReference(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the `RID` owned by this SkinReference, as returned by `RenderingServer.skeleton_create`.
      *
@@ -19,7 +19,7 @@ class SkinReference(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSkeleton(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, segment)
     }
 
     /**
@@ -32,16 +32,16 @@ class SkinReference(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSkin(): Skin? {
         checkOpen()
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, handle))
+        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkinReference? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkinReference? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkinReference? =
-            if (handle.address() == 0L) null else SkinReference(handle)
+            if (handle.address() == 0L) null else SkinReference(GodotHandle(handle))
 
         private const val GET_SKELETON_HASH = 2944877500L
         private val getSkeletonBind by lazy {

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HFlowContainer
  */
-class HFlowContainer(handle: MemorySegment) : FlowContainer(handle) {
+class HFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HFlowContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HFlowContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HFlowContainer? =
-            if (handle.address() == 0L) null else HFlowContainer(handle)
+            if (handle.address() == 0L) null else HFlowContainer(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

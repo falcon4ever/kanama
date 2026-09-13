@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventMIDI
  */
-class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
+class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     var channel: Int
         @JvmName("channelProperty")
         get() = getChannel()
@@ -68,7 +68,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setChannel(channel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setChannelBind, handle, channel)
+        ObjectCalls.ptrcallWithIntArg(setChannelBind, segment, channel)
     }
 
     /**
@@ -79,7 +79,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getChannelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getChannelBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setMessage(message: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMessageBind, handle, message)
+        ObjectCalls.ptrcallWithLongArg(setMessageBind, segment, message)
     }
 
     /**
@@ -103,7 +103,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getMessage(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMessageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMessageBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setPitch(pitch: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPitchBind, handle, pitch)
+        ObjectCalls.ptrcallWithIntArg(setPitchBind, segment, pitch)
     }
 
     /**
@@ -129,7 +129,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getPitch(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPitchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPitchBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setVelocity(velocity: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithIntArg(setVelocityBind, segment, velocity)
     }
 
     /**
@@ -157,7 +157,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getVelocity(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVelocityBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setInstrument(instrument: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInstrumentBind, handle, instrument)
+        ObjectCalls.ptrcallWithIntArg(setInstrumentBind, segment, instrument)
     }
 
     /**
@@ -185,7 +185,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getInstrument(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInstrumentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInstrumentBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setPressure(pressure: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPressureBind, handle, pressure)
+        ObjectCalls.ptrcallWithIntArg(setPressureBind, segment, pressure)
     }
 
     /**
@@ -209,7 +209,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getPressure(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPressureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPressureBind, segment)
     }
 
     /**
@@ -222,7 +222,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setControllerNumber(controllerNumber: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setControllerNumberBind, handle, controllerNumber)
+        ObjectCalls.ptrcallWithIntArg(setControllerNumberBind, segment, controllerNumber)
     }
 
     /**
@@ -235,7 +235,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getControllerNumber(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getControllerNumberBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getControllerNumberBind, segment)
     }
 
     /**
@@ -246,7 +246,7 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setControllerValue(controllerValue: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setControllerValueBind, handle, controllerValue)
+        ObjectCalls.ptrcallWithIntArg(setControllerValueBind, segment, controllerValue)
     }
 
     /**
@@ -257,16 +257,16 @@ class InputEventMIDI(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getControllerValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getControllerValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getControllerValueBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventMIDI? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventMIDI? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventMIDI? =
-            if (handle.address() == 0L) null else InputEventMIDI(handle)
+            if (handle.address() == 0L) null else InputEventMIDI(GodotHandle(handle))
 
         private const val SET_CHANNEL_HASH = 1286410249L
         private val setChannelBind by lazy {

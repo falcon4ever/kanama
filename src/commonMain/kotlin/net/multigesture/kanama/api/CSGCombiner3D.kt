@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: CSGCombiner3D
  */
-class CSGCombiner3D(handle: MemorySegment) : CSGShape3D(handle) {
+class CSGCombiner3D(handle: GodotHandle) : CSGShape3D(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGCombiner3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGCombiner3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGCombiner3D? =
-            if (handle.address() == 0L) null else CSGCombiner3D(handle)
+            if (handle.address() == 0L) null else CSGCombiner3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

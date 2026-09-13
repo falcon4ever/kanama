@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: Viewport
  */
-open class Viewport(handle: MemorySegment) : Node(handle) {
+open class Viewport(handle: GodotHandle) : Node(handle) {
     var disable3d: Boolean
         @JvmName("disable3dProperty")
         get() = is3dDisabled()
@@ -315,523 +315,523 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
         set(value) = setOversamplingOverride(value)
 
     fun setWorld2d(world2d: World2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, handle, listOf(world2d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, handle))
+        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
     }
 
     fun findWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, handle))
+        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, segment))
     }
 
     fun setCanvasTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setCanvasTransformBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(setCanvasTransformBind, segment, xform)
     }
 
     fun getCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, segment)
     }
 
     fun setGlobalCanvasTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setGlobalCanvasTransformBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(setGlobalCanvasTransformBind, segment, xform)
     }
 
     fun getGlobalCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalCanvasTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalCanvasTransformBind, segment)
     }
 
     fun getStretchTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getStretchTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getStretchTransformBind, segment)
     }
 
     fun getFinalTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, segment)
     }
 
     fun getScreenTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, segment)
     }
 
     fun getVisibleRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getVisibleRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getVisibleRectBind, segment)
     }
 
     fun setTransparentBackground(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransparentBackgroundBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setTransparentBackgroundBind, segment, enable)
     }
 
     fun hasTransparentBackground(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasTransparentBackgroundBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasTransparentBackgroundBind, segment)
     }
 
     fun setUseHdr2d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseHdr2dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseHdr2dBind, segment, enable)
     }
 
     fun isUsingHdr2d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdr2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdr2dBind, segment)
     }
 
     fun setMsaa2d(msaa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, handle, msaa)
+        ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, segment, msaa)
     }
 
     fun getMsaa2d(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, segment)
     }
 
     fun setMsaa3d(msaa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, handle, msaa)
+        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa)
     }
 
     fun getMsaa3d(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
     }
 
     fun setScreenSpaceAa(screenSpaceAa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, handle, screenSpaceAa)
+        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa)
     }
 
     fun getScreenSpaceAa(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
     }
 
     fun setUseTaa(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseTaaBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseTaaBind, segment, enable)
     }
 
     fun isUsingTaa(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTaaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTaaBind, segment)
     }
 
     fun setUseDebanding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, enable)
     }
 
     fun isUsingDebanding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDebandingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDebandingBind, segment)
     }
 
     fun setUseOcclusionCulling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOcclusionCullingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseOcclusionCullingBind, segment, enable)
     }
 
     fun isUsingOcclusionCulling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOcclusionCullingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOcclusionCullingBind, segment)
     }
 
     fun setDebugDraw(debugDraw: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, handle, debugDraw)
+        ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, segment, debugDraw)
     }
 
     fun getDebugDraw(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, segment)
     }
 
     fun setUseOversampling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOversamplingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseOversamplingBind, segment, enable)
     }
 
     fun isUsingOversampling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOversamplingBind, segment)
     }
 
     fun setOversamplingOverride(oversampling: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOversamplingOverrideBind, handle, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(setOversamplingOverrideBind, segment, oversampling)
     }
 
     fun getOversamplingOverride(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingOverrideBind, segment)
     }
 
     fun getOversampling(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
     }
 
     fun getRenderInfo(type: Long, info: Long): Int {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, handle, type, info)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, segment, type, info)
     }
 
     fun getTexture(): ViewportTexture? {
-        return ViewportTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return ViewportTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     fun setPhysicsObjectPicking(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingBind, segment, enable)
     }
 
     fun getPhysicsObjectPicking(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingBind, segment)
     }
 
     fun setPhysicsObjectPickingSort(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingSortBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingSortBind, segment, enable)
     }
 
     fun getPhysicsObjectPickingSort(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingSortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingSortBind, segment)
     }
 
     fun setPhysicsObjectPickingFirstOnly(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingFirstOnlyBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingFirstOnlyBind, segment, enable)
     }
 
     fun getPhysicsObjectPickingFirstOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingFirstOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingFirstOnlyBind, segment)
     }
 
     fun getViewportRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getViewportRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getViewportRidBind, segment)
     }
 
     fun pushTextInput(text: String) {
-        ObjectCalls.ptrcallWithStringArg(pushTextInputBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(pushTextInputBind, segment, text)
     }
 
     fun pushInput(event: InputEvent, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, handle, event.requireOpenHandle(), inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, segment, event.requireOpenHandle(), inLocalCoords)
     }
 
     fun pushUnhandledInput(event: InputEvent, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, handle, event.requireOpenHandle(), inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, segment, event.requireOpenHandle(), inLocalCoords)
     }
 
     fun notifyMouseEntered() {
-        ObjectCalls.ptrcallNoArgs(notifyMouseEnteredBind, handle)
+        ObjectCalls.ptrcallNoArgs(notifyMouseEnteredBind, segment)
     }
 
     fun notifyMouseExited() {
-        ObjectCalls.ptrcallNoArgs(notifyMouseExitedBind, handle)
+        ObjectCalls.ptrcallNoArgs(notifyMouseExitedBind, segment)
     }
 
     fun getMousePosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMousePositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMousePositionBind, segment)
     }
 
     fun warpMouse(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, segment, position)
     }
 
     fun updateMouseCursorState() {
-        ObjectCalls.ptrcallNoArgs(updateMouseCursorStateBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateMouseCursorStateBind, segment)
     }
 
     fun guiCancelDrag() {
-        ObjectCalls.ptrcallNoArgs(guiCancelDragBind, handle)
+        ObjectCalls.ptrcallNoArgs(guiCancelDragBind, segment)
     }
 
     fun guiGetDragData(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(guiGetDragDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(guiGetDragDataBind, segment)
     }
 
     fun guiGetDragDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(guiGetDragDescriptionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(guiGetDragDescriptionBind, segment)
     }
 
     fun guiSetDragDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(guiSetDragDescriptionBind, handle, description)
+        ObjectCalls.ptrcallWithStringArg(guiSetDragDescriptionBind, segment, description)
     }
 
     fun guiIsDragging(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDraggingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDraggingBind, segment)
     }
 
     fun guiIsDragSuccessful(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDragSuccessfulBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDragSuccessfulBind, segment)
     }
 
     fun guiReleaseFocus() {
-        ObjectCalls.ptrcallNoArgs(guiReleaseFocusBind, handle)
+        ObjectCalls.ptrcallNoArgs(guiReleaseFocusBind, segment)
     }
 
     fun guiGetFocusOwner(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetFocusOwnerBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetFocusOwnerBind, segment))
     }
 
     fun guiGetHoveredControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetHoveredControlBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetHoveredControlBind, segment))
     }
 
     fun setDisableInput(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableInputBind, handle, disable)
+        ObjectCalls.ptrcallWithBoolArg(setDisableInputBind, segment, disable)
     }
 
     fun isInputDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInputDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInputDisabledBind, segment)
     }
 
     fun setPositionalShadowAtlasSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPositionalShadowAtlasSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setPositionalShadowAtlasSizeBind, segment, size)
     }
 
     fun getPositionalShadowAtlasSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPositionalShadowAtlasSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPositionalShadowAtlasSizeBind, segment)
     }
 
     fun setPositionalShadowAtlas16Bits(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPositionalShadowAtlas16BitsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPositionalShadowAtlas16BitsBind, segment, enable)
     }
 
     fun getPositionalShadowAtlas16Bits(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPositionalShadowAtlas16BitsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPositionalShadowAtlas16BitsBind, segment)
     }
 
     fun setSnapControlsToPixels(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnapControlsToPixelsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSnapControlsToPixelsBind, segment, enabled)
     }
 
     fun isSnapControlsToPixelsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnapControlsToPixelsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSnapControlsToPixelsEnabledBind, segment)
     }
 
     fun setSnap2dTransformsToPixel(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnap2dTransformsToPixelBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSnap2dTransformsToPixelBind, segment, enabled)
     }
 
     fun isSnap2dTransformsToPixelEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dTransformsToPixelEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dTransformsToPixelEnabledBind, segment)
     }
 
     fun setSnap2dVerticesToPixel(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnap2dVerticesToPixelBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSnap2dVerticesToPixelBind, segment, enabled)
     }
 
     fun isSnap2dVerticesToPixelEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dVerticesToPixelEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dVerticesToPixelEnabledBind, segment)
     }
 
     fun setPositionalShadowAtlasQuadrantSubdiv(quadrant: Int, subdiv: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, handle, quadrant, subdiv)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant, subdiv)
     }
 
     fun getPositionalShadowAtlasQuadrantSubdiv(quadrant: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, handle, quadrant)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant)
     }
 
     fun setInputAsHandled() {
-        ObjectCalls.ptrcallNoArgs(setInputAsHandledBind, handle)
+        ObjectCalls.ptrcallNoArgs(setInputAsHandledBind, segment)
     }
 
     fun isInputHandled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInputHandledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInputHandledBind, segment)
     }
 
     fun setHandleInputLocally(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHandleInputLocallyBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHandleInputLocallyBind, segment, enable)
     }
 
     fun isHandlingInputLocally(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHandlingInputLocallyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHandlingInputLocallyBind, segment)
     }
 
     fun setDefaultCanvasItemTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, segment, mode)
     }
 
     fun getDefaultCanvasItemTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, segment)
     }
 
     fun setEmbeddingSubwindows(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmbeddingSubwindowsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEmbeddingSubwindowsBind, segment, enable)
     }
 
     fun isEmbeddingSubwindows(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddingSubwindowsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddingSubwindowsBind, segment)
     }
 
     fun getEmbeddedSubwindows(): List<Window> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getEmbeddedSubwindowsBind, handle, Window::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getEmbeddedSubwindowsBind, segment, Window::wrap)
     }
 
     fun setDragThreshold(threshold: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithIntArg(setDragThresholdBind, segment, threshold)
     }
 
     fun getDragThreshold(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDragThresholdBind, segment)
     }
 
     fun setCanvasCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCanvasCullMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCanvasCullMaskBind, segment, mask)
     }
 
     fun getCanvasCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCanvasCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCanvasCullMaskBind, segment)
     }
 
     fun setCanvasCullMaskBit(layer: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setCanvasCullMaskBitBind, handle, layer, enable)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setCanvasCullMaskBitBind, segment, layer, enable)
     }
 
     fun getCanvasCullMaskBit(layer: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getCanvasCullMaskBitBind, handle, layer)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getCanvasCullMaskBitBind, segment, layer)
     }
 
     fun setDefaultCanvasItemTextureRepeat(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, segment, mode)
     }
 
     fun getDefaultCanvasItemTextureRepeat(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, segment)
     }
 
     fun setSdfOversize(oversize: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, handle, oversize)
+        ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, segment, oversize)
     }
 
     fun getSdfOversize(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, segment)
     }
 
     fun setSdfScale(scale: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, segment, scale)
     }
 
     fun getSdfScale(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, segment)
     }
 
     fun setMeshLodThreshold(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, handle, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, segment, pixels)
     }
 
     fun getMeshLodThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, segment)
     }
 
     fun setAsAudioListener2d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener2dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener2dBind, segment, enable)
     }
 
     fun isAudioListener2d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener2dBind, segment)
     }
 
     fun getAudioListener2d(): AudioListener2D? {
-        return AudioListener2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener2dBind, handle))
+        return AudioListener2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener2dBind, segment))
     }
 
     fun getCamera2d(): Camera2D? {
-        return Camera2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera2dBind, handle))
+        return Camera2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera2dBind, segment))
     }
 
     fun setWorld3d(world3d: World3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, handle, listOf(world3d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, handle))
+        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
     }
 
     fun findWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, handle))
+        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, segment))
     }
 
     fun setUseOwnWorld3d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOwnWorld3dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseOwnWorld3dBind, segment, enable)
     }
 
     fun isUsingOwnWorld3d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOwnWorld3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOwnWorld3dBind, segment)
     }
 
     fun getAudioListener3d(): AudioListener3D? {
-        return AudioListener3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener3dBind, handle))
+        return AudioListener3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener3dBind, segment))
     }
 
     fun getCamera3d(): Camera3D? {
-        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera3dBind, handle))
+        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera3dBind, segment))
     }
 
     fun setAsAudioListener3d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener3dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener3dBind, segment, enable)
     }
 
     fun isAudioListener3d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener3dBind, segment)
     }
 
     fun setDisable3d(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisable3dBind, handle, disable)
+        ObjectCalls.ptrcallWithBoolArg(setDisable3dBind, segment, disable)
     }
 
     fun is3dDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(is3dDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(is3dDisabledBind, segment)
     }
 
     fun setUseXr(use: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseXrBind, handle, use)
+        ObjectCalls.ptrcallWithBoolArg(setUseXrBind, segment, use)
     }
 
     fun isUsingXr(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingXrBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingXrBind, segment)
     }
 
     fun setScaling3dMode(scaling3dMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, handle, scaling3dMode)
+        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode)
     }
 
     fun getScaling3dMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
     }
 
     fun setScaling3dScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setScaling3dScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setScaling3dScaleBind, segment, scale)
     }
 
     fun getScaling3dScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScaling3dScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getScaling3dScaleBind, segment)
     }
 
     fun setFsrSharpness(fsrSharpness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, handle, fsrSharpness)
+        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, segment, fsrSharpness)
     }
 
     fun getFsrSharpness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
     }
 
     fun setTextureMipmapBias(textureMipmapBias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, handle, textureMipmapBias)
+        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, segment, textureMipmapBias)
     }
 
     fun getTextureMipmapBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, segment)
     }
 
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, handle, anisotropicFilteringLevel)
+        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel)
     }
 
     fun getAnisotropicFilteringLevel(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment)
     }
 
     fun setVrsMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVrsModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVrsModeBind, segment, mode)
     }
 
     fun getVrsMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, segment)
     }
 
     fun setVrsUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, segment, mode)
     }
 
     fun getVrsUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, segment)
     }
 
     fun setVrsTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getVrsTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, segment))
     }
 
     // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d);
@@ -943,11 +943,11 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
         const val VRS_UPDATE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Viewport? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Viewport? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Viewport? =
-            if (handle.address() == 0L) null else Viewport(handle)
+            if (handle.address() == 0L) null else Viewport(GodotHandle(handle))
 
         private const val SET_WORLD_2D_HASH = 2736080068L
         private val setWorld2dBind by lazy {

@@ -95,8 +95,8 @@ object GDExtensionManager {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): GDExtensionManager? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): GDExtensionManager? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): GDExtensionManager? =
         if (handle.address() == 0L) null else this

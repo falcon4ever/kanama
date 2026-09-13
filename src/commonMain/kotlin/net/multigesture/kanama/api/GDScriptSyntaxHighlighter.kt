@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GDScriptSyntaxHighlighter
  */
-class GDScriptSyntaxHighlighter(handle: MemorySegment) : EditorSyntaxHighlighter(handle) {
+class GDScriptSyntaxHighlighter(handle: GodotHandle) : EditorSyntaxHighlighter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GDScriptSyntaxHighlighter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GDScriptSyntaxHighlighter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GDScriptSyntaxHighlighter? =
-            if (handle.address() == 0L) null else GDScriptSyntaxHighlighter(handle)
+            if (handle.address() == 0L) null else GDScriptSyntaxHighlighter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

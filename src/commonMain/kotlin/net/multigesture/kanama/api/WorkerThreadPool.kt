@@ -27,7 +27,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun addTask(action: GodotCallable, highPriority: Boolean = false, description: String = ""): Long {
-        return ObjectCalls.ptrcallWithCallableBoolStringArgsRetLong(addTaskBind, singleton, action.target.handle, action.method, highPriority, description)
+        return ObjectCalls.ptrcallWithCallableBoolStringArgsRetLong(addTaskBind, singleton, action.target.segment, action.method, highPriority, description)
     }
 
     /**
@@ -88,7 +88,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun addGroupTask(action: GodotCallable, elements: Int, tasksNeeded: Int = -1, highPriority: Boolean = false, description: String = ""): Long {
-        return ObjectCalls.ptrcallWithCallableTwoIntBoolStringArgsRetLong(addGroupTaskBind, singleton, action.target.handle, action.method, elements, tasksNeeded, highPriority, description)
+        return ObjectCalls.ptrcallWithCallableTwoIntBoolStringArgsRetLong(addGroupTaskBind, singleton, action.target.segment, action.method, elements, tasksNeeded, highPriority, description)
     }
 
     /**
@@ -136,8 +136,8 @@ object WorkerThreadPool {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): WorkerThreadPool? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): WorkerThreadPool? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): WorkerThreadPool? =
         if (handle.address() == 0L) null else this

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: FogVolume
  */
-class FogVolume(handle: MemorySegment) : VisualInstance3D(handle) {
+class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
     var size: Vector3
         @JvmName("sizeProperty")
         get() = getSize()
@@ -47,7 +47,7 @@ class FogVolume(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -66,7 +66,7 @@ class FogVolume(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -78,7 +78,7 @@ class FogVolume(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.set_shape
      */
     fun setShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape)
     }
 
     /**
@@ -90,7 +90,7 @@ class FogVolume(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.get_shape
      */
     fun getShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment)
     }
 
     /**
@@ -100,7 +100,7 @@ class FogVolume(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -110,16 +110,16 @@ class FogVolume(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FogVolume? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FogVolume? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FogVolume? =
-            if (handle.address() == 0L) null else FogVolume(handle)
+            if (handle.address() == 0L) null else FogVolume(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: ImageTexture
  */
-class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
+class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
     /**
      * Replaces the texture's data with a new `Image`. This will re-allocate new memory for the
      * texture. If you want to update the image, but don't need to change its parameters (format,
@@ -20,7 +20,7 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setImage(image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setImageBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setImageBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -34,7 +34,7 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun update(image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(updateBind, handle, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(updateBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -44,7 +44,7 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSizeOverride(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, segment, size)
     }
 
     companion object {
@@ -59,11 +59,11 @@ class ImageTexture(handle: MemorySegment) : Texture2D(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImageTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImageTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImageTexture? =
-            if (handle.address() == 0L) null else ImageTexture(handle)
+            if (handle.address() == 0L) null else ImageTexture(GodotHandle(handle))
 
         private const val CREATE_FROM_IMAGE_HASH = 2775144163L
         private val createFromImageBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDPipelineSpecializationConstant
  */
-class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handle) {
+class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle) {
     var value: Any?
         @JvmName("valueProperty")
         get() = getValue()
@@ -32,7 +32,7 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      */
     fun setValue(value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(setValueBind, handle, value)
+        ObjectCalls.ptrcallWithVariantArg(setValueBind, segment, value)
     }
 
     /**
@@ -43,7 +43,7 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      */
     fun getValue(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getValueBind, segment)
     }
 
     /**
@@ -54,7 +54,7 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      */
     fun setConstantId(constantId: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setConstantIdBind, handle, constantId)
+        ObjectCalls.ptrcallWithUInt32Arg(setConstantIdBind, segment, constantId)
     }
 
     /**
@@ -65,16 +65,16 @@ class RDPipelineSpecializationConstant(handle: MemorySegment) : RefCounted(handl
      */
     fun getConstantId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getConstantIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getConstantIdBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDPipelineSpecializationConstant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDPipelineSpecializationConstant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDPipelineSpecializationConstant? =
-            if (handle.address() == 0L) null else RDPipelineSpecializationConstant(handle)
+            if (handle.address() == 0L) null else RDPipelineSpecializationConstant(GodotHandle(handle))
 
         private const val SET_VALUE_HASH = 1114965689L
         private val setValueBind by lazy {

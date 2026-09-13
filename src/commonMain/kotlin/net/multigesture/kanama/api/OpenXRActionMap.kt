@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRActionMap
  */
-class OpenXRActionMap(handle: MemorySegment) : Resource(handle) {
+class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
     var actionSets: List<Any?>
         @JvmName("actionSetsProperty")
         get() = getActionSets()
@@ -24,86 +24,86 @@ class OpenXRActionMap(handle: MemorySegment) : Resource(handle) {
 
     fun setActionSets(actionSets: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setActionSetsBind, handle, actionSets)
+        ObjectCalls.ptrcallWithArrayArg(setActionSetsBind, segment, actionSets)
     }
 
     fun getActionSets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getActionSetsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getActionSetsBind, segment)
     }
 
     fun getActionSetCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getActionSetCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getActionSetCountBind, segment)
     }
 
     fun findActionSet(name: String): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findActionSetBind, handle, name))
+        return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findActionSetBind, segment, name))
     }
 
     fun getActionSet(idx: Int): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getActionSetBind, handle, idx))
+        return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getActionSetBind, segment, idx))
     }
 
     fun addActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addActionSetBind, handle, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeActionSetBind, handle, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setInteractionProfiles(interactionProfiles: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setInteractionProfilesBind, handle, interactionProfiles)
+        ObjectCalls.ptrcallWithArrayArg(setInteractionProfilesBind, segment, interactionProfiles)
     }
 
     fun getInteractionProfiles(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getInteractionProfilesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getInteractionProfilesBind, segment)
     }
 
     fun getInteractionProfileCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInteractionProfileCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInteractionProfileCountBind, segment)
     }
 
     fun findInteractionProfile(name: String): OpenXRInteractionProfile? {
         checkOpen()
-        return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findInteractionProfileBind, handle, name))
+        return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findInteractionProfileBind, segment, name))
     }
 
     fun getInteractionProfile(idx: Int): OpenXRInteractionProfile? {
         checkOpen()
-        return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInteractionProfileBind, handle, idx))
+        return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInteractionProfileBind, segment, idx))
     }
 
     fun addInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addInteractionProfileBind, handle, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeInteractionProfileBind, handle, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun createDefaultActionSets() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(createDefaultActionSetsBind, handle)
+        ObjectCalls.ptrcallNoArgs(createDefaultActionSetsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRActionMap? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRActionMap? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRActionMap? =
-            if (handle.address() == 0L) null else OpenXRActionMap(handle)
+            if (handle.address() == 0L) null else OpenXRActionMap(GodotHandle(handle))
 
         private const val SET_ACTION_SETS_HASH = 381264803L
         private val setActionSetsBind by lazy {

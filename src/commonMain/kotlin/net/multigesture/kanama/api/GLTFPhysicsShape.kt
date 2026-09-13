@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: GLTFPhysicsShape
  */
-class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
+class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
     var shapeType: String
         @JvmName("shapeTypeProperty")
         get() = getShapeType()
@@ -55,92 +55,92 @@ class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
 
     fun toNode(cacheShapes: Boolean = false): CollisionShape3D? {
         checkOpen()
-        return CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toNodeBind, handle, cacheShapes))
+        return CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toNodeBind, segment, cacheShapes))
     }
 
     fun toResource(cacheShapes: Boolean = false): Shape3D? {
         checkOpen()
-        return Shape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toResourceBind, handle, cacheShapes))
+        return Shape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toResourceBind, segment, cacheShapes))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
     }
 
     fun getShapeType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getShapeTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getShapeTypeBind, segment)
     }
 
     fun setShapeType(shapeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setShapeTypeBind, handle, shapeType)
+        ObjectCalls.ptrcallWithStringArg(setShapeTypeBind, segment, shapeType)
     }
 
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     fun getIsTrigger(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsTriggerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsTriggerBind, segment)
     }
 
     fun setIsTrigger(isTrigger: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsTriggerBind, handle, isTrigger)
+        ObjectCalls.ptrcallWithBoolArg(setIsTriggerBind, segment, isTrigger)
     }
 
     fun getMeshIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMeshIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMeshIndexBind, segment)
     }
 
     fun setMeshIndex(meshIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMeshIndexBind, handle, meshIndex)
+        ObjectCalls.ptrcallWithIntArg(setMeshIndexBind, segment, meshIndex)
     }
 
     fun getImporterMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImporterMeshBind, handle))
+        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImporterMeshBind, segment))
     }
 
     fun setImporterMesh(importerMesh: ImporterMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setImporterMeshBind, handle, listOf(importerMesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setImporterMeshBind, segment, listOf(importerMesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     companion object {
         fun fromNode(shapeNode: CollisionShape3D): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, shapeNode.handle))
+            return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, shapeNode.segment))
         }
 
         fun fromResource(shapeResource: Shape3D?): GLTFPhysicsShape? {
@@ -152,11 +152,11 @@ class GLTFPhysicsShape(handle: MemorySegment) : Resource(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFPhysicsShape? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFPhysicsShape? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFPhysicsShape? =
-            if (handle.address() == 0L) null else GLTFPhysicsShape(handle)
+            if (handle.address() == 0L) null else GLTFPhysicsShape(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 3613751275L
         private val fromNodeBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XMLParser
  */
-class XMLParser(handle: MemorySegment) : RefCounted(handle) {
+class XMLParser(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Parses the next node in the file. This method returns an error code.
      *
@@ -18,7 +18,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun read(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(readBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(readBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, segment)
     }
 
     /**
@@ -40,7 +40,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNodeNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getNodeNameBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeData(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNodeDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getNodeDataBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNodeOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getNodeOffsetBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAttributeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAttributeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAttributeCountBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAttributeName(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeNameBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeNameBind, segment, idx)
     }
 
     /**
@@ -94,7 +94,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAttributeValue(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeValueBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeValueBind, segment, idx)
     }
 
     /**
@@ -104,7 +104,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasAttribute(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasAttributeBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasAttributeBind, segment, name)
     }
 
     /**
@@ -115,7 +115,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNamedAttributeValue(name: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueBind, segment, name)
     }
 
     /**
@@ -126,7 +126,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNamedAttributeValueSafe(name: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueSafeBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueSafeBind, segment, name)
     }
 
     /**
@@ -136,7 +136,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
     }
 
     /**
@@ -146,7 +146,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCurrentLine(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentLineBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentLineBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun skipSection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(skipSectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(skipSectionBind, segment)
     }
 
     /**
@@ -168,7 +168,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun seek(position: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(seekBind, handle, position)
+        return ObjectCalls.ptrcallWithLongArgRetLong(seekBind, segment, position)
     }
 
     /**
@@ -178,7 +178,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun open(file: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(openBind, handle, file)
+        return ObjectCalls.ptrcallWithStringArgRetLong(openBind, segment, file)
     }
 
     /**
@@ -188,7 +188,7 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
      */
     fun openBuffer(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, segment, buffer)
     }
 
     companion object {
@@ -201,11 +201,11 @@ class XMLParser(handle: MemorySegment) : RefCounted(handle) {
         const val NODE_UNKNOWN: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XMLParser? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XMLParser? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XMLParser? =
-            if (handle.address() == 0L) null else XMLParser(handle)
+            if (handle.address() == 0L) null else XMLParser(GodotHandle(handle))
 
         private const val READ_HASH = 166280745L
         private val readBind by lazy {

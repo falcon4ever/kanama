@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Line2D
  */
-class Line2D(handle: MemorySegment) : Node2D(handle) {
+class Line2D(handle: GodotHandle) : Node2D(handle) {
     var points: List<Vector2>
         @JvmName("pointsProperty")
         get() = getPoints()
@@ -105,7 +105,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_points
      */
     fun setPoints(points: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, handle, points)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, segment, points)
     }
 
     /**
@@ -115,7 +115,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_points
      */
     fun getPoints(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_point_position
      */
     fun setPointPosition(index: Int, position: Vector2) {
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, handle, index, position)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, segment, index, position)
     }
 
     /**
@@ -133,7 +133,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_point_position
      */
     fun getPointPosition(index: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, segment, index)
     }
 
     /**
@@ -142,7 +142,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_point_count
      */
     fun getPointCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
     }
 
     /**
@@ -155,7 +155,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.add_point
      */
     fun addPoint(position: Vector2, index: Int = -1) {
-        ObjectCalls.ptrcallWithVector2AndIntArg(addPointBind, handle, position, index)
+        ObjectCalls.ptrcallWithVector2AndIntArg(addPointBind, segment, position, index)
     }
 
     /**
@@ -164,7 +164,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.remove_point
      */
     fun removePoint(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(removePointBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, index)
     }
 
     /**
@@ -173,7 +173,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.clear_points
      */
     fun clearPoints() {
-        ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearPointsBind, segment)
     }
 
     /**
@@ -186,7 +186,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_closed
      */
     fun setClosed(closed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClosedBind, handle, closed)
+        ObjectCalls.ptrcallWithBoolArg(setClosedBind, segment, closed)
     }
 
     /**
@@ -199,7 +199,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.is_closed
      */
     fun isClosed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClosedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isClosedBind, segment)
     }
 
     /**
@@ -208,7 +208,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_width
      */
     fun setWidth(width: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
     }
 
     /**
@@ -217,7 +217,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_width
      */
     fun getWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
     }
 
     /**
@@ -227,7 +227,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_curve
      */
     fun setCurve(curve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -237,7 +237,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_curve
      */
     fun getCurve(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**
@@ -246,7 +246,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_default_color
      */
     fun setDefaultColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDefaultColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setDefaultColorBind, segment, color)
     }
 
     /**
@@ -255,7 +255,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_default_color
      */
     fun getDefaultColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDefaultColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDefaultColorBind, segment)
     }
 
     /**
@@ -265,7 +265,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_gradient
      */
     fun setGradient(color: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, handle, listOf(color?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(color?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -275,7 +275,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_gradient
      */
     fun getGradient(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
     }
 
     /**
@@ -284,7 +284,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -293,7 +293,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -302,7 +302,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_texture_mode
      */
     fun setTextureMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, mode)
     }
 
     /**
@@ -311,7 +311,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_texture_mode
      */
     fun getTextureMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment)
     }
 
     /**
@@ -320,7 +320,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_joint_mode
      */
     fun setJointMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJointModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setJointModeBind, segment, mode)
     }
 
     /**
@@ -329,7 +329,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_joint_mode
      */
     fun getJointMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJointModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getJointModeBind, segment)
     }
 
     /**
@@ -338,7 +338,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_begin_cap_mode
      */
     fun setBeginCapMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBeginCapModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBeginCapModeBind, segment, mode)
     }
 
     /**
@@ -347,7 +347,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_begin_cap_mode
      */
     fun getBeginCapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBeginCapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBeginCapModeBind, segment)
     }
 
     /**
@@ -356,7 +356,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_end_cap_mode
      */
     fun setEndCapMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEndCapModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setEndCapModeBind, segment, mode)
     }
 
     /**
@@ -365,7 +365,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_end_cap_mode
      */
     fun getEndCapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEndCapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEndCapModeBind, segment)
     }
 
     /**
@@ -377,7 +377,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_sharp_limit
      */
     fun setSharpLimit(limit: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSharpLimitBind, handle, limit)
+        ObjectCalls.ptrcallWithDoubleArg(setSharpLimitBind, segment, limit)
     }
 
     /**
@@ -389,7 +389,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_sharp_limit
      */
     fun getSharpLimit(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSharpLimitBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSharpLimitBind, segment)
     }
 
     /**
@@ -399,7 +399,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_round_precision
      */
     fun setRoundPrecision(precision: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRoundPrecisionBind, handle, precision)
+        ObjectCalls.ptrcallWithIntArg(setRoundPrecisionBind, segment, precision)
     }
 
     /**
@@ -409,7 +409,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_round_precision
      */
     fun getRoundPrecision(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRoundPrecisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRoundPrecisionBind, segment)
     }
 
     /**
@@ -419,7 +419,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_antialiased
      */
     fun setAntialiased(antialiased: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAntialiasedBind, handle, antialiased)
+        ObjectCalls.ptrcallWithBoolArg(setAntialiasedBind, segment, antialiased)
     }
 
     /**
@@ -429,7 +429,7 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_antialiased
      */
     fun getAntialiased(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, segment)
     }
 
     companion object {
@@ -444,11 +444,11 @@ class Line2D(handle: MemorySegment) : Node2D(handle) {
         const val LINE_TEXTURE_STRETCH: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Line2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Line2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Line2D? =
-            if (handle.address() == 0L) null else Line2D(handle)
+            if (handle.address() == 0L) null else Line2D(GodotHandle(handle))
 
         private const val SET_POINTS_HASH = 1509147220L
         private val setPointsBind by lazy {

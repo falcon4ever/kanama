@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParameter
  */
-open class VisualShaderNodeParameter(handle: MemorySegment) : VisualShaderNode(handle) {
+open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(handle) {
     var parameterName: String
         @JvmName("parameterNameProperty")
         get() = getParameterName()
@@ -30,32 +30,32 @@ open class VisualShaderNodeParameter(handle: MemorySegment) : VisualShaderNode(h
 
     fun setParameterName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setParameterNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setParameterNameBind, segment, name)
     }
 
     fun getParameterName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, segment)
     }
 
     fun setQualifier(qualifier: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setQualifierBind, handle, qualifier)
+        ObjectCalls.ptrcallWithLongArg(setQualifierBind, segment, qualifier)
     }
 
     fun getQualifier(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getQualifierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getQualifierBind, segment)
     }
 
     fun setInstanceIndex(instanceIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInstanceIndexBind, handle, instanceIndex)
+        ObjectCalls.ptrcallWithIntArg(setInstanceIndexBind, segment, instanceIndex)
     }
 
     fun getInstanceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInstanceIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInstanceIndexBind, segment)
     }
 
     companion object {
@@ -66,11 +66,11 @@ open class VisualShaderNodeParameter(handle: MemorySegment) : VisualShaderNode(h
         const val QUAL_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParameter(GodotHandle(handle))
 
         private const val SET_PARAMETER_NAME_HASH = 83702148L
         private val setParameterNameBind by lazy {

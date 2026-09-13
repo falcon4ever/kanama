@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: StyleBoxFlat
  */
-class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
+class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     var bgColor: Color
         @JvmName("bgColorProperty")
         get() = getBgColor()
@@ -159,7 +159,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setBgColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBgColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setBgColorBind, segment, color)
     }
 
     /**
@@ -169,7 +169,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getBgColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, segment)
     }
 
     /**
@@ -179,7 +179,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setBorderColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, segment, color)
     }
 
     /**
@@ -189,7 +189,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getBorderColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setBorderWidthAll(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBorderWidthAllBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setBorderWidthAllBind, segment, width)
     }
 
     /**
@@ -209,7 +209,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getBorderWidthMin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBorderWidthMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBorderWidthMinBind, segment)
     }
 
     /**
@@ -219,7 +219,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setBorderWidth(margin: Long, width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setBorderWidthBind, handle, margin, width)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setBorderWidthBind, segment, margin, width)
     }
 
     /**
@@ -229,7 +229,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getBorderWidth(margin: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getBorderWidthBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getBorderWidthBind, segment, margin)
     }
 
     /**
@@ -239,7 +239,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setBorderBlend(blend: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBorderBlendBind, handle, blend)
+        ObjectCalls.ptrcallWithBoolArg(setBorderBlendBind, segment, blend)
     }
 
     /**
@@ -249,7 +249,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getBorderBlend(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getBorderBlendBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getBorderBlendBind, segment)
     }
 
     /**
@@ -259,7 +259,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setCornerRadiusAll(radius: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCornerRadiusAllBind, handle, radius)
+        ObjectCalls.ptrcallWithIntArg(setCornerRadiusAllBind, segment, radius)
     }
 
     /**
@@ -269,7 +269,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setCornerRadius(corner: Long, radius: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setCornerRadiusBind, handle, corner, radius)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setCornerRadiusBind, segment, corner, radius)
     }
 
     /**
@@ -279,7 +279,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getCornerRadius(corner: Long): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getCornerRadiusBind, handle, corner)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getCornerRadiusBind, segment, corner)
     }
 
     /**
@@ -293,7 +293,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setExpandMargin(margin: Long, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, handle, margin, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin, size)
     }
 
     /**
@@ -303,7 +303,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setExpandMarginAll(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, segment, size)
     }
 
     /**
@@ -317,7 +317,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getExpandMargin(margin: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin)
     }
 
     /**
@@ -327,7 +327,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setDrawCenter(drawCenter: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, drawCenter)
+        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, segment, drawCenter)
     }
 
     /**
@@ -337,7 +337,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun isDrawCenterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setSkew(skew: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSkewBind, handle, skew)
+        ObjectCalls.ptrcallWithVector2Arg(setSkewBind, segment, skew)
     }
 
     /**
@@ -371,7 +371,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getSkew(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSkewBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSkewBind, segment)
     }
 
     /**
@@ -381,7 +381,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setShadowColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, segment, color)
     }
 
     /**
@@ -391,7 +391,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getShadowColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, segment)
     }
 
     /**
@@ -401,7 +401,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setShadowSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, segment, size)
     }
 
     /**
@@ -411,7 +411,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getShadowSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, segment)
     }
 
     /**
@@ -421,7 +421,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setShadowOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, segment, offset)
     }
 
     /**
@@ -431,7 +431,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getShadowOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, segment)
     }
 
     /**
@@ -444,7 +444,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setAntiAliased(antiAliased: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAntiAliasedBind, handle, antiAliased)
+        ObjectCalls.ptrcallWithBoolArg(setAntiAliasedBind, segment, antiAliased)
     }
 
     /**
@@ -457,7 +457,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun isAntiAliased(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAntiAliasedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAntiAliasedBind, segment)
     }
 
     /**
@@ -470,7 +470,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setAaSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAaSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setAaSizeBind, segment, size)
     }
 
     /**
@@ -483,7 +483,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getAaSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAaSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAaSizeBind, segment)
     }
 
     /**
@@ -498,7 +498,7 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun setCornerDetail(detail: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCornerDetailBind, handle, detail)
+        ObjectCalls.ptrcallWithIntArg(setCornerDetailBind, segment, detail)
     }
 
     /**
@@ -513,16 +513,16 @@ class StyleBoxFlat(handle: MemorySegment) : StyleBox(handle) {
      */
     fun getCornerDetail(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCornerDetailBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCornerDetailBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StyleBoxFlat? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StyleBoxFlat? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StyleBoxFlat? =
-            if (handle.address() == 0L) null else StyleBoxFlat(handle)
+            if (handle.address() == 0L) null else StyleBoxFlat(GodotHandle(handle))
 
         private const val SET_BG_COLOR_HASH = 2920490490L
         private val setBgColorBind by lazy {

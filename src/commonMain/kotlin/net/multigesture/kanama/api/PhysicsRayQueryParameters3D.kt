@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicsRayQueryParameters3D
  */
-class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
+class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     var from: Vector3
         @JvmName("fromProperty")
         get() = getFrom()
@@ -69,7 +69,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrom(from: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setFromBind, handle, from)
+        ObjectCalls.ptrcallWithVector3Arg(setFromBind, segment, from)
     }
 
     /**
@@ -79,7 +79,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrom(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getFromBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getFromBind, segment)
     }
 
     /**
@@ -89,7 +89,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTo(to: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setToBind, handle, to)
+        ObjectCalls.ptrcallWithVector3Arg(setToBind, segment, to)
     }
 
     /**
@@ -99,7 +99,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTo(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getToBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getToBind, segment)
     }
 
     /**
@@ -112,7 +112,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCollisionMask(collisionMask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -125,7 +125,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setExclude(exclude: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
+        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
     }
 
     /**
@@ -151,7 +151,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getExclude(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, segment)
     }
 
     /**
@@ -161,7 +161,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCollideWithBodies(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -171,7 +171,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isCollideWithBodiesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCollideWithAreas(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -191,7 +191,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isCollideWithAreasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
     }
 
     /**
@@ -202,7 +202,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHitFromInside(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, segment, enable)
     }
 
     /**
@@ -213,7 +213,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isHitFromInsideEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, segment)
     }
 
     /**
@@ -224,7 +224,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHitBackFaces(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, segment, enable)
     }
 
     /**
@@ -235,7 +235,7 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isHitBackFacesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, segment)
     }
 
     companion object {
@@ -250,11 +250,11 @@ class PhysicsRayQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsRayQueryParameters3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsRayQueryParameters3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsRayQueryParameters3D? =
-            if (handle.address() == 0L) null else PhysicsRayQueryParameters3D(handle)
+            if (handle.address() == 0L) null else PhysicsRayQueryParameters3D(GodotHandle(handle))
 
         private const val CREATE_HASH = 3110599579L
         private val createBind by lazy {

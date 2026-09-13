@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TextureLayered
  */
-open class TextureLayered(handle: MemorySegment) : Texture(handle) {
+open class TextureLayered(handle: GodotHandle) : Texture(handle) {
     /**
      * Returns the current format being used by this texture.
      *
@@ -19,7 +19,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -30,7 +30,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      */
     fun getLayeredType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, segment)
     }
 
     /**
@@ -40,7 +40,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      */
     fun getLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLayersBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
      */
     fun getLayerData(layer: Int): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, handle, layer))
+        return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, segment, layer))
     }
 
     companion object {
@@ -89,11 +89,11 @@ open class TextureLayered(handle: MemorySegment) : Texture(handle) {
         const val LAYERED_TYPE_CUBEMAP_ARRAY: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextureLayered? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextureLayered? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextureLayered? =
-            if (handle.address() == 0L) null else TextureLayered(handle)
+            if (handle.address() == 0L) null else TextureLayered(GodotHandle(handle))
 
         private const val GET_FORMAT_HASH = 3847873762L
         private val getFormatBind by lazy {

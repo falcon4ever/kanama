@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeDeterminant
  */
-class VisualShaderNodeDeterminant(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeDeterminant(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeDeterminant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeDeterminant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeDeterminant? =
-            if (handle.address() == 0L) null else VisualShaderNodeDeterminant(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeDeterminant(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

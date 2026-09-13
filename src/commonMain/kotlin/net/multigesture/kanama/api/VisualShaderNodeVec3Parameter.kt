@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: VisualShaderNodeVec3Parameter
  */
-class VisualShaderNodeVec3Parameter(handle: MemorySegment) : VisualShaderNodeParameter(handle) {
+class VisualShaderNodeVec3Parameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
     var defaultValueEnabled: Boolean
         @JvmName("defaultValueEnabledProperty")
         get() = isDefaultValueEnabled()
@@ -25,31 +25,31 @@ class VisualShaderNodeVec3Parameter(handle: MemorySegment) : VisualShaderNodePar
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setDefaultValueBind, handle, value)
+        ObjectCalls.ptrcallWithVector3Arg(setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getDefaultValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getDefaultValueBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeVec3Parameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeVec3Parameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeVec3Parameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeVec3Parameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeVec3Parameter(GodotHandle(handle))
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
         private val setDefaultValueEnabledBind by lazy {

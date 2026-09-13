@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: RegExMatch
  */
-class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
+class RegExMatch(handle: GodotHandle) : RefCounted(handle) {
     val subject: String
         @JvmName("subjectProperty")
         get() = getSubject()
@@ -24,46 +24,46 @@ class RegExMatch(handle: MemorySegment) : RefCounted(handle) {
 
     fun getSubject(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSubjectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSubjectBind, segment)
     }
 
     fun getGroupCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, segment)
     }
 
     fun getNames(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getNamesBind, segment)
     }
 
     fun getStrings(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStringsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStringsBind, segment)
     }
 
     fun getString(name: Any?): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetString(getStringBind, handle, name)
+        return ObjectCalls.ptrcallWithVariantArgRetString(getStringBind, segment, name)
     }
 
     fun getStart(name: Any?): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetInt(getStartBind, handle, name)
+        return ObjectCalls.ptrcallWithVariantArgRetInt(getStartBind, segment, name)
     }
 
     fun getEnd(name: Any?): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetInt(getEndBind, handle, name)
+        return ObjectCalls.ptrcallWithVariantArgRetInt(getEndBind, segment, name)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RegExMatch? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RegExMatch? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RegExMatch? =
-            if (handle.address() == 0L) null else RegExMatch(handle)
+            if (handle.address() == 0L) null else RegExMatch(GodotHandle(handle))
 
         private const val GET_SUBJECT_HASH = 201670096L
         private val getSubjectBind by lazy {

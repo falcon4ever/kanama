@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDHitGroup
  */
-class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
+class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
     var closestHitShader: RDPipelineShader?
         @JvmName("closestHitShaderProperty")
         get() = getClosestHitShader()
@@ -37,7 +37,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setClosestHitShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -47,7 +47,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getClosestHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, handle))
+        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, segment))
     }
 
     /**
@@ -57,7 +57,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setAnyHitShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -67,7 +67,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAnyHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, handle))
+        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, segment))
     }
 
     /**
@@ -78,7 +78,7 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setIntersectionShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, handle, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -89,16 +89,16 @@ class RDHitGroup(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIntersectionShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, handle))
+        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDHitGroup? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDHitGroup? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDHitGroup? =
-            if (handle.address() == 0L) null else RDHitGroup(handle)
+            if (handle.address() == 0L) null else RDHitGroup(GodotHandle(handle))
 
         private const val SET_CLOSEST_HIT_SHADER_HASH = 2556777288L
         private val setClosestHitShaderBind by lazy {

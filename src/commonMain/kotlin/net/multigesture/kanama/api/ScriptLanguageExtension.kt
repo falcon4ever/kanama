@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ScriptLanguageExtension
  */
-class ScriptLanguageExtension(handle: MemorySegment) : ScriptLanguage(handle) {
+class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -42,11 +42,11 @@ class ScriptLanguageExtension(handle: MemorySegment) : ScriptLanguage(handle) {
         const val CODE_COMPLETION_KIND_MAX: Long = 11L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScriptLanguageExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScriptLanguageExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScriptLanguageExtension? =
-            if (handle.address() == 0L) null else ScriptLanguageExtension(handle)
+            if (handle.address() == 0L) null else ScriptLanguageExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

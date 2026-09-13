@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: RDPipelineColorBlendState
  */
-class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
+class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
     var enableLogicOp: Boolean
         @JvmName("enableLogicOpProperty")
         get() = getEnableLogicOp()
@@ -44,7 +44,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableLogicOp(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableLogicOpBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableLogicOpBind, segment, pMember)
     }
 
     /**
@@ -54,7 +54,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableLogicOp(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableLogicOpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableLogicOpBind, segment)
     }
 
     /**
@@ -64,7 +64,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLogicOp(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLogicOpBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setLogicOpBind, segment, pMember)
     }
 
     /**
@@ -74,7 +74,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLogicOp(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBlendConstant(pMember: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBlendConstantBind, handle, pMember)
+        ObjectCalls.ptrcallWithColorArg(setBlendConstantBind, segment, pMember)
     }
 
     /**
@@ -94,7 +94,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBlendConstant(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBlendConstantBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getBlendConstantBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setAttachments(attachments: List<RDPipelineColorBlendStateAttachment>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setAttachmentsBind, handle, attachments)
+        ObjectCalls.ptrcallWithObjectListArg(setAttachmentsBind, segment, attachments)
     }
 
     /**
@@ -114,16 +114,16 @@ class RDPipelineColorBlendState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, handle, RDPipelineColorBlendStateAttachment::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, segment, RDPipelineColorBlendStateAttachment::wrap)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDPipelineColorBlendState? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDPipelineColorBlendState? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDPipelineColorBlendState? =
-            if (handle.address() == 0L) null else RDPipelineColorBlendState(handle)
+            if (handle.address() == 0L) null else RDPipelineColorBlendState(GodotHandle(handle))
 
         private const val SET_ENABLE_LOGIC_OP_HASH = 2586408642L
         private val setEnableLogicOpBind by lazy {

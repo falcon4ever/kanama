@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Generic6DOFJoint3D
  */
-class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
+class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
     /**
      * The speed that the linear motor will attempt to reach on the X axis.
      *
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_x
      */
     fun setParamX(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamXBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamXBind, segment, param, value)
     }
 
     /**
@@ -26,7 +26,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_x
      */
     fun getParamX(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamXBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamXBind, segment, param)
     }
 
     /**
@@ -35,7 +35,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_y
      */
     fun setParamY(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamYBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamYBind, segment, param, value)
     }
 
     /**
@@ -44,7 +44,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_y
      */
     fun getParamY(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamYBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamYBind, segment, param)
     }
 
     /**
@@ -53,7 +53,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_z
      */
     fun setParamZ(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamZBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamZBind, segment, param, value)
     }
 
     /**
@@ -62,7 +62,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_z
      */
     fun getParamZ(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamZBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamZBind, segment, param)
     }
 
     /**
@@ -72,7 +72,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_x
      */
     fun setFlagX(flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagXBind, handle, flag, value)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagXBind, segment, flag, value)
     }
 
     /**
@@ -82,7 +82,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_x
      */
     fun getFlagX(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagXBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagXBind, segment, flag)
     }
 
     /**
@@ -92,7 +92,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_y
      */
     fun setFlagY(flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagYBind, handle, flag, value)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagYBind, segment, flag, value)
     }
 
     /**
@@ -102,7 +102,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_y
      */
     fun getFlagY(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagYBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagYBind, segment, flag)
     }
 
     /**
@@ -112,7 +112,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_z
      */
     fun setFlagZ(flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagZBind, handle, flag, value)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagZBind, segment, flag, value)
     }
 
     /**
@@ -122,7 +122,7 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_z
      */
     fun getFlagZ(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagZBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagZBind, segment, flag)
     }
 
     companion object {
@@ -158,11 +158,11 @@ class Generic6DOFJoint3D(handle: MemorySegment) : Joint3D(handle) {
         const val FLAG_MAX: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Generic6DOFJoint3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Generic6DOFJoint3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Generic6DOFJoint3D? =
-            if (handle.address() == 0L) null else Generic6DOFJoint3D(handle)
+            if (handle.address() == 0L) null else Generic6DOFJoint3D(GodotHandle(handle))
 
         private const val SET_PARAM_X_HASH = 2018184242L
         private val setParamXBind by lazy {

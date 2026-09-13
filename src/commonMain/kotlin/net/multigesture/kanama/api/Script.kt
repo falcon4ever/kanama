@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Script
  */
-open class Script(handle: MemorySegment) : Resource(handle) {
+open class Script(handle: GodotHandle) : Resource(handle) {
     var sourceCode: String
         @JvmName("sourceCodeProperty")
         get() = getSourceCode()
@@ -25,7 +25,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun canInstantiate(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun hasSourceCode(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSourceCodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasSourceCodeBind, segment)
     }
 
     /**
@@ -49,7 +49,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSourceCodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSourceCodeBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun setSourceCode(source: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSourceCodeBind, handle, source)
+        ObjectCalls.ptrcallWithStringArg(setSourceCodeBind, segment, source)
     }
 
     /**
@@ -70,7 +70,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun reload(keepState: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetLong(reloadBind, handle, keepState)
+        return ObjectCalls.ptrcallWithBoolArgRetLong(reloadBind, segment, keepState)
     }
 
     /**
@@ -80,8 +80,8 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getBaseScript(): Script? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseScriptBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseScriptBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -95,7 +95,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getInstanceBaseType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getInstanceBaseTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getInstanceBaseTypeBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getGlobalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getGlobalNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getGlobalNameBind, segment)
     }
 
     /**
@@ -117,7 +117,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun hasScriptMethod(methodName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptMethodBind, handle, methodName)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptMethodBind, segment, methodName)
     }
 
     /**
@@ -127,7 +127,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun hasScriptSignal(signalName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptSignalBind, handle, signalName)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptSignalBind, segment, signalName)
     }
 
     /**
@@ -138,7 +138,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getScriptPropertyList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptPropertyListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptPropertyListBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getScriptMethodList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptMethodListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptMethodListBind, segment)
     }
 
     /**
@@ -160,7 +160,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getScriptSignalList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptSignalListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptSignalListBind, segment)
     }
 
     /**
@@ -170,7 +170,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getScriptConstantMap(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getScriptConstantMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getScriptConstantMapBind, segment)
     }
 
     /**
@@ -180,7 +180,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getPropertyDefaultValue(property: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getPropertyDefaultValueBind, handle, property)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getPropertyDefaultValueBind, segment, property)
     }
 
     /**
@@ -190,7 +190,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun isTool(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isToolBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isToolBind, segment)
     }
 
     /**
@@ -201,7 +201,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun isAbstract(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbstractBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAbstractBind, segment)
     }
 
     /**
@@ -211,7 +211,7 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun getRpcConfig(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRpcConfigBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRpcConfigBind, segment)
     }
 
     /**
@@ -221,16 +221,16 @@ open class Script(handle: MemorySegment) : Resource(handle) {
      */
     fun instanceHas(baseObject: GodotObject): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(instanceHasBind, handle, baseObject.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(instanceHasBind, segment, baseObject.segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Script? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Script? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Script? =
-            if (handle.address() == 0L) null else Script(handle)
+            if (handle.address() == 0L) null else Script(GodotHandle(handle))
 
         private const val CAN_INSTANTIATE_HASH = 36873697L
         private val canInstantiateBind by lazy {

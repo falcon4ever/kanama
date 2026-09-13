@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ResourceImporterDynamicFont
  */
-class ResourceImporterDynamicFont(handle: MemorySegment) : ResourceImporter(handle) {
+class ResourceImporterDynamicFont(handle: GodotHandle) : ResourceImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceImporterDynamicFont? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceImporterDynamicFont? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceImporterDynamicFont? =
-            if (handle.address() == 0L) null else ResourceImporterDynamicFont(handle)
+            if (handle.address() == 0L) null else ResourceImporterDynamicFont(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

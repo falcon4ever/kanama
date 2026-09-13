@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Label3D
  */
-class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
+class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     var pixelSize: Double
         @JvmName("pixelSizeProperty")
         get() = getPixelSize()
@@ -219,7 +219,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -229,7 +229,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_vertical_alignment
      */
     fun setVerticalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -247,7 +247,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_vertical_alignment
      */
     fun getVerticalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
     }
 
     /**
@@ -256,7 +256,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, modulate)
+        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
     }
 
     /**
@@ -265,7 +265,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
     }
 
     /**
@@ -274,7 +274,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_outline_modulate
      */
     fun setOutlineModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setOutlineModulateBind, handle, modulate)
+        ObjectCalls.ptrcallWithColorArg(setOutlineModulateBind, segment, modulate)
     }
 
     /**
@@ -283,7 +283,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_outline_modulate
      */
     fun getOutlineModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getOutlineModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getOutlineModulateBind, segment)
     }
 
     /**
@@ -292,7 +292,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -301,7 +301,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     /**
@@ -310,7 +310,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -319,7 +319,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_text_direction
      */
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     /**
@@ -329,7 +329,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -339,7 +339,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -348,7 +348,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, handle, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
     }
 
     /**
@@ -357,7 +357,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
     }
 
     /**
@@ -366,7 +366,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, handle, args)
+        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -375,7 +375,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -384,7 +384,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_uppercase
      */
     fun setUppercase(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, segment, enable)
     }
 
     /**
@@ -393,7 +393,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.is_uppercase
      */
     fun isUppercase(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, segment)
     }
 
     /**
@@ -406,7 +406,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_render_priority
      */
     fun setRenderPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, segment, priority)
     }
 
     /**
@@ -419,7 +419,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_render_priority
      */
     fun getRenderPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, segment)
     }
 
     /**
@@ -432,7 +432,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_outline_render_priority
      */
     fun setOutlineRenderPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOutlineRenderPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setOutlineRenderPriorityBind, segment, priority)
     }
 
     /**
@@ -445,7 +445,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_outline_render_priority
      */
     fun getOutlineRenderPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineRenderPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineRenderPriorityBind, segment)
     }
 
     /**
@@ -454,7 +454,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_font
      */
     fun setFont(font: Font?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, handle, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -463,7 +463,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_font
      */
     fun getFont(): Font? {
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, handle))
+        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
     }
 
     /**
@@ -474,7 +474,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_font_size
      */
     fun setFontSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, segment, size)
     }
 
     /**
@@ -485,7 +485,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_font_size
      */
     fun getFontSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, segment)
     }
 
     /**
@@ -494,7 +494,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_outline_size
      */
     fun setOutlineSize(outlineSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, handle, outlineSize)
+        ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, segment, outlineSize)
     }
 
     /**
@@ -503,7 +503,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_outline_size
      */
     fun getOutlineSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, segment)
     }
 
     /**
@@ -513,7 +513,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_line_spacing
      */
     fun setLineSpacing(lineSpacing: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, handle, lineSpacing)
+        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, segment, lineSpacing)
     }
 
     /**
@@ -523,7 +523,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_line_spacing
      */
     fun getLineSpacing(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, segment)
     }
 
     /**
@@ -534,7 +534,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
     }
 
     /**
@@ -545,7 +545,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_autowrap_mode
      */
     fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
     }
 
     /**
@@ -555,7 +555,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
     }
 
     /**
@@ -565,7 +565,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
     }
 
     /**
@@ -574,7 +574,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_justification_flags
      */
     fun setJustificationFlags(justificationFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, handle, justificationFlags)
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
     }
 
     /**
@@ -583,7 +583,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_justification_flags
      */
     fun getJustificationFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
     }
 
     /**
@@ -592,7 +592,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_width
      */
     fun setWidth(width: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
     }
 
     /**
@@ -601,7 +601,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_width
      */
     fun getWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
     }
 
     /**
@@ -611,7 +611,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_pixel_size
      */
     fun setPixelSize(pixelSize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, handle, pixelSize)
+        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, segment, pixelSize)
     }
 
     /**
@@ -621,7 +621,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_pixel_size
      */
     fun getPixelSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, segment)
     }
 
     /**
@@ -630,7 +630,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -639,7 +639,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -648,7 +648,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_draw_flag
      */
     fun setDrawFlag(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, handle, flag, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag, enabled)
     }
 
     /**
@@ -657,7 +657,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_draw_flag
      */
     fun getDrawFlag(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag)
     }
 
     /**
@@ -666,7 +666,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_billboard_mode
      */
     fun setBillboardMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode)
     }
 
     /**
@@ -675,7 +675,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_billboard_mode
      */
     fun getBillboardMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment)
     }
 
     /**
@@ -684,7 +684,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_cut_mode
      */
     fun setAlphaCutMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode)
     }
 
     /**
@@ -693,7 +693,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_cut_mode
      */
     fun getAlphaCutMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment)
     }
 
     /**
@@ -702,7 +702,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_scissor_threshold
      */
     fun setAlphaScissorThreshold(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, segment, threshold)
     }
 
     /**
@@ -711,7 +711,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_scissor_threshold
      */
     fun getAlphaScissorThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, segment)
     }
 
     /**
@@ -720,7 +720,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_hash_scale
      */
     fun setAlphaHashScale(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, segment, threshold)
     }
 
     /**
@@ -729,7 +729,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_hash_scale
      */
     fun getAlphaHashScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, segment)
     }
 
     /**
@@ -738,7 +738,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_antialiasing
      */
     fun setAlphaAntialiasing(alphaAa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, handle, alphaAa)
+        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa)
     }
 
     /**
@@ -747,7 +747,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_antialiasing
      */
     fun getAlphaAntialiasing(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment)
     }
 
     /**
@@ -756,7 +756,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_antialiasing_edge
      */
     fun setAlphaAntialiasingEdge(edge: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, handle, edge)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, segment, edge)
     }
 
     /**
@@ -765,7 +765,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_antialiasing_edge
      */
     fun getAlphaAntialiasingEdge(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, segment)
     }
 
     /**
@@ -774,7 +774,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_texture_filter
      */
     fun setTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
     }
 
     /**
@@ -783,7 +783,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_texture_filter
      */
     fun getTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
     }
 
     /**
@@ -793,7 +793,7 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.generate_triangle_mesh
      */
     fun generateTriangleMesh(): TriangleMesh? {
-        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, handle))
+        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
     companion object {
@@ -808,11 +808,11 @@ class Label3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         const val ALPHA_CUT_HASH: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Label3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Label3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Label3D? =
-            if (handle.address() == 0L) null else Label3D(handle)
+            if (handle.address() == 0L) null else Label3D(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
         private val setHorizontalAlignmentBind by lazy {

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: SkeletonProfile
  */
-open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
+open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     var rootBone: String
         @JvmName("rootBoneProperty")
         get() = getRootBone()
@@ -46,7 +46,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setRootBone(boneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, handle, boneName)
+        ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, segment, boneName)
     }
 
     /**
@@ -57,7 +57,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getRootBone(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setScaleBaseBone(boneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setScaleBaseBoneBind, handle, boneName)
+        ObjectCalls.ptrcallWithStringNameArg(setScaleBaseBoneBind, segment, boneName)
     }
 
     /**
@@ -79,7 +79,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getScaleBaseBone(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getScaleBaseBoneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getScaleBaseBoneBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setGroupSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setGroupSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setGroupSizeBind, segment, size)
     }
 
     /**
@@ -103,7 +103,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getGroupSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGroupSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getGroupSizeBind, segment)
     }
 
     /**
@@ -114,7 +114,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getGroupName(groupIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupNameBind, handle, groupIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupNameBind, segment, groupIdx)
     }
 
     /**
@@ -125,7 +125,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setGroupName(groupIdx: Int, groupName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupNameBind, handle, groupIdx, groupName)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupNameBind, segment, groupIdx, groupName)
     }
 
     /**
@@ -136,7 +136,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getTexture(groupIdx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, handle, groupIdx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, segment, groupIdx))
     }
 
     /**
@@ -147,7 +147,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setTexture(groupIdx: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, handle, groupIdx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, segment, groupIdx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -159,7 +159,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setBoneSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBoneSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setBoneSizeBind, segment, size)
     }
 
     /**
@@ -171,7 +171,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getBoneSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneSizeBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun findBone(boneName: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBoneBind, handle, boneName)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBoneBind, segment, boneName)
     }
 
     /**
@@ -192,7 +192,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getBoneName(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneNameBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneNameBind, segment, boneIdx)
     }
 
     /**
@@ -203,7 +203,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setBoneName(boneIdx: Int, boneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneNameBind, handle, boneIdx, boneName)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneNameBind, segment, boneIdx, boneName)
     }
 
     /**
@@ -214,7 +214,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getBoneParent(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneParentBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneParentBind, segment, boneIdx)
     }
 
     /**
@@ -225,7 +225,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setBoneParent(boneIdx: Int, boneParent: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneParentBind, handle, boneIdx, boneParent)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneParentBind, segment, boneIdx, boneParent)
     }
 
     /**
@@ -235,7 +235,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getTailDirection(boneIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, segment, boneIdx)
     }
 
     /**
@@ -247,7 +247,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setTailDirection(boneIdx: Int, tailDirection: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, handle, boneIdx, tailDirection)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, segment, boneIdx, tailDirection)
     }
 
     /**
@@ -257,7 +257,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getBoneTail(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneTailBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneTailBind, segment, boneIdx)
     }
 
     /**
@@ -267,7 +267,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setBoneTail(boneIdx: Int, boneTail: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneTailBind, handle, boneIdx, boneTail)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneTailBind, segment, boneIdx, boneTail)
     }
 
     /**
@@ -277,7 +277,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getReferencePose(boneIdx: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getReferencePoseBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getReferencePoseBind, segment, boneIdx)
     }
 
     /**
@@ -287,7 +287,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setReferencePose(boneIdx: Int, boneName: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setReferencePoseBind, handle, boneIdx, boneName)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setReferencePoseBind, segment, boneIdx, boneName)
     }
 
     /**
@@ -298,7 +298,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getHandleOffset(boneIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getHandleOffsetBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getHandleOffsetBind, segment, boneIdx)
     }
 
     /**
@@ -309,7 +309,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setHandleOffset(boneIdx: Int, handleOffset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setHandleOffsetBind, handle, boneIdx, handleOffset)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setHandleOffsetBind, segment, boneIdx, handleOffset)
     }
 
     /**
@@ -319,7 +319,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun getGroup(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupBind, segment, boneIdx)
     }
 
     /**
@@ -329,7 +329,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setGroup(boneIdx: Int, group: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupBind, handle, boneIdx, group)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupBind, segment, boneIdx, group)
     }
 
     /**
@@ -341,7 +341,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun isRequired(boneIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRequiredBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isRequiredBind, segment, boneIdx)
     }
 
     /**
@@ -351,7 +351,7 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
      */
     fun setRequired(boneIdx: Int, required: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRequiredBind, handle, boneIdx, required)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setRequiredBind, segment, boneIdx, required)
     }
 
     object Signals {
@@ -364,11 +364,11 @@ open class SkeletonProfile(handle: MemorySegment) : Resource(handle) {
         const val TAIL_DIRECTION_END: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonProfile? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonProfile? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonProfile? =
-            if (handle.address() == 0L) null else SkeletonProfile(handle)
+            if (handle.address() == 0L) null else SkeletonProfile(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_HASH = 3304788590L
         private val setRootBoneBind by lazy {

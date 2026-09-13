@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: GodotInstance
  */
-class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
+class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Finishes this instance's startup sequence. Returns `true` on success.
      *
      * Generated from Godot docs: GodotInstance.start
      */
     fun start(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(startBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(startBind, segment)
     }
 
     /**
@@ -26,7 +26,7 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.is_started
      */
     fun isStarted(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, segment)
     }
 
     /**
@@ -35,7 +35,7 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.iteration
      */
     fun iteration(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(iterationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(iterationBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.focus_in
      */
     fun focusIn() {
-        ObjectCalls.ptrcallNoArgs(focusInBind, handle)
+        ObjectCalls.ptrcallNoArgs(focusInBind, segment)
     }
 
     /**
@@ -53,7 +53,7 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.focus_out
      */
     fun focusOut() {
-        ObjectCalls.ptrcallNoArgs(focusOutBind, handle)
+        ObjectCalls.ptrcallNoArgs(focusOutBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, handle)
+        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
     }
 
     /**
@@ -71,16 +71,16 @@ class GodotInstance(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.resume
      */
     fun resume() {
-        ObjectCalls.ptrcallNoArgs(resumeBind, handle)
+        ObjectCalls.ptrcallNoArgs(resumeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GodotInstance? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GodotInstance? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GodotInstance? =
-            if (handle.address() == 0L) null else GodotInstance(handle)
+            if (handle.address() == 0L) null else GodotInstance(GodotHandle(handle))
 
         private const val START_HASH = 2240911060L
         private val startBind by lazy {

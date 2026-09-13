@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CurveTexture
  */
-class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
+class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
     var textureMode: Long
         @JvmName("textureModeProperty")
         get() = getTextureMode()
@@ -33,7 +33,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
     }
 
     /**
@@ -43,7 +43,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -53,7 +53,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**
@@ -64,7 +64,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setTextureMode(textureMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, handle, textureMode)
+        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, textureMode)
     }
 
     /**
@@ -75,7 +75,7 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getTextureMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment)
     }
 
     companion object {
@@ -83,11 +83,11 @@ class CurveTexture(handle: MemorySegment) : Texture2D(handle) {
         const val TEXTURE_MODE_RED: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CurveTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CurveTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CurveTexture? =
-            if (handle.address() == 0L) null else CurveTexture(handle)
+            if (handle.address() == 0L) null else CurveTexture(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L
         private val setWidthBind by lazy {

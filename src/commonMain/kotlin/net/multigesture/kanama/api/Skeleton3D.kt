@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: Skeleton3D
  */
-class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
+class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
     var motionScale: Double
         @JvmName("motionScaleProperty")
         get() = getMotionScale()
@@ -47,7 +47,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.add_bone
      */
     fun addBone(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(addBoneBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(addBoneBind, segment, name)
     }
 
     /**
@@ -57,7 +57,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.find_bone
      */
     fun findBone(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(findBoneBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(findBoneBind, segment, name)
     }
 
     /**
@@ -66,7 +66,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_name
      */
     fun getBoneName(boneIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getBoneNameBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getBoneNameBind, segment, boneIdx)
     }
 
     /**
@@ -75,7 +75,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_name
      */
     fun setBoneName(boneIdx: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setBoneNameBind, handle, boneIdx, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setBoneNameBind, segment, boneIdx, name)
     }
 
     /**
@@ -84,7 +84,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_meta
      */
     fun getBoneMeta(boneIdx: Int, key: String): Any? {
-        return ObjectCalls.ptrcallWithIntAndStringNameArgRetVariantScalar(getBoneMetaBind, handle, boneIdx, key)
+        return ObjectCalls.ptrcallWithIntAndStringNameArgRetVariantScalar(getBoneMetaBind, segment, boneIdx, key)
     }
 
     /**
@@ -93,7 +93,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_meta_list
      */
     fun getBoneMetaList(boneIdx: Int): List<String> {
-        return ObjectCalls.ptrcallWithIntArgRetStringNameList(getBoneMetaListBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringNameList(getBoneMetaListBind, segment, boneIdx)
     }
 
     /**
@@ -102,7 +102,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.has_bone_meta
      */
     fun hasBoneMeta(boneIdx: Int, key: String): Boolean {
-        return ObjectCalls.ptrcallWithIntAndStringNameArgRetBool(hasBoneMetaBind, handle, boneIdx, key)
+        return ObjectCalls.ptrcallWithIntAndStringNameArgRetBool(hasBoneMetaBind, segment, boneIdx, key)
     }
 
     /**
@@ -111,7 +111,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_meta
      */
     fun setBoneMeta(boneIdx: Int, key: String, value: Any?) {
-        ObjectCalls.ptrcallWithIntStringNameAndVariantArg(setBoneMetaBind, handle, boneIdx, key, value)
+        ObjectCalls.ptrcallWithIntStringNameAndVariantArg(setBoneMetaBind, segment, boneIdx, key, value)
     }
 
     /**
@@ -121,7 +121,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_concatenated_bone_names
      */
     fun getConcatenatedBoneNames(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getConcatenatedBoneNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getConcatenatedBoneNamesBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_parent
      */
     fun getBoneParent(boneIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getBoneParentBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getBoneParentBind, segment, boneIdx)
     }
 
     /**
@@ -141,7 +141,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_parent
      */
     fun setBoneParent(boneIdx: Int, parentIdx: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setBoneParentBind, handle, boneIdx, parentIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(setBoneParentBind, segment, boneIdx, parentIdx)
     }
 
     /**
@@ -150,7 +150,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_count
      */
     fun getBoneCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, segment)
     }
 
     /**
@@ -161,7 +161,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_version
      */
     fun getVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVersionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVersionBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.unparent_bone_and_rest
      */
     fun unparentBoneAndRest(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(unparentBoneAndRestBind, handle, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(unparentBoneAndRestBind, segment, boneIdx)
     }
 
     /**
@@ -181,7 +181,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_children
      */
     fun getBoneChildren(boneIdx: Int): List<Int> {
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getBoneChildrenBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getBoneChildrenBind, segment, boneIdx)
     }
 
     /**
@@ -192,7 +192,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_parentless_bones
      */
     fun getParentlessBones(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getParentlessBonesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getParentlessBonesBind, segment)
     }
 
     /**
@@ -201,7 +201,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_rest
      */
     fun getBoneRest(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneRestBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneRestBind, segment, boneIdx)
     }
 
     /**
@@ -210,7 +210,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_rest
      */
     fun setBoneRest(boneIdx: Int, rest: Transform3D) {
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBoneRestBind, handle, boneIdx, rest)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBoneRestBind, segment, boneIdx, rest)
     }
 
     /**
@@ -219,11 +219,11 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_rest
      */
     fun getBoneGlobalRest(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalRestBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalRestBind, segment, boneIdx)
     }
 
     fun createSkinFromRestTransforms(): Skin? {
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(createSkinFromRestTransformsBind, handle))
+        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(createSkinFromRestTransformsBind, segment))
     }
 
     /**
@@ -232,7 +232,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.register_skin
      */
     fun registerSkin(skin: Skin?): SkinReference? {
-        return SkinReference.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(registerSkinBind, handle, skin?.requireOpenHandle() ?: MemorySegment.NULL))
+        return SkinReference.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(registerSkinBind, segment, skin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -241,7 +241,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.localize_rests
      */
     fun localizeRests() {
-        ObjectCalls.ptrcallNoArgs(localizeRestsBind, handle)
+        ObjectCalls.ptrcallNoArgs(localizeRestsBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.clear_bones
      */
     fun clearBones() {
-        ObjectCalls.ptrcallNoArgs(clearBonesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBonesBind, segment)
     }
 
     /**
@@ -261,7 +261,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose
      */
     fun getBonePose(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBonePoseBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBonePoseBind, segment, boneIdx)
     }
 
     /**
@@ -270,7 +270,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose
      */
     fun setBonePose(boneIdx: Int, pose: Transform3D) {
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBonePoseBind, handle, boneIdx, pose)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBonePoseBind, segment, boneIdx, pose)
     }
 
     /**
@@ -280,7 +280,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose_position
      */
     fun setBonePosePosition(boneIdx: Int, position: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setBonePosePositionBind, handle, boneIdx, position)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setBonePosePositionBind, segment, boneIdx, position)
     }
 
     /**
@@ -291,7 +291,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose_rotation
      */
     fun setBonePoseRotation(boneIdx: Int, rotation: Quaternion) {
-        ObjectCalls.ptrcallWithIntAndQuaternionArg(setBonePoseRotationBind, handle, boneIdx, rotation)
+        ObjectCalls.ptrcallWithIntAndQuaternionArg(setBonePoseRotationBind, segment, boneIdx, rotation)
     }
 
     /**
@@ -300,7 +300,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose_scale
      */
     fun setBonePoseScale(boneIdx: Int, scale: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setBonePoseScaleBind, handle, boneIdx, scale)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setBonePoseScaleBind, segment, boneIdx, scale)
     }
 
     /**
@@ -310,7 +310,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose_position
      */
     fun getBonePosePosition(boneIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getBonePosePositionBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getBonePosePositionBind, segment, boneIdx)
     }
 
     /**
@@ -320,7 +320,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose_rotation
      */
     fun getBonePoseRotation(boneIdx: Int): Quaternion {
-        return ObjectCalls.ptrcallWithIntArgRetQuaternion(getBonePoseRotationBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetQuaternion(getBonePoseRotationBind, segment, boneIdx)
     }
 
     /**
@@ -329,7 +329,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose_scale
      */
     fun getBonePoseScale(boneIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getBonePoseScaleBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getBonePoseScaleBind, segment, boneIdx)
     }
 
     /**
@@ -338,7 +338,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.reset_bone_pose
      */
     fun resetBonePose(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(resetBonePoseBind, handle, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(resetBonePoseBind, segment, boneIdx)
     }
 
     /**
@@ -347,7 +347,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.reset_bone_poses
      */
     fun resetBonePoses() {
-        ObjectCalls.ptrcallNoArgs(resetBonePosesBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetBonePosesBind, segment)
     }
 
     /**
@@ -356,7 +356,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.is_bone_enabled
      */
     fun isBoneEnabled(boneIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isBoneEnabledBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isBoneEnabledBind, segment, boneIdx)
     }
 
     /**
@@ -365,7 +365,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_enabled
      */
     fun setBoneEnabled(boneIdx: Int, enabled: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setBoneEnabledBind, handle, boneIdx, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setBoneEnabledBind, segment, boneIdx, enabled)
     }
 
     /**
@@ -378,7 +378,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_pose
      */
     fun getBoneGlobalPose(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseBind, segment, boneIdx)
     }
 
     /**
@@ -390,7 +390,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_global_pose
      */
     fun setBoneGlobalPose(boneIdx: Int, pose: Transform3D) {
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBoneGlobalPoseBind, handle, boneIdx, pose)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBoneGlobalPoseBind, segment, boneIdx, pose)
     }
 
     /**
@@ -399,7 +399,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.force_update_all_bone_transforms
      */
     fun forceUpdateAllBoneTransforms() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateAllBoneTransformsBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceUpdateAllBoneTransformsBind, segment)
     }
 
     /**
@@ -408,7 +408,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.force_update_bone_child_transform
      */
     fun forceUpdateBoneChildTransform(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(forceUpdateBoneChildTransformBind, handle, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(forceUpdateBoneChildTransformBind, segment, boneIdx)
     }
 
     /**
@@ -418,7 +418,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_motion_scale
      */
     fun setMotionScale(motionScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMotionScaleBind, handle, motionScale)
+        ObjectCalls.ptrcallWithDoubleArg(setMotionScaleBind, segment, motionScale)
     }
 
     /**
@@ -428,7 +428,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_motion_scale
      */
     fun getMotionScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMotionScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMotionScaleBind, segment)
     }
 
     /**
@@ -438,7 +438,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_show_rest_only
      */
     fun setShowRestOnly(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowRestOnlyBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setShowRestOnlyBind, segment, enabled)
     }
 
     /**
@@ -448,7 +448,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.is_show_rest_only
      */
     fun isShowRestOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowRestOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowRestOnlyBind, segment)
     }
 
     /**
@@ -457,7 +457,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_modifier_callback_mode_process
      */
     fun setModifierCallbackModeProcess(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setModifierCallbackModeProcessBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setModifierCallbackModeProcessBind, segment, mode)
     }
 
     /**
@@ -466,7 +466,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_modifier_callback_mode_process
      */
     fun getModifierCallbackModeProcess(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getModifierCallbackModeProcessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getModifierCallbackModeProcessBind, segment)
     }
 
     /**
@@ -477,7 +477,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.advance
      */
     fun advance(delta: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(advanceBind, handle, delta)
+        ObjectCalls.ptrcallWithDoubleArg(advanceBind, segment, delta)
     }
 
     /**
@@ -486,7 +486,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.clear_bones_global_pose_override
      */
     fun clearBonesGlobalPoseOverride() {
-        ObjectCalls.ptrcallNoArgs(clearBonesGlobalPoseOverrideBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBonesGlobalPoseOverrideBind, segment)
     }
 
     /**
@@ -499,7 +499,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_global_pose_override
      */
     fun setBoneGlobalPoseOverride(boneIdx: Int, pose: Transform3D, amount: Double, persistent: Boolean = false) {
-        ObjectCalls.ptrcallWithIntTransform3DDoubleBoolArgs(setBoneGlobalPoseOverrideBind, handle, boneIdx, pose, amount, persistent)
+        ObjectCalls.ptrcallWithIntTransform3DDoubleBoolArgs(setBoneGlobalPoseOverrideBind, segment, boneIdx, pose, amount, persistent)
     }
 
     /**
@@ -508,7 +508,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_pose_override
      */
     fun getBoneGlobalPoseOverride(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseOverrideBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseOverrideBind, segment, boneIdx)
     }
 
     /**
@@ -519,7 +519,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_pose_no_override
      */
     fun getBoneGlobalPoseNoOverride(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseNoOverrideBind, handle, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseNoOverrideBind, segment, boneIdx)
     }
 
     /**
@@ -533,7 +533,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_animate_physical_bones
      */
     fun setAnimatePhysicalBones(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAnimatePhysicalBonesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAnimatePhysicalBonesBind, segment, enabled)
     }
 
     /**
@@ -547,7 +547,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_animate_physical_bones
      */
     fun getAnimatePhysicalBones(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAnimatePhysicalBonesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAnimatePhysicalBonesBind, segment)
     }
 
     /**
@@ -556,7 +556,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_stop_simulation
      */
     fun physicalBonesStopSimulation() {
-        ObjectCalls.ptrcallNoArgs(physicalBonesStopSimulationBind, handle)
+        ObjectCalls.ptrcallNoArgs(physicalBonesStopSimulationBind, segment)
     }
 
     /**
@@ -567,7 +567,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_start_simulation
      */
     fun physicalBonesStartSimulation(bones: List<String>) {
-        ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, handle, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, segment, bones)
     }
 
     /**
@@ -576,7 +576,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_add_collision_exception
      */
     fun physicalBonesAddCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesAddCollisionExceptionBind, handle, exception)
+        ObjectCalls.ptrcallWithRIDArg(physicalBonesAddCollisionExceptionBind, segment, exception)
     }
 
     /**
@@ -585,7 +585,7 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_remove_collision_exception
      */
     fun physicalBonesRemoveCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesRemoveCollisionExceptionBind, handle, exception)
+        ObjectCalls.ptrcallWithRIDArg(physicalBonesRemoveCollisionExceptionBind, segment, exception)
     }
 
     object Signals {
@@ -604,11 +604,11 @@ class Skeleton3D(handle: MemorySegment) : Node3D(handle) {
         const val MODIFIER_CALLBACK_MODE_PROCESS_MANUAL: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Skeleton3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Skeleton3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Skeleton3D? =
-            if (handle.address() == 0L) null else Skeleton3D(handle)
+            if (handle.address() == 0L) null else Skeleton3D(GodotHandle(handle))
 
         private const val ADD_BONE_HASH = 1597066294L
         private val addBoneBind by lazy {

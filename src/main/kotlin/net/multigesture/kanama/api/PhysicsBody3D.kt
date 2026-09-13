@@ -10,7 +10,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: PhysicsBody3D
  */
-open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
+open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
     /**
      * Moves the body along the vector `motion`. In order to be frame rate independent in
      * `Node._physics_process` or `Node._process`, `motion` should be computed using `delta`. The body
@@ -26,7 +26,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.move_and_collide
      */
     fun moveAndCollide(motion: Vector3, testOnly: Boolean = false, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): KinematicCollision3D? {
-        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, handle, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
+        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
     }
 
     /**
@@ -45,7 +45,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.test_move
      */
     fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D?, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): Boolean {
-        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(testMoveBind, handle, from, motion, collision?.requireOpenHandle() ?: MemorySegment.NULL, safeMargin, recoveryAsCollision, maxCollisions)
+        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: MemorySegment.NULL, safeMargin, recoveryAsCollision, maxCollisions)
     }
 
     /**
@@ -55,7 +55,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.get_gravity
      */
     fun getGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, segment)
     }
 
     /**
@@ -64,7 +64,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.set_axis_lock
      */
     fun setAxisLock(axis: Long, lock: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setAxisLockBind, handle, axis, lock)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setAxisLockBind, segment, axis, lock)
     }
 
     /**
@@ -73,7 +73,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.get_axis_lock
      */
     fun getAxisLock(axis: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getAxisLockBind, handle, axis)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getAxisLockBind, segment, axis)
     }
 
     /**
@@ -82,7 +82,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.get_collision_exceptions
      */
     fun getCollisionExceptions(): List<PhysicsBody3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedPhysicsBody3DList(getCollisionExceptionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTypedPhysicsBody3DList(getCollisionExceptionsBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.add_collision_exception_with
      */
     fun addCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     /**
@@ -100,7 +100,7 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.remove_collision_exception_with
      */
     fun removeCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, handle, listOf(body.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     companion object {
@@ -112,11 +112,11 @@ open class PhysicsBody3D(handle: MemorySegment) : CollisionObject3D(handle) {
         const val BODY_AXIS_ANGULAR_Z: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Z
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsBody3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsBody3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsBody3D? =
-            if (handle.address() == 0L) null else PhysicsBody3D(handle)
+            if (handle.address() == 0L) null else PhysicsBody3D(GodotHandle(handle))
 
         private const val MOVE_AND_COLLIDE_HASH = 3208792678L
         private val moveAndCollideBind by lazy {

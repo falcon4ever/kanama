@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: PolygonPathFinder
  */
-class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
+class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
     /**
      * Sets up `PolygonPathFinder` with an array of points that define the vertices of the polygon, and
      * an array of indices that determine the edges of the polygon. The length of `connections` must be
@@ -20,22 +20,22 @@ class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
      */
     fun setup(points: List<Vector2>, connections: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListAndPackedInt32ListArgs(setupBind, handle, points, connections)
+        ObjectCalls.ptrcallWithPackedVector2ListAndPackedInt32ListArgs(setupBind, segment, points, connections)
     }
 
     fun findPath(from: Vector2, to: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(findPathBind, handle, from, to)
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(findPathBind, segment, from, to)
     }
 
     fun getIntersections(from: Vector2, to: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getIntersectionsBind, handle, from, to)
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getIntersectionsBind, segment, from, to)
     }
 
     fun getClosestPoint(point: Vector2): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, handle, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, segment, point)
     }
 
     /**
@@ -45,31 +45,31 @@ class PolygonPathFinder(handle: MemorySegment) : Resource(handle) {
      */
     fun isPointInside(point: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetBool(isPointInsideBind, handle, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetBool(isPointInsideBind, segment, point)
     }
 
     fun setPointPenalty(idx: Int, penalty: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointPenaltyBind, handle, idx, penalty)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointPenaltyBind, segment, idx, penalty)
     }
 
     fun getPointPenalty(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointPenaltyBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointPenaltyBind, segment, idx)
     }
 
     fun getBounds(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PolygonPathFinder? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PolygonPathFinder? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PolygonPathFinder? =
-            if (handle.address() == 0L) null else PolygonPathFinder(handle)
+            if (handle.address() == 0L) null else PolygonPathFinder(GodotHandle(handle))
 
         private const val SETUP_HASH = 3251786936L
         private val setupBind by lazy {

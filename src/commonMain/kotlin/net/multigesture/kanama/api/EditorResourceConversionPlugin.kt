@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorResourceConversionPlugin
  */
-class EditorResourceConversionPlugin(handle: MemorySegment) : RefCounted(handle) {
+class EditorResourceConversionPlugin(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorResourceConversionPlugin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorResourceConversionPlugin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorResourceConversionPlugin? =
-            if (handle.address() == 0L) null else EditorResourceConversionPlugin(handle)
+            if (handle.address() == 0L) null else EditorResourceConversionPlugin(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

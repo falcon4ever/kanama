@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  *
  * Generated from Godot docs: Tweener
  */
-open class Tweener(handle: MemorySegment) : RefCounted(handle) {
+open class Tweener(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     object Signals {
@@ -18,11 +18,11 @@ open class Tweener(handle: MemorySegment) : RefCounted(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Tweener? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Tweener? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Tweener? =
-            if (handle.address() == 0L) null else Tweener(handle)
+            if (handle.address() == 0L) null else Tweener(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

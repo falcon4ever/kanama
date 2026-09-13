@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioListener2D
  */
-class AudioListener2D(handle: MemorySegment) : Node2D(handle) {
+class AudioListener2D(handle: GodotHandle) : Node2D(handle) {
     /**
      * Makes the `AudioListener2D` active, setting it as the hearing point for the sounds. If there is
      * already another active `AudioListener2D`, it will be disabled. This method will have no effect
@@ -19,7 +19,7 @@ class AudioListener2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioListener2D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, handle)
+        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ class AudioListener2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioListener2D.clear_current
      */
     fun clearCurrent() {
-        ObjectCalls.ptrcallNoArgs(clearCurrentBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearCurrentBind, segment)
     }
 
     /**
@@ -37,16 +37,16 @@ class AudioListener2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: AudioListener2D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioListener2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioListener2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioListener2D? =
-            if (handle.address() == 0L) null else AudioListener2D(handle)
+            if (handle.address() == 0L) null else AudioListener2D(GodotHandle(handle))
 
         private const val MAKE_CURRENT_HASH = 3218959716L
         private val makeCurrentBind by lazy {

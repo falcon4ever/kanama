@@ -7,6 +7,33 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Breaking — `GodotHandle` replaces `MemorySegment` in every public signature (task 104, step 1)
+
+- **Every attachable script constructor changes type.** The opaque handle a wrapper and a
+  `KanamaScript` take is `net.multigesture.kanama.api.GodotHandle` — a zero-cost
+  `@JvmInline value class` declared once per backend under that one fully-qualified name
+  (over the FFM `MemorySegment` on desktop/Android and iOS, over the registry id on Web).
+  No public wrapper or script signature names a `java.lang.foreign` type any more, which is
+  what lets one script source compile for all four backends. Migrating a script is three
+  lines:
+
+  1. the constructor parameter type: `MemorySegment` → `GodotHandle`
+     (`class Player(godotObject: GodotHandle) : KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D)`);
+  2. the import: drop `import java.lang.foreign.MemorySegment`, add
+     `import net.multigesture.kanama.api.GodotHandle`;
+  3. nothing else — re-wrapping through another wrapper's handle
+     (`CharacterBody3D(body.handle)`, `selfAs(::Node3D)`, `getAsOrNull(path, ::Sprite2D)`) is
+     unchanged, because `GodotObject.handle` keeps its name and is a `GodotHandle` now.
+
+  A script left on the old type fails the build with that migration spelled out, instead of an
+  argument-type mismatch inside the generated registrar. Code that reached through the handle
+  for a raw pointer (`handle.address()`) has no replacement by design: use `isSameInstance()`,
+  and `handle.segment` only from backend glue. The editor's "new script" template, the starter
+  template, the example project and the twelve demos are migrated. Three desktop-only helpers
+  keep a `MemorySegment` parameter on purpose, because what they take is a raw native pointer and
+  not an object handle: `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
+  `OpenXRAPIExtension.transformFromPose(pose)` and `OpenXRAPIExtension.setCustomPlaySpace(space)`.
+
 ### Added — Web render-quality, window and glue families (task 64, tps-demo parcel 8)
 
 - **Web protocol 27 → 28.** The Kotlin/Wasm backend admits the settings families tps-demo's

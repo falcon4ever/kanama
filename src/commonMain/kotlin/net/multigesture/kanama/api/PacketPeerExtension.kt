@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: PacketPeerExtension
  */
-class PacketPeerExtension(handle: MemorySegment) : PacketPeer(handle) {
+class PacketPeerExtension(handle: GodotHandle) : PacketPeer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PacketPeerExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PacketPeerExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PacketPeerExtension? =
-            if (handle.address() == 0L) null else PacketPeerExtension(handle)
+            if (handle.address() == 0L) null else PacketPeerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

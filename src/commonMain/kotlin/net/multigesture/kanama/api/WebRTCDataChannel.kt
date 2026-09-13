@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: WebRTCDataChannel
  */
-open class WebRTCDataChannel(handle: MemorySegment) : PacketPeer(handle) {
+open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
     var writeMode: Long
         @JvmName("writeModeProperty")
         get() = getWriteMode()
@@ -18,72 +18,72 @@ open class WebRTCDataChannel(handle: MemorySegment) : PacketPeer(handle) {
 
     fun poll(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
     }
 
     fun wasStringPacket(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(wasStringPacketBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(wasStringPacketBind, segment)
     }
 
     fun setWriteMode(writeMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWriteModeBind, handle, writeMode)
+        ObjectCalls.ptrcallWithLongArg(setWriteModeBind, segment, writeMode)
     }
 
     fun getWriteMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWriteModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getWriteModeBind, segment)
     }
 
     fun getReadyState(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, segment)
     }
 
     fun getLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, segment)
     }
 
     fun isOrdered(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isOrderedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOrderedBind, segment)
     }
 
     fun getId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, segment)
     }
 
     fun getMaxPacketLifeTime(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPacketLifeTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPacketLifeTimeBind, segment)
     }
 
     fun getMaxRetransmits(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxRetransmitsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxRetransmitsBind, segment)
     }
 
     fun getProtocol(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getProtocolBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getProtocolBind, segment)
     }
 
     fun isNegotiated(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNegotiatedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNegotiatedBind, segment)
     }
 
     fun getBufferedAmount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferedAmountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBufferedAmountBind, segment)
     }
 
     companion object {
@@ -95,11 +95,11 @@ open class WebRTCDataChannel(handle: MemorySegment) : PacketPeer(handle) {
         const val STATE_CLOSED: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WebRTCDataChannel? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WebRTCDataChannel? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WebRTCDataChannel? =
-            if (handle.address() == 0L) null else WebRTCDataChannel(handle)
+            if (handle.address() == 0L) null else WebRTCDataChannel(GodotHandle(handle))
 
         private const val POLL_HASH = 166280745L
         private val pollBind by lazy {

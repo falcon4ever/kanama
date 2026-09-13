@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectEQ
  */
-open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
+open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
     /**
      * Sets band's gain at the specified index, in dB.
      *
@@ -20,7 +20,7 @@ open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setBandGainDb(bandIdx: Int, volumeDb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setBandGainDbBind, handle, bandIdx, volumeDb)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setBandGainDbBind, segment, bandIdx, volumeDb)
     }
 
     /**
@@ -30,7 +30,7 @@ open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getBandGainDb(bandIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getBandGainDbBind, handle, bandIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getBandGainDbBind, segment, bandIdx)
     }
 
     /**
@@ -40,16 +40,16 @@ open class AudioEffectEQ(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getBandCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBandCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBandCountBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectEQ? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectEQ? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectEQ? =
-            if (handle.address() == 0L) null else AudioEffectEQ(handle)
+            if (handle.address() == 0L) null else AudioEffectEQ(GodotHandle(handle))
 
         private const val SET_BAND_GAIN_DB_HASH = 1602489585L
         private val setBandGainDbBind by lazy {

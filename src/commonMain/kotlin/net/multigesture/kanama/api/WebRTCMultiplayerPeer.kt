@@ -8,54 +8,54 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: WebRTCMultiplayerPeer
  */
-class WebRTCMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
+class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     fun createServer(channelsConfig: List<Any?> = emptyList()): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithArrayArgRetLong(createServerBind, handle, channelsConfig)
+        return ObjectCalls.ptrcallWithArrayArgRetLong(createServerBind, segment, channelsConfig)
     }
 
     fun createClient(peerId: Int, channelsConfig: List<Any?> = emptyList()): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createClientBind, handle, peerId, channelsConfig)
+        return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createClientBind, segment, peerId, channelsConfig)
     }
 
     fun createMesh(peerId: Int, channelsConfig: List<Any?> = emptyList()): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createMeshBind, handle, peerId, channelsConfig)
+        return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createMeshBind, segment, peerId, channelsConfig)
     }
 
     fun addPeer(peer: WebRTCPeerConnection?, peerId: Int, unreliableLifetime: Int = 1): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, handle, peer?.requireOpenHandle() ?: MemorySegment.NULL, peerId, unreliableLifetime)
+        return ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, segment, peer?.requireOpenHandle() ?: MemorySegment.NULL, peerId, unreliableLifetime)
     }
 
     fun removePeer(peerId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePeerBind, handle, peerId)
+        ObjectCalls.ptrcallWithIntArg(removePeerBind, segment, peerId)
     }
 
     fun hasPeer(peerId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasPeerBind, handle, peerId)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasPeerBind, segment, peerId)
     }
 
     fun getPeer(peerId: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getPeerBind, handle, peerId)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(getPeerBind, segment, peerId)
     }
 
     fun getPeers(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getPeersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getPeersBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WebRTCMultiplayerPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WebRTCMultiplayerPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WebRTCMultiplayerPeer? =
-            if (handle.address() == 0L) null else WebRTCMultiplayerPeer(handle)
+            if (handle.address() == 0L) null else WebRTCMultiplayerPeer(GodotHandle(handle))
 
         private const val CREATE_SERVER_HASH = 2865356025L
         private val createServerBind by lazy {

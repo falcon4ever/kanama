@@ -11,7 +11,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: TabBar
  */
-class TabBar(handle: MemorySegment) : Control(handle) {
+class TabBar(handle: GodotHandle) : Control(handle) {
     var tabCount: Int
         @JvmName("tabCountProperty")
         get() = getTabCount()
@@ -101,47 +101,47 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.set_tab_count
      */
-    fun setTabCount(count: Int) { ObjectCalls.ptrcallWithIntArg(setTabCountBind, handle, count) }
+    fun setTabCount(count: Int) { ObjectCalls.ptrcallWithIntArg(setTabCountBind, segment, count) }
     /**
      * The number of tabs currently in the bar.
      *
      * Generated from Godot docs: TabBar.get_tab_count
      */
-    fun getTabCount(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, handle)
+    fun getTabCount(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, segment)
     /**
      * The index of the current selected tab. A value of `-1` means that no tab is selected and can
      * only be set when `deselect_enabled` is `true` or if all tabs are hidden or disabled.
      *
      * Generated from Godot docs: TabBar.set_current_tab
      */
-    fun setCurrentTab(tabIdx: Int) { ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, handle, tabIdx) }
+    fun setCurrentTab(tabIdx: Int) { ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, segment, tabIdx) }
     /**
      * The index of the current selected tab. A value of `-1` means that no tab is selected and can
      * only be set when `deselect_enabled` is `true` or if all tabs are hidden or disabled.
      *
      * Generated from Godot docs: TabBar.get_current_tab
      */
-    fun getCurrentTab(): Int = ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, handle)
+    fun getCurrentTab(): Int = ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, segment)
     /**
      * Returns the previously active tab index.
      *
      * Generated from Godot docs: TabBar.get_previous_tab
      */
-    fun getPreviousTab(): Int = ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, handle)
+    fun getPreviousTab(): Int = ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, segment)
     /**
      * Selects the first available tab with lower index than the currently selected. Returns `true` if
      * tab selection changed.
      *
      * Generated from Godot docs: TabBar.select_previous_available
      */
-    fun selectPreviousAvailable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, handle)
+    fun selectPreviousAvailable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, segment)
     /**
      * Selects the first available tab with greater index than the currently selected. Returns `true`
      * if tab selection changed.
      *
      * Generated from Godot docs: TabBar.select_next_available
      */
-    fun selectNextAvailable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, handle)
+    fun selectNextAvailable(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, segment)
 
     /**
      * Sets a `title` for the tab at index `tab_idx`.
@@ -149,7 +149,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_title
      */
     fun setTabTitle(tabIdx: Int, title: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, handle, tabIdx, title)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, segment, tabIdx, title)
     }
 
     /**
@@ -157,7 +157,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.get_tab_title
      */
-    fun getTabTitle(tabIdx: Int): String = ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, handle, tabIdx)
+    fun getTabTitle(tabIdx: Int): String = ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, segment, tabIdx)
 
     /**
      * Sets a `tooltip` for tab at index `tab_idx`. Note: By default, if the `tooltip` is empty and the
@@ -167,7 +167,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_tooltip
      */
     fun setTabTooltip(tabIdx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, handle, tabIdx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, segment, tabIdx, tooltip)
     }
 
     /**
@@ -175,7 +175,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.get_tab_tooltip
      */
-    fun getTabTooltip(tabIdx: Int): String = ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, handle, tabIdx)
+    fun getTabTooltip(tabIdx: Int): String = ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, segment, tabIdx)
 
     /**
      * Sets tab title base writing direction.
@@ -183,7 +183,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_text_direction
      */
     fun setTabTextDirection(tabIdx: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTabTextDirectionBind, handle, tabIdx, direction)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setTabTextDirectionBind, segment, tabIdx, direction)
     }
 
     /**
@@ -192,7 +192,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_text_direction
      */
     fun getTabTextDirection(tabIdx: Int): Long =
-        ObjectCalls.ptrcallWithIntArgRetLong(getTabTextDirectionBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArgRetLong(getTabTextDirectionBind, segment, tabIdx)
 
     /**
      * Sets the language code of the title for the tab at index `tab_idx` to `language`. This is used
@@ -202,7 +202,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_language
      */
     fun setTabLanguage(tabIdx: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabLanguageBind, handle, tabIdx, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabLanguageBind, segment, tabIdx, language)
     }
 
     /**
@@ -211,7 +211,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_language
      */
     fun getTabLanguage(tabIdx: Int): String =
-        ObjectCalls.ptrcallWithIntArgRetString(getTabLanguageBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArgRetString(getTabLanguageBind, segment, tabIdx)
 
     /**
      * Sets an `icon` for the tab at index `tab_idx`.
@@ -219,7 +219,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_icon
      */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, handle, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -228,7 +228,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_icon
      */
     fun getTabIcon(tabIdx: Int): Texture2D? =
-        Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, handle, tabIdx))
+        Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, segment, tabIdx))
 
     /**
      * Sets the maximum allowed width of the icon for the tab at index `tab_idx`. This limit is applied
@@ -238,7 +238,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_icon_max_width
      */
     fun setTabIconMaxWidth(tabIdx: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, handle, tabIdx, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, segment, tabIdx, width)
     }
 
     /**
@@ -247,7 +247,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_icon_max_width
      */
     fun getTabIconMaxWidth(tabIdx: Int): Int =
-        ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, segment, tabIdx)
 
     /**
      * Sets an `icon` for the button of the tab at index `tab_idx` (located to the right, before the
@@ -259,7 +259,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
         ObjectCalls.ptrcallWithIntAndObjectArg(
             setTabButtonIconBind,
-            handle,
+            segment,
             tabIdx,
             icon?.requireOpenHandle() ?: MemorySegment.NULL,
         )
@@ -272,7 +272,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_button_icon
      */
     fun getTabButtonIcon(tabIdx: Int): Texture2D? =
-        Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, handle, tabIdx))
+        Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, segment, tabIdx))
 
     /**
      * If `disabled` is `true`, disables the tab at index `tab_idx`, making it non-interactable.
@@ -280,7 +280,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_disabled
      */
     fun setTabDisabled(tabIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, handle, tabIdx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, segment, tabIdx, disabled)
     }
 
     /**
@@ -289,7 +289,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.is_tab_disabled
      */
     fun isTabDisabled(tabIdx: Int): Boolean =
-        ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, segment, tabIdx)
 
     /**
      * If `hidden` is `true`, hides the tab at index `tab_idx`, making it disappear from the tab area.
@@ -297,7 +297,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_hidden
      */
     fun setTabHidden(tabIdx: Int, hidden: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, handle, tabIdx, hidden)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, segment, tabIdx, hidden)
     }
 
     /**
@@ -306,7 +306,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.is_tab_hidden
      */
     fun isTabHidden(tabIdx: Int): Boolean =
-        ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, segment, tabIdx)
 
     /**
      * Sets the metadata value for the tab at index `tab_idx`, which can be retrieved later using
@@ -315,7 +315,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_metadata
      */
     fun setTabMetadata(tabIdx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, handle, tabIdx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, segment, tabIdx, metadata)
     }
 
     /**
@@ -325,14 +325,14 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_metadata
      */
     fun getTabMetadata(tabIdx: Int): Any? =
-        ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, segment, tabIdx)
 
     /**
      * Removes the tab at index `tab_idx`.
      *
      * Generated from Godot docs: TabBar.remove_tab
      */
-    fun removeTab(tabIdx: Int) { ObjectCalls.ptrcallWithIntArg(removeTabBind, handle, tabIdx) }
+    fun removeTab(tabIdx: Int) { ObjectCalls.ptrcallWithIntArg(removeTabBind, segment, tabIdx) }
 
     /**
      * Adds a new tab.
@@ -340,7 +340,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.add_tab
      */
     fun addTab(title: String = "", icon: Texture2D? = null) {
-        ObjectCalls.ptrcallWithStringAndObjectArg(addTabBind, handle, title, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndObjectArg(addTabBind, segment, title, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -350,72 +350,72 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_idx_at_point
      */
     fun getTabIdxAtPoint(point: Vector2): Int =
-        ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, handle, point)
+        ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, segment, point)
 
     /**
      * The horizontal alignment of the tabs.
      *
      * Generated from Godot docs: TabBar.set_tab_alignment
      */
-    fun setTabAlignment(alignment: Long) { ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, handle, alignment) }
+    fun setTabAlignment(alignment: Long) { ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment) }
     /**
      * The horizontal alignment of the tabs.
      *
      * Generated from Godot docs: TabBar.get_tab_alignment
      */
-    fun getTabAlignment(): Long = ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, handle)
+    fun getTabAlignment(): Long = ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment)
     /**
      * If `true`, tabs overflowing this node's width will be hidden, displaying two navigation buttons
      * instead. Otherwise, this node's minimum size is updated so that all tabs are visible.
      *
      * Generated from Godot docs: TabBar.set_clip_tabs
      */
-    fun setClipTabs(clipTabs: Boolean) { ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, handle, clipTabs) }
+    fun setClipTabs(clipTabs: Boolean) { ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, segment, clipTabs) }
     /**
      * If `true`, tabs overflowing this node's width will be hidden, displaying two navigation buttons
      * instead. Otherwise, this node's minimum size is updated so that all tabs are visible.
      *
      * Generated from Godot docs: TabBar.get_clip_tabs
      */
-    fun getClipTabs(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, handle)
+    fun getClipTabs(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, segment)
     /**
      * Returns the number of hidden tabs offsetted to the left.
      *
      * Generated from Godot docs: TabBar.get_tab_offset
      */
-    fun getTabOffset(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTabOffsetBind, handle)
+    fun getTabOffset(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTabOffsetBind, segment)
     /**
      * Returns `true` if the offset buttons (the ones that appear when there's not enough space for all
      * tabs) are visible.
      *
      * Generated from Godot docs: TabBar.get_offset_buttons_visible
      */
-    fun getOffsetButtonsVisible(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getOffsetButtonsVisibleBind, handle)
+    fun getOffsetButtonsVisible(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getOffsetButtonsVisibleBind, segment)
     /**
      * Moves the scroll view to make the tab visible.
      *
      * Generated from Godot docs: TabBar.ensure_tab_visible
      */
-    fun ensureTabVisible(idx: Int) { ObjectCalls.ptrcallWithIntArg(ensureTabVisibleBind, handle, idx) }
+    fun ensureTabVisible(idx: Int) { ObjectCalls.ptrcallWithIntArg(ensureTabVisibleBind, segment, idx) }
     /**
      * Returns tab `Rect2` with local position and size.
      *
      * Generated from Godot docs: TabBar.get_tab_rect
      */
-    fun getTabRect(tabIdx: Int): Rect2 = ObjectCalls.ptrcallWithIntArgRetRect2(getTabRectBind, handle, tabIdx)
+    fun getTabRect(tabIdx: Int): Rect2 = ObjectCalls.ptrcallWithIntArgRetRect2(getTabRectBind, segment, tabIdx)
     /**
      * Moves a tab from `from` to `to`.
      *
      * Generated from Godot docs: TabBar.move_tab
      */
-    fun moveTab(from: Int, to: Int) { ObjectCalls.ptrcallWithTwoIntArgs(moveTabBind, handle, from, to) }
+    fun moveTab(from: Int, to: Int) { ObjectCalls.ptrcallWithTwoIntArgs(moveTabBind, segment, from, to) }
     /**
      * If `true`, middle-clicking on a tab will emit the `tab_close_pressed` signal.
      *
      * Generated from Godot docs: TabBar.set_close_with_middle_mouse
      */
     fun setCloseWithMiddleMouse(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCloseWithMiddleMouseBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCloseWithMiddleMouseBind, segment, enabled)
     }
     /**
      * If `true`, middle-clicking on a tab will emit the `tab_close_pressed` signal.
@@ -423,14 +423,14 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_close_with_middle_mouse
      */
     fun getCloseWithMiddleMouse(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(getCloseWithMiddleMouseBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(getCloseWithMiddleMouseBind, segment)
     /**
      * When the close button will appear on the tabs.
      *
      * Generated from Godot docs: TabBar.set_tab_close_display_policy
      */
     fun setTabCloseDisplayPolicy(policy: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabCloseDisplayPolicyBind, handle, policy)
+        ObjectCalls.ptrcallWithLongArg(setTabCloseDisplayPolicyBind, segment, policy)
     }
     /**
      * When the close button will appear on the tabs.
@@ -438,38 +438,38 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_close_display_policy
      */
     fun getTabCloseDisplayPolicy(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getTabCloseDisplayPolicyBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getTabCloseDisplayPolicyBind, segment)
     /**
      * Sets the maximum width which all tabs should be limited to. Unlimited if set to `0`.
      *
      * Generated from Godot docs: TabBar.set_max_tab_width
      */
-    fun setMaxTabWidth(width: Int) { ObjectCalls.ptrcallWithIntArg(setMaxTabWidthBind, handle, width) }
+    fun setMaxTabWidth(width: Int) { ObjectCalls.ptrcallWithIntArg(setMaxTabWidthBind, segment, width) }
     /**
      * Sets the maximum width which all tabs should be limited to. Unlimited if set to `0`.
      *
      * Generated from Godot docs: TabBar.get_max_tab_width
      */
-    fun getMaxTabWidth(): Int = ObjectCalls.ptrcallNoArgsRetInt(getMaxTabWidthBind, handle)
+    fun getMaxTabWidth(): Int = ObjectCalls.ptrcallNoArgsRetInt(getMaxTabWidthBind, segment)
     /**
      * if `true`, the mouse's scroll wheel can be used to navigate the scroll view.
      *
      * Generated from Godot docs: TabBar.set_scrolling_enabled
      */
-    fun setScrollingEnabled(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setScrollingEnabledBind, handle, enabled) }
+    fun setScrollingEnabled(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setScrollingEnabledBind, segment, enabled) }
     /**
      * if `true`, the mouse's scroll wheel can be used to navigate the scroll view.
      *
      * Generated from Godot docs: TabBar.get_scrolling_enabled
      */
-    fun getScrollingEnabled(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getScrollingEnabledBind, handle)
+    fun getScrollingEnabled(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getScrollingEnabledBind, segment)
     /**
      * If `true`, tabs can be rearranged with mouse drag.
      *
      * Generated from Godot docs: TabBar.set_drag_to_rearrange_enabled
      */
     fun setDragToRearrangeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, segment, enabled)
     }
     /**
      * If `true`, tabs can be rearranged with mouse drag.
@@ -477,7 +477,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.get_drag_to_rearrange_enabled
      */
     fun getDragToRearrangeEnabled(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, segment)
     /**
      * If `true`, hovering over a tab while dragging something will switch to that tab. Does not have
      * effect when hovering another tab to rearrange. The delay for when this happens is dictated by
@@ -486,7 +486,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: TabBar.set_switch_on_drag_hover
      */
     fun setSwitchOnDragHover(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, segment, enabled)
     }
     /**
      * If `true`, hovering over a tab while dragging something will switch to that tab. Does not have
@@ -495,7 +495,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.get_switch_on_drag_hover
      */
-    fun getSwitchOnDragHover(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, handle)
+    fun getSwitchOnDragHover(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, segment)
     /**
      * `TabBar`s with the same rearrange group ID will allow dragging the tabs between them. Enable
      * drag with `drag_to_rearrange_enabled`. Setting this to `-1` will disable rearranging between
@@ -503,7 +503,7 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.set_tabs_rearrange_group
      */
-    fun setTabsRearrangeGroup(groupId: Int) { ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, handle, groupId) }
+    fun setTabsRearrangeGroup(groupId: Int) { ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, segment, groupId) }
     /**
      * `TabBar`s with the same rearrange group ID will allow dragging the tabs between them. Enable
      * drag with `drag_to_rearrange_enabled`. Setting this to `-1` will disable rearranging between
@@ -511,51 +511,51 @@ class TabBar(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.get_tabs_rearrange_group
      */
-    fun getTabsRearrangeGroup(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, handle)
+    fun getTabsRearrangeGroup(): Int = ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, segment)
     /**
      * If `true`, the tab offset will be changed to keep the currently selected tab visible.
      *
      * Generated from Godot docs: TabBar.set_scroll_to_selected
      */
-    fun setScrollToSelected(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setScrollToSelectedBind, handle, enabled) }
+    fun setScrollToSelected(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setScrollToSelectedBind, segment, enabled) }
     /**
      * If `true`, the tab offset will be changed to keep the currently selected tab visible.
      *
      * Generated from Godot docs: TabBar.get_scroll_to_selected
      */
-    fun getScrollToSelected(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getScrollToSelectedBind, handle)
+    fun getScrollToSelected(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getScrollToSelectedBind, segment)
     /**
      * If `true`, enables selecting a tab with the right mouse button.
      *
      * Generated from Godot docs: TabBar.set_select_with_rmb
      */
-    fun setSelectWithRmb(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setSelectWithRmbBind, handle, enabled) }
+    fun setSelectWithRmb(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setSelectWithRmbBind, segment, enabled) }
     /**
      * If `true`, enables selecting a tab with the right mouse button.
      *
      * Generated from Godot docs: TabBar.get_select_with_rmb
      */
-    fun getSelectWithRmb(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getSelectWithRmbBind, handle)
+    fun getSelectWithRmb(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getSelectWithRmbBind, segment)
     /**
      * If `true`, all tabs can be deselected so that no tab is selected. Click on the current tab to
      * deselect it.
      *
      * Generated from Godot docs: TabBar.set_deselect_enabled
      */
-    fun setDeselectEnabled(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, handle, enabled) }
+    fun setDeselectEnabled(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, segment, enabled) }
     /**
      * If `true`, all tabs can be deselected so that no tab is selected. Click on the current tab to
      * deselect it.
      *
      * Generated from Godot docs: TabBar.get_deselect_enabled
      */
-    fun getDeselectEnabled(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, handle)
+    fun getDeselectEnabled(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, segment)
     /**
      * Clears all tabs.
      *
      * Generated from Godot docs: TabBar.clear_tabs
      */
-    fun clearTabs() { ObjectCalls.ptrcallNoArgs(clearTabsBind, handle) }
+    fun clearTabs() { ObjectCalls.ptrcallNoArgs(clearTabsBind, segment) }
 
     object Signals {
         const val tabChanged: String = "tab_changed"
@@ -569,11 +569,11 @@ class TabBar(handle: MemorySegment) : Control(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TabBar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TabBar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TabBar? =
-            if (handle.address() == 0L) null else TabBar(handle)
+            if (handle.address() == 0L) null else TabBar(GodotHandle(handle))
 
         private const val INT_VOID_HASH = 1286410249L
         private const val NOARGS_INT_HASH = 3905245786L

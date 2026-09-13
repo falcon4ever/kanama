@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: SceneState
  */
-class SceneState(handle: MemorySegment) : RefCounted(handle) {
+class SceneState(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the resource path to the represented `PackedScene`.
      *
@@ -19,7 +19,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, segment)
     }
 
     /**
@@ -30,8 +30,8 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBaseSceneState(): SceneState? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseSceneStateBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseSceneStateBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -46,7 +46,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNodeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getNodeCountBind, segment)
     }
 
     /**
@@ -56,7 +56,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeType(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeTypeBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeTypeBind, segment, idx)
     }
 
     /**
@@ -66,7 +66,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeName(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeNameBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeNameBind, segment, idx)
     }
 
     /**
@@ -77,7 +77,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodePath(idx: Int, forParent: Boolean = false): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(getNodePathBind, handle, idx, forParent)
+        return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(getNodePathBind, segment, idx, forParent)
     }
 
     /**
@@ -87,7 +87,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeOwnerPath(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getNodeOwnerPathBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getNodeOwnerPathBind, segment, idx)
     }
 
     /**
@@ -97,7 +97,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isNodeInstancePlaceholder(idx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isNodeInstancePlaceholderBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isNodeInstancePlaceholderBind, segment, idx)
     }
 
     /**
@@ -107,7 +107,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeInstancePlaceholder(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getNodeInstancePlaceholderBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getNodeInstancePlaceholderBind, segment, idx)
     }
 
     /**
@@ -118,7 +118,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeInstance(idx: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, handle, idx))
+        return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, segment, idx))
     }
 
     /**
@@ -128,7 +128,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeGroups(idx: Int): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getNodeGroupsBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getNodeGroupsBind, segment, idx)
     }
 
     /**
@@ -141,7 +141,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodeIndex(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getNodeIndexBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getNodeIndexBind, segment, idx)
     }
 
     /**
@@ -153,7 +153,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodePropertyCount(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getNodePropertyCountBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getNodePropertyCountBind, segment, idx)
     }
 
     /**
@@ -163,7 +163,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodePropertyName(idx: Int, propIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(getNodePropertyNameBind, handle, idx, propIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(getNodePropertyNameBind, segment, idx, propIdx)
     }
 
     /**
@@ -173,7 +173,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNodePropertyValue(idx: Int, propIdx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getNodePropertyValueBind, handle, idx, propIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getNodePropertyValueBind, segment, idx, propIdx)
     }
 
     /**
@@ -185,7 +185,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getConnectionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getConnectionCountBind, segment)
     }
 
     /**
@@ -195,7 +195,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionSource(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionSourceBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionSourceBind, segment, idx)
     }
 
     /**
@@ -205,7 +205,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionSignal(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionSignalBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionSignalBind, segment, idx)
     }
 
     /**
@@ -216,7 +216,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionTarget(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionTargetBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionTargetBind, segment, idx)
     }
 
     /**
@@ -226,7 +226,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionMethod(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionMethodBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionMethodBind, segment, idx)
     }
 
     /**
@@ -236,7 +236,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionFlags(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionFlagsBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionFlagsBind, segment, idx)
     }
 
     /**
@@ -246,7 +246,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionBinds(idx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getConnectionBindsBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetArray(getConnectionBindsBind, segment, idx)
     }
 
     /**
@@ -256,7 +256,7 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getConnectionUnbinds(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, segment, idx)
     }
 
     companion object {
@@ -266,11 +266,11 @@ class SceneState(handle: MemorySegment) : RefCounted(handle) {
         const val GEN_EDIT_STATE_MAIN_INHERITED: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SceneState? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SceneState? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SceneState? =
-            if (handle.address() == 0L) null else SceneState(handle)
+            if (handle.address() == 0L) null else SceneState(GodotHandle(handle))
 
         private const val GET_PATH_HASH = 201670096L
         private val getPathBind by lazy {

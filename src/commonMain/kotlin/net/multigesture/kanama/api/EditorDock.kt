@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: EditorDock
  */
-open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
+open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
     var title: String
         @JvmName("titleProperty")
         get() = getTitle()
@@ -93,7 +93,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.open
      */
     fun open() {
-        ObjectCalls.ptrcallNoArgs(openBind, handle)
+        ObjectCalls.ptrcallNoArgs(openBind, segment)
     }
 
     /**
@@ -103,11 +103,11 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.make_visible
      */
     fun makeVisible() {
-        ObjectCalls.ptrcallNoArgs(makeVisibleBind, handle)
+        ObjectCalls.ptrcallNoArgs(makeVisibleBind, segment)
     }
 
     fun closeDock() {
-        ObjectCalls.ptrcallNoArgs(closeDockBind, handle)
+        ObjectCalls.ptrcallNoArgs(closeDockBind, segment)
     }
 
     /**
@@ -117,7 +117,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
+        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
     }
 
     /**
@@ -127,7 +127,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
     }
 
     /**
@@ -137,7 +137,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_layout_key
      */
     fun setLayoutKey(layoutKey: String) {
-        ObjectCalls.ptrcallWithStringArg(setLayoutKeyBind, handle, layoutKey)
+        ObjectCalls.ptrcallWithStringArg(setLayoutKeyBind, segment, layoutKey)
     }
 
     /**
@@ -147,7 +147,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_layout_key
      */
     fun getLayoutKey(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLayoutKeyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLayoutKeyBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_global
      */
     fun setGlobal(global: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setGlobalBind, handle, global)
+        ObjectCalls.ptrcallWithBoolArg(setGlobalBind, segment, global)
     }
 
     /**
@@ -167,7 +167,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.is_global
      */
     fun isGlobal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isGlobalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isGlobalBind, segment)
     }
 
     /**
@@ -178,7 +178,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_transient
      */
     fun setTransient(transient: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransientBind, handle, transient)
+        ObjectCalls.ptrcallWithBoolArg(setTransientBind, segment, transient)
     }
 
     /**
@@ -189,7 +189,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.is_transient
      */
     fun isTransient(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransientBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTransientBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_closable
      */
     fun setClosable(closable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClosableBind, handle, closable)
+        ObjectCalls.ptrcallWithBoolArg(setClosableBind, segment, closable)
     }
 
     /**
@@ -209,7 +209,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.is_closable
      */
     fun isClosable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClosableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isClosableBind, segment)
     }
 
     /**
@@ -219,7 +219,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_icon_name
      */
     fun setIconName(iconName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setIconNameBind, handle, iconName)
+        ObjectCalls.ptrcallWithStringNameArg(setIconNameBind, segment, iconName)
     }
 
     /**
@@ -229,7 +229,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_icon_name
      */
     fun getIconName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getIconNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getIconNameBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_dock_icon
      */
     fun setDockIcon(icon: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setDockIconBind, handle, listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDockIconBind, segment, listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -247,7 +247,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_dock_icon
      */
     fun getDockIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDockIconBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDockIconBind, segment))
     }
 
     /**
@@ -258,7 +258,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_force_show_icon
      */
     fun setForceShowIcon(force: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setForceShowIconBind, handle, force)
+        ObjectCalls.ptrcallWithBoolArg(setForceShowIconBind, segment, force)
     }
 
     /**
@@ -269,7 +269,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_force_show_icon
      */
     fun getForceShowIcon(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getForceShowIconBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getForceShowIconBind, segment)
     }
 
     /**
@@ -278,7 +278,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_title_color
      */
     fun setTitleColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTitleColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setTitleColorBind, segment, color)
     }
 
     /**
@@ -287,7 +287,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_title_color
      */
     fun getTitleColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTitleColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getTitleColorBind, segment)
     }
 
     /**
@@ -296,7 +296,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_dock_shortcut
      */
     fun setDockShortcut(shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithObjectArgs(setDockShortcutBind, handle, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDockShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -305,7 +305,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_dock_shortcut
      */
     fun getDockShortcut(): Shortcut? {
-        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDockShortcutBind, handle))
+        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDockShortcutBind, segment))
     }
 
     /**
@@ -316,7 +316,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_default_slot
      */
     fun setDefaultSlot(slot: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultSlotBind, handle, slot)
+        ObjectCalls.ptrcallWithLongArg(setDefaultSlotBind, segment, slot)
     }
 
     /**
@@ -327,7 +327,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_default_slot
      */
     fun getDefaultSlot(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultSlotBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultSlotBind, segment)
     }
 
     /**
@@ -337,7 +337,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_available_layouts
      */
     fun setAvailableLayouts(layouts: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAvailableLayoutsBind, handle, layouts)
+        ObjectCalls.ptrcallWithLongArg(setAvailableLayoutsBind, segment, layouts)
     }
 
     /**
@@ -347,7 +347,7 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_available_layouts
      */
     fun getAvailableLayouts(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAvailableLayoutsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAvailableLayoutsBind, segment)
     }
 
     object Signals {
@@ -375,11 +375,11 @@ open class EditorDock(handle: MemorySegment) : MarginContainer(handle) {
         const val DOCK_SLOT_MAX: Long = 11L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorDock? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorDock? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorDock? =
-            if (handle.address() == 0L) null else EditorDock(handle)
+            if (handle.address() == 0L) null else EditorDock(GodotHandle(handle))
 
         private const val OPEN_HASH = 3218959716L
         private val openBind by lazy {

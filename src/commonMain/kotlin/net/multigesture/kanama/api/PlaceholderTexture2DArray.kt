@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PlaceholderTexture2DArray
  */
-class PlaceholderTexture2DArray(handle: MemorySegment) : PlaceholderTextureLayered(handle) {
+class PlaceholderTexture2DArray(handle: GodotHandle) : PlaceholderTextureLayered(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PlaceholderTexture2DArray? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaceholderTexture2DArray? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaceholderTexture2DArray? =
-            if (handle.address() == 0L) null else PlaceholderTexture2DArray(handle)
+            if (handle.address() == 0L) null else PlaceholderTexture2DArray(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

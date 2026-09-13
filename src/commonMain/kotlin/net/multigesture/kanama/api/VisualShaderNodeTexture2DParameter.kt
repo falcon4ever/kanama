@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTexture2DParameter
  */
-class VisualShaderNodeTexture2DParameter(handle: MemorySegment) : VisualShaderNodeTextureParameter(handle) {
+class VisualShaderNodeTexture2DParameter(handle: GodotHandle) : VisualShaderNodeTextureParameter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTexture2DParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture2DParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTexture2DParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeTexture2DParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTexture2DParameter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

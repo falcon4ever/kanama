@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: XRFaceModifier3D
  */
-class XRFaceModifier3D(handle: MemorySegment) : Node3D(handle) {
+class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
     var faceTracker: String
         @JvmName("faceTrackerProperty")
         get() = getFaceTracker()
@@ -31,7 +31,7 @@ class XRFaceModifier3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.set_face_tracker
      */
     fun setFaceTracker(trackerName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setFaceTrackerBind, handle, trackerName)
+        ObjectCalls.ptrcallWithStringNameArg(setFaceTrackerBind, segment, trackerName)
     }
 
     /**
@@ -40,7 +40,7 @@ class XRFaceModifier3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.get_face_tracker
      */
     fun getFaceTracker(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getFaceTrackerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getFaceTrackerBind, segment)
     }
 
     /**
@@ -49,7 +49,7 @@ class XRFaceModifier3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.set_target
      */
     fun setTarget(target: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setTargetBind, handle, target)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetBind, segment, target)
     }
 
     /**
@@ -58,16 +58,16 @@ class XRFaceModifier3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.get_target
      */
     fun getTarget(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRFaceModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRFaceModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRFaceModifier3D? =
-            if (handle.address() == 0L) null else XRFaceModifier3D(handle)
+            if (handle.address() == 0L) null else XRFaceModifier3D(GodotHandle(handle))
 
         private const val SET_FACE_TRACKER_HASH = 3304788590L
         private val setFaceTrackerBind by lazy {

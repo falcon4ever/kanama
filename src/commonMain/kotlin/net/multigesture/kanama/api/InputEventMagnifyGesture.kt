@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventMagnifyGesture
  */
-class InputEventMagnifyGesture(handle: MemorySegment) : InputEventGesture(handle) {
+class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) {
     var factor: Double
         @JvmName("factorProperty")
         get() = getFactor()
@@ -26,7 +26,7 @@ class InputEventMagnifyGesture(handle: MemorySegment) : InputEventGesture(handle
      */
     fun setFactor(factor: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFactorBind, handle, factor)
+        ObjectCalls.ptrcallWithDoubleArg(setFactorBind, segment, factor)
     }
 
     /**
@@ -37,16 +37,16 @@ class InputEventMagnifyGesture(handle: MemorySegment) : InputEventGesture(handle
      */
     fun getFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventMagnifyGesture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventMagnifyGesture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventMagnifyGesture? =
-            if (handle.address() == 0L) null else InputEventMagnifyGesture(handle)
+            if (handle.address() == 0L) null else InputEventMagnifyGesture(GodotHandle(handle))
 
         private const val SET_FACTOR_HASH = 373806689L
         private val setFactorBind by lazy {

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CPUParticles2D
  */
-class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
+class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     var emitting: Boolean
         @JvmName("emittingProperty")
         get() = isEmitting()
@@ -437,7 +437,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emitting
      */
     fun setEmitting(emitting: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmittingBind, handle, emitting)
+        ObjectCalls.ptrcallWithBoolArg(setEmittingBind, segment, emitting)
     }
 
     /**
@@ -446,7 +446,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_amount
      */
     fun setAmount(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAmountBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setAmountBind, segment, amount)
     }
 
     /**
@@ -455,7 +455,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_lifetime
      */
     fun setLifetime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, handle, secs)
+        ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, segment, secs)
     }
 
     /**
@@ -465,7 +465,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_one_shot
      */
     fun setOneShot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, enable)
     }
 
     /**
@@ -474,7 +474,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_pre_process_time
      */
     fun setPreProcessTime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, handle, secs)
+        ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, segment, secs)
     }
 
     /**
@@ -484,7 +484,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_explosiveness_ratio
      */
     fun setExplosivenessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, segment, ratio)
     }
 
     /**
@@ -493,7 +493,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_randomness_ratio
      */
     fun setRandomnessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, segment, ratio)
     }
 
     /**
@@ -502,7 +502,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_lifetime_randomness
      */
     fun setLifetimeRandomness(random: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, handle, random)
+        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, segment, random)
     }
 
     /**
@@ -514,7 +514,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_use_local_coordinates
      */
     fun setUseLocalCoordinates(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, segment, enable)
     }
 
     /**
@@ -525,7 +525,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_fixed_fps
      */
     fun setFixedFps(fps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, handle, fps)
+        ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, segment, fps)
     }
 
     /**
@@ -535,7 +535,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_fractional_delta
      */
     fun setFractionalDelta(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, segment, enable)
     }
 
     /**
@@ -545,7 +545,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_speed_scale
      */
     fun setSpeedScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, scale)
     }
 
     /**
@@ -558,7 +558,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.request_particles_process
      */
     fun requestParticlesProcess(processTime: Double, processTimeResidual: Double = 0.0) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, handle, processTime, processTimeResidual)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, segment, processTime, processTimeResidual)
     }
 
     /**
@@ -570,7 +570,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.is_emitting
      */
     fun isEmitting(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, segment)
     }
 
     /**
@@ -579,7 +579,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_amount
      */
     fun getAmount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, segment)
     }
 
     /**
@@ -588,7 +588,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_lifetime
      */
     fun getLifetime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, segment)
     }
 
     /**
@@ -598,7 +598,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_one_shot
      */
     fun getOneShot(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, segment)
     }
 
     /**
@@ -607,7 +607,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_pre_process_time
      */
     fun getPreProcessTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, segment)
     }
 
     /**
@@ -617,7 +617,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_explosiveness_ratio
      */
     fun getExplosivenessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, segment)
     }
 
     /**
@@ -626,7 +626,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_randomness_ratio
      */
     fun getRandomnessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, segment)
     }
 
     /**
@@ -635,7 +635,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_lifetime_randomness
      */
     fun getLifetimeRandomness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, segment)
     }
 
     /**
@@ -647,7 +647,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_use_local_coordinates
      */
     fun getUseLocalCoordinates(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, segment)
     }
 
     /**
@@ -658,7 +658,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_fixed_fps
      */
     fun getFixedFps(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, segment)
     }
 
     /**
@@ -668,7 +668,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_fractional_delta
      */
     fun getFractionalDelta(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, segment)
     }
 
     /**
@@ -678,7 +678,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     /**
@@ -689,7 +689,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_use_fixed_seed
      */
     fun setUseFixedSeed(useFixedSeed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, handle, useFixedSeed)
+        ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, segment, useFixedSeed)
     }
 
     /**
@@ -700,7 +700,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_use_fixed_seed
      */
     fun getUseFixedSeed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, segment)
     }
 
     /**
@@ -709,7 +709,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_seed
      */
     fun setSeed(seed: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, handle, seed)
+        ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, segment, seed)
     }
 
     /**
@@ -718,7 +718,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_seed
      */
     fun getSeed(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, segment)
     }
 
     /**
@@ -727,7 +727,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_draw_order
      */
     fun setDrawOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, handle, order)
+        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order)
     }
 
     /**
@@ -736,7 +736,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_draw_order
      */
     fun getDrawOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment)
     }
 
     /**
@@ -745,7 +745,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -754,7 +754,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -764,7 +764,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.restart
      */
     fun restart(keepSeed: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(restartBind, handle, keepSeed)
+        ObjectCalls.ptrcallWithBoolArg(restartBind, segment, keepSeed)
     }
 
     /**
@@ -773,7 +773,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_direction
      */
     fun setDirection(direction: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithVector2Arg(setDirectionBind, segment, direction)
     }
 
     /**
@@ -782,7 +782,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_direction
      */
     fun getDirection(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getDirectionBind, segment)
     }
 
     /**
@@ -791,7 +791,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_spread
      */
     fun setSpread(spread: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, spread)
+        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, segment, spread)
     }
 
     /**
@@ -800,7 +800,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_spread
      */
     fun getSpread(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, segment)
     }
 
     /**
@@ -809,7 +809,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_param_min
      */
     fun setParamMin(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param, value)
     }
 
     /**
@@ -818,7 +818,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_param_min
      */
     fun getParamMin(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param)
     }
 
     /**
@@ -828,7 +828,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_param_max
      */
     fun setParamMax(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param, value)
     }
 
     /**
@@ -838,7 +838,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_param_max
      */
     fun getParamMax(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param)
     }
 
     /**
@@ -847,7 +847,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_param_curve
      */
     fun setParamCurve(param: Long, curve: Curve?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, handle, param, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -856,7 +856,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_param_curve
      */
     fun getParamCurve(param: Long): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, handle, param))
+        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param))
     }
 
     /**
@@ -865,7 +865,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -874,7 +874,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -884,7 +884,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_color_ramp
      */
     fun setColorRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -894,7 +894,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_color_ramp
      */
     fun getColorRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     /**
@@ -903,7 +903,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_color_initial_ramp
      */
     fun setColorInitialRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -912,7 +912,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_color_initial_ramp
      */
     fun getColorInitialRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
     }
 
     /**
@@ -921,7 +921,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_particle_flag
      */
     fun setParticleFlag(particleFlag: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, handle, particleFlag, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag, enable)
     }
 
     /**
@@ -930,7 +930,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_particle_flag
      */
     fun getParticleFlag(particleFlag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, handle, particleFlag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag)
     }
 
     /**
@@ -939,7 +939,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_shape
      */
     fun setEmissionShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape)
     }
 
     /**
@@ -948,7 +948,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_shape
      */
     fun getEmissionShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment)
     }
 
     /**
@@ -957,7 +957,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_sphere_radius
      */
     fun setEmissionSphereRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, segment, radius)
     }
 
     /**
@@ -966,7 +966,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_sphere_radius
      */
     fun getEmissionSphereRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, segment)
     }
 
     /**
@@ -975,7 +975,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_rect_extents
      */
     fun setEmissionRectExtents(extents: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setEmissionRectExtentsBind, handle, extents)
+        ObjectCalls.ptrcallWithVector2Arg(setEmissionRectExtentsBind, segment, extents)
     }
 
     /**
@@ -984,7 +984,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_rect_extents
      */
     fun getEmissionRectExtents(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getEmissionRectExtentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getEmissionRectExtentsBind, segment)
     }
 
     /**
@@ -994,7 +994,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_points
      */
     fun setEmissionPoints(array: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionPointsBind, handle, array)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionPointsBind, segment, array)
     }
 
     /**
@@ -1004,7 +1004,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_points
      */
     fun getEmissionPoints(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getEmissionPointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getEmissionPointsBind, segment)
     }
 
     /**
@@ -1013,7 +1013,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_normals
      */
     fun setEmissionNormals(array: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionNormalsBind, handle, array)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setEmissionNormalsBind, segment, array)
     }
 
     /**
@@ -1022,7 +1022,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_normals
      */
     fun getEmissionNormals(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getEmissionNormalsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getEmissionNormalsBind, segment)
     }
 
     /**
@@ -1032,7 +1032,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_colors
      */
     fun setEmissionColors(array: List<Color>) {
-        ObjectCalls.ptrcallWithPackedColorListArg(setEmissionColorsBind, handle, array)
+        ObjectCalls.ptrcallWithPackedColorListArg(setEmissionColorsBind, segment, array)
     }
 
     /**
@@ -1042,7 +1042,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_colors
      */
     fun getEmissionColors(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getEmissionColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getEmissionColorsBind, segment)
     }
 
     /**
@@ -1051,7 +1051,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_ring_inner_radius
      */
     fun setEmissionRingInnerRadius(innerRadius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, handle, innerRadius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, segment, innerRadius)
     }
 
     /**
@@ -1060,7 +1060,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_ring_inner_radius
      */
     fun getEmissionRingInnerRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, segment)
     }
 
     /**
@@ -1069,7 +1069,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_emission_ring_radius
      */
     fun setEmissionRingRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, segment, radius)
     }
 
     /**
@@ -1078,7 +1078,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_emission_ring_radius
      */
     fun getEmissionRingRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, segment)
     }
 
     /**
@@ -1087,7 +1087,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_gravity
      */
     fun getGravity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, segment)
     }
 
     /**
@@ -1096,7 +1096,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_gravity
      */
     fun setGravity(accelVec: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGravityBind, handle, accelVec)
+        ObjectCalls.ptrcallWithVector2Arg(setGravityBind, segment, accelVec)
     }
 
     /**
@@ -1106,7 +1106,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_split_scale
      */
     fun getSplitScale(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSplitScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSplitScaleBind, segment)
     }
 
     /**
@@ -1116,7 +1116,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_split_scale
      */
     fun setSplitScale(splitScale: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSplitScaleBind, handle, splitScale)
+        ObjectCalls.ptrcallWithBoolArg(setSplitScaleBind, segment, splitScale)
     }
 
     /**
@@ -1126,7 +1126,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_scale_curve_x
      */
     fun getScaleCurveX(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, segment))
     }
 
     /**
@@ -1136,7 +1136,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_scale_curve_x
      */
     fun setScaleCurveX(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, handle, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1146,7 +1146,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_scale_curve_y
      */
     fun getScaleCurveY(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, segment))
     }
 
     /**
@@ -1156,7 +1156,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_scale_curve_y
      */
     fun setScaleCurveY(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, handle, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1166,7 +1166,7 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.convert_from_particles
      */
     fun convertFromParticles(particles: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, handle, listOf(particles.handle))
+        ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, segment, listOf(particles.segment))
     }
 
     object Signals {
@@ -1203,11 +1203,11 @@ class CPUParticles2D(handle: MemorySegment) : Node2D(handle) {
         const val EMISSION_SHAPE_MAX: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CPUParticles2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CPUParticles2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CPUParticles2D? =
-            if (handle.address() == 0L) null else CPUParticles2D(handle)
+            if (handle.address() == 0L) null else CPUParticles2D(GodotHandle(handle))
 
         private const val SET_EMITTING_HASH = 2586408642L
         private val setEmittingBind by lazy {

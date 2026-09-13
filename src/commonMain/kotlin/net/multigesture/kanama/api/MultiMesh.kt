@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Transform3D
  *
  * Generated from Godot docs: MultiMesh
  */
-class MultiMesh(handle: MemorySegment) : Resource(handle) {
+class MultiMesh(handle: GodotHandle) : Resource(handle) {
     var transformFormat: Long
         @JvmName("transformFormatProperty")
         get() = getTransformFormat()
@@ -78,7 +78,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -89,7 +89,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -101,7 +101,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setUseColors(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseColorsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseColorsBind, segment, enable)
     }
 
     /**
@@ -113,7 +113,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun isUsingColors(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingColorsBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setUseCustomData(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomDataBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseCustomDataBind, segment, enable)
     }
 
     /**
@@ -137,7 +137,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun isUsingCustomData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomDataBind, segment)
     }
 
     /**
@@ -147,7 +147,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setTransformFormat(format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransformFormatBind, handle, format)
+        ObjectCalls.ptrcallWithLongArg(setTransformFormatBind, segment, format)
     }
 
     /**
@@ -157,7 +157,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getTransformFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransformFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTransformFormatBind, segment)
     }
 
     /**
@@ -169,7 +169,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setInstanceCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInstanceCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setInstanceCountBind, segment, count)
     }
 
     /**
@@ -181,7 +181,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getInstanceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInstanceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInstanceCountBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setVisibleInstanceCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setVisibleInstanceCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setVisibleInstanceCountBind, segment, count)
     }
 
     /**
@@ -203,7 +203,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getVisibleInstanceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleInstanceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleInstanceCountBind, segment)
     }
 
     /**
@@ -216,7 +216,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setPhysicsInterpolationQuality(quality: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationQualityBind, handle, quality)
+        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationQualityBind, segment, quality)
     }
 
     /**
@@ -229,7 +229,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getPhysicsInterpolationQuality(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationQualityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationQualityBind, segment)
     }
 
     /**
@@ -239,7 +239,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setInstanceTransform(instance: Int, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setInstanceTransformBind, handle, instance, transform)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setInstanceTransformBind, segment, instance, transform)
     }
 
     /**
@@ -249,7 +249,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setInstanceTransform2d(instance: Int, transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform2DArg(setInstanceTransform2dBind, handle, instance, transform)
+        ObjectCalls.ptrcallWithIntAndTransform2DArg(setInstanceTransform2dBind, segment, instance, transform)
     }
 
     /**
@@ -259,7 +259,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getInstanceTransform(instance: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getInstanceTransformBind, handle, instance)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getInstanceTransformBind, segment, instance)
     }
 
     /**
@@ -269,7 +269,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getInstanceTransform2d(instance: Int): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getInstanceTransform2dBind, handle, instance)
+        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getInstanceTransform2dBind, segment, instance)
     }
 
     /**
@@ -285,7 +285,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setInstanceColor(instance: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setInstanceColorBind, handle, instance, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setInstanceColorBind, segment, instance, color)
     }
 
     /**
@@ -295,7 +295,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getInstanceColor(instance: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceColorBind, handle, instance)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceColorBind, segment, instance)
     }
 
     /**
@@ -309,7 +309,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setInstanceCustomData(instance: Int, customData: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setInstanceCustomDataBind, handle, instance, customData)
+        ObjectCalls.ptrcallWithIntAndColorArg(setInstanceCustomDataBind, segment, instance, customData)
     }
 
     /**
@@ -319,7 +319,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getInstanceCustomData(instance: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceCustomDataBind, handle, instance)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceCustomDataBind, segment, instance)
     }
 
     /**
@@ -332,7 +332,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun resetInstancePhysicsInterpolation(instance: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(resetInstancePhysicsInterpolationBind, handle, instance)
+        ObjectCalls.ptrcallWithIntArg(resetInstancePhysicsInterpolationBind, segment, instance)
     }
 
     /**
@@ -344,7 +344,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun resetInstancesPhysicsInterpolation() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetInstancesPhysicsInterpolationBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetInstancesPhysicsInterpolationBind, segment)
     }
 
     /**
@@ -355,7 +355,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
     }
 
     /**
@@ -366,7 +366,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
     }
 
     /**
@@ -376,17 +376,17 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
     }
 
     fun getBuffer(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBufferBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBufferBind, segment)
     }
 
     fun setBuffer(buffer: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBufferBind, handle, buffer)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBufferBind, segment, buffer)
     }
 
     /**
@@ -401,7 +401,7 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setBufferInterpolated(bufferCurr: List<Float>, bufferPrev: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(setBufferInterpolatedBind, handle, bufferCurr, bufferPrev)
+        ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(setBufferInterpolatedBind, segment, bufferCurr, bufferPrev)
     }
 
     companion object {
@@ -411,11 +411,11 @@ class MultiMesh(handle: MemorySegment) : Resource(handle) {
         const val INTERP_QUALITY_HIGH: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiMesh? =
-            if (handle.address() == 0L) null else MultiMesh(handle)
+            if (handle.address() == 0L) null else MultiMesh(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {

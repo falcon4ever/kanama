@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: CharacterBody3D
  */
-class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
+class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     var motionMode: Long
         @JvmName("motionModeProperty")
         get() = getMotionMode()
@@ -120,7 +120,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.move_and_slide
      */
     fun moveAndSlide(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(moveAndSlideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(moveAndSlideBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.apply_floor_snap
      */
     fun applyFloorSnap() {
-        ObjectCalls.ptrcallNoArgs(applyFloorSnapBind, handle)
+        ObjectCalls.ptrcallNoArgs(applyFloorSnapBind, segment)
     }
 
     /**
@@ -141,7 +141,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_velocity
      */
     fun setVelocity(velocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(setVelocityBind, segment, velocity)
     }
 
     /**
@@ -152,7 +152,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_velocity
      */
     fun getVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_safe_margin
      */
     fun setSafeMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSafeMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setSafeMarginBind, segment, margin)
     }
 
     /**
@@ -182,7 +182,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_safe_margin
      */
     fun getSafeMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSafeMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSafeMarginBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_floor_stop_on_slope_enabled
      */
     fun isFloorStopOnSlopeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFloorStopOnSlopeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFloorStopOnSlopeEnabledBind, segment)
     }
 
     /**
@@ -204,7 +204,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_floor_stop_on_slope_enabled
      */
     fun setFloorStopOnSlopeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFloorStopOnSlopeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFloorStopOnSlopeEnabledBind, segment, enabled)
     }
 
     /**
@@ -216,7 +216,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_floor_constant_speed_enabled
      */
     fun setFloorConstantSpeedEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFloorConstantSpeedEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFloorConstantSpeedEnabledBind, segment, enabled)
     }
 
     /**
@@ -228,7 +228,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_floor_constant_speed_enabled
      */
     fun isFloorConstantSpeedEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFloorConstantSpeedEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFloorConstantSpeedEnabledBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_floor_block_on_wall_enabled
      */
     fun setFloorBlockOnWallEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFloorBlockOnWallEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFloorBlockOnWallEnabledBind, segment, enabled)
     }
 
     /**
@@ -248,7 +248,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_floor_block_on_wall_enabled
      */
     fun isFloorBlockOnWallEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFloorBlockOnWallEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFloorBlockOnWallEnabledBind, segment)
     }
 
     /**
@@ -258,7 +258,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_slide_on_ceiling_enabled
      */
     fun setSlideOnCeilingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSlideOnCeilingEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSlideOnCeilingEnabledBind, segment, enabled)
     }
 
     /**
@@ -268,7 +268,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_slide_on_ceiling_enabled
      */
     fun isSlideOnCeilingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSlideOnCeilingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSlideOnCeilingEnabledBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_platform_floor_layers
      */
     fun setPlatformFloorLayers(excludeLayer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setPlatformFloorLayersBind, handle, excludeLayer)
+        ObjectCalls.ptrcallWithUInt32Arg(setPlatformFloorLayersBind, segment, excludeLayer)
     }
 
     /**
@@ -290,7 +290,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_platform_floor_layers
      */
     fun getPlatformFloorLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlatformFloorLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlatformFloorLayersBind, segment)
     }
 
     /**
@@ -300,7 +300,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_platform_wall_layers
      */
     fun setPlatformWallLayers(excludeLayer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setPlatformWallLayersBind, handle, excludeLayer)
+        ObjectCalls.ptrcallWithUInt32Arg(setPlatformWallLayersBind, segment, excludeLayer)
     }
 
     /**
@@ -310,7 +310,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_platform_wall_layers
      */
     fun getPlatformWallLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlatformWallLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlatformWallLayersBind, segment)
     }
 
     /**
@@ -320,7 +320,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_max_slides
      */
     fun getMaxSlides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxSlidesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxSlidesBind, segment)
     }
 
     /**
@@ -330,7 +330,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_max_slides
      */
     fun setMaxSlides(maxSlides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxSlidesBind, handle, maxSlides)
+        ObjectCalls.ptrcallWithIntArg(setMaxSlidesBind, segment, maxSlides)
     }
 
     /**
@@ -340,7 +340,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_floor_max_angle
      */
     fun getFloorMaxAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFloorMaxAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFloorMaxAngleBind, segment)
     }
 
     /**
@@ -350,7 +350,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_floor_max_angle
      */
     fun setFloorMaxAngle(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFloorMaxAngleBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setFloorMaxAngleBind, segment, radians)
     }
 
     /**
@@ -366,7 +366,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_floor_snap_length
      */
     fun getFloorSnapLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFloorSnapLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFloorSnapLengthBind, segment)
     }
 
     /**
@@ -382,7 +382,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_floor_snap_length
      */
     fun setFloorSnapLength(floorSnapLength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFloorSnapLengthBind, handle, floorSnapLength)
+        ObjectCalls.ptrcallWithDoubleArg(setFloorSnapLengthBind, segment, floorSnapLength)
     }
 
     /**
@@ -393,7 +393,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_wall_min_slide_angle
      */
     fun getWallMinSlideAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWallMinSlideAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWallMinSlideAngleBind, segment)
     }
 
     /**
@@ -404,7 +404,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_wall_min_slide_angle
      */
     fun setWallMinSlideAngle(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWallMinSlideAngleBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setWallMinSlideAngleBind, segment, radians)
     }
 
     /**
@@ -416,7 +416,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_up_direction
      */
     fun getUpDirection(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUpDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getUpDirectionBind, segment)
     }
 
     /**
@@ -428,7 +428,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_up_direction
      */
     fun setUpDirection(upDirection: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setUpDirectionBind, handle, upDirection)
+        ObjectCalls.ptrcallWithVector3Arg(setUpDirectionBind, segment, upDirection)
     }
 
     /**
@@ -437,7 +437,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_motion_mode
      */
     fun setMotionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMotionModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMotionModeBind, segment, mode)
     }
 
     /**
@@ -446,7 +446,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_motion_mode
      */
     fun getMotionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMotionModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMotionModeBind, segment)
     }
 
     /**
@@ -456,7 +456,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.set_platform_on_leave
      */
     fun setPlatformOnLeave(onLeaveApplyVelocity: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPlatformOnLeaveBind, handle, onLeaveApplyVelocity)
+        ObjectCalls.ptrcallWithLongArg(setPlatformOnLeaveBind, segment, onLeaveApplyVelocity)
     }
 
     /**
@@ -466,7 +466,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_platform_on_leave
      */
     fun getPlatformOnLeave(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlatformOnLeaveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPlatformOnLeaveBind, segment)
     }
 
     /**
@@ -477,7 +477,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_on_floor
      */
     fun isOnFloor(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnFloorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnFloorBind, segment)
     }
 
     /**
@@ -488,7 +488,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_on_floor_only
      */
     fun isOnFloorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnFloorOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnFloorOnlyBind, segment)
     }
 
     /**
@@ -499,7 +499,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_on_ceiling
      */
     fun isOnCeiling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnCeilingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnCeilingBind, segment)
     }
 
     /**
@@ -510,7 +510,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_on_ceiling_only
      */
     fun isOnCeilingOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnCeilingOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnCeilingOnlyBind, segment)
     }
 
     /**
@@ -521,7 +521,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_on_wall
      */
     fun isOnWall(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnWallBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnWallBind, segment)
     }
 
     /**
@@ -532,7 +532,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.is_on_wall_only
      */
     fun isOnWallOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnWallOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnWallOnlyBind, segment)
     }
 
     /**
@@ -543,7 +543,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_floor_normal
      */
     fun getFloorNormal(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getFloorNormalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getFloorNormalBind, segment)
     }
 
     /**
@@ -554,7 +554,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_wall_normal
      */
     fun getWallNormal(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getWallNormalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getWallNormalBind, segment)
     }
 
     /**
@@ -565,7 +565,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_last_motion
      */
     fun getLastMotion(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLastMotionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getLastMotionBind, segment)
     }
 
     /**
@@ -574,7 +574,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_position_delta
      */
     fun getPositionDelta(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionDeltaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionDeltaBind, segment)
     }
 
     /**
@@ -585,7 +585,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_real_velocity
      */
     fun getRealVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRealVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRealVelocityBind, segment)
     }
 
     /**
@@ -596,7 +596,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_floor_angle
      */
     fun getFloorAngle(upDirection: Vector3): Double {
-        return ObjectCalls.ptrcallWithVector3ArgRetDouble(getFloorAngleBind, handle, upDirection)
+        return ObjectCalls.ptrcallWithVector3ArgRetDouble(getFloorAngleBind, segment, upDirection)
     }
 
     /**
@@ -606,7 +606,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_platform_velocity
      */
     fun getPlatformVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPlatformVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPlatformVelocityBind, segment)
     }
 
     /**
@@ -616,7 +616,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_platform_angular_velocity
      */
     fun getPlatformAngularVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPlatformAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPlatformAngularVelocityBind, segment)
     }
 
     /**
@@ -626,7 +626,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_slide_collision_count
      */
     fun getSlideCollisionCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSlideCollisionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSlideCollisionCountBind, segment)
     }
 
     /**
@@ -638,7 +638,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_slide_collision
      */
     fun getSlideCollision(slideIdx: Int): KinematicCollision3D? {
-        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlideCollisionBind, handle, slideIdx))
+        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlideCollisionBind, segment, slideIdx))
     }
 
     /**
@@ -649,7 +649,7 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_last_slide_collision
      */
     fun getLastSlideCollision(): KinematicCollision3D? {
-        return KinematicCollision3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, handle))
+        return KinematicCollision3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
     }
 
     companion object {
@@ -660,11 +660,11 @@ class CharacterBody3D(handle: MemorySegment) : PhysicsBody3D(handle) {
         const val PLATFORM_ON_LEAVE_DO_NOTHING: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CharacterBody3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CharacterBody3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CharacterBody3D? =
-            if (handle.address() == 0L) null else CharacterBody3D(handle)
+            if (handle.address() == 0L) null else CharacterBody3D(GodotHandle(handle))
 
         private const val MOVE_AND_SLIDE_HASH = 2240911060L
         private val moveAndSlideBind by lazy {

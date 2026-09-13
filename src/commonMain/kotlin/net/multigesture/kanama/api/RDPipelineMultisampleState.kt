@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDPipelineMultisampleState
  */
-class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
+class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     var sampleCount: Long
         @JvmName("sampleCountProperty")
         get() = getSampleCount()
@@ -56,7 +56,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSampleCount(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSampleCountBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSampleCountBind, segment, pMember)
     }
 
     /**
@@ -67,7 +67,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSampleCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, segment)
     }
 
     /**
@@ -81,7 +81,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableSampleShading(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableSampleShadingBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableSampleShadingBind, segment, pMember)
     }
 
     /**
@@ -95,7 +95,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableSampleShading(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableSampleShadingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableSampleShadingBind, segment)
     }
 
     /**
@@ -109,7 +109,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMinSampleShading(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinSampleShadingBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setMinSampleShadingBind, segment, pMember)
     }
 
     /**
@@ -123,7 +123,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMinSampleShading(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinSampleShadingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinSampleShadingBind, segment)
     }
 
     /**
@@ -135,7 +135,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableAlphaToCoverage(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToCoverageBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToCoverageBind, segment, pMember)
     }
 
     /**
@@ -147,7 +147,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableAlphaToCoverage(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToCoverageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToCoverageBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableAlphaToOne(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToOneBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToOneBind, segment, pMember)
     }
 
     /**
@@ -169,7 +169,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableAlphaToOne(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToOneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToOneBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSampleMasks(masks: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedIntListArg(setSampleMasksBind, handle, masks)
+        ObjectCalls.ptrcallWithTypedIntListArg(setSampleMasksBind, segment, masks)
     }
 
     /**
@@ -193,16 +193,16 @@ class RDPipelineMultisampleState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSampleMasks(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLongList(getSampleMasksBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLongList(getSampleMasksBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDPipelineMultisampleState? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDPipelineMultisampleState? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDPipelineMultisampleState? =
-            if (handle.address() == 0L) null else RDPipelineMultisampleState(handle)
+            if (handle.address() == 0L) null else RDPipelineMultisampleState(GodotHandle(handle))
 
         private const val SET_SAMPLE_COUNT_HASH = 3774171498L
         private val setSampleCountBind by lazy {

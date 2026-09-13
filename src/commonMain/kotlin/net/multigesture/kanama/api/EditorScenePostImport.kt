@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorScenePostImport
  */
-class EditorScenePostImport(handle: MemorySegment) : RefCounted(handle) {
+class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the source file path which got imported (e.g. `res://scene.dae`).
      *
@@ -18,16 +18,16 @@ class EditorScenePostImport(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSourceFile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSourceFileBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSourceFileBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorScenePostImport? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorScenePostImport? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorScenePostImport? =
-            if (handle.address() == 0L) null else EditorScenePostImport(handle)
+            if (handle.address() == 0L) null else EditorScenePostImport(GodotHandle(handle))
 
         private const val GET_SOURCE_FILE_HASH = 201670096L
         private val getSourceFileBind by lazy {

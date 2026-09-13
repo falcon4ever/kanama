@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CollisionPolygon2D
  */
-class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
+class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
     var buildMode: Long
         @JvmName("buildModeProperty")
         get() = getBuildMode()
@@ -57,7 +57,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_polygon
      */
     fun setPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
     }
 
     /**
@@ -68,7 +68,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_build_mode
      */
     fun setBuildMode(buildMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBuildModeBind, handle, buildMode)
+        ObjectCalls.ptrcallWithLongArg(setBuildModeBind, segment, buildMode)
     }
 
     /**
@@ -86,7 +86,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_build_mode
      */
     fun getBuildMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBuildModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBuildModeBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_disabled
      */
     fun setDisabled(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, disabled)
     }
 
     /**
@@ -106,7 +106,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision
      */
     fun setOneWayCollision(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneWayCollisionBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setOneWayCollisionBind, segment, enabled)
     }
 
     /**
@@ -130,7 +130,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.is_one_way_collision_enabled
      */
     fun isOneWayCollisionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOneWayCollisionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOneWayCollisionEnabledBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision_margin
      */
     fun setOneWayCollisionMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOneWayCollisionMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setOneWayCollisionMarginBind, segment, margin)
     }
 
     /**
@@ -150,7 +150,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_one_way_collision_margin
      */
     fun getOneWayCollisionMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOneWayCollisionMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOneWayCollisionMarginBind, segment)
     }
 
     /**
@@ -159,7 +159,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision_direction
      */
     fun setOneWayCollisionDirection(direction: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOneWayCollisionDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithVector2Arg(setOneWayCollisionDirectionBind, segment, direction)
     }
 
     /**
@@ -168,7 +168,7 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_one_way_collision_direction
      */
     fun getOneWayCollisionDirection(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, segment)
     }
 
     companion object {
@@ -176,11 +176,11 @@ class CollisionPolygon2D(handle: MemorySegment) : Node2D(handle) {
         const val BUILD_SEGMENTS: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CollisionPolygon2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CollisionPolygon2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CollisionPolygon2D? =
-            if (handle.address() == 0L) null else CollisionPolygon2D(handle)
+            if (handle.address() == 0L) null else CollisionPolygon2D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L
         private val setPolygonBind by lazy {

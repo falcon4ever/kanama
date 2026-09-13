@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: DirectionalLight2D
  */
-class DirectionalLight2D(handle: MemorySegment) : Light2D(handle) {
+class DirectionalLight2D(handle: GodotHandle) : Light2D(handle) {
     var maxDistance: Double
         @JvmName("maxDistanceProperty")
         get() = getMaxDistance()
@@ -28,7 +28,7 @@ class DirectionalLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: DirectionalLight2D.set_max_distance
      */
     fun setMaxDistance(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, handle, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, segment, pixels)
     }
 
     /**
@@ -41,16 +41,16 @@ class DirectionalLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: DirectionalLight2D.get_max_distance
      */
     fun getMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): DirectionalLight2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): DirectionalLight2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): DirectionalLight2D? =
-            if (handle.address() == 0L) null else DirectionalLight2D(handle)
+            if (handle.address() == 0L) null else DirectionalLight2D(GodotHandle(handle))
 
         private const val SET_MAX_DISTANCE_HASH = 373806689L
         private val setMaxDistanceBind by lazy {

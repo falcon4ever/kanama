@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3i
  *
  * Generated from Godot docs: PlaceholderTexture3D
  */
-class PlaceholderTexture3D(handle: MemorySegment) : Texture3D(handle) {
+class PlaceholderTexture3D(handle: GodotHandle) : Texture3D(handle) {
     var size: Vector3i
         @JvmName("sizeProperty")
         get() = getSize()
@@ -26,7 +26,7 @@ class PlaceholderTexture3D(handle: MemorySegment) : Texture3D(handle) {
      */
     fun setSize(size: Vector3i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3iArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3iArg(setSizeBind, segment, size)
     }
 
     /**
@@ -36,16 +36,16 @@ class PlaceholderTexture3D(handle: MemorySegment) : Texture3D(handle) {
      */
     fun getSize(): Vector3i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3i(getSizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PlaceholderTexture3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaceholderTexture3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaceholderTexture3D? =
-            if (handle.address() == 0L) null else PlaceholderTexture3D(handle)
+            if (handle.address() == 0L) null else PlaceholderTexture3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 560364750L
         private val setSizeBind by lazy {

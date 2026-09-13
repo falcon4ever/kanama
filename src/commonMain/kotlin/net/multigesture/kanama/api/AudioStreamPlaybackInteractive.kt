@@ -8,29 +8,29 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: AudioStreamPlaybackInteractive
  */
-class AudioStreamPlaybackInteractive(handle: MemorySegment) : AudioStreamPlayback(handle) {
+class AudioStreamPlaybackInteractive(handle: GodotHandle) : AudioStreamPlayback(handle) {
     fun switchToClipByName(clipName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(switchToClipByNameBind, handle, clipName)
+        ObjectCalls.ptrcallWithStringNameArg(switchToClipByNameBind, segment, clipName)
     }
 
     fun switchToClip(clipIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(switchToClipBind, handle, clipIndex)
+        ObjectCalls.ptrcallWithIntArg(switchToClipBind, segment, clipIndex)
     }
 
     fun getCurrentClipIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentClipIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentClipIndexBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamPlaybackInteractive? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamPlaybackInteractive? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamPlaybackInteractive? =
-            if (handle.address() == 0L) null else AudioStreamPlaybackInteractive(handle)
+            if (handle.address() == 0L) null else AudioStreamPlaybackInteractive(GodotHandle(handle))
 
         private const val SWITCH_TO_CLIP_BY_NAME_HASH = 3304788590L
         private val switchToClipByNameBind by lazy {

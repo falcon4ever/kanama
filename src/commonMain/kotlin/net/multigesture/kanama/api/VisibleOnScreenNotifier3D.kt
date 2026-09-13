@@ -11,14 +11,14 @@ import net.multigesture.kanama.types.AABB
  *
  * Generated from Godot docs: VisibleOnScreenNotifier3D
  */
-open class VisibleOnScreenNotifier3D(handle: MemorySegment) : VisualInstance3D(handle) {
+open class VisibleOnScreenNotifier3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * The `VisibleOnScreenNotifier3D`'s bounding box.
      *
      * Generated from Godot docs: VisibleOnScreenNotifier3D.set_aabb
      */
     fun setAabb(rect: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, rect)
+        ObjectCalls.ptrcallWithAABBArg(setAabbBind, segment, rect)
     }
 
     /**
@@ -29,7 +29,7 @@ open class VisibleOnScreenNotifier3D(handle: MemorySegment) : VisualInstance3D(h
      * Generated from Godot docs: VisibleOnScreenNotifier3D.is_on_screen
      */
     fun isOnScreen(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, segment)
     }
 
     object Signals {
@@ -39,11 +39,11 @@ open class VisibleOnScreenNotifier3D(handle: MemorySegment) : VisualInstance3D(h
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisibleOnScreenNotifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisibleOnScreenNotifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisibleOnScreenNotifier3D? =
-            if (handle.address() == 0L) null else VisibleOnScreenNotifier3D(handle)
+            if (handle.address() == 0L) null else VisibleOnScreenNotifier3D(GodotHandle(handle))
 
         private const val SET_AABB_HASH = 259215842L
         private val setAabbBind by lazy {

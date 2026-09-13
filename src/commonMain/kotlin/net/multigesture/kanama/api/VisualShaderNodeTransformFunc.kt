@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTransformFunc
  */
-class VisualShaderNodeTransformFunc(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(handle) {
     var function: Long
         @JvmName("functionProperty")
         get() = getFunction()
@@ -18,12 +18,12 @@ class VisualShaderNodeTransformFunc(handle: MemorySegment) : VisualShaderNode(ha
 
     fun setFunction(func: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
     }
 
     fun getFunction(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
     }
 
     companion object {
@@ -32,11 +32,11 @@ class VisualShaderNodeTransformFunc(handle: MemorySegment) : VisualShaderNode(ha
         const val FUNC_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTransformFunc? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformFunc? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTransformFunc? =
-            if (handle.address() == 0L) null else VisualShaderNodeTransformFunc(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTransformFunc(GodotHandle(handle))
 
         private const val SET_FUNCTION_HASH = 2900990409L
         private val setFunctionBind by lazy {

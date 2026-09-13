@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: EditorExportPlatformMacOS
  */
-class EditorExportPlatformMacOS(handle: MemorySegment) : EditorExportPlatform(handle) {
+class EditorExportPlatformMacOS(handle: GodotHandle) : EditorExportPlatform(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorExportPlatformMacOS? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorExportPlatformMacOS? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorExportPlatformMacOS? =
-            if (handle.address() == 0L) null else EditorExportPlatformMacOS(handle)
+            if (handle.address() == 0L) null else EditorExportPlatformMacOS(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

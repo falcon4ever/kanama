@@ -14,7 +14,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Node3D
  */
-open class Node3D(handle: MemorySegment) : Node(handle) {
+open class Node3D(handle: GodotHandle) : Node(handle) {
     var transform: Transform3D
         @JvmName("transformProperty")
         get() = getTransform()
@@ -124,7 +124,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_transform
      */
     fun setTransform(local: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, local)
+        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, local)
     }
 
     /**
@@ -134,7 +134,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_transform
      */
     fun getTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_position
      */
     fun setPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, segment, position)
     }
 
     /**
@@ -154,7 +154,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_position
      */
     fun getPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, segment)
     }
 
     /**
@@ -170,7 +170,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation
      */
     fun setRotation(eulerRadians: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setRotationBind, handle, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(setRotationBind, segment, eulerRadians)
     }
 
     /**
@@ -186,7 +186,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation
      */
     fun getRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation_degrees
      */
     fun setRotationDegrees(eulerDegrees: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setRotationDegreesBind, handle, eulerDegrees)
+        ObjectCalls.ptrcallWithVector3Arg(setRotationDegreesBind, segment, eulerDegrees)
     }
 
     /**
@@ -206,7 +206,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation_degrees
      */
     fun getRotationDegrees(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationDegreesBind, segment)
     }
 
     /**
@@ -217,7 +217,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation_order
      */
     fun setRotationOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, handle, order)
+        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, segment, order)
     }
 
     /**
@@ -228,7 +228,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation_order
      */
     fun getRotationOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, segment)
     }
 
     /**
@@ -237,7 +237,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation_edit_mode
      */
     fun setRotationEditMode(editMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, handle, editMode)
+        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, segment, editMode)
     }
 
     /**
@@ -246,7 +246,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation_edit_mode
      */
     fun getRotationEditMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, segment)
     }
 
     /**
@@ -260,7 +260,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_scale
      */
     fun setScale(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(setScaleBind, segment, scale)
     }
 
     /**
@@ -274,7 +274,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_scale
      */
     fun getScale(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, segment)
     }
 
     /**
@@ -286,7 +286,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_quaternion
      */
     fun setQuaternion(quaternion: Quaternion) {
-        ObjectCalls.ptrcallWithQuaternionArg(setQuaternionBind, handle, quaternion)
+        ObjectCalls.ptrcallWithQuaternionArg(setQuaternionBind, segment, quaternion)
     }
 
     /**
@@ -298,7 +298,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_quaternion
      */
     fun getQuaternion(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getQuaternionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getQuaternionBind, segment)
     }
 
     /**
@@ -308,7 +308,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_basis
      */
     fun setBasis(basis: Basis) {
-        ObjectCalls.ptrcallWithBasisArg(setBasisBind, handle, basis)
+        ObjectCalls.ptrcallWithBasisArg(setBasisBind, segment, basis)
     }
 
     /**
@@ -318,7 +318,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_basis
      */
     fun getBasis(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getBasisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBasis(getBasisBind, segment)
     }
 
     /**
@@ -329,7 +329,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_transform
      */
     fun setGlobalTransform(global: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setGlobalTransformBind, handle, global)
+        ObjectCalls.ptrcallWithTransform3DArg(setGlobalTransformBind, segment, global)
     }
 
     /**
@@ -340,7 +340,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_transform
      */
     fun getGlobalTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformBind, segment)
     }
 
     /**
@@ -358,7 +358,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_transform_interpolated
      */
     fun getGlobalTransformInterpolated(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformInterpolatedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformInterpolatedBind, segment)
     }
 
     /**
@@ -369,7 +369,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_position
      */
     fun setGlobalPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalPositionBind, segment, position)
     }
 
     /**
@@ -380,7 +380,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_position
      */
     fun getGlobalPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalPositionBind, segment)
     }
 
     /**
@@ -391,7 +391,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_basis
      */
     fun setGlobalBasis(basis: Basis) {
-        ObjectCalls.ptrcallWithBasisArg(setGlobalBasisBind, handle, basis)
+        ObjectCalls.ptrcallWithBasisArg(setGlobalBasisBind, segment, basis)
     }
 
     /**
@@ -402,7 +402,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_basis
      */
     fun getGlobalBasis(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getGlobalBasisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBasis(getGlobalBasisBind, segment)
     }
 
     /**
@@ -417,7 +417,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_rotation
      */
     fun setGlobalRotation(eulerRadians: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationBind, handle, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationBind, segment, eulerRadians)
     }
 
     /**
@@ -432,7 +432,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_rotation
      */
     fun getGlobalRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationBind, segment)
     }
 
     /**
@@ -442,7 +442,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_rotation_degrees
      */
     fun setGlobalRotationDegrees(eulerDegrees: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationDegreesBind, handle, eulerDegrees)
+        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationDegreesBind, segment, eulerDegrees)
     }
 
     /**
@@ -452,7 +452,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_rotation_degrees
      */
     fun getGlobalRotationDegrees(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationDegreesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationDegreesBind, segment)
     }
 
     /**
@@ -463,7 +463,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_parent_node_3d
      */
     fun getParentNode3d(): Node3D? {
-        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentNode3dBind, handle))
+        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentNode3dBind, segment))
     }
 
     /**
@@ -474,7 +474,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_ignore_transform_notification
      */
     fun setIgnoreTransformNotification(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreTransformNotificationBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreTransformNotificationBind, segment, enabled)
     }
 
     /**
@@ -485,7 +485,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_as_top_level
      */
     fun setAsTopLevel(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, segment, enable)
     }
 
     /**
@@ -496,7 +496,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.is_set_as_top_level
      */
     fun isSetAsTopLevel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, segment)
     }
 
     /**
@@ -508,7 +508,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_disable_scale
      */
     fun setDisableScale(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableScaleBind, handle, disable)
+        ObjectCalls.ptrcallWithBoolArg(setDisableScaleBind, segment, disable)
     }
 
     /**
@@ -520,7 +520,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.is_scale_disabled
      */
     fun isScaleDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScaleDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScaleDisabledBind, segment)
     }
 
     /**
@@ -530,7 +530,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_world_3d
      */
     fun getWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, handle))
+        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
     }
 
     /**
@@ -543,7 +543,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.force_update_transform
      */
     fun forceUpdateTransform() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, segment)
     }
 
     /**
@@ -557,7 +557,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_visibility_parent
      */
     fun setVisibilityParent(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setVisibilityParentBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setVisibilityParentBind, segment, path)
     }
 
     /**
@@ -571,7 +571,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_visibility_parent
      */
     fun getVisibilityParent(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getVisibilityParentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getVisibilityParentBind, segment)
     }
 
     /**
@@ -580,7 +580,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.update_gizmos
      */
     fun updateGizmos() {
-        ObjectCalls.ptrcallNoArgs(updateGizmosBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateGizmosBind, segment)
     }
 
     /**
@@ -591,7 +591,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.add_gizmo
      */
     fun addGizmo(gizmo: Node3DGizmo?) {
-        ObjectCalls.ptrcallWithObjectArgs(addGizmoBind, handle, listOf(gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addGizmoBind, segment, listOf(gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -600,7 +600,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.get_gizmos
      */
     fun getGizmos(): List<Node3DGizmo> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getGizmosBind, handle, Node3DGizmo::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getGizmosBind, segment, Node3DGizmo::wrap)
     }
 
     /**
@@ -609,7 +609,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.clear_gizmos
      */
     fun clearGizmos() {
-        ObjectCalls.ptrcallNoArgs(clearGizmosBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearGizmosBind, segment)
     }
 
     /**
@@ -620,7 +620,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_subgizmo_selection
      */
     fun setSubgizmoSelection(gizmo: Node3DGizmo?, id: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(setSubgizmoSelectionBind, handle, gizmo?.requireOpenHandle() ?: MemorySegment.NULL, id, transform)
+        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(setSubgizmoSelectionBind, segment, gizmo?.requireOpenHandle() ?: MemorySegment.NULL, id, transform)
     }
 
     /**
@@ -630,7 +630,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.clear_subgizmo_selection
      */
     fun clearSubgizmoSelection() {
-        ObjectCalls.ptrcallNoArgs(clearSubgizmoSelectionBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSubgizmoSelectionBind, segment)
     }
 
     /**
@@ -640,7 +640,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
     }
 
     /**
@@ -650,7 +650,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
     }
 
     /**
@@ -663,7 +663,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.is_visible_in_tree
      */
     fun isVisibleInTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, segment)
     }
 
     /**
@@ -673,7 +673,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, handle)
+        ObjectCalls.ptrcallNoArgs(showBind, segment)
     }
 
     /**
@@ -683,7 +683,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, handle)
+        ObjectCalls.ptrcallNoArgs(hideBind, segment)
     }
 
     /**
@@ -694,7 +694,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_notify_local_transform
      */
     fun setNotifyLocalTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, segment, enable)
     }
 
     /**
@@ -704,7 +704,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.is_local_transform_notification_enabled
      */
     fun isLocalTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -716,7 +716,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_notify_transform
      */
     fun setNotifyTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, segment, enable)
     }
 
     /**
@@ -726,7 +726,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.is_transform_notification_enabled
      */
     fun isTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -736,7 +736,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate
      */
     fun rotate(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateBind, handle, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateBind, segment, axis, angle)
     }
 
     /**
@@ -747,7 +747,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.global_rotate
      */
     fun globalRotate(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(globalRotateBind, handle, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(globalRotateBind, segment, axis, angle)
     }
 
     /**
@@ -758,7 +758,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.global_scale
      */
     fun globalScale(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(globalScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(globalScaleBind, segment, scale)
     }
 
     /**
@@ -768,7 +768,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.global_translate
      */
     fun globalTranslate(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(globalTranslateBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(globalTranslateBind, segment, offset)
     }
 
     /**
@@ -778,7 +778,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_object_local
      */
     fun rotateObjectLocal(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateObjectLocalBind, handle, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateObjectLocalBind, segment, axis, angle)
     }
 
     /**
@@ -788,7 +788,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.scale_object_local
      */
     fun scaleObjectLocal(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(scaleObjectLocalBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(scaleObjectLocalBind, segment, scale)
     }
 
     /**
@@ -798,7 +798,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.translate_object_local
      */
     fun translateObjectLocal(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(translateObjectLocalBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(translateObjectLocalBind, segment, offset)
     }
 
     /**
@@ -808,7 +808,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_x
      */
     fun rotateX(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateXBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(rotateXBind, segment, angle)
     }
 
     /**
@@ -818,7 +818,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_y
      */
     fun rotateY(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateYBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(rotateYBind, segment, angle)
     }
 
     /**
@@ -828,7 +828,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_z
      */
     fun rotateZ(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateZBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(rotateZBind, segment, angle)
     }
 
     /**
@@ -841,7 +841,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.translate
      */
     fun translate(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(translateBind, handle, offset)
+        ObjectCalls.ptrcallWithVector3Arg(translateBind, segment, offset)
     }
 
     /**
@@ -852,7 +852,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.orthonormalize
      */
     fun orthonormalize() {
-        ObjectCalls.ptrcallNoArgs(orthonormalizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(orthonormalizeBind, segment)
     }
 
     /**
@@ -862,7 +862,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.set_identity
      */
     fun setIdentity() {
-        ObjectCalls.ptrcallNoArgs(setIdentityBind, handle)
+        ObjectCalls.ptrcallNoArgs(setIdentityBind, segment)
     }
 
     /**
@@ -882,7 +882,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.look_at
      */
     fun lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(lookAtBind, handle, target, up, useModelFront)
+        ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(lookAtBind, segment, target, up, useModelFront)
     }
 
     /**
@@ -898,7 +898,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
         up: Vector3 = Vector3.UP,
         useModelFront: Boolean = false,
     ) {
-        ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(lookAtFromPositionBind, handle, position, target, up, useModelFront)
+        ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(lookAtFromPositionBind, segment, position, target, up, useModelFront)
     }
 
     /**
@@ -908,7 +908,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.to_local
      */
     fun toLocal(globalPoint: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toLocalBind, handle, globalPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toLocalBind, segment, globalPoint)
     }
 
     /**
@@ -918,7 +918,7 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Node3D.to_global
      */
     fun toGlobal(localPoint: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toGlobalBind, handle, localPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toGlobalBind, segment, localPoint)
     }
 
     object Signals {
@@ -936,11 +936,11 @@ open class Node3D(handle: MemorySegment) : Node(handle) {
         const val ROTATION_EDIT_MODE_BASIS: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Node3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Node3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Node3D? =
-            if (handle.address() == 0L) null else Node3D(handle)
+            if (handle.address() == 0L) null else Node3D(GodotHandle(handle))
 
         private const val SET_TRANSFORM_HASH = 2952846383L
         private val setTransformBind by lazy {

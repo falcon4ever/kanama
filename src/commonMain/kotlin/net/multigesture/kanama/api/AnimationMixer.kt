@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: AnimationMixer
  */
-open class AnimationMixer(handle: MemorySegment) : Node(handle) {
+open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     var active: Boolean
         @JvmName("activeProperty")
         get() = isActive()
@@ -82,7 +82,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.add_animation_library
      */
     fun addAnimationLibrary(name: String, library: AnimationLibrary?): Long {
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, handle, name, library?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -91,7 +91,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.remove_animation_library
      */
     fun removeAnimationLibrary(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeAnimationLibraryBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeAnimationLibraryBind, segment, name)
     }
 
     /**
@@ -100,7 +100,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.rename_animation_library
      */
     fun renameAnimationLibrary(name: String, newname: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationLibraryBind, handle, name, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationLibraryBind, segment, name, newname)
     }
 
     /**
@@ -109,7 +109,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.has_animation_library
      */
     fun hasAnimationLibrary(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationLibraryBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationLibraryBind, segment, name)
     }
 
     /**
@@ -119,7 +119,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation_library
      */
     fun getAnimationLibrary(name: String): AnimationLibrary? {
-        return AnimationLibrary.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationLibraryBind, handle, name))
+        return AnimationLibrary.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationLibraryBind, segment, name))
     }
 
     /**
@@ -128,7 +128,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation_library_list
      */
     fun getAnimationLibraryList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationLibraryListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationLibraryListBind, segment)
     }
 
     /**
@@ -137,7 +137,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.has_animation
      */
     fun hasAnimation(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, segment, name)
     }
 
     /**
@@ -147,7 +147,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation
      */
     fun getAnimation(name: String): Animation? {
-        return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, handle, name))
+        return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
     }
 
     /**
@@ -156,7 +156,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation_list
      */
     fun getAnimationList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationListBind, segment)
     }
 
     /**
@@ -165,7 +165,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_active
      */
     fun setActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, handle, active)
+        ObjectCalls.ptrcallWithBoolArg(setActiveBind, segment, active)
     }
 
     /**
@@ -174,7 +174,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_active
      */
     fun isActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_deterministic
      */
     fun setDeterministic(deterministic: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeterministicBind, handle, deterministic)
+        ObjectCalls.ptrcallWithBoolArg(setDeterministicBind, segment, deterministic)
     }
 
     /**
@@ -214,7 +214,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_deterministic
      */
     fun isDeterministic(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeterministicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDeterministicBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_root_node
      */
     fun setRootNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootNodeBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setRootNodeBind, segment, path)
     }
 
     /**
@@ -232,7 +232,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_node
      */
     fun getRootNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootNodeBind, segment)
     }
 
     /**
@@ -241,7 +241,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_callback_mode_process
      */
     fun setCallbackModeProcess(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeProcessBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setCallbackModeProcessBind, segment, mode)
     }
 
     /**
@@ -250,7 +250,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_callback_mode_process
      */
     fun getCallbackModeProcess(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeProcessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeProcessBind, segment)
     }
 
     /**
@@ -259,7 +259,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_callback_mode_method
      */
     fun setCallbackModeMethod(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeMethodBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setCallbackModeMethodBind, segment, mode)
     }
 
     /**
@@ -268,7 +268,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_callback_mode_method
      */
     fun getCallbackModeMethod(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeMethodBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeMethodBind, segment)
     }
 
     /**
@@ -283,7 +283,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_callback_mode_discrete
      */
     fun setCallbackModeDiscrete(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeDiscreteBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setCallbackModeDiscreteBind, segment, mode)
     }
 
     /**
@@ -298,7 +298,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_callback_mode_discrete
      */
     fun getCallbackModeDiscrete(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeDiscreteBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeDiscreteBind, segment)
     }
 
     /**
@@ -309,7 +309,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_audio_max_polyphony
      */
     fun setAudioMaxPolyphony(maxPolyphony: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAudioMaxPolyphonyBind, handle, maxPolyphony)
+        ObjectCalls.ptrcallWithIntArg(setAudioMaxPolyphonyBind, segment, maxPolyphony)
     }
 
     /**
@@ -320,7 +320,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_audio_max_polyphony
      */
     fun getAudioMaxPolyphony(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAudioMaxPolyphonyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAudioMaxPolyphonyBind, segment)
     }
 
     /**
@@ -335,7 +335,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_root_motion_track
      */
     fun setRootMotionTrack(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootMotionTrackBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setRootMotionTrackBind, segment, path)
     }
 
     /**
@@ -350,7 +350,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_track
      */
     fun getRootMotionTrack(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootMotionTrackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootMotionTrackBind, segment)
     }
 
     /**
@@ -360,7 +360,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_root_motion_local
      */
     fun setRootMotionLocal(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRootMotionLocalBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setRootMotionLocalBind, segment, enabled)
     }
 
     /**
@@ -370,7 +370,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_root_motion_local
      */
     fun isRootMotionLocal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRootMotionLocalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRootMotionLocalBind, segment)
     }
 
     /**
@@ -382,7 +382,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_position
      */
     fun getRootMotionPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionBind, segment)
     }
 
     /**
@@ -394,7 +394,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_rotation
      */
     fun getRootMotionRotation(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationBind, segment)
     }
 
     /**
@@ -406,7 +406,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_scale
      */
     fun getRootMotionScale(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleBind, segment)
     }
 
     /**
@@ -419,7 +419,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_position_accumulator
      */
     fun getRootMotionPositionAccumulator(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionAccumulatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionAccumulatorBind, segment)
     }
 
     /**
@@ -434,7 +434,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_rotation_accumulator
      */
     fun getRootMotionRotationAccumulator(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationAccumulatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationAccumulatorBind, segment)
     }
 
     /**
@@ -446,7 +446,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_scale_accumulator
      */
     fun getRootMotionScaleAccumulator(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleAccumulatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleAccumulatorBind, segment)
     }
 
     /**
@@ -456,7 +456,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.clear_caches
      */
     fun clearCaches() {
-        ObjectCalls.ptrcallNoArgs(clearCachesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearCachesBind, segment)
     }
 
     /**
@@ -465,7 +465,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.advance
      */
     fun advance(delta: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(advanceBind, handle, delta)
+        ObjectCalls.ptrcallWithDoubleArg(advanceBind, segment, delta)
     }
 
     /**
@@ -481,7 +481,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.capture
      */
     fun capture(name: String, duration: Double, transType: Long = 0L, easeType: Long = 0L) {
-        ObjectCalls.ptrcallWithStringNameDoubleTwoLongArgs(captureBind, handle, name, duration, transType, easeType)
+        ObjectCalls.ptrcallWithStringNameDoubleTwoLongArgs(captureBind, segment, name, duration, transType, easeType)
     }
 
     /**
@@ -494,7 +494,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_reset_on_save_enabled
      */
     fun setResetOnSaveEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setResetOnSaveEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setResetOnSaveEnabledBind, segment, enabled)
     }
 
     /**
@@ -507,7 +507,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_reset_on_save_enabled
      */
     fun isResetOnSaveEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isResetOnSaveEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isResetOnSaveEnabledBind, segment)
     }
 
     /**
@@ -516,7 +516,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation
      */
     fun findAnimation(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationBind, handle, animation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationBind, segment, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -526,7 +526,7 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation_library
      */
     fun findAnimationLibrary(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, handle, animation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     object Signals {
@@ -550,11 +550,11 @@ open class AnimationMixer(handle: MemorySegment) : Node(handle) {
         const val ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationMixer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationMixer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationMixer? =
-            if (handle.address() == 0L) null else AnimationMixer(handle)
+            if (handle.address() == 0L) null else AnimationMixer(GodotHandle(handle))
 
         private const val ADD_ANIMATION_LIBRARY_HASH = 618909818L
         private val addAnimationLibraryBind by lazy {

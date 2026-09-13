@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: VirtualJoystick
  */
-class VirtualJoystick(handle: MemorySegment) : Control(handle) {
+class VirtualJoystick(handle: GodotHandle) : Control(handle) {
     var joystickMode: Long
         @JvmName("joystickModeProperty")
         get() = getJoystickMode()
@@ -85,7 +85,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_joystick_mode
      */
     fun setJoystickMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJoystickModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setJoystickModeBind, segment, mode)
     }
 
     /**
@@ -94,7 +94,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_joystick_mode
      */
     fun getJoystickMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJoystickModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getJoystickModeBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_joystick_size
      */
     fun setJoystickSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setJoystickSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setJoystickSizeBind, segment, size)
     }
 
     /**
@@ -112,7 +112,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_joystick_size
      */
     fun getJoystickSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getJoystickSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getJoystickSizeBind, segment)
     }
 
     /**
@@ -121,7 +121,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_tip_size
      */
     fun setTipSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTipSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setTipSizeBind, segment, size)
     }
 
     /**
@@ -130,7 +130,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_tip_size
      */
     fun getTipSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTipSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTipSizeBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_deadzone_ratio
      */
     fun setDeadzoneRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDeadzoneRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setDeadzoneRatioBind, segment, ratio)
     }
 
     /**
@@ -160,7 +160,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_deadzone_ratio
      */
     fun getDeadzoneRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDeadzoneRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDeadzoneRatioBind, segment)
     }
 
     /**
@@ -173,7 +173,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_clampzone_ratio
      */
     fun setClampzoneRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setClampzoneRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setClampzoneRatioBind, segment, ratio)
     }
 
     /**
@@ -186,7 +186,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_clampzone_ratio
      */
     fun getClampzoneRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClampzoneRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getClampzoneRatioBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_initial_offset_ratio
      */
     fun setInitialOffsetRatio(ratio: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setInitialOffsetRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithVector2Arg(setInitialOffsetRatioBind, segment, ratio)
     }
 
     /**
@@ -206,7 +206,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_initial_offset_ratio
      */
     fun getInitialOffsetRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getInitialOffsetRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getInitialOffsetRatioBind, segment)
     }
 
     /**
@@ -215,7 +215,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_left
      */
     fun setActionLeft(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionLeftBind, handle, action)
+        ObjectCalls.ptrcallWithStringNameArg(setActionLeftBind, segment, action)
     }
 
     /**
@@ -224,7 +224,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_left
      */
     fun getActionLeft(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionLeftBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getActionLeftBind, segment)
     }
 
     /**
@@ -233,7 +233,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_right
      */
     fun setActionRight(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionRightBind, handle, action)
+        ObjectCalls.ptrcallWithStringNameArg(setActionRightBind, segment, action)
     }
 
     /**
@@ -242,7 +242,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_right
      */
     fun getActionRight(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionRightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getActionRightBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_up
      */
     fun setActionUp(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionUpBind, handle, action)
+        ObjectCalls.ptrcallWithStringNameArg(setActionUpBind, segment, action)
     }
 
     /**
@@ -260,7 +260,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_up
      */
     fun getActionUp(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionUpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getActionUpBind, segment)
     }
 
     /**
@@ -269,7 +269,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_down
      */
     fun setActionDown(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionDownBind, handle, action)
+        ObjectCalls.ptrcallWithStringNameArg(setActionDownBind, segment, action)
     }
 
     /**
@@ -278,7 +278,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_down
      */
     fun getActionDown(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionDownBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getActionDownBind, segment)
     }
 
     /**
@@ -287,7 +287,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_visibility_mode
      */
     fun setVisibilityMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode)
     }
 
     /**
@@ -296,7 +296,7 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_visibility_mode
      */
     fun getVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment)
     }
 
     object Signals {
@@ -315,11 +315,11 @@ class VirtualJoystick(handle: MemorySegment) : Control(handle) {
         const val VISIBILITY_WHEN_TOUCHED: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VirtualJoystick? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VirtualJoystick? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VirtualJoystick? =
-            if (handle.address() == 0L) null else VirtualJoystick(handle)
+            if (handle.address() == 0L) null else VirtualJoystick(GodotHandle(handle))
 
         private const val SET_JOYSTICK_MODE_HASH = 1316760817L
         private val setJoystickModeBind by lazy {

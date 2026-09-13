@@ -17,18 +17,24 @@ import java.lang.foreign.MemorySegment
  * dangling pointer for every member except [instanceId], and `GD.isInstanceValid`
  * is the only safe question left to ask it.
  */
-open class GodotObject(val handle: MemorySegment) {
+open class GodotObject(val handle: GodotHandle) {
+
+    /**
+     * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam. Internal: game code
+     * passes [handle] around and never unwraps it.
+     */
+    internal val segment: MemorySegment get() = handle.segment
 
     /** Returns true when both wrappers refer to the same Godot object instance. */
-    fun isSameInstance(other: GodotObject): Boolean = handle.address() == other.handle.address()
+    fun isSameInstance(other: GodotObject): Boolean = segment.address() == other.segment.address()
 
     init {
-        require(handle.address() != 0L) { "GodotObject handle must not be NULL" }
+        require(segment.address() != 0L) { "GodotObject handle must not be NULL" }
     }
 
     /**
      * The engine instance id, captured once at construction (`object_get_instance_id`, a
-     * direct interface downcall). Unlike [getInstanceId] this never dereferences [handle]
+     * direct interface downcall). Unlike [getInstanceId] this never dereferences [segment]
      * again, so it stays valid to read after the object has been freed; `GD.isInstanceValid`
      * routes through it (task 98).
      *
@@ -36,22 +42,22 @@ open class GodotObject(val handle: MemorySegment) {
      * `getInstanceId()J` signature; Kotlin callers read `instanceId` as usual.
      */
     @get:JvmName("capturedInstanceId")
-    val instanceId: Long = ObjectCalls.objectGetInstanceId(handle)
+    val instanceId: Long = ObjectCalls.objectGetInstanceId(segment)
 
     fun getClassName(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getClassBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getClassBind, segment)
 
     fun isClass(className: String): Boolean =
-        ObjectCalls.ptrcallWithStringArgRetBool(isClassBind, handle, className)
+        ObjectCalls.ptrcallWithStringArgRetBool(isClassBind, segment, className)
 
     fun getInstanceId(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getInstanceIdBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getInstanceIdBind, segment)
 
     fun isQueuedForDeletion(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isQueuedForDeletionBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isQueuedForDeletionBind, segment)
 
     fun setIndexed(propertyPath: NodePath, value: Any?) {
-        ObjectCalls.ptrcallWithNodePathAndVariantArg(setIndexedBind, handle, propertyPath, value)
+        ObjectCalls.ptrcallWithNodePathAndVariantArg(setIndexedBind, segment, propertyPath, value)
     }
 
     fun setIndexed(propertyPath: String, value: Any?) {
@@ -59,80 +65,80 @@ open class GodotObject(val handle: MemorySegment) {
     }
 
     fun getIndexed(propertyPath: NodePath): Any? =
-        ObjectCalls.ptrcallWithNodePathArgRetVariantScalar(getIndexedBind, handle, propertyPath)
+        ObjectCalls.ptrcallWithNodePathArgRetVariantScalar(getIndexedBind, segment, propertyPath)
 
     fun getIndexed(propertyPath: String): Any? =
         getIndexed(NodePath(propertyPath))
 
     fun getPropertyList(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getPropertyListBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(getPropertyListBind, segment)
 
     fun getMethodList(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getMethodListBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(getMethodListBind, segment)
 
     fun propertyCanRevert(property: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(propertyCanRevertBind, handle, property)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(propertyCanRevertBind, segment, property)
 
     fun propertyGetRevert(property: String): Any? =
-        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(propertyGetRevertBind, handle, property)
+        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(propertyGetRevertBind, segment, property)
 
     fun notification(what: Int, reversed: Boolean = false) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(notificationBind, handle, what, reversed)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(notificationBind, segment, what, reversed)
     }
 
     /** Variant-path read: the script comes back as a borrowed view, never `close()` it — see [call]. */
     fun getScript(): Any? =
-        ObjectCalls.ptrcallNoArgsRetVariantScalar(getScriptBind, handle)
+        ObjectCalls.ptrcallNoArgsRetVariantScalar(getScriptBind, segment)
 
     fun setMeta(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setMetaBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setMetaBind, segment, name, value)
     }
 
     /** Variant-path read: an object result is a borrowed view, never `close()` it — see [call]. */
     fun getMeta(name: String, defaultValue: Any? = null): Any? =
-        ObjectCalls.ptrcallWithStringNameAndVariantArgRetVariantScalar(getMetaBind, handle, name, defaultValue)
+        ObjectCalls.ptrcallWithStringNameAndVariantArgRetVariantScalar(getMetaBind, segment, name, defaultValue)
 
     fun hasMeta(name: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMetaBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMetaBind, segment, name)
 
     fun removeMeta(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeMetaBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeMetaBind, segment, name)
     }
 
     fun getMetaList(): List<String> =
-        ObjectCalls.ptrcallNoArgsRetStringNameList(getMetaListBind, handle)
+        ObjectCalls.ptrcallNoArgsRetStringNameList(getMetaListBind, segment)
 
     fun addUserSignal(signal: String, arguments: List<Map<String, Any>> = emptyList()) {
-        ObjectCalls.ptrcallWithStringAndArrayOfDictionariesArg(addUserSignalBind, handle, signal, arguments)
+        ObjectCalls.ptrcallWithStringAndArrayOfDictionariesArg(addUserSignalBind, segment, signal, arguments)
     }
 
     fun hasUserSignal(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasUserSignalBind, handle, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(hasUserSignalBind, segment, signal)
 
     fun removeUserSignal(signal: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeUserSignalBind, handle, signal)
+        ObjectCalls.ptrcallWithStringNameArg(removeUserSignalBind, segment, signal)
     }
 
     fun hasMethod(method: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMethodBind, handle, method)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMethodBind, segment, method)
 
     fun getMethodArgumentCount(method: String): Long =
-        ObjectCalls.ptrcallWithStringNameArgRetInt(getMethodArgumentCountBind, handle, method).toLong()
+        ObjectCalls.ptrcallWithStringNameArgRetInt(getMethodArgumentCountBind, segment, method).toLong()
 
     fun hasSignal(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasSignalBind, handle, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(hasSignalBind, segment, signal)
 
     fun getSignalList(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getSignalListBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(getSignalListBind, segment)
 
     fun getSignalConnectionList(signal: String): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(getSignalConnectionListBind, handle, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(getSignalConnectionListBind, segment, signal)
 
     fun getIncomingConnections(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getIncomingConnectionsBind, handle)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(getIncomingConnectionsBind, segment)
 
     fun hasConnections(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasConnectionsBind, handle, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(hasConnectionsBind, segment, signal)
 
     fun signal(name: String): GodotSignal =
         GodotSignal(this, name)
@@ -140,9 +146,9 @@ open class GodotObject(val handle: MemorySegment) {
     fun connect(signal: String, target: GodotObject, method: String, flags: Long = CONNECT_DEFAULT): Long =
         ObjectCalls.ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
             connectBind,
-            handle,
+            segment,
             signal,
-            target.handle,
+            target.segment,
             method,
             flags,
         )
@@ -156,53 +162,53 @@ open class GodotObject(val handle: MemorySegment) {
     ): Long =
         ObjectCalls.ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
             connectBind,
-            handle,
+            segment,
             signal,
-            target.handle,
+            target.segment,
             method,
             boundArgs,
             flags,
         )
 
     fun disconnect(signal: String, target: GodotObject, method: String) {
-        ObjectCalls.ptrcallWithStringNameAndCallableArgs(disconnectBind, handle, signal, target.handle, method)
+        ObjectCalls.ptrcallWithStringNameAndCallableArgs(disconnectBind, segment, signal, target.segment, method)
     }
 
     fun isConnected(signal: String, target: GodotObject, method: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameAndCallableArgsRetBool(isConnectedBind, handle, signal, target.handle, method)
+        ObjectCalls.ptrcallWithStringNameAndCallableArgsRetBool(isConnectedBind, segment, signal, target.segment, method)
 
     internal fun disconnectBound(signal: String, target: GodotObject, method: String, boundArgs: List<Any?>) {
         ObjectCalls.ptrcallWithStringNameAndBoundCallableArgs(
             disconnectBind,
-            handle,
+            segment,
             signal,
-            target.handle,
+            target.segment,
             method,
             boundArgs,
         )
     }
 
     fun emitSignal(signal: String, vararg args: Any?) {
-        RuntimeSignals.emitAny(handle, signal, args.toList())
+        RuntimeSignals.emitAny(segment, signal, args.toList())
     }
 
     fun setBlockSignals(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBlockSignalsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setBlockSignalsBind, segment, enable)
     }
 
     fun isBlockingSignals(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isBlockingSignalsBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isBlockingSignalsBind, segment)
 
     fun notifyPropertyListChanged() {
-        ObjectCalls.ptrcallNoArgs(notifyPropertyListChangedBind, handle)
+        ObjectCalls.ptrcallNoArgs(notifyPropertyListChangedBind, segment)
     }
 
     fun setMessageTranslation(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMessageTranslationBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMessageTranslationBind, segment, enable)
     }
 
     fun canTranslateMessages(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(canTranslateMessagesBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(canTranslateMessagesBind, segment)
 
     /**
      * Dynamic `Object.call`. Scalars come back as Kotlin values. An **object** result comes back
@@ -212,7 +218,7 @@ open class GodotObject(val handle: MemorySegment) {
      * - never `close()` it, and never `close()` a `Resource.fromObject(...)`/`X.fromObject(...)`
      *   view you mint over it — that releases a reference you never took;
      * - if the call *minted* the object and the return Variant held its only reference
-     *   (`call("duplicate")`, a static factory), the handle is already dead when you receive it;
+     *   (`call("duplicate")`, a static factory), the segment is already dead when you receive it;
      *   use the typed wrapper method instead (an owned `+1` you close), or `ClassDB.instantiate`,
      *   whose owned decode path retains before the Variant is destroyed.
      *
@@ -223,11 +229,11 @@ open class GodotObject(val handle: MemorySegment) {
      * `docs/contributing/wrapper-maintenance.md` "RefCounted Return Ownership".
      */
     fun call(method: String, vararg args: Any?): Any? {
-        val result = ObjectCalls.callWithVariantArgs(callBind, handle, listOf(method, *args))
+        val result = ObjectCalls.callWithVariantArgs(callBind, segment, listOf(method, *args))
         if (method == "set" && args.size == 2) {
             val property = args[0] as? String
             if (property != null) {
-                ScriptBridge.applyOrRecordScriptPropertySet(handle, property, args[1])
+                ScriptBridge.applyOrRecordScriptPropertySet(segment, property, args[1])
             }
         }
         return result
@@ -235,11 +241,11 @@ open class GodotObject(val handle: MemorySegment) {
 
     /** Variant-path call; an object result is a borrowed view, never `close()` it — see [call]. */
     fun callDeferred(method: String, vararg args: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callDeferredBind, handle, listOf(method, *args))
+        ObjectCalls.callWithVariantArgs(callDeferredBind, segment, listOf(method, *args))
 
     /** Variant-path call; an object result is a borrowed view, never `close()` it — see [call]. */
     fun callv(method: String, arguments: List<Any?>): Any? =
-        ObjectCalls.ptrcallWithStringNameArrayArgsRetVariantScalar(callvBind, handle, method, arguments)
+        ObjectCalls.ptrcallWithStringNameArrayArgsRetVariantScalar(callvBind, segment, method, arguments)
 
     /**
      * Dynamic `Object.get`. A resource read this way (`get("mesh")`) is a *borrowed* view that
@@ -247,42 +253,42 @@ open class GodotObject(val handle: MemorySegment) {
      * typed getter (`getMesh()`) is the owned `+1` you close.
      */
     fun get(property: String): Any? =
-        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(objectGetBind, handle, property)
+        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(objectGetBind, segment, property)
 
     fun set(property: String, value: Any?): Long {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(objectSetBind, handle, property, value)
-        ScriptBridge.applyOrRecordScriptPropertySet(handle, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(objectSetBind, segment, property, value)
+        ScriptBridge.applyOrRecordScriptPropertySet(segment, property, value)
         return 0L
     }
 
     fun setDeferred(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredBind, handle, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredBind, segment, property, value)
     }
 
     fun setScript(script: Resource?) {
-        ScriptBridge.noteSetScript(handle, script?.handle ?: MemorySegment.NULL)
-        ObjectCalls.ptrcallWithVariantArg(setScriptBind, handle, script)
+        ScriptBridge.noteSetScript(segment, script?.segment ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithVariantArg(setScriptBind, segment, script)
     }
 
     fun tr(message: String, context: String = ""): String =
-        ObjectCalls.ptrcallWithTwoStringNameArgsRetString(trBind, handle, message, context)
+        ObjectCalls.ptrcallWithTwoStringNameArgsRetString(trBind, segment, message, context)
 
     fun trN(message: String, pluralMessage: String, n: Int, context: String = ""): String =
-        ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetString(trNBind, handle, message, pluralMessage, n, context)
+        ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetString(trNBind, segment, message, pluralMessage, n, context)
 
     fun getTranslationDomain(): String =
-        ObjectCalls.ptrcallNoArgsRetStringName(getTranslationDomainBind, handle)
+        ObjectCalls.ptrcallNoArgsRetStringName(getTranslationDomainBind, segment)
 
     fun setTranslationDomain(domain: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTranslationDomainBind, handle, domain)
+        ObjectCalls.ptrcallWithStringNameArg(setTranslationDomainBind, segment, domain)
     }
 
     fun cancelFree() {
-        ObjectCalls.ptrcallNoArgs(cancelFreeBind, handle)
+        ObjectCalls.ptrcallNoArgs(cancelFreeBind, segment)
     }
 
     override fun toString(): String =
-        ObjectCalls.ptrcallNoArgsRetString(toStringBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(toStringBind, segment)
 
     object Signals {
         const val scriptChanged: String = "script_changed"
@@ -300,8 +306,8 @@ open class GodotObject(val handle: MemorySegment) {
         const val CONNECT_REFERENCE_COUNTED = 8L
         const val CONNECT_APPEND_SOURCE_OBJECT = 16L
 
-        fun wrap(handle: MemorySegment): GodotObject? =
-            if (handle.address() == 0L) null else GodotObject(handle)
+        internal fun wrap(handle: MemorySegment): GodotObject? =
+            if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
 
         private const val NOARGS_STRING_HASH = 201670096L
         private const val NOARGS_BOOL_HASH = 36873697L

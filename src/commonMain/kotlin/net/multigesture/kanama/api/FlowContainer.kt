@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: FlowContainer
  */
-open class FlowContainer(handle: MemorySegment) : Container(handle) {
+open class FlowContainer(handle: GodotHandle) : Container(handle) {
     var alignment: Long
         @JvmName("alignmentProperty")
         get() = getAlignment()
@@ -43,7 +43,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.get_line_count
      */
     fun getLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
     }
 
     /**
@@ -53,7 +53,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_alignment
      */
     fun setAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment)
     }
 
     /**
@@ -63,7 +63,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.get_alignment
      */
     fun getAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_last_wrap_alignment
      */
     fun setLastWrapAlignment(lastWrapAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLastWrapAlignmentBind, handle, lastWrapAlignment)
+        ObjectCalls.ptrcallWithLongArg(setLastWrapAlignmentBind, segment, lastWrapAlignment)
     }
 
     /**
@@ -85,7 +85,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.get_last_wrap_alignment
      */
     fun getLastWrapAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLastWrapAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLastWrapAlignmentBind, segment)
     }
 
     /**
@@ -95,7 +95,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_vertical
      */
     fun setVertical(vertical: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, handle, vertical)
+        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
     }
 
     /**
@@ -105,7 +105,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.is_vertical
      */
     fun isVertical(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_reverse_fill
      */
     fun setReverseFill(reverseFill: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setReverseFillBind, handle, reverseFill)
+        ObjectCalls.ptrcallWithBoolArg(setReverseFillBind, segment, reverseFill)
     }
 
     /**
@@ -127,7 +127,7 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FlowContainer.is_reverse_fill
      */
     fun isReverseFill(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReverseFillBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isReverseFillBind, segment)
     }
 
     companion object {
@@ -140,11 +140,11 @@ open class FlowContainer(handle: MemorySegment) : Container(handle) {
         const val LAST_WRAP_ALIGNMENT_END: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FlowContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FlowContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FlowContainer? =
-            if (handle.address() == 0L) null else FlowContainer(handle)
+            if (handle.address() == 0L) null else FlowContainer(GodotHandle(handle))
 
         private const val GET_LINE_COUNT_HASH = 3905245786L
         private val getLineCountBind by lazy {

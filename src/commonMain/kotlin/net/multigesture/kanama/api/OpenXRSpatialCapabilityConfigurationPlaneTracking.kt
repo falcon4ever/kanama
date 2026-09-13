@@ -8,34 +8,34 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationPlaneTracking
  */
-class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: MemorySegment) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
+class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
     fun supportsMesh2d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(supportsMesh2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(supportsMesh2dBind, segment)
     }
 
     fun supportsPolygons(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(supportsPolygonsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(supportsPolygonsBind, segment)
     }
 
     fun supportsLabels(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(supportsLabelsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(supportsLabelsBind, segment)
     }
 
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
-            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationPlaneTracking(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(handle))
 
         private const val SUPPORTS_MESH_2D_HASH = 2240911060L
         private val supportsMesh2dBind by lazy {

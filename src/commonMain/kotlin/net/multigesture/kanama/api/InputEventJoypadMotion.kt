@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventJoypadMotion
  */
-class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
+class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
     var axis: Long
         @JvmName("axisProperty")
         get() = getAxis()
@@ -31,7 +31,7 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setAxis(axis: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAxisBind, handle, axis)
+        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis)
     }
 
     /**
@@ -41,7 +41,7 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getAxis(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      */
     fun setAxisValue(axisValue: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAxisValueBind, handle, axisValue)
+        ObjectCalls.ptrcallWithDoubleArg(setAxisValueBind, segment, axisValue)
     }
 
     /**
@@ -63,16 +63,16 @@ class InputEventJoypadMotion(handle: MemorySegment) : InputEvent(handle) {
      */
     fun getAxisValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAxisValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAxisValueBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventJoypadMotion? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventJoypadMotion? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventJoypadMotion? =
-            if (handle.address() == 0L) null else InputEventJoypadMotion(handle)
+            if (handle.address() == 0L) null else InputEventJoypadMotion(GodotHandle(handle))
 
         private const val SET_AXIS_HASH = 1332685170L
         private val setAxisBind by lazy {

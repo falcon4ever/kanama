@@ -14,170 +14,170 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: SurfaceTool
  */
-class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
+class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     fun setSkinWeightCount(count: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, handle, count)
+        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, segment, count)
     }
 
     fun getSkinWeightCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, segment)
     }
 
     fun setCustomFormat(channelIndex: Int, format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, handle, channelIndex, format)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, segment, channelIndex, format)
     }
 
     fun getCustomFormat(channelIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, handle, channelIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, segment, channelIndex)
     }
 
     fun begin(primitive: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(beginBind, handle, primitive)
+        ObjectCalls.ptrcallWithLongArg(beginBind, segment, primitive)
     }
 
     fun addVertex(vertex: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(addVertexBind, handle, vertex)
+        ObjectCalls.ptrcallWithVector3Arg(addVertexBind, segment, vertex)
     }
 
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     fun setNormal(normal: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setNormalBind, handle, normal)
+        ObjectCalls.ptrcallWithVector3Arg(setNormalBind, segment, normal)
     }
 
     fun setTangent(tangent: Plane) {
         checkOpen()
-        ObjectCalls.ptrcallWithPlaneArg(setTangentBind, handle, tangent)
+        ObjectCalls.ptrcallWithPlaneArg(setTangentBind, segment, tangent)
     }
 
     fun setUv(uv: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setUvBind, handle, uv)
+        ObjectCalls.ptrcallWithVector2Arg(setUvBind, segment, uv)
     }
 
     fun setUv2(uv2: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setUv2Bind, handle, uv2)
+        ObjectCalls.ptrcallWithVector2Arg(setUv2Bind, segment, uv2)
     }
 
     fun setBones(bones: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setBonesBind, handle, bones)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setBonesBind, segment, bones)
     }
 
     fun setWeights(weights: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setWeightsBind, handle, weights)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setWeightsBind, segment, weights)
     }
 
     fun setCustom(channelIndex: Int, customColor: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setCustomBind, handle, channelIndex, customColor)
+        ObjectCalls.ptrcallWithIntAndColorArg(setCustomBind, segment, channelIndex, customColor)
     }
 
     fun setSmoothGroup(index: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setSmoothGroupBind, handle, index)
+        ObjectCalls.ptrcallWithUInt32Arg(setSmoothGroupBind, segment, index)
     }
 
     fun addTriangleFan(vertices: List<Vector3>, uvs: List<Vector2>, colors: List<Color>, uv2s: List<Vector2>, normals: List<Vector3>, tangents: List<Plane>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(addTriangleFanBind, handle, vertices, uvs, colors, uv2s, normals, tangents)
+        ObjectCalls.ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(addTriangleFanBind, segment, vertices, uvs, colors, uv2s, normals, tangents)
     }
 
     fun addIndex(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addIndexBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(addIndexBind, segment, index)
     }
 
     fun index() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(indexBind, handle)
+        ObjectCalls.ptrcallNoArgs(indexBind, segment)
     }
 
     fun deindex() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(deindexBind, handle)
+        ObjectCalls.ptrcallNoArgs(deindexBind, segment)
     }
 
     fun generateNormals(flip: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(generateNormalsBind, handle, flip)
+        ObjectCalls.ptrcallWithBoolArg(generateNormalsBind, segment, flip)
     }
 
     fun generateTangents() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(generateTangentsBind, handle)
+        ObjectCalls.ptrcallNoArgs(generateTangentsBind, segment)
     }
 
     fun optimizeIndicesForCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(optimizeIndicesForCacheBind, handle)
+        ObjectCalls.ptrcallNoArgs(optimizeIndicesForCacheBind, segment)
     }
 
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
     }
 
     fun generateLod(ndThreshold: Double, targetIndexCount: Int = 3): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedInt32List(generateLodBind, handle, ndThreshold, targetIndexCount)
+        return ObjectCalls.ptrcallWithDoubleAndIntArgsRetPackedInt32List(generateLodBind, segment, ndThreshold, targetIndexCount)
     }
 
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getPrimitiveType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, segment)
     }
 
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun createFrom(existing: Mesh?, surface: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndIntArg(createFromBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface)
+        ObjectCalls.ptrcallWithObjectAndIntArg(createFromBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
     fun createFromArrays(arrays: List<Any?>, primitiveType: Long = 3L) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, handle, arrays, primitiveType)
+        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, segment, arrays, primitiveType)
     }
 
     fun createFromBlendShape(existing: Mesh?, surface: Int, blendShape: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectIntStringArgs(createFromBlendShapeBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, blendShape)
+        ObjectCalls.ptrcallWithObjectIntStringArgs(createFromBlendShapeBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, blendShape)
     }
 
     fun appendFrom(existing: Mesh?, surface: Int, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(appendFromBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, transform)
+        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(appendFromBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface, transform)
     }
 
     fun commit(existing: ArrayMesh?, flags: Long = 0L): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(commitBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL, flags))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(commitBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL, flags))
     }
 
     fun commitToArrays(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(commitToArraysBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(commitToArraysBind, segment)
     }
 
     // No-arg commit() — the generated commit(existing, flags) doesn't default the nullable `existing`
@@ -198,15 +198,15 @@ class SurfaceTool(handle: MemorySegment) : RefCounted(handle) {
         const val SKIN_8_WEIGHTS: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SurfaceTool? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SurfaceTool? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SurfaceTool? =
-            if (handle.address() == 0L) null else SurfaceTool(handle)
+            if (handle.address() == 0L) null else SurfaceTool(GodotHandle(handle))
 
         // Instantiate a SurfaceTool (RefCounted; used to build meshes procedurally).
         fun create(): SurfaceTool =
-            SurfaceTool(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool")))
+            SurfaceTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))))
 
         private const val SET_SKIN_WEIGHT_COUNT_HASH = 618679515L
         private val setSkinWeightCountBind by lazy {

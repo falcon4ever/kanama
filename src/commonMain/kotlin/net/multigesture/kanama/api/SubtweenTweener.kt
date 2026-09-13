@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SubtweenTweener
  */
-class SubtweenTweener(handle: MemorySegment) : Tweener(handle) {
+class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
     /**
      * Sets the time in seconds after which the `SubtweenTweener` will start running the subtween. By
      * default there's no delay.
@@ -19,8 +19,8 @@ class SubtweenTweener(handle: MemorySegment) : Tweener(handle) {
      */
     fun setDelay(delay: Double): SubtweenTweener? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, handle, delay)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -29,11 +29,11 @@ class SubtweenTweener(handle: MemorySegment) : Tweener(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SubtweenTweener? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SubtweenTweener? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SubtweenTweener? =
-            if (handle.address() == 0L) null else SubtweenTweener(handle)
+            if (handle.address() == 0L) null else SubtweenTweener(GodotHandle(handle))
 
         private const val SET_DELAY_HASH = 449181780L
         private val setDelayBind by lazy {

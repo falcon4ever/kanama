@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: KinematicCollision3D
  */
-class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
+class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the moving object's travel before collision.
      *
@@ -20,7 +20,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTravel(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, segment)
     }
 
     /**
@@ -30,7 +30,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRemainder(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, segment)
     }
 
     /**
@@ -40,7 +40,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPosition(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getPositionBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getPositionBind, segment, collisionIndex)
     }
 
     /**
@@ -72,7 +72,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getNormal(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getNormalBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getNormalBind, segment, collisionIndex)
     }
 
     /**
@@ -83,7 +83,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAngle(collisionIndex: Int = 0, upDirection: Vector3): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector3ArgsRetDouble(getAngleBind, handle, collisionIndex, upDirection)
+        return ObjectCalls.ptrcallWithIntVector3ArgsRetDouble(getAngleBind, segment, collisionIndex, upDirection)
     }
 
     /**
@@ -94,7 +94,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLocalShape(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLocalShapeBind, handle, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLocalShapeBind, segment, collisionIndex))
     }
 
     /**
@@ -105,7 +105,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, segment, collisionIndex))
     }
 
     /**
@@ -116,7 +116,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderId(collisionIndex: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, segment, collisionIndex)
     }
 
     /**
@@ -127,7 +127,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderRid(collisionIndex: Int = 0): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, segment, collisionIndex)
     }
 
     /**
@@ -137,7 +137,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderShape(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderShapeBind, handle, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderShapeBind, segment, collisionIndex))
     }
 
     /**
@@ -148,7 +148,7 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderShapeIndex(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeIndexBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeIndexBind, segment, collisionIndex)
     }
 
     /**
@@ -159,16 +159,16 @@ class KinematicCollision3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, segment, collisionIndex)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): KinematicCollision3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): KinematicCollision3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): KinematicCollision3D? =
-            if (handle.address() == 0L) null else KinematicCollision3D(handle)
+            if (handle.address() == 0L) null else KinematicCollision3D(GodotHandle(handle))
 
         private const val GET_TRAVEL_HASH = 3360562783L
         private val getTravelBind by lazy {

@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ResourceImporterTextureAtlas
  */
-class ResourceImporterTextureAtlas(handle: MemorySegment) : ResourceImporter(handle) {
+class ResourceImporterTextureAtlas(handle: GodotHandle) : ResourceImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceImporterTextureAtlas? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceImporterTextureAtlas? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceImporterTextureAtlas? =
-            if (handle.address() == 0L) null else ResourceImporterTextureAtlas(handle)
+            if (handle.address() == 0L) null else ResourceImporterTextureAtlas(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

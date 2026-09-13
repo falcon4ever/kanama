@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CollisionShape2D
  */
-class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
+class CollisionShape2D(handle: GodotHandle) : Node2D(handle) {
     var shape: Shape2D?
         @JvmName("shapeProperty")
         get() = getShape()
@@ -56,7 +56,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.set_shape
      */
     fun setShape(shape: Shape2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -65,7 +65,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.get_shape
      */
     fun getShape(): Shape2D? {
-        return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
+        return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**
@@ -75,7 +75,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.set_disabled
      */
     fun setDisabled(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, disabled)
     }
 
     /**
@@ -85,7 +85,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.set_one_way_collision
      */
     fun setOneWayCollision(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneWayCollisionBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setOneWayCollisionBind, segment, enabled)
     }
 
     /**
@@ -109,7 +109,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.is_one_way_collision_enabled
      */
     fun isOneWayCollisionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOneWayCollisionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOneWayCollisionEnabledBind, segment)
     }
 
     /**
@@ -119,7 +119,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.set_one_way_collision_margin
      */
     fun setOneWayCollisionMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOneWayCollisionMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setOneWayCollisionMarginBind, segment, margin)
     }
 
     /**
@@ -129,7 +129,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.get_one_way_collision_margin
      */
     fun getOneWayCollisionMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOneWayCollisionMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOneWayCollisionMarginBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.set_one_way_collision_direction
      */
     fun setOneWayCollisionDirection(direction: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOneWayCollisionDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithVector2Arg(setOneWayCollisionDirectionBind, segment, direction)
     }
 
     /**
@@ -147,7 +147,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.get_one_way_collision_direction
      */
     fun getOneWayCollisionDirection(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, segment)
     }
 
     /**
@@ -159,7 +159,7 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.set_debug_color
      */
     fun setDebugColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, segment, color)
     }
 
     /**
@@ -171,16 +171,16 @@ class CollisionShape2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.get_debug_color
      */
     fun getDebugColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CollisionShape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CollisionShape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CollisionShape2D? =
-            if (handle.address() == 0L) null else CollisionShape2D(handle)
+            if (handle.address() == 0L) null else CollisionShape2D(GodotHandle(handle))
 
         private const val SET_SHAPE_HASH = 771364740L
         private val setShapeBind by lazy {

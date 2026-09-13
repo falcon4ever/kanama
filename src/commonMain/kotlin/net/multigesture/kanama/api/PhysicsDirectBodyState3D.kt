@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicsDirectBodyState3D
  */
-open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle) {
+open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
     val step: Double
         @JvmName("stepProperty")
         get() = getStep()
@@ -98,7 +98,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_total_gravity
      */
     fun getTotalGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTotalGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getTotalGravityBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_total_linear_damp
      */
     fun getTotalLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalLinearDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalLinearDampBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_total_angular_damp
      */
     fun getTotalAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalAngularDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalAngularDampBind, segment)
     }
 
     /**
@@ -126,7 +126,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_center_of_mass
      */
     fun getCenterOfMass(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, segment)
     }
 
     /**
@@ -135,11 +135,11 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_center_of_mass_local
      */
     fun getCenterOfMassLocal(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassLocalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassLocalBind, segment)
     }
 
     fun getPrincipalInertiaAxes(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getPrincipalInertiaAxesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBasis(getPrincipalInertiaAxesBind, segment)
     }
 
     /**
@@ -148,7 +148,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_inverse_mass
      */
     fun getInverseMass(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInverseMassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInverseMassBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_inverse_inertia
      */
     fun getInverseInertia(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getInverseInertiaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getInverseInertiaBind, segment)
     }
 
     /**
@@ -166,7 +166,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_inverse_inertia_tensor
      */
     fun getInverseInertiaTensor(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getInverseInertiaTensorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBasis(getInverseInertiaTensorBind, segment)
     }
 
     /**
@@ -175,7 +175,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_linear_velocity
      */
     fun setLinearVelocity(velocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, velocity)
     }
 
     /**
@@ -184,7 +184,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_linear_velocity
      */
     fun getLinearVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_angular_velocity
      */
     fun setAngularVelocity(velocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, velocity)
     }
 
     /**
@@ -202,7 +202,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_angular_velocity
      */
     fun getAngularVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
     }
 
     /**
@@ -211,7 +211,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_transform
      */
     fun setTransform(transform: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
+        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, transform)
     }
 
     /**
@@ -220,7 +220,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_transform
      */
     fun getTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_velocity_at_local_position
      */
     fun getVelocityAtLocalPosition(localPosition: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(getVelocityAtLocalPositionBind, handle, localPosition)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(getVelocityAtLocalPositionBind, segment, localPosition)
     }
 
     /**
@@ -242,7 +242,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_central_impulse
      */
     fun applyCentralImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, handle, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, segment, impulse)
     }
 
     /**
@@ -254,7 +254,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_impulse
      */
     fun applyImpulse(impulse: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, handle, impulse, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, segment, impulse, position)
     }
 
     /**
@@ -268,7 +268,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_torque_impulse
      */
     fun applyTorqueImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyTorqueImpulseBind, handle, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(applyTorqueImpulseBind, segment, impulse)
     }
 
     /**
@@ -279,7 +279,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_central_force
      */
     fun applyCentralForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector3Arg(applyCentralForceBind, segment, force)
     }
 
     /**
@@ -289,7 +289,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_force
      */
     fun applyForce(force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyForceBind, handle, force, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(applyForceBind, segment, force, position)
     }
 
     /**
@@ -301,7 +301,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_torque
      */
     fun applyTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyTorqueBind, handle, torque)
+        ObjectCalls.ptrcallWithVector3Arg(applyTorqueBind, segment, torque)
     }
 
     /**
@@ -312,7 +312,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.add_constant_central_force
      */
     fun addConstantCentralForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(addConstantCentralForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector3Arg(addConstantCentralForceBind, segment, force)
     }
 
     /**
@@ -323,7 +323,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.add_constant_force
      */
     fun addConstantForce(force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(addConstantForceBind, handle, force, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(addConstantForceBind, segment, force, position)
     }
 
     /**
@@ -333,7 +333,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.add_constant_torque
      */
     fun addConstantTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(addConstantTorqueBind, handle, torque)
+        ObjectCalls.ptrcallWithVector3Arg(addConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -343,7 +343,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_constant_force
      */
     fun setConstantForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantForceBind, handle, force)
+        ObjectCalls.ptrcallWithVector3Arg(setConstantForceBind, segment, force)
     }
 
     /**
@@ -353,7 +353,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_constant_force
      */
     fun getConstantForce(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantForceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantForceBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_constant_torque
      */
     fun setConstantTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantTorqueBind, handle, torque)
+        ObjectCalls.ptrcallWithVector3Arg(setConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -373,7 +373,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_constant_torque
      */
     fun getConstantTorque(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantTorqueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantTorqueBind, segment)
     }
 
     /**
@@ -382,7 +382,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_sleep_state
      */
     fun setSleepState(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSleepStateBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSleepStateBind, segment, enabled)
     }
 
     /**
@@ -391,7 +391,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.is_sleeping
      */
     fun isSleeping(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, segment)
     }
 
     /**
@@ -400,7 +400,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_collision_layer
      */
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
     }
 
     /**
@@ -409,7 +409,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_collision_layer
      */
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
     }
 
     /**
@@ -418,7 +418,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -427,7 +427,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -437,7 +437,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_count
      */
     fun getContactCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, segment)
     }
 
     /**
@@ -446,7 +446,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_position
      */
     fun getContactLocalPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalPositionBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalPositionBind, segment, contactIdx)
     }
 
     /**
@@ -455,7 +455,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_normal
      */
     fun getContactLocalNormal(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalNormalBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalNormalBind, segment, contactIdx)
     }
 
     /**
@@ -464,7 +464,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_impulse
      */
     fun getContactImpulse(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactImpulseBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactImpulseBind, segment, contactIdx)
     }
 
     /**
@@ -473,7 +473,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_shape
      */
     fun getContactLocalShape(contactIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getContactLocalShapeBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getContactLocalShapeBind, segment, contactIdx)
     }
 
     /**
@@ -482,7 +482,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_velocity_at_position
      */
     fun getContactLocalVelocityAtPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalVelocityAtPositionBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalVelocityAtPositionBind, segment, contactIdx)
     }
 
     /**
@@ -491,7 +491,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider
      */
     fun getContactCollider(contactIdx: Int): RID {
-        return ObjectCalls.ptrcallWithIntArgRetRID(getContactColliderBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetRID(getContactColliderBind, segment, contactIdx)
     }
 
     /**
@@ -500,7 +500,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_position
      */
     fun getContactColliderPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactColliderPositionBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactColliderPositionBind, segment, contactIdx)
     }
 
     /**
@@ -509,7 +509,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_id
      */
     fun getContactColliderId(contactIdx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getContactColliderIdBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getContactColliderIdBind, segment, contactIdx)
     }
 
     /**
@@ -518,7 +518,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_object
      */
     fun getContactColliderObject(contactIdx: Int): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getContactColliderObjectBind, handle, contactIdx))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getContactColliderObjectBind, segment, contactIdx))
     }
 
     /**
@@ -527,7 +527,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_shape
      */
     fun getContactColliderShape(contactIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getContactColliderShapeBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getContactColliderShapeBind, segment, contactIdx)
     }
 
     /**
@@ -536,7 +536,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_velocity_at_position
      */
     fun getContactColliderVelocityAtPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactColliderVelocityAtPositionBind, handle, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactColliderVelocityAtPositionBind, segment, contactIdx)
     }
 
     /**
@@ -545,7 +545,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_step
      */
     fun getStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
     }
 
     /**
@@ -555,7 +555,7 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.integrate_forces
      */
     fun integrateForces() {
-        ObjectCalls.ptrcallNoArgs(integrateForcesBind, handle)
+        ObjectCalls.ptrcallNoArgs(integrateForcesBind, segment)
     }
 
     /**
@@ -564,16 +564,16 @@ open class PhysicsDirectBodyState3D(handle: MemorySegment) : GodotObject(handle)
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_space_state
      */
     fun getSpaceState(): PhysicsDirectSpaceState3D? {
-        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpaceStateBind, handle))
+        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpaceStateBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsDirectBodyState3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsDirectBodyState3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsDirectBodyState3D? =
-            if (handle.address() == 0L) null else PhysicsDirectBodyState3D(handle)
+            if (handle.address() == 0L) null else PhysicsDirectBodyState3D(GodotHandle(handle))
 
         private const val GET_TOTAL_GRAVITY_HASH = 3360562783L
         private val getTotalGravityBind by lazy {

@@ -95,8 +95,8 @@ object ResourceSaver {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): ResourceSaver? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): ResourceSaver? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): ResourceSaver? =
         if (handle.address() == 0L) null else this

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeOutput
  */
-class AnimationNodeOutput(handle: MemorySegment) : AnimationNode(handle) {
+class AnimationNodeOutput(handle: GodotHandle) : AnimationNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeOutput? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeOutput? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeOutput? =
-            if (handle.address() == 0L) null else AnimationNodeOutput(handle)
+            if (handle.address() == 0L) null else AnimationNodeOutput(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

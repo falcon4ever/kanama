@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Transform3D
  *
  * Generated from Godot docs: PathFollow3D
  */
-class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
+class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
     var progress: Double
         @JvmName("progressProperty")
         get() = getProgress()
@@ -74,7 +74,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_progress
      */
     fun setProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressBind, handle, progress)
+        ObjectCalls.ptrcallWithDoubleArg(setProgressBind, segment, progress)
     }
 
     /**
@@ -84,7 +84,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_progress
      */
     fun getProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_h_offset
      */
     fun setHOffset(hOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, handle, hOffset)
+        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, segment, hOffset)
     }
 
     /**
@@ -102,7 +102,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_h_offset
      */
     fun getHOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_v_offset
      */
     fun setVOffset(vOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, handle, vOffset)
+        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, segment, vOffset)
     }
 
     /**
@@ -120,7 +120,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_v_offset
      */
     fun getVOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, segment)
     }
 
     /**
@@ -134,7 +134,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_progress_ratio
      */
     fun setProgressRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setProgressRatioBind, segment, ratio)
     }
 
     /**
@@ -148,7 +148,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_progress_ratio
      */
     fun getProgressRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressRatioBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_rotation_mode
      */
     fun setRotationMode(rotationMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationModeBind, handle, rotationMode)
+        ObjectCalls.ptrcallWithLongArg(setRotationModeBind, segment, rotationMode)
     }
 
     /**
@@ -168,7 +168,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_rotation_mode
      */
     fun getRotationMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRotationModeBind, segment)
     }
 
     /**
@@ -183,7 +183,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_cubic_interpolation
      */
     fun setCubicInterpolation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCubicInterpolationBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCubicInterpolationBind, segment, enabled)
     }
 
     /**
@@ -198,7 +198,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_cubic_interpolation
      */
     fun getCubicInterpolation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCubicInterpolationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCubicInterpolationBind, segment)
     }
 
     /**
@@ -208,7 +208,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_use_model_front
      */
     fun setUseModelFront(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseModelFrontBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseModelFrontBind, segment, enabled)
     }
 
     /**
@@ -218,7 +218,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.is_using_model_front
      */
     fun isUsingModelFront(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingModelFrontBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingModelFrontBind, segment)
     }
 
     /**
@@ -228,7 +228,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_loop
      */
     fun setLoop(loop: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
+        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
     }
 
     /**
@@ -238,7 +238,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.has_loop
      */
     fun hasLoop(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
     }
 
     /**
@@ -247,7 +247,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_tilt_enabled
      */
     fun setTiltEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTiltEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setTiltEnabledBind, segment, enabled)
     }
 
     /**
@@ -256,7 +256,7 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.is_tilt_enabled
      */
     fun isTiltEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTiltEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTiltEnabledBind, segment)
     }
 
     companion object {
@@ -277,11 +277,11 @@ class PathFollow3D(handle: MemorySegment) : Node3D(handle) {
         const val ROTATION_ORIENTED: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PathFollow3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PathFollow3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PathFollow3D? =
-            if (handle.address() == 0L) null else PathFollow3D(handle)
+            if (handle.address() == 0L) null else PathFollow3D(GodotHandle(handle))
 
         private const val SET_PROGRESS_HASH = 373806689L
         private val setProgressBind by lazy {

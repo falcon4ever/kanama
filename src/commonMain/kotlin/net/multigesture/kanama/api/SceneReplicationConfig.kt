@@ -9,70 +9,70 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: SceneReplicationConfig
  */
-class SceneReplicationConfig(handle: MemorySegment) : Resource(handle) {
+class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun getProperties(): List<NodePath> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getPropertiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(getPropertiesBind, segment)
     }
 
     fun addProperty(path: NodePath, index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndIntArg(addPropertyBind, handle, path, index)
+        ObjectCalls.ptrcallWithNodePathAndIntArg(addPropertyBind, segment, path, index)
     }
 
     fun hasProperty(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasPropertyBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasPropertyBind, segment, path)
     }
 
     fun removeProperty(path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(removePropertyBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(removePropertyBind, segment, path)
     }
 
     fun propertyGetIndex(path: NodePath): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetInt(propertyGetIndexBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetInt(propertyGetIndexBind, segment, path)
     }
 
     fun propertyGetSpawn(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSpawnBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSpawnBind, segment, path)
     }
 
     fun propertySetSpawn(path: NodePath, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSpawnBind, handle, path, enabled)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSpawnBind, segment, path, enabled)
     }
 
     fun propertyGetReplicationMode(path: NodePath): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetLong(propertyGetReplicationModeBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetLong(propertyGetReplicationModeBind, segment, path)
     }
 
     fun propertySetReplicationMode(path: NodePath, mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndLongArg(propertySetReplicationModeBind, handle, path, mode)
+        ObjectCalls.ptrcallWithNodePathAndLongArg(propertySetReplicationModeBind, segment, path, mode)
     }
 
     fun propertyGetSync(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSyncBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSyncBind, segment, path)
     }
 
     fun propertySetSync(path: NodePath, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSyncBind, handle, path, enabled)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSyncBind, segment, path, enabled)
     }
 
     fun propertyGetWatch(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetWatchBind, handle, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetWatchBind, segment, path)
     }
 
     fun propertySetWatch(path: NodePath, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetWatchBind, handle, path, enabled)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetWatchBind, segment, path, enabled)
     }
 
     companion object {
@@ -81,11 +81,11 @@ class SceneReplicationConfig(handle: MemorySegment) : Resource(handle) {
         const val REPLICATION_MODE_ON_CHANGE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SceneReplicationConfig? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SceneReplicationConfig? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SceneReplicationConfig? =
-            if (handle.address() == 0L) null else SceneReplicationConfig(handle)
+            if (handle.address() == 0L) null else SceneReplicationConfig(GodotHandle(handle))
 
         private const val GET_PROPERTIES_HASH = 3995934104L
         private val getPropertiesBind by lazy {

@@ -8,24 +8,24 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationBaseHeader
  */
-open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: MemorySegment) : RefCounted(handle) {
+open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: GodotHandle) : RefCounted(handle) {
     fun hasValidConfiguration(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasValidConfigurationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasValidConfigurationBind, segment)
     }
 
     fun getConfiguration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getConfigurationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getConfigurationBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationBaseHeader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationBaseHeader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationBaseHeader? =
-            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationBaseHeader(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationBaseHeader(GodotHandle(handle))
 
         private const val HAS_VALID_CONFIGURATION_HASH = 36873697L
         private val hasValidConfigurationBind by lazy {

@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: XRInterface
  */
-open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
+open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
     var interfaceIsPrimary: Boolean
         @JvmName("interfaceIsPrimaryProperty")
         get() = isPrimary()
@@ -43,7 +43,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, segment)
     }
 
     /**
@@ -54,7 +54,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCapabilities(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCapabilitiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCapabilitiesBind, segment)
     }
 
     /**
@@ -64,7 +64,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPrimary(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPrimaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPrimaryBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPrimary(primary: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPrimaryBind, handle, primary)
+        ObjectCalls.ptrcallWithBoolArg(setPrimaryBind, segment, primary)
     }
 
     /**
@@ -84,7 +84,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isInitialized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun initialize(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(initializeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(initializeBind, segment)
     }
 
     /**
@@ -115,7 +115,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun uninitialize() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(uninitializeBind, handle)
+        ObjectCalls.ptrcallNoArgs(uninitializeBind, segment)
     }
 
     /**
@@ -128,7 +128,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSystemInfo(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSystemInfoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getSystemInfoBind, segment)
     }
 
     /**
@@ -139,7 +139,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTrackingStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRenderTargetSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRenderTargetSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getRenderTargetSizeBind, segment)
     }
 
     /**
@@ -161,7 +161,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
     }
 
     /**
@@ -176,7 +176,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun triggerHapticPulse(actionName: String, trackerName: String, frequency: Double, amplitude: Double, durationSec: Double, delaySec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringStringNameFourDoubleArgs(triggerHapticPulseBind, handle, actionName, trackerName, frequency, amplitude, durationSec, delaySec)
+        ObjectCalls.ptrcallWithStringStringNameFourDoubleArgs(triggerHapticPulseBind, segment, actionName, trackerName, frequency, amplitude, durationSec, delaySec)
     }
 
     /**
@@ -186,7 +186,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun supportsPlayAreaMode(mode: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, handle, mode)
+        return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, segment, mode)
     }
 
     /**
@@ -196,7 +196,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPlayAreaMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, segment)
     }
 
     /**
@@ -206,7 +206,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPlayAreaMode(mode: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, handle, mode)
+        return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, segment, mode)
     }
 
     /**
@@ -219,7 +219,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPlayArea(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPlayAreaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPlayAreaBind, segment)
     }
 
     /**
@@ -229,7 +229,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAnchorDetectionIsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAnchorDetectionIsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAnchorDetectionIsEnabledBind, segment)
     }
 
     /**
@@ -239,7 +239,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setAnchorDetectionIsEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAnchorDetectionIsEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAnchorDetectionIsEnabledBind, segment, enable)
     }
 
     /**
@@ -250,7 +250,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, segment)
     }
 
     /**
@@ -260,7 +260,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPassthroughSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughSupportedBind, segment)
     }
 
     /**
@@ -270,7 +270,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPassthroughEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughEnabledBind, segment)
     }
 
     /**
@@ -281,7 +281,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun startPassthrough(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(startPassthroughBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(startPassthroughBind, segment)
     }
 
     /**
@@ -291,7 +291,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun stopPassthrough() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopPassthroughBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopPassthroughBind, segment)
     }
 
     /**
@@ -303,7 +303,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTransformForView(view: Long, camTransform: Transform3D): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32Transform3DArgsRetTransform3D(getTransformForViewBind, handle, view, camTransform)
+        return ObjectCalls.ptrcallWithUInt32Transform3DArgsRetTransform3D(getTransformForViewBind, segment, view, camTransform)
     }
 
     /**
@@ -313,7 +313,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getProjectionForView(view: Long, aspect: Double, near: Double, far: Double): Projection {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32ThreeDoubleArgsRetProjection(getProjectionForViewBind, handle, view, aspect, near, far)
+        return ObjectCalls.ptrcallWithUInt32ThreeDoubleArgsRetProjection(getProjectionForViewBind, segment, view, aspect, near, far)
     }
 
     /**
@@ -324,7 +324,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSupportedEnvironmentBlendModes(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getSupportedEnvironmentBlendModesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getSupportedEnvironmentBlendModesBind, segment)
     }
 
     /**
@@ -335,7 +335,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnvironmentBlendMode(mode: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, handle, mode)
+        return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, segment, mode)
     }
 
     /**
@@ -346,7 +346,7 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnvironmentBlendMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, segment)
     }
 
     object Signals {
@@ -380,11 +380,11 @@ open class XRInterface(handle: MemorySegment) : RefCounted(handle) {
         const val XR_VRS_TEXTURE_FORMAT_FRAGMENT_DENSITY_MAP: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRInterface? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRInterface? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRInterface? =
-            if (handle.address() == 0L) null else XRInterface(handle)
+            if (handle.address() == 0L) null else XRInterface(GodotHandle(handle))
 
         private const val GET_NAME_HASH = 2002593661L
         private val getNameBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Shader
  */
-open class Shader(handle: MemorySegment) : Resource(handle) {
+open class Shader(handle: GodotHandle) : Resource(handle) {
     var code: String
         @JvmName("codeProperty")
         get() = getCode()
@@ -25,7 +25,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      */
     fun getMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
     }
 
     /**
@@ -36,7 +36,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      */
     fun setCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setCodeBind, handle, code)
+        ObjectCalls.ptrcallWithStringArg(setCodeBind, segment, code)
     }
 
     /**
@@ -47,7 +47,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      */
     fun getCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, segment)
     }
 
     /**
@@ -59,7 +59,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      */
     fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, handle, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, index)
+        ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, segment, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
     /**
@@ -71,7 +71,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      */
     fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
         checkOpen()
-        return Texture.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, handle, name, index))
+        return Texture.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, segment, name, index))
     }
 
     /**
@@ -85,7 +85,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      */
     fun getShaderUniformList(getGroups: Boolean = false): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetArray(getShaderUniformListBind, handle, getGroups)
+        return ObjectCalls.ptrcallWithBoolArgRetArray(getShaderUniformListBind, segment, getGroups)
     }
 
     /**
@@ -97,7 +97,7 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
      */
     fun inspectNativeShaderCode() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, handle)
+        ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, segment)
     }
 
     companion object {
@@ -109,11 +109,11 @@ open class Shader(handle: MemorySegment) : Resource(handle) {
         const val MODE_TEXTURE_BLIT: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Shader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Shader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Shader? =
-            if (handle.address() == 0L) null else Shader(handle)
+            if (handle.address() == 0L) null else Shader(GodotHandle(handle))
 
         private const val GET_MODE_HASH = 3392948163L
         private val getModeBind by lazy {

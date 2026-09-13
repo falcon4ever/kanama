@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.types.Transform2D
 
 /**
@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Transform2D
  * PhysicsDirectBodyState2DExtension's virtual table.
  */
 @ScriptClass(attachTo = "PhysicsDirectBodyState2DExtension")
-class Body2dVirtualReturnProbe(val godotObject: MemorySegment) {
+class Body2dVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // Transform2D value-type return (non-identity components so the smoke can
   // assert real values survived).

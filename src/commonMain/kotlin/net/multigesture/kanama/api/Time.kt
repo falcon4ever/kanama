@@ -220,8 +220,8 @@ object Time {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): Time? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): Time? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): Time? =
         if (handle.address() == 0L) null else this

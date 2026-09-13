@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: TextureLayeredRD
  */
-open class TextureLayeredRD(handle: MemorySegment) : TextureLayered(handle) {
+open class TextureLayeredRD(handle: GodotHandle) : TextureLayered(handle) {
     var textureRdRid: RID
         @JvmName("textureRdRidProperty")
         get() = getTextureRdRid()
@@ -26,7 +26,7 @@ open class TextureLayeredRD(handle: MemorySegment) : TextureLayered(handle) {
      */
     fun setTextureRdRid(textureRdRid: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setTextureRdRidBind, handle, textureRdRid)
+        ObjectCalls.ptrcallWithRIDArg(setTextureRdRidBind, segment, textureRdRid)
     }
 
     /**
@@ -36,16 +36,16 @@ open class TextureLayeredRD(handle: MemorySegment) : TextureLayered(handle) {
      */
     fun getTextureRdRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getTextureRdRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getTextureRdRidBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextureLayeredRD? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextureLayeredRD? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextureLayeredRD? =
-            if (handle.address() == 0L) null else TextureLayeredRD(handle)
+            if (handle.address() == 0L) null else TextureLayeredRD(GodotHandle(handle))
 
         private const val SET_TEXTURE_RD_RID_HASH = 2722037293L
         private val setTextureRdRidBind by lazy {

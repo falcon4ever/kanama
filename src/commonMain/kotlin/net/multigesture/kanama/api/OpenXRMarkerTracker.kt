@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: OpenXRMarkerTracker
  */
-class OpenXRMarkerTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(handle) {
+class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handle) {
     var boundsSize: Vector2
         @JvmName("boundsSizeProperty")
         get() = getBoundsSize()
@@ -31,51 +31,51 @@ class OpenXRMarkerTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(ha
 
     fun setBoundsSize(boundsSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setBoundsSizeBind, handle, boundsSize)
+        ObjectCalls.ptrcallWithVector2Arg(setBoundsSizeBind, segment, boundsSize)
     }
 
     fun getBoundsSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, segment)
     }
 
     fun setMarkerType(markerType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMarkerTypeBind, handle, markerType)
+        ObjectCalls.ptrcallWithLongArg(setMarkerTypeBind, segment, markerType)
     }
 
     fun getMarkerType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMarkerTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMarkerTypeBind, segment)
     }
 
     fun setMarkerId(markerId: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMarkerIdBind, handle, markerId)
+        ObjectCalls.ptrcallWithUInt32Arg(setMarkerIdBind, segment, markerId)
     }
 
     fun getMarkerId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMarkerIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getMarkerIdBind, segment)
     }
 
     fun setMarkerData(markerData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(setMarkerDataBind, handle, markerData)
+        ObjectCalls.ptrcallWithVariantArg(setMarkerDataBind, segment, markerData)
     }
 
     fun getMarkerData(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getMarkerDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getMarkerDataBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRMarkerTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRMarkerTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRMarkerTracker? =
-            if (handle.address() == 0L) null else OpenXRMarkerTracker(handle)
+            if (handle.address() == 0L) null else OpenXRMarkerTracker(GodotHandle(handle))
 
         private const val SET_BOUNDS_SIZE_HASH = 743155724L
         private val setBoundsSizeBind by lazy {

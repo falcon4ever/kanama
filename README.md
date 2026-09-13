@@ -114,12 +114,12 @@ package com.example.game
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GD
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
-import java.lang.foreign.MemorySegment
 
 @ScriptClass(attachTo = "Node")
-class HelloKanama(godotObject: MemorySegment) :
+class HelloKanama(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
     @OnReady
     fun ready() {

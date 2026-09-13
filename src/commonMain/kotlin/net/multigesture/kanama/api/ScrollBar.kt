@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ScrollBar
  */
-open class ScrollBar(handle: MemorySegment) : Range(handle) {
+open class ScrollBar(handle: GodotHandle) : Range(handle) {
     var customStep: Double
         @JvmName("customStepProperty")
         get() = getCustomStep()
@@ -25,7 +25,7 @@ open class ScrollBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ScrollBar.set_custom_step
      */
     fun setCustomStep(step: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCustomStepBind, handle, step)
+        ObjectCalls.ptrcallWithDoubleArg(setCustomStepBind, segment, step)
     }
 
     /**
@@ -35,7 +35,7 @@ open class ScrollBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ScrollBar.get_custom_step
      */
     fun getCustomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomStepBind, segment)
     }
 
     object Signals {
@@ -44,11 +44,11 @@ open class ScrollBar(handle: MemorySegment) : Range(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScrollBar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScrollBar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScrollBar? =
-            if (handle.address() == 0L) null else ScrollBar(handle)
+            if (handle.address() == 0L) null else ScrollBar(GodotHandle(handle))
 
         private const val SET_CUSTOM_STEP_HASH = 373806689L
         private val setCustomStepBind by lazy {

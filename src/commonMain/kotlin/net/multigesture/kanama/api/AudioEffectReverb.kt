@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectReverb
  */
-class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     var predelayMsec: Double
         @JvmName("predelayMsecProperty")
         get() = getPredelayMsec()
@@ -69,7 +69,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPredelayMsec(msec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPredelayMsecBind, handle, msec)
+        ObjectCalls.ptrcallWithDoubleArg(setPredelayMsecBind, segment, msec)
     }
 
     /**
@@ -80,7 +80,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPredelayMsec(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayMsecBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayMsecBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPredelayFeedback(feedback: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPredelayFeedbackBind, handle, feedback)
+        ObjectCalls.ptrcallWithDoubleArg(setPredelayFeedbackBind, segment, feedback)
     }
 
     /**
@@ -102,7 +102,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPredelayFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayFeedbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayFeedbackBind, segment)
     }
 
     /**
@@ -112,7 +112,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setRoomSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRoomSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setRoomSizeBind, segment, size)
     }
 
     /**
@@ -122,7 +122,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getRoomSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRoomSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRoomSizeBind, segment)
     }
 
     /**
@@ -133,7 +133,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setDamping(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDampingBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setDampingBind, segment, amount)
     }
 
     /**
@@ -144,7 +144,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getDamping(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, segment)
     }
 
     /**
@@ -155,7 +155,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setSpread(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, segment, amount)
     }
 
     /**
@@ -166,7 +166,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, segment)
     }
 
     /**
@@ -177,7 +177,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setDry(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setDryBind, segment, amount)
     }
 
     /**
@@ -188,7 +188,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getDry(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setWet(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWetBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setWetBind, segment, amount)
     }
 
     /**
@@ -210,7 +210,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getWet(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, segment)
     }
 
     /**
@@ -221,7 +221,7 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setHpf(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHpfBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setHpfBind, segment, amount)
     }
 
     /**
@@ -232,16 +232,16 @@ class AudioEffectReverb(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getHpf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHpfBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHpfBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectReverb? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectReverb? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectReverb? =
-            if (handle.address() == 0L) null else AudioEffectReverb(handle)
+            if (handle.address() == 0L) null else AudioEffectReverb(GodotHandle(handle))
 
         private const val SET_PREDELAY_MSEC_HASH = 373806689L
         private val setPredelayMsecBind by lazy {

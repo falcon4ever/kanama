@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: ReflectionProbe
  */
-class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
+class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
     var updateMode: Long
         @JvmName("updateModeProperty")
         get() = getUpdateMode()
@@ -110,7 +110,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_intensity
      */
     fun setIntensity(intensity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setIntensityBind, handle, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(setIntensityBind, segment, intensity)
     }
 
     /**
@@ -119,7 +119,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_intensity
      */
     fun getIntensity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getIntensityBind, segment)
     }
 
     /**
@@ -128,7 +128,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_blend_distance
      */
     fun setBlendDistance(blendDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBlendDistanceBind, handle, blendDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setBlendDistanceBind, segment, blendDistance)
     }
 
     /**
@@ -137,7 +137,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_blend_distance
      */
     fun getBlendDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBlendDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBlendDistanceBind, segment)
     }
 
     /**
@@ -148,7 +148,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_ambient_mode
      */
     fun setAmbientMode(ambient: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAmbientModeBind, handle, ambient)
+        ObjectCalls.ptrcallWithLongArg(setAmbientModeBind, segment, ambient)
     }
 
     /**
@@ -159,7 +159,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_ambient_mode
      */
     fun getAmbientMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAmbientModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAmbientModeBind, segment)
     }
 
     /**
@@ -169,7 +169,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_ambient_color
      */
     fun setAmbientColor(ambient: Color) {
-        ObjectCalls.ptrcallWithColorArg(setAmbientColorBind, handle, ambient)
+        ObjectCalls.ptrcallWithColorArg(setAmbientColorBind, segment, ambient)
     }
 
     /**
@@ -179,7 +179,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_ambient_color
      */
     fun getAmbientColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getAmbientColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getAmbientColorBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_ambient_color_energy
      */
     fun setAmbientColorEnergy(ambientEnergy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAmbientColorEnergyBind, handle, ambientEnergy)
+        ObjectCalls.ptrcallWithDoubleArg(setAmbientColorEnergyBind, segment, ambientEnergy)
     }
 
     /**
@@ -199,7 +199,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_ambient_color_energy
      */
     fun getAmbientColorEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientColorEnergyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientColorEnergyBind, segment)
     }
 
     /**
@@ -212,7 +212,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_max_distance
      */
     fun setMaxDistance(maxDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, handle, maxDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, segment, maxDistance)
     }
 
     /**
@@ -225,7 +225,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_max_distance
      */
     fun getMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, segment)
     }
 
     /**
@@ -239,7 +239,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_mesh_lod_threshold
      */
     fun setMeshLodThreshold(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, segment, ratio)
     }
 
     /**
@@ -253,7 +253,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_mesh_lod_threshold
      */
     fun getMeshLodThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, segment)
     }
 
     /**
@@ -265,7 +265,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -277,7 +277,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -288,7 +288,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_origin_offset
      */
     fun setOriginOffset(originOffset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setOriginOffsetBind, handle, originOffset)
+        ObjectCalls.ptrcallWithVector3Arg(setOriginOffsetBind, segment, originOffset)
     }
 
     /**
@@ -299,7 +299,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_origin_offset
      */
     fun getOriginOffset(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOriginOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getOriginOffsetBind, segment)
     }
 
     /**
@@ -308,7 +308,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_as_interior
      */
     fun setAsInterior(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsInteriorBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsInteriorBind, segment, enable)
     }
 
     /**
@@ -317,7 +317,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.is_set_as_interior
      */
     fun isSetAsInterior(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsInteriorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsInteriorBind, segment)
     }
 
     /**
@@ -329,7 +329,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_enable_box_projection
      */
     fun setEnableBoxProjection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableBoxProjectionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableBoxProjectionBind, segment, enable)
     }
 
     /**
@@ -341,7 +341,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.is_box_projection_enabled
      */
     fun isBoxProjectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBoxProjectionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBoxProjectionEnabledBind, segment)
     }
 
     /**
@@ -351,7 +351,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_enable_shadows
      */
     fun setEnableShadows(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableShadowsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableShadowsBind, segment, enable)
     }
 
     /**
@@ -361,7 +361,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.are_shadows_enabled
      */
     fun areShadowsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areShadowsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areShadowsEnabledBind, segment)
     }
 
     /**
@@ -374,7 +374,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_cull_mask
      */
     fun setCullMask(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, layers)
     }
 
     /**
@@ -387,7 +387,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     /**
@@ -399,7 +399,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_reflection_mask
      */
     fun setReflectionMask(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setReflectionMaskBind, handle, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(setReflectionMaskBind, segment, layers)
     }
 
     /**
@@ -411,7 +411,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_reflection_mask
      */
     fun getReflectionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getReflectionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getReflectionMaskBind, segment)
     }
 
     /**
@@ -420,7 +420,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_update_mode
      */
     fun setUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode)
     }
 
     /**
@@ -429,7 +429,7 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_update_mode
      */
     fun getUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment)
     }
 
     companion object {
@@ -440,11 +440,11 @@ class ReflectionProbe(handle: MemorySegment) : VisualInstance3D(handle) {
         const val AMBIENT_COLOR: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ReflectionProbe? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ReflectionProbe? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ReflectionProbe? =
-            if (handle.address() == 0L) null else ReflectionProbe(handle)
+            if (handle.address() == 0L) null else ReflectionProbe(GodotHandle(handle))
 
         private const val SET_INTENSITY_HASH = 373806689L
         private val setIntensityBind by lazy {

@@ -12,22 +12,22 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: PhysicsServer3DExtension
  */
-class PhysicsServer3DExtension(handle: MemorySegment) : GodotObject(handle) {
+class PhysicsServer3DExtension(handle: GodotHandle) : GodotObject(handle) {
     fun bodyTestMotionIsExcludingBody(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(bodyTestMotionIsExcludingBodyBind, handle, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(bodyTestMotionIsExcludingBodyBind, segment, body)
     }
 
     fun bodyTestMotionIsExcludingObject(objectValue: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(bodyTestMotionIsExcludingObjectBind, handle, objectValue)
+        return ObjectCalls.ptrcallWithLongArgRetBool(bodyTestMotionIsExcludingObjectBind, segment, objectValue)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsServer3DExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsServer3DExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsServer3DExtension? =
-            if (handle.address() == 0L) null else PhysicsServer3DExtension(handle)
+            if (handle.address() == 0L) null else PhysicsServer3DExtension(GodotHandle(handle))
 
         private const val BODY_TEST_MOTION_IS_EXCLUDING_BODY_HASH = 4155700596L
         private val bodyTestMotionIsExcludingBodyBind by lazy {

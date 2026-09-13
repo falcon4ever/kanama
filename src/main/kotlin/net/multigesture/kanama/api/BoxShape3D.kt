@@ -9,7 +9,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: BoxShape3D
  */
-class BoxShape3D internal constructor(handle: MemorySegment) : Shape3D(handle) {
+class BoxShape3D internal constructor(handle: GodotHandle) : Shape3D(handle) {
 
     /**
      * The box's width, height and depth.
@@ -18,7 +18,7 @@ class BoxShape3D internal constructor(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -28,7 +28,7 @@ class BoxShape3D internal constructor(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     companion object {
@@ -45,7 +45,7 @@ class BoxShape3D internal constructor(handle: MemorySegment) : Shape3D(handle) {
 
         @JvmStatic
         fun create(): BoxShape3D =
-            BoxShape3D(ObjectCalls.constructObject("BoxShape3D"))
+            BoxShape3D(GodotHandle(ObjectCalls.constructObject("BoxShape3D")))
 
         @JvmStatic
         fun fromResource(value: Resource): BoxShape3D? =

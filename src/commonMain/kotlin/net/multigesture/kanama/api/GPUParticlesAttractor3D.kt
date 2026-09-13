@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: GPUParticlesAttractor3D
  */
-open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(handle) {
+open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handle) {
     var strength: Double
         @JvmName("strengthProperty")
         get() = getStrength()
@@ -48,7 +48,7 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
     }
 
     /**
@@ -63,7 +63,7 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.set_strength
      */
     fun setStrength(strength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, segment, strength)
     }
 
     /**
@@ -85,7 +85,7 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.get_strength
      */
     fun getStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.set_attenuation
      */
     fun setAttenuation(attenuation: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAttenuationBind, handle, attenuation)
+        ObjectCalls.ptrcallWithDoubleArg(setAttenuationBind, segment, attenuation)
     }
 
     /**
@@ -107,7 +107,7 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.get_attenuation
      */
     fun getAttenuation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAttenuationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAttenuationBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.set_directionality
      */
     fun setDirectionality(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDirectionalityBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setDirectionalityBind, segment, amount)
     }
 
     /**
@@ -133,16 +133,16 @@ open class GPUParticlesAttractor3D(handle: MemorySegment) : VisualInstance3D(han
      * Generated from Godot docs: GPUParticlesAttractor3D.get_directionality
      */
     fun getDirectionality(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDirectionalityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDirectionalityBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GPUParticlesAttractor3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GPUParticlesAttractor3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GPUParticlesAttractor3D? =
-            if (handle.address() == 0L) null else GPUParticlesAttractor3D(handle)
+            if (handle.address() == 0L) null else GPUParticlesAttractor3D(GodotHandle(handle))
 
         private const val SET_CULL_MASK_HASH = 1286410249L
         private val setCullMaskBind by lazy {

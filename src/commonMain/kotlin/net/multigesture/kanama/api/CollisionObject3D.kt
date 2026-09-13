@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Transform3D
  *
  * Generated from Godot docs: CollisionObject3D
  */
-open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
+open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
     var disableMode: Long
         @JvmName("disableModeProperty")
         get() = getDisableMode()
@@ -60,7 +60,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_collision_layer
      */
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
     }
 
     /**
@@ -73,7 +73,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_collision_layer
      */
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
     }
 
     /**
@@ -86,7 +86,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -99,7 +99,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -109,7 +109,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_collision_layer_value
      */
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -119,7 +119,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_collision_layer_value
      */
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -129,7 +129,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -139,7 +139,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -150,7 +150,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_collision_priority
      */
     fun setCollisionPriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, segment, priority)
     }
 
     /**
@@ -161,7 +161,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_collision_priority
      */
     fun getCollisionPriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
     }
 
     /**
@@ -170,7 +170,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_disable_mode
      */
     fun setDisableMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode)
     }
 
     /**
@@ -179,7 +179,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_disable_mode
      */
     fun getDisableMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment)
     }
 
     /**
@@ -190,7 +190,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_ray_pickable
      */
     fun setRayPickable(rayPickable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRayPickableBind, handle, rayPickable)
+        ObjectCalls.ptrcallWithBoolArg(setRayPickableBind, segment, rayPickable)
     }
 
     /**
@@ -201,7 +201,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.is_ray_pickable
      */
     fun isRayPickable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRayPickableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRayPickableBind, segment)
     }
 
     /**
@@ -211,7 +211,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.set_capture_input_on_drag
      */
     fun setCaptureInputOnDrag(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaptureInputOnDragBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCaptureInputOnDragBind, segment, enable)
     }
 
     /**
@@ -221,7 +221,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_capture_input_on_drag
      */
     fun getCaptureInputOnDrag(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCaptureInputOnDragBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getCaptureInputOnDragBind, segment)
     }
 
     /**
@@ -230,7 +230,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -240,7 +240,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.create_shape_owner
      */
     fun createShapeOwner(owner: GodotObject): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetUInt32(createShapeOwnerBind, handle, owner.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetUInt32(createShapeOwnerBind, segment, owner.segment)
     }
 
     /**
@@ -249,7 +249,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.remove_shape_owner
      */
     fun removeShapeOwner(ownerId: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(removeShapeOwnerBind, handle, ownerId)
+        ObjectCalls.ptrcallWithUInt32Arg(removeShapeOwnerBind, segment, ownerId)
     }
 
     /**
@@ -259,7 +259,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.get_shape_owners
      */
     fun getShapeOwners(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getShapeOwnersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getShapeOwnersBind, segment)
     }
 
     /**
@@ -268,7 +268,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_set_transform
      */
     fun shapeOwnerSetTransform(ownerId: Long, transform: Transform3D) {
-        ObjectCalls.ptrcallWithUInt32AndTransform3DArg(shapeOwnerSetTransformBind, handle, ownerId, transform)
+        ObjectCalls.ptrcallWithUInt32AndTransform3DArg(shapeOwnerSetTransformBind, segment, ownerId, transform)
     }
 
     /**
@@ -277,7 +277,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_get_transform
      */
     fun shapeOwnerGetTransform(ownerId: Long): Transform3D {
-        return ObjectCalls.ptrcallWithUInt32ArgRetTransform3D(shapeOwnerGetTransformBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetTransform3D(shapeOwnerGetTransformBind, segment, ownerId)
     }
 
     /**
@@ -286,7 +286,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_get_owner
      */
     fun shapeOwnerGetOwner(ownerId: Long): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallWithUInt32ArgRetObject(shapeOwnerGetOwnerBind, handle, ownerId))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithUInt32ArgRetObject(shapeOwnerGetOwnerBind, segment, ownerId))
     }
 
     /**
@@ -295,7 +295,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_set_disabled
      */
     fun shapeOwnerSetDisabled(ownerId: Long, disabled: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetDisabledBind, handle, ownerId, disabled)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetDisabledBind, segment, ownerId, disabled)
     }
 
     /**
@@ -304,7 +304,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.is_shape_owner_disabled
      */
     fun isShapeOwnerDisabled(ownerId: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerDisabledBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerDisabledBind, segment, ownerId)
     }
 
     /**
@@ -313,7 +313,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_add_shape
      */
     fun shapeOwnerAddShape(ownerId: Long, shape: Shape3D) {
-        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, handle, ownerId, shape.requireOpenHandle())
+        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, segment, ownerId, shape.requireOpenHandle())
     }
 
     /**
@@ -322,7 +322,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_get_shape_count
      */
     fun shapeOwnerGetShapeCount(ownerId: Long): Int {
-        return ObjectCalls.ptrcallWithUInt32ArgRetInt(shapeOwnerGetShapeCountBind, handle, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetInt(shapeOwnerGetShapeCountBind, segment, ownerId)
     }
 
     /**
@@ -331,7 +331,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_get_shape
      */
     fun shapeOwnerGetShape(ownerId: Long, shapeId: Int): Shape3D? {
-        return Shape3D.wrap(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(shapeOwnerGetShapeBind, handle, ownerId, shapeId))
+        return Shape3D.wrap(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(shapeOwnerGetShapeBind, segment, ownerId, shapeId))
     }
 
     /**
@@ -340,7 +340,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_get_shape_index
      */
     fun shapeOwnerGetShapeIndex(ownerId: Long, shapeId: Int): Int {
-        return ObjectCalls.ptrcallWithUInt32AndIntArgRetInt(shapeOwnerGetShapeIndexBind, handle, ownerId, shapeId)
+        return ObjectCalls.ptrcallWithUInt32AndIntArgRetInt(shapeOwnerGetShapeIndexBind, segment, ownerId, shapeId)
     }
 
     /**
@@ -349,7 +349,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_remove_shape
      */
     fun shapeOwnerRemoveShape(ownerId: Long, shapeId: Int) {
-        ObjectCalls.ptrcallWithUInt32AndIntArg(shapeOwnerRemoveShapeBind, handle, ownerId, shapeId)
+        ObjectCalls.ptrcallWithUInt32AndIntArg(shapeOwnerRemoveShapeBind, segment, ownerId, shapeId)
     }
 
     /**
@@ -358,7 +358,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_clear_shapes
      */
     fun shapeOwnerClearShapes(ownerId: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(shapeOwnerClearShapesBind, handle, ownerId)
+        ObjectCalls.ptrcallWithUInt32Arg(shapeOwnerClearShapesBind, segment, ownerId)
     }
 
     /**
@@ -367,7 +367,7 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_find_owner
      */
     fun shapeFindOwner(shapeIndex: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(shapeFindOwnerBind, handle, shapeIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(shapeFindOwnerBind, segment, shapeIndex)
     }
 
     object Signals {
@@ -382,11 +382,11 @@ open class CollisionObject3D(handle: MemorySegment) : Node3D(handle) {
         const val DISABLE_MODE_KEEP_ACTIVE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CollisionObject3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CollisionObject3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CollisionObject3D? =
-            if (handle.address() == 0L) null else CollisionObject3D(handle)
+            if (handle.address() == 0L) null else CollisionObject3D(GodotHandle(handle))
 
         private const val SET_COLLISION_LAYER_HASH = 1286410249L
         private val setCollisionLayerBind by lazy {

@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MarginContainer
  */
-open class MarginContainer(handle: MemorySegment) : Container(handle) {
+open class MarginContainer(handle: GodotHandle) : Container(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MarginContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MarginContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MarginContainer? =
-            if (handle.address() == 0L) null else MarginContainer(handle)
+            if (handle.address() == 0L) null else MarginContainer(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

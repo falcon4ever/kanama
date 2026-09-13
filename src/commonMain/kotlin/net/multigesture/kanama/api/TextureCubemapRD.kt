@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TextureCubemapRD
  */
-class TextureCubemapRD(handle: MemorySegment) : TextureLayeredRD(handle) {
+class TextureCubemapRD(handle: GodotHandle) : TextureLayeredRD(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextureCubemapRD? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextureCubemapRD? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextureCubemapRD? =
-            if (handle.address() == 0L) null else TextureCubemapRD(handle)
+            if (handle.address() == 0L) null else TextureCubemapRD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

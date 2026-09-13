@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: ReferenceRect
  */
-class ReferenceRect(handle: MemorySegment) : Control(handle) {
+class ReferenceRect(handle: GodotHandle) : Control(handle) {
     var borderColor: Color
         @JvmName("borderColorProperty")
         get() = getBorderColor()
@@ -37,7 +37,7 @@ class ReferenceRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.get_border_color
      */
     fun getBorderColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, segment)
     }
 
     /**
@@ -46,7 +46,7 @@ class ReferenceRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.set_border_color
      */
     fun setBorderColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, segment, color)
     }
 
     /**
@@ -56,7 +56,7 @@ class ReferenceRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.get_border_width
      */
     fun getBorderWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderWidthBind, segment)
     }
 
     /**
@@ -66,7 +66,7 @@ class ReferenceRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.set_border_width
      */
     fun setBorderWidth(width: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBorderWidthBind, handle, width)
+        ObjectCalls.ptrcallWithDoubleArg(setBorderWidthBind, segment, width)
     }
 
     /**
@@ -76,7 +76,7 @@ class ReferenceRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.get_editor_only
      */
     fun getEditorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEditorOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEditorOnlyBind, segment)
     }
 
     /**
@@ -86,16 +86,16 @@ class ReferenceRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.set_editor_only
      */
     fun setEditorOnly(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, segment, enabled)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ReferenceRect? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ReferenceRect? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ReferenceRect? =
-            if (handle.address() == 0L) null else ReferenceRect(handle)
+            if (handle.address() == 0L) null else ReferenceRect(GodotHandle(handle))
 
         private const val GET_BORDER_COLOR_HASH = 3444240500L
         private val getBorderColorBind by lazy {

@@ -9,7 +9,7 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: RefCounted
  */
 open class RefCounted internal constructor(
-    handle: MemorySegment,
+    handle: GodotHandle,
 ) : GodotObject(handle), AutoCloseable {
 
     private var closed = false
@@ -22,7 +22,7 @@ open class RefCounted internal constructor(
      */
     fun getReferenceCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, handle).toLong()
+        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, segment).toLong()
     }
 
     internal fun checkOpen() {
@@ -31,7 +31,7 @@ open class RefCounted internal constructor(
 
     internal fun requireOpenHandle(): MemorySegment {
         checkOpen()
-        return handle
+        return segment
     }
 
     /**
@@ -42,9 +42,9 @@ open class RefCounted internal constructor(
      */
     internal fun retainForKotlinWrapper(): MemorySegment {
         checkOpen()
-        ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(referenceBind, segment)
         wrapperReferenceReleased = false
-        return handle
+        return segment
     }
 
     /**
@@ -60,10 +60,10 @@ open class RefCounted internal constructor(
     override fun close() {
         if (closed || wrapperReferenceReleased) return
         wrapperReferenceReleased = true
-        val shouldDestroy = ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)
+        val shouldDestroy = ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, segment)
         if (shouldDestroy) {
             closed = true
-            ObjectCalls.destroyObject(handle)
+            ObjectCalls.destroyObject(segment)
         }
     }
 

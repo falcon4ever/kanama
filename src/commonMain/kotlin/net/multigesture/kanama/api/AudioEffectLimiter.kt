@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectLimiter
  */
-class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
     var ceilingDb: Double
         @JvmName("ceilingDbProperty")
         get() = getCeilingDb()
@@ -43,7 +43,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setCeilingDb(ceiling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, handle, ceiling)
+        ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, segment, ceiling)
     }
 
     /**
@@ -53,7 +53,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getCeilingDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, segment)
     }
 
     /**
@@ -64,7 +64,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setThresholdDb(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setThresholdDbBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setThresholdDbBind, segment, threshold)
     }
 
     /**
@@ -75,7 +75,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getThresholdDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdDbBind, segment)
     }
 
     /**
@@ -85,7 +85,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setSoftClipDb(softClip: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSoftClipDbBind, handle, softClip)
+        ObjectCalls.ptrcallWithDoubleArg(setSoftClipDbBind, segment, softClip)
     }
 
     /**
@@ -95,7 +95,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getSoftClipDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipDbBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setSoftClipRatio(softClip: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSoftClipRatioBind, handle, softClip)
+        ObjectCalls.ptrcallWithDoubleArg(setSoftClipRatioBind, segment, softClip)
     }
 
     /**
@@ -117,16 +117,16 @@ class AudioEffectLimiter(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getSoftClipRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipRatioBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectLimiter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectLimiter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectLimiter? =
-            if (handle.address() == 0L) null else AudioEffectLimiter(handle)
+            if (handle.address() == 0L) null else AudioEffectLimiter(GodotHandle(handle))
 
         private const val SET_CEILING_DB_HASH = 373806689L
         private val setCeilingDbBind by lazy {

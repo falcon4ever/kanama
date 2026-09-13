@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectPitchShift
  */
-class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
     var pitchScale: Double
         @JvmName("pitchScaleProperty")
         get() = getPitchScale()
@@ -40,7 +40,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPitchScale(rate: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, handle, rate)
+        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, segment, rate)
     }
 
     /**
@@ -52,7 +52,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPitchScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setOversampling(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOversamplingBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setOversamplingBind, segment, amount)
     }
 
     /**
@@ -74,7 +74,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getOversampling(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOversamplingBind, segment)
     }
 
     /**
@@ -87,7 +87,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setFftSize(size: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
+        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, segment, size)
     }
 
     /**
@@ -100,7 +100,7 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getFftSize(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment)
     }
 
     companion object {
@@ -112,11 +112,11 @@ class AudioEffectPitchShift(handle: MemorySegment) : AudioEffect(handle) {
         const val FFT_SIZE_MAX: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectPitchShift? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectPitchShift? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectPitchShift? =
-            if (handle.address() == 0L) null else AudioEffectPitchShift(handle)
+            if (handle.address() == 0L) null else AudioEffectPitchShift(GodotHandle(handle))
 
         private const val SET_PITCH_SCALE_HASH = 373806689L
         private val setPitchScaleBind by lazy {

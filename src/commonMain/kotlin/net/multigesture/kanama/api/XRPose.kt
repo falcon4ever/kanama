@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: XRPose
  */
-class XRPose(handle: MemorySegment) : RefCounted(handle) {
+class XRPose(handle: GodotHandle) : RefCounted(handle) {
     var hasTrackingData: Boolean
         @JvmName("hasTrackingDataProperty")
         get() = getHasTrackingData()
@@ -58,7 +58,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHasTrackingData(hasTrackingData: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, handle, hasTrackingData)
+        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, segment, hasTrackingData)
     }
 
     /**
@@ -69,7 +69,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getHasTrackingData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, segment)
     }
 
     /**
@@ -85,7 +85,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setNameBind, segment, name)
     }
 
     /**
@@ -101,7 +101,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTransform(transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, handle, transform)
+        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, transform)
     }
 
     /**
@@ -121,7 +121,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAdjustedTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getAdjustedTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getAdjustedTransformBind, segment)
     }
 
     /**
@@ -142,7 +142,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLinearVelocity(velocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, velocity)
     }
 
     /**
@@ -152,7 +152,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLinearVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setAngularVelocity(velocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, velocity)
     }
 
     /**
@@ -172,7 +172,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAngularVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
     }
 
     /**
@@ -183,7 +183,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTrackingConfidence(trackingConfidence: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, handle, trackingConfidence)
+        ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, segment, trackingConfidence)
     }
 
     /**
@@ -194,7 +194,7 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTrackingConfidence(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, segment)
     }
 
     companion object {
@@ -203,11 +203,11 @@ class XRPose(handle: MemorySegment) : RefCounted(handle) {
         const val XR_TRACKING_CONFIDENCE_HIGH: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRPose? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRPose? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRPose? =
-            if (handle.address() == 0L) null else XRPose(handle)
+            if (handle.address() == 0L) null else XRPose(GodotHandle(handle))
 
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L
         private val setHasTrackingDataBind by lazy {

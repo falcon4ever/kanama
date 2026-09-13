@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ScriptEditorBase
  */
-class ScriptEditorBase(handle: MemorySegment) : VBoxContainer(handle) {
+class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
     /**
      * Adds an `EditorSyntaxHighlighter` to the open script.
      *
      * Generated from Godot docs: ScriptEditorBase.add_syntax_highlighter
      */
     fun addSyntaxHighlighter(highlighter: EditorSyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(addSyntaxHighlighterBind, handle, listOf(highlighter?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addSyntaxHighlighterBind, segment, listOf(highlighter?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -27,7 +27,7 @@ class ScriptEditorBase(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ScriptEditorBase.get_base_editor
      */
     fun getBaseEditor(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBaseEditorBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBaseEditorBind, segment))
     }
 
     object Signals {
@@ -45,11 +45,11 @@ class ScriptEditorBase(handle: MemorySegment) : VBoxContainer(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScriptEditorBase? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScriptEditorBase? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScriptEditorBase? =
-            if (handle.address() == 0L) null else ScriptEditorBase(handle)
+            if (handle.address() == 0L) null else ScriptEditorBase(GodotHandle(handle))
 
         private const val ADD_SYNTAX_HIGHLIGHTER_HASH = 1092774468L
         private val addSyntaxHighlighterBind by lazy {

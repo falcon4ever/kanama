@@ -95,14 +95,16 @@ wrapper caches a `MethodBind` and calls a typed helper on a runtime abstraction
 ```kotlin
 // generated CharacterBody3D.kt (desktop)
 fun moveAndSlide(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(moveAndSlideBind, handle)
-fun setVelocity(velocity: Vector3) = ObjectCalls.ptrcallWithVector3Arg(setVelocityBind, handle, velocity)
+fun setVelocity(velocity: Vector3) = ObjectCalls.ptrcallWithVector3Arg(setVelocityBind, segment, velocity)
 ```
 
 `ObjectCalls` is the platform seam: desktop implements it with Panama/FFM; **iOS
 implements it with the C shim** (`get_method_bind` + the generic `ptrcall` dispatch).
-The generated wrappers depend only on `ObjectCalls` + types +
-`java.lang.foreign.MemorySegment`, all of which iOS provides (it shims
-`MemorySegment`), so the same wrapper source runs on both backends.
+The generated wrappers depend only on `ObjectCalls` + types + `GodotHandle`, all of
+which iOS provides — `GodotHandle` is a per-platform `@JvmInline value class` over
+the backend's pointer type (iOS declares its own over the `MemorySegment` shim), so
+the same wrapper source runs on both backends. A wrapper BODY unwraps it once through
+the internal `GodotObject.segment`; the raw type never appears in a public signature.
 
 ```
 extension_api.json
@@ -172,7 +174,7 @@ wrapper output:
 
 - **Reuse the generated wrapper classes unchanged** (they are the shared
   `src/commonMain` files since task 103). They depend only on `ObjectCalls` +
-  types + `MemorySegment`, all present on iOS.
+  types + `GodotHandle`, all present on iOS.
 - **Generate the iOS `ObjectCalls` helper bodies** for the set of `shape.function`
   names the wrappers use. As the generator picks each method's `CallShape` it knows
   the structured arg types + return type; collect a registry `shape.function ->

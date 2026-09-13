@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JSONRPC
  */
-open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
+open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Registers a callback for the given method name. - `name`: The name that clients can use to
      * access the callback. - `callback`: The callback which will handle the specified method.
@@ -18,7 +18,7 @@ open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.set_method
      */
     fun setMethod(name: String, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringCallableArgs(setMethodBind, handle, name, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithStringCallableArgs(setMethodBind, segment, name, callback.target.segment, callback.method)
     }
 
     /**
@@ -31,11 +31,11 @@ open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.process_action
      */
     fun processAction(action: Any?, recurse: Boolean = false): Any? {
-        return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(processActionBind, handle, action, recurse)
+        return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(processActionBind, segment, action, recurse)
     }
 
     fun processString(action: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(processStringBind, handle, action)
+        return ObjectCalls.ptrcallWithStringArgRetString(processStringBind, segment, action)
     }
 
     /**
@@ -48,7 +48,7 @@ open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_request
      */
     fun makeRequest(method: String, params: Any?, id: Any?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringAndTwoVariantArgsRetDictionary(makeRequestBind, handle, method, params, id)
+        return ObjectCalls.ptrcallWithStringAndTwoVariantArgsRetDictionary(makeRequestBind, segment, method, params, id)
     }
 
     /**
@@ -60,7 +60,7 @@ open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_response
      */
     fun makeResponse(result: Any?, id: Any?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithTwoVariantArgsRetDictionary(makeResponseBind, handle, result, id)
+        return ObjectCalls.ptrcallWithTwoVariantArgsRetDictionary(makeResponseBind, segment, result, id)
     }
 
     /**
@@ -71,7 +71,7 @@ open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_notification
      */
     fun makeNotification(method: String, params: Any?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringAndVariantArgRetDictionary(makeNotificationBind, handle, method, params)
+        return ObjectCalls.ptrcallWithStringAndVariantArgRetDictionary(makeNotificationBind, segment, method, params)
     }
 
     /**
@@ -82,7 +82,7 @@ open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_response_error
      */
     fun makeResponseError(code: Int, message: String, id: Any? = null): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithIntStringVariantArgsRetDictionary(makeResponseErrorBind, handle, code, message, id)
+        return ObjectCalls.ptrcallWithIntStringVariantArgsRetDictionary(makeResponseErrorBind, segment, code, message, id)
     }
 
     companion object {
@@ -93,11 +93,11 @@ open class JSONRPC(handle: MemorySegment) : GodotObject(handle) {
         const val INTERNAL_ERROR: Long = -32603L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JSONRPC? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JSONRPC? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JSONRPC? =
-            if (handle.address() == 0L) null else JSONRPC(handle)
+            if (handle.address() == 0L) null else JSONRPC(GodotHandle(handle))
 
         private const val SET_METHOD_HASH = 2137474292L
         private val setMethodBind by lazy {

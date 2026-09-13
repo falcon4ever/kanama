@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: CanvasModulate
  */
-class CanvasModulate(handle: MemorySegment) : Node2D(handle) {
+class CanvasModulate(handle: GodotHandle) : Node2D(handle) {
     var color: Color
         @JvmName("colorProperty")
         get() = getColor()
@@ -25,7 +25,7 @@ class CanvasModulate(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasModulate.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -34,16 +34,16 @@ class CanvasModulate(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasModulate.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CanvasModulate? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CanvasModulate? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CanvasModulate? =
-            if (handle.address() == 0L) null else CanvasModulate(handle)
+            if (handle.address() == 0L) null else CanvasModulate(GodotHandle(handle))
 
         private const val SET_COLOR_HASH = 2920490490L
         private val setColorBind by lazy {

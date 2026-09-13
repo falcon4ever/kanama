@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TLSOptions
  */
-class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
+class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns `true` if created with `TLSOptions.server`, `false` otherwise.
      *
@@ -18,7 +18,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isUnsafeClient(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUnsafeClientBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUnsafeClientBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCommonNameOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCommonNameOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCommonNameOverrideBind, segment)
     }
 
     /**
@@ -49,7 +49,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTrustedCaChain(): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, handle))
+        return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, segment))
     }
 
     /**
@@ -59,7 +59,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPrivateKey(): CryptoKey? {
         checkOpen()
-        return CryptoKey.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, handle))
+        return CryptoKey.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, segment))
     }
 
     /**
@@ -69,7 +69,7 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOwnCertificate(): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, handle))
+        return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, segment))
     }
 
     companion object {
@@ -112,11 +112,11 @@ class TLSOptions(handle: MemorySegment) : RefCounted(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TLSOptions? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TLSOptions? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TLSOptions? =
-            if (handle.address() == 0L) null else TLSOptions(handle)
+            if (handle.address() == 0L) null else TLSOptions(GodotHandle(handle))
 
         private const val CLIENT_HASH = 3565000357L
         private val clientBind by lazy {

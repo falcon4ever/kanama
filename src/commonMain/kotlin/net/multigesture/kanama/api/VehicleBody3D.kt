@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: VehicleBody3D
  */
-class VehicleBody3D(handle: MemorySegment) : RigidBody3D(handle) {
+class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
     var engineForce: Double
         @JvmName("engineForceProperty")
         get() = getEngineForce()
@@ -41,7 +41,7 @@ class VehicleBody3D(handle: MemorySegment) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.set_engine_force
      */
     fun setEngineForce(engineForce: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEngineForceBind, handle, engineForce)
+        ObjectCalls.ptrcallWithDoubleArg(setEngineForceBind, segment, engineForce)
     }
 
     /**
@@ -55,7 +55,7 @@ class VehicleBody3D(handle: MemorySegment) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.get_engine_force
      */
     fun getEngineForce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEngineForceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEngineForceBind, segment)
     }
 
     /**
@@ -67,7 +67,7 @@ class VehicleBody3D(handle: MemorySegment) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.set_brake
      */
     fun setBrake(brake: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBrakeBind, handle, brake)
+        ObjectCalls.ptrcallWithDoubleArg(setBrakeBind, segment, brake)
     }
 
     /**
@@ -79,7 +79,7 @@ class VehicleBody3D(handle: MemorySegment) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.get_brake
      */
     fun getBrake(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBrakeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBrakeBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class VehicleBody3D(handle: MemorySegment) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.set_steering
      */
     fun setSteering(steering: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSteeringBind, handle, steering)
+        ObjectCalls.ptrcallWithDoubleArg(setSteeringBind, segment, steering)
     }
 
     /**
@@ -103,16 +103,16 @@ class VehicleBody3D(handle: MemorySegment) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.get_steering
      */
     fun getSteering(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSteeringBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSteeringBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VehicleBody3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VehicleBody3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VehicleBody3D? =
-            if (handle.address() == 0L) null else VehicleBody3D(handle)
+            if (handle.address() == 0L) null else VehicleBody3D(GodotHandle(handle))
 
         private const val SET_ENGINE_FORCE_HASH = 373806689L
         private val setEngineForceBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRHapticVibration
  */
-class OpenXRHapticVibration(handle: MemorySegment) : OpenXRHapticBase(handle) {
+class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
     var duration: Long
         @JvmName("durationProperty")
         get() = getDuration()
@@ -30,41 +30,41 @@ class OpenXRHapticVibration(handle: MemorySegment) : OpenXRHapticBase(handle) {
 
     fun setDuration(duration: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDurationBind, handle, duration)
+        ObjectCalls.ptrcallWithLongArg(setDurationBind, segment, duration)
     }
 
     fun getDuration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDurationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDurationBind, segment)
     }
 
     fun setFrequency(frequency: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFrequencyBind, handle, frequency)
+        ObjectCalls.ptrcallWithDoubleArg(setFrequencyBind, segment, frequency)
     }
 
     fun getFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrequencyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFrequencyBind, segment)
     }
 
     fun setAmplitude(amplitude: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAmplitudeBind, handle, amplitude)
+        ObjectCalls.ptrcallWithDoubleArg(setAmplitudeBind, segment, amplitude)
     }
 
     fun getAmplitude(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmplitudeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAmplitudeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRHapticVibration? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRHapticVibration? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRHapticVibration? =
-            if (handle.address() == 0L) null else OpenXRHapticVibration(handle)
+            if (handle.address() == 0L) null else OpenXRHapticVibration(GodotHandle(handle))
 
         private const val SET_DURATION_HASH = 1286410249L
         private val setDurationBind by lazy {

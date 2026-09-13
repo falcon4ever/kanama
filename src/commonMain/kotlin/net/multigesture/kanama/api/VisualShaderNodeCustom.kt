@@ -8,19 +8,19 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeCustom
  */
-class VisualShaderNodeCustom(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeCustom(handle: GodotHandle) : VisualShaderNode(handle) {
     fun getOptionIndex(option: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOptionIndexBind, handle, option)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getOptionIndexBind, segment, option)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeCustom? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeCustom? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeCustom? =
-            if (handle.address() == 0L) null else VisualShaderNodeCustom(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeCustom(GodotHandle(handle))
 
         private const val GET_OPTION_INDEX_HASH = 923996154L
         private val getOptionIndexBind by lazy {

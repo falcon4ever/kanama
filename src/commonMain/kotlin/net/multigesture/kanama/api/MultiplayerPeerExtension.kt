@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MultiplayerPeerExtension
  */
-class MultiplayerPeerExtension(handle: MemorySegment) : MultiplayerPeer(handle) {
+class MultiplayerPeerExtension(handle: GodotHandle) : MultiplayerPeer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiplayerPeerExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiplayerPeerExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiplayerPeerExtension? =
-            if (handle.address() == 0L) null else MultiplayerPeerExtension(handle)
+            if (handle.address() == 0L) null else MultiplayerPeerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

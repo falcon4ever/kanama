@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SkeletonModification2DStackHolder
  */
-class SkeletonModification2DStackHolder(handle: MemorySegment) : SkeletonModification2D(handle) {
+class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModification2D(handle) {
     /**
      * Sets the `SkeletonModificationStack2D` that this modification is holding. This modification
      * stack will then be executed when this modification is executed.
@@ -19,7 +19,7 @@ class SkeletonModification2DStackHolder(handle: MemorySegment) : SkeletonModific
      */
     fun setHeldModificationStack(heldModificationStack: SkeletonModificationStack2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setHeldModificationStackBind, handle, listOf(heldModificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setHeldModificationStackBind, segment, listOf(heldModificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -29,16 +29,16 @@ class SkeletonModification2DStackHolder(handle: MemorySegment) : SkeletonModific
      */
     fun getHeldModificationStack(): SkeletonModificationStack2D? {
         checkOpen()
-        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHeldModificationStackBind, handle))
+        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHeldModificationStackBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2DStackHolder? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2DStackHolder? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2DStackHolder? =
-            if (handle.address() == 0L) null else SkeletonModification2DStackHolder(handle)
+            if (handle.address() == 0L) null else SkeletonModification2DStackHolder(GodotHandle(handle))
 
         private const val SET_HELD_MODIFICATION_STACK_HASH = 3907307132L
         private val setHeldModificationStackBind by lazy {

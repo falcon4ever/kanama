@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: XRPositionalTracker
  */
-open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
+open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     var profile: String
         @JvmName("profileProperty")
         get() = getTrackerProfile()
@@ -34,7 +34,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun getTrackerProfile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getTrackerProfileBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTrackerProfileBind, segment)
     }
 
     /**
@@ -45,7 +45,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun setTrackerProfile(profile: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setTrackerProfileBind, handle, profile)
+        ObjectCalls.ptrcallWithStringArg(setTrackerProfileBind, segment, profile)
     }
 
     /**
@@ -55,7 +55,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun getTrackerHand(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment)
     }
 
     /**
@@ -65,7 +65,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun setTrackerHand(hand: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackerHandBind, handle, hand)
+        ObjectCalls.ptrcallWithLongArg(setTrackerHandBind, segment, hand)
     }
 
     /**
@@ -75,7 +75,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun hasPose(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasPoseBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasPoseBind, segment, name)
     }
 
     /**
@@ -85,7 +85,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun getPose(name: String): XRPose? {
         checkOpen()
-        return XRPose.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getPoseBind, handle, name))
+        return XRPose.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getPoseBind, segment, name))
     }
 
     /**
@@ -96,7 +96,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun invalidatePose(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(invalidatePoseBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(invalidatePoseBind, segment, name)
     }
 
     /**
@@ -107,7 +107,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun setPose(name: String, transform: Transform3D, linearVelocity: Vector3, angularVelocity: Vector3, trackingConfidence: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameTransform3DTwoVector3LongArgs(setPoseBind, handle, name, transform, linearVelocity, angularVelocity, trackingConfidence)
+        ObjectCalls.ptrcallWithStringNameTransform3DTwoVector3LongArgs(setPoseBind, segment, name, transform, linearVelocity, angularVelocity, trackingConfidence)
     }
 
     /**
@@ -118,7 +118,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun getInput(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, segment, name)
     }
 
     /**
@@ -129,7 +129,7 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
      */
     fun setInput(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInputBind, handle, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInputBind, segment, name, value)
     }
 
     object Signals {
@@ -149,11 +149,11 @@ open class XRPositionalTracker(handle: MemorySegment) : XRTracker(handle) {
         const val TRACKER_HAND_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRPositionalTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRPositionalTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRPositionalTracker? =
-            if (handle.address() == 0L) null else XRPositionalTracker(handle)
+            if (handle.address() == 0L) null else XRPositionalTracker(GodotHandle(handle))
 
         private const val GET_TRACKER_PROFILE_HASH = 201670096L
         private val getTrackerProfileBind by lazy {

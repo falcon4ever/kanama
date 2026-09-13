@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeFloatParameter
  */
-class VisualShaderNodeFloatParameter(handle: MemorySegment) : VisualShaderNodeParameter(handle) {
+class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
     var hint: Long
         @JvmName("hintProperty")
         get() = getHint()
@@ -48,62 +48,62 @@ class VisualShaderNodeFloatParameter(handle: MemorySegment) : VisualShaderNodePa
 
     fun setHint(hint: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintBind, handle, hint)
+        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint)
     }
 
     fun getHint(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment)
     }
 
     fun setMin(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setMinBind, segment, value)
     }
 
     fun getMin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, segment)
     }
 
     fun setMax(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxBind, segment, value)
     }
 
     fun getMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, segment)
     }
 
     fun setStep(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStepBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setStepBind, segment, value)
     }
 
     fun getStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
     }
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDefaultValueBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultValueBind, segment)
     }
 
     companion object {
@@ -113,11 +113,11 @@ class VisualShaderNodeFloatParameter(handle: MemorySegment) : VisualShaderNodePa
         const val HINT_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeFloatParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeFloatParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeFloatParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeFloatParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeFloatParameter(GodotHandle(handle))
 
         private const val SET_HINT_HASH = 3712586466L
         private val setHintBind by lazy {

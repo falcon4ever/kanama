@@ -8,29 +8,29 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialQueryResultData
  */
-class OpenXRSpatialQueryResultData(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getCapacity(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCapacityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCapacityBind, segment)
     }
 
     fun getEntityId(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getEntityIdBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getEntityIdBind, segment, index)
     }
 
     fun getEntityState(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getEntityStateBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getEntityStateBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialQueryResultData? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialQueryResultData? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialQueryResultData? =
-            if (handle.address() == 0L) null else OpenXRSpatialQueryResultData(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialQueryResultData(GodotHandle(handle))
 
         private const val GET_CAPACITY_HASH = 3905245786L
         private val getCapacityBind by lazy {

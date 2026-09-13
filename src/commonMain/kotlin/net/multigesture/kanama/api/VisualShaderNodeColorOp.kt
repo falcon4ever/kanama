@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeColorOp
  */
-class VisualShaderNodeColorOp(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeColorOp(handle: GodotHandle) : VisualShaderNode(handle) {
     var operator: Long
         @JvmName("operatorProperty")
         get() = getOperator()
@@ -18,12 +18,12 @@ class VisualShaderNodeColorOp(handle: MemorySegment) : VisualShaderNode(handle) 
 
     fun setOperator(op: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOperatorBind, handle, op)
+        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op)
     }
 
     fun getOperator(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment)
     }
 
     companion object {
@@ -39,11 +39,11 @@ class VisualShaderNodeColorOp(handle: MemorySegment) : VisualShaderNode(handle) 
         const val OP_MAX: Long = 9L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeColorOp? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeColorOp? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeColorOp? =
-            if (handle.address() == 0L) null else VisualShaderNodeColorOp(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeColorOp(GodotHandle(handle))
 
         private const val SET_OPERATOR_HASH = 4260370673L
         private val setOperatorBind by lazy {

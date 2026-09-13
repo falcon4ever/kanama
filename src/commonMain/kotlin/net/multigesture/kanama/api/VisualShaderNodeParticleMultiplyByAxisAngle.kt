@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParticleMultiplyByAxisAngle
  */
-class VisualShaderNodeParticleMultiplyByAxisAngle(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualShaderNode(handle) {
     var degreesMode: Boolean
         @JvmName("degreesModeProperty")
         get() = isDegreesMode()
@@ -18,21 +18,21 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: MemorySegment) : Visua
 
     fun setDegreesMode(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDegreesModeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDegreesModeBind, segment, enabled)
     }
 
     fun isDegreesMode(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDegreesModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDegreesModeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleMultiplyByAxisAngle? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
-            if (handle.address() == 0L) null else VisualShaderNodeParticleMultiplyByAxisAngle(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(handle))
 
         private const val SET_DEGREES_MODE_HASH = 2586408642L
         private val setDegreesModeBind by lazy {

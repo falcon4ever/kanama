@@ -8,24 +8,24 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialComponentData
  */
-open class OpenXRSpatialComponentData(handle: MemorySegment) : RefCounted(handle) {
+open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) {
     fun setCapacity(capacity: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCapacityBind, handle, capacity)
+        ObjectCalls.ptrcallWithUInt32Arg(setCapacityBind, segment, capacity)
     }
 
     fun getComponentType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentData? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentData? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentData? =
-            if (handle.address() == 0L) null else OpenXRSpatialComponentData(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialComponentData(GodotHandle(handle))
 
         private const val SET_CAPACITY_HASH = 1286410249L
         private val setCapacityBind by lazy {

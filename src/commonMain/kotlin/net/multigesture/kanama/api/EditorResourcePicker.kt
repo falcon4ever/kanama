@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorResourcePicker
  */
-open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
+open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
     var baseType: String
         @JvmName("baseTypeProperty")
         get() = getBaseType()
@@ -42,7 +42,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_base_type
      */
     fun setBaseType(baseType: String) {
-        ObjectCalls.ptrcallWithStringArg(setBaseTypeBind, handle, baseType)
+        ObjectCalls.ptrcallWithStringArg(setBaseTypeBind, segment, baseType)
     }
 
     /**
@@ -51,7 +51,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.get_base_type
      */
     fun getBaseType(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBaseTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBaseTypeBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.get_allowed_types
      */
     fun getAllowedTypes(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAllowedTypesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAllowedTypesBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_edited_resource
      */
     fun setEditedResource(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEditedResourceBind, handle, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEditedResourceBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -79,7 +79,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.get_edited_resource
      */
     fun getEditedResource(): Resource? {
-        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedResourceBind, handle))
+        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedResourceBind, segment))
     }
 
     /**
@@ -89,7 +89,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_toggle_mode
      */
     fun setToggleMode(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, segment, enable)
     }
 
     /**
@@ -99,7 +99,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.is_toggle_mode
      */
     fun isToggleMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_toggle_pressed
      */
     fun setTogglePressed(pressed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTogglePressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setTogglePressedBind, segment, pressed)
     }
 
     /**
@@ -117,7 +117,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_editable
      */
     fun setEditable(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enable)
     }
 
     /**
@@ -126,7 +126,7 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.is_editable
      */
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     }
 
     object Signals {
@@ -136,11 +136,11 @@ open class EditorResourcePicker(handle: MemorySegment) : HBoxContainer(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorResourcePicker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorResourcePicker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorResourcePicker? =
-            if (handle.address() == 0L) null else EditorResourcePicker(handle)
+            if (handle.address() == 0L) null else EditorResourcePicker(GodotHandle(handle))
 
         private const val SET_BASE_TYPE_HASH = 83702148L
         private val setBaseTypeBind by lazy {

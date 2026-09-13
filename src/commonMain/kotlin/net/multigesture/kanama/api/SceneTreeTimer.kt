@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SceneTreeTimer
  */
-class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
+class SceneTreeTimer(handle: GodotHandle) : RefCounted(handle) {
     var timeLeft: Double
         @JvmName("timeLeftProperty")
         get() = getTimeLeft()
@@ -25,7 +25,7 @@ class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTimeLeft(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, segment, time)
     }
 
     /**
@@ -35,7 +35,7 @@ class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTimeLeft(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, segment)
     }
 
     object Signals {
@@ -44,11 +44,11 @@ class SceneTreeTimer(handle: MemorySegment) : RefCounted(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SceneTreeTimer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SceneTreeTimer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SceneTreeTimer? =
-            if (handle.address() == 0L) null else SceneTreeTimer(handle)
+            if (handle.address() == 0L) null else SceneTreeTimer(GodotHandle(handle))
 
         private const val SET_TIME_LEFT_HASH = 373806689L
         private val setTimeLeftBind by lazy {

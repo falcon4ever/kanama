@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: ArrayMesh
  */
-class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
+class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
     var blendShapeMode: Long
         @JvmName("blendShapeModeProperty")
         get() = getBlendShapeMode()
@@ -32,133 +32,133 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
 
     fun addBlendShape(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(addBlendShapeBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(addBlendShapeBind, segment, name)
     }
 
     fun getBlendShapeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, segment)
     }
 
     fun getBlendShapeName(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendShapeNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendShapeNameBind, segment, index)
     }
 
     fun setBlendShapeName(index: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendShapeNameBind, handle, index, name)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendShapeNameBind, segment, index, name)
     }
 
     fun clearBlendShapes() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBlendShapesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBlendShapesBind, segment)
     }
 
     fun setBlendShapeMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode)
     }
 
     fun getBlendShapeMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment)
     }
 
     fun addSurfaceFromArrays(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, handle, primitive, arrays, blendShapes, lods, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, segment, primitive, arrays, blendShapes, lods, flags)
     }
 
     fun clearSurfaces() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearSurfacesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearSurfacesBind, segment)
     }
 
     fun surfaceRemove(surfIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(surfaceRemoveBind, handle, surfIdx)
+        ObjectCalls.ptrcallWithIntArg(surfaceRemoveBind, segment, surfIdx)
     }
 
     fun surfaceUpdateVertexRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateVertexRegionBind, handle, surfIdx, offset, data)
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateVertexRegionBind, segment, surfIdx, offset, data)
     }
 
     fun surfaceUpdateAttributeRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateAttributeRegionBind, handle, surfIdx, offset, data)
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateAttributeRegionBind, segment, surfIdx, offset, data)
     }
 
     fun surfaceUpdateSkinRegion(surfIdx: Int, offset: Int, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateSkinRegionBind, handle, surfIdx, offset, data)
+        ObjectCalls.ptrcallWithTwoIntAndByteArrayArg(surfaceUpdateSkinRegionBind, segment, surfIdx, offset, data)
     }
 
     fun surfaceGetArrayLen(surfIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayLenBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayLenBind, segment, surfIdx)
     }
 
     fun surfaceGetArrayIndexLen(surfIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayIndexLenBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(surfaceGetArrayIndexLenBind, segment, surfIdx)
     }
 
     fun surfaceGetFormat(surfIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, segment, surfIdx)
     }
 
     fun surfaceGetPrimitiveType(surfIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, segment, surfIdx)
     }
 
     fun surfaceFindByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(surfaceFindByNameBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(surfaceFindByNameBind, segment, name)
     }
 
     fun surfaceSetName(surfIdx: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(surfaceSetNameBind, handle, surfIdx, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(surfaceSetNameBind, segment, surfIdx, name)
     }
 
     fun surfaceGetName(surfIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(surfaceGetNameBind, handle, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(surfaceGetNameBind, segment, surfIdx)
     }
 
     fun regenNormalMaps() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(regenNormalMapsBind, handle)
+        ObjectCalls.ptrcallNoArgs(regenNormalMapsBind, segment)
     }
 
     fun lightmapUnwrap(transform: Transform3D, texelSize: Double): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, handle, transform, texelSize)
+        return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, segment, transform, texelSize)
     }
 
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
     }
 
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
     }
 
     fun setShadowMesh(mesh: ArrayMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getShadowMesh(): ArrayMesh? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -167,11 +167,11 @@ class ArrayMesh(handle: MemorySegment) : Mesh(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ArrayMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ArrayMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ArrayMesh? =
-            if (handle.address() == 0L) null else ArrayMesh(handle)
+            if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
 
         // Downcast a Resource/Mesh to ArrayMesh (null if not), mirroring the desktop helper.
         fun fromResource(value: Resource): ArrayMesh? =

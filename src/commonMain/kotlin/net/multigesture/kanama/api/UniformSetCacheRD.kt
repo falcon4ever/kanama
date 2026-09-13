@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: UniformSetCacheRD
  */
-class UniformSetCacheRD(handle: MemorySegment) : GodotObject(handle) {
+class UniformSetCacheRD(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -25,11 +25,11 @@ class UniformSetCacheRD(handle: MemorySegment) : GodotObject(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): UniformSetCacheRD? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): UniformSetCacheRD? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): UniformSetCacheRD? =
-            if (handle.address() == 0L) null else UniformSetCacheRD(handle)
+            if (handle.address() == 0L) null else UniformSetCacheRD(GodotHandle(handle))
 
         private const val GET_CACHE_HASH = 658571723L
         private val getCacheBind by lazy {

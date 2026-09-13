@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TorusMesh
  */
-class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var innerRadius: Double
         @JvmName("innerRadiusProperty")
         get() = getInnerRadius()
@@ -43,7 +43,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setInnerRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, segment, radius)
     }
 
     /**
@@ -53,7 +53,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getInnerRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setOuterRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, segment, radius)
     }
 
     /**
@@ -73,7 +73,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getOuterRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRings(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
+        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
     }
 
     /**
@@ -93,7 +93,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRingSegments(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingSegmentsBind, handle, rings)
+        ObjectCalls.ptrcallWithIntArg(setRingSegmentsBind, segment, rings)
     }
 
     /**
@@ -113,16 +113,16 @@ class TorusMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRingSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRingSegmentsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TorusMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TorusMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TorusMesh? =
-            if (handle.address() == 0L) null else TorusMesh(handle)
+            if (handle.address() == 0L) null else TorusMesh(GodotHandle(handle))
 
         private const val SET_INNER_RADIUS_HASH = 373806689L
         private val setInnerRadiusBind by lazy {

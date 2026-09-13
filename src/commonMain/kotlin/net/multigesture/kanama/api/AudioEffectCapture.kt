@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AudioEffectCapture
  */
-class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
     var bufferLength: Double
         @JvmName("bufferLengthProperty")
         get() = getBufferLength()
@@ -26,7 +26,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun canGetBuffer(frames: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(canGetBufferBind, handle, frames)
+        return ObjectCalls.ptrcallWithIntArgRetBool(canGetBufferBind, segment, frames)
     }
 
     /**
@@ -40,7 +40,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getBuffer(frames: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getBufferBind, handle, frames)
+        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getBufferBind, segment, frames)
     }
 
     /**
@@ -51,7 +51,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun clearBuffer() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBufferBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBufferBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setBufferLength(bufferLengthSeconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, bufferLengthSeconds)
+        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, segment, bufferLengthSeconds)
     }
 
     /**
@@ -75,7 +75,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
     }
 
     /**
@@ -85,7 +85,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getFramesAvailable(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, segment)
     }
 
     /**
@@ -95,7 +95,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getDiscardedFrames(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDiscardedFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDiscardedFramesBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getBufferLengthFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferLengthFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBufferLengthFramesBind, segment)
     }
 
     /**
@@ -115,16 +115,16 @@ class AudioEffectCapture(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPushedFrames(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPushedFramesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPushedFramesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectCapture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectCapture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectCapture? =
-            if (handle.address() == 0L) null else AudioEffectCapture(handle)
+            if (handle.address() == 0L) null else AudioEffectCapture(GodotHandle(handle))
 
         private const val CAN_GET_BUFFER_HASH = 1116898809L
         private val canGetBufferBind by lazy {

@@ -12,6 +12,7 @@ import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
 import java.util.concurrent.ConcurrentHashMap
 import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.Resource
@@ -280,7 +281,7 @@ object BuiltinTypes {
       is ByteArray -> variantFromPackedByteArrayInto(value, variantOut, arena)
       is List<*> -> variantFromArrayInto(value, variantOut, arena)
       is Map<*, *> -> variantFromDictionaryInto(value, variantOut, arena)
-      is GodotObject -> variantFromObjectInto(value.handle, variantOut, arena)
+      is GodotObject -> variantFromObjectInto(value.segment, variantOut, arena)
       // Variant(Object*) already refs RefCounted values; adding an extra
       // retain here leaks whenever the temporary Variant is destroyed.
       is Resource -> variantFromObjectInto(value.requireOpenHandle(), variantOut, arena)
@@ -303,7 +304,7 @@ object BuiltinTypes {
   fun readVariantScalarOwned(variant: MemorySegment, arena: Arena): Any? {
     val value = variantToScalar(variant, arena)
     if (value is GodotObject && value.isClass("RefCounted")) {
-      ObjectCalls.ptrcallNoArgsRetBool(referenceBind, value.handle)
+      ObjectCalls.ptrcallNoArgsRetBool(referenceBind, value.segment)
       return RefCounted(value.handle)
     }
     return value
@@ -825,7 +826,10 @@ object BuiltinTypes {
           args = emptyList(),
           rReturn = methodRet,
         )
-        return GodotCallable(GodotObject(objectHandle), GodotStrings.readStringName(methodRet))
+        return GodotCallable(
+          GodotObject(GodotHandle(objectHandle)),
+          GodotStrings.readStringName(methodRet),
+        )
       } finally {
         destroyTyped(VariantType.STRING_NAME, methodRet)
       }
@@ -1269,7 +1273,7 @@ object BuiltinTypes {
    * are non-owning.
    */
   fun readArrayObjects(src: MemorySegment): List<GodotObject> =
-    readArrayObjects(src) { handle -> GodotObject(handle) }
+    readArrayObjects(src) { handle -> GodotObject(GodotHandle(handle)) }
 
   fun <T : Any> readArrayObjects(src: MemorySegment, wrapper: (MemorySegment) -> T?): List<T> {
     val sizeHash = 3173160232L
@@ -1918,7 +1922,7 @@ object BuiltinTypes {
         val objectHandle =
           when (value) {
             is Resource -> value.requireOpenHandle()
-            is GodotObject -> value.handle
+            is GodotObject -> value.segment
             else ->
               error(
                 "Unsupported Object array value type: ${value?.let { it::class.qualifiedName } ?: "null"}"
@@ -2264,7 +2268,7 @@ object BuiltinTypes {
         val scratch = arena.allocate(ADDRESS)
         VariantConverters.variantToType(VariantType.OBJECT).invoke(scratch, variant)
         val handle = scratch.get(ADDRESS, 0)
-        if (handle.address() == 0L) null else GodotObject(handle)
+        if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
       }
 
       VariantType.PACKED_BYTE_ARRAY -> {

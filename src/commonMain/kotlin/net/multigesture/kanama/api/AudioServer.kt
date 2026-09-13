@@ -675,8 +675,8 @@ object AudioServer {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): AudioServer? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): AudioServer? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): AudioServer? =
         if (handle.address() == 0L) null else this

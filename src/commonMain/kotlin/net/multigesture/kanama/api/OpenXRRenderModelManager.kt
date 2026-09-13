@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRRenderModelManager
  */
-class OpenXRRenderModelManager(handle: MemorySegment) : Node3D(handle) {
+class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
     var tracker: Long
         @JvmName("trackerProperty")
         get() = getTracker()
@@ -23,19 +23,19 @@ class OpenXRRenderModelManager(handle: MemorySegment) : Node3D(handle) {
         set(value) = setMakeLocalToPose(value)
 
     fun getTracker(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerBind, segment)
     }
 
     fun setTracker(tracker: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTrackerBind, handle, tracker)
+        ObjectCalls.ptrcallWithLongArg(setTrackerBind, segment, tracker)
     }
 
     fun getMakeLocalToPose(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getMakeLocalToPoseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getMakeLocalToPoseBind, segment)
     }
 
     fun setMakeLocalToPose(makeLocalToPose: String) {
-        ObjectCalls.ptrcallWithStringArg(setMakeLocalToPoseBind, handle, makeLocalToPose)
+        ObjectCalls.ptrcallWithStringArg(setMakeLocalToPoseBind, segment, makeLocalToPose)
     }
 
     object Signals {
@@ -50,11 +50,11 @@ class OpenXRRenderModelManager(handle: MemorySegment) : Node3D(handle) {
         const val RENDER_MODEL_TRACKER_RIGHT_HAND: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRRenderModelManager? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRRenderModelManager? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRRenderModelManager? =
-            if (handle.address() == 0L) null else OpenXRRenderModelManager(handle)
+            if (handle.address() == 0L) null else OpenXRRenderModelManager(GodotHandle(handle))
 
         private const val GET_TRACKER_HASH = 2456466356L
         private val getTrackerBind by lazy {

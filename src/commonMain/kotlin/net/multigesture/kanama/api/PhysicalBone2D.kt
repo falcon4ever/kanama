@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: PhysicalBone2D
  */
-class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
+class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
     var bone2dNodepath: NodePath
         @JvmName("bone2dNodepathProperty")
         get() = getBone2dNodepath()
@@ -50,7 +50,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_joint
      */
     fun getJoint(): Joint2D? {
-        return Joint2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJointBind, handle))
+        return Joint2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJointBind, segment))
     }
 
     /**
@@ -61,7 +61,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_auto_configure_joint
      */
     fun getAutoConfigureJoint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAutoConfigureJointBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAutoConfigureJointBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_auto_configure_joint
      */
     fun setAutoConfigureJoint(autoConfigureJoint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoConfigureJointBind, handle, autoConfigureJoint)
+        ObjectCalls.ptrcallWithBoolArg(setAutoConfigureJointBind, segment, autoConfigureJoint)
     }
 
     /**
@@ -84,7 +84,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_simulate_physics
      */
     fun setSimulatePhysics(simulatePhysics: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSimulatePhysicsBind, handle, simulatePhysics)
+        ObjectCalls.ptrcallWithBoolArg(setSimulatePhysicsBind, segment, simulatePhysics)
     }
 
     /**
@@ -96,7 +96,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_simulate_physics
      */
     fun getSimulatePhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.is_simulating_physics
      */
     fun isSimulatingPhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, segment)
     }
 
     /**
@@ -115,7 +115,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_bone2d_nodepath
      */
     fun setBone2dNodepath(nodepath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setBone2dNodepathBind, handle, nodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setBone2dNodepathBind, segment, nodepath)
     }
 
     /**
@@ -124,7 +124,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_bone2d_nodepath
      */
     fun getBone2dNodepath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodepathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodepathBind, segment)
     }
 
     /**
@@ -133,7 +133,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_bone2d_index
      */
     fun setBone2dIndex(boneIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBone2dIndexBind, handle, boneIndex)
+        ObjectCalls.ptrcallWithIntArg(setBone2dIndexBind, segment, boneIndex)
     }
 
     /**
@@ -142,7 +142,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_bone2d_index
      */
     fun getBone2dIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBone2dIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBone2dIndexBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_follow_bone_when_simulating
      */
     fun setFollowBoneWhenSimulating(followBone: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowBoneWhenSimulatingBind, handle, followBone)
+        ObjectCalls.ptrcallWithBoolArg(setFollowBoneWhenSimulatingBind, segment, followBone)
     }
 
     /**
@@ -162,16 +162,16 @@ class PhysicalBone2D(handle: MemorySegment) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_follow_bone_when_simulating
      */
     fun getFollowBoneWhenSimulating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFollowBoneWhenSimulatingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFollowBoneWhenSimulatingBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicalBone2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicalBone2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicalBone2D? =
-            if (handle.address() == 0L) null else PhysicalBone2D(handle)
+            if (handle.address() == 0L) null else PhysicalBone2D(GodotHandle(handle))
 
         private const val GET_JOINT_HASH = 3582132112L
         private val getJointBind by lazy {

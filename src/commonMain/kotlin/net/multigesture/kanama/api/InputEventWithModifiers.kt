@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: InputEventWithModifiers
  */
-open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow(handle) {
+open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(handle) {
     var commandOrControlAutoremap: Boolean
         @JvmName("commandOrControlAutoremapProperty")
         get() = isCommandOrControlAutoremap()
@@ -50,7 +50,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun setCommandOrControlAutoremap(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCommandOrControlAutoremapBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCommandOrControlAutoremapBind, segment, enable)
     }
 
     /**
@@ -61,7 +61,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun isCommandOrControlAutoremap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlAutoremapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlAutoremapBind, segment)
     }
 
     /**
@@ -72,7 +72,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun isCommandOrControlPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlPressedBind, segment)
     }
 
     /**
@@ -82,7 +82,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun setAltPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAltPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setAltPressedBind, segment, pressed)
     }
 
     /**
@@ -92,7 +92,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun isAltPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAltPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAltPressedBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun setShiftPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setShiftPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setShiftPressedBind, segment, pressed)
     }
 
     /**
@@ -112,7 +112,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun isShiftPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isShiftPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShiftPressedBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun setCtrlPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCtrlPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setCtrlPressedBind, segment, pressed)
     }
 
     /**
@@ -132,7 +132,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun isCtrlPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCtrlPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCtrlPressedBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun setMetaPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMetaPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setMetaPressedBind, segment, pressed)
     }
 
     /**
@@ -154,7 +154,7 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun isMetaPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMetaPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMetaPressedBind, segment)
     }
 
     /**
@@ -164,16 +164,16 @@ open class InputEventWithModifiers(handle: MemorySegment) : InputEventFromWindow
      */
     fun getModifiersMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventWithModifiers? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventWithModifiers? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventWithModifiers? =
-            if (handle.address() == 0L) null else InputEventWithModifiers(handle)
+            if (handle.address() == 0L) null else InputEventWithModifiers(GodotHandle(handle))
 
         private const val SET_COMMAND_OR_CONTROL_AUTOREMAP_HASH = 2586408642L
         private val setCommandOrControlAutoremapBind by lazy {

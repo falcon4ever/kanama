@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: DPITexture
  */
-class DPITexture(handle: MemorySegment) : Texture2D(handle) {
+class DPITexture(handle: GodotHandle) : Texture2D(handle) {
     var fixAlphaBorder: Boolean
         @JvmName("fixAlphaBorderProperty")
         get() = getFixAlphaBorder()
@@ -51,7 +51,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSource(source: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSourceBind, handle, source)
+        ObjectCalls.ptrcallWithStringArg(setSourceBind, segment, source)
     }
 
     /**
@@ -61,7 +61,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getSource(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSourceBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFixAlphaBorder(fixAlphaBorder: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFixAlphaBorderBind, handle, fixAlphaBorder)
+        ObjectCalls.ptrcallWithBoolArg(setFixAlphaBorderBind, segment, fixAlphaBorder)
     }
 
     /**
@@ -85,7 +85,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getFixAlphaBorder(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFixAlphaBorderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFixAlphaBorderBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setPremultAlpha(premultAlpha: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPremultAlphaBind, handle, premultAlpha)
+        ObjectCalls.ptrcallWithBoolArg(setPremultAlphaBind, segment, premultAlpha)
     }
 
     /**
@@ -119,7 +119,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getPremultAlpha(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPremultAlphaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPremultAlphaBind, segment)
     }
 
     /**
@@ -129,7 +129,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setBaseScale(baseScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBaseScaleBind, handle, baseScale)
+        ObjectCalls.ptrcallWithDoubleArg(setBaseScaleBind, segment, baseScale)
     }
 
     /**
@@ -139,7 +139,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getBaseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBaseScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBaseScaleBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSaturation(saturation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSaturationBind, handle, saturation)
+        ObjectCalls.ptrcallWithDoubleArg(setSaturationBind, segment, saturation)
     }
 
     /**
@@ -159,7 +159,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getSaturation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSaturationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSaturationBind, segment)
     }
 
     /**
@@ -169,7 +169,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setColorMap(colorMap: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setColorMapBind, handle, colorMap)
+        ObjectCalls.ptrcallWithDictionaryArg(setColorMapBind, segment, colorMap)
     }
 
     /**
@@ -179,7 +179,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getColorMap(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getColorMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getColorMapBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setSizeOverride(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, segment, size)
     }
 
     /**
@@ -200,7 +200,7 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getScaledRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getScaledRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getScaledRidBind, segment)
     }
 
     companion object {
@@ -215,11 +215,11 @@ class DPITexture(handle: MemorySegment) : Texture2D(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): DPITexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): DPITexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): DPITexture? =
-            if (handle.address() == 0L) null else DPITexture(handle)
+            if (handle.address() == 0L) null else DPITexture(GodotHandle(handle))
 
         private const val CREATE_FROM_STRING_HASH = 755140520L
         private val createFromStringBind by lazy {
