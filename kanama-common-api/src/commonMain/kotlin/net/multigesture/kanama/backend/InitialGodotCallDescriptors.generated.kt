@@ -3535,6 +3535,127 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.RETAINED_REFCOUNTED,
     )
 
+  val ENVIRONMENT_SET_SSAO_ENABLED =
+    GodotCallDescriptor(
+      opcode = 322,
+      className = "Environment",
+      methodName = "set_ssao_enabled",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val ENVIRONMENT_SET_VOLUMETRIC_FOG_ENABLED =
+    GodotCallDescriptor(
+      opcode = 323,
+      className = "Environment",
+      methodName = "set_volumetric_fog_enabled",
+      hash = 2586408642L,
+      shape = GodotCallShape.BOOL_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RENDERINGSERVER_VOXEL_GI_SET_QUALITY =
+    GodotCallDescriptor(
+      opcode = 324,
+      className = "RenderingServer",
+      methodName = "voxel_gi_set_quality",
+      hash = 1538689978L,
+      shape = GodotCallShape.LONG_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RENDERINGSERVER_ENVIRONMENT_SET_SDFGI_RAY_COUNT =
+    GodotCallDescriptor(
+      opcode = 325,
+      className = "RenderingServer",
+      methodName = "environment_set_sdfgi_ray_count",
+      hash = 340137951L,
+      shape = GodotCallShape.LONG_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RENDERINGSERVER_ENVIRONMENT_SET_SSAO_QUALITY =
+    GodotCallDescriptor(
+      opcode = 326,
+      className = "RenderingServer",
+      methodName = "environment_set_ssao_quality",
+      hash = 189753569L,
+      shape = GodotCallShape.LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RENDERINGSERVER_ENVIRONMENT_SET_SSIL_QUALITY =
+    GodotCallDescriptor(
+      opcode = 327,
+      className = "RenderingServer",
+      methodName = "environment_set_ssil_quality",
+      hash = 1713836683L,
+      shape = GodotCallShape.LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val RENDERINGSERVER_GET_CURRENT_RENDERING_DRIVER_NAME =
+    GodotCallDescriptor(
+      opcode = 328,
+      className = "RenderingServer",
+      methodName = "get_current_rendering_driver_name",
+      hash = 201670096L,
+      shape = GodotCallShape.NOARGS_RET_STRING_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val OS_GET_NAME =
+    GodotCallDescriptor(
+      opcode = 329,
+      className = "OS",
+      methodName = "get_name",
+      hash = 201670096L,
+      shape = GodotCallShape.NOARGS_RET_STRING_SINGLETON,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val VIEWPORT_SET_INPUT_AS_HANDLED =
+    GodotCallDescriptor(
+      opcode = 330,
+      className = "Viewport",
+      methodName = "set_input_as_handled",
+      hash = 3218959716L,
+      shape = GodotCallShape.NOARGS_VOID,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CONTROL_SET_POSITION =
+    GodotCallDescriptor(
+      opcode = 331,
+      className = "Control",
+      methodName = "set_position",
+      hash = 2436320129L,
+      shape = GodotCallShape.VECTOR2_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val CONTROL_SET_SIZE =
+    GodotCallDescriptor(
+      opcode = 332,
+      className = "Control",
+      methodName = "set_size",
+      hash = 2436320129L,
+      shape = GodotCallShape.VECTOR2_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 321
+  const val MAX_OPCODE = 332
 }

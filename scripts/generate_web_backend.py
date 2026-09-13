@@ -364,6 +364,17 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     319: {},
     320: {},
     321: {"ret": "browser"},
+    322: {},
+    323: {},
+    324: {},
+    325: {},
+    326: {},
+    327: {},
+    328: {},
+    329: {},
+    330: {},
+    331: {},
+    332: {},
 }
 
 
@@ -786,6 +797,24 @@ def body_LONG_ARG_SINGLETON(calls):
     ]
 
 
+def body_LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON(calls):
+    """Six values joined by U+001F on the object-query string channel (task 64 parcel 8): the
+    RenderingServer SSAO/SSIL quality tuning has no RID and no result; the GDScript arm splits
+    the payload and calls Godot with the full signature."""
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "require(quality in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "require(blurPasses in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
+        "require(adaptiveTarget.isFinite() && fadeoutFrom.isFinite() && fadeoutTo.isFinite())",
+        "val packed =",
+        "listOf(quality, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)",
+        '.joinToString("\\u001f")',
+        "commands.flush()",
+        "immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), packed)",
+    ]
+
+
 def body_STRINGNAME_ARG_SINGLETON(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -796,16 +825,40 @@ def body_STRINGNAME_ARG_SINGLETON(calls):
 
 
 def body_NOARGS_RET_STRING_SINGLETON(calls):
-    op = _only(calls).opcode
-    return [
-        f"require(descriptor.executionMode == {_SNAPSHOT})",
-        f"require(descriptor.opcode == {op})",
-        "return webRenderingMethodSnapshot(requireActiveWebScriptHandle())",
+    """One opcode reads the per-script snapshot the proxy seeds at ready (the rendering method,
+    85); the task-64 parcel-8 reads (rendering driver name, OS name) answer on the immediate
+    string channel like every other singleton query, so no new snapshot family per string."""
+    snapshot = [c for c in calls if c.execution_mode.value == "SNAPSHOT_READ"]
+    immediate = [c for c in calls if c.execution_mode.value == "IMMEDIATE_RESULT"]
+    snap = _only(snapshot).opcode
+    lines = [
+        f"require({_opcode_guard(calls)})",
+        "return when (descriptor.executionMode) {",
+        f"{_SNAPSHOT} -> {{",
+        f"require(descriptor.opcode == {snap})",
+        "webRenderingMethodSnapshot(requireActiveWebScriptHandle())",
         "?: error(",
         '"Missing Web ${descriptor.className}.${descriptor.methodName} snapshot for " +',
         '"active script handle"',
         ")",
+        "}",
     ]
+    if immediate:
+        lines += [
+            f"{_IMMEDIATE} -> {{",
+            f"require({_opcode_guard(immediate)})",
+            "commands.flush()",
+            'immediateWebStringQuery(descriptor.opcode, requireActiveWebScriptHandle(), "")',
+            "}",
+        ]
+    lines += [
+        "else -> error(",
+        '"Unsupported execution mode ${descriptor.executionMode} for " +',
+        '"${descriptor.className}.${descriptor.methodName}"',
+        ")",
+        "}",
+    ]
+    return lines
 
 
 def body_LONG_DOUBLE_ARG(calls):
@@ -1684,18 +1737,22 @@ def body_STRINGNAME_RET_HANDLE_LIST(calls):
         ".map { GodotHandle.fromBackendToken(it.toLong()) }",
     ]
 def body_LONG_OBJECT_ARG(calls):
+    """Godot lets both members of this shape clear the slot (`Mesh.surface_set_material(i, null)`
+    drops the mesh's reference to a duplicated material), so the object slot is nullable and null
+    rides as handle id 0 -- the GDScript arm already reads 0 as null (task 64 parcel 8)."""
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
         f"require({_opcode_guard(calls)})",
         "require(longValue in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong())",
-        "requireWebBrowserHandle(objectValue.webId(), WebBrowserHandleKind.OBJECT)",
+        "objectValue?.let { requireWebBrowserHandle(it.webId(), WebBrowserHandleKind.OBJECT) }",
         "commands.flush()",
-        "// Item index and object handle packed into one query string (unit separator).",
+        "// Item index and object handle packed into one query string (unit separator);",
+        "// handle id 0 clears the slot.",
         "check(",
         "immediateWebObjectQuery(",
         "descriptor.opcode,",
         "receiver.webId(),",
-        'longValue.toString() + "" + objectValue.webId().toString(),',
+        'longValue.toString() + "" + (objectValue?.webId() ?: 0).toString(),',
         ") == 1",
         ") {",
         '"Kanama Web ${descriptor.className}.${descriptor.methodName} was not applied"',
@@ -2002,6 +2059,17 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
         "",
     ),
     "LONG_ARG_SINGLETON": (["value: Long"], ""),
+    "LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON": (
+        [
+            "quality: Long",
+            "halfSize: Boolean",
+            "adaptiveTarget: Double",
+            "blurPasses: Long",
+            "fadeoutFrom: Double",
+            "fadeoutTo: Double",
+        ],
+        "",
+    ),
     "OBJECT_RET_HANDLE": (["receiver: GodotHandle", "value: GodotHandle"], "GodotHandle?"),
     "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE": (
         [
@@ -2191,7 +2259,7 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     "BASIS_RET_LONG": (["receiver: GodotHandle", "value: GodotBasis"], "Long"),
     "NOARGS_RET_VECTOR3I_LIST": (["receiver: GodotHandle"], "List<GodotVector3i>"),
     "LONG_OBJECT_ARG": (
-        ["receiver: GodotHandle", "longValue: Long", "objectValue: GodotHandle"],
+        ["receiver: GodotHandle", "longValue: Long", "objectValue: GodotHandle?"],
         "",
     ),
     "LONG_TRANSFORM3D_ARG": (
@@ -2347,6 +2415,7 @@ EMIT_ORDER = [
     "STRINGNAME_STRINGNAME_RET_DOUBLE_SINGLETON",
     "VECTOR3_VECTOR3_ARG",
     "LONG_ARG_SINGLETON",
+    "LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON",
     "OBJECT_RET_HANDLE",
     "OBJECT_NODEPATH_VECTOR3_DOUBLE_RET_HANDLE",
     "OBJECT_NODEPATH_DOUBLE_DOUBLE_RET_HANDLE",

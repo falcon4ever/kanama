@@ -179,6 +179,16 @@ data class Vector2i(val x: Int, val y: Int) {
   }
 }
 
+/** Integer axis-aligned rectangle; mirrors desktop's `Rect2i` (position + size, derived `end`). */
+data class Rect2i(val position: Vector2i, val size: Vector2i) {
+  val end: Vector2i
+    get() = Vector2i(position.x + size.x, position.y + size.y)
+
+  companion object {
+    val ZERO = Rect2i(Vector2i(0, 0), Vector2i(0, 0))
+  }
+}
+
 /** Rotation quaternion backing Basis decomposition and slerp (Godot layout: x, y, z, w). */
 data class Quaternion(val x: Double, val y: Double, val z: Double, val w: Double) {
   fun normalized(): Quaternion {

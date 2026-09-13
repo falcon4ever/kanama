@@ -7,6 +7,34 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — Web render-quality, window and glue families (task 64, tps-demo parcel 8)
+
+- **Web protocol 27 → 28.** The Kotlin/Wasm backend admits the settings families tps-demo's
+  Settings / Menu / Level write on every graphics apply: `Environment.set_ssao_enabled` (322) and
+  `set_volumetric_fog_enabled` (323) as queued mutations, `RenderingServer.voxel_gi_set_quality`
+  (324), `environment_set_sdfgi_ray_count` (325) and the six-argument
+  `environment_set_ssao_quality` (326) / `environment_set_ssil_quality` (327) on a new
+  `LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON` shape (the six values ride the object-query
+  string channel joined by U+001F and the applier calls Godot with the full signature), plus
+  `RenderingServer.get_current_rendering_driver_name` (328) and `OS.get_name` (329) on the
+  immediate string channel, the queued `Viewport.set_input_as_handled` (330) and
+  `Control.set_position` / `set_size` (331/332). The Compatibility renderer ignores most of the
+  quality writes, but the calls reach the engine instead of a Kotlin-side stub. `Node.get_window`,
+  `Node.propagate_call("set", [property, bool])`, `ResourceLoader`'s threaded-load family and
+  `loadLightmapGIData`, and the `ENV_SSAO_/ENV_SSIL_/VOXEL_GI_/ENV_SDFGI_RAY_COUNT_` constants are
+  generated members of the Web wrappers now rather than hand-written extensions needing their own
+  imports — the shared demo sources spell them exactly as desktop does, and the threaded-load
+  status constants take Godot's own values (the old facade had `THREAD_LOAD_IN_PROGRESS` and
+  `THREAD_LOAD_LOADED` transposed). The `LONG_OBJECT_ARG` object slot is nullable, so
+  `Mesh.surface_set_material(i, null)` clears a surface material. The Web script processor also
+  emits the `<Script>Rpcs` helpers desktop has (the parcel-5 `<Script>Methods` precedent): a
+  browser build has a single local peer, so a broadcast or a call addressed to peer 0/1 runs the
+  local leg when `@Rpc(callLocal = true)` says so and any remote peer id fails loud. The in-repo
+  `web3d` fixture proves the new surface (`Main.render_settings_probe` = 63,
+  `Main.window_family_probe` = 31, both required by the smoke gate).
+  **Existing Web exports must be rebuilt**: a protocol-27 export refuses to load against a
+  protocol-28 bridge, and vice versa.
+
 ### Added — Web SceneTree.create_timer (task 64, tps-demo parcel 7)
 
 - **Web protocol 26 → 27.** `SceneTree.create_timer(time_sec)` (opcode 321, new `DOUBLE_RET_HANDLE`

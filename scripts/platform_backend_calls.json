@@ -5043,6 +5043,188 @@
       "returnOwnership": "RETAINED_REFCOUNTED",
       "semantics": "One-shot SceneTreeTimer (time in seconds; process_always/process_in_physics/ignore_time_scale keep Godot's defaults) as a retained browser handle; its `timeout` signal is awaited through the generic signal path (tps-demo's Level / Part / PartDisappear waits).",
       "introducedBy": "64-parcel7-tps-timer"
+    },
+    {
+      "opcode": 322,
+      "scope": "class",
+      "className": "Environment",
+      "methodName": "set_ssao_enabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle screen-space ambient occlusion (tps-demo's Settings applies the player's SSAO choice; a no-op on the Compatibility renderer, which has no SSAO -- the call still reaches the engine rather than a Kotlin-side stub).",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 323,
+      "scope": "class",
+      "className": "Environment",
+      "methodName": "set_volumetric_fog_enabled",
+      "hash": 2586408642,
+      "arguments": [
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "BOOL_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Toggle volumetric fog (tps-demo's Settings; a no-op on the Compatibility renderer, which has no volumetric fog -- the call still reaches the engine rather than a Kotlin-side stub).",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 324,
+      "scope": "singleton",
+      "className": "RenderingServer",
+      "methodName": "voxel_gi_set_quality",
+      "hash": 1538689978,
+      "arguments": [
+        "enum::RenderingServer.VoxelGIQuality"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Global VoxelGI quality write (tps-demo's Level GI setup); Compatibility has no VoxelGI, so the engine ignores it there.",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 325,
+      "scope": "singleton",
+      "className": "RenderingServer",
+      "methodName": "environment_set_sdfgi_ray_count",
+      "hash": 340137951,
+      "arguments": [
+        "enum::RenderingServer.EnvironmentSDFGIRayCount"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Global SDFGI ray-count write (tps-demo's Level GI setup); Compatibility has no SDFGI, so the engine ignores it there.",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 326,
+      "scope": "singleton",
+      "className": "RenderingServer",
+      "methodName": "environment_set_ssao_quality",
+      "hash": 189753569,
+      "arguments": [
+        "enum::RenderingServer.EnvironmentSSAOQuality",
+        "bool",
+        "float",
+        "int",
+        "float",
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Global SSAO quality tuning (tps-demo's Settings). The six values ride the object-query string channel joined by U+001F; the arm splits them and calls Godot with the full signature. Compatibility has no SSAO, so the engine ignores it there.",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 327,
+      "scope": "singleton",
+      "className": "RenderingServer",
+      "methodName": "environment_set_ssil_quality",
+      "hash": 1713836683,
+      "arguments": [
+        "enum::RenderingServer.EnvironmentSSILQuality",
+        "bool",
+        "float",
+        "int",
+        "float",
+        "float"
+      ],
+      "returnType": "void",
+      "shape": "LONG_BOOL_DOUBLE_LONG_DOUBLE_DOUBLE_ARG_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Global SSIL quality tuning (tps-demo's Settings), same six-value string payload as environment_set_ssao_quality. Compatibility has no SSIL, so the engine ignores it there.",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 328,
+      "scope": "singleton",
+      "className": "RenderingServer",
+      "methodName": "get_current_rendering_driver_name",
+      "hash": 201670096,
+      "arguments": [],
+      "returnType": "String",
+      "shape": "NOARGS_RET_STRING_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the active rendering driver name (opengl3 on the Web export) on the immediate string channel; tps-demo's Settings and Menu branch on \"metal\" for the MetalFX scale filters.",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 329,
+      "scope": "singleton",
+      "className": "OS",
+      "methodName": "get_name",
+      "hash": 201670096,
+      "arguments": [],
+      "returnType": "String",
+      "shape": "NOARGS_RET_STRING_SINGLETON",
+      "executionMode": "IMMEDIATE_RESULT",
+      "returnOwnership": "BORROWED",
+      "semantics": "Read the OS name (\"Web\" in a browser) on the immediate string channel; tps-demo's Menu branches on iOS/Android for its mobile lobby defaults.",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 330,
+      "scope": "class",
+      "className": "Viewport",
+      "methodName": "set_input_as_handled",
+      "hash": 3218959716,
+      "arguments": [],
+      "returnType": "void",
+      "shape": "NOARGS_VOID",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue marking the current input event handled (tps-demo's Settings consumes toggle_fullscreen); applied at the flush that ends the input callback, so the event stops propagating like it does on desktop.",
+      "introducedBy": "64-parcel8-tps-render-settings"
+    },
+    {
+      "opcode": 331,
+      "scope": "class",
+      "className": "Control",
+      "methodName": "set_position",
+      "hash": 2436320129,
+      "arguments": [
+        "Vector2",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR2_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Control's offset-anchored position (keep_offsets keeps Godot's default false); tps-demo's SafeArea nudges its UI root inside the display safe area with it.",
+      "introducedBy": "64-parcel8-tps-window"
+    },
+    {
+      "opcode": 332,
+      "scope": "class",
+      "className": "Control",
+      "methodName": "set_size",
+      "hash": 2436320129,
+      "arguments": [
+        "Vector2",
+        "bool"
+      ],
+      "returnType": "void",
+      "shape": "VECTOR2_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue a Control's size (keep_offsets keeps Godot's default false); the SafeArea shrink that follows set_position.",
+      "introducedBy": "64-parcel8-tps-window"
     }
   ],
   "compositions": [

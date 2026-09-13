@@ -30,6 +30,18 @@ class Environment(godotObject: GodotHandle) : Resource(godotObject) {
     GodotBackendCalls.invokeBoolArg(D.ENVIRONMENT_SET_SDFGI_ENABLED, requireOpenHandle(), enabled)
   }
 
+  fun setSsaoEnabled(enabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(D.ENVIRONMENT_SET_SSAO_ENABLED, requireOpenHandle(), enabled)
+  }
+
+  fun setVolumetricFogEnabled(enabled: Boolean) {
+    GodotBackendCalls.invokeBoolArg(
+      D.ENVIRONMENT_SET_VOLUMETRIC_FOG_ENABLED,
+      requireOpenHandle(),
+      enabled,
+    )
+  }
+
   var backgroundEnergyMultiplier: Double
     get() = unsupportedWebGameplayFamily("Environment.get_bg_energy_multiplier")
     set(newValue) = setBgEnergyMultiplier(newValue)
@@ -45,6 +57,14 @@ class Environment(godotObject: GodotHandle) : Resource(godotObject) {
   var sdfgiEnabled: Boolean
     get() = unsupportedWebGameplayFamily("Environment.is_sdfgi_enabled")
     set(newValue) = setSdfgiEnabled(newValue)
+
+  var ssaoEnabled: Boolean
+    get() = unsupportedWebGameplayFamily("Environment.is_ssao_enabled")
+    set(newValue) = setSsaoEnabled(newValue)
+
+  var volumetricFogEnabled: Boolean
+    get() = unsupportedWebGameplayFamily("Environment.is_volumetric_fog_enabled")
+    set(newValue) = setVolumetricFogEnabled(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -58,6 +78,12 @@ fun Environment.setSsilEnabled(enabled: Boolean) = setSsilEnabled(enabled)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Environment.setSdfgiEnabled(enabled: Boolean) = setSdfgiEnabled(enabled)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Environment.setSsaoEnabled(enabled: Boolean) = setSsaoEnabled(enabled)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun Environment.setVolumetricFogEnabled(enabled: Boolean) = setVolumetricFogEnabled(enabled)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var Environment.backgroundEnergyMultiplier: Double
@@ -85,4 +111,18 @@ var Environment.sdfgiEnabled: Boolean
   get() = sdfgiEnabled
   set(newValue) {
     sdfgiEnabled = newValue
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Environment.ssaoEnabled: Boolean
+  get() = ssaoEnabled
+  set(newValue) {
+    ssaoEnabled = newValue
+  }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var Environment.volumetricFogEnabled: Boolean
+  get() = volumetricFogEnabled
+  set(newValue) {
+    volumetricFogEnabled = newValue
   }
