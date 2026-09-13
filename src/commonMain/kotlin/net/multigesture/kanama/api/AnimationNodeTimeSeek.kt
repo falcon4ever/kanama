@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeTimeSeek
  */
-class AnimationNodeTimeSeek(handle: MemorySegment) : AnimationNode(handle) {
+class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
     var explicitElapse: Boolean
         @JvmName("explicitElapseProperty")
         get() = isExplicitElapse()
@@ -26,7 +26,7 @@ class AnimationNodeTimeSeek(handle: MemorySegment) : AnimationNode(handle) {
      */
     fun setExplicitElapse(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setExplicitElapseBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setExplicitElapseBind, segment, enable)
     }
 
     /**
@@ -37,16 +37,16 @@ class AnimationNodeTimeSeek(handle: MemorySegment) : AnimationNode(handle) {
      */
     fun isExplicitElapse(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isExplicitElapseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isExplicitElapseBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeTimeSeek? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeTimeSeek? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeTimeSeek? =
-            if (handle.address() == 0L) null else AnimationNodeTimeSeek(handle)
+            if (handle.address() == 0L) null else AnimationNodeTimeSeek(GodotHandle(handle))
 
         private const val SET_EXPLICIT_ELAPSE_HASH = 2586408642L
         private val setExplicitElapseBind by lazy {

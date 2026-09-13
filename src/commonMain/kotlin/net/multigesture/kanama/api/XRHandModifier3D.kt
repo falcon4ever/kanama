@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XRHandModifier3D
  */
-class XRHandModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var handTracker: String
         @JvmName("handTrackerProperty")
         get() = getHandTracker()
@@ -31,7 +31,7 @@ class XRHandModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRHandModifier3D.set_hand_tracker
      */
     fun setHandTracker(trackerName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setHandTrackerBind, handle, trackerName)
+        ObjectCalls.ptrcallWithStringNameArg(setHandTrackerBind, segment, trackerName)
     }
 
     /**
@@ -41,7 +41,7 @@ class XRHandModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRHandModifier3D.get_hand_tracker
      */
     fun getHandTracker(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getHandTrackerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getHandTrackerBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ class XRHandModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRHandModifier3D.set_bone_update
      */
     fun setBoneUpdate(boneUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, handle, boneUpdate)
+        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate)
     }
 
     /**
@@ -59,7 +59,7 @@ class XRHandModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRHandModifier3D.get_bone_update
      */
     fun getBoneUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment)
     }
 
     companion object {
@@ -68,11 +68,11 @@ class XRHandModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         const val BONE_UPDATE_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRHandModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRHandModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRHandModifier3D? =
-            if (handle.address() == 0L) null else XRHandModifier3D(handle)
+            if (handle.address() == 0L) null else XRHandModifier3D(GodotHandle(handle))
 
         private const val SET_HAND_TRACKER_HASH = 3304788590L
         private val setHandTrackerBind by lazy {

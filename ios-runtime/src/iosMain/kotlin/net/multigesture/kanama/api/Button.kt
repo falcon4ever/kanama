@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: Button
  */
-open class Button(handle: MemorySegment) : BaseButton(handle) {
+open class Button(handle: GodotHandle) : BaseButton(handle) {
     var text: String
         @JvmName("textProperty")
         get() = getText()
@@ -89,116 +89,116 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
         set(value) = setLanguage(value)
 
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
     }
 
     fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
     }
 
     fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
     }
 
     fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
     }
 
     fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
     }
 
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
     }
 
     fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
     }
 
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
     }
 
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     fun setButtonIcon(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setButtonIconBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setButtonIconBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getButtonIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonIconBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonIconBind, segment))
     }
 
     fun setFlat(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, enabled)
     }
 
     fun isFlat(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
     }
 
     fun setClipText(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipTextBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setClipTextBind, segment, enabled)
     }
 
     fun getClipText(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getClipTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getClipTextBind, segment)
     }
 
     fun setTextAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setTextAlignmentBind, segment, alignment)
     }
 
     fun getTextAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextAlignmentBind, segment)
     }
 
     fun setIconAlignment(iconAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconAlignmentBind, handle, iconAlignment)
+        ObjectCalls.ptrcallWithLongArg(setIconAlignmentBind, segment, iconAlignment)
     }
 
     fun getIconAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getIconAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getIconAlignmentBind, segment)
     }
 
     fun setVerticalIconAlignment(verticalIconAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalIconAlignmentBind, handle, verticalIconAlignment)
+        ObjectCalls.ptrcallWithLongArg(setVerticalIconAlignmentBind, segment, verticalIconAlignment)
     }
 
     fun getVerticalIconAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalIconAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalIconAlignmentBind, segment)
     }
 
     fun setExpandIcon(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpandIconBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setExpandIconBind, segment, enabled)
     }
 
     fun isExpandIcon(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isExpandIconBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isExpandIconBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Button? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Button? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Button? =
-            if (handle.address() == 0L) null else Button(handle)
+            if (handle.address() == 0L) null else Button(GodotHandle(handle))
 
         private const val SET_TEXT_HASH = 83702148L
         private val setTextBind by lazy {

@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: CanvasLayer
  */
-open class CanvasLayer(handle: MemorySegment) : Node(handle) {
+open class CanvasLayer(handle: GodotHandle) : Node(handle) {
     var layer: Int
         @JvmName("layerProperty")
         get() = getLayer()
@@ -77,7 +77,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_layer
      */
     fun setLayer(layer: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLayerBind, handle, layer)
+        ObjectCalls.ptrcallWithIntArg(setLayerBind, segment, layer)
     }
 
     /**
@@ -90,7 +90,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_layer
      */
     fun getLayer(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLayerBind, segment)
     }
 
     /**
@@ -100,7 +100,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
     }
 
     /**
@@ -110,7 +110,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, handle)
+        ObjectCalls.ptrcallNoArgs(showBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, handle)
+        ObjectCalls.ptrcallNoArgs(hideBind, segment)
     }
 
     /**
@@ -139,7 +139,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_transform
      */
     fun setTransform(transform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, handle, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, transform)
     }
 
     /**
@@ -148,7 +148,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_transform
      */
     fun getTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_final_transform
      */
     fun getFinalTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -176,7 +176,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -185,7 +185,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_rotation
      */
     fun setRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, handle, radians)
+        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, segment, radians)
     }
 
     /**
@@ -194,7 +194,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_rotation
      */
     fun getRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, segment)
     }
 
     /**
@@ -203,7 +203,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_scale
      */
     fun setScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, segment, scale)
     }
 
     /**
@@ -212,7 +212,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_scale
      */
     fun getScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_follow_viewport
      */
     fun setFollowViewport(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowViewportBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFollowViewportBind, segment, enable)
     }
 
     /**
@@ -234,7 +234,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.is_following_viewport
      */
     fun isFollowingViewport(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFollowingViewportBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFollowingViewportBind, segment)
     }
 
     /**
@@ -244,7 +244,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_follow_viewport_scale
      */
     fun setFollowViewportScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFollowViewportScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setFollowViewportScaleBind, segment, scale)
     }
 
     /**
@@ -254,7 +254,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_follow_viewport_scale
      */
     fun getFollowViewportScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFollowViewportScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFollowViewportScaleBind, segment)
     }
 
     /**
@@ -264,7 +264,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_custom_viewport
      */
     fun setCustomViewport(viewport: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, handle, listOf(viewport.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, segment, listOf(viewport.segment))
     }
 
     /**
@@ -274,7 +274,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_custom_viewport
      */
     fun getCustomViewport(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, segment))
     }
 
     /**
@@ -283,7 +283,7 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_canvas
      */
     fun getCanvas(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, segment)
     }
 
     object Signals {
@@ -292,11 +292,11 @@ open class CanvasLayer(handle: MemorySegment) : Node(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CanvasLayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CanvasLayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CanvasLayer? =
-            if (handle.address() == 0L) null else CanvasLayer(handle)
+            if (handle.address() == 0L) null else CanvasLayer(GodotHandle(handle))
 
         private const val SET_LAYER_HASH = 1286410249L
         private val setLayerBind by lazy {

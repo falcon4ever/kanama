@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ResourceFormatLoader
  */
-class ResourceFormatLoader(handle: MemorySegment) : RefCounted(handle) {
+class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -21,11 +21,11 @@ class ResourceFormatLoader(handle: MemorySegment) : RefCounted(handle) {
         const val CACHE_MODE_REPLACE_DEEP: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceFormatLoader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceFormatLoader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceFormatLoader? =
-            if (handle.address() == 0L) null else ResourceFormatLoader(handle)
+            if (handle.address() == 0L) null else ResourceFormatLoader(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

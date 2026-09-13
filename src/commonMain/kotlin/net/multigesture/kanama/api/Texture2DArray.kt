@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Texture2DArray
  */
-class Texture2DArray(handle: MemorySegment) : ImageTextureLayered(handle) {
+class Texture2DArray(handle: GodotHandle) : ImageTextureLayered(handle) {
     /**
      * Creates a placeholder version of this resource (`PlaceholderTexture2DArray`).
      *
@@ -19,8 +19,8 @@ class Texture2DArray(handle: MemorySegment) : ImageTextureLayered(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -29,11 +29,11 @@ class Texture2DArray(handle: MemorySegment) : ImageTextureLayered(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Texture2DArray? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Texture2DArray? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Texture2DArray? =
-            if (handle.address() == 0L) null else Texture2DArray(handle)
+            if (handle.address() == 0L) null else Texture2DArray(GodotHandle(handle))
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L
         private val createPlaceholderBind by lazy {

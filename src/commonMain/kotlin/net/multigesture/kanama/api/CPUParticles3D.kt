@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: CPUParticles3D
  */
-class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
+class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     var emitting: Boolean
         @JvmName("emittingProperty")
         get() = isEmitting()
@@ -486,7 +486,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emitting
      */
     fun setEmitting(emitting: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmittingBind, handle, emitting)
+        ObjectCalls.ptrcallWithBoolArg(setEmittingBind, segment, emitting)
     }
 
     /**
@@ -495,7 +495,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_amount
      */
     fun setAmount(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAmountBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setAmountBind, segment, amount)
     }
 
     /**
@@ -504,7 +504,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_lifetime
      */
     fun setLifetime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, handle, secs)
+        ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, segment, secs)
     }
 
     /**
@@ -514,7 +514,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_one_shot
      */
     fun setOneShot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, enable)
     }
 
     /**
@@ -523,7 +523,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_pre_process_time
      */
     fun setPreProcessTime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, handle, secs)
+        ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, segment, secs)
     }
 
     /**
@@ -533,7 +533,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_explosiveness_ratio
      */
     fun setExplosivenessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, segment, ratio)
     }
 
     /**
@@ -542,7 +542,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_randomness_ratio
      */
     fun setRandomnessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, segment, ratio)
     }
 
     /**
@@ -554,7 +554,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_visibility_aabb
      */
     fun setVisibilityAabb(aabb: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setVisibilityAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setVisibilityAabbBind, segment, aabb)
     }
 
     /**
@@ -563,7 +563,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_lifetime_randomness
      */
     fun setLifetimeRandomness(random: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, handle, random)
+        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, segment, random)
     }
 
     /**
@@ -575,7 +575,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_use_local_coordinates
      */
     fun setUseLocalCoordinates(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, segment, enable)
     }
 
     /**
@@ -586,7 +586,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_fixed_fps
      */
     fun setFixedFps(fps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, handle, fps)
+        ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, segment, fps)
     }
 
     /**
@@ -596,7 +596,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_fractional_delta
      */
     fun setFractionalDelta(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, segment, enable)
     }
 
     /**
@@ -606,7 +606,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_speed_scale
      */
     fun setSpeedScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, scale)
     }
 
     /**
@@ -618,7 +618,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.is_emitting
      */
     fun isEmitting(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, segment)
     }
 
     /**
@@ -627,7 +627,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_amount
      */
     fun getAmount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, segment)
     }
 
     /**
@@ -636,7 +636,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_lifetime
      */
     fun getLifetime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, segment)
     }
 
     /**
@@ -646,7 +646,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_one_shot
      */
     fun getOneShot(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, segment)
     }
 
     /**
@@ -655,7 +655,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_pre_process_time
      */
     fun getPreProcessTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, segment)
     }
 
     /**
@@ -665,7 +665,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_explosiveness_ratio
      */
     fun getExplosivenessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, segment)
     }
 
     /**
@@ -674,7 +674,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_randomness_ratio
      */
     fun getRandomnessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, segment)
     }
 
     /**
@@ -686,7 +686,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_visibility_aabb
      */
     fun getVisibilityAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(getVisibilityAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getVisibilityAabbBind, segment)
     }
 
     /**
@@ -695,7 +695,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_lifetime_randomness
      */
     fun getLifetimeRandomness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, segment)
     }
 
     /**
@@ -707,7 +707,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_use_local_coordinates
      */
     fun getUseLocalCoordinates(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, segment)
     }
 
     /**
@@ -718,7 +718,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_fixed_fps
      */
     fun getFixedFps(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, segment)
     }
 
     /**
@@ -728,7 +728,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_fractional_delta
      */
     fun getFractionalDelta(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, segment)
     }
 
     /**
@@ -738,7 +738,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     /**
@@ -747,7 +747,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_draw_order
      */
     fun setDrawOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, handle, order)
+        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order)
     }
 
     /**
@@ -756,7 +756,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_draw_order
      */
     fun getDrawOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment)
     }
 
     /**
@@ -765,7 +765,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -774,7 +774,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_mesh
      */
     fun getMesh(): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -785,7 +785,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_use_fixed_seed
      */
     fun setUseFixedSeed(useFixedSeed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, handle, useFixedSeed)
+        ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, segment, useFixedSeed)
     }
 
     /**
@@ -796,7 +796,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_use_fixed_seed
      */
     fun getUseFixedSeed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, segment)
     }
 
     /**
@@ -805,7 +805,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_seed
      */
     fun setSeed(seed: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, handle, seed)
+        ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, segment, seed)
     }
 
     /**
@@ -814,7 +814,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_seed
      */
     fun getSeed(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, segment)
     }
 
     /**
@@ -824,7 +824,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.restart
      */
     fun restart(keepSeed: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(restartBind, handle, keepSeed)
+        ObjectCalls.ptrcallWithBoolArg(restartBind, segment, keepSeed)
     }
 
     /**
@@ -837,7 +837,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.request_particles_process
      */
     fun requestParticlesProcess(processTime: Double, processTimeResidual: Double = 0.0) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, handle, processTime, processTimeResidual)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, segment, processTime, processTimeResidual)
     }
 
     /**
@@ -847,7 +847,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.capture_aabb
      */
     fun captureAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(captureAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(captureAabbBind, segment)
     }
 
     /**
@@ -856,7 +856,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_direction
      */
     fun setDirection(direction: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, segment, direction)
     }
 
     /**
@@ -865,7 +865,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_direction
      */
     fun getDirection(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, segment)
     }
 
     /**
@@ -875,7 +875,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_spread
      */
     fun setSpread(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, segment, degrees)
     }
 
     /**
@@ -885,7 +885,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_spread
      */
     fun getSpread(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, segment)
     }
 
     /**
@@ -894,7 +894,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_flatness
      */
     fun setFlatness(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, segment, amount)
     }
 
     /**
@@ -903,7 +903,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_flatness
      */
     fun getFlatness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, segment)
     }
 
     /**
@@ -912,7 +912,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_param_min
      */
     fun setParamMin(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param, value)
     }
 
     /**
@@ -921,7 +921,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_param_min
      */
     fun getParamMin(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param)
     }
 
     /**
@@ -930,7 +930,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_param_max
      */
     fun setParamMax(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param, value)
     }
 
     /**
@@ -939,7 +939,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_param_max
      */
     fun getParamMax(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param)
     }
 
     /**
@@ -948,7 +948,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_param_curve
      */
     fun setParamCurve(param: Long, curve: Curve?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, handle, param, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param, curve?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -957,7 +957,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_param_curve
      */
     fun getParamCurve(param: Long): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, handle, param))
+        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param))
     }
 
     /**
@@ -969,7 +969,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -981,7 +981,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -994,7 +994,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color_ramp
      */
     fun setColorRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1007,7 +1007,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color_ramp
      */
     fun getColorRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     /**
@@ -1020,7 +1020,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color_initial_ramp
      */
     fun setColorInitialRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1033,7 +1033,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color_initial_ramp
      */
     fun getColorInitialRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
     }
 
     /**
@@ -1042,7 +1042,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_particle_flag
      */
     fun setParticleFlag(particleFlag: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, handle, particleFlag, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag, enable)
     }
 
     /**
@@ -1051,7 +1051,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_particle_flag
      */
     fun getParticleFlag(particleFlag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, handle, particleFlag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag)
     }
 
     /**
@@ -1060,7 +1060,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_shape
      */
     fun setEmissionShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape)
     }
 
     /**
@@ -1069,7 +1069,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_shape
      */
     fun getEmissionShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment)
     }
 
     /**
@@ -1078,7 +1078,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_sphere_radius
      */
     fun setEmissionSphereRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, segment, radius)
     }
 
     /**
@@ -1087,7 +1087,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_sphere_radius
      */
     fun getEmissionSphereRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, segment)
     }
 
     /**
@@ -1096,7 +1096,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_box_extents
      */
     fun setEmissionBoxExtents(extents: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, handle, extents)
+        ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, segment, extents)
     }
 
     /**
@@ -1105,7 +1105,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_box_extents
      */
     fun getEmissionBoxExtents(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, segment)
     }
 
     /**
@@ -1115,7 +1115,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_points
      */
     fun setEmissionPoints(array: List<Vector3>) {
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setEmissionPointsBind, handle, array)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setEmissionPointsBind, segment, array)
     }
 
     /**
@@ -1125,7 +1125,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_points
      */
     fun getEmissionPoints(): List<Vector3> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getEmissionPointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getEmissionPointsBind, segment)
     }
 
     /**
@@ -1134,7 +1134,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_normals
      */
     fun setEmissionNormals(array: List<Vector3>) {
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setEmissionNormalsBind, handle, array)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setEmissionNormalsBind, segment, array)
     }
 
     /**
@@ -1143,7 +1143,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_normals
      */
     fun getEmissionNormals(): List<Vector3> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getEmissionNormalsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getEmissionNormalsBind, segment)
     }
 
     /**
@@ -1157,7 +1157,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_colors
      */
     fun setEmissionColors(array: List<Color>) {
-        ObjectCalls.ptrcallWithPackedColorListArg(setEmissionColorsBind, handle, array)
+        ObjectCalls.ptrcallWithPackedColorListArg(setEmissionColorsBind, segment, array)
     }
 
     /**
@@ -1171,7 +1171,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_colors
      */
     fun getEmissionColors(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getEmissionColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getEmissionColorsBind, segment)
     }
 
     /**
@@ -1180,7 +1180,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_axis
      */
     fun setEmissionRingAxis(axis: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, handle, axis)
+        ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, segment, axis)
     }
 
     /**
@@ -1189,7 +1189,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_axis
      */
     fun getEmissionRingAxis(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, segment)
     }
 
     /**
@@ -1198,7 +1198,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_height
      */
     fun setEmissionRingHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, segment, height)
     }
 
     /**
@@ -1207,7 +1207,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_height
      */
     fun getEmissionRingHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, segment)
     }
 
     /**
@@ -1216,7 +1216,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_radius
      */
     fun setEmissionRingRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, segment, radius)
     }
 
     /**
@@ -1225,7 +1225,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_radius
      */
     fun getEmissionRingRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, segment)
     }
 
     /**
@@ -1234,7 +1234,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_inner_radius
      */
     fun setEmissionRingInnerRadius(innerRadius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, handle, innerRadius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, segment, innerRadius)
     }
 
     /**
@@ -1243,7 +1243,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_inner_radius
      */
     fun getEmissionRingInnerRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, segment)
     }
 
     /**
@@ -1256,7 +1256,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_cone_angle
      */
     fun setEmissionRingConeAngle(coneAngle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, handle, coneAngle)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, segment, coneAngle)
     }
 
     /**
@@ -1269,7 +1269,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_cone_angle
      */
     fun getEmissionRingConeAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, segment)
     }
 
     /**
@@ -1278,7 +1278,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_gravity
      */
     fun getGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, segment)
     }
 
     /**
@@ -1287,7 +1287,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_gravity
      */
     fun setGravity(accelVec: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGravityBind, handle, accelVec)
+        ObjectCalls.ptrcallWithVector3Arg(setGravityBind, segment, accelVec)
     }
 
     /**
@@ -1296,7 +1296,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_split_scale
      */
     fun getSplitScale(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSplitScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSplitScaleBind, segment)
     }
 
     /**
@@ -1305,7 +1305,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_split_scale
      */
     fun setSplitScale(splitScale: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSplitScaleBind, handle, splitScale)
+        ObjectCalls.ptrcallWithBoolArg(setSplitScaleBind, segment, splitScale)
     }
 
     /**
@@ -1314,7 +1314,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_x
      */
     fun getScaleCurveX(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, segment))
     }
 
     /**
@@ -1323,7 +1323,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_x
      */
     fun setScaleCurveX(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, handle, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1332,7 +1332,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_y
      */
     fun getScaleCurveY(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, segment))
     }
 
     /**
@@ -1341,7 +1341,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_y
      */
     fun setScaleCurveY(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, handle, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1350,7 +1350,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_z
      */
     fun getScaleCurveZ(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveZBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveZBind, segment))
     }
 
     /**
@@ -1359,7 +1359,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_z
      */
     fun setScaleCurveZ(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveZBind, handle, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveZBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1369,7 +1369,7 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.convert_from_particles
      */
     fun convertFromParticles(particles: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, handle, listOf(particles.handle))
+        ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, segment, listOf(particles.segment))
     }
 
     object Signals {
@@ -1407,11 +1407,11 @@ class CPUParticles3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         const val EMISSION_SHAPE_MAX: Long = 7L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CPUParticles3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CPUParticles3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CPUParticles3D? =
-            if (handle.address() == 0L) null else CPUParticles3D(handle)
+            if (handle.address() == 0L) null else CPUParticles3D(GodotHandle(handle))
 
         private const val SET_EMITTING_HASH = 2586408642L
         private val setEmittingBind by lazy {

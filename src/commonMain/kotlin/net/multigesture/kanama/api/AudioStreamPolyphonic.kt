@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStreamPolyphonic
  */
-class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
     var polyphony: Int
         @JvmName("polyphonyProperty")
         get() = getPolyphony()
@@ -26,7 +26,7 @@ class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setPolyphony(voices: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPolyphonyBind, handle, voices)
+        ObjectCalls.ptrcallWithIntArg(setPolyphonyBind, segment, voices)
     }
 
     /**
@@ -36,16 +36,16 @@ class AudioStreamPolyphonic(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getPolyphony(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPolyphonyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPolyphonyBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamPolyphonic? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamPolyphonic? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamPolyphonic? =
-            if (handle.address() == 0L) null else AudioStreamPolyphonic(handle)
+            if (handle.address() == 0L) null else AudioStreamPolyphonic(GodotHandle(handle))
 
         private const val SET_POLYPHONY_HASH = 1286410249L
         private val setPolyphonyBind by lazy {

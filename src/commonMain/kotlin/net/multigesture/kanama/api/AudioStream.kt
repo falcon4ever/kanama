@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStream
  */
-open class AudioStream(handle: MemorySegment) : Resource(handle) {
+open class AudioStream(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns the length of the audio stream in seconds. If this stream is an `AudioStreamRandomizer`,
      * returns the length of the last played stream. If this stream has an indefinite length (such as
@@ -20,7 +20,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
     }
 
     /**
@@ -31,7 +31,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      */
     fun isMonophonic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonophonicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMonophonicBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      */
     fun instantiatePlayback(): AudioStreamPlayback? {
         checkOpen()
-        return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, handle))
+        return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, segment))
     }
 
     /**
@@ -55,7 +55,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      */
     fun canBeSampled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canBeSampledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(canBeSampledBind, segment)
     }
 
     /**
@@ -65,7 +65,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      */
     fun generateSample(): AudioSample? {
         checkOpen()
-        return AudioSample.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, handle))
+        return AudioSample.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, segment))
     }
 
     /**
@@ -75,7 +75,7 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
      */
     fun isMetaStream(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMetaStreamBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMetaStreamBind, segment)
     }
 
     object Signals {
@@ -84,11 +84,11 @@ open class AudioStream(handle: MemorySegment) : Resource(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStream? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStream? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStream? =
-            if (handle.address() == 0L) null else AudioStream(handle)
+            if (handle.address() == 0L) null else AudioStream(GodotHandle(handle))
 
         private const val GET_LENGTH_HASH = 1740695150L
         private val getLengthBind by lazy {

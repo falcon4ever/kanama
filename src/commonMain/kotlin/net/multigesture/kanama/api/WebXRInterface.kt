@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: WebXRInterface
  */
-class WebXRInterface(handle: MemorySegment) : XRInterface(handle) {
+class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     var sessionMode: String
         @JvmName("sessionModeProperty")
         get() = getSessionMode()
@@ -48,92 +48,92 @@ class WebXRInterface(handle: MemorySegment) : XRInterface(handle) {
 
     fun isSessionSupported(sessionMode: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(isSessionSupportedBind, handle, sessionMode)
+        ObjectCalls.ptrcallWithStringArg(isSessionSupportedBind, segment, sessionMode)
     }
 
     fun setSessionMode(sessionMode: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSessionModeBind, handle, sessionMode)
+        ObjectCalls.ptrcallWithStringArg(setSessionModeBind, segment, sessionMode)
     }
 
     fun getSessionMode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSessionModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSessionModeBind, segment)
     }
 
     fun setRequiredFeatures(requiredFeatures: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setRequiredFeaturesBind, handle, requiredFeatures)
+        ObjectCalls.ptrcallWithStringArg(setRequiredFeaturesBind, segment, requiredFeatures)
     }
 
     fun getRequiredFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getRequiredFeaturesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getRequiredFeaturesBind, segment)
     }
 
     fun setOptionalFeatures(optionalFeatures: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOptionalFeaturesBind, handle, optionalFeatures)
+        ObjectCalls.ptrcallWithStringArg(setOptionalFeaturesBind, segment, optionalFeatures)
     }
 
     fun getOptionalFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOptionalFeaturesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOptionalFeaturesBind, segment)
     }
 
     fun getReferenceSpaceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getReferenceSpaceTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getReferenceSpaceTypeBind, segment)
     }
 
     fun getEnabledFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEnabledFeaturesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEnabledFeaturesBind, segment)
     }
 
     fun setRequestedReferenceSpaceTypes(requestedReferenceSpaceTypes: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setRequestedReferenceSpaceTypesBind, handle, requestedReferenceSpaceTypes)
+        ObjectCalls.ptrcallWithStringArg(setRequestedReferenceSpaceTypesBind, segment, requestedReferenceSpaceTypes)
     }
 
     fun getRequestedReferenceSpaceTypes(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getRequestedReferenceSpaceTypesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getRequestedReferenceSpaceTypesBind, segment)
     }
 
     fun isInputSourceActive(inputSourceId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputSourceActiveBind, handle, inputSourceId)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isInputSourceActiveBind, segment, inputSourceId)
     }
 
     fun getInputSourceTracker(inputSourceId: Int): XRControllerTracker? {
         checkOpen()
-        return XRControllerTracker.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInputSourceTrackerBind, handle, inputSourceId))
+        return XRControllerTracker.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInputSourceTrackerBind, segment, inputSourceId))
     }
 
     fun getInputSourceTargetRayMode(inputSourceId: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getInputSourceTargetRayModeBind, handle, inputSourceId)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getInputSourceTargetRayModeBind, segment, inputSourceId)
     }
 
     fun getVisibilityState(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getVisibilityStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getVisibilityStateBind, segment)
     }
 
     fun getDisplayRefreshRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayRefreshRateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayRefreshRateBind, segment)
     }
 
     fun setDisplayRefreshRate(refreshRate: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDisplayRefreshRateBind, handle, refreshRate)
+        ObjectCalls.ptrcallWithDoubleArg(setDisplayRefreshRateBind, segment, refreshRate)
     }
 
     fun getAvailableDisplayRefreshRates(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, segment)
     }
 
     object Signals {
@@ -159,11 +159,11 @@ class WebXRInterface(handle: MemorySegment) : XRInterface(handle) {
         const val TARGET_RAY_MODE_SCREEN: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WebXRInterface? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WebXRInterface? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WebXRInterface? =
-            if (handle.address() == 0L) null else WebXRInterface(handle)
+            if (handle.address() == 0L) null else WebXRInterface(GodotHandle(handle))
 
         private const val IS_SESSION_SUPPORTED_HASH = 83702148L
         private val isSessionSupportedBind by lazy {

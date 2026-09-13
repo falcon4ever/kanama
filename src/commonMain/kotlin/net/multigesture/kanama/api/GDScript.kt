@@ -8,19 +8,19 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GDScript
  */
-class GDScript(handle: MemorySegment) : Script(handle) {
+class GDScript(handle: GodotHandle) : Script(handle) {
     fun new(vararg extraArgs: Any?): Any? {
         checkOpen()
-        return ObjectCalls.callWithVariantArgs(newBind, handle, listOf(*extraArgs))
+        return ObjectCalls.callWithVariantArgs(newBind, segment, listOf(*extraArgs))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GDScript? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GDScript? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GDScript? =
-            if (handle.address() == 0L) null else GDScript(handle)
+            if (handle.address() == 0L) null else GDScript(GodotHandle(handle))
 
         private const val NEW_HASH = 1545262638L
         private val newBind by lazy {

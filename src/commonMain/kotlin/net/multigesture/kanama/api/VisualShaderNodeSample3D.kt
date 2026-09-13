@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeSample3D
  */
-open class VisualShaderNodeSample3D(handle: MemorySegment) : VisualShaderNode(handle) {
+open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(handle) {
     var source: Long
         @JvmName("sourceProperty")
         get() = getSource()
@@ -18,12 +18,12 @@ open class VisualShaderNodeSample3D(handle: MemorySegment) : VisualShaderNode(ha
 
     fun setSource(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, handle, value)
+        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value)
     }
 
     fun getSource(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment)
     }
 
     companion object {
@@ -32,11 +32,11 @@ open class VisualShaderNodeSample3D(handle: MemorySegment) : VisualShaderNode(ha
         const val SOURCE_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeSample3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeSample3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeSample3D? =
-            if (handle.address() == 0L) null else VisualShaderNodeSample3D(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeSample3D(GodotHandle(handle))
 
         private const val SET_SOURCE_HASH = 3315130991L
         private val setSourceBind by lazy {

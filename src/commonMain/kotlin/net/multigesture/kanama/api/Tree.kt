@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Tree
  */
-class Tree(handle: MemorySegment) : Control(handle) {
+class Tree(handle: GodotHandle) : Control(handle) {
     var columns: Int
         @JvmName("columnsProperty")
         get() = getColumns()
@@ -118,7 +118,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.create_item
      */
     fun createItem(parent: TreeItem, index: Int = -1): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(createItemBind, handle, parent.handle, index))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(createItemBind, segment, parent.segment, index))
     }
 
     /**
@@ -141,7 +141,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_root
      */
     fun getRoot(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, handle))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment))
     }
 
     /**
@@ -152,7 +152,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_custom_minimum_width
      */
     fun setColumnCustomMinimumWidth(column: Int, minWidth: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setColumnCustomMinimumWidthBind, handle, column, minWidth)
+        ObjectCalls.ptrcallWithTwoIntArgs(setColumnCustomMinimumWidthBind, segment, column, minWidth)
     }
 
     /**
@@ -163,7 +163,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_expand
      */
     fun setColumnExpand(column: Int, expand: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnExpandBind, handle, column, expand)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnExpandBind, segment, column, expand)
     }
 
     /**
@@ -172,7 +172,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_expand_ratio
      */
     fun setColumnExpandRatio(column: Int, ratio: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setColumnExpandRatioBind, handle, column, ratio)
+        ObjectCalls.ptrcallWithTwoIntArgs(setColumnExpandRatioBind, segment, column, ratio)
     }
 
     /**
@@ -181,7 +181,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_clip_content
      */
     fun setColumnClipContent(column: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnClipContentBind, handle, column, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnClipContentBind, segment, column, enable)
     }
 
     /**
@@ -190,7 +190,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_column_expanding
      */
     fun isColumnExpanding(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isColumnExpandingBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isColumnExpandingBind, segment, column)
     }
 
     /**
@@ -199,7 +199,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_column_clipping_content
      */
     fun isColumnClippingContent(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isColumnClippingContentBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isColumnClippingContentBind, segment, column)
     }
 
     /**
@@ -208,7 +208,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_expand_ratio
      */
     fun getColumnExpandRatio(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColumnExpandRatioBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getColumnExpandRatioBind, segment, column)
     }
 
     /**
@@ -217,7 +217,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_width
      */
     fun getColumnWidth(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColumnWidthBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getColumnWidthBind, segment, column)
     }
 
     /**
@@ -228,7 +228,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_custom_drawing_canvas_item
      */
     fun getCustomDrawingCanvasItem(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCustomDrawingCanvasItemBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getCustomDrawingCanvasItemBind, segment)
     }
 
     /**
@@ -237,7 +237,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_hide_root
      */
     fun setHideRoot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideRootBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHideRootBind, segment, enable)
     }
 
     /**
@@ -246,7 +246,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_root_hidden
      */
     fun isRootHidden(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRootHiddenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRootHiddenBind, segment)
     }
 
     /**
@@ -256,7 +256,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_next_selected
      */
     fun getNextSelected(from: TreeItem): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getNextSelectedBind, handle, from.handle))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getNextSelectedBind, segment, from.segment))
     }
 
     /**
@@ -268,7 +268,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_selected
      */
     fun getSelected(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSelectedBind, handle))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSelectedBind, segment))
     }
 
     /**
@@ -277,7 +277,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_selected
      */
     fun setSelected(item: TreeItem, column: Int) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(setSelectedBind, handle, item.handle, column)
+        ObjectCalls.ptrcallWithObjectAndIntArg(setSelectedBind, segment, item.segment, column)
     }
 
     /**
@@ -290,7 +290,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_selected_column
      */
     fun getSelectedColumn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedColumnBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedColumnBind, segment)
     }
 
     /**
@@ -299,7 +299,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_pressed_button
      */
     fun getPressedButton(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPressedButtonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPressedButtonBind, segment)
     }
 
     /**
@@ -308,7 +308,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_select_mode
      */
     fun setSelectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode)
     }
 
     /**
@@ -317,7 +317,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_select_mode
      */
     fun getSelectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment)
     }
 
     /**
@@ -327,7 +327,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.deselect_all
      */
     fun deselectAll() {
-        ObjectCalls.ptrcallNoArgs(deselectAllBind, handle)
+        ObjectCalls.ptrcallNoArgs(deselectAllBind, segment)
     }
 
     /**
@@ -337,7 +337,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_columns
      */
     fun setColumns(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setColumnsBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setColumnsBind, segment, amount)
     }
 
     /**
@@ -347,7 +347,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_columns
      */
     fun getColumns(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, segment)
     }
 
     /**
@@ -357,7 +357,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_edited
      */
     fun getEdited(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedBind, handle))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedBind, segment))
     }
 
     /**
@@ -366,7 +366,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_edited_column
      */
     fun getEditedColumn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getEditedColumnBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getEditedColumnBind, segment)
     }
 
     /**
@@ -377,7 +377,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.edit_selected
      */
     fun editSelected(forceEdit: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithBoolArgRetBool(editSelectedBind, handle, forceEdit)
+        return ObjectCalls.ptrcallWithBoolArgRetBool(editSelectedBind, segment, forceEdit)
     }
 
     /**
@@ -387,7 +387,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_custom_popup_rect
      */
     fun getCustomPopupRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getCustomPopupRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getCustomPopupRectBind, segment)
     }
 
     /**
@@ -398,7 +398,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_item_area_rect
      */
     fun getItemAreaRect(item: TreeItem, column: Int = -1, buttonIndex: Int = -1): Rect2 {
-        return ObjectCalls.ptrcallWithObjectAndTwoIntArgsRetRect2(getItemAreaRectBind, handle, item.handle, column, buttonIndex)
+        return ObjectCalls.ptrcallWithObjectAndTwoIntArgsRetRect2(getItemAreaRectBind, segment, item.segment, column, buttonIndex)
     }
 
     /**
@@ -407,7 +407,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_item_at_position
      */
     fun getItemAtPosition(position: Vector2): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithVector2ArgRetObject(getItemAtPositionBind, handle, position))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithVector2ArgRetObject(getItemAtPositionBind, segment, position))
     }
 
     /**
@@ -416,7 +416,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_at_position
      */
     fun getColumnAtPosition(position: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getColumnAtPositionBind, handle, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(getColumnAtPositionBind, segment, position)
     }
 
     /**
@@ -434,7 +434,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_drop_section_at_position
      */
     fun getDropSectionAtPosition(position: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getDropSectionAtPositionBind, handle, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(getDropSectionAtPositionBind, segment, position)
     }
 
     /**
@@ -443,7 +443,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_button_id_at_position
      */
     fun getButtonIdAtPosition(position: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getButtonIdAtPositionBind, handle, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(getButtonIdAtPositionBind, segment, position)
     }
 
     /**
@@ -455,7 +455,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.ensure_cursor_is_visible
      */
     fun ensureCursorIsVisible() {
-        ObjectCalls.ptrcallNoArgs(ensureCursorIsVisibleBind, handle)
+        ObjectCalls.ptrcallNoArgs(ensureCursorIsVisibleBind, segment)
     }
 
     /**
@@ -464,7 +464,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_titles_visible
      */
     fun setColumnTitlesVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setColumnTitlesVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setColumnTitlesVisibleBind, segment, visible)
     }
 
     /**
@@ -473,7 +473,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.are_column_titles_visible
      */
     fun areColumnTitlesVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areColumnTitlesVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areColumnTitlesVisibleBind, segment)
     }
 
     /**
@@ -482,7 +482,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title
      */
     fun setColumnTitle(column: Int, title: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleBind, handle, column, title)
+        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleBind, segment, column, title)
     }
 
     /**
@@ -491,7 +491,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title
      */
     fun getColumnTitle(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleBind, segment, column)
     }
 
     /**
@@ -500,7 +500,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_tooltip_text
      */
     fun setColumnTitleTooltipText(column: Int, tooltipText: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleTooltipTextBind, handle, column, tooltipText)
+        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleTooltipTextBind, segment, column, tooltipText)
     }
 
     /**
@@ -509,7 +509,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_tooltip_text
      */
     fun getColumnTitleTooltipText(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleTooltipTextBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleTooltipTextBind, segment, column)
     }
 
     /**
@@ -519,7 +519,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_alignment
      */
     fun setColumnTitleAlignment(column: Int, titleAlignment: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleAlignmentBind, handle, column, titleAlignment)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleAlignmentBind, segment, column, titleAlignment)
     }
 
     /**
@@ -528,7 +528,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_alignment
      */
     fun getColumnTitleAlignment(column: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleAlignmentBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleAlignmentBind, segment, column)
     }
 
     /**
@@ -537,7 +537,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_direction
      */
     fun setColumnTitleDirection(column: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleDirectionBind, handle, column, direction)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleDirectionBind, segment, column, direction)
     }
 
     /**
@@ -546,7 +546,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_direction
      */
     fun getColumnTitleDirection(column: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleDirectionBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleDirectionBind, segment, column)
     }
 
     /**
@@ -556,7 +556,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_language
      */
     fun setColumnTitleLanguage(column: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleLanguageBind, handle, column, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleLanguageBind, segment, column, language)
     }
 
     /**
@@ -565,7 +565,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_language
      */
     fun getColumnTitleLanguage(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleLanguageBind, handle, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleLanguageBind, segment, column)
     }
 
     /**
@@ -574,7 +574,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_scroll
      */
     fun getScroll(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBind, segment)
     }
 
     /**
@@ -583,7 +583,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.scroll_to_item
      */
     fun scrollToItem(item: TreeItem, centerOnItem: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(scrollToItemBind, handle, item.handle, centerOnItem)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(scrollToItemBind, segment, item.segment, centerOnItem)
     }
 
     /**
@@ -592,7 +592,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_h_scroll_enabled
      */
     fun setHScrollEnabled(hScroll: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHScrollEnabledBind, handle, hScroll)
+        ObjectCalls.ptrcallWithBoolArg(setHScrollEnabledBind, segment, hScroll)
     }
 
     /**
@@ -601,7 +601,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_h_scroll_enabled
      */
     fun isHScrollEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHScrollEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHScrollEnabledBind, segment)
     }
 
     /**
@@ -610,7 +610,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_v_scroll_enabled
      */
     fun setVScrollEnabled(hScroll: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVScrollEnabledBind, handle, hScroll)
+        ObjectCalls.ptrcallWithBoolArg(setVScrollEnabledBind, segment, hScroll)
     }
 
     /**
@@ -619,7 +619,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_v_scroll_enabled
      */
     fun isVScrollEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVScrollEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVScrollEnabledBind, segment)
     }
 
     /**
@@ -629,7 +629,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_scroll_hint_mode
      */
     fun setScrollHintMode(scrollHintMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, handle, scrollHintMode)
+        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode)
     }
 
     /**
@@ -639,7 +639,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_scroll_hint_mode
      */
     fun getScrollHintMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment)
     }
 
     /**
@@ -648,7 +648,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_tile_scroll_hint
      */
     fun setTileScrollHint(tileScrollHint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, handle, tileScrollHint)
+        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, segment, tileScrollHint)
     }
 
     /**
@@ -657,7 +657,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_scroll_hint_tiled
      */
     fun isScrollHintTiled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, segment)
     }
 
     /**
@@ -666,7 +666,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_hide_folding
      */
     fun setHideFolding(hide: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideFoldingBind, handle, hide)
+        ObjectCalls.ptrcallWithBoolArg(setHideFoldingBind, segment, hide)
     }
 
     /**
@@ -675,7 +675,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_folding_hidden
      */
     fun isFoldingHidden(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFoldingHiddenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFoldingHiddenBind, segment)
     }
 
     /**
@@ -686,7 +686,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_enable_recursive_folding
      */
     fun setEnableRecursiveFolding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableRecursiveFoldingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableRecursiveFoldingBind, segment, enable)
     }
 
     /**
@@ -697,7 +697,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_recursive_folding_enabled
      */
     fun isRecursiveFoldingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecursiveFoldingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRecursiveFoldingEnabledBind, segment)
     }
 
     /**
@@ -707,7 +707,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_enable_drag_unfolding
      */
     fun setEnableDragUnfolding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDragUnfoldingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDragUnfoldingBind, segment, enable)
     }
 
     /**
@@ -717,7 +717,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_drag_unfolding_enabled
      */
     fun isDragUnfoldingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragUnfoldingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDragUnfoldingEnabledBind, segment)
     }
 
     /**
@@ -729,7 +729,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_drop_mode_flags
      */
     fun setDropModeFlags(flags: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDropModeFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithIntArg(setDropModeFlagsBind, segment, flags)
     }
 
     /**
@@ -741,7 +741,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_drop_mode_flags
      */
     fun getDropModeFlags(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDropModeFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDropModeFlagsBind, segment)
     }
 
     /**
@@ -750,7 +750,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_allow_rmb_select
      */
     fun setAllowRmbSelect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, segment, allow)
     }
 
     /**
@@ -759,7 +759,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_allow_rmb_select
      */
     fun getAllowRmbSelect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, segment)
     }
 
     /**
@@ -768,7 +768,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_allow_reselect
      */
     fun setAllowReselect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, segment, allow)
     }
 
     /**
@@ -777,7 +777,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_allow_reselect
      */
     fun getAllowReselect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, segment)
     }
 
     /**
@@ -786,7 +786,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_allow_search
      */
     fun setAllowSearch(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, segment, allow)
     }
 
     /**
@@ -795,7 +795,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.get_allow_search
      */
     fun getAllowSearch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, segment)
     }
 
     /**
@@ -805,7 +805,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.set_auto_tooltip
      */
     fun setAutoTooltip(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoTooltipBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutoTooltipBind, segment, enable)
     }
 
     /**
@@ -815,7 +815,7 @@ class Tree(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Tree.is_auto_tooltip_enabled
      */
     fun isAutoTooltipEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTooltipEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTooltipEnabledBind, segment)
     }
 
     object Signals {
@@ -849,11 +849,11 @@ class Tree(handle: MemorySegment) : Control(handle) {
         const val SCROLL_HINT_MODE_BOTTOM: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Tree? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Tree? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Tree? =
-            if (handle.address() == 0L) null else Tree(handle)
+            if (handle.address() == 0L) null else Tree(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {

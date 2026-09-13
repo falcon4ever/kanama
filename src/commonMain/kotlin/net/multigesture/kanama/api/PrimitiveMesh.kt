@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.AABB
  *
  * Generated from Godot docs: PrimitiveMesh
  */
-open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
+open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     var material: Material?
         @JvmName("materialProperty")
         get() = getMaterial()
@@ -50,7 +50,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -60,7 +60,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     /**
@@ -70,7 +70,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getMeshArrays(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getMeshArraysBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getMeshArraysBind, segment)
     }
 
     /**
@@ -81,7 +81,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
     }
 
     /**
@@ -92,7 +92,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setFlipFaces(flipFaces: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, handle, flipFaces)
+        ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, segment, flipFaces)
     }
 
     /**
@@ -116,7 +116,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getFlipFaces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setAddUv2(addUv2: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAddUv2Bind, handle, addUv2)
+        ObjectCalls.ptrcallWithBoolArg(setAddUv2Bind, segment, addUv2)
     }
 
     /**
@@ -138,7 +138,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getAddUv2(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAddUv2Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAddUv2Bind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setUv2Padding(uv2Padding: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setUv2PaddingBind, handle, uv2Padding)
+        ObjectCalls.ptrcallWithDoubleArg(setUv2PaddingBind, segment, uv2Padding)
     }
 
     /**
@@ -166,7 +166,7 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun getUv2Padding(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUv2PaddingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getUv2PaddingBind, segment)
     }
 
     /**
@@ -176,16 +176,16 @@ open class PrimitiveMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun requestUpdate() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(requestUpdateBind, handle)
+        ObjectCalls.ptrcallNoArgs(requestUpdateBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PrimitiveMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PrimitiveMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PrimitiveMesh? =
-            if (handle.address() == 0L) null else PrimitiveMesh(handle)
+            if (handle.address() == 0L) null else PrimitiveMesh(GodotHandle(handle))
 
         private const val SET_MATERIAL_HASH = 2757459619L
         private val setMaterialBind by lazy {

@@ -11,14 +11,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ChainIK3D
  */
-open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
+open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
     /**
      * Sets the root bone name of the bone chain.
      *
      * Generated from Godot docs: ChainIK3D.set_root_bone_name
      */
     fun setRootBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -27,7 +27,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_root_bone_name
      */
     fun getRootBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, segment, index)
     }
 
     /**
@@ -36,7 +36,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_root_bone
      */
     fun setRootBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, segment, index, bone)
     }
 
     /**
@@ -45,7 +45,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_root_bone
      */
     fun getRootBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, segment, index)
     }
 
     /**
@@ -56,7 +56,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone_name
      */
     fun setEndBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, handle, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -65,7 +65,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone_name
      */
     fun getEndBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, segment, index)
     }
 
     /**
@@ -74,7 +74,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone
      */
     fun setEndBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, handle, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, segment, index, bone)
     }
 
     /**
@@ -83,7 +83,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone
      */
     fun getEndBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, segment, index)
     }
 
     /**
@@ -94,7 +94,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_extend_end_bone
      */
     fun setExtendEndBone(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, segment, index, enabled)
     }
 
     /**
@@ -103,7 +103,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.is_end_bone_extended
      */
     fun isEndBoneExtended(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, segment, index)
     }
 
     /**
@@ -112,7 +112,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone_direction
      */
     fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, handle, index, boneDirection)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
     }
 
     /**
@@ -122,7 +122,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone_direction
      */
     fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
     }
 
     /**
@@ -131,7 +131,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone_length
      */
     fun setEndBoneLength(index: Int, length: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, handle, index, length)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, segment, index, length)
     }
 
     /**
@@ -140,7 +140,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone_length
      */
     fun getEndBoneLength(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, segment, index)
     }
 
     /**
@@ -149,7 +149,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_joint_bone_name
      */
     fun getJointBoneName(index: Int, joint: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, segment, index, joint)
     }
 
     /**
@@ -158,7 +158,7 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_joint_bone
      */
     fun getJointBone(index: Int, joint: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, handle, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, segment, index, joint)
     }
 
     /**
@@ -167,16 +167,16 @@ open class ChainIK3D(handle: MemorySegment) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_joint_count
      */
     fun getJointCount(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ChainIK3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ChainIK3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ChainIK3D? =
-            if (handle.address() == 0L) null else ChainIK3D(handle)
+            if (handle.address() == 0L) null else ChainIK3D(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L
         private val setRootBoneNameBind by lazy {

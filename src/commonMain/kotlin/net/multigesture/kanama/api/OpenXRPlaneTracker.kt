@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: OpenXRPlaneTracker
  */
-class OpenXRPlaneTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(handle) {
+class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handle) {
     var boundsSize: Vector2
         @JvmName("boundsSizeProperty")
         get() = getBoundsSize()
@@ -32,57 +32,57 @@ class OpenXRPlaneTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(han
 
     fun setBoundsSize(boundsSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setBoundsSizeBind, handle, boundsSize)
+        ObjectCalls.ptrcallWithVector2Arg(setBoundsSizeBind, segment, boundsSize)
     }
 
     fun getBoundsSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, segment)
     }
 
     fun setPlaneAlignment(planeAlignment: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlaneAlignmentBind, handle, planeAlignment)
+        ObjectCalls.ptrcallWithLongArg(setPlaneAlignmentBind, segment, planeAlignment)
     }
 
     fun getPlaneAlignment(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaneAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPlaneAlignmentBind, segment)
     }
 
     fun setPlaneLabel(planeLabel: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPlaneLabelBind, handle, planeLabel)
+        ObjectCalls.ptrcallWithStringArg(setPlaneLabelBind, segment, planeLabel)
     }
 
     fun getPlaneLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPlaneLabelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPlaneLabelBind, segment)
     }
 
     fun setMeshData(origin: Transform3D, vertices: List<Vector2>, indices: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DPackedVector2ListPackedInt32ListArgs(setMeshDataBind, handle, origin, vertices, indices)
+        ObjectCalls.ptrcallWithTransform3DPackedVector2ListPackedInt32ListArgs(setMeshDataBind, segment, origin, vertices, indices)
     }
 
     fun clearMeshData() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearMeshDataBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearMeshDataBind, segment)
     }
 
     fun getMeshOffset(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getMeshOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getMeshOffsetBind, segment)
     }
 
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun getShape(thickness: Double = 0.01): Shape3D? {
         checkOpen()
-        return Shape3D.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(getShapeBind, handle, thickness))
+        return Shape3D.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(getShapeBind, segment, thickness))
     }
 
     object Signals {
@@ -91,11 +91,11 @@ class OpenXRPlaneTracker(handle: MemorySegment) : OpenXRSpatialEntityTracker(han
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRPlaneTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRPlaneTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRPlaneTracker? =
-            if (handle.address() == 0L) null else OpenXRPlaneTracker(handle)
+            if (handle.address() == 0L) null else OpenXRPlaneTracker(GodotHandle(handle))
 
         private const val SET_BOUNDS_SIZE_HASH = 743155724L
         private val setBoundsSizeBind by lazy {

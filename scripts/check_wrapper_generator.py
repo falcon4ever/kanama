@@ -396,14 +396,14 @@ def check_ios_policies(output_dir: Path) -> int:
         return 1
 
     # Non-null factory policy: Resource.fromHandle must be non-null so KanamaScript's
-    # (MemorySegment) -> Resource selfFactory for @ScriptClass(attachTo = "Resource") type-checks.
+    # (GodotHandle) -> Resource selfFactory for @ScriptClass(attachTo = "Resource") type-checks.
     subprocess.run(
         [sys.executable, str(ROOT / "scripts/generate_api_wrapper.py"),
          "--class", "Resource", "--output-dir", str(policy_dir)],
         cwd=ROOT, check=True, capture_output=True,
     )
     resource = (policy_dir / "Resource.kt").read_text(encoding="utf-8")
-    if "fun fromHandle(handle: MemorySegment): Resource =" not in resource:
+    if "fun fromHandle(handle: GodotHandle): Resource =" not in resource:
         print("[wrapper_generator] FAIL Resource.fromHandle is not non-null "
               "(script-attachable non-null factory policy regressed)", file=sys.stderr)
         return 1

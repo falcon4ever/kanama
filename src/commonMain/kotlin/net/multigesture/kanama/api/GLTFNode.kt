@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: GLTFNode
  */
-class GLTFNode(handle: MemorySegment) : Resource(handle) {
+class GLTFNode(handle: GodotHandle) : Resource(handle) {
     var originalName: String
         @JvmName("originalNameProperty")
         get() = getOriginalName()
@@ -100,171 +100,171 @@ class GLTFNode(handle: MemorySegment) : Resource(handle) {
 
     fun getOriginalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, segment)
     }
 
     fun setOriginalName(originalName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, handle, originalName)
+        ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, segment, originalName)
     }
 
     fun getParent(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getParentBind, segment)
     }
 
     fun setParent(parent: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParentBind, handle, parent)
+        ObjectCalls.ptrcallWithIntArg(setParentBind, segment, parent)
     }
 
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
     }
 
     fun setHeight(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithIntArg(setHeightBind, segment, height)
     }
 
     fun getXform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getXformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(getXformBind, segment)
     }
 
     fun setXform(xform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setXformBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform3DArg(setXformBind, segment, xform)
     }
 
     fun getMesh(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMeshBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMeshBind, segment)
     }
 
     fun setMesh(mesh: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMeshBind, handle, mesh)
+        ObjectCalls.ptrcallWithIntArg(setMeshBind, segment, mesh)
     }
 
     fun getCamera(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCameraBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCameraBind, segment)
     }
 
     fun setCamera(camera: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCameraBind, handle, camera)
+        ObjectCalls.ptrcallWithIntArg(setCameraBind, segment, camera)
     }
 
     fun getSkin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSkinBind, segment)
     }
 
     fun setSkin(skin: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSkinBind, handle, skin)
+        ObjectCalls.ptrcallWithIntArg(setSkinBind, segment, skin)
     }
 
     fun getSkeleton(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, segment)
     }
 
     fun setSkeleton(skeleton: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSkeletonBind, handle, skeleton)
+        ObjectCalls.ptrcallWithIntArg(setSkeletonBind, segment, skeleton)
     }
 
     fun getPosition(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, segment)
     }
 
     fun setPosition(position: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, segment, position)
     }
 
     fun getRotation(): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRotationBind, segment)
     }
 
     fun setRotation(rotation: Quaternion) {
         checkOpen()
-        ObjectCalls.ptrcallWithQuaternionArg(setRotationBind, handle, rotation)
+        ObjectCalls.ptrcallWithQuaternionArg(setRotationBind, segment, rotation)
     }
 
     fun getScale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, segment)
     }
 
     fun setScale(scale: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithVector3Arg(setScaleBind, segment, scale)
     }
 
     fun getChildren(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getChildrenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getChildrenBind, segment)
     }
 
     fun setChildren(children: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setChildrenBind, handle, children)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setChildrenBind, segment, children)
     }
 
     fun appendChildIndex(childIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(appendChildIndexBind, handle, childIndex)
+        ObjectCalls.ptrcallWithIntArg(appendChildIndexBind, segment, childIndex)
     }
 
     fun getLight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLightBind, segment)
     }
 
     fun setLight(light: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setLightBind, handle, light)
+        ObjectCalls.ptrcallWithIntArg(setLightBind, segment, light)
     }
 
     fun getVisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getVisibleBind, segment)
     }
 
     fun setVisible(visible: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, segment, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
     fun getSceneNodePath(gltfState: GLTFState?, handleSkeletons: Boolean = true): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getSceneNodePathBind, handle, gltfState?.requireOpenHandle() ?: MemorySegment.NULL, handleSkeletons)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getSceneNodePathBind, segment, gltfState?.requireOpenHandle() ?: MemorySegment.NULL, handleSkeletons)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFNode? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFNode? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFNode? =
-            if (handle.address() == 0L) null else GLTFNode(handle)
+            if (handle.address() == 0L) null else GLTFNode(GodotHandle(handle))
 
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L
         private val getOriginalNameBind by lazy {

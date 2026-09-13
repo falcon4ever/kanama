@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StreamPeer
  */
-open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
+open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     var bigEndian: Boolean
         @JvmName("bigEndianProperty")
         get() = isBigEndianEnabled()
@@ -26,7 +26,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putData(data: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, handle, data)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, segment, data)
     }
 
     /**
@@ -38,7 +38,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putPartialData(data: ByteArray): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetArray(putPartialDataBind, handle, data)
+        return ObjectCalls.ptrcallWithByteArrayArgRetArray(putPartialDataBind, segment, data)
     }
 
     /**
@@ -50,7 +50,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getData(bytes: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, handle, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, segment, bytes)
     }
 
     /**
@@ -62,7 +62,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPartialData(bytes: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, handle, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, segment, bytes)
     }
 
     /**
@@ -72,7 +72,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAvailableBytes(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAvailableBytesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAvailableBytesBind, segment)
     }
 
     /**
@@ -82,7 +82,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBigEndian(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, segment, enable)
     }
 
     /**
@@ -92,7 +92,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isBigEndianEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBigEndianEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBigEndianEnabledBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun put8(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(put8Bind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(put8Bind, segment, value)
     }
 
     /**
@@ -112,7 +112,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putU8(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(putU8Bind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(putU8Bind, segment, value)
     }
 
     /**
@@ -122,7 +122,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun put16(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(put16Bind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(put16Bind, segment, value)
     }
 
     /**
@@ -132,7 +132,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putU16(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(putU16Bind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(putU16Bind, segment, value)
     }
 
     /**
@@ -142,7 +142,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun put32(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(put32Bind, handle, value)
+        ObjectCalls.ptrcallWithIntArg(put32Bind, segment, value)
     }
 
     /**
@@ -152,7 +152,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putU32(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(putU32Bind, handle, value)
+        ObjectCalls.ptrcallWithUInt32Arg(putU32Bind, segment, value)
     }
 
     /**
@@ -162,7 +162,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun put64(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(put64Bind, handle, value)
+        ObjectCalls.ptrcallWithLongArg(put64Bind, segment, value)
     }
 
     /**
@@ -172,7 +172,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putU64(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(putU64Bind, handle, value)
+        ObjectCalls.ptrcallWithLongArg(putU64Bind, segment, value)
     }
 
     /**
@@ -182,7 +182,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putHalf(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(putHalfBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(putHalfBind, segment, value)
     }
 
     /**
@@ -192,7 +192,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putFloat(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(putFloatBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(putFloatBind, segment, value)
     }
 
     /**
@@ -202,7 +202,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putDouble(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(putDoubleBind, handle, value)
+        ObjectCalls.ptrcallWithDoubleArg(putDoubleBind, segment, value)
     }
 
     /**
@@ -214,7 +214,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putString(value: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(putStringBind, handle, value)
+        ObjectCalls.ptrcallWithStringArg(putStringBind, segment, value)
     }
 
     /**
@@ -226,7 +226,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putUtf8String(value: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(putUtf8StringBind, handle, value)
+        ObjectCalls.ptrcallWithStringArg(putUtf8StringBind, segment, value)
     }
 
     /**
@@ -238,7 +238,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putVar(value: Any?, fullObjects: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantAndBoolArg(putVarBind, handle, value, fullObjects)
+        ObjectCalls.ptrcallWithVariantAndBoolArg(putVarBind, segment, value, fullObjects)
     }
 
     /**
@@ -248,7 +248,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun get8(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(get8Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(get8Bind, segment)
     }
 
     /**
@@ -258,7 +258,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getU8(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getU8Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getU8Bind, segment)
     }
 
     /**
@@ -268,7 +268,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun get16(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(get16Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(get16Bind, segment)
     }
 
     /**
@@ -278,7 +278,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getU16(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getU16Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getU16Bind, segment)
     }
 
     /**
@@ -288,7 +288,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun get32(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(get32Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(get32Bind, segment)
     }
 
     /**
@@ -298,7 +298,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getU32(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getU32Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getU32Bind, segment)
     }
 
     /**
@@ -308,7 +308,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun get64(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(get64Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(get64Bind, segment)
     }
 
     /**
@@ -318,7 +318,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getU64(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getU64Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getU64Bind, segment)
     }
 
     /**
@@ -328,7 +328,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getHalf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHalfBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHalfBind, segment)
     }
 
     /**
@@ -338,7 +338,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFloat(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFloatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFloatBind, segment)
     }
 
     /**
@@ -348,7 +348,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDouble(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDoubleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDoubleBind, segment)
     }
 
     /**
@@ -359,7 +359,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getString(bytes: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getStringBind, handle, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetString(getStringBind, segment, bytes)
     }
 
     /**
@@ -371,7 +371,7 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getUtf8String(bytes: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getUtf8StringBind, handle, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetString(getUtf8StringBind, segment, bytes)
     }
 
     /**
@@ -385,16 +385,16 @@ open class StreamPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVar(allowObjects: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
+        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, segment, allowObjects)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeer? =
-            if (handle.address() == 0L) null else StreamPeer(handle)
+            if (handle.address() == 0L) null else StreamPeer(GodotHandle(handle))
 
         private const val PUT_DATA_HASH = 680677267L
         private val putDataBind by lazy {

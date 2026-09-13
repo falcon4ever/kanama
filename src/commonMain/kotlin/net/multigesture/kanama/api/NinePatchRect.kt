@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: NinePatchRect
  */
-class NinePatchRect(handle: MemorySegment) : Control(handle) {
+class NinePatchRect(handle: GodotHandle) : Control(handle) {
     var texture: Texture2D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -74,7 +74,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -83,7 +83,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -94,7 +94,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_patch_margin
      */
     fun setPatchMargin(margin: Long, value: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setPatchMarginBind, handle, margin, value)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setPatchMarginBind, segment, margin, value)
     }
 
     /**
@@ -105,7 +105,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_patch_margin
      */
     fun getPatchMargin(margin: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getPatchMarginBind, handle, margin)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getPatchMarginBind, segment, margin)
     }
 
     /**
@@ -116,7 +116,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_region_rect
      */
     fun setRegionRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, handle, rect)
+        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, segment, rect)
     }
 
     /**
@@ -127,7 +127,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_region_rect
      */
     fun getRegionRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, segment)
     }
 
     /**
@@ -136,7 +136,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_draw_center
      */
     fun setDrawCenter(drawCenter: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, handle, drawCenter)
+        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, segment, drawCenter)
     }
 
     /**
@@ -145,7 +145,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.is_draw_center_enabled
      */
     fun isDrawCenterEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, segment)
     }
 
     /**
@@ -154,7 +154,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_h_axis_stretch_mode
      */
     fun setHAxisStretchMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode)
     }
 
     /**
@@ -163,7 +163,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_h_axis_stretch_mode
      */
     fun getHAxisStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_v_axis_stretch_mode
      */
     fun setVAxisStretchMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode)
     }
 
     /**
@@ -181,7 +181,7 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_v_axis_stretch_mode
      */
     fun getVAxisStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment)
     }
 
     object Signals {
@@ -194,11 +194,11 @@ class NinePatchRect(handle: MemorySegment) : Control(handle) {
         const val AXIS_STRETCH_MODE_TILE_FIT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NinePatchRect? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NinePatchRect? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NinePatchRect? =
-            if (handle.address() == 0L) null else NinePatchRect(handle)
+            if (handle.address() == 0L) null else NinePatchRect(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {

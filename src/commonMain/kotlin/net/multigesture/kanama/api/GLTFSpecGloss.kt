@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Color
 /**
  * Generated from Godot docs: GLTFSpecGloss
  */
-class GLTFSpecGloss(handle: MemorySegment) : Resource(handle) {
+class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
     var diffuseImg: Image?
         @JvmName("diffuseImgProperty")
         get() = getDiffuseImg()
@@ -43,61 +43,61 @@ class GLTFSpecGloss(handle: MemorySegment) : Resource(handle) {
 
     fun getDiffuseImg(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDiffuseImgBind, handle))
+        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDiffuseImgBind, segment))
     }
 
     fun setDiffuseImg(diffuseImg: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDiffuseImgBind, handle, listOf(diffuseImg?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDiffuseImgBind, segment, listOf(diffuseImg?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getDiffuseFactor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getDiffuseFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDiffuseFactorBind, segment)
     }
 
     fun setDiffuseFactor(diffuseFactor: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setDiffuseFactorBind, handle, diffuseFactor)
+        ObjectCalls.ptrcallWithColorArg(setDiffuseFactorBind, segment, diffuseFactor)
     }
 
     fun getGlossFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlossFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGlossFactorBind, segment)
     }
 
     fun setGlossFactor(glossFactor: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlossFactorBind, handle, glossFactor)
+        ObjectCalls.ptrcallWithDoubleArg(setGlossFactorBind, segment, glossFactor)
     }
 
     fun getSpecularFactor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSpecularFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSpecularFactorBind, segment)
     }
 
     fun setSpecularFactor(specularFactor: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSpecularFactorBind, handle, specularFactor)
+        ObjectCalls.ptrcallWithColorArg(setSpecularFactorBind, segment, specularFactor)
     }
 
     fun getSpecGlossImg(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpecGlossImgBind, handle))
+        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpecGlossImgBind, segment))
     }
 
     fun setSpecGlossImg(specGlossImg: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSpecGlossImgBind, handle, listOf(specGlossImg?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSpecGlossImgBind, segment, listOf(specGlossImg?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFSpecGloss? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFSpecGloss? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFSpecGloss? =
-            if (handle.address() == 0L) null else GLTFSpecGloss(handle)
+            if (handle.address() == 0L) null else GLTFSpecGloss(GodotHandle(handle))
 
         private const val GET_DIFFUSE_IMG_HASH = 564927088L
         private val getDiffuseImgBind by lazy {

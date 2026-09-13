@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: IntervalTweener
  */
-class IntervalTweener(handle: MemorySegment) : Tweener(handle) {
+class IntervalTweener(handle: GodotHandle) : Tweener(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): IntervalTweener? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): IntervalTweener? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): IntervalTweener? =
-            if (handle.address() == 0L) null else IntervalTweener(handle)
+            if (handle.address() == 0L) null else IntervalTweener(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

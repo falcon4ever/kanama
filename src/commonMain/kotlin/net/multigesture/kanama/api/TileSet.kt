@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: TileSet
  */
-class TileSet(handle: MemorySegment) : Resource(handle) {
+class TileSet(handle: GodotHandle) : Resource(handle) {
     var tileShape: Long
         @JvmName("tileShapeProperty")
         get() = getTileShape()
@@ -52,7 +52,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getNextSourceId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNextSourceIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getNextSourceIdBind, segment)
     }
 
     /**
@@ -66,7 +66,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addSource(source: TileSetSource?, atlasSourceIdOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, handle, source?.requireOpenHandle() ?: MemorySegment.NULL, atlasSourceIdOverride)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, segment, source?.requireOpenHandle() ?: MemorySegment.NULL, atlasSourceIdOverride)
     }
 
     /**
@@ -76,7 +76,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeSource(sourceId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeSourceBind, handle, sourceId)
+        ObjectCalls.ptrcallWithIntArg(removeSourceBind, segment, sourceId)
     }
 
     /**
@@ -86,7 +86,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setSourceId(sourceId: Int, newSourceId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setSourceIdBind, handle, sourceId, newSourceId)
+        ObjectCalls.ptrcallWithTwoIntArgs(setSourceIdBind, segment, sourceId, newSourceId)
     }
 
     /**
@@ -96,7 +96,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSourceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSourceCountBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceId(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSourceIdBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSourceIdBind, segment, index)
     }
 
     /**
@@ -116,7 +116,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun hasSource(sourceId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceBind, handle, sourceId)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceBind, segment, sourceId)
     }
 
     /**
@@ -126,7 +126,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getSource(sourceId: Int): TileSetSource? {
         checkOpen()
-        return TileSetSource.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, handle, sourceId))
+        return TileSetSource.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, segment, sourceId))
     }
 
     /**
@@ -136,7 +136,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setTileShape(shape: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setTileShapeBind, segment, shape)
     }
 
     /**
@@ -146,7 +146,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTileShape(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, segment)
     }
 
     /**
@@ -157,7 +157,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setTileLayout(layout: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, handle, layout)
+        ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, segment, layout)
     }
 
     /**
@@ -168,7 +168,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTileLayout(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, segment)
     }
 
     /**
@@ -179,7 +179,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setTileOffsetAxis(alignment: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, segment, alignment)
     }
 
     /**
@@ -190,7 +190,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTileOffsetAxis(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, segment)
     }
 
     /**
@@ -201,7 +201,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setTileSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setTileSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setTileSizeBind, segment, size)
     }
 
     /**
@@ -212,7 +212,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTileSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTileSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getTileSizeBind, segment)
     }
 
     /**
@@ -222,7 +222,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setUvClipping(uvClipping: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUvClippingBind, handle, uvClipping)
+        ObjectCalls.ptrcallWithBoolArg(setUvClippingBind, segment, uvClipping)
     }
 
     /**
@@ -232,7 +232,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun isUvClipping(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUvClippingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUvClippingBind, segment)
     }
 
     /**
@@ -242,7 +242,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getOcclusionLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOcclusionLayersCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOcclusionLayersCountBind, segment)
     }
 
     /**
@@ -254,7 +254,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addOcclusionLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addOcclusionLayerBind, handle, toPosition)
+        ObjectCalls.ptrcallWithIntArg(addOcclusionLayerBind, segment, toPosition)
     }
 
     /**
@@ -265,7 +265,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun moveOcclusionLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveOcclusionLayerBind, handle, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveOcclusionLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -275,7 +275,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeOcclusionLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeOcclusionLayerBind, handle, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(removeOcclusionLayerBind, segment, layerIndex)
     }
 
     /**
@@ -286,7 +286,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setOcclusionLayerLightMask(layerIndex: Int, lightMask: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setOcclusionLayerLightMaskBind, handle, layerIndex, lightMask)
+        ObjectCalls.ptrcallWithTwoIntArgs(setOcclusionLayerLightMaskBind, segment, layerIndex, lightMask)
     }
 
     /**
@@ -296,7 +296,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getOcclusionLayerLightMask(layerIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOcclusionLayerLightMaskBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getOcclusionLayerLightMaskBind, segment, layerIndex)
     }
 
     /**
@@ -306,7 +306,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setOcclusionLayerSdfCollision(layerIndex: Int, sdfCollision: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setOcclusionLayerSdfCollisionBind, handle, layerIndex, sdfCollision)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setOcclusionLayerSdfCollisionBind, segment, layerIndex, sdfCollision)
     }
 
     /**
@@ -316,7 +316,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getOcclusionLayerSdfCollision(layerIndex: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getOcclusionLayerSdfCollisionBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getOcclusionLayerSdfCollisionBind, segment, layerIndex)
     }
 
     /**
@@ -326,7 +326,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getPhysicsLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsLayersCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsLayersCountBind, segment)
     }
 
     /**
@@ -338,7 +338,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addPhysicsLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addPhysicsLayerBind, handle, toPosition)
+        ObjectCalls.ptrcallWithIntArg(addPhysicsLayerBind, segment, toPosition)
     }
 
     /**
@@ -349,7 +349,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun movePhysicsLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(movePhysicsLayerBind, handle, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(movePhysicsLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -359,7 +359,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removePhysicsLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePhysicsLayerBind, handle, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(removePhysicsLayerBind, segment, layerIndex)
     }
 
     /**
@@ -370,7 +370,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setPhysicsLayerCollisionLayer(layerIndex: Int, layer: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionLayerBind, handle, layerIndex, layer)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionLayerBind, segment, layerIndex, layer)
     }
 
     /**
@@ -381,7 +381,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionLayer(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionLayerBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionLayerBind, segment, layerIndex)
     }
 
     /**
@@ -391,7 +391,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setPhysicsLayerCollisionMask(layerIndex: Int, mask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionMaskBind, handle, layerIndex, mask)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionMaskBind, segment, layerIndex, mask)
     }
 
     /**
@@ -401,7 +401,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionMask(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionMaskBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionMaskBind, segment, layerIndex)
     }
 
     /**
@@ -411,7 +411,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setPhysicsLayerCollisionPriority(layerIndex: Int, priority: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPhysicsLayerCollisionPriorityBind, handle, layerIndex, priority)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setPhysicsLayerCollisionPriorityBind, segment, layerIndex, priority)
     }
 
     /**
@@ -421,7 +421,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionPriority(layerIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPhysicsLayerCollisionPriorityBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getPhysicsLayerCollisionPriorityBind, segment, layerIndex)
     }
 
     /**
@@ -431,7 +431,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setPhysicsLayerPhysicsMaterial(layerIndex: Int, physicsMaterial: PhysicsMaterial?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, handle, layerIndex, physicsMaterial?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, segment, layerIndex, physicsMaterial?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -441,7 +441,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getPhysicsLayerPhysicsMaterial(layerIndex: Int): PhysicsMaterial? {
         checkOpen()
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, handle, layerIndex))
+        return PhysicsMaterial.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, segment, layerIndex))
     }
 
     /**
@@ -451,7 +451,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTerrainSetsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetsCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetsCountBind, segment)
     }
 
     /**
@@ -462,7 +462,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addTerrainSet(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addTerrainSetBind, handle, toPosition)
+        ObjectCalls.ptrcallWithIntArg(addTerrainSetBind, segment, toPosition)
     }
 
     /**
@@ -473,7 +473,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun moveTerrainSet(terrainSet: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveTerrainSetBind, handle, terrainSet, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveTerrainSetBind, segment, terrainSet, toPosition)
     }
 
     /**
@@ -483,7 +483,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeTerrainSet(terrainSet: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeTerrainSetBind, handle, terrainSet)
+        ObjectCalls.ptrcallWithIntArg(removeTerrainSetBind, segment, terrainSet)
     }
 
     /**
@@ -494,7 +494,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setTerrainSetMode(terrainSet: Int, mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, handle, terrainSet, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, segment, terrainSet, mode)
     }
 
     /**
@@ -504,7 +504,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTerrainSetMode(terrainSet: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, handle, terrainSet)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, segment, terrainSet)
     }
 
     /**
@@ -514,7 +514,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTerrainsCount(terrainSet: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTerrainsCountBind, handle, terrainSet)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getTerrainsCountBind, segment, terrainSet)
     }
 
     /**
@@ -525,7 +525,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addTerrain(terrainSet: Int, toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(addTerrainBind, handle, terrainSet, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(addTerrainBind, segment, terrainSet, toPosition)
     }
 
     /**
@@ -536,7 +536,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun moveTerrain(terrainSet: Int, terrainIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntArgs(moveTerrainBind, handle, terrainSet, terrainIndex, toPosition)
+        ObjectCalls.ptrcallWithThreeIntArgs(moveTerrainBind, segment, terrainSet, terrainIndex, toPosition)
     }
 
     /**
@@ -547,7 +547,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeTerrain(terrainSet: Int, terrainIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(removeTerrainBind, handle, terrainSet, terrainIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(removeTerrainBind, segment, terrainSet, terrainIndex)
     }
 
     /**
@@ -557,7 +557,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun clearTerrains(terrainSet: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(clearTerrainsBind, handle, terrainSet)
+        ObjectCalls.ptrcallWithIntArg(clearTerrainsBind, segment, terrainSet)
     }
 
     /**
@@ -567,7 +567,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setTerrainName(terrainSet: Int, terrainIndex: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setTerrainNameBind, handle, terrainSet, terrainIndex, name)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setTerrainNameBind, segment, terrainSet, terrainIndex, name)
     }
 
     /**
@@ -577,7 +577,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTerrainName(terrainSet: Int, terrainIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTerrainNameBind, handle, terrainSet, terrainIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTerrainNameBind, segment, terrainSet, terrainIndex)
     }
 
     /**
@@ -588,7 +588,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setTerrainColor(terrainSet: Int, terrainIndex: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setTerrainColorBind, handle, terrainSet, terrainIndex, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(setTerrainColorBind, segment, terrainSet, terrainIndex, color)
     }
 
     /**
@@ -598,7 +598,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getTerrainColor(terrainSet: Int, terrainIndex: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getTerrainColorBind, handle, terrainSet, terrainIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getTerrainColorBind, segment, terrainSet, terrainIndex)
     }
 
     /**
@@ -608,7 +608,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getNavigationLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNavigationLayersCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getNavigationLayersCountBind, segment)
     }
 
     /**
@@ -620,7 +620,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addNavigationLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addNavigationLayerBind, handle, toPosition)
+        ObjectCalls.ptrcallWithIntArg(addNavigationLayerBind, segment, toPosition)
     }
 
     /**
@@ -631,7 +631,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun moveNavigationLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveNavigationLayerBind, handle, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveNavigationLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -641,7 +641,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeNavigationLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeNavigationLayerBind, handle, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(removeNavigationLayerBind, segment, layerIndex)
     }
 
     /**
@@ -652,7 +652,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setNavigationLayerLayers(layerIndex: Int, layers: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setNavigationLayerLayersBind, handle, layerIndex, layers)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(setNavigationLayerLayersBind, segment, layerIndex, layers)
     }
 
     /**
@@ -663,7 +663,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getNavigationLayerLayers(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getNavigationLayerLayersBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(getNavigationLayerLayersBind, segment, layerIndex)
     }
 
     /**
@@ -675,7 +675,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int, value: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setNavigationLayerLayerValueBind, handle, layerIndex, layerNumber, value)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setNavigationLayerLayerValueBind, segment, layerIndex, layerNumber, value)
     }
 
     /**
@@ -687,7 +687,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getNavigationLayerLayerValueBind, handle, layerIndex, layerNumber)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getNavigationLayerLayerValueBind, segment, layerIndex, layerNumber)
     }
 
     /**
@@ -697,7 +697,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getCustomDataLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCustomDataLayersCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCustomDataLayersCountBind, segment)
     }
 
     /**
@@ -709,7 +709,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addCustomDataLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addCustomDataLayerBind, handle, toPosition)
+        ObjectCalls.ptrcallWithIntArg(addCustomDataLayerBind, segment, toPosition)
     }
 
     /**
@@ -720,7 +720,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun moveCustomDataLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveCustomDataLayerBind, handle, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(moveCustomDataLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -730,7 +730,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeCustomDataLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeCustomDataLayerBind, handle, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(removeCustomDataLayerBind, segment, layerIndex)
     }
 
     /**
@@ -740,7 +740,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getCustomDataLayerByName(layerName: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(getCustomDataLayerByNameBind, handle, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetInt(getCustomDataLayerByNameBind, segment, layerName)
     }
 
     /**
@@ -751,7 +751,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setCustomDataLayerName(layerIndex: Int, layerName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setCustomDataLayerNameBind, handle, layerIndex, layerName)
+        ObjectCalls.ptrcallWithIntAndStringArg(setCustomDataLayerNameBind, segment, layerIndex, layerName)
     }
 
     /**
@@ -761,7 +761,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun hasCustomDataLayerByName(layerName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataLayerByNameBind, handle, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataLayerByNameBind, segment, layerName)
     }
 
     /**
@@ -771,7 +771,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getCustomDataLayerName(layerIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getCustomDataLayerNameBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(getCustomDataLayerNameBind, segment, layerIndex)
     }
 
     /**
@@ -781,7 +781,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setCustomDataLayerType(layerIndex: Int, layerType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, handle, layerIndex, layerType)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, segment, layerIndex, layerType)
     }
 
     /**
@@ -791,7 +791,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getCustomDataLayerType(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, handle, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, segment, layerIndex)
     }
 
     /**
@@ -804,7 +804,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setSourceLevelTileProxy(sourceFrom: Int, sourceTo: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setSourceLevelTileProxyBind, handle, sourceFrom, sourceTo)
+        ObjectCalls.ptrcallWithTwoIntArgs(setSourceLevelTileProxyBind, segment, sourceFrom, sourceTo)
     }
 
     /**
@@ -815,7 +815,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceLevelTileProxy(sourceFrom: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSourceLevelTileProxyBind, handle, sourceFrom)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSourceLevelTileProxyBind, segment, sourceFrom)
     }
 
     /**
@@ -825,7 +825,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun hasSourceLevelTileProxy(sourceFrom: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceLevelTileProxyBind, handle, sourceFrom)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceLevelTileProxyBind, segment, sourceFrom)
     }
 
     /**
@@ -835,7 +835,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeSourceLevelTileProxy(sourceFrom: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeSourceLevelTileProxyBind, handle, sourceFrom)
+        ObjectCalls.ptrcallWithIntArg(removeSourceLevelTileProxyBind, segment, sourceFrom)
     }
 
     /**
@@ -848,7 +848,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, sourceTo: Int, coordsTo: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(setCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom, sourceTo, coordsTo)
+        ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(setCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom, sourceTo, coordsTo)
     }
 
     /**
@@ -860,7 +860,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iArgsRetArray(getCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
+        return ObjectCalls.ptrcallWithIntVector2iArgsRetArray(getCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
     }
 
     /**
@@ -870,7 +870,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun hasCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(hasCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
+        return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(hasCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
     }
 
     /**
@@ -880,7 +880,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(removeCoordsLevelTileProxyBind, handle, sourceFrom, coordsFrom)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(removeCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
     }
 
     /**
@@ -892,7 +892,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun setAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int, sourceTo: Int, coordsTo: Vector2i, alternativeTo: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(setAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
+        ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(setAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
     }
 
     /**
@@ -904,7 +904,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(getAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(getAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -914,7 +914,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun hasAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(hasAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(hasAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -924,7 +924,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removeAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeAlternativeLevelTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -938,7 +938,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun mapTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(mapTileProxyBind, handle, sourceFrom, coordsFrom, alternativeFrom)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(mapTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -948,7 +948,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun cleanupInvalidTileProxies() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(cleanupInvalidTileProxiesBind, handle)
+        ObjectCalls.ptrcallNoArgs(cleanupInvalidTileProxiesBind, segment)
     }
 
     /**
@@ -958,7 +958,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun clearTileProxies() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearTileProxiesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearTileProxiesBind, segment)
     }
 
     /**
@@ -969,7 +969,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun addPattern(pattern: TileMapPattern?, index: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, handle, pattern?.requireOpenHandle() ?: MemorySegment.NULL, index)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, segment, pattern?.requireOpenHandle() ?: MemorySegment.NULL, index)
     }
 
     /**
@@ -979,7 +979,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getPattern(index: Int = -1): TileMapPattern? {
         checkOpen()
-        return TileMapPattern.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, handle, index))
+        return TileMapPattern.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, segment, index))
     }
 
     /**
@@ -989,7 +989,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun removePattern(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePatternBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removePatternBind, segment, index)
     }
 
     /**
@@ -999,7 +999,7 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
      */
     fun getPatternsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, segment)
     }
 
     companion object {
@@ -1036,11 +1036,11 @@ class TileSet(handle: MemorySegment) : Resource(handle) {
         const val TERRAIN_MODE_MATCH_SIDES: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TileSet? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TileSet? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TileSet? =
-            if (handle.address() == 0L) null else TileSet(handle)
+            if (handle.address() == 0L) null else TileSet(GodotHandle(handle))
 
         private const val GET_NEXT_SOURCE_ID_HASH = 3905245786L
         private val getNextSourceIdBind by lazy {

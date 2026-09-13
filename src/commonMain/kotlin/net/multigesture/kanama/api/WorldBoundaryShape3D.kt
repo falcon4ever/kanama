@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Plane
  *
  * Generated from Godot docs: WorldBoundaryShape3D
  */
-class WorldBoundaryShape3D(handle: MemorySegment) : Shape3D(handle) {
+class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
     var plane: Plane
         @JvmName("planeProperty")
         get() = getPlane()
@@ -26,7 +26,7 @@ class WorldBoundaryShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setPlane(plane: Plane) {
         checkOpen()
-        ObjectCalls.ptrcallWithPlaneArg(setPlaneBind, handle, plane)
+        ObjectCalls.ptrcallWithPlaneArg(setPlaneBind, segment, plane)
     }
 
     /**
@@ -36,16 +36,16 @@ class WorldBoundaryShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getPlane(): Plane {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WorldBoundaryShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WorldBoundaryShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WorldBoundaryShape3D? =
-            if (handle.address() == 0L) null else WorldBoundaryShape3D(handle)
+            if (handle.address() == 0L) null else WorldBoundaryShape3D(GodotHandle(handle))
 
         private const val SET_PLANE_HASH = 3505987427L
         private val setPlaneBind by lazy {

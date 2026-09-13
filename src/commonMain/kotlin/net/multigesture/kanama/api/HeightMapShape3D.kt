@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HeightMapShape3D
  */
-class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
+class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
     var mapWidth: Int
         @JvmName("mapWidthProperty")
         get() = getMapWidth()
@@ -37,7 +37,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setMapWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMapWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setMapWidthBind, segment, width)
     }
 
     /**
@@ -47,7 +47,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getMapWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMapWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMapWidthBind, segment)
     }
 
     /**
@@ -57,7 +57,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setMapDepth(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMapDepthBind, handle, height)
+        ObjectCalls.ptrcallWithIntArg(setMapDepthBind, segment, height)
     }
 
     /**
@@ -67,7 +67,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getMapDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMapDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMapDepthBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setMapData(data: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setMapDataBind, handle, data)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setMapDataBind, segment, data)
     }
 
     /**
@@ -87,7 +87,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getMapData(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getMapDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getMapDataBind, segment)
     }
 
     /**
@@ -98,7 +98,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getMinHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinHeightBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getMaxHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxHeightBind, segment)
     }
 
     /**
@@ -125,16 +125,16 @@ class HeightMapShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun updateMapDataFromImage(image: Image?, heightMin: Double, heightMax: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectTwoDoubleArgs(updateMapDataFromImageBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, heightMin, heightMax)
+        ObjectCalls.ptrcallWithObjectTwoDoubleArgs(updateMapDataFromImageBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, heightMin, heightMax)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HeightMapShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HeightMapShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HeightMapShape3D? =
-            if (handle.address() == 0L) null else HeightMapShape3D(handle)
+            if (handle.address() == 0L) null else HeightMapShape3D(GodotHandle(handle))
 
         private const val SET_MAP_WIDTH_HASH = 1286410249L
         private val setMapWidthBind by lazy {

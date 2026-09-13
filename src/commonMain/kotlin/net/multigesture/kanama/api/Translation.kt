@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Translation
  */
-open class Translation(handle: MemorySegment) : Resource(handle) {
+open class Translation(handle: GodotHandle) : Resource(handle) {
     var locale: String
         @JvmName("localeProperty")
         get() = getLocale()
@@ -31,7 +31,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun setLocale(locale: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLocaleBind, handle, locale)
+        ObjectCalls.ptrcallWithStringArg(setLocaleBind, segment, locale)
     }
 
     /**
@@ -41,7 +41,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun getLocale(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun addMessage(srcMessage: String, xlatedMessage: String, context: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(addMessageBind, handle, srcMessage, xlatedMessage, context)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(addMessageBind, segment, srcMessage, xlatedMessage, context)
     }
 
     /**
@@ -64,7 +64,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun addPluralMessage(srcMessage: String, xlatedMessages: List<String>, context: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(addPluralMessageBind, handle, srcMessage, xlatedMessages, context)
+        ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(addPluralMessageBind, segment, srcMessage, xlatedMessages, context)
     }
 
     /**
@@ -74,7 +74,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun getMessage(srcMessage: String, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(getMessageBind, handle, srcMessage, context)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(getMessageBind, segment, srcMessage, context)
     }
 
     /**
@@ -87,7 +87,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun getPluralMessage(srcMessage: String, srcPluralMessage: String, n: Int, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(getPluralMessageBind, handle, srcMessage, srcPluralMessage, n, context)
+        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(getPluralMessageBind, segment, srcMessage, srcPluralMessage, n, context)
     }
 
     /**
@@ -97,7 +97,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun eraseMessage(srcMessage: String, context: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(eraseMessageBind, handle, srcMessage, context)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(eraseMessageBind, segment, srcMessage, context)
     }
 
     /**
@@ -110,7 +110,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun getMessageList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMessageListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMessageListBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun getTranslatedMessageList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTranslatedMessageListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTranslatedMessageListBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun getMessageCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun setPluralRulesOverride(rules: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPluralRulesOverrideBind, handle, rules)
+        ObjectCalls.ptrcallWithStringArg(setPluralRulesOverrideBind, segment, rules)
     }
 
     /**
@@ -156,16 +156,16 @@ open class Translation(handle: MemorySegment) : Resource(handle) {
      */
     fun getPluralRulesOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPluralRulesOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPluralRulesOverrideBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Translation? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Translation? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Translation? =
-            if (handle.address() == 0L) null else Translation(handle)
+            if (handle.address() == 0L) null else Translation(GodotHandle(handle))
 
         private const val SET_LOCALE_HASH = 83702148L
         private val setLocaleBind by lazy {

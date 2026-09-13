@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: TabContainer
  */
-class TabContainer(handle: MemorySegment) : Container(handle) {
+class TabContainer(handle: GodotHandle) : Container(handle) {
     var tabAlignment: Long
         @JvmName("tabAlignmentProperty")
         get() = getTabAlignment()
@@ -91,7 +91,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_count
      */
     fun getTabCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_current_tab
      */
     fun setCurrentTab(tabIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, handle, tabIdx)
+        ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, segment, tabIdx)
     }
 
     /**
@@ -111,7 +111,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_current_tab
      */
     fun getCurrentTab(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_previous_tab
      */
     fun getPreviousTab(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.select_previous_available
      */
     fun selectPreviousAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.select_next_available
      */
     fun selectNextAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_current_tab_control
      */
     fun getCurrentTabControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentTabControlBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentTabControlBind, segment))
     }
 
     /**
@@ -160,7 +160,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_bar
      */
     fun getTabBar(): TabBar? {
-        return TabBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTabBarBind, handle))
+        return TabBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTabBarBind, segment))
     }
 
     /**
@@ -169,7 +169,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_control
      */
     fun getTabControl(tabIdx: Int): Control? {
-        return Control.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabControlBind, handle, tabIdx))
+        return Control.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabControlBind, segment, tabIdx))
     }
 
     /**
@@ -178,7 +178,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_alignment
      */
     fun setTabAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment)
     }
 
     /**
@@ -187,7 +187,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_alignment
      */
     fun getTabAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tabs_position
      */
     fun setTabsPosition(tabsPosition: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabsPositionBind, handle, tabsPosition)
+        ObjectCalls.ptrcallWithLongArg(setTabsPositionBind, segment, tabsPosition)
     }
 
     /**
@@ -205,7 +205,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tabs_position
      */
     fun getTabsPosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabsPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTabsPositionBind, segment)
     }
 
     /**
@@ -215,7 +215,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_clip_tabs
      */
     fun setClipTabs(clipTabs: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, handle, clipTabs)
+        ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, segment, clipTabs)
     }
 
     /**
@@ -225,7 +225,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_clip_tabs
      */
     fun getClipTabs(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tabs_visible
      */
     fun setTabsVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTabsVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setTabsVisibleBind, segment, visible)
     }
 
     /**
@@ -243,7 +243,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.are_tabs_visible
      */
     fun areTabsVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areTabsVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areTabsVisibleBind, segment)
     }
 
     /**
@@ -252,7 +252,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_all_tabs_in_front
      */
     fun setAllTabsInFront(isFront: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllTabsInFrontBind, handle, isFront)
+        ObjectCalls.ptrcallWithBoolArg(setAllTabsInFrontBind, segment, isFront)
     }
 
     /**
@@ -261,7 +261,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.is_all_tabs_in_front
      */
     fun isAllTabsInFront(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllTabsInFrontBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAllTabsInFrontBind, segment)
     }
 
     /**
@@ -271,7 +271,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_title
      */
     fun setTabTitle(tabIdx: Int, title: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, handle, tabIdx, title)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, segment, tabIdx, title)
     }
 
     /**
@@ -281,7 +281,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_title
      */
     fun getTabTitle(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, segment, tabIdx)
     }
 
     /**
@@ -292,7 +292,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_tooltip
      */
     fun setTabTooltip(tabIdx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, handle, tabIdx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, segment, tabIdx, tooltip)
     }
 
     /**
@@ -301,7 +301,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_tooltip
      */
     fun getTabTooltip(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, segment, tabIdx)
     }
 
     /**
@@ -310,7 +310,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_icon
      */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, handle, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -319,7 +319,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_icon
      */
     fun getTabIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, handle, tabIdx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, segment, tabIdx))
     }
 
     /**
@@ -330,7 +330,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_icon_max_width
      */
     fun setTabIconMaxWidth(tabIdx: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, handle, tabIdx, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, segment, tabIdx, width)
     }
 
     /**
@@ -339,7 +339,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_icon_max_width
      */
     fun getTabIconMaxWidth(tabIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, segment, tabIdx)
     }
 
     /**
@@ -348,7 +348,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_disabled
      */
     fun setTabDisabled(tabIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, handle, tabIdx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, segment, tabIdx, disabled)
     }
 
     /**
@@ -357,7 +357,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.is_tab_disabled
      */
     fun isTabDisabled(tabIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, segment, tabIdx)
     }
 
     /**
@@ -366,7 +366,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_hidden
      */
     fun setTabHidden(tabIdx: Int, hidden: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, handle, tabIdx, hidden)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, segment, tabIdx, hidden)
     }
 
     /**
@@ -375,7 +375,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.is_tab_hidden
      */
     fun isTabHidden(tabIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, segment, tabIdx)
     }
 
     /**
@@ -385,7 +385,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_metadata
      */
     fun setTabMetadata(tabIdx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, handle, tabIdx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, segment, tabIdx, metadata)
     }
 
     /**
@@ -395,7 +395,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_metadata
      */
     fun getTabMetadata(tabIdx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, handle, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, segment, tabIdx)
     }
 
     /**
@@ -404,7 +404,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_button_icon
      */
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, handle, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -413,7 +413,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_button_icon
      */
     fun getTabButtonIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, handle, tabIdx))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, segment, tabIdx))
     }
 
     /**
@@ -423,7 +423,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_idx_at_point
      */
     fun getTabIdxAtPoint(point: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, handle, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, segment, point)
     }
 
     /**
@@ -433,7 +433,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_idx_from_control
      */
     fun getTabIdxFromControl(control: Control): Int {
-        return ObjectCalls.ptrcallWithObjectArgRetInt(getTabIdxFromControlBind, handle, control.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetInt(getTabIdxFromControlBind, segment, control.segment)
     }
 
     /**
@@ -444,7 +444,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_popup
      */
     fun setPopup(popup: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setPopupBind, handle, listOf(popup.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setPopupBind, segment, listOf(popup.segment))
     }
 
     /**
@@ -455,7 +455,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_popup
      */
     fun getPopup(): Popup? {
-        return Popup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
+        return Popup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
     }
 
     /**
@@ -465,7 +465,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_switch_on_drag_hover
      */
     fun setSwitchOnDragHover(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, segment, enabled)
     }
 
     /**
@@ -475,7 +475,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_switch_on_drag_hover
      */
     fun getSwitchOnDragHover(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, segment)
     }
 
     /**
@@ -484,7 +484,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_drag_to_rearrange_enabled
      */
     fun setDragToRearrangeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, segment, enabled)
     }
 
     /**
@@ -493,7 +493,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_drag_to_rearrange_enabled
      */
     fun getDragToRearrangeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, segment)
     }
 
     /**
@@ -504,7 +504,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tabs_rearrange_group
      */
     fun setTabsRearrangeGroup(groupId: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, handle, groupId)
+        ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, segment, groupId)
     }
 
     /**
@@ -515,7 +515,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tabs_rearrange_group
      */
     fun getTabsRearrangeGroup(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, segment)
     }
 
     /**
@@ -525,7 +525,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_use_hidden_tabs_for_min_size
      */
     fun setUseHiddenTabsForMinSize(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseHiddenTabsForMinSizeBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUseHiddenTabsForMinSizeBind, segment, enabled)
     }
 
     /**
@@ -535,7 +535,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_use_hidden_tabs_for_min_size
      */
     fun getUseHiddenTabsForMinSize(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseHiddenTabsForMinSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseHiddenTabsForMinSizeBind, segment)
     }
 
     /**
@@ -544,7 +544,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_focus_mode
      */
     fun setTabFocusMode(focusMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabFocusModeBind, handle, focusMode)
+        ObjectCalls.ptrcallWithLongArg(setTabFocusModeBind, segment, focusMode)
     }
 
     /**
@@ -553,7 +553,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_focus_mode
      */
     fun getTabFocusMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabFocusModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTabFocusModeBind, segment)
     }
 
     /**
@@ -563,7 +563,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_deselect_enabled
      */
     fun setDeselectEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, segment, enabled)
     }
 
     /**
@@ -573,7 +573,7 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_deselect_enabled
      */
     fun getDeselectEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, segment)
     }
 
     object Signals {
@@ -592,11 +592,11 @@ class TabContainer(handle: MemorySegment) : Container(handle) {
         const val POSITION_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TabContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TabContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TabContainer? =
-            if (handle.address() == 0L) null else TabContainer(handle)
+            if (handle.address() == 0L) null else TabContainer(GodotHandle(handle))
 
         private const val GET_TAB_COUNT_HASH = 3905245786L
         private val getTabCountBind by lazy {

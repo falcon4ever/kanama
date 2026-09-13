@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorExportPlatformExtension
  */
-class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatform(handle) {
+class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(handle) {
     /**
      * Sets current configuration error message text. This method should be called only from the
      * `_can_export`, `_has_valid_export_configuration`, or `_has_valid_project_configuration`
@@ -20,7 +20,7 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      */
     fun setConfigError(errorText: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setConfigErrorBind, handle, errorText)
+        ObjectCalls.ptrcallWithStringArg(setConfigErrorBind, segment, errorText)
     }
 
     /**
@@ -32,7 +32,7 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      */
     fun getConfigError(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getConfigErrorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getConfigErrorBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      */
     fun setConfigMissingTemplates(missingTemplates: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setConfigMissingTemplatesBind, handle, missingTemplates)
+        ObjectCalls.ptrcallWithBoolArg(setConfigMissingTemplatesBind, segment, missingTemplates)
     }
 
     /**
@@ -56,16 +56,16 @@ class EditorExportPlatformExtension(handle: MemorySegment) : EditorExportPlatfor
      */
     fun getConfigMissingTemplates(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getConfigMissingTemplatesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getConfigMissingTemplatesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorExportPlatformExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorExportPlatformExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorExportPlatformExtension? =
-            if (handle.address() == 0L) null else EditorExportPlatformExtension(handle)
+            if (handle.address() == 0L) null else EditorExportPlatformExtension(GodotHandle(handle))
 
         private const val SET_CONFIG_ERROR_HASH = 3089850668L
         private val setConfigErrorBind by lazy {

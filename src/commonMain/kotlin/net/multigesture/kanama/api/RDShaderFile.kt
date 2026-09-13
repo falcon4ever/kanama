@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDShaderFile
  */
-class RDShaderFile(handle: MemorySegment) : Resource(handle) {
+class RDShaderFile(handle: GodotHandle) : Resource(handle) {
     var baseError: String
         @JvmName("baseErrorProperty")
         get() = getBaseError()
@@ -26,7 +26,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      */
     fun setBytecode(bytecode: RDShaderSPIRV?, version: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, handle, bytecode?.requireOpenHandle() ?: MemorySegment.NULL, version)
+        ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, segment, bytecode?.requireOpenHandle() ?: MemorySegment.NULL, version)
     }
 
     /**
@@ -36,7 +36,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      */
     fun getSpirv(version: String = ""): RDShaderSPIRV? {
         checkOpen()
-        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, handle, version))
+        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, segment, version))
     }
 
     /**
@@ -46,7 +46,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      */
     fun getVersionList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getVersionListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getVersionListBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      */
     fun setBaseError(error: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setBaseErrorBind, handle, error)
+        ObjectCalls.ptrcallWithStringArg(setBaseErrorBind, segment, error)
     }
 
     /**
@@ -70,16 +70,16 @@ class RDShaderFile(handle: MemorySegment) : Resource(handle) {
      */
     fun getBaseError(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getBaseErrorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getBaseErrorBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDShaderFile? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDShaderFile? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDShaderFile? =
-            if (handle.address() == 0L) null else RDShaderFile(handle)
+            if (handle.address() == 0L) null else RDShaderFile(GodotHandle(handle))
 
         private const val SET_BYTECODE_HASH = 1526857008L
         private val setBytecodeBind by lazy {

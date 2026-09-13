@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectSpectrumAnalyzer
  */
-class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
     var bufferLength: Double
         @JvmName("bufferLengthProperty")
         get() = getBufferLength()
@@ -33,7 +33,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setBufferLength(seconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, segment, seconds)
     }
 
     /**
@@ -44,7 +44,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
     }
 
     /**
@@ -56,7 +56,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setFftSize(size: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, handle, size)
+        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, segment, size)
     }
 
     /**
@@ -68,7 +68,7 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getFftSize(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment)
     }
 
     companion object {
@@ -80,11 +80,11 @@ class AudioEffectSpectrumAnalyzer(handle: MemorySegment) : AudioEffect(handle) {
         const val FFT_SIZE_MAX: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectSpectrumAnalyzer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectSpectrumAnalyzer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectSpectrumAnalyzer? =
-            if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzer(handle)
+            if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzer(GodotHandle(handle))
 
         private const val SET_BUFFER_LENGTH_HASH = 373806689L
         private val setBufferLengthBind by lazy {

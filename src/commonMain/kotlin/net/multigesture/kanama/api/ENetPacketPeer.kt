@@ -8,85 +8,85 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ENetPacketPeer
  */
-class ENetPacketPeer(handle: MemorySegment) : PacketPeer(handle) {
+class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun peerDisconnect(data: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(peerDisconnectBind, handle, data)
+        ObjectCalls.ptrcallWithIntArg(peerDisconnectBind, segment, data)
     }
 
     fun peerDisconnectLater(data: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(peerDisconnectLaterBind, handle, data)
+        ObjectCalls.ptrcallWithIntArg(peerDisconnectLaterBind, segment, data)
     }
 
     fun peerDisconnectNow(data: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(peerDisconnectNowBind, handle, data)
+        ObjectCalls.ptrcallWithIntArg(peerDisconnectNowBind, segment, data)
     }
 
     fun ping() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pingBind, handle)
+        ObjectCalls.ptrcallNoArgs(pingBind, segment)
     }
 
     fun pingInterval(pingInterval: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(pingIntervalBind, handle, pingInterval)
+        ObjectCalls.ptrcallWithIntArg(pingIntervalBind, segment, pingInterval)
     }
 
     fun reset() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
     fun send(channel: Int, packet: ByteArray, flags: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(sendBind, handle, channel, packet, flags)
+        return ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(sendBind, segment, channel, packet, flags)
     }
 
     fun throttleConfigure(interval: Int, acceleration: Int, deceleration: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntArgs(throttleConfigureBind, handle, interval, acceleration, deceleration)
+        ObjectCalls.ptrcallWithThreeIntArgs(throttleConfigureBind, segment, interval, acceleration, deceleration)
     }
 
     fun setTimeout(timeout: Int, timeoutMin: Int, timeoutMax: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntArgs(setTimeoutBind, handle, timeout, timeoutMin, timeoutMax)
+        ObjectCalls.ptrcallWithThreeIntArgs(setTimeoutBind, segment, timeout, timeoutMin, timeoutMax)
     }
 
     fun getPacketFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPacketFlagsBind, segment)
     }
 
     fun getRemoteAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getRemoteAddressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getRemoteAddressBind, segment)
     }
 
     fun getRemotePort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRemotePortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRemotePortBind, segment)
     }
 
     fun getStatistic(statistic: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getStatisticBind, handle, statistic)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getStatisticBind, segment, statistic)
     }
 
     fun getState(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, segment)
     }
 
     fun getChannels(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getChannelsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getChannelsBind, segment)
     }
 
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
     }
 
     companion object {
@@ -121,11 +121,11 @@ class ENetPacketPeer(handle: MemorySegment) : PacketPeer(handle) {
         const val PEER_PACKET_THROTTLE_INTERVAL: Long = 13L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ENetPacketPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ENetPacketPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ENetPacketPeer? =
-            if (handle.address() == 0L) null else ENetPacketPeer(handle)
+            if (handle.address() == 0L) null else ENetPacketPeer(GodotHandle(handle))
 
         private const val PEER_DISCONNECT_HASH = 1995695955L
         private val peerDisconnectBind by lazy {

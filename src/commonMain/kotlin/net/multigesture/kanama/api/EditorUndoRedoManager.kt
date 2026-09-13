@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorUndoRedoManager
  */
-class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
+class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Create a new action. After this is called, do all your calls to `add_do_method`,
      * `add_undo_method`, `add_do_property`, and `add_undo_property`, then commit the action with
@@ -27,7 +27,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.create_action
      */
     fun createAction(name: String, mergeMode: Long = 0L, customContext: GodotObject, backwardUndoOps: Boolean = false, markUnsaved: Boolean = true) {
-        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(createActionBind, handle, name, mergeMode, customContext.handle, backwardUndoOps, markUnsaved)
+        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(createActionBind, segment, name, mergeMode, customContext.segment, backwardUndoOps, markUnsaved)
     }
 
     /**
@@ -37,7 +37,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.commit_action
      */
     fun commitAction(execute: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(commitActionBind, handle, execute)
+        ObjectCalls.ptrcallWithBoolArg(commitActionBind, segment, execute)
     }
 
     /**
@@ -47,7 +47,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.is_committing_action
      */
     fun isCommittingAction(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommittingActionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCommittingActionBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.force_fixed_history
      */
     fun forceFixedHistory() {
-        ObjectCalls.ptrcallNoArgs(forceFixedHistoryBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceFixedHistoryBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_do_method
      */
     fun addDoMethod(objectValue: GodotObject, method: String, vararg extraArgs: Any?) {
-        ObjectCalls.callWithVariantArgs(addDoMethodBind, handle, listOf(objectValue, method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(addDoMethodBind, segment, listOf(objectValue, method, *extraArgs))
     }
 
     /**
@@ -80,7 +80,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_undo_method
      */
     fun addUndoMethod(objectValue: GodotObject, method: String, vararg extraArgs: Any?) {
-        ObjectCalls.callWithVariantArgs(addUndoMethodBind, handle, listOf(objectValue, method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(addUndoMethodBind, segment, listOf(objectValue, method, *extraArgs))
     }
 
     /**
@@ -90,7 +90,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_do_property
      */
     fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, handle, objectValue.handle, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -100,7 +100,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_undo_property
      */
     fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, handle, objectValue.handle, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -110,7 +110,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_do_reference
      */
     fun addDoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addDoReferenceBind, handle, listOf(objectValue.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addDoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -120,7 +120,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_undo_reference
      */
     fun addUndoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addUndoReferenceBind, handle, listOf(objectValue.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addUndoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -130,7 +130,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.get_object_history_id
      */
     fun getObjectHistoryId(objectValue: GodotObject): Int {
-        return ObjectCalls.ptrcallWithObjectArgRetInt(getObjectHistoryIdBind, handle, objectValue.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetInt(getObjectHistoryIdBind, segment, objectValue.segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.get_history_undo_redo
      */
     fun getHistoryUndoRedo(id: Int): UndoRedo? {
-        return UndoRedo.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getHistoryUndoRedoBind, handle, id))
+        return UndoRedo.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getHistoryUndoRedoBind, segment, id))
     }
 
     /**
@@ -155,7 +155,7 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.clear_history
      */
     fun clearHistory(id: Int = -99, increaseVersion: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(clearHistoryBind, handle, id, increaseVersion)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(clearHistoryBind, segment, id, increaseVersion)
     }
 
     object Signals {
@@ -169,11 +169,11 @@ class EditorUndoRedoManager(handle: MemorySegment) : GodotObject(handle) {
         const val INVALID_HISTORY: Long = -99L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorUndoRedoManager? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorUndoRedoManager? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorUndoRedoManager? =
-            if (handle.address() == 0L) null else EditorUndoRedoManager(handle)
+            if (handle.address() == 0L) null else EditorUndoRedoManager(GodotHandle(handle))
 
         private const val CREATE_ACTION_HASH = 796197507L
         private val createActionBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MultiMeshInstance2D
  */
-class MultiMeshInstance2D(handle: MemorySegment) : Node2D(handle) {
+class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
     var multimesh: MultiMesh?
         @JvmName("multimeshProperty")
         get() = getMultimesh()
@@ -30,7 +30,7 @@ class MultiMeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.set_multimesh
      */
     fun setMultimesh(multimesh: MultiMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, handle, listOf(multimesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -39,7 +39,7 @@ class MultiMeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.get_multimesh
      */
     fun getMultimesh(): MultiMesh? {
-        return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, handle))
+        return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
     }
 
     /**
@@ -49,7 +49,7 @@ class MultiMeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -59,7 +59,7 @@ class MultiMeshInstance2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     object Signals {
@@ -68,11 +68,11 @@ class MultiMeshInstance2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiMeshInstance2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiMeshInstance2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiMeshInstance2D? =
-            if (handle.address() == 0L) null else MultiMeshInstance2D(handle)
+            if (handle.address() == 0L) null else MultiMeshInstance2D(GodotHandle(handle))
 
         private const val SET_MULTIMESH_HASH = 2246127404L
         private val setMultimeshBind by lazy {

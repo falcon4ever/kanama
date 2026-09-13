@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: ConcavePolygonShape3D
  */
-class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
+class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
     var data: List<Vector3>
         @JvmName("dataProperty")
         get() = getFaces()
@@ -33,7 +33,7 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setFaces(faces: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setFacesBind, handle, faces)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setFacesBind, segment, faces)
     }
 
     /**
@@ -44,7 +44,7 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, segment)
     }
 
     /**
@@ -55,7 +55,7 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun setBackfaceCollisionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBackfaceCollisionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setBackfaceCollisionEnabledBind, segment, enabled)
     }
 
     /**
@@ -66,16 +66,16 @@ class ConcavePolygonShape3D(handle: MemorySegment) : Shape3D(handle) {
      */
     fun isBackfaceCollisionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBackfaceCollisionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBackfaceCollisionEnabledBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConcavePolygonShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConcavePolygonShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConcavePolygonShape3D? =
-            if (handle.address() == 0L) null else ConcavePolygonShape3D(handle)
+            if (handle.address() == 0L) null else ConcavePolygonShape3D(GodotHandle(handle))
 
         private const val SET_FACES_HASH = 334873810L
         private val setFacesBind by lazy {

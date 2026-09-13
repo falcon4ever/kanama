@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: UPNPDevice
  */
-class UPNPDevice(handle: MemorySegment) : RefCounted(handle) {
+class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     var descriptionUrl: String
         @JvmName("descriptionUrlProperty")
         get() = getDescriptionUrl()
@@ -48,82 +48,82 @@ class UPNPDevice(handle: MemorySegment) : RefCounted(handle) {
 
     fun isValidGateway(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isValidGatewayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isValidGatewayBind, segment)
     }
 
     fun queryExternalAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, segment)
     }
 
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, handle, port, portInternal, desc, proto, duration)
+        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, segment, port, portInternal, desc, proto, duration)
     }
 
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, handle, port, proto)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, segment, port, proto)
     }
 
     fun setDescriptionUrl(url: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setDescriptionUrlBind, handle, url)
+        ObjectCalls.ptrcallWithStringArg(setDescriptionUrlBind, segment, url)
     }
 
     fun getDescriptionUrl(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getDescriptionUrlBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDescriptionUrlBind, segment)
     }
 
     fun setServiceType(type: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setServiceTypeBind, handle, type)
+        ObjectCalls.ptrcallWithStringArg(setServiceTypeBind, segment, type)
     }
 
     fun getServiceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getServiceTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getServiceTypeBind, segment)
     }
 
     fun setIgdControlUrl(url: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setIgdControlUrlBind, handle, url)
+        ObjectCalls.ptrcallWithStringArg(setIgdControlUrlBind, segment, url)
     }
 
     fun getIgdControlUrl(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIgdControlUrlBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getIgdControlUrlBind, segment)
     }
 
     fun setIgdServiceType(type: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setIgdServiceTypeBind, handle, type)
+        ObjectCalls.ptrcallWithStringArg(setIgdServiceTypeBind, segment, type)
     }
 
     fun getIgdServiceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIgdServiceTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getIgdServiceTypeBind, segment)
     }
 
     fun setIgdOurAddr(addr: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setIgdOurAddrBind, handle, addr)
+        ObjectCalls.ptrcallWithStringArg(setIgdOurAddrBind, segment, addr)
     }
 
     fun getIgdOurAddr(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIgdOurAddrBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getIgdOurAddrBind, segment)
     }
 
     fun setIgdStatus(status: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setIgdStatusBind, handle, status)
+        ObjectCalls.ptrcallWithLongArg(setIgdStatusBind, segment, status)
     }
 
     fun getIgdStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getIgdStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getIgdStatusBind, segment)
     }
 
     companion object {
@@ -139,11 +139,11 @@ class UPNPDevice(handle: MemorySegment) : RefCounted(handle) {
         const val IGD_STATUS_UNKNOWN_ERROR: Long = 9L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): UPNPDevice? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): UPNPDevice? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): UPNPDevice? =
-            if (handle.address() == 0L) null else UPNPDevice(handle)
+            if (handle.address() == 0L) null else UPNPDevice(GodotHandle(handle))
 
         private const val IS_VALID_GATEWAY_HASH = 36873697L
         private val isValidGatewayBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ConfirmationDialog
  */
-open class ConfirmationDialog(handle: MemorySegment) : AcceptDialog(handle) {
+open class ConfirmationDialog(handle: GodotHandle) : AcceptDialog(handle) {
     var cancelButtonText: String
         @JvmName("cancelButtonTextProperty")
         get() = getCancelButtonText()
@@ -26,7 +26,7 @@ open class ConfirmationDialog(handle: MemorySegment) : AcceptDialog(handle) {
      * Generated from Godot docs: ConfirmationDialog.get_cancel_button
      */
     fun getCancelButton(): Button? {
-        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCancelButtonBind, handle))
+        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCancelButtonBind, segment))
     }
 
     /**
@@ -35,7 +35,7 @@ open class ConfirmationDialog(handle: MemorySegment) : AcceptDialog(handle) {
      * Generated from Godot docs: ConfirmationDialog.set_cancel_button_text
      */
     fun setCancelButtonText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setCancelButtonTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setCancelButtonTextBind, segment, text)
     }
 
     /**
@@ -44,16 +44,16 @@ open class ConfirmationDialog(handle: MemorySegment) : AcceptDialog(handle) {
      * Generated from Godot docs: ConfirmationDialog.get_cancel_button_text
      */
     fun getCancelButtonText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCancelButtonTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCancelButtonTextBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConfirmationDialog? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConfirmationDialog? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConfirmationDialog? =
-            if (handle.address() == 0L) null else ConfirmationDialog(handle)
+            if (handle.address() == 0L) null else ConfirmationDialog(GodotHandle(handle))
 
         private const val GET_CANCEL_BUTTON_HASH = 1856205918L
         private val getCancelButtonBind by lazy {

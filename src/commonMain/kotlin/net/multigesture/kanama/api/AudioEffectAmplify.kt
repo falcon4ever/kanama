@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectAmplify
  */
-class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
     var volumeDb: Double
         @JvmName("volumeDbProperty")
         get() = getVolumeDb()
@@ -32,7 +32,7 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setVolumeDb(volume: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, volume)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, segment, volume)
     }
 
     /**
@@ -43,7 +43,7 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getVolumeDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, segment)
     }
 
     /**
@@ -56,7 +56,7 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setVolumeLinear(volume: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, handle, volume)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, segment, volume)
     }
 
     /**
@@ -69,16 +69,16 @@ class AudioEffectAmplify(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getVolumeLinear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectAmplify? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectAmplify? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectAmplify? =
-            if (handle.address() == 0L) null else AudioEffectAmplify(handle)
+            if (handle.address() == 0L) null else AudioEffectAmplify(GodotHandle(handle))
 
         private const val SET_VOLUME_DB_HASH = 373806689L
         private val setVolumeDbBind by lazy {

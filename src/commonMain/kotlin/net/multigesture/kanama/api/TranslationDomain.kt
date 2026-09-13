@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TranslationDomain
  */
-class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
+class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = isEnabled()
@@ -80,7 +80,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTranslationObject(locale: String): Translation? {
         checkOpen()
-        return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, handle, locale))
+        return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, segment, locale))
     }
 
     /**
@@ -90,7 +90,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addTranslation(translation: Translation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -100,7 +100,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun removeTranslation(translation: Translation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, handle, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -110,7 +110,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTranslations(): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, handle, Translation::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, segment, Translation::wrap)
     }
 
     /**
@@ -132,7 +132,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasTranslationForLocale(locale: String, exact: Boolean): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(hasTranslationForLocaleBind, handle, locale, exact)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(hasTranslationForLocaleBind, segment, locale, exact)
     }
 
     /**
@@ -142,7 +142,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasTranslation(translation: Translation?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, handle, translation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, segment, translation?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -154,7 +154,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, handle, locale, exact, Translation::fromHandle)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, segment, locale, exact, Translation::wrap)
     }
 
     /**
@@ -164,7 +164,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun translate(message: String, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, handle, message, context)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, segment, message, context)
     }
 
     /**
@@ -176,7 +176,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun translatePlural(message: String, messagePlural: String, n: Int, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, handle, message, messagePlural, n, context)
+        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, segment, message, messagePlural, n, context)
     }
 
     /**
@@ -187,7 +187,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLocaleOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLocaleOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLocaleOverrideBind, segment)
     }
 
     /**
@@ -200,7 +200,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLocaleOverride(locale: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLocaleOverrideBind, handle, locale)
+        ObjectCalls.ptrcallWithStringArg(setLocaleOverrideBind, segment, locale)
     }
 
     /**
@@ -211,7 +211,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -222,7 +222,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -236,7 +236,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPseudolocalizationEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationEnabledBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationEnabledBind, segment, enabled)
     }
 
     /**
@@ -263,7 +263,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPseudolocalizationAccentsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationAccentsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationAccentsEnabledBind, segment)
     }
 
     /**
@@ -276,7 +276,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationAccentsEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationAccentsEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationAccentsEnabledBind, segment, enabled)
     }
 
     /**
@@ -289,7 +289,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPseudolocalizationDoubleVowelsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationDoubleVowelsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationDoubleVowelsEnabledBind, segment)
     }
 
     /**
@@ -302,7 +302,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationDoubleVowelsEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationDoubleVowelsEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationDoubleVowelsEnabledBind, segment, enabled)
     }
 
     /**
@@ -317,7 +317,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPseudolocalizationFakeBidiEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationFakeBidiEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationFakeBidiEnabledBind, segment)
     }
 
     /**
@@ -332,7 +332,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationFakeBidiEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationFakeBidiEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationFakeBidiEnabledBind, segment, enabled)
     }
 
     /**
@@ -345,7 +345,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPseudolocalizationOverrideEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationOverrideEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationOverrideEnabledBind, segment)
     }
 
     /**
@@ -358,7 +358,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationOverrideEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationOverrideEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationOverrideEnabledBind, segment, enabled)
     }
 
     /**
@@ -372,7 +372,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPseudolocalizationSkipPlaceholdersEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationSkipPlaceholdersEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationSkipPlaceholdersEnabledBind, segment)
     }
 
     /**
@@ -386,7 +386,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationSkipPlaceholdersEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationSkipPlaceholdersEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationSkipPlaceholdersEnabledBind, segment, enabled)
     }
 
     /**
@@ -400,7 +400,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPseudolocalizationExpansionRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPseudolocalizationExpansionRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPseudolocalizationExpansionRatioBind, segment)
     }
 
     /**
@@ -414,7 +414,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationExpansionRatio(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPseudolocalizationExpansionRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setPseudolocalizationExpansionRatioBind, segment, ratio)
     }
 
     /**
@@ -427,7 +427,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPseudolocalizationPrefix(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationPrefixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationPrefixBind, segment)
     }
 
     /**
@@ -440,7 +440,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationPrefix(prefix: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPseudolocalizationPrefixBind, handle, prefix)
+        ObjectCalls.ptrcallWithStringArg(setPseudolocalizationPrefixBind, segment, prefix)
     }
 
     /**
@@ -453,7 +453,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPseudolocalizationSuffix(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationSuffixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationSuffixBind, segment)
     }
 
     /**
@@ -466,7 +466,7 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPseudolocalizationSuffix(suffix: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPseudolocalizationSuffixBind, handle, suffix)
+        ObjectCalls.ptrcallWithStringArg(setPseudolocalizationSuffixBind, segment, suffix)
     }
 
     /**
@@ -476,16 +476,16 @@ class TranslationDomain(handle: MemorySegment) : RefCounted(handle) {
      */
     fun pseudolocalize(message: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(pseudolocalizeBind, handle, message)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(pseudolocalizeBind, segment, message)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TranslationDomain? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TranslationDomain? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TranslationDomain? =
-            if (handle.address() == 0L) null else TranslationDomain(handle)
+            if (handle.address() == 0L) null else TranslationDomain(GodotHandle(handle))
 
         private const val GET_TRANSLATION_OBJECT_HASH = 606768082L
         private val getTranslationObjectBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Timer
  */
-class Timer(handle: MemorySegment) : Node(handle) {
+class Timer(handle: GodotHandle) : Node(handle) {
     var processCallback: Long
         @JvmName("processCallbackProperty")
         get() = getTimerProcessCallback()
@@ -63,7 +63,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.set_wait_time
      */
     fun setWaitTime(timeSec: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWaitTimeBind, handle, timeSec)
+        ObjectCalls.ptrcallWithDoubleArg(setWaitTimeBind, segment, timeSec)
     }
 
     /**
@@ -77,7 +77,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.get_wait_time
      */
     fun getWaitTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWaitTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWaitTimeBind, segment)
     }
 
     /**
@@ -87,7 +87,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.set_one_shot
      */
     fun setOneShot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, enable)
     }
 
     /**
@@ -97,7 +97,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.is_one_shot
      */
     fun isOneShot(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOneShotBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOneShotBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.set_autostart
      */
     fun setAutostart(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutostartBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAutostartBind, segment, enable)
     }
 
     /**
@@ -119,7 +119,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.has_autostart
      */
     fun hasAutostart(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutostartBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasAutostartBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.start
      */
     fun start(timeSec: Double = -1.0) {
-        ObjectCalls.ptrcallWithDoubleArg(startBind, handle, timeSec)
+        ObjectCalls.ptrcallWithDoubleArg(startBind, segment, timeSec)
     }
 
     /**
@@ -142,7 +142,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.set_paused
      */
     fun setPaused(paused: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPausedBind, handle, paused)
+        ObjectCalls.ptrcallWithBoolArg(setPausedBind, segment, paused)
     }
 
     /**
@@ -162,7 +162,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.is_paused
      */
     fun isPaused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.set_ignore_time_scale
      */
     fun setIgnoreTimeScale(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreTimeScaleBind, handle, ignore)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreTimeScaleBind, segment, ignore)
     }
 
     /**
@@ -180,7 +180,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.is_ignoring_time_scale
      */
     fun isIgnoringTimeScale(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringTimeScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringTimeScaleBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.is_stopped
      */
     fun isStopped(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isStoppedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isStoppedBind, segment)
     }
 
     /**
@@ -199,7 +199,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.get_time_left
      */
     fun getTimeLeft(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, segment)
     }
 
     /**
@@ -208,7 +208,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.set_timer_process_callback
      */
     fun setTimerProcessCallback(callback: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTimerProcessCallbackBind, handle, callback)
+        ObjectCalls.ptrcallWithLongArg(setTimerProcessCallbackBind, segment, callback)
     }
 
     /**
@@ -217,7 +217,7 @@ class Timer(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Timer.get_timer_process_callback
      */
     fun getTimerProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTimerProcessCallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTimerProcessCallbackBind, segment)
     }
 
     object Signals {
@@ -229,11 +229,11 @@ class Timer(handle: MemorySegment) : Node(handle) {
         const val TIMER_PROCESS_IDLE: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Timer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Timer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Timer? =
-            if (handle.address() == 0L) null else Timer(handle)
+            if (handle.address() == 0L) null else Timer(GodotHandle(handle))
 
         private const val SET_WAIT_TIME_HASH = 373806689L
         private val setWaitTimeBind by lazy {

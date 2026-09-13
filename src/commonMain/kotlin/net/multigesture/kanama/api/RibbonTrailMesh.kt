@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RibbonTrailMesh
  */
-class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var shape: Long
         @JvmName("shapeProperty")
         get() = getShape()
@@ -56,7 +56,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, segment, size)
     }
 
     /**
@@ -67,7 +67,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSections(sections: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
+        ObjectCalls.ptrcallWithIntArg(setSectionsBind, segment, sections)
     }
 
     /**
@@ -87,7 +87,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, segment)
     }
 
     /**
@@ -97,7 +97,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSectionLength(sectionLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
+        ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, segment, sectionLength)
     }
 
     /**
@@ -107,7 +107,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSectionLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSectionSegments(sectionSegments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionSegmentsBind, handle, sectionSegments)
+        ObjectCalls.ptrcallWithIntArg(setSectionSegmentsBind, segment, sectionSegments)
     }
 
     /**
@@ -129,7 +129,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSectionSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSectionSegmentsBind, segment)
     }
 
     /**
@@ -141,7 +141,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -153,7 +153,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**
@@ -163,7 +163,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setShape(shape: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape)
     }
 
     /**
@@ -173,7 +173,7 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getShape(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment)
     }
 
     companion object {
@@ -181,11 +181,11 @@ class RibbonTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
         const val SHAPE_CROSS: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RibbonTrailMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RibbonTrailMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RibbonTrailMesh? =
-            if (handle.address() == 0L) null else RibbonTrailMesh(handle)
+            if (handle.address() == 0L) null else RibbonTrailMesh(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 373806689L
         private val setSizeBind by lazy {

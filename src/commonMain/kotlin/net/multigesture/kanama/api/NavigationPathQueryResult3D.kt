@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: NavigationPathQueryResult3D
  */
-class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
+class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     var path: List<Vector3>
         @JvmName("pathProperty")
         get() = getPath()
@@ -53,7 +53,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPath(path: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setPathBind, handle, path)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setPathBind, segment, path)
     }
 
     /**
@@ -65,7 +65,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPath(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPathBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPathTypes(pathTypes: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setPathTypesBind, handle, pathTypes)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(setPathTypesBind, segment, pathTypes)
     }
 
     /**
@@ -85,7 +85,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPathTypes(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, segment)
     }
 
     /**
@@ -95,7 +95,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPathRids(pathRids: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setPathRidsBind, handle, pathRids)
+        ObjectCalls.ptrcallWithRIDListArg(setPathRidsBind, segment, pathRids)
     }
 
     /**
@@ -105,7 +105,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPathRids(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getPathRidsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getPathRidsBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPathOwnerIds(pathOwnerIds: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt64ListArg(setPathOwnerIdsBind, handle, pathOwnerIds)
+        ObjectCalls.ptrcallWithPackedInt64ListArg(setPathOwnerIdsBind, segment, pathOwnerIds)
     }
 
     /**
@@ -127,7 +127,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPathOwnerIds(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPathOwnerIdsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPathOwnerIdsBind, segment)
     }
 
     /**
@@ -137,7 +137,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPathLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setPathLengthBind, segment, length)
     }
 
     /**
@@ -147,7 +147,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPathLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun reset() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
     companion object {
@@ -166,11 +166,11 @@ class NavigationPathQueryResult3D(handle: MemorySegment) : RefCounted(handle) {
         const val PATH_SEGMENT_TYPE_LINK: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationPathQueryResult3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationPathQueryResult3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationPathQueryResult3D? =
-            if (handle.address() == 0L) null else NavigationPathQueryResult3D(handle)
+            if (handle.address() == 0L) null else NavigationPathQueryResult3D(GodotHandle(handle))
 
         private const val SET_PATH_HASH = 334873810L
         private val setPathBind by lazy {

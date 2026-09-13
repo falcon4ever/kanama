@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeIntOp
  */
-class VisualShaderNodeIntOp(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeIntOp(handle: GodotHandle) : VisualShaderNode(handle) {
     var operator: Long
         @JvmName("operatorProperty")
         get() = getOperator()
@@ -18,12 +18,12 @@ class VisualShaderNodeIntOp(handle: MemorySegment) : VisualShaderNode(handle) {
 
     fun setOperator(op: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOperatorBind, handle, op)
+        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op)
     }
 
     fun getOperator(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment)
     }
 
     companion object {
@@ -42,11 +42,11 @@ class VisualShaderNodeIntOp(handle: MemorySegment) : VisualShaderNode(handle) {
         const val OP_ENUM_SIZE: Long = 12L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeIntOp? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeIntOp? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeIntOp? =
-            if (handle.address() == 0L) null else VisualShaderNodeIntOp(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeIntOp(GodotHandle(handle))
 
         private const val SET_OPERATOR_HASH = 1677909323L
         private val setOperatorBind by lazy {

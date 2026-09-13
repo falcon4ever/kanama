@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorCommandPalette
  */
-class EditorCommandPalette(handle: MemorySegment) : ConfirmationDialog(handle) {
+class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
     /**
      * Adds a custom command to EditorCommandPalette. - `command_name`: `String` (Name of the Command.
      * This is displayed to the user.) - `key_name`: `String` (Name of the key for a particular
@@ -21,7 +21,7 @@ class EditorCommandPalette(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: EditorCommandPalette.add_command
      */
     fun addCommand(commandName: String, keyName: String, bindedCallable: GodotCallable, shortcutText: String = "None") {
-        ObjectCalls.ptrcallWithTwoStringCallableStringArgs(addCommandBind, handle, commandName, keyName, bindedCallable.target.handle, bindedCallable.method, shortcutText)
+        ObjectCalls.ptrcallWithTwoStringCallableStringArgs(addCommandBind, segment, commandName, keyName, bindedCallable.target.segment, bindedCallable.method, shortcutText)
     }
 
     /**
@@ -31,16 +31,16 @@ class EditorCommandPalette(handle: MemorySegment) : ConfirmationDialog(handle) {
      * Generated from Godot docs: EditorCommandPalette.remove_command
      */
     fun removeCommand(keyName: String) {
-        ObjectCalls.ptrcallWithStringArg(removeCommandBind, handle, keyName)
+        ObjectCalls.ptrcallWithStringArg(removeCommandBind, segment, keyName)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorCommandPalette? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorCommandPalette? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorCommandPalette? =
-            if (handle.address() == 0L) null else EditorCommandPalette(handle)
+            if (handle.address() == 0L) null else EditorCommandPalette(GodotHandle(handle))
 
         private const val ADD_COMMAND_HASH = 864043298L
         private val addCommandBind by lazy {

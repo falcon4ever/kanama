@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: WebSocketMultiplayerPeer
  */
-class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) {
+class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     var supportedProtocols: List<String>
         @JvmName("supportedProtocolsProperty")
         get() = getSupportedProtocols()
@@ -48,96 +48,96 @@ class WebSocketMultiplayerPeer(handle: MemorySegment) : MultiplayerPeer(handle) 
 
     fun createClient(url: String, tlsClientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, handle, url, tlsClientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, handle, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun getPeer(peerId: Int): WebSocketPeer? {
         checkOpen()
-        return WebSocketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, handle, peerId))
+        return WebSocketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, peerId))
     }
 
     fun getPeerAddress(id: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getPeerAddressBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(getPeerAddressBind, segment, id)
     }
 
     fun getPeerPort(id: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getPeerPortBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getPeerPortBind, segment, id)
     }
 
     fun getSupportedProtocols(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedProtocolsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedProtocolsBind, segment)
     }
 
     fun setSupportedProtocols(protocols: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setSupportedProtocolsBind, handle, protocols)
+        ObjectCalls.ptrcallWithPackedStringListArg(setSupportedProtocolsBind, segment, protocols)
     }
 
     fun getHandshakeHeaders(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getHandshakeHeadersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getHandshakeHeadersBind, segment)
     }
 
     fun setHandshakeHeaders(protocols: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setHandshakeHeadersBind, handle, protocols)
+        ObjectCalls.ptrcallWithPackedStringListArg(setHandshakeHeadersBind, segment, protocols)
     }
 
     fun getInboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInboundBufferSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInboundBufferSizeBind, segment)
     }
 
     fun setInboundBufferSize(bufferSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInboundBufferSizeBind, handle, bufferSize)
+        ObjectCalls.ptrcallWithIntArg(setInboundBufferSizeBind, segment, bufferSize)
     }
 
     fun getOutboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutboundBufferSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutboundBufferSizeBind, segment)
     }
 
     fun setOutboundBufferSize(bufferSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOutboundBufferSizeBind, handle, bufferSize)
+        ObjectCalls.ptrcallWithIntArg(setOutboundBufferSizeBind, segment, bufferSize)
     }
 
     fun getHandshakeTimeout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHandshakeTimeoutBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHandshakeTimeoutBind, segment)
     }
 
     fun setHandshakeTimeout(timeout: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHandshakeTimeoutBind, handle, timeout)
+        ObjectCalls.ptrcallWithDoubleArg(setHandshakeTimeoutBind, segment, timeout)
     }
 
     fun setMaxQueuedPackets(maxQueuedPackets: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxQueuedPacketsBind, handle, maxQueuedPackets)
+        ObjectCalls.ptrcallWithIntArg(setMaxQueuedPacketsBind, segment, maxQueuedPackets)
     }
 
     fun getMaxQueuedPackets(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxQueuedPacketsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxQueuedPacketsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WebSocketMultiplayerPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WebSocketMultiplayerPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WebSocketMultiplayerPeer? =
-            if (handle.address() == 0L) null else WebSocketMultiplayerPeer(handle)
+            if (handle.address() == 0L) null else WebSocketMultiplayerPeer(GodotHandle(handle))
 
         private const val CREATE_CLIENT_HASH = 1966198364L
         private val createClientBind by lazy {

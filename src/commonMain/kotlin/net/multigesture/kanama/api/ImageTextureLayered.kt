@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ImageTextureLayered
  */
-open class ImageTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
+open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
     /**
      * Creates an `ImageTextureLayered` from an array of `Image`s. See `Image.create` for the expected
      * data format. The first image decides the width, height, image format and mipmapping setting. The
@@ -22,7 +22,7 @@ open class ImageTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
      */
     fun createFromImages(images: List<Image>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectListArgRetLong(createFromImagesBind, handle, images)
+        return ObjectCalls.ptrcallWithObjectListArgRetLong(createFromImagesBind, segment, images)
     }
 
     /**
@@ -35,16 +35,16 @@ open class ImageTextureLayered(handle: MemorySegment) : TextureLayered(handle) {
      */
     fun updateLayer(image: Image?, layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndIntArg(updateLayerBind, handle, image?.requireOpenHandle() ?: MemorySegment.NULL, layer)
+        ObjectCalls.ptrcallWithObjectAndIntArg(updateLayerBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, layer)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImageTextureLayered? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImageTextureLayered? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImageTextureLayered? =
-            if (handle.address() == 0L) null else ImageTextureLayered(handle)
+            if (handle.address() == 0L) null else ImageTextureLayered(GodotHandle(handle))
 
         private const val CREATE_FROM_IMAGES_HASH = 2785773503L
         private val createFromImagesBind by lazy {

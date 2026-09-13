@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: Joint2D
  */
-open class Joint2D(handle: MemorySegment) : Node2D(handle) {
+open class Joint2D(handle: GodotHandle) : Node2D(handle) {
     var nodeA: NodePath
         @JvmName("nodeAProperty")
         get() = getNodeA()
@@ -44,7 +44,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_node_a
      */
     fun setNodeA(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setNodeABind, handle, node)
+        ObjectCalls.ptrcallWithNodePathArg(setNodeABind, segment, node)
     }
 
     /**
@@ -53,7 +53,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_node_a
      */
     fun getNodeA(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeABind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeABind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_node_b
      */
     fun setNodeB(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setNodeBBind, handle, node)
+        ObjectCalls.ptrcallWithNodePathArg(setNodeBBind, segment, node)
     }
 
     /**
@@ -71,7 +71,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_node_b
      */
     fun getNodeB(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeBBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeBBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_bias
      */
     fun setBias(bias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, handle, bias)
+        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, segment, bias)
     }
 
     /**
@@ -95,7 +95,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_bias
      */
     fun getBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, segment)
     }
 
     /**
@@ -104,7 +104,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_exclude_nodes_from_collision
      */
     fun setExcludeNodesFromCollision(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExcludeNodesFromCollisionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setExcludeNodesFromCollisionBind, segment, enable)
     }
 
     /**
@@ -113,7 +113,7 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_exclude_nodes_from_collision
      */
     fun getExcludeNodesFromCollision(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeNodesFromCollisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeNodesFromCollisionBind, segment)
     }
 
     /**
@@ -122,16 +122,16 @@ open class Joint2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Joint2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Joint2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Joint2D? =
-            if (handle.address() == 0L) null else Joint2D(handle)
+            if (handle.address() == 0L) null else Joint2D(GodotHandle(handle))
 
         private const val SET_NODE_A_HASH = 1348162250L
         private val setNodeABind by lazy {

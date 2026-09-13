@@ -1557,8 +1557,7 @@ object ObjectCalls {
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
-  ): List<Node> =
-    ptrcallWithBoolArgRetTypedObjectList(methodBind, instance, boolArg, Node::wrap)
+  ): List<Node> = ptrcallWithBoolArgRetTypedObjectList(methodBind, instance, boolArg, Node::wrap)
 
   fun ptrcallWithStringAndBoolArgRetObjectList(
     methodBind: MemorySegment,

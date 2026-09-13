@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimatableBody2D
  */
-class AnimatableBody2D(handle: MemorySegment) : StaticBody2D(handle) {
+class AnimatableBody2D(handle: GodotHandle) : StaticBody2D(handle) {
     var syncToPhysics: Boolean
         @JvmName("syncToPhysicsProperty")
         get() = isSyncToPhysicsEnabled()
@@ -27,7 +27,7 @@ class AnimatableBody2D(handle: MemorySegment) : StaticBody2D(handle) {
      * Generated from Godot docs: AnimatableBody2D.set_sync_to_physics
      */
     fun setSyncToPhysics(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSyncToPhysicsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSyncToPhysicsBind, segment, enable)
     }
 
     /**
@@ -38,16 +38,16 @@ class AnimatableBody2D(handle: MemorySegment) : StaticBody2D(handle) {
      * Generated from Godot docs: AnimatableBody2D.is_sync_to_physics_enabled
      */
     fun isSyncToPhysicsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSyncToPhysicsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSyncToPhysicsEnabledBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimatableBody2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimatableBody2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimatableBody2D? =
-            if (handle.address() == 0L) null else AnimatableBody2D(handle)
+            if (handle.address() == 0L) null else AnimatableBody2D(GodotHandle(handle))
 
         private const val SET_SYNC_TO_PHYSICS_HASH = 2586408642L
         private val setSyncToPhysicsBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: OpenXRHand
  */
-class OpenXRHand(handle: MemorySegment) : Node3D(handle) {
+class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
     var hand: Long
         @JvmName("handProperty")
         get() = getHand()
@@ -42,43 +42,43 @@ class OpenXRHand(handle: MemorySegment) : Node3D(handle) {
         set(value) = setBoneUpdate(value)
 
     fun setHand(hand: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHandBind, handle, hand)
+        ObjectCalls.ptrcallWithLongArg(setHandBind, segment, hand)
     }
 
     fun getHand(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHandBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHandBind, segment)
     }
 
     fun setHandSkeleton(handSkeleton: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setHandSkeletonBind, handle, handSkeleton)
+        ObjectCalls.ptrcallWithNodePathArg(setHandSkeletonBind, segment, handSkeleton)
     }
 
     fun getHandSkeleton(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getHandSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getHandSkeletonBind, segment)
     }
 
     fun setMotionRange(motionRange: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMotionRangeBind, handle, motionRange)
+        ObjectCalls.ptrcallWithLongArg(setMotionRangeBind, segment, motionRange)
     }
 
     fun getMotionRange(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMotionRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMotionRangeBind, segment)
     }
 
     fun setSkeletonRig(skeletonRig: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSkeletonRigBind, handle, skeletonRig)
+        ObjectCalls.ptrcallWithLongArg(setSkeletonRigBind, segment, skeletonRig)
     }
 
     fun getSkeletonRig(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkeletonRigBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSkeletonRigBind, segment)
     }
 
     fun setBoneUpdate(boneUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, handle, boneUpdate)
+        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate)
     }
 
     fun getBoneUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment)
     }
 
     companion object {
@@ -96,11 +96,11 @@ class OpenXRHand(handle: MemorySegment) : Node3D(handle) {
         const val BONE_UPDATE_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRHand? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRHand? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRHand? =
-            if (handle.address() == 0L) null else OpenXRHand(handle)
+            if (handle.address() == 0L) null else OpenXRHand(GodotHandle(handle))
 
         private const val SET_HAND_HASH = 1849328560L
         private val setHandBind by lazy {

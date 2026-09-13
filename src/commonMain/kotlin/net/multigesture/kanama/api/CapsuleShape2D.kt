@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CapsuleShape2D
  */
-class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
+class CapsuleShape2D(handle: GodotHandle) : Shape2D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -39,7 +39,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -51,7 +51,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     /**
@@ -75,7 +75,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     /**
@@ -87,7 +87,7 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setMidHeight(midHeight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, handle, midHeight)
+        ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, segment, midHeight)
     }
 
     /**
@@ -99,16 +99,16 @@ class CapsuleShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getMidHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CapsuleShape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CapsuleShape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CapsuleShape2D? =
-            if (handle.address() == 0L) null else CapsuleShape2D(handle)
+            if (handle.address() == 0L) null else CapsuleShape2D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

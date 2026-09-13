@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CameraAttributes
  */
-open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
+open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
     var exposureSensitivity: Double
         @JvmName("exposureSensitivityProperty")
         get() = getExposureSensitivity()
@@ -49,7 +49,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun setExposureMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExposureMultiplierBind, handle, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(setExposureMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -59,7 +59,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun getExposureMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExposureMultiplierBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getExposureMultiplierBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun setExposureSensitivity(sensitivity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExposureSensitivityBind, handle, sensitivity)
+        ObjectCalls.ptrcallWithDoubleArg(setExposureSensitivityBind, segment, sensitivity)
     }
 
     /**
@@ -87,7 +87,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun getExposureSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExposureSensitivityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getExposureSensitivityBind, segment)
     }
 
     /**
@@ -100,7 +100,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun setAutoExposureEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAutoExposureEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAutoExposureEnabledBind, segment, enabled)
     }
 
     /**
@@ -113,7 +113,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun isAutoExposureEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoExposureEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAutoExposureEnabledBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun setAutoExposureSpeed(exposureSpeed: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureSpeedBind, handle, exposureSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureSpeedBind, segment, exposureSpeed)
     }
 
     /**
@@ -135,7 +135,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun getAutoExposureSpeed(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureSpeedBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun setAutoExposureScale(exposureGrey: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureScaleBind, handle, exposureGrey)
+        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureScaleBind, segment, exposureGrey)
     }
 
     /**
@@ -155,16 +155,16 @@ open class CameraAttributes(handle: MemorySegment) : Resource(handle) {
      */
     fun getAutoExposureScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureScaleBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CameraAttributes? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CameraAttributes? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CameraAttributes? =
-            if (handle.address() == 0L) null else CameraAttributes(handle)
+            if (handle.address() == 0L) null else CameraAttributes(GodotHandle(handle))
 
         private const val SET_EXPOSURE_MULTIPLIER_HASH = 373806689L
         private val setExposureMultiplierBind by lazy {

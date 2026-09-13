@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectDelay
  */
-class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
     var dry: Double
         @JvmName("dryProperty")
         get() = getDry()
@@ -98,7 +98,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setDry(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDryBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setDryBind, segment, amount)
     }
 
     /**
@@ -108,7 +108,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getDry(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap1Active(amount: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setTap1ActiveBind, handle, amount)
+        ObjectCalls.ptrcallWithBoolArg(setTap1ActiveBind, segment, amount)
     }
 
     /**
@@ -128,7 +128,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun isTap1Active(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isTap1ActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTap1ActiveBind, segment)
     }
 
     /**
@@ -139,7 +139,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap1DelayMs(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap1DelayMsBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setTap1DelayMsBind, segment, amount)
     }
 
     /**
@@ -150,7 +150,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getTap1DelayMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1DelayMsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1DelayMsBind, segment)
     }
 
     /**
@@ -160,7 +160,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap1LevelDb(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap1LevelDbBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setTap1LevelDbBind, segment, amount)
     }
 
     /**
@@ -170,7 +170,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getTap1LevelDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1LevelDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1LevelDbBind, segment)
     }
 
     /**
@@ -181,7 +181,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap1Pan(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap1PanBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setTap1PanBind, segment, amount)
     }
 
     /**
@@ -192,7 +192,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getTap1Pan(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1PanBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1PanBind, segment)
     }
 
     /**
@@ -202,7 +202,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap2Active(amount: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setTap2ActiveBind, handle, amount)
+        ObjectCalls.ptrcallWithBoolArg(setTap2ActiveBind, segment, amount)
     }
 
     /**
@@ -212,7 +212,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun isTap2Active(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isTap2ActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTap2ActiveBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap2DelayMs(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap2DelayMsBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setTap2DelayMsBind, segment, amount)
     }
 
     /**
@@ -234,7 +234,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getTap2DelayMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2DelayMsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2DelayMsBind, segment)
     }
 
     /**
@@ -244,7 +244,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap2LevelDb(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap2LevelDbBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setTap2LevelDbBind, segment, amount)
     }
 
     /**
@@ -254,7 +254,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getTap2LevelDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2LevelDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2LevelDbBind, segment)
     }
 
     /**
@@ -265,7 +265,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setTap2Pan(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap2PanBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setTap2PanBind, segment, amount)
     }
 
     /**
@@ -276,7 +276,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getTap2Pan(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2PanBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2PanBind, segment)
     }
 
     /**
@@ -286,7 +286,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setFeedbackActive(amount: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFeedbackActiveBind, handle, amount)
+        ObjectCalls.ptrcallWithBoolArg(setFeedbackActiveBind, segment, amount)
     }
 
     /**
@@ -296,7 +296,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun isFeedbackActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFeedbackActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFeedbackActiveBind, segment)
     }
 
     /**
@@ -306,7 +306,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setFeedbackDelayMs(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackDelayMsBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setFeedbackDelayMsBind, segment, amount)
     }
 
     /**
@@ -316,7 +316,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getFeedbackDelayMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackDelayMsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackDelayMsBind, segment)
     }
 
     /**
@@ -326,7 +326,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setFeedbackLevelDb(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackLevelDbBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setFeedbackLevelDbBind, segment, amount)
     }
 
     /**
@@ -336,7 +336,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getFeedbackLevelDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLevelDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLevelDbBind, segment)
     }
 
     /**
@@ -347,7 +347,7 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setFeedbackLowpass(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackLowpassBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setFeedbackLowpassBind, segment, amount)
     }
 
     /**
@@ -358,16 +358,16 @@ class AudioEffectDelay(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getFeedbackLowpass(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLowpassBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLowpassBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectDelay? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectDelay? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectDelay? =
-            if (handle.address() == 0L) null else AudioEffectDelay(handle)
+            if (handle.address() == 0L) null else AudioEffectDelay(GodotHandle(handle))
 
         private const val SET_DRY_HASH = 373806689L
         private val setDryBind by lazy {

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicsPointQueryParameters3D
  */
-class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) {
+class PhysicsPointQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     var position: Vector3
         @JvmName("positionProperty")
         get() = getPosition()
@@ -51,7 +51,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setPosition(position: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, segment, position)
     }
 
     /**
@@ -61,7 +61,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getPosition(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollisionMask(collisionMask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -87,7 +87,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -100,7 +100,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setExclude(exclude: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
+        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
     }
 
     /**
@@ -113,7 +113,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun getExclude(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, segment)
     }
 
     /**
@@ -123,7 +123,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollideWithBodies(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -133,7 +133,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isCollideWithBodiesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun setCollideWithAreas(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -153,16 +153,16 @@ class PhysicsPointQueryParameters3D(handle: MemorySegment) : RefCounted(handle) 
      */
     fun isCollideWithAreasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsPointQueryParameters3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsPointQueryParameters3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsPointQueryParameters3D? =
-            if (handle.address() == 0L) null else PhysicsPointQueryParameters3D(handle)
+            if (handle.address() == 0L) null else PhysicsPointQueryParameters3D(GodotHandle(handle))
 
         private const val SET_POSITION_HASH = 3460891852L
         private val setPositionBind by lazy {

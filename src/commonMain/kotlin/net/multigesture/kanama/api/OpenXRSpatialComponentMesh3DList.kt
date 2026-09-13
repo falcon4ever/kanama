@@ -9,24 +9,24 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: OpenXRSpatialComponentMesh3DList
  */
-class OpenXRSpatialComponentMesh3DList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+class OpenXRSpatialComponentMesh3DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getTransform(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, segment, index)
     }
 
     fun getMesh(index: Long): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getMeshBind, handle, index))
+        return Mesh.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getMeshBind, segment, index))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentMesh3DList? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentMesh3DList? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentMesh3DList? =
-            if (handle.address() == 0L) null else OpenXRSpatialComponentMesh3DList(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialComponentMesh3DList(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 1965739696L
         private val getTransformBind by lazy {

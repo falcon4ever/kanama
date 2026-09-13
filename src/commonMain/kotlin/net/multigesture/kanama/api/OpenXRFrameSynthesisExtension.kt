@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRFrameSynthesisExtension
  */
-class OpenXRFrameSynthesisExtension(handle: MemorySegment) : OpenXRExtensionWrapper(handle) {
+class OpenXRFrameSynthesisExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = isEnabled()
@@ -23,36 +23,36 @@ class OpenXRFrameSynthesisExtension(handle: MemorySegment) : OpenXRExtensionWrap
         set(value) = setRelaxFrameInterval(value)
 
     fun isAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAvailableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAvailableBind, segment)
     }
 
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     fun setEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enable)
     }
 
     fun getRelaxFrameInterval(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getRelaxFrameIntervalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getRelaxFrameIntervalBind, segment)
     }
 
     fun setRelaxFrameInterval(relaxFrameInterval: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRelaxFrameIntervalBind, handle, relaxFrameInterval)
+        ObjectCalls.ptrcallWithBoolArg(setRelaxFrameIntervalBind, segment, relaxFrameInterval)
     }
 
     fun skipNextFrame() {
-        ObjectCalls.ptrcallNoArgs(skipNextFrameBind, handle)
+        ObjectCalls.ptrcallNoArgs(skipNextFrameBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRFrameSynthesisExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRFrameSynthesisExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRFrameSynthesisExtension? =
-            if (handle.address() == 0L) null else OpenXRFrameSynthesisExtension(handle)
+            if (handle.address() == 0L) null else OpenXRFrameSynthesisExtension(GodotHandle(handle))
 
         private const val IS_AVAILABLE_HASH = 36873697L
         private val isAvailableBind by lazy {

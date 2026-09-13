@@ -8,119 +8,119 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeGroupBase
  */
-open class VisualShaderNodeGroupBase(handle: MemorySegment) : VisualShaderNodeResizableBase(handle) {
+open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResizableBase(handle) {
     fun setInputs(inputs: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setInputsBind, handle, inputs)
+        ObjectCalls.ptrcallWithStringArg(setInputsBind, segment, inputs)
     }
 
     fun getInputs(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInputsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getInputsBind, segment)
     }
 
     fun setOutputs(outputs: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOutputsBind, handle, outputs)
+        ObjectCalls.ptrcallWithStringArg(setOutputsBind, segment, outputs)
     }
 
     fun getOutputs(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOutputsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOutputsBind, segment)
     }
 
     fun isValidPortName(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isValidPortNameBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(isValidPortNameBind, segment, name)
     }
 
     fun addInputPort(id: Int, type: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(addInputPortBind, handle, id, type, name)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(addInputPortBind, segment, id, type, name)
     }
 
     fun removeInputPort(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeInputPortBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(removeInputPortBind, segment, id)
     }
 
     fun getInputPortCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInputPortCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInputPortCountBind, segment)
     }
 
     fun hasInputPort(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasInputPortBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasInputPortBind, segment, id)
     }
 
     fun clearInputPorts() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearInputPortsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearInputPortsBind, segment)
     }
 
     fun addOutputPort(id: Int, type: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(addOutputPortBind, handle, id, type, name)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(addOutputPortBind, segment, id, type, name)
     }
 
     fun removeOutputPort(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeOutputPortBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(removeOutputPortBind, segment, id)
     }
 
     fun getOutputPortCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortCountBind, segment)
     }
 
     fun hasOutputPort(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasOutputPortBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetBool(hasOutputPortBind, segment, id)
     }
 
     fun clearOutputPorts() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearOutputPortsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearOutputPortsBind, segment)
     }
 
     fun setInputPortName(id: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setInputPortNameBind, handle, id, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setInputPortNameBind, segment, id, name)
     }
 
     fun setInputPortType(id: Int, type: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setInputPortTypeBind, handle, id, type)
+        ObjectCalls.ptrcallWithTwoIntArgs(setInputPortTypeBind, segment, id, type)
     }
 
     fun setOutputPortName(id: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setOutputPortNameBind, handle, id, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setOutputPortNameBind, segment, id, name)
     }
 
     fun setOutputPortType(id: Int, type: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setOutputPortTypeBind, handle, id, type)
+        ObjectCalls.ptrcallWithTwoIntArgs(setOutputPortTypeBind, segment, id, type)
     }
 
     fun getFreeInputPortId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFreeInputPortIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFreeInputPortIdBind, segment)
     }
 
     fun getFreeOutputPortId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFreeOutputPortIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFreeOutputPortIdBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeGroupBase? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeGroupBase? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeGroupBase? =
-            if (handle.address() == 0L) null else VisualShaderNodeGroupBase(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeGroupBase(GodotHandle(handle))
 
         private const val SET_INPUTS_HASH = 83702148L
         private val setInputsBind by lazy {

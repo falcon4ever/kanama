@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HScrollBar
  */
-class HScrollBar(handle: MemorySegment) : ScrollBar(handle) {
+class HScrollBar(handle: GodotHandle) : ScrollBar(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HScrollBar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HScrollBar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HScrollBar? =
-            if (handle.address() == 0L) null else HScrollBar(handle)
+            if (handle.address() == 0L) null else HScrollBar(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

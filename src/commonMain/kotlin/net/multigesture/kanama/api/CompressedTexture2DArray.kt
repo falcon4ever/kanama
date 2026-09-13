@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CompressedTexture2DArray
  */
-class CompressedTexture2DArray(handle: MemorySegment) : CompressedTextureLayered(handle) {
+class CompressedTexture2DArray(handle: GodotHandle) : CompressedTextureLayered(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CompressedTexture2DArray? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CompressedTexture2DArray? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CompressedTexture2DArray? =
-            if (handle.address() == 0L) null else CompressedTexture2DArray(handle)
+            if (handle.address() == 0L) null else CompressedTexture2DArray(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

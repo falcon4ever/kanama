@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Separator
  */
-open class Separator(handle: MemorySegment) : Control(handle) {
+open class Separator(handle: GodotHandle) : Control(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Separator? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Separator? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Separator? =
-            if (handle.address() == 0L) null else Separator(handle)
+            if (handle.address() == 0L) null else Separator(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

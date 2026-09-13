@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDSamplerState
  */
-class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
+class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     var magFilter: Long
         @JvmName("magFilterProperty")
         get() = getMagFilter()
@@ -110,7 +110,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMagFilter(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, pMember)
     }
 
     /**
@@ -121,7 +121,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMagFilter(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMinFilter(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, pMember)
     }
 
     /**
@@ -143,7 +143,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMinFilter(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment)
     }
 
     /**
@@ -153,7 +153,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMipFilter(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMipFilterBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setMipFilterBind, segment, pMember)
     }
 
     /**
@@ -163,7 +163,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMipFilter(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, segment)
     }
 
     /**
@@ -174,7 +174,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setRepeatU(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatUBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setRepeatUBind, segment, pMember)
     }
 
     /**
@@ -185,7 +185,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRepeatU(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setRepeatV(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatVBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setRepeatVBind, segment, pMember)
     }
 
     /**
@@ -207,7 +207,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRepeatV(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, segment)
     }
 
     /**
@@ -218,7 +218,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setRepeatW(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatWBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setRepeatWBind, segment, pMember)
     }
 
     /**
@@ -229,7 +229,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRepeatW(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, segment)
     }
 
     /**
@@ -242,7 +242,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLodBias(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, segment, pMember)
     }
 
     /**
@@ -255,7 +255,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLodBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, segment)
     }
 
     /**
@@ -265,7 +265,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setUseAnisotropy(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseAnisotropyBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setUseAnisotropyBind, segment, pMember)
     }
 
     /**
@@ -275,7 +275,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getUseAnisotropy(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseAnisotropyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseAnisotropyBind, segment)
     }
 
     /**
@@ -289,7 +289,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setAnisotropyMax(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAnisotropyMaxBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setAnisotropyMaxBind, segment, pMember)
     }
 
     /**
@@ -303,7 +303,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAnisotropyMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyMaxBind, segment)
     }
 
     /**
@@ -316,7 +316,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableCompare(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableCompareBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableCompareBind, segment, pMember)
     }
 
     /**
@@ -329,7 +329,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableCompare(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableCompareBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableCompareBind, segment)
     }
 
     /**
@@ -339,7 +339,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCompareOp(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCompareOpBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setCompareOpBind, segment, pMember)
     }
 
     /**
@@ -349,7 +349,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCompareOp(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, segment)
     }
 
     /**
@@ -360,7 +360,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMinLod(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinLodBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setMinLodBind, segment, pMember)
     }
 
     /**
@@ -371,7 +371,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMinLod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinLodBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinLodBind, segment)
     }
 
     /**
@@ -382,7 +382,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMaxLod(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxLodBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxLodBind, segment, pMember)
     }
 
     /**
@@ -393,7 +393,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMaxLod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxLodBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxLodBind, segment)
     }
 
     /**
@@ -404,7 +404,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBorderColor(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBorderColorBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBorderColorBind, segment, pMember)
     }
 
     /**
@@ -415,7 +415,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBorderColor(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, segment)
     }
 
     /**
@@ -426,7 +426,7 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setUnnormalizedUvw(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUnnormalizedUvwBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setUnnormalizedUvwBind, segment, pMember)
     }
 
     /**
@@ -437,16 +437,16 @@ class RDSamplerState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getUnnormalizedUvw(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUnnormalizedUvwBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUnnormalizedUvwBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDSamplerState? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDSamplerState? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDSamplerState? =
-            if (handle.address() == 0L) null else RDSamplerState(handle)
+            if (handle.address() == 0L) null else RDSamplerState(GodotHandle(handle))
 
         private const val SET_MAG_FILTER_HASH = 1493420382L
         private val setMagFilterBind by lazy {

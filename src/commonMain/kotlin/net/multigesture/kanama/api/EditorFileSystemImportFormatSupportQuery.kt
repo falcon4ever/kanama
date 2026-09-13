@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorFileSystemImportFormatSupportQuery
  */
-class EditorFileSystemImportFormatSupportQuery(handle: MemorySegment) : RefCounted(handle) {
+class EditorFileSystemImportFormatSupportQuery(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorFileSystemImportFormatSupportQuery? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorFileSystemImportFormatSupportQuery? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorFileSystemImportFormatSupportQuery? =
-            if (handle.address() == 0L) null else EditorFileSystemImportFormatSupportQuery(handle)
+            if (handle.address() == 0L) null else EditorFileSystemImportFormatSupportQuery(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

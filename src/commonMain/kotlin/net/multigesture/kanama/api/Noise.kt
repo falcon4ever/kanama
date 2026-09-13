@@ -10,59 +10,59 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: Noise
  */
-open class Noise(handle: MemorySegment) : Resource(handle) {
+open class Noise(handle: GodotHandle) : Resource(handle) {
     fun getNoise1d(x: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(getNoise1dBind, handle, x)
+        return ObjectCalls.ptrcallWithFloatArgRetFloat(getNoise1dBind, segment, x)
     }
 
     fun getNoise2d(x: Double, y: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(getNoise2dBind, handle, x, y)
+        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(getNoise2dBind, segment, x, y)
     }
 
     fun getNoise2dv(v: Vector2): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getNoise2dvBind, handle, v)
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getNoise2dvBind, segment, v)
     }
 
     fun getNoise3d(x: Double, y: Double, z: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeDoubleArgsRetDouble(getNoise3dBind, handle, x, y, z)
+        return ObjectCalls.ptrcallWithThreeDoubleArgsRetDouble(getNoise3dBind, segment, x, y, z)
     }
 
     fun getNoise3dv(v: Vector3): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetDouble(getNoise3dvBind, handle, v)
+        return ObjectCalls.ptrcallWithVector3ArgRetDouble(getNoise3dvBind, segment, v)
     }
 
     fun getImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getImageBind, handle, width, height, invert, in3dSpace, normalize))
+        return Image.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getImageBind, segment, width, height, invert, in3dSpace, normalize))
     }
 
     fun getSeamlessImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(getSeamlessImageBind, handle, width, height, invert, in3dSpace, skirt, normalize))
+        return Image.wrap(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(getSeamlessImageBind, segment, width, height, invert, in3dSpace, skirt, normalize))
     }
 
     fun getImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(getImage3dBind, handle, width, height, depth, invert, normalize, Image::fromHandle)
+        return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(getImage3dBind, segment, width, height, depth, invert, normalize, Image::wrap)
     }
 
     fun getSeamlessImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(getSeamlessImage3dBind, handle, width, height, depth, invert, skirt, normalize, Image::fromHandle)
+        return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(getSeamlessImage3dBind, segment, width, height, depth, invert, skirt, normalize, Image::wrap)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Noise? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Noise? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Noise? =
-            if (handle.address() == 0L) null else Noise(handle)
+            if (handle.address() == 0L) null else Noise(GodotHandle(handle))
 
         private const val GET_NOISE_1D_HASH = 3919130443L
         private val getNoise1dBind by lazy {

@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: NavigationAgent2D
  */
-class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
+class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
     var targetPosition: Vector2
         @JvmName("targetPositionProperty")
         get() = getTargetPosition()
@@ -201,7 +201,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_enabled
      */
     fun setAvoidanceEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, segment, enabled)
     }
 
     /**
@@ -227,7 +227,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_enabled
      */
     fun getAvoidanceEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, segment)
     }
 
     /**
@@ -241,7 +241,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_desired_distance
      */
     fun setPathDesiredDistance(desiredDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathDesiredDistanceBind, handle, desiredDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setPathDesiredDistanceBind, segment, desiredDistance)
     }
 
     /**
@@ -255,7 +255,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_desired_distance
      */
     fun getPathDesiredDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathDesiredDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathDesiredDistanceBind, segment)
     }
 
     /**
@@ -272,7 +272,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_target_desired_distance
      */
     fun setTargetDesiredDistance(desiredDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTargetDesiredDistanceBind, handle, desiredDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setTargetDesiredDistanceBind, segment, desiredDistance)
     }
 
     /**
@@ -289,7 +289,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_target_desired_distance
      */
     fun getTargetDesiredDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetDesiredDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetDesiredDistanceBind, segment)
     }
 
     /**
@@ -302,7 +302,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -315,7 +315,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -324,7 +324,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_neighbor_distance
      */
     fun setNeighborDistance(neighborDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNeighborDistanceBind, handle, neighborDistance)
+        ObjectCalls.ptrcallWithDoubleArg(setNeighborDistanceBind, segment, neighborDistance)
     }
 
     /**
@@ -333,7 +333,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_neighbor_distance
      */
     fun getNeighborDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNeighborDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getNeighborDistanceBind, segment)
     }
 
     /**
@@ -342,7 +342,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_max_neighbors
      */
     fun setMaxNeighbors(maxNeighbors: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxNeighborsBind, handle, maxNeighbors)
+        ObjectCalls.ptrcallWithIntArg(setMaxNeighborsBind, segment, maxNeighbors)
     }
 
     /**
@@ -351,7 +351,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_max_neighbors
      */
     fun getMaxNeighbors(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxNeighborsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxNeighborsBind, segment)
     }
 
     /**
@@ -363,7 +363,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_time_horizon_agents
      */
     fun setTimeHorizonAgents(timeHorizon: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTimeHorizonAgentsBind, handle, timeHorizon)
+        ObjectCalls.ptrcallWithDoubleArg(setTimeHorizonAgentsBind, segment, timeHorizon)
     }
 
     /**
@@ -375,7 +375,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_time_horizon_agents
      */
     fun getTimeHorizonAgents(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeHorizonAgentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeHorizonAgentsBind, segment)
     }
 
     /**
@@ -388,7 +388,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_time_horizon_obstacles
      */
     fun setTimeHorizonObstacles(timeHorizon: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTimeHorizonObstaclesBind, handle, timeHorizon)
+        ObjectCalls.ptrcallWithDoubleArg(setTimeHorizonObstaclesBind, segment, timeHorizon)
     }
 
     /**
@@ -401,7 +401,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_time_horizon_obstacles
      */
     fun getTimeHorizonObstacles(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeHorizonObstaclesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeHorizonObstaclesBind, segment)
     }
 
     /**
@@ -410,7 +410,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_max_speed
      */
     fun setMaxSpeed(maxSpeed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxSpeedBind, handle, maxSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxSpeedBind, segment, maxSpeed)
     }
 
     /**
@@ -419,7 +419,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_max_speed
      */
     fun getMaxSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxSpeedBind, segment)
     }
 
     /**
@@ -430,7 +430,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_max_distance
      */
     fun setPathMaxDistance(maxSpeed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathMaxDistanceBind, handle, maxSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(setPathMaxDistanceBind, segment, maxSpeed)
     }
 
     /**
@@ -441,7 +441,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_max_distance
      */
     fun getPathMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathMaxDistanceBind, segment)
     }
 
     /**
@@ -452,7 +452,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_navigation_layers
      */
     fun setNavigationLayers(navigationLayers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, handle, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -463,7 +463,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_navigation_layers
      */
     fun getNavigationLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
     }
 
     /**
@@ -473,7 +473,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_navigation_layer_value
      */
     fun setNavigationLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -483,7 +483,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_navigation_layer_value
      */
     fun getNavigationLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -492,7 +492,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_pathfinding_algorithm
      */
     fun setPathfindingAlgorithm(pathfindingAlgorithm: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, handle, pathfindingAlgorithm)
+        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm)
     }
 
     /**
@@ -501,7 +501,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_pathfinding_algorithm
      */
     fun getPathfindingAlgorithm(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment)
     }
 
     /**
@@ -510,7 +510,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_postprocessing
      */
     fun setPathPostprocessing(pathPostprocessing: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, handle, pathPostprocessing)
+        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing)
     }
 
     /**
@@ -519,7 +519,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_postprocessing
      */
     fun getPathPostprocessing(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment)
     }
 
     /**
@@ -528,7 +528,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_metadata_flags
      */
     fun setPathMetadataFlags(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathMetadataFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setPathMetadataFlagsBind, segment, flags)
     }
 
     /**
@@ -537,7 +537,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_metadata_flags
      */
     fun getPathMetadataFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathMetadataFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPathMetadataFlagsBind, segment)
     }
 
     /**
@@ -547,7 +547,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, handle, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -560,7 +560,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -570,7 +570,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_target_position
      */
     fun setTargetPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, segment, position)
     }
 
     /**
@@ -580,7 +580,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_target_position
      */
     fun getTargetPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, segment)
     }
 
     /**
@@ -593,7 +593,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_simplify_path
      */
     fun setSimplifyPath(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, segment, enabled)
     }
 
     /**
@@ -606,7 +606,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_simplify_path
      */
     fun getSimplifyPath(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, segment)
     }
 
     /**
@@ -615,7 +615,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_simplify_epsilon
      */
     fun setSimplifyEpsilon(epsilon: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, handle, epsilon)
+        ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, segment, epsilon)
     }
 
     /**
@@ -624,7 +624,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_simplify_epsilon
      */
     fun getSimplifyEpsilon(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, segment)
     }
 
     /**
@@ -634,7 +634,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_return_max_length
      */
     fun setPathReturnMaxLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, segment, length)
     }
 
     /**
@@ -644,7 +644,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_return_max_length
      */
     fun getPathReturnMaxLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, segment)
     }
 
     /**
@@ -657,7 +657,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_return_max_radius
      */
     fun setPathReturnMaxRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, segment, radius)
     }
 
     /**
@@ -670,7 +670,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_return_max_radius
      */
     fun getPathReturnMaxRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, segment)
     }
 
     /**
@@ -684,7 +684,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_search_max_polygons
      */
     fun setPathSearchMaxPolygons(maxPolygons: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, handle, maxPolygons)
+        ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, segment, maxPolygons)
     }
 
     /**
@@ -698,7 +698,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_search_max_polygons
      */
     fun getPathSearchMaxPolygons(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, segment)
     }
 
     /**
@@ -713,7 +713,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_search_max_distance
      */
     fun setPathSearchMaxDistance(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, handle, distance)
+        ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -728,7 +728,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_search_max_distance
      */
     fun getPathSearchMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, segment)
     }
 
     /**
@@ -738,7 +738,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_length
      */
     fun getPathLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, segment)
     }
 
     /**
@@ -750,7 +750,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_next_path_position
      */
     fun getNextPathPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getNextPathPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getNextPathPositionBind, segment)
     }
 
     /**
@@ -761,7 +761,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_velocity_forced
      */
     fun setVelocityForced(velocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityForcedBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(setVelocityForcedBind, segment, velocity)
     }
 
     /**
@@ -773,7 +773,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_velocity
      */
     fun setVelocity(velocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
     }
 
     /**
@@ -785,7 +785,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_velocity
      */
     fun getVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
     }
 
     /**
@@ -795,7 +795,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.distance_to_target
      */
     fun distanceToTarget(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(distanceToTargetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(distanceToTargetBind, segment)
     }
 
     /**
@@ -804,7 +804,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_current_navigation_result
      */
     fun getCurrentNavigationResult(): NavigationPathQueryResult2D? {
-        return NavigationPathQueryResult2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentNavigationResultBind, handle))
+        return NavigationPathQueryResult2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentNavigationResultBind, segment))
     }
 
     /**
@@ -818,7 +818,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_current_navigation_path
      */
     fun getCurrentNavigationPath(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getCurrentNavigationPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getCurrentNavigationPathBind, segment)
     }
 
     /**
@@ -827,7 +827,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_current_navigation_path_index
      */
     fun getCurrentNavigationPathIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentNavigationPathIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentNavigationPathIndexBind, segment)
     }
 
     /**
@@ -838,7 +838,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.is_target_reached
      */
     fun isTargetReached(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTargetReachedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTargetReachedBind, segment)
     }
 
     /**
@@ -848,7 +848,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.is_target_reachable
      */
     fun isTargetReachable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTargetReachableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isTargetReachableBind, segment)
     }
 
     /**
@@ -861,7 +861,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.is_navigation_finished
      */
     fun isNavigationFinished(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNavigationFinishedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNavigationFinishedBind, segment)
     }
 
     /**
@@ -872,7 +872,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_final_position
      */
     fun getFinalPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFinalPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getFinalPositionBind, segment)
     }
 
     /**
@@ -882,7 +882,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_layers
      */
     fun setAvoidanceLayers(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, handle, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, segment, layers)
     }
 
     /**
@@ -892,7 +892,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_layers
      */
     fun getAvoidanceLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, segment)
     }
 
     /**
@@ -902,7 +902,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_mask
      */
     fun setAvoidanceMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceMaskBind, segment, mask)
     }
 
     /**
@@ -912,7 +912,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_mask
      */
     fun getAvoidanceMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceMaskBind, segment)
     }
 
     /**
@@ -922,7 +922,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_layer_value
      */
     fun setAvoidanceLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -932,7 +932,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_layer_value
      */
     fun getAvoidanceLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -942,7 +942,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_mask_value
      */
     fun setAvoidanceMaskValue(maskNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceMaskValueBind, handle, maskNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceMaskValueBind, segment, maskNumber, value)
     }
 
     /**
@@ -952,7 +952,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_mask_value
      */
     fun getAvoidanceMaskValue(maskNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceMaskValueBind, handle, maskNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceMaskValueBind, segment, maskNumber)
     }
 
     /**
@@ -963,7 +963,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_priority
      */
     fun setAvoidancePriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAvoidancePriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithDoubleArg(setAvoidancePriorityBind, segment, priority)
     }
 
     /**
@@ -974,7 +974,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_priority
      */
     fun getAvoidancePriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAvoidancePriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAvoidancePriorityBind, segment)
     }
 
     /**
@@ -983,7 +983,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_enabled
      */
     fun setDebugEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDebugEnabledBind, segment, enabled)
     }
 
     /**
@@ -992,7 +992,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_enabled
      */
     fun getDebugEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDebugEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDebugEnabledBind, segment)
     }
 
     /**
@@ -1001,7 +1001,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_use_custom
      */
     fun setDebugUseCustom(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugUseCustomBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDebugUseCustomBind, segment, enabled)
     }
 
     /**
@@ -1010,7 +1010,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_use_custom
      */
     fun getDebugUseCustom(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDebugUseCustomBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDebugUseCustomBind, segment)
     }
 
     /**
@@ -1019,7 +1019,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_path_custom_color
      */
     fun setDebugPathCustomColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugPathCustomColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setDebugPathCustomColorBind, segment, color)
     }
 
     /**
@@ -1028,7 +1028,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_path_custom_color
      */
     fun getDebugPathCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugPathCustomColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDebugPathCustomColorBind, segment)
     }
 
     /**
@@ -1038,7 +1038,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_path_custom_point_size
      */
     fun setDebugPathCustomPointSize(pointSize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDebugPathCustomPointSizeBind, handle, pointSize)
+        ObjectCalls.ptrcallWithDoubleArg(setDebugPathCustomPointSizeBind, segment, pointSize)
     }
 
     /**
@@ -1048,7 +1048,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_path_custom_point_size
      */
     fun getDebugPathCustomPointSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDebugPathCustomPointSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDebugPathCustomPointSizeBind, segment)
     }
 
     /**
@@ -1058,7 +1058,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_path_custom_line_width
      */
     fun setDebugPathCustomLineWidth(lineWidth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDebugPathCustomLineWidthBind, handle, lineWidth)
+        ObjectCalls.ptrcallWithDoubleArg(setDebugPathCustomLineWidthBind, segment, lineWidth)
     }
 
     /**
@@ -1068,7 +1068,7 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_path_custom_line_width
      */
     fun getDebugPathCustomLineWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDebugPathCustomLineWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDebugPathCustomLineWidthBind, segment)
     }
 
     object Signals {
@@ -1082,11 +1082,11 @@ class NavigationAgent2D(handle: MemorySegment) : Node(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationAgent2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationAgent2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationAgent2D? =
-            if (handle.address() == 0L) null else NavigationAgent2D(handle)
+            if (handle.address() == 0L) null else NavigationAgent2D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L
         private val getRidBind by lazy {

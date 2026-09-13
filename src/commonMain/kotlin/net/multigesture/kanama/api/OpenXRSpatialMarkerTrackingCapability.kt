@@ -9,38 +9,38 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability
  */
-class OpenXRSpatialMarkerTrackingCapability(handle: MemorySegment) : OpenXRExtensionWrapper(handle) {
+class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     fun isQrcodeSupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isQrcodeSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isQrcodeSupportedBind, segment)
     }
 
     fun isMicroQrcodeSupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMicroQrcodeSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMicroQrcodeSupportedBind, segment)
     }
 
     fun isArucoSupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isArucoSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isArucoSupportedBind, segment)
     }
 
     fun isAprilTagSupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAprilTagSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAprilTagSupportedBind, segment)
     }
 
     fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(startEntityDiscoveryBind, handle, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.handle, userCallback.method))
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.segment, userCallback.method))
     }
 
     fun doEntityUpdate(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?) {
-        ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(doEntityUpdateBind, handle, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(doEntityUpdateBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialMarkerTrackingCapability? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialMarkerTrackingCapability? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialMarkerTrackingCapability? =
-            if (handle.address() == 0L) null else OpenXRSpatialMarkerTrackingCapability(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialMarkerTrackingCapability(GodotHandle(handle))
 
         private const val IS_QRCODE_SUPPORTED_HASH = 2240911060L
         private val isQrcodeSupportedBind by lazy {

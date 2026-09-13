@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: EditorNode3DGizmo
  */
-class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
+class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     /**
      * Adds lines to the gizmo (as sets of 2 points), with a given material. The lines are used for
      * visualizing the gizmo. Call this method during `_redraw`.
@@ -22,7 +22,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun addLines(lines: List<Vector3>, material: Material?, billboard: Boolean = false, modulate: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListObjectBoolColorArgs(addLinesBind, handle, lines, material?.requireOpenHandle() ?: MemorySegment.NULL, billboard, modulate)
+        ObjectCalls.ptrcallWithPackedVector3ListObjectBoolColorArgs(addLinesBind, segment, lines, material?.requireOpenHandle() ?: MemorySegment.NULL, billboard, modulate)
     }
 
     /**
@@ -33,7 +33,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun addMesh(mesh: Mesh?, material: Material?, transform: Transform3D, skeleton: SkinReference?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(addMeshBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, material?.requireOpenHandle() ?: MemorySegment.NULL, transform, skeleton?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(addMeshBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, material?.requireOpenHandle() ?: MemorySegment.NULL, transform, skeleton?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -44,7 +44,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun addCollisionSegments(segments: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(addCollisionSegmentsBind, handle, segments)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(addCollisionSegmentsBind, segment, segments)
     }
 
     /**
@@ -55,7 +55,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun addCollisionTriangles(triangles: TriangleMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addCollisionTrianglesBind, handle, listOf(triangles?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addCollisionTrianglesBind, segment, listOf(triangles?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -65,7 +65,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun addUnscaledBillboard(material: Material?, defaultScale: Double = 1.0, modulate: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectDoubleColorArgs(addUnscaledBillboardBind, handle, material?.requireOpenHandle() ?: MemorySegment.NULL, defaultScale, modulate)
+        ObjectCalls.ptrcallWithObjectDoubleColorArgs(addUnscaledBillboardBind, segment, material?.requireOpenHandle() ?: MemorySegment.NULL, defaultScale, modulate)
     }
 
     /**
@@ -83,7 +83,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun addHandles(handles: List<Vector3>, material: Material?, ids: List<Int>, billboard: Boolean = false, secondary: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(addHandlesBind, handle, handles, material?.requireOpenHandle() ?: MemorySegment.NULL, ids, billboard, secondary)
+        ObjectCalls.ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(addHandlesBind, segment, handles, material?.requireOpenHandle() ?: MemorySegment.NULL, ids, billboard, secondary)
     }
 
     /**
@@ -93,7 +93,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun setNode3d(node: Node) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNode3dBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(setNode3dBind, segment, listOf(node.segment))
     }
 
     /**
@@ -103,7 +103,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun getNode3d(): Node3D? {
         checkOpen()
-        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNode3dBind, handle))
+        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNode3dBind, segment))
     }
 
     /**
@@ -114,7 +114,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun getPlugin(): EditorNode3DGizmoPlugin? {
         checkOpen()
-        return EditorNode3DGizmoPlugin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPluginBind, handle))
+        return EditorNode3DGizmoPlugin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPluginBind, segment))
     }
 
     /**
@@ -124,7 +124,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -135,7 +135,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun setHidden(hidden: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHiddenBind, handle, hidden)
+        ObjectCalls.ptrcallWithBoolArg(setHiddenBind, segment, hidden)
     }
 
     /**
@@ -146,7 +146,7 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun isSubgizmoSelected(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSubgizmoSelectedBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isSubgizmoSelectedBind, segment, id)
     }
 
     /**
@@ -157,16 +157,16 @@ class EditorNode3DGizmo(handle: MemorySegment) : Node3DGizmo(handle) {
      */
     fun getSubgizmoSelection(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSubgizmoSelectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSubgizmoSelectionBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorNode3DGizmo? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorNode3DGizmo? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorNode3DGizmo? =
-            if (handle.address() == 0L) null else EditorNode3DGizmo(handle)
+            if (handle.address() == 0L) null else EditorNode3DGizmo(GodotHandle(handle))
 
         private const val ADD_LINES_HASH = 2910971437L
         private val addLinesBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PacketPeer
  */
-open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
+open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
     var encodeBufferMaxSize: Int
         @JvmName("encodeBufferMaxSizeProperty")
         get() = getEncodeBufferMaxSize()
@@ -28,7 +28,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVar(allowObjects: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, handle, allowObjects)
+        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, segment, allowObjects)
     }
 
     /**
@@ -40,7 +40,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putVar(varValue: Any?, fullObjects: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(putVarBind, handle, varValue, fullObjects)
+        return ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(putVarBind, segment, varValue, fullObjects)
     }
 
     /**
@@ -50,7 +50,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPacket(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getPacketBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getPacketBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun putPacket(buffer: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putPacketBind, handle, buffer)
+        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putPacketBind, segment, buffer)
     }
 
     /**
@@ -70,7 +70,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPacketError(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getAvailablePacketCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAvailablePacketCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAvailablePacketCountBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEncodeBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEncodeBufferMaxSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getEncodeBufferMaxSizeBind, segment)
     }
 
     /**
@@ -106,16 +106,16 @@ open class PacketPeer(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEncodeBufferMaxSize(maxSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setEncodeBufferMaxSizeBind, handle, maxSize)
+        ObjectCalls.ptrcallWithIntArg(setEncodeBufferMaxSizeBind, segment, maxSize)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PacketPeer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PacketPeer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PacketPeer? =
-            if (handle.address() == 0L) null else PacketPeer(handle)
+            if (handle.address() == 0L) null else PacketPeer(GodotHandle(handle))
 
         private const val GET_VAR_HASH = 3442865206L
         private val getVarBind by lazy {

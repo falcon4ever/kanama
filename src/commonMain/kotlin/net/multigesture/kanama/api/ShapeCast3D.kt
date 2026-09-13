@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: ShapeCast3D
  */
-class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
+class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = isEnabled()
@@ -85,7 +85,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.resource_changed
      */
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, handle, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -94,7 +94,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -103,7 +103,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
     }
 
     /**
@@ -112,7 +112,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_shape
      */
     fun setShape(shape: Shape3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -121,7 +121,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_shape
      */
     fun getShape(): Shape3D? {
-        return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
+        return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**
@@ -130,7 +130,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_target_position
      */
     fun setTargetPosition(localPoint: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setTargetPositionBind, handle, localPoint)
+        ObjectCalls.ptrcallWithVector3Arg(setTargetPositionBind, segment, localPoint)
     }
 
     /**
@@ -139,7 +139,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_target_position
      */
     fun getTargetPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTargetPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getTargetPositionBind, segment)
     }
 
     /**
@@ -149,7 +149,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_margin
      */
     fun setMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, handle, margin)
+        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
     }
 
     /**
@@ -159,7 +159,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_margin
      */
     fun getMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
     }
 
     /**
@@ -168,7 +168,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_max_results
      */
     fun setMaxResults(maxResults: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxResultsBind, handle, maxResults)
+        ObjectCalls.ptrcallWithIntArg(setMaxResultsBind, segment, maxResults)
     }
 
     /**
@@ -177,7 +177,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_max_results
      */
     fun getMaxResults(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxResultsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMaxResultsBind, segment)
     }
 
     /**
@@ -187,7 +187,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.is_colliding
      */
     fun isColliding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollidingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollidingBind, segment)
     }
 
     /**
@@ -198,7 +198,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collision_count
      */
     fun getCollisionCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, segment)
     }
 
     /**
@@ -209,7 +209,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.force_shapecast_update
      */
     fun forceShapecastUpdate() {
-        ObjectCalls.ptrcallNoArgs(forceShapecastUpdateBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceShapecastUpdateBind, segment)
     }
 
     /**
@@ -219,7 +219,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collider
      */
     fun getCollider(index: Int): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, index))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, segment, index))
     }
 
     /**
@@ -228,7 +228,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collider_rid
      */
     fun getColliderRid(index: Int): RID {
-        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, segment, index)
     }
 
     /**
@@ -238,7 +238,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collider_shape
      */
     fun getColliderShape(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, segment, index)
     }
 
     /**
@@ -248,7 +248,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collision_point
      */
     fun getCollisionPoint(index: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, segment, index)
     }
 
     /**
@@ -257,7 +257,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collision_normal
      */
     fun getCollisionNormal(index: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, segment, index)
     }
 
     /**
@@ -267,7 +267,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_closest_collision_safe_fraction
      */
     fun getClosestCollisionSafeFraction(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClosestCollisionSafeFractionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getClosestCollisionSafeFractionBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_closest_collision_unsafe_fraction
      */
     fun getClosestCollisionUnsafeFraction(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClosestCollisionUnsafeFractionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getClosestCollisionUnsafeFractionBind, segment)
     }
 
     /**
@@ -288,7 +288,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.add_exception_rid
      */
     fun addExceptionRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(addExceptionRidBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(addExceptionRidBind, segment, rid)
     }
 
     /**
@@ -297,7 +297,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.add_exception
      */
     fun addException(node: CollisionObject3D) {
-        ObjectCalls.ptrcallWithObjectArgs(addExceptionBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addExceptionBind, segment, listOf(node.segment))
     }
 
     /**
@@ -306,7 +306,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.remove_exception_rid
      */
     fun removeExceptionRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(removeExceptionRidBind, handle, rid)
+        ObjectCalls.ptrcallWithRIDArg(removeExceptionRidBind, segment, rid)
     }
 
     /**
@@ -315,7 +315,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.remove_exception
      */
     fun removeException(node: CollisionObject3D) {
-        ObjectCalls.ptrcallWithObjectArgs(removeExceptionBind, handle, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeExceptionBind, segment, listOf(node.segment))
     }
 
     /**
@@ -324,7 +324,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.clear_exceptions
      */
     fun clearExceptions() {
-        ObjectCalls.ptrcallNoArgs(clearExceptionsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearExceptionsBind, segment)
     }
 
     /**
@@ -336,7 +336,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -348,7 +348,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -358,7 +358,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -368,7 +368,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -377,7 +377,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_exclude_parent_body
      */
     fun setExcludeParentBody(mask: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExcludeParentBodyBind, handle, mask)
+        ObjectCalls.ptrcallWithBoolArg(setExcludeParentBodyBind, segment, mask)
     }
 
     /**
@@ -386,7 +386,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_exclude_parent_body
      */
     fun getExcludeParentBody(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeParentBodyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeParentBodyBind, segment)
     }
 
     /**
@@ -395,7 +395,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_collide_with_areas
      */
     fun setCollideWithAreas(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -404,7 +404,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.is_collide_with_areas_enabled
      */
     fun isCollideWithAreasEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
     }
 
     /**
@@ -413,7 +413,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_collide_with_bodies
      */
     fun setCollideWithBodies(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -422,7 +422,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.is_collide_with_bodies_enabled
      */
     fun isCollideWithBodiesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -432,7 +432,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_collision_result
      */
     fun getCollisionResult(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getCollisionResultBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getCollisionResultBind, segment)
     }
 
     /**
@@ -444,7 +444,7 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_debug_shape_custom_color
      */
     fun setDebugShapeCustomColor(debugShapeCustomColor: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugShapeCustomColorBind, handle, debugShapeCustomColor)
+        ObjectCalls.ptrcallWithColorArg(setDebugShapeCustomColorBind, segment, debugShapeCustomColor)
     }
 
     /**
@@ -456,16 +456,16 @@ class ShapeCast3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.get_debug_shape_custom_color
      */
     fun getDebugShapeCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugShapeCustomColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDebugShapeCustomColorBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ShapeCast3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ShapeCast3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ShapeCast3D? =
-            if (handle.address() == 0L) null else ShapeCast3D(handle)
+            if (handle.address() == 0L) null else ShapeCast3D(GodotHandle(handle))
 
         private const val RESOURCE_CHANGED_HASH = 968641751L
         private val resourceChangedBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: PCKPacker
  */
-class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
+class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Creates a new PCK file at the file path `pck_path`. The `.pck` file extension isn't added
      * automatically, so it should be part of `pck_path` (even though it's not required).
@@ -19,7 +19,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, handle, pckPath, alignment, key, encryptDirectory)
+        return ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, segment, pckPath, alignment, key, encryptDirectory)
     }
 
     /**
@@ -31,7 +31,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, handle, targetPath, sourcePath, encrypt)
+        return ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, segment, targetPath, sourcePath, encrypt)
     }
 
     /**
@@ -43,7 +43,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, handle, targetPath, data, encrypt)
+        return ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, segment, targetPath, data, encrypt)
     }
 
     /**
@@ -55,7 +55,7 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addFileRemoval(targetPath: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, handle, targetPath)
+        return ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, segment, targetPath)
     }
 
     /**
@@ -69,16 +69,16 @@ class PCKPacker(handle: MemorySegment) : RefCounted(handle) {
      */
     fun flush(verbose: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, handle, verbose)
+        return ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, segment, verbose)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PCKPacker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PCKPacker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PCKPacker? =
-            if (handle.address() == 0L) null else PCKPacker(handle)
+            if (handle.address() == 0L) null else PCKPacker(GodotHandle(handle))
 
         private const val PCK_START_HASH = 508410629L
         private val pckStartBind by lazy {

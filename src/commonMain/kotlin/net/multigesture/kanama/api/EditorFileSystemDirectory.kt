@@ -10,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorFileSystemDirectory
  */
-class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
+class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns the number of subdirectories in this directory.
      *
      * Generated from Godot docs: EditorFileSystemDirectory.get_subdir_count
      */
     fun getSubdirCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdirCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdirCountBind, segment)
     }
 
     /**
@@ -26,7 +26,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_subdir
      */
     fun getSubdir(idx: Int): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSubdirBind, handle, idx))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSubdirBind, segment, idx))
     }
 
     /**
@@ -35,7 +35,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_count
      */
     fun getFileCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFileCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFileCountBind, segment)
     }
 
     /**
@@ -44,7 +44,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file
      */
     fun getFile(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFileBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getFileBind, segment, idx)
     }
 
     /**
@@ -53,7 +53,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_path
      */
     fun getFilePath(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFilePathBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getFilePathBind, segment, idx)
     }
 
     /**
@@ -63,7 +63,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_type
      */
     fun getFileType(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getFileTypeBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getFileTypeBind, segment, idx)
     }
 
     /**
@@ -73,7 +73,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_script_class_name
      */
     fun getFileScriptClassName(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassNameBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassNameBind, segment, idx)
     }
 
     /**
@@ -83,7 +83,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_script_class_extends
      */
     fun getFileScriptClassExtends(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassExtendsBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassExtendsBind, segment, idx)
     }
 
     /**
@@ -92,7 +92,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_import_is_valid
      */
     fun getFileImportIsValid(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getFileImportIsValidBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getFileImportIsValidBind, segment, idx)
     }
 
     /**
@@ -101,7 +101,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_name
      */
     fun getName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
     }
 
     /**
@@ -110,7 +110,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_path
      */
     fun getPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_parent
      */
     fun getParent(): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, handle))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment))
     }
 
     /**
@@ -129,7 +129,7 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.find_file_index
      */
     fun findFileIndex(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(findFileIndexBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(findFileIndexBind, segment, name)
     }
 
     /**
@@ -138,16 +138,16 @@ class EditorFileSystemDirectory(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.find_dir_index
      */
     fun findDirIndex(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(findDirIndexBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(findDirIndexBind, segment, name)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorFileSystemDirectory? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorFileSystemDirectory? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorFileSystemDirectory? =
-            if (handle.address() == 0L) null else EditorFileSystemDirectory(handle)
+            if (handle.address() == 0L) null else EditorFileSystemDirectory(GodotHandle(handle))
 
         private const val GET_SUBDIR_COUNT_HASH = 3905245786L
         private val getSubdirCountBind by lazy {

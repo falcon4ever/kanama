@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: EditorResourcePreviewGenerator
  */
-class EditorResourcePreviewGenerator(handle: MemorySegment) : RefCounted(handle) {
+class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Call from within `_generate` to request the rendering server draw to the `viewport`.
      *
@@ -19,16 +19,16 @@ class EditorResourcePreviewGenerator(handle: MemorySegment) : RefCounted(handle)
      */
     fun requestDrawAndWait(viewport: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(requestDrawAndWaitBind, handle, viewport)
+        ObjectCalls.ptrcallWithRIDArg(requestDrawAndWaitBind, segment, viewport)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorResourcePreviewGenerator? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorResourcePreviewGenerator? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorResourcePreviewGenerator? =
-            if (handle.address() == 0L) null else EditorResourcePreviewGenerator(handle)
+            if (handle.address() == 0L) null else EditorResourcePreviewGenerator(GodotHandle(handle))
 
         private const val REQUEST_DRAW_AND_WAIT_HASH = 145472570L
         private val requestDrawAndWaitBind by lazy {

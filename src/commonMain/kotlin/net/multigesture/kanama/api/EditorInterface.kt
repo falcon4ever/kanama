@@ -129,7 +129,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun makeMeshPreviews(meshes: List<Mesh>, previewSize: Int): List<Texture2D> {
-        return ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(makeMeshPreviewsBind, singleton, meshes, previewSize, Texture2D::fromHandle)
+        return ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(makeMeshPreviewsBind, singleton, meshes, previewSize, Texture2D::wrap)
     }
 
     /**
@@ -345,7 +345,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialog(dialog: Window, rect: Rect2i) {
-        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupDialogBind, singleton, dialog.handle, rect)
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupDialogBind, singleton, dialog.segment, rect)
     }
 
     /**
@@ -357,7 +357,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialogCentered(dialog: Window, minsize: Vector2i) {
-        ObjectCalls.ptrcallWithObjectAndVector2iArg(popupDialogCenteredBind, singleton, dialog.handle, minsize)
+        ObjectCalls.ptrcallWithObjectAndVector2iArg(popupDialogCenteredBind, singleton, dialog.segment, minsize)
     }
 
     /**
@@ -369,7 +369,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialogCenteredRatio(dialog: Window, ratio: Double = 0.8) {
-        ObjectCalls.ptrcallWithObjectAndDoubleArg(popupDialogCenteredRatioBind, singleton, dialog.handle, ratio)
+        ObjectCalls.ptrcallWithObjectAndDoubleArg(popupDialogCenteredRatioBind, singleton, dialog.segment, ratio)
     }
 
     /**
@@ -381,7 +381,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialogCenteredClamped(dialog: Window, minsize: Vector2i, fallbackRatio: Double = 0.75) {
-        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupDialogCenteredClampedBind, singleton, dialog.handle, minsize, fallbackRatio)
+        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupDialogCenteredClampedBind, singleton, dialog.segment, minsize, fallbackRatio)
     }
 
     /**
@@ -425,7 +425,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node) {
-        ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(popupNodeSelectorBind, singleton, callback.target.handle, callback.method, validTypes, currentValue.handle)
+        ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(popupNodeSelectorBind, singleton, callback.target.segment, callback.method, validTypes, currentValue.segment)
     }
 
     /**
@@ -440,7 +440,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupPropertySelector(objectValue: GodotObject, callback: GodotCallable, typeFilter: List<Int>, currentValue: String = "") {
-        ObjectCalls.ptrcallWithObjectCallablePackedInt32ListStringArgs(popupPropertySelectorBind, singleton, objectValue.handle, callback.target.handle, callback.method, typeFilter, currentValue)
+        ObjectCalls.ptrcallWithObjectCallablePackedInt32ListStringArgs(popupPropertySelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, typeFilter, currentValue)
     }
 
     /**
@@ -453,7 +453,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupMethodSelector(objectValue: GodotObject, callback: GodotCallable, currentValue: String = "") {
-        ObjectCalls.ptrcallWithObjectCallableStringArgs(popupMethodSelectorBind, singleton, objectValue.handle, callback.target.handle, callback.method, currentValue)
+        ObjectCalls.ptrcallWithObjectCallableStringArgs(popupMethodSelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, currentValue)
     }
 
     /**
@@ -466,7 +466,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupQuickOpen(callback: GodotCallable, baseTypes: List<String>) {
-        ObjectCalls.ptrcallWithCallableStringNameListArgs(popupQuickOpenBind, singleton, callback.target.handle, callback.method, baseTypes)
+        ObjectCalls.ptrcallWithCallableStringNameListArgs(popupQuickOpenBind, singleton, callback.target.segment, callback.method, baseTypes)
     }
 
     /**
@@ -488,7 +488,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupCreateDialog(callback: GodotCallable, baseType: String = "", currentType: String = "", dialogTitle: String = "", typeBlocklist: List<String>) {
-        ObjectCalls.ptrcallWithCallableStringNameTwoStringStringNameListArgs(popupCreateDialogBind, singleton, callback.target.handle, callback.method, baseType, currentType, dialogTitle, typeBlocklist)
+        ObjectCalls.ptrcallWithCallableStringNameTwoStringStringNameListArgs(popupCreateDialogBind, singleton, callback.target.segment, callback.method, baseType, currentType, dialogTitle, typeBlocklist)
     }
 
     /**
@@ -563,7 +563,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun inspectObject(objectValue: GodotObject, forProperty: String = "", inspectorOnly: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectStringBoolArgs(inspectObjectBind, singleton, objectValue.handle, forProperty, inspectorOnly)
+        ObjectCalls.ptrcallWithObjectStringBoolArgs(inspectObjectBind, singleton, objectValue.segment, forProperty, inspectorOnly)
     }
 
     /**
@@ -584,7 +584,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun editNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(editNodeBind, singleton, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(editNodeBind, singleton, listOf(node.segment))
     }
 
     /**
@@ -632,7 +632,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun setObjectEdited(objectValue: GodotObject, edited: Boolean) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(setObjectEditedBind, singleton, objectValue.handle, edited)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(setObjectEditedBind, singleton, objectValue.segment, edited)
     }
 
     /**
@@ -642,7 +642,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isObjectEdited(objectValue: GodotObject): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isObjectEditedBind, singleton, objectValue.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isObjectEditedBind, singleton, objectValue.segment)
     }
 
     /**
@@ -672,7 +672,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getOpenSceneRoots(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenSceneRootsBind, singleton, Node::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenSceneRootsBind, singleton, Node::wrap)
     }
 
     /**
@@ -693,7 +693,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun addRootNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, singleton, listOf(node.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, singleton, listOf(node.segment))
     }
 
     /**
@@ -832,8 +832,8 @@ object EditorInterface {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): EditorInterface? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): EditorInterface? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): EditorInterface? =
         if (handle.address() == 0L) null else this

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectPanner
  */
-class AudioEffectPanner(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
     var pan: Double
         @JvmName("panProperty")
         get() = getPan()
@@ -26,7 +26,7 @@ class AudioEffectPanner(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setPan(cpanume: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPanBind, handle, cpanume)
+        ObjectCalls.ptrcallWithDoubleArg(setPanBind, segment, cpanume)
     }
 
     /**
@@ -37,16 +37,16 @@ class AudioEffectPanner(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getPan(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPanBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPanBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectPanner? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectPanner? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectPanner? =
-            if (handle.address() == 0L) null else AudioEffectPanner(handle)
+            if (handle.address() == 0L) null else AudioEffectPanner(GodotHandle(handle))
 
         private const val SET_PAN_HASH = 373806689L
         private val setPanBind by lazy {

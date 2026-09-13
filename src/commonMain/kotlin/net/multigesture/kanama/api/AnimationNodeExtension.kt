@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeExtension
  */
-class AnimationNodeExtension(handle: MemorySegment) : AnimationNode(handle) {
+class AnimationNodeExtension(handle: GodotHandle) : AnimationNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -35,11 +35,11 @@ class AnimationNodeExtension(handle: MemorySegment) : AnimationNode(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeExtension? =
-            if (handle.address() == 0L) null else AnimationNodeExtension(handle)
+            if (handle.address() == 0L) null else AnimationNodeExtension(GodotHandle(handle))
 
         private const val IS_LOOPING_HASH = 2035584311L
         private val isLoopingBind by lazy {

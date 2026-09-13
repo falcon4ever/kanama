@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: PhysicsRayQueryParameters2D
  */
-class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
+class PhysicsRayQueryParameters2D(handle: GodotHandle) : RefCounted(handle) {
     var from: Vector2
         @JvmName("fromProperty")
         get() = getFrom()
@@ -63,7 +63,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrom(from: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setFromBind, handle, from)
+        ObjectCalls.ptrcallWithVector2Arg(setFromBind, segment, from)
     }
 
     /**
@@ -73,7 +73,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrom(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFromBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getFromBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTo(to: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setToBind, handle, to)
+        ObjectCalls.ptrcallWithVector2Arg(setToBind, segment, to)
     }
 
     /**
@@ -93,7 +93,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTo(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getToBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getToBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCollisionMask(collisionMask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, collisionMask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -119,7 +119,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setExclude(exclude: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, handle, exclude)
+        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
     }
 
     /**
@@ -145,7 +145,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getExclude(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, segment)
     }
 
     /**
@@ -155,7 +155,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCollideWithBodies(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -165,7 +165,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isCollideWithBodiesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -175,7 +175,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCollideWithAreas(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -185,7 +185,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isCollideWithAreasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHitFromInside(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, segment, enable)
     }
 
     /**
@@ -207,7 +207,7 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isHitFromInsideEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, segment)
     }
 
     companion object {
@@ -222,11 +222,11 @@ class PhysicsRayQueryParameters2D(handle: MemorySegment) : RefCounted(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsRayQueryParameters2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsRayQueryParameters2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsRayQueryParameters2D? =
-            if (handle.address() == 0L) null else PhysicsRayQueryParameters2D(handle)
+            if (handle.address() == 0L) null else PhysicsRayQueryParameters2D(GodotHandle(handle))
 
         private const val CREATE_HASH = 3196569324L
         private val createBind by lazy {

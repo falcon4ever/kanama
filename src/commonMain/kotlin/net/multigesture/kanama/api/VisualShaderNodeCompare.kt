@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeCompare
  */
-class VisualShaderNodeCompare(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     var type: Long
         @JvmName("typeProperty")
         get() = getComparisonType()
@@ -30,32 +30,32 @@ class VisualShaderNodeCompare(handle: MemorySegment) : VisualShaderNode(handle) 
 
     fun setComparisonType(type: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setComparisonTypeBind, handle, type)
+        ObjectCalls.ptrcallWithLongArg(setComparisonTypeBind, segment, type)
     }
 
     fun getComparisonType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getComparisonTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getComparisonTypeBind, segment)
     }
 
     fun setFunction(func: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
     }
 
     fun getFunction(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
     }
 
     fun setCondition(condition: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setConditionBind, handle, condition)
+        ObjectCalls.ptrcallWithLongArg(setConditionBind, segment, condition)
     }
 
     fun getCondition(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getConditionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getConditionBind, segment)
     }
 
     companion object {
@@ -80,11 +80,11 @@ class VisualShaderNodeCompare(handle: MemorySegment) : VisualShaderNode(handle) 
         const val COND_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeCompare? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeCompare? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeCompare? =
-            if (handle.address() == 0L) null else VisualShaderNodeCompare(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeCompare(GodotHandle(handle))
 
         private const val SET_COMPARISON_TYPE_HASH = 516558320L
         private val setComparisonTypeBind by lazy {

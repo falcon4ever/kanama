@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Sky
  */
-class Sky(handle: MemorySegment) : Resource(handle) {
+class Sky(handle: GodotHandle) : Resource(handle) {
     var skyMaterial: Material?
         @JvmName("skyMaterialProperty")
         get() = getMaterial()
@@ -39,7 +39,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      */
     fun setRadianceSize(size: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRadianceSizeBind, handle, size)
+        ObjectCalls.ptrcallWithLongArg(setRadianceSizeBind, segment, size)
     }
 
     /**
@@ -51,7 +51,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      */
     fun getRadianceSize(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRadianceSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getRadianceSizeBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      */
     fun setProcessMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, segment, mode)
     }
 
     /**
@@ -75,7 +75,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      */
     fun getProcessMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, segment)
     }
 
     /**
@@ -86,7 +86,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      */
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -97,7 +97,7 @@ class Sky(handle: MemorySegment) : Resource(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
@@ -115,11 +115,11 @@ class Sky(handle: MemorySegment) : Resource(handle) {
         const val PROCESS_MODE_REALTIME: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Sky? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Sky? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Sky? =
-            if (handle.address() == 0L) null else Sky(handle)
+            if (handle.address() == 0L) null else Sky(GodotHandle(handle))
 
         private const val SET_RADIANCE_SIZE_HASH = 1512957179L
         private val setRadianceSizeBind by lazy {

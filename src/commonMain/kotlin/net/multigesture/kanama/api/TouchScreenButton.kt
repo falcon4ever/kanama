@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TouchScreenButton
  */
-class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
+class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
     var textureNormal: Texture2D?
         @JvmName("textureNormalProperty")
         get() = getTextureNormal()
@@ -72,7 +72,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_texture_normal
      */
     fun setTextureNormal(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -81,7 +81,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_texture_normal
      */
     fun getTextureNormal(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
     }
 
     /**
@@ -90,7 +90,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_texture_pressed
      */
     fun setTexturePressed(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -99,7 +99,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_texture_pressed
      */
     fun getTexturePressed(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
     }
 
     /**
@@ -108,7 +108,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_bitmask
      */
     fun setBitmask(bitmask: BitMap?) {
-        ObjectCalls.ptrcallWithObjectArgs(setBitmaskBind, handle, listOf(bitmask?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setBitmaskBind, segment, listOf(bitmask?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -117,7 +117,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_bitmask
      */
     fun getBitmask(): BitMap? {
-        return BitMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBitmaskBind, handle))
+        return BitMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBitmaskBind, segment))
     }
 
     /**
@@ -126,7 +126,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_shape
      */
     fun setShape(shape: Shape2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -135,7 +135,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_shape
      */
     fun getShape(): Shape2D? {
-        return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
+        return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**
@@ -145,7 +145,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_shape_centered
      */
     fun setShapeCentered(bool: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShapeCenteredBind, handle, bool)
+        ObjectCalls.ptrcallWithBoolArg(setShapeCenteredBind, segment, bool)
     }
 
     /**
@@ -155,7 +155,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_shape_centered
      */
     fun isShapeCentered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShapeCenteredBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShapeCenteredBind, segment)
     }
 
     /**
@@ -164,7 +164,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_shape_visible
      */
     fun setShapeVisible(bool: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShapeVisibleBind, handle, bool)
+        ObjectCalls.ptrcallWithBoolArg(setShapeVisibleBind, segment, bool)
     }
 
     /**
@@ -173,7 +173,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_shape_visible
      */
     fun isShapeVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShapeVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShapeVisibleBind, segment)
     }
 
     /**
@@ -182,7 +182,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_action
      */
     fun setAction(action: String) {
-        ObjectCalls.ptrcallWithStringArg(setActionBind, handle, action)
+        ObjectCalls.ptrcallWithStringArg(setActionBind, segment, action)
     }
 
     /**
@@ -191,7 +191,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_action
      */
     fun getAction(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getActionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getActionBind, segment)
     }
 
     /**
@@ -200,7 +200,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_visibility_mode
      */
     fun setVisibilityMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode)
     }
 
     /**
@@ -209,7 +209,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_visibility_mode
      */
     fun getVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment)
     }
 
     /**
@@ -220,7 +220,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_passby_press
      */
     fun setPassbyPress(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPassbyPressBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPassbyPressBind, segment, enabled)
     }
 
     /**
@@ -231,7 +231,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_passby_press_enabled
      */
     fun isPassbyPressEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPassbyPressEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPassbyPressEnabledBind, segment)
     }
 
     /**
@@ -240,7 +240,7 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_pressed
      */
     fun isPressed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, segment)
     }
 
     object Signals {
@@ -253,11 +253,11 @@ class TouchScreenButton(handle: MemorySegment) : Node2D(handle) {
         const val VISIBILITY_TOUCHSCREEN_ONLY: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TouchScreenButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TouchScreenButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TouchScreenButton? =
-            if (handle.address() == 0L) null else TouchScreenButton(handle)
+            if (handle.address() == 0L) null else TouchScreenButton(GodotHandle(handle))
 
         private const val SET_TEXTURE_NORMAL_HASH = 4051416890L
         private val setTextureNormalBind by lazy {

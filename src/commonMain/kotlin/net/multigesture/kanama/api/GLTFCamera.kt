@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFCamera
  */
-class GLTFCamera(handle: MemorySegment) : Resource(handle) {
+class GLTFCamera(handle: GodotHandle) : Resource(handle) {
     var perspective: Boolean
         @JvmName("perspectiveProperty")
         get() = getPerspective()
@@ -42,67 +42,67 @@ class GLTFCamera(handle: MemorySegment) : Resource(handle) {
 
     fun toNode(): Camera3D? {
         checkOpen()
-        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, handle))
+        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, segment))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
     }
 
     fun getPerspective(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPerspectiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPerspectiveBind, segment)
     }
 
     fun setPerspective(perspective: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPerspectiveBind, handle, perspective)
+        ObjectCalls.ptrcallWithBoolArg(setPerspectiveBind, segment, perspective)
     }
 
     fun getFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, segment)
     }
 
     fun setFov(fov: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFovBind, handle, fov)
+        ObjectCalls.ptrcallWithDoubleArg(setFovBind, segment, fov)
     }
 
     fun getSizeMag(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeMagBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeMagBind, segment)
     }
 
     fun setSizeMag(sizeMag: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSizeMagBind, handle, sizeMag)
+        ObjectCalls.ptrcallWithDoubleArg(setSizeMagBind, segment, sizeMag)
     }
 
     fun getDepthFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthFarBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthFarBind, segment)
     }
 
     fun setDepthFar(zdepthFar: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthFarBind, handle, zdepthFar)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthFarBind, segment, zdepthFar)
     }
 
     fun getDepthNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthNearBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthNearBind, segment)
     }
 
     fun setDepthNear(zdepthNear: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthNearBind, handle, zdepthNear)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthNearBind, segment, zdepthNear)
     }
 
     companion object {
         fun fromNode(cameraNode: Camera3D): GLTFCamera? {
-            return GLTFCamera.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, cameraNode.handle))
+            return GLTFCamera.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, cameraNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFCamera? {
@@ -110,11 +110,11 @@ class GLTFCamera(handle: MemorySegment) : Resource(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFCamera? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFCamera? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFCamera? =
-            if (handle.address() == 0L) null else GLTFCamera(handle)
+            if (handle.address() == 0L) null else GLTFCamera(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 237784L
         private val fromNodeBind by lazy {

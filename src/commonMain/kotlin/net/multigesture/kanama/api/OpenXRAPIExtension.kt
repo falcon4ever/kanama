@@ -11,245 +11,245 @@ import net.multigesture.kanama.types.Vector2i
 /**
  * Generated from Godot docs: OpenXRAPIExtension
  */
-class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
+class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun getOpenxrVersion(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpenxrVersionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOpenxrVersionBind, segment)
     }
 
     fun getInstance(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInstanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getInstanceBind, segment)
     }
 
     fun getSystemId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSystemIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSystemIdBind, segment)
     }
 
     fun getSession(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSessionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSessionBind, segment)
     }
 
     fun xrResult(result: Long, format: String, args: List<Any?>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(xrResultBind, handle, result, format, args)
+        return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(xrResultBind, segment, result, format, args)
     }
 
     fun getInstanceProcAddr(name: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(getInstanceProcAddrBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetLong(getInstanceProcAddrBind, segment, name)
     }
 
     fun getErrorString(result: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getErrorStringBind, handle, result)
+        return ObjectCalls.ptrcallWithLongArgRetString(getErrorStringBind, segment, result)
     }
 
     fun getSwapchainFormatName(swapchainFormat: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getSwapchainFormatNameBind, handle, swapchainFormat)
+        return ObjectCalls.ptrcallWithLongArgRetString(getSwapchainFormatNameBind, segment, swapchainFormat)
     }
 
     fun setObjectName(objectType: Long, objectHandle: Long, objectName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongStringArgs(setObjectNameBind, handle, objectType, objectHandle, objectName)
+        ObjectCalls.ptrcallWithTwoLongStringArgs(setObjectNameBind, segment, objectType, objectHandle, objectName)
     }
 
     fun beginDebugLabelRegion(labelName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(beginDebugLabelRegionBind, handle, labelName)
+        ObjectCalls.ptrcallWithStringArg(beginDebugLabelRegionBind, segment, labelName)
     }
 
     fun endDebugLabelRegion() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(endDebugLabelRegionBind, handle)
+        ObjectCalls.ptrcallNoArgs(endDebugLabelRegionBind, segment)
     }
 
     fun insertDebugLabel(labelName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(insertDebugLabelBind, handle, labelName)
+        ObjectCalls.ptrcallWithStringArg(insertDebugLabelBind, segment, labelName)
     }
 
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
     }
 
     fun getViewConfiguration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getViewConfigurationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getViewConfigurationBind, segment)
     }
 
     fun isInitialized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, segment)
     }
 
     fun isRunning(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, segment)
     }
 
     fun getPlaySpace(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaySpaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPlaySpaceBind, segment)
     }
 
     fun getPredictedDisplayTime(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPredictedDisplayTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPredictedDisplayTimeBind, segment)
     }
 
     fun getNextFrameTime(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNextFrameTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getNextFrameTimeBind, segment)
     }
 
     fun canRender(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canRenderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(canRenderBind, segment)
     }
 
     fun findAction(name: String, actionSet: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndRIDArgRetRID(findActionBind, handle, name, actionSet)
+        return ObjectCalls.ptrcallWithStringAndRIDArgRetRID(findActionBind, segment, name, actionSet)
     }
 
     fun actionGetHandle(action: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(actionGetHandleBind, handle, action)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(actionGetHandleBind, segment, action)
     }
 
     fun getHandTracker(handIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getHandTrackerBind, handle, handIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getHandTrackerBind, segment, handIndex)
     }
 
     fun registerCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerCompositionLayerProviderBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(registerCompositionLayerProviderBind, segment, listOf(extension.segment))
     }
 
     fun unregisterCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterCompositionLayerProviderBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(unregisterCompositionLayerProviderBind, segment, listOf(extension.segment))
     }
 
     fun registerProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerProjectionViewsExtensionBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(registerProjectionViewsExtensionBind, segment, listOf(extension.segment))
     }
 
     fun unregisterProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionViewsExtensionBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionViewsExtensionBind, segment, listOf(extension.segment))
     }
 
     fun registerFrameInfoExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerFrameInfoExtensionBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(registerFrameInfoExtensionBind, segment, listOf(extension.segment))
     }
 
     fun unregisterFrameInfoExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterFrameInfoExtensionBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(unregisterFrameInfoExtensionBind, segment, listOf(extension.segment))
     }
 
     fun registerProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerProjectionLayerExtensionBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(registerProjectionLayerExtensionBind, segment, listOf(extension.segment))
     }
 
     fun unregisterProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionLayerExtensionBind, handle, listOf(extension.handle))
+        ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionLayerExtensionBind, segment, listOf(extension.segment))
     }
 
     fun getRenderStateZNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZNearBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZNearBind, segment)
     }
 
     fun getRenderStateZFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZFarBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZFarBind, segment)
     }
 
     fun setVelocityTexture(renderTarget: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setVelocityTextureBind, handle, renderTarget)
+        ObjectCalls.ptrcallWithRIDArg(setVelocityTextureBind, segment, renderTarget)
     }
 
     fun setVelocityDepthTexture(renderTarget: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setVelocityDepthTextureBind, handle, renderTarget)
+        ObjectCalls.ptrcallWithRIDArg(setVelocityDepthTextureBind, segment, renderTarget)
     }
 
     fun setVelocityTargetSize(targetSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setVelocityTargetSizeBind, handle, targetSize)
+        ObjectCalls.ptrcallWithVector2iArg(setVelocityTargetSizeBind, segment, targetSize)
     }
 
     fun getSupportedSwapchainFormats(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getSupportedSwapchainFormatsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getSupportedSwapchainFormatsBind, segment)
     }
 
     fun openxrSwapchainCreate(createFlags: Long, usageFlags: Long, swapchainFormat: Long, width: Long, height: Long, sampleCount: Long, arraySize: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(openxrSwapchainCreateBind, handle, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
+        return ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(openxrSwapchainCreateBind, segment, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
     }
 
     fun openxrSwapchainFree(swapchain: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(openxrSwapchainFreeBind, handle, swapchain)
+        ObjectCalls.ptrcallWithLongArg(openxrSwapchainFreeBind, segment, swapchain)
     }
 
     fun openxrSwapchainGetSwapchain(swapchain: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(openxrSwapchainGetSwapchainBind, handle, swapchain)
+        return ObjectCalls.ptrcallWithLongArgRetLong(openxrSwapchainGetSwapchainBind, segment, swapchain)
     }
 
     fun openxrSwapchainAcquire(swapchain: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(openxrSwapchainAcquireBind, handle, swapchain)
+        ObjectCalls.ptrcallWithLongArg(openxrSwapchainAcquireBind, segment, swapchain)
     }
 
     fun openxrSwapchainGetImage(swapchain: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetRID(openxrSwapchainGetImageBind, handle, swapchain)
+        return ObjectCalls.ptrcallWithLongArgRetRID(openxrSwapchainGetImageBind, segment, swapchain)
     }
 
     fun openxrSwapchainRelease(swapchain: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(openxrSwapchainReleaseBind, handle, swapchain)
+        ObjectCalls.ptrcallWithLongArg(openxrSwapchainReleaseBind, segment, swapchain)
     }
 
     fun getProjectionLayer(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionLayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionLayerBind, segment)
     }
 
     fun setRenderRegion(renderRegion: Rect2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iArg(setRenderRegionBind, handle, renderRegion)
+        ObjectCalls.ptrcallWithRect2iArg(setRenderRegionBind, segment, renderRegion)
     }
 
     fun setEmulateEnvironmentBlendModeAlphaBlend(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEmulateEnvironmentBlendModeAlphaBlendBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEmulateEnvironmentBlendModeAlphaBlendBind, segment, enabled)
     }
 
     fun isEnvironmentBlendModeAlphaSupported(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(isEnvironmentBlendModeAlphaSupportedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(isEnvironmentBlendModeAlphaSupportedBind, segment)
     }
 
     fun updateMainSwapchainSize() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(updateMainSwapchainSizeBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateMainSwapchainSizeBind, segment)
     }
 
     companion object {
@@ -262,11 +262,11 @@ class OpenXRAPIExtension(handle: MemorySegment) : RefCounted(handle) {
         const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_EMULATING: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRAPIExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRAPIExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRAPIExtension? =
-            if (handle.address() == 0L) null else OpenXRAPIExtension(handle)
+            if (handle.address() == 0L) null else OpenXRAPIExtension(GodotHandle(handle))
 
         private const val GET_OPENXR_VERSION_HASH = 2455072627L
         private val getOpenxrVersionBind by lazy {

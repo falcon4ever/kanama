@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeAnimation
  */
-class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) {
+class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     var animation: String
         @JvmName("animationProperty")
         get() = getAnimation()
@@ -68,7 +68,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setAnimation(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, segment, name)
     }
 
     /**
@@ -79,7 +79,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getAnimation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, segment)
     }
 
     /**
@@ -89,7 +89,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setPlayMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlayModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setPlayModeBind, segment, mode)
     }
 
     /**
@@ -99,7 +99,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getPlayMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setAdvanceOnStart(advanceOnStart: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAdvanceOnStartBind, handle, advanceOnStart)
+        ObjectCalls.ptrcallWithBoolArg(setAdvanceOnStartBind, segment, advanceOnStart)
     }
 
     /**
@@ -123,7 +123,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun isAdvanceOnStart(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAdvanceOnStartBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAdvanceOnStartBind, segment)
     }
 
     /**
@@ -134,7 +134,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setUseCustomTimeline(useCustomTimeline: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomTimelineBind, handle, useCustomTimeline)
+        ObjectCalls.ptrcallWithBoolArg(setUseCustomTimelineBind, segment, useCustomTimeline)
     }
 
     /**
@@ -145,7 +145,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun isUsingCustomTimeline(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomTimelineBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomTimelineBind, segment)
     }
 
     /**
@@ -156,7 +156,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setTimelineLength(timelineLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTimelineLengthBind, handle, timelineLength)
+        ObjectCalls.ptrcallWithDoubleArg(setTimelineLengthBind, segment, timelineLength)
     }
 
     /**
@@ -167,7 +167,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getTimelineLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimelineLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTimelineLengthBind, segment)
     }
 
     /**
@@ -180,7 +180,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setStretchTimeScale(stretchTimeScale: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setStretchTimeScaleBind, handle, stretchTimeScale)
+        ObjectCalls.ptrcallWithBoolArg(setStretchTimeScaleBind, segment, stretchTimeScale)
     }
 
     /**
@@ -193,7 +193,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun isStretchingTimeScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isStretchingTimeScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isStretchingTimeScaleBind, segment)
     }
 
     /**
@@ -204,7 +204,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setStartOffset(startOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStartOffsetBind, handle, startOffset)
+        ObjectCalls.ptrcallWithDoubleArg(setStartOffsetBind, segment, startOffset)
     }
 
     /**
@@ -215,7 +215,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getStartOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStartOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStartOffsetBind, segment)
     }
 
     /**
@@ -229,7 +229,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setLoopMode(loopMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, handle, loopMode)
+        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode)
     }
 
     /**
@@ -243,7 +243,7 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getLoopMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment)
     }
 
     companion object {
@@ -251,11 +251,11 @@ class AnimationNodeAnimation(handle: MemorySegment) : AnimationRootNode(handle) 
         const val PLAY_MODE_BACKWARD: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeAnimation? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeAnimation? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeAnimation? =
-            if (handle.address() == 0L) null else AnimationNodeAnimation(handle)
+            if (handle.address() == 0L) null else AnimationNodeAnimation(GodotHandle(handle))
 
         private const val SET_ANIMATION_HASH = 3304788590L
         private val setAnimationBind by lazy {

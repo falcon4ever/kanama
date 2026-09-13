@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioEffectCompressor
  */
-class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
+class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     var threshold: Double
         @JvmName("thresholdProperty")
         get() = getThreshold()
@@ -63,7 +63,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setThreshold(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, segment, threshold)
     }
 
     /**
@@ -74,7 +74,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, segment)
     }
 
     /**
@@ -86,7 +86,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setRatio(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setRatioBind, segment, ratio)
     }
 
     /**
@@ -98,7 +98,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setGain(gain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGainBind, handle, gain)
+        ObjectCalls.ptrcallWithDoubleArg(setGainBind, segment, gain)
     }
 
     /**
@@ -118,7 +118,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, segment)
     }
 
     /**
@@ -129,7 +129,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setAttackUs(attackUs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAttackUsBind, handle, attackUs)
+        ObjectCalls.ptrcallWithDoubleArg(setAttackUsBind, segment, attackUs)
     }
 
     /**
@@ -140,7 +140,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getAttackUs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAttackUsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAttackUsBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setReleaseMs(releaseMs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setReleaseMsBind, handle, releaseMs)
+        ObjectCalls.ptrcallWithDoubleArg(setReleaseMsBind, segment, releaseMs)
     }
 
     /**
@@ -162,7 +162,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getReleaseMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseMsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseMsBind, segment)
     }
 
     /**
@@ -173,7 +173,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setMix(mix: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMixBind, handle, mix)
+        ObjectCalls.ptrcallWithDoubleArg(setMixBind, segment, mix)
     }
 
     /**
@@ -184,7 +184,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getMix(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMixBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun setSidechain(sidechain: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setSidechainBind, handle, sidechain)
+        ObjectCalls.ptrcallWithStringNameArg(setSidechainBind, segment, sidechain)
     }
 
     /**
@@ -204,16 +204,16 @@ class AudioEffectCompressor(handle: MemorySegment) : AudioEffect(handle) {
      */
     fun getSidechain(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getSidechainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getSidechainBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioEffectCompressor? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioEffectCompressor? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioEffectCompressor? =
-            if (handle.address() == 0L) null else AudioEffectCompressor(handle)
+            if (handle.address() == 0L) null else AudioEffectCompressor(GodotHandle(handle))
 
         private const val SET_THRESHOLD_HASH = 373806689L
         private val setThresholdBind by lazy {

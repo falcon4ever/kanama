@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: Area3D
  */
-class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
+class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
     var monitoring: Boolean
         @JvmName("monitoringProperty")
         get() = isMonitoring()
@@ -152,7 +152,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_space_override_mode
      */
     fun setGravitySpaceOverrideMode(spaceOverrideMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, handle, spaceOverrideMode)
+        ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, segment, spaceOverrideMode)
     }
 
     /**
@@ -161,7 +161,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_space_override_mode
      */
     fun getGravitySpaceOverrideMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_is_point
      */
     fun setGravityIsPoint(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setGravityIsPointBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setGravityIsPointBind, segment, enable)
     }
 
     /**
@@ -181,7 +181,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_gravity_a_point
      */
     fun isGravityAPoint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isGravityAPointBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isGravityAPointBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_point_unit_distance
      */
     fun setGravityPointUnitDistance(distanceScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityPointUnitDistanceBind, handle, distanceScale)
+        ObjectCalls.ptrcallWithDoubleArg(setGravityPointUnitDistanceBind, segment, distanceScale)
     }
 
     /**
@@ -211,7 +211,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_point_unit_distance
      */
     fun getGravityPointUnitDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityPointUnitDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityPointUnitDistanceBind, segment)
     }
 
     /**
@@ -220,7 +220,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_point_center
      */
     fun setGravityPointCenter(center: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGravityPointCenterBind, handle, center)
+        ObjectCalls.ptrcallWithVector3Arg(setGravityPointCenterBind, segment, center)
     }
 
     /**
@@ -229,7 +229,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_point_center
      */
     fun getGravityPointCenter(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityPointCenterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityPointCenterBind, segment)
     }
 
     /**
@@ -238,7 +238,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_direction
      */
     fun setGravityDirection(direction: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGravityDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithVector3Arg(setGravityDirectionBind, segment, direction)
     }
 
     /**
@@ -247,7 +247,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_direction
      */
     fun getGravityDirection(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityDirectionBind, segment)
     }
 
     /**
@@ -257,7 +257,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity
      */
     fun setGravity(gravity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityBind, handle, gravity)
+        ObjectCalls.ptrcallWithDoubleArg(setGravityBind, segment, gravity)
     }
 
     /**
@@ -267,7 +267,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity
      */
     fun getGravity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityBind, segment)
     }
 
     /**
@@ -276,7 +276,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_linear_damp_space_override_mode
      */
     fun setLinearDampSpaceOverrideMode(spaceOverrideMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, handle, spaceOverrideMode)
+        ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, segment, spaceOverrideMode)
     }
 
     /**
@@ -285,7 +285,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_linear_damp_space_override_mode
      */
     fun getLinearDampSpaceOverrideMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, segment)
     }
 
     /**
@@ -294,7 +294,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_angular_damp_space_override_mode
      */
     fun setAngularDampSpaceOverrideMode(spaceOverrideMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, handle, spaceOverrideMode)
+        ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, segment, spaceOverrideMode)
     }
 
     /**
@@ -303,7 +303,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_angular_damp_space_override_mode
      */
     fun getAngularDampSpaceOverrideMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, segment)
     }
 
     /**
@@ -313,7 +313,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_angular_damp
      */
     fun setAngularDamp(angularDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, handle, angularDamp)
+        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, segment, angularDamp)
     }
 
     /**
@@ -323,7 +323,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_angular_damp
      */
     fun getAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, segment)
     }
 
     /**
@@ -333,7 +333,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_linear_damp
      */
     fun setLinearDamp(linearDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, handle, linearDamp)
+        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, segment, linearDamp)
     }
 
     /**
@@ -343,7 +343,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_linear_damp
      */
     fun getLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, segment)
     }
 
     /**
@@ -353,7 +353,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_priority
      */
     fun setPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setPriorityBind, segment, priority)
     }
 
     /**
@@ -363,7 +363,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_priority
      */
     fun getPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, segment)
     }
 
     /**
@@ -373,7 +373,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_wind_force_magnitude
      */
     fun setWindForceMagnitude(windForceMagnitude: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWindForceMagnitudeBind, handle, windForceMagnitude)
+        ObjectCalls.ptrcallWithDoubleArg(setWindForceMagnitudeBind, segment, windForceMagnitude)
     }
 
     /**
@@ -383,7 +383,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_wind_force_magnitude
      */
     fun getWindForceMagnitude(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWindForceMagnitudeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWindForceMagnitudeBind, segment)
     }
 
     /**
@@ -394,7 +394,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_wind_attenuation_factor
      */
     fun setWindAttenuationFactor(windAttenuationFactor: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWindAttenuationFactorBind, handle, windAttenuationFactor)
+        ObjectCalls.ptrcallWithDoubleArg(setWindAttenuationFactorBind, segment, windAttenuationFactor)
     }
 
     /**
@@ -405,7 +405,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_wind_attenuation_factor
      */
     fun getWindAttenuationFactor(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWindAttenuationFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWindAttenuationFactorBind, segment)
     }
 
     /**
@@ -417,7 +417,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_wind_source_path
      */
     fun setWindSourcePath(windSourcePath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setWindSourcePathBind, handle, windSourcePath)
+        ObjectCalls.ptrcallWithNodePathArg(setWindSourcePathBind, segment, windSourcePath)
     }
 
     /**
@@ -429,7 +429,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_wind_source_path
      */
     fun getWindSourcePath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getWindSourcePathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getWindSourcePathBind, segment)
     }
 
     /**
@@ -438,7 +438,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_monitorable
      */
     fun setMonitorable(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMonitorableBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMonitorableBind, segment, enable)
     }
 
     /**
@@ -447,7 +447,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_monitorable
      */
     fun isMonitorable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonitorableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMonitorableBind, segment)
     }
 
     /**
@@ -456,7 +456,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_monitoring
      */
     fun setMonitoring(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMonitoringBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setMonitoringBind, segment, enable)
     }
 
     /**
@@ -465,7 +465,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_monitoring
      */
     fun isMonitoring(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringBind, segment)
     }
 
     /**
@@ -479,7 +479,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_overlapping_bodies
      */
     fun getOverlappingBodies(): List<Node3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingBodiesBind, handle, Node3D::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingBodiesBind, segment, Node3D::wrap)
     }
 
     /**
@@ -492,7 +492,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_overlapping_areas
      */
     fun getOverlappingAreas(): List<Area3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingAreasBind, handle, Area3D::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingAreasBind, segment, Area3D::wrap)
     }
 
     /**
@@ -507,7 +507,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.has_overlapping_bodies
      */
     fun hasOverlappingBodies(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingBodiesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingBodiesBind, segment)
     }
 
     /**
@@ -520,7 +520,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.has_overlapping_areas
      */
     fun hasOverlappingAreas(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingAreasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingAreasBind, segment)
     }
 
     /**
@@ -535,7 +535,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.overlaps_body
      */
     fun overlapsBody(body: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsBodyBind, handle, body.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsBodyBind, segment, body.segment)
     }
 
     /**
@@ -546,7 +546,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.overlaps_area
      */
     fun overlapsArea(area: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsAreaBind, handle, area.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsAreaBind, segment, area.segment)
     }
 
     /**
@@ -555,7 +555,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_audio_bus_override
      */
     fun setAudioBusOverride(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAudioBusOverrideBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAudioBusOverrideBind, segment, enable)
     }
 
     /**
@@ -564,7 +564,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_overriding_audio_bus
      */
     fun isOverridingAudioBus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOverridingAudioBusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOverridingAudioBusBind, segment)
     }
 
     /**
@@ -573,7 +573,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_audio_bus_name
      */
     fun setAudioBusName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAudioBusNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setAudioBusNameBind, segment, name)
     }
 
     /**
@@ -582,7 +582,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_audio_bus_name
      */
     fun getAudioBusName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAudioBusNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getAudioBusNameBind, segment)
     }
 
     /**
@@ -591,7 +591,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_use_reverb_bus
      */
     fun setUseReverbBus(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseReverbBusBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseReverbBusBind, segment, enable)
     }
 
     /**
@@ -600,7 +600,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_using_reverb_bus
      */
     fun isUsingReverbBus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingReverbBusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingReverbBusBind, segment)
     }
 
     /**
@@ -609,7 +609,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_reverb_bus_name
      */
     fun setReverbBusName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setReverbBusNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(setReverbBusNameBind, segment, name)
     }
 
     /**
@@ -618,7 +618,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_reverb_bus_name
      */
     fun getReverbBusName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getReverbBusNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getReverbBusNameBind, segment)
     }
 
     /**
@@ -628,7 +628,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_reverb_amount
      */
     fun setReverbAmount(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setReverbAmountBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setReverbAmountBind, segment, amount)
     }
 
     /**
@@ -638,7 +638,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_reverb_amount
      */
     fun getReverbAmount(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReverbAmountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getReverbAmountBind, segment)
     }
 
     /**
@@ -648,7 +648,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_reverb_uniformity
      */
     fun setReverbUniformity(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setReverbUniformityBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setReverbUniformityBind, segment, amount)
     }
 
     /**
@@ -658,7 +658,7 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_reverb_uniformity
      */
     fun getReverbUniformity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReverbUniformityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getReverbUniformityBind, segment)
     }
 
     object Signals {
@@ -680,11 +680,11 @@ class Area3D(handle: MemorySegment) : CollisionObject3D(handle) {
         const val SPACE_OVERRIDE_REPLACE_COMBINE: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Area3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Area3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Area3D? =
-            if (handle.address() == 0L) null else Area3D(handle)
+            if (handle.address() == 0L) null else Area3D(GodotHandle(handle))
 
         private const val SET_GRAVITY_SPACE_OVERRIDE_MODE_HASH = 2311433571L
         private val setGravitySpaceOverrideModeBind by lazy {

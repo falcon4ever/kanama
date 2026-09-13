@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.NodePath
 /**
  * Generated from Godot docs: MultiplayerSynchronizer
  */
-class MultiplayerSynchronizer(handle: MemorySegment) : Node(handle) {
+class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
     var rootPath: NodePath
         @JvmName("rootPathProperty")
         get() = getRootPath()
@@ -48,71 +48,71 @@ class MultiplayerSynchronizer(handle: MemorySegment) : Node(handle) {
         set(value) = setVisibilityPublic(value)
 
     fun setRootPath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootPathBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setRootPathBind, segment, path)
     }
 
     fun getRootPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootPathBind, segment)
     }
 
     fun setReplicationInterval(milliseconds: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setReplicationIntervalBind, handle, milliseconds)
+        ObjectCalls.ptrcallWithDoubleArg(setReplicationIntervalBind, segment, milliseconds)
     }
 
     fun getReplicationInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReplicationIntervalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getReplicationIntervalBind, segment)
     }
 
     fun setDeltaInterval(milliseconds: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDeltaIntervalBind, handle, milliseconds)
+        ObjectCalls.ptrcallWithDoubleArg(setDeltaIntervalBind, segment, milliseconds)
     }
 
     fun getDeltaInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDeltaIntervalBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDeltaIntervalBind, segment)
     }
 
     fun setReplicationConfig(config: SceneReplicationConfig?) {
-        ObjectCalls.ptrcallWithObjectArgs(setReplicationConfigBind, handle, listOf(config?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setReplicationConfigBind, segment, listOf(config?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getReplicationConfig(): SceneReplicationConfig? {
-        return SceneReplicationConfig.wrap(ObjectCalls.ptrcallNoArgsRetObject(getReplicationConfigBind, handle))
+        return SceneReplicationConfig.wrap(ObjectCalls.ptrcallNoArgsRetObject(getReplicationConfigBind, segment))
     }
 
     fun setVisibilityUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityUpdateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVisibilityUpdateModeBind, segment, mode)
     }
 
     fun getVisibilityUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityUpdateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityUpdateModeBind, segment)
     }
 
     fun updateVisibility(forPeer: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(updateVisibilityBind, handle, forPeer)
+        ObjectCalls.ptrcallWithIntArg(updateVisibilityBind, segment, forPeer)
     }
 
     fun setVisibilityPublic(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibilityPublicBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setVisibilityPublicBind, segment, visible)
     }
 
     fun isVisibilityPublic(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibilityPublicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isVisibilityPublicBind, segment)
     }
 
     fun addVisibilityFilter(filter: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(addVisibilityFilterBind, handle, filter.target.handle, filter.method)
+        ObjectCalls.ptrcallWithCallableArg(addVisibilityFilterBind, segment, filter.target.segment, filter.method)
     }
 
     fun removeVisibilityFilter(filter: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(removeVisibilityFilterBind, handle, filter.target.handle, filter.method)
+        ObjectCalls.ptrcallWithCallableArg(removeVisibilityFilterBind, segment, filter.target.segment, filter.method)
     }
 
     fun setVisibilityFor(peer: Int, visible: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setVisibilityForBind, handle, peer, visible)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setVisibilityForBind, segment, peer, visible)
     }
 
     fun getVisibilityFor(peer: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getVisibilityForBind, handle, peer)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getVisibilityForBind, segment, peer)
     }
 
     object Signals {
@@ -127,11 +127,11 @@ class MultiplayerSynchronizer(handle: MemorySegment) : Node(handle) {
         const val VISIBILITY_PROCESS_NONE: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiplayerSynchronizer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiplayerSynchronizer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiplayerSynchronizer? =
-            if (handle.address() == 0L) null else MultiplayerSynchronizer(handle)
+            if (handle.address() == 0L) null else MultiplayerSynchronizer(GodotHandle(handle))
 
         private const val SET_ROOT_PATH_HASH = 1348162250L
         private val setRootPathBind by lazy {

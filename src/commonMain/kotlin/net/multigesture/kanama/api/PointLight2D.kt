@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: PointLight2D
  */
-class PointLight2D(handle: MemorySegment) : Light2D(handle) {
+class PointLight2D(handle: GodotHandle) : Light2D(handle) {
     var texture: Texture2D?
         @JvmName("textureProperty")
         get() = getTexture()
@@ -37,7 +37,7 @@ class PointLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -46,7 +46,7 @@ class PointLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -55,7 +55,7 @@ class PointLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.set_texture_offset
      */
     fun setTextureOffset(textureOffset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTextureOffsetBind, handle, textureOffset)
+        ObjectCalls.ptrcallWithVector2Arg(setTextureOffsetBind, segment, textureOffset)
     }
 
     /**
@@ -64,7 +64,7 @@ class PointLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.get_texture_offset
      */
     fun getTextureOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureOffsetBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class PointLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.set_texture_scale
      */
     fun setTextureScale(textureScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTextureScaleBind, handle, textureScale)
+        ObjectCalls.ptrcallWithDoubleArg(setTextureScaleBind, segment, textureScale)
     }
 
     /**
@@ -82,16 +82,16 @@ class PointLight2D(handle: MemorySegment) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.get_texture_scale
      */
     fun getTextureScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureScaleBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PointLight2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PointLight2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PointLight2D? =
-            if (handle.address() == 0L) null else PointLight2D(handle)
+            if (handle.address() == 0L) null else PointLight2D(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L
         private val setTextureBind by lazy {

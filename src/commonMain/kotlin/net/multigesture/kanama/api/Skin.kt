@@ -9,69 +9,69 @@ import net.multigesture.kanama.types.Transform3D
 /**
  * Generated from Godot docs: Skin
  */
-class Skin(handle: MemorySegment) : Resource(handle) {
+class Skin(handle: GodotHandle) : Resource(handle) {
     fun setBindCount(bindCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBindCountBind, handle, bindCount)
+        ObjectCalls.ptrcallWithIntArg(setBindCountBind, segment, bindCount)
     }
 
     fun getBindCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBindCountBind, segment)
     }
 
     fun addBind(bone: Int, pose: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(addBindBind, handle, bone, pose)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(addBindBind, segment, bone, pose)
     }
 
     fun addNamedBind(name: String, pose: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndTransform3DArg(addNamedBindBind, handle, name, pose)
+        ObjectCalls.ptrcallWithStringAndTransform3DArg(addNamedBindBind, segment, name, pose)
     }
 
     fun setBindPose(bindIndex: Int, pose: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBindPoseBind, handle, bindIndex, pose)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBindPoseBind, segment, bindIndex, pose)
     }
 
     fun getBindPose(bindIndex: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBindPoseBind, handle, bindIndex)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBindPoseBind, segment, bindIndex)
     }
 
     fun setBindName(bindIndex: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBindNameBind, handle, bindIndex, name)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(setBindNameBind, segment, bindIndex, name)
     }
 
     fun getBindName(bindIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBindNameBind, handle, bindIndex)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(getBindNameBind, segment, bindIndex)
     }
 
     fun setBindBone(bindIndex: Int, bone: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setBindBoneBind, handle, bindIndex, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(setBindBoneBind, segment, bindIndex, bone)
     }
 
     fun getBindBone(bindIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getBindBoneBind, handle, bindIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getBindBoneBind, segment, bindIndex)
     }
 
     fun clearBinds() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBindsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBindsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Skin? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Skin? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Skin? =
-            if (handle.address() == 0L) null else Skin(handle)
+            if (handle.address() == 0L) null else Skin(GodotHandle(handle))
 
         private const val SET_BIND_COUNT_HASH = 1286410249L
         private val setBindCountBind by lazy {

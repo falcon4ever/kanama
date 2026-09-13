@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: RootMotionView
  */
-class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
+class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
     var animationPath: NodePath
         @JvmName("animationPathProperty")
         get() = getAnimationPath()
@@ -50,7 +50,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_animation_path
      */
     fun setAnimationPath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setAnimationPathBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setAnimationPathBind, segment, path)
     }
 
     /**
@@ -59,7 +59,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_animation_path
      */
     fun getAnimationPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPathBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -77,7 +77,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -86,7 +86,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_cell_size
      */
     fun setCellSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, segment, size)
     }
 
     /**
@@ -95,7 +95,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_cell_size
      */
     fun getCellSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, segment)
     }
 
     /**
@@ -105,7 +105,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_radius
      */
     fun setRadius(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, size)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, size)
     }
 
     /**
@@ -115,7 +115,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_zero_y
      */
     fun setZeroY(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setZeroYBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setZeroYBind, segment, enable)
     }
 
     /**
@@ -135,16 +135,16 @@ class RootMotionView(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_zero_y
      */
     fun getZeroY(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getZeroYBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getZeroYBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RootMotionView? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RootMotionView? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RootMotionView? =
-            if (handle.address() == 0L) null else RootMotionView(handle)
+            if (handle.address() == 0L) null else RootMotionView(GodotHandle(handle))
 
         private const val SET_ANIMATION_PATH_HASH = 1348162250L
         private val setAnimationPathBind by lazy {

@@ -8,30 +8,30 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRFutureResult
  */
-class OpenXRFutureResult(handle: MemorySegment) : RefCounted(handle) {
+class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
     fun getStatus(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
     }
 
     fun getFuture(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFutureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFutureBind, segment)
     }
 
     fun cancelFuture() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(cancelFutureBind, handle)
+        ObjectCalls.ptrcallNoArgs(cancelFutureBind, segment)
     }
 
     fun setResultValue(resultValue: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(setResultValueBind, handle, resultValue)
+        ObjectCalls.ptrcallWithVariantArg(setResultValueBind, segment, resultValue)
     }
 
     fun getResultValue(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getResultValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getResultValueBind, segment)
     }
 
     object Signals {
@@ -44,11 +44,11 @@ class OpenXRFutureResult(handle: MemorySegment) : RefCounted(handle) {
         const val RESULT_CANCELLED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRFutureResult? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRFutureResult? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRFutureResult? =
-            if (handle.address() == 0L) null else OpenXRFutureResult(handle)
+            if (handle.address() == 0L) null else OpenXRFutureResult(GodotHandle(handle))
 
         private const val GET_STATUS_HASH = 2023607463L
         private val getStatusBind by lazy {

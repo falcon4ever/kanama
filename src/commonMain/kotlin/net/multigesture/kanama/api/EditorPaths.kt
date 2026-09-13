@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorPaths
  */
-class EditorPaths(handle: MemorySegment) : GodotObject(handle) {
+class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns the absolute path to the user's data folder. This folder should be used for persistent
      * user data files such as installed export templates. Default paths per platform:
@@ -18,7 +18,7 @@ class EditorPaths(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_data_dir
      */
     fun getDataDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDataDirBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getDataDirBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ class EditorPaths(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_config_dir
      */
     fun getConfigDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getConfigDirBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getConfigDirBind, segment)
     }
 
     /**
@@ -39,7 +39,7 @@ class EditorPaths(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_cache_dir
      */
     fun getCacheDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCacheDirBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCacheDirBind, segment)
     }
 
     /**
@@ -59,7 +59,7 @@ class EditorPaths(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.is_self_contained
      */
     fun isSelfContained(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelfContainedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelfContainedBind, segment)
     }
 
     /**
@@ -70,7 +70,7 @@ class EditorPaths(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_self_contained_file
      */
     fun getSelfContainedFile(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSelfContainedFileBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSelfContainedFileBind, segment)
     }
 
     /**
@@ -81,16 +81,16 @@ class EditorPaths(handle: MemorySegment) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_project_settings_dir
      */
     fun getProjectSettingsDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getProjectSettingsDirBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getProjectSettingsDirBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorPaths? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorPaths? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorPaths? =
-            if (handle.address() == 0L) null else EditorPaths(handle)
+            if (handle.address() == 0L) null else EditorPaths(GodotHandle(handle))
 
         private const val GET_DATA_DIR_HASH = 201670096L
         private val getDataDirBind by lazy {

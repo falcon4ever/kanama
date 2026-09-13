@@ -222,7 +222,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun getTranslations(): List<Translation> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, singleton, Translation::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, singleton, Translation::wrap)
     }
 
     /**
@@ -234,7 +234,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, singleton, locale, exact, Translation::fromHandle)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, singleton, locale, exact, Translation::wrap)
     }
 
     /**
@@ -386,8 +386,8 @@ object TranslationServer {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): TranslationServer? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): TranslationServer? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): TranslationServer? =
         if (handle.address() == 0L) null else this

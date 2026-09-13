@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: World3D
  */
-class World3D(handle: MemorySegment) : Resource(handle) {
+class World3D(handle: GodotHandle) : Resource(handle) {
     var environment: Environment?
         @JvmName("environmentProperty")
         get() = getEnvironment()
@@ -55,7 +55,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getSpace(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, segment)
     }
 
     /**
@@ -65,7 +65,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getNavigationMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getScenario(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getScenarioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getScenarioBind, segment)
     }
 
     /**
@@ -85,7 +85,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setEnvironment(env: Environment?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -95,7 +95,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, handle))
+        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
     }
 
     /**
@@ -105,7 +105,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setFallbackEnvironment(env: Environment?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, handle, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -115,7 +115,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getFallbackEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, handle))
+        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, segment))
     }
 
     /**
@@ -125,7 +125,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun setCameraAttributes(attributes: CameraAttributes?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(attributes?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(attributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -135,7 +135,7 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getCameraAttributes(): CameraAttributes? {
         checkOpen()
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
+        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     /**
@@ -147,16 +147,16 @@ class World3D(handle: MemorySegment) : Resource(handle) {
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState3D? {
         checkOpen()
-        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, handle))
+        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): World3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): World3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): World3D? =
-            if (handle.address() == 0L) null else World3D(handle)
+            if (handle.address() == 0L) null else World3D(GodotHandle(handle))
 
         private const val GET_SPACE_HASH = 2944877500L
         private val getSpaceBind by lazy {

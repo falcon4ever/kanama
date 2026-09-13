@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: CSGPrimitive3D
  */
-open class CSGPrimitive3D(handle: MemorySegment) : CSGShape3D(handle) {
+open class CSGPrimitive3D(handle: GodotHandle) : CSGShape3D(handle) {
     var flipFaces: Boolean
         @JvmName("flipFacesProperty")
         get() = getFlipFaces()
@@ -17,20 +17,20 @@ open class CSGPrimitive3D(handle: MemorySegment) : CSGShape3D(handle) {
         set(value) = setFlipFaces(value)
 
     fun setFlipFaces(flipFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, handle, flipFaces)
+        ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, segment, flipFaces)
     }
 
     fun getFlipFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGPrimitive3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGPrimitive3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGPrimitive3D? =
-            if (handle.address() == 0L) null else CSGPrimitive3D(handle)
+            if (handle.address() == 0L) null else CSGPrimitive3D(GodotHandle(handle))
 
         private const val SET_FLIP_FACES_HASH = 2586408642L
         private val setFlipFacesBind by lazy {

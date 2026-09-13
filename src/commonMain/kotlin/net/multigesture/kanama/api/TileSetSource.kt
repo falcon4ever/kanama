@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: TileSetSource
  */
-open class TileSetSource(handle: MemorySegment) : Resource(handle) {
+open class TileSetSource(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns how many tiles this atlas source defines (not including alternative tiles).
      *
@@ -19,7 +19,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      */
     fun getTilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTilesCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTilesCountBind, segment)
     }
 
     /**
@@ -29,7 +29,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      */
     fun getTileId(index: Int): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2i(getTileIdBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2i(getTileIdBind, segment, index)
     }
 
     /**
@@ -39,7 +39,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      */
     fun hasTile(atlasCoords: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(hasTileBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(hasTileBind, segment, atlasCoords)
     }
 
     /**
@@ -51,7 +51,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      */
     fun getAlternativeTilesCount(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getAlternativeTilesCountBind, handle, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getAlternativeTilesCountBind, segment, atlasCoords)
     }
 
     /**
@@ -61,7 +61,7 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      */
     fun getAlternativeTileId(atlasCoords: Vector2i, index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(getAlternativeTileIdBind, handle, atlasCoords, index)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(getAlternativeTileIdBind, segment, atlasCoords, index)
     }
 
     /**
@@ -72,16 +72,16 @@ open class TileSetSource(handle: MemorySegment) : Resource(handle) {
      */
     fun hasAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(hasAlternativeTileBind, handle, atlasCoords, alternativeTile)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(hasAlternativeTileBind, segment, atlasCoords, alternativeTile)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TileSetSource? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TileSetSource? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TileSetSource? =
-            if (handle.address() == 0L) null else TileSetSource(handle)
+            if (handle.address() == 0L) null else TileSetSource(GodotHandle(handle))
 
         private const val GET_TILES_COUNT_HASH = 3905245786L
         private val getTilesCountBind by lazy {

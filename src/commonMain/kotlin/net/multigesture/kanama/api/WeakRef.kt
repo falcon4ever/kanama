@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: WeakRef
  */
-class WeakRef(handle: MemorySegment) : RefCounted(handle) {
+class WeakRef(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the `Object` this weakref is referring to. Returns `null` if that object no longer
      * exists.
@@ -19,16 +19,16 @@ class WeakRef(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRef(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRefBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRefBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): WeakRef? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): WeakRef? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): WeakRef? =
-            if (handle.address() == 0L) null else WeakRef(handle)
+            if (handle.address() == 0L) null else WeakRef(GodotHandle(handle))
 
         private const val GET_REF_HASH = 1214101251L
         private val getRefBind by lazy {

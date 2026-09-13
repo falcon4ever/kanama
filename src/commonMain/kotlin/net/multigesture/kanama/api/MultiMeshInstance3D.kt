@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MultiMeshInstance3D
  */
-class MultiMeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
+class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     var multimesh: MultiMesh?
         @JvmName("multimeshProperty")
         get() = getMultimesh()
@@ -25,7 +25,7 @@ class MultiMeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MultiMeshInstance3D.set_multimesh
      */
     fun setMultimesh(multimesh: MultiMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, handle, listOf(multimesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -35,16 +35,16 @@ class MultiMeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MultiMeshInstance3D.get_multimesh
      */
     fun getMultimesh(): MultiMesh? {
-        return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, handle))
+        return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiMeshInstance3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiMeshInstance3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiMeshInstance3D? =
-            if (handle.address() == 0L) null else MultiMeshInstance3D(handle)
+            if (handle.address() == 0L) null else MultiMeshInstance3D(GodotHandle(handle))
 
         private const val SET_MULTIMESH_HASH = 2246127404L
         private val setMultimeshBind by lazy {

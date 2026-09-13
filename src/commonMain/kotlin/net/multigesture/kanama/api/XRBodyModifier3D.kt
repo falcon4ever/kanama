@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: XRBodyModifier3D
  */
-class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
+class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     var bodyTracker: String
         @JvmName("bodyTrackerProperty")
         get() = getBodyTracker()
@@ -37,7 +37,7 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.set_body_tracker
      */
     fun setBodyTracker(trackerName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setBodyTrackerBind, handle, trackerName)
+        ObjectCalls.ptrcallWithStringNameArg(setBodyTrackerBind, segment, trackerName)
     }
 
     /**
@@ -47,7 +47,7 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.get_body_tracker
      */
     fun getBodyTracker(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getBodyTrackerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getBodyTrackerBind, segment)
     }
 
     /**
@@ -56,7 +56,7 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.set_body_update
      */
     fun setBodyUpdate(bodyUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBodyUpdateBind, handle, bodyUpdate)
+        ObjectCalls.ptrcallWithLongArg(setBodyUpdateBind, segment, bodyUpdate)
     }
 
     /**
@@ -65,7 +65,7 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.get_body_update
      */
     fun getBodyUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBodyUpdateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBodyUpdateBind, segment)
     }
 
     /**
@@ -74,7 +74,7 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.set_bone_update
      */
     fun setBoneUpdate(boneUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, handle, boneUpdate)
+        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate)
     }
 
     /**
@@ -83,7 +83,7 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.get_bone_update
      */
     fun getBoneUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment)
     }
 
     companion object {
@@ -95,11 +95,11 @@ class XRBodyModifier3D(handle: MemorySegment) : SkeletonModifier3D(handle) {
         const val BONE_UPDATE_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRBodyModifier3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRBodyModifier3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRBodyModifier3D? =
-            if (handle.address() == 0L) null else XRBodyModifier3D(handle)
+            if (handle.address() == 0L) null else XRBodyModifier3D(GodotHandle(handle))
 
         private const val SET_BODY_TRACKER_HASH = 3304788590L
         private val setBodyTrackerBind by lazy {

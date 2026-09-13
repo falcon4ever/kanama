@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: TileMapPattern
  */
-class TileMapPattern(handle: MemorySegment) : Resource(handle) {
+class TileMapPattern(handle: GodotHandle) : Resource(handle) {
     /**
      * Sets the tile identifiers for the cell at coordinates `coords`. See `TileMap.set_cell`.
      *
@@ -19,7 +19,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun setCell(coords: Vector2i, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, handle, coords, sourceId, atlasCoords, alternativeTile)
+        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, segment, coords, sourceId, atlasCoords, alternativeTile)
     }
 
     /**
@@ -29,7 +29,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun hasCell(coords: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(hasCellBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(hasCellBind, segment, coords)
     }
 
     /**
@@ -39,7 +39,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun removeCell(coords: Vector2i, updateSize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndBoolArg(removeCellBind, handle, coords, updateSize)
+        ObjectCalls.ptrcallWithVector2iAndBoolArg(removeCellBind, segment, coords, updateSize)
     }
 
     /**
@@ -49,7 +49,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun getCellSourceId(coords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, segment, coords)
     }
 
     /**
@@ -59,7 +59,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun getCellAtlasCoords(coords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, segment, coords)
     }
 
     /**
@@ -69,7 +69,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun getCellAlternativeTile(coords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, handle, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, segment, coords)
     }
 
     /**
@@ -79,7 +79,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun getUsedCells(): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, segment)
     }
 
     /**
@@ -89,7 +89,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     /**
@@ -99,7 +99,7 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun setSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
     }
 
     /**
@@ -109,16 +109,16 @@ class TileMapPattern(handle: MemorySegment) : Resource(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TileMapPattern? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TileMapPattern? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TileMapPattern? =
-            if (handle.address() == 0L) null else TileMapPattern(handle)
+            if (handle.address() == 0L) null else TileMapPattern(GodotHandle(handle))
 
         private const val SET_CELL_HASH = 2224802556L
         private val setCellBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: MeshTexture
  */
-class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
+class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
     var mesh: Mesh?
         @JvmName("meshProperty")
         get() = getMesh()
@@ -38,7 +38,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -48,7 +48,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -58,7 +58,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setImageSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setImageSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setImageSizeBind, segment, size)
     }
 
     /**
@@ -68,7 +68,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getImageSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getImageSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getImageSizeBind, segment)
     }
 
     /**
@@ -78,7 +78,7 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setBaseTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -88,8 +88,8 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getBaseTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseTextureBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseTextureBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -98,11 +98,11 @@ class MeshTexture(handle: MemorySegment) : Texture2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshTexture? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshTexture? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MeshTexture? =
-            if (handle.address() == 0L) null else MeshTexture(handle)
+            if (handle.address() == 0L) null else MeshTexture(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {

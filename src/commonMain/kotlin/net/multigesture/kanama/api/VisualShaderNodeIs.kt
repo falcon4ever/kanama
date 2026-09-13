@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeIs
  */
-class VisualShaderNodeIs(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeIs(handle: GodotHandle) : VisualShaderNode(handle) {
     var function: Long
         @JvmName("functionProperty")
         get() = getFunction()
@@ -18,12 +18,12 @@ class VisualShaderNodeIs(handle: MemorySegment) : VisualShaderNode(handle) {
 
     fun setFunction(func: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, handle, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
     }
 
     fun getFunction(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
     }
 
     companion object {
@@ -32,11 +32,11 @@ class VisualShaderNodeIs(handle: MemorySegment) : VisualShaderNode(handle) {
         const val FUNC_MAX: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeIs? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeIs? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeIs? =
-            if (handle.address() == 0L) null else VisualShaderNodeIs(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeIs(GodotHandle(handle))
 
         private const val SET_FUNCTION_HASH = 1438374690L
         private val setFunctionBind by lazy {

@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: GraphNode
  */
-class GraphNode(handle: MemorySegment) : GraphElement(handle) {
+class GraphNode(handle: GodotHandle) : GraphElement(handle) {
     var title: String
         @JvmName("titleProperty")
         get() = getTitle()
@@ -38,7 +38,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, title)
+        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
     }
 
     /**
@@ -47,7 +47,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_titlebar_hbox
      */
     fun getTitlebarHbox(): HBoxContainer? {
-        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTitlebarHboxBind, handle))
+        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTitlebarHboxBind, segment))
     }
 
     /**
@@ -80,7 +80,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot
      */
     fun setSlot(slotIndex: Int, enableLeftPort: Boolean, typeLeft: Int, colorLeft: Color, enableRightPort: Boolean, typeRight: Int, colorRight: Color, customIconLeft: Texture2D?, customIconRight: Texture2D?, drawStylebox: Boolean = true) {
-        ObjectCalls.ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(setSlotBind, handle, slotIndex, enableLeftPort, typeLeft, colorLeft, enableRightPort, typeRight, colorRight, customIconLeft?.requireOpenHandle() ?: MemorySegment.NULL, customIconRight?.requireOpenHandle() ?: MemorySegment.NULL, drawStylebox)
+        ObjectCalls.ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(setSlotBind, segment, slotIndex, enableLeftPort, typeLeft, colorLeft, enableRightPort, typeRight, colorRight, customIconLeft?.requireOpenHandle() ?: MemorySegment.NULL, customIconRight?.requireOpenHandle() ?: MemorySegment.NULL, drawStylebox)
     }
 
     /**
@@ -90,7 +90,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.clear_slot
      */
     fun clearSlot(slotIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(clearSlotBind, handle, slotIndex)
+        ObjectCalls.ptrcallWithIntArg(clearSlotBind, segment, slotIndex)
     }
 
     /**
@@ -99,7 +99,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.clear_all_slots
      */
     fun clearAllSlots() {
-        ObjectCalls.ptrcallNoArgs(clearAllSlotsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearAllSlotsBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_slot_enabled_left
      */
     fun isSlotEnabledLeft(slotIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotEnabledLeftBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotEnabledLeftBind, segment, slotIndex)
     }
 
     /**
@@ -118,7 +118,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_enabled_left
      */
     fun setSlotEnabledLeft(slotIndex: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotEnabledLeftBind, handle, slotIndex, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotEnabledLeftBind, segment, slotIndex, enable)
     }
 
     /**
@@ -128,7 +128,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_type_left
      */
     fun setSlotTypeLeft(slotIndex: Int, type: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setSlotTypeLeftBind, handle, slotIndex, type)
+        ObjectCalls.ptrcallWithTwoIntArgs(setSlotTypeLeftBind, segment, slotIndex, type)
     }
 
     /**
@@ -137,7 +137,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_type_left
      */
     fun getSlotTypeLeft(slotIndex: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSlotTypeLeftBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSlotTypeLeftBind, segment, slotIndex)
     }
 
     /**
@@ -146,7 +146,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_color_left
      */
     fun setSlotColorLeft(slotIndex: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setSlotColorLeftBind, handle, slotIndex, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setSlotColorLeftBind, segment, slotIndex, color)
     }
 
     /**
@@ -155,7 +155,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_color_left
      */
     fun getSlotColorLeft(slotIndex: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getSlotColorLeftBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getSlotColorLeftBind, segment, slotIndex)
     }
 
     /**
@@ -165,7 +165,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_custom_icon_left
      */
     fun setSlotCustomIconLeft(slotIndex: Int, customIcon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSlotCustomIconLeftBind, handle, slotIndex, customIcon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSlotCustomIconLeftBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -174,7 +174,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_custom_icon_left
      */
     fun getSlotCustomIconLeft(slotIndex: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconLeftBind, handle, slotIndex))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconLeftBind, segment, slotIndex))
     }
 
     /**
@@ -184,7 +184,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_metadata_left
      */
     fun setSlotMetadataLeft(slotIndex: Int, value: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setSlotMetadataLeftBind, handle, slotIndex, value)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setSlotMetadataLeftBind, segment, slotIndex, value)
     }
 
     /**
@@ -193,7 +193,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_metadata_left
      */
     fun getSlotMetadataLeft(slotIndex: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataLeftBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataLeftBind, segment, slotIndex)
     }
 
     /**
@@ -202,7 +202,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_slot_enabled_right
      */
     fun isSlotEnabledRight(slotIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotEnabledRightBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotEnabledRightBind, segment, slotIndex)
     }
 
     /**
@@ -212,7 +212,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_enabled_right
      */
     fun setSlotEnabledRight(slotIndex: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotEnabledRightBind, handle, slotIndex, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotEnabledRightBind, segment, slotIndex, enable)
     }
 
     /**
@@ -222,7 +222,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_type_right
      */
     fun setSlotTypeRight(slotIndex: Int, type: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setSlotTypeRightBind, handle, slotIndex, type)
+        ObjectCalls.ptrcallWithTwoIntArgs(setSlotTypeRightBind, segment, slotIndex, type)
     }
 
     /**
@@ -231,7 +231,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_type_right
      */
     fun getSlotTypeRight(slotIndex: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSlotTypeRightBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getSlotTypeRightBind, segment, slotIndex)
     }
 
     /**
@@ -240,7 +240,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_color_right
      */
     fun setSlotColorRight(slotIndex: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setSlotColorRightBind, handle, slotIndex, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setSlotColorRightBind, segment, slotIndex, color)
     }
 
     /**
@@ -249,7 +249,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_color_right
      */
     fun getSlotColorRight(slotIndex: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getSlotColorRightBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getSlotColorRightBind, segment, slotIndex)
     }
 
     /**
@@ -259,7 +259,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_custom_icon_right
      */
     fun setSlotCustomIconRight(slotIndex: Int, customIcon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSlotCustomIconRightBind, handle, slotIndex, customIcon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSlotCustomIconRightBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -268,7 +268,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_custom_icon_right
      */
     fun getSlotCustomIconRight(slotIndex: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconRightBind, handle, slotIndex))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconRightBind, segment, slotIndex))
     }
 
     /**
@@ -278,7 +278,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_metadata_right
      */
     fun setSlotMetadataRight(slotIndex: Int, value: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setSlotMetadataRightBind, handle, slotIndex, value)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setSlotMetadataRightBind, segment, slotIndex, value)
     }
 
     /**
@@ -287,7 +287,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_metadata_right
      */
     fun getSlotMetadataRight(slotIndex: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataRightBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataRightBind, segment, slotIndex)
     }
 
     /**
@@ -296,7 +296,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_slot_draw_stylebox
      */
     fun isSlotDrawStylebox(slotIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotDrawStyleboxBind, handle, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotDrawStyleboxBind, segment, slotIndex)
     }
 
     /**
@@ -305,7 +305,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_draw_stylebox
      */
     fun setSlotDrawStylebox(slotIndex: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotDrawStyleboxBind, handle, slotIndex, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotDrawStyleboxBind, segment, slotIndex, enable)
     }
 
     /**
@@ -315,7 +315,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_ignore_invalid_connection_type
      */
     fun setIgnoreInvalidConnectionType(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreInvalidConnectionTypeBind, handle, ignore)
+        ObjectCalls.ptrcallWithBoolArg(setIgnoreInvalidConnectionTypeBind, segment, ignore)
     }
 
     /**
@@ -325,7 +325,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_ignoring_valid_connection_type
      */
     fun isIgnoringValidConnectionType(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringValidConnectionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringValidConnectionTypeBind, segment)
     }
 
     /**
@@ -339,7 +339,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slots_focus_mode
      */
     fun setSlotsFocusMode(focusMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSlotsFocusModeBind, handle, focusMode)
+        ObjectCalls.ptrcallWithLongArg(setSlotsFocusModeBind, segment, focusMode)
     }
 
     /**
@@ -353,7 +353,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slots_focus_mode
      */
     fun getSlotsFocusMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSlotsFocusModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSlotsFocusModeBind, segment)
     }
 
     /**
@@ -362,7 +362,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_count
      */
     fun getInputPortCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getInputPortCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInputPortCountBind, segment)
     }
 
     /**
@@ -371,7 +371,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_position
      */
     fun getInputPortPosition(portIdx: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getInputPortPositionBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getInputPortPositionBind, segment, portIdx)
     }
 
     /**
@@ -380,7 +380,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_type
      */
     fun getInputPortType(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getInputPortTypeBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getInputPortTypeBind, segment, portIdx)
     }
 
     /**
@@ -389,7 +389,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_color
      */
     fun getInputPortColor(portIdx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getInputPortColorBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getInputPortColorBind, segment, portIdx)
     }
 
     /**
@@ -398,7 +398,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_slot
      */
     fun getInputPortSlot(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getInputPortSlotBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getInputPortSlotBind, segment, portIdx)
     }
 
     /**
@@ -407,7 +407,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_count
      */
     fun getOutputPortCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortCountBind, segment)
     }
 
     /**
@@ -416,7 +416,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_position
      */
     fun getOutputPortPosition(portIdx: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getOutputPortPositionBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getOutputPortPositionBind, segment, portIdx)
     }
 
     /**
@@ -425,7 +425,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_type
      */
     fun getOutputPortType(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOutputPortTypeBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getOutputPortTypeBind, segment, portIdx)
     }
 
     /**
@@ -434,7 +434,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_color
      */
     fun getOutputPortColor(portIdx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getOutputPortColorBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getOutputPortColorBind, segment, portIdx)
     }
 
     /**
@@ -443,7 +443,7 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_slot
      */
     fun getOutputPortSlot(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOutputPortSlotBind, handle, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getOutputPortSlotBind, segment, portIdx)
     }
 
     object Signals {
@@ -453,11 +453,11 @@ class GraphNode(handle: MemorySegment) : GraphElement(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GraphNode? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GraphNode? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GraphNode? =
-            if (handle.address() == 0L) null else GraphNode(handle)
+            if (handle.address() == 0L) null else GraphNode(GodotHandle(handle))
 
         private const val SET_TITLE_HASH = 83702148L
         private val setTitleBind by lazy {

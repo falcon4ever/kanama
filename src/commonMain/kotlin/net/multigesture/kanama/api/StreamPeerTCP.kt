@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: StreamPeerTCP
  */
-class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
+class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
     /**
      * Opens the TCP socket, and binds it to the specified local address. This method is generally not
      * needed, and only used to force the subsequent call to `connect_to_host` to use the specified
@@ -21,7 +21,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun bind(port: Int, host: String = "*"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, handle, port, host)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, segment, port, host)
     }
 
     /**
@@ -32,7 +32,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun connectToHost(host: String, port: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, handle, host, port)
+        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port)
     }
 
     /**
@@ -42,7 +42,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun getConnectedHost(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getConnectedHostBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getConnectedHostBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun getConnectedPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getConnectedPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getConnectedPortBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
     }
 
     /**
@@ -76,16 +76,16 @@ class StreamPeerTCP(handle: MemorySegment) : StreamPeerSocket(handle) {
      */
     fun setNoDelay(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNoDelayBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setNoDelayBind, segment, enabled)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StreamPeerTCP? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StreamPeerTCP? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StreamPeerTCP? =
-            if (handle.address() == 0L) null else StreamPeerTCP(handle)
+            if (handle.address() == 0L) null else StreamPeerTCP(GodotHandle(handle))
 
         private const val BIND_HASH = 3167955072L
         private val bindBind by lazy {

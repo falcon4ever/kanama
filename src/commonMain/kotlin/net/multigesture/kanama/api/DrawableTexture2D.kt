@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Rect2i
  *
  * Generated from Godot docs: DrawableTexture2D
  */
-class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
+class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
     /**
      * Sets the format of this DrawableTexture.
      *
@@ -20,7 +20,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setFormat(format: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, format)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format)
     }
 
     /**
@@ -30,7 +30,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setUseMipmaps(mipmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, handle, mipmaps)
+        ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, segment, mipmaps)
     }
 
     /**
@@ -40,7 +40,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun getUseMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseMipmapsBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun setup(width: Int, height: Int, format: Long, color: Color, useMipmaps: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, handle, width, height, format, color, useMipmaps)
+        ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, segment, width, height, format, color, useMipmaps)
     }
 
     /**
@@ -63,7 +63,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = 0, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(blitRectBind, handle, rect, source?.requireOpenHandle() ?: MemorySegment.NULL, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(blitRectBind, segment, rect, source?.requireOpenHandle() ?: MemorySegment.NULL, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -76,7 +76,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = 0, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(blitRectMultiBind, handle, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(blitRectMultiBind, segment, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -86,7 +86,7 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
      */
     fun generateMipmaps() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(generateMipmapsBind, handle)
+        ObjectCalls.ptrcallNoArgs(generateMipmapsBind, segment)
     }
 
     companion object {
@@ -96,11 +96,11 @@ class DrawableTexture2D(handle: MemorySegment) : Texture2D(handle) {
         const val DRAWABLE_FORMAT_RGBAF: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): DrawableTexture2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): DrawableTexture2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): DrawableTexture2D? =
-            if (handle.address() == 0L) null else DrawableTexture2D(handle)
+            if (handle.address() == 0L) null else DrawableTexture2D(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 2875673594L
         private val setFormatBind by lazy {

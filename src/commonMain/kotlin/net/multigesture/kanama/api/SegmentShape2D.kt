@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: SegmentShape2D
  */
-class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
+class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
     var a: Vector2
         @JvmName("aProperty")
         get() = getA()
@@ -32,7 +32,7 @@ class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setA(a: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setABind, handle, a)
+        ObjectCalls.ptrcallWithVector2Arg(setABind, segment, a)
     }
 
     /**
@@ -42,7 +42,7 @@ class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getA(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getABind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getABind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun setB(b: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setBBind, handle, b)
+        ObjectCalls.ptrcallWithVector2Arg(setBBind, segment, b)
     }
 
     /**
@@ -62,16 +62,16 @@ class SegmentShape2D(handle: MemorySegment) : Shape2D(handle) {
      */
     fun getB(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getBBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SegmentShape2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SegmentShape2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SegmentShape2D? =
-            if (handle.address() == 0L) null else SegmentShape2D(handle)
+            if (handle.address() == 0L) null else SegmentShape2D(GodotHandle(handle))
 
         private const val SET_A_HASH = 743155724L
         private val setABind by lazy {

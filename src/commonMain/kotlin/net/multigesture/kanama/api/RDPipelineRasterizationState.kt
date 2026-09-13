@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDPipelineRasterizationState
  */
-class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
+class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     var enableDepthClamp: Boolean
         @JvmName("enableDepthClampProperty")
         get() = getEnableDepthClamp()
@@ -86,7 +86,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEnableDepthClamp(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableDepthClampBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDepthClampBind, segment, pMember)
     }
 
     /**
@@ -97,7 +97,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEnableDepthClamp(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthClampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthClampBind, segment)
     }
 
     /**
@@ -107,7 +107,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDiscardPrimitives(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDiscardPrimitivesBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setDiscardPrimitivesBind, segment, pMember)
     }
 
     /**
@@ -117,7 +117,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDiscardPrimitives(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDiscardPrimitivesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDiscardPrimitivesBind, segment)
     }
 
     /**
@@ -127,7 +127,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setWireframe(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWireframeBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setWireframeBind, segment, pMember)
     }
 
     /**
@@ -137,7 +137,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getWireframe(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWireframeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getWireframeBind, segment)
     }
 
     /**
@@ -148,7 +148,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCullMode(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, pMember)
     }
 
     /**
@@ -159,7 +159,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCullMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment)
     }
 
     /**
@@ -169,7 +169,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrontFace(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, segment, pMember)
     }
 
     /**
@@ -179,7 +179,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrontFace(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, segment)
     }
 
     /**
@@ -191,7 +191,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthBiasEnabled(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDepthBiasEnabledBind, handle, pMember)
+        ObjectCalls.ptrcallWithBoolArg(setDepthBiasEnabledBind, segment, pMember)
     }
 
     /**
@@ -203,7 +203,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthBiasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDepthBiasEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDepthBiasEnabledBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthBiasConstantFactor(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasConstantFactorBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasConstantFactorBind, segment, pMember)
     }
 
     /**
@@ -223,7 +223,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthBiasConstantFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasConstantFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasConstantFactorBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthBiasClamp(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasClampBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasClampBind, segment, pMember)
     }
 
     /**
@@ -245,7 +245,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthBiasClamp(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasClampBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasClampBind, segment)
     }
 
     /**
@@ -256,7 +256,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDepthBiasSlopeFactor(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasSlopeFactorBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasSlopeFactorBind, segment, pMember)
     }
 
     /**
@@ -267,7 +267,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDepthBiasSlopeFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasSlopeFactorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasSlopeFactorBind, segment)
     }
 
     /**
@@ -278,7 +278,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLineWidth(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLineWidthBind, handle, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(setLineWidthBind, segment, pMember)
     }
 
     /**
@@ -289,7 +289,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLineWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, segment)
     }
 
     /**
@@ -300,7 +300,7 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPatchControlPoints(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setPatchControlPointsBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setPatchControlPointsBind, segment, pMember)
     }
 
     /**
@@ -311,16 +311,16 @@ class RDPipelineRasterizationState(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPatchControlPoints(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPatchControlPointsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getPatchControlPointsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDPipelineRasterizationState? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDPipelineRasterizationState? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDPipelineRasterizationState? =
-            if (handle.address() == 0L) null else RDPipelineRasterizationState(handle)
+            if (handle.address() == 0L) null else RDPipelineRasterizationState(GodotHandle(handle))
 
         private const val SET_ENABLE_DEPTH_CLAMP_HASH = 2586408642L
         private val setEnableDepthClampBind by lazy {

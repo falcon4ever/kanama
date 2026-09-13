@@ -3078,7 +3078,8 @@ object ObjectCalls {
       VT_OBJECT ->
         if (outInt.value != 0L) {
           val handle = MemorySegment.ofAddress(outInt.value)
-          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(GodotHandle(handle)) else handle
+          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(GodotHandle(handle))
+          else handle
         } else {
           null
         }
@@ -4889,7 +4890,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     }
   check(
     "arg-typed(GLTFState.set_nodes Array[GLTFNode] round-trip by handle)",
-    typedNodesBack.map { it.segment.address() } == listOf(typedNodeA.address(), typedNodeB.address()),
+    typedNodesBack.map { it.segment.address() } ==
+      listOf(typedNodeA.address(), typedNodeB.address()),
   )
   ObjectCalls.destroyObject(typedGltf)
 
@@ -6037,7 +6039,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // (unreference -> zero -> object_destroy). A wrong convention shows up as refcount != 1
   // (probe fails) or a double-free crash right here.
   run {
-    val res = net.multigesture.kanama.api.Resource(GodotHandle(ObjectCalls.constructObject("Resource")))
+    val res =
+      net.multigesture.kanama.api.Resource(GodotHandle(ObjectCalls.constructObject("Resource")))
     val dup = res.duplicate()
     check("refcounted-ret-owns-plus1", dup != null && dup.getReferenceCount() == 1)
     dup?.close() // unreference() -> true at zero -> destroyObject; crash/guardrail-noise = fail

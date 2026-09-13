@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: RDUniform
  */
-class RDUniform(handle: MemorySegment) : RefCounted(handle) {
+class RDUniform(handle: GodotHandle) : RefCounted(handle) {
     var uniformType: Long
         @JvmName("uniformTypeProperty")
         get() = getUniformType()
@@ -32,7 +32,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setUniformType(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, segment, pMember)
     }
 
     /**
@@ -42,7 +42,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getUniformType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBinding(pMember: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBindingBind, handle, pMember)
+        ObjectCalls.ptrcallWithIntArg(setBindingBind, segment, pMember)
     }
 
     /**
@@ -62,7 +62,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBinding(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBindingBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addId(id: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(addIdBind, handle, id)
+        ObjectCalls.ptrcallWithRIDArg(addIdBind, segment, id)
     }
 
     /**
@@ -83,7 +83,7 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clearIds() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearIdsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearIdsBind, segment)
     }
 
     /**
@@ -93,16 +93,16 @@ class RDUniform(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIds(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getIdsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(getIdsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDUniform? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDUniform? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDUniform? =
-            if (handle.address() == 0L) null else RDUniform(handle)
+            if (handle.address() == 0L) null else RDUniform(GodotHandle(handle))
 
         private const val SET_UNIFORM_TYPE_HASH = 1664894931L
         private val setUniformTypeBind by lazy {

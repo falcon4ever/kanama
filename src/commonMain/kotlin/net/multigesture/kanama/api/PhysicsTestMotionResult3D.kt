@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: PhysicsTestMotionResult3D
  */
-class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
+class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the moving object's travel before collision.
      *
@@ -20,7 +20,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTravel(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, segment)
     }
 
     /**
@@ -30,7 +30,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRemainder(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, segment)
     }
 
     /**
@@ -41,7 +41,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionSafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionSafeFractionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionSafeFractionBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionUnsafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionUnsafeFractionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionUnsafeFractionBind, segment)
     }
 
     /**
@@ -62,7 +62,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionPoint(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, segment, collisionIndex)
     }
 
     /**
@@ -84,7 +84,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionNormal(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, segment, collisionIndex)
     }
 
     /**
@@ -95,7 +95,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, segment, collisionIndex)
     }
 
     /**
@@ -106,7 +106,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderId(collisionIndex: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, segment, collisionIndex)
     }
 
     /**
@@ -117,7 +117,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderRid(collisionIndex: Int = 0): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, segment, collisionIndex)
     }
 
     /**
@@ -128,7 +128,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, handle, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, segment, collisionIndex))
     }
 
     /**
@@ -139,7 +139,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getColliderShape(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, segment, collisionIndex)
     }
 
     /**
@@ -150,7 +150,7 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionLocalShape(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionLocalShapeBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionLocalShapeBind, segment, collisionIndex)
     }
 
     /**
@@ -161,16 +161,16 @@ class PhysicsTestMotionResult3D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCollisionDepth(collisionIndex: Int = 0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getCollisionDepthBind, handle, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getCollisionDepthBind, segment, collisionIndex)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsTestMotionResult3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsTestMotionResult3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsTestMotionResult3D? =
-            if (handle.address() == 0L) null else PhysicsTestMotionResult3D(handle)
+            if (handle.address() == 0L) null else PhysicsTestMotionResult3D(GodotHandle(handle))
 
         private const val GET_TRAVEL_HASH = 3360562783L
         private val getTravelBind by lazy {

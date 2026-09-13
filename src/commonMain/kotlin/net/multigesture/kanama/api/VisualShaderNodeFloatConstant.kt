@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeFloatConstant
  */
-class VisualShaderNodeFloatConstant(handle: MemorySegment) : VisualShaderNodeConstant(handle) {
+class VisualShaderNodeFloatConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
     var constant: Double
         @JvmName("constantProperty")
         get() = getConstant()
@@ -18,21 +18,21 @@ class VisualShaderNodeFloatConstant(handle: MemorySegment) : VisualShaderNodeCon
 
     fun setConstant(constant: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setConstantBind, handle, constant)
+        ObjectCalls.ptrcallWithDoubleArg(setConstantBind, segment, constant)
     }
 
     fun getConstant(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConstantBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getConstantBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeFloatConstant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeFloatConstant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeFloatConstant? =
-            if (handle.address() == 0L) null else VisualShaderNodeFloatConstant(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeFloatConstant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 373806689L
         private val setConstantBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Popup
  */
-open class Popup(handle: MemorySegment) : Window(handle) {
+open class Popup(handle: GodotHandle) : Window(handle) {
     // No conservative instance methods emitted yet.
 
     object Signals {
@@ -19,11 +19,11 @@ open class Popup(handle: MemorySegment) : Window(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Popup? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Popup? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Popup? =
-            if (handle.address() == 0L) null else Popup(handle)
+            if (handle.address() == 0L) null else Popup(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: AStarGrid2D
  */
-class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
+class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     var region: Rect2i
         @JvmName("regionProperty")
         get() = getRegion()
@@ -77,7 +77,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setRegion(region: Rect2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iArg(setRegionBind, handle, region)
+        ObjectCalls.ptrcallWithRect2iArg(setRegionBind, segment, region)
     }
 
     /**
@@ -88,7 +88,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRegion(): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getRegionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(getRegionBind, segment)
     }
 
     /**
@@ -99,7 +99,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
     }
 
     /**
@@ -110,7 +110,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
     }
 
     /**
@@ -121,7 +121,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -132,7 +132,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -144,7 +144,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCellSize(cellSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setCellSizeBind, handle, cellSize)
+        ObjectCalls.ptrcallWithVector2Arg(setCellSizeBind, segment, cellSize)
     }
 
     /**
@@ -156,7 +156,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCellSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCellSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getCellSizeBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setCellShape(cellShape: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellShapeBind, handle, cellShape)
+        ObjectCalls.ptrcallWithLongArg(setCellShapeBind, segment, cellShape)
     }
 
     /**
@@ -178,7 +178,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCellShape(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, segment)
     }
 
     /**
@@ -189,7 +189,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isInBounds(x: Int, y: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isInBoundsBind, handle, x, y)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isInBoundsBind, segment, x, y)
     }
 
     /**
@@ -200,7 +200,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isInBoundsv(id: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isInBoundsvBind, handle, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(isInBoundsvBind, segment, id)
     }
 
     /**
@@ -210,7 +210,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isDirty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDirtyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDirtyBind, segment)
     }
 
     /**
@@ -223,7 +223,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun update() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(updateBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setJumpingEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setJumpingEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setJumpingEnabledBind, segment, enabled)
     }
 
     /**
@@ -247,7 +247,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isJumpingEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isJumpingEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isJumpingEnabledBind, segment)
     }
 
     /**
@@ -258,7 +258,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDiagonalMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, segment, mode)
     }
 
     /**
@@ -269,7 +269,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDiagonalMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, segment)
     }
 
     /**
@@ -280,7 +280,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDefaultComputeHeuristic(heuristic: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, handle, heuristic)
+        ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, segment, heuristic)
     }
 
     /**
@@ -291,7 +291,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDefaultComputeHeuristic(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, segment)
     }
 
     /**
@@ -302,7 +302,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDefaultEstimateHeuristic(heuristic: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, handle, heuristic)
+        ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, segment, heuristic)
     }
 
     /**
@@ -313,7 +313,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDefaultEstimateHeuristic(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, segment)
     }
 
     /**
@@ -325,7 +325,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPointSolid(id: Vector2i, solid: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndBoolArg(setPointSolidBind, handle, id, solid)
+        ObjectCalls.ptrcallWithVector2iAndBoolArg(setPointSolidBind, segment, id, solid)
     }
 
     /**
@@ -335,7 +335,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isPointSolid(id: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isPointSolidBind, handle, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(isPointSolidBind, segment, id)
     }
 
     /**
@@ -348,7 +348,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPointWeightScale(id: Vector2i, weightScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndDoubleArg(setPointWeightScaleBind, handle, id, weightScale)
+        ObjectCalls.ptrcallWithVector2iAndDoubleArg(setPointWeightScaleBind, segment, id, weightScale)
     }
 
     /**
@@ -358,7 +358,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointWeightScale(id: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getPointWeightScaleBind, handle, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getPointWeightScaleBind, segment, id)
     }
 
     /**
@@ -369,7 +369,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fillSolidRegion(region: Rect2i, solid: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndBoolArg(fillSolidRegionBind, handle, region, solid)
+        ObjectCalls.ptrcallWithRect2iAndBoolArg(fillSolidRegionBind, segment, region, solid)
     }
 
     /**
@@ -380,7 +380,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun fillWeightScaleRegion(region: Rect2i, weightScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndDoubleArg(fillWeightScaleRegionBind, handle, region, weightScale)
+        ObjectCalls.ptrcallWithRect2iAndDoubleArg(fillWeightScaleRegionBind, segment, region, weightScale)
     }
 
     /**
@@ -390,7 +390,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -400,7 +400,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointPosition(id: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2(getPointPositionBind, handle, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2(getPointPositionBind, segment, id)
     }
 
     /**
@@ -411,7 +411,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointDataInRegion(region: Rect2i): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(getPointDataInRegionBind, handle, region)
+        return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(getPointDataInRegionBind, segment, region)
     }
 
     /**
@@ -429,7 +429,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPointPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(getPointPathBind, handle, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(getPointPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     /**
@@ -445,7 +445,7 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIdPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, handle, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     companion object {
@@ -465,11 +465,11 @@ class AStarGrid2D(handle: MemorySegment) : RefCounted(handle) {
         const val CELL_SHAPE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AStarGrid2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AStarGrid2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AStarGrid2D? =
-            if (handle.address() == 0L) null else AStarGrid2D(handle)
+            if (handle.address() == 0L) null else AStarGrid2D(GodotHandle(handle))
 
         private const val SET_REGION_HASH = 1763793166L
         private val setRegionBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: PhysicsDirectSpaceState2D
  */
-open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle) {
+open class PhysicsDirectSpaceState2D(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Checks whether a point is inside any solid shape. Position and other parameters are defined
      * through `PhysicsPointQueryParameters2D`. The shapes the point is inside of are returned in an
@@ -25,7 +25,7 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
      * Generated from Godot docs: PhysicsDirectSpaceState2D.intersect_point
      */
     fun intersectPoint(parameters: PhysicsPointQueryParameters2D, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectPointBind, handle, parameters.requireOpenHandle(), maxResults)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -41,7 +41,7 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
      * Generated from Godot docs: PhysicsDirectSpaceState2D.intersect_ray
      */
     fun intersectRay(parameters: PhysicsRayQueryParameters2D): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(intersectRayBind, handle, parameters.requireOpenHandle())
+        return ObjectCalls.ptrcallWithObjectArgRetDictionary(intersectRayBind, segment, parameters.requireOpenHandle())
     }
 
     /**
@@ -55,7 +55,7 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
      * Generated from Godot docs: PhysicsDirectSpaceState2D.intersect_shape
      */
     fun intersectShape(parameters: PhysicsShapeQueryParameters2D, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectShapeBind, handle, parameters.requireOpenHandle(), maxResults)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectShapeBind, segment, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -71,7 +71,7 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
      * Generated from Godot docs: PhysicsDirectSpaceState2D.cast_motion
      */
     fun castMotion(parameters: PhysicsShapeQueryParameters2D): List<Float> {
-        return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(castMotionBind, handle, parameters.requireOpenHandle())
+        return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(castMotionBind, segment, parameters.requireOpenHandle())
     }
 
     /**
@@ -85,7 +85,7 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
      * Generated from Godot docs: PhysicsDirectSpaceState2D.collide_shape
      */
     fun collideShape(parameters: PhysicsShapeQueryParameters2D, maxResults: Int = 32): List<Vector2> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector2List(collideShapeBind, handle, parameters.requireOpenHandle(), maxResults)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector2List(collideShapeBind, segment, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -101,16 +101,16 @@ open class PhysicsDirectSpaceState2D(handle: MemorySegment) : GodotObject(handle
      * Generated from Godot docs: PhysicsDirectSpaceState2D.get_rest_info
      */
     fun getRestInfo(parameters: PhysicsShapeQueryParameters2D): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(getRestInfoBind, handle, parameters.requireOpenHandle())
+        return ObjectCalls.ptrcallWithObjectArgRetDictionary(getRestInfoBind, segment, parameters.requireOpenHandle())
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PhysicsDirectSpaceState2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PhysicsDirectSpaceState2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PhysicsDirectSpaceState2D? =
-            if (handle.address() == 0L) null else PhysicsDirectSpaceState2D(handle)
+            if (handle.address() == 0L) null else PhysicsDirectSpaceState2D(GodotHandle(handle))
 
         private const val INTERSECT_POINT_HASH = 2118456068L
         private val intersectPointBind by lazy {

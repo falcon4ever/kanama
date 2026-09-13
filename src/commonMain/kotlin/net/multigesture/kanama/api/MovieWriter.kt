@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MovieWriter
  */
-class MovieWriter(handle: MemorySegment) : GodotObject(handle) {
+class MovieWriter(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -22,15 +22,15 @@ class MovieWriter(handle: MemorySegment) : GodotObject(handle) {
          * Generated from Godot docs: MovieWriter.add_writer
          */
         fun addWriter(writer: MovieWriter) {
-            ObjectCalls.ptrcallWithObjectArgs(addWriterBind, MemorySegment.NULL, listOf(writer.handle))
+            ObjectCalls.ptrcallWithObjectArgs(addWriterBind, MemorySegment.NULL, listOf(writer.segment))
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MovieWriter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MovieWriter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MovieWriter? =
-            if (handle.address() == 0L) null else MovieWriter(handle)
+            if (handle.address() == 0L) null else MovieWriter(GodotHandle(handle))
 
         private const val ADD_WRITER_HASH = 4023702871L
         private val addWriterBind by lazy {

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ProgressBar
  */
-class ProgressBar(handle: MemorySegment) : Range(handle) {
+class ProgressBar(handle: GodotHandle) : Range(handle) {
     var fillMode: Int
         @JvmName("fillModeProperty")
         get() = getFillMode()
@@ -42,7 +42,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_fill_mode
      */
     fun setFillMode(mode: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFillModeBind, handle, mode)
+        ObjectCalls.ptrcallWithIntArg(setFillModeBind, segment, mode)
     }
 
     /**
@@ -51,7 +51,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.get_fill_mode
      */
     fun getFillMode(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_show_percentage
      */
     fun setShowPercentage(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowPercentageBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setShowPercentageBind, segment, visible)
     }
 
     /**
@@ -69,7 +69,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.is_percentage_shown
      */
     fun isPercentageShown(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPercentageShownBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPercentageShownBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_indeterminate
      */
     fun setIndeterminate(indeterminate: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIndeterminateBind, handle, indeterminate)
+        ObjectCalls.ptrcallWithBoolArg(setIndeterminateBind, segment, indeterminate)
     }
 
     /**
@@ -89,7 +89,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.is_indeterminate
      */
     fun isIndeterminate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIndeterminateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIndeterminateBind, segment)
     }
 
     /**
@@ -98,7 +98,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_editor_preview_indeterminate
      */
     fun setEditorPreviewIndeterminate(previewIndeterminate: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorPreviewIndeterminateBind, handle, previewIndeterminate)
+        ObjectCalls.ptrcallWithBoolArg(setEditorPreviewIndeterminateBind, segment, previewIndeterminate)
     }
 
     /**
@@ -107,7 +107,7 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: ProgressBar.is_editor_preview_indeterminate_enabled
      */
     fun isEditorPreviewIndeterminateEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorPreviewIndeterminateEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditorPreviewIndeterminateEnabledBind, segment)
     }
 
     companion object {
@@ -117,11 +117,11 @@ class ProgressBar(handle: MemorySegment) : Range(handle) {
         const val FILL_BOTTOM_TO_TOP: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ProgressBar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ProgressBar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ProgressBar? =
-            if (handle.address() == 0L) null else ProgressBar(handle)
+            if (handle.address() == 0L) null else ProgressBar(GodotHandle(handle))
 
         private const val SET_FILL_MODE_HASH = 1286410249L
         private val setFillModeBind by lazy {

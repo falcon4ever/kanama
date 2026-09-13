@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: ParticleProcessMaterial
  */
-class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
+class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     var lifetimeRandomness: Double
         @JvmName("lifetimeRandomnessProperty")
         get() = getLifetimeRandomness()
@@ -765,7 +765,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setDirection(degrees: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, handle, degrees)
+        ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, segment, degrees)
     }
 
     /**
@@ -775,7 +775,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getDirection(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, segment)
     }
 
     /**
@@ -786,7 +786,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setInheritVelocityRatio(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setInheritVelocityRatioBind, handle, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(setInheritVelocityRatioBind, segment, ratio)
     }
 
     /**
@@ -797,7 +797,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getInheritVelocityRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInheritVelocityRatioBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInheritVelocityRatioBind, segment)
     }
 
     /**
@@ -807,7 +807,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSpread(degrees: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, handle, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, segment, degrees)
     }
 
     /**
@@ -817,7 +817,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, segment)
     }
 
     /**
@@ -827,7 +827,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setFlatness(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, handle, amount)
+        ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, segment, amount)
     }
 
     /**
@@ -837,7 +837,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getFlatness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, segment)
     }
 
     /**
@@ -848,7 +848,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParam(param: Long, value: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, segment, param, value)
     }
 
     /**
@@ -859,7 +859,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParam(param: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, segment, param)
     }
 
     /**
@@ -871,7 +871,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParamMin(param: Long, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param, value)
     }
 
     /**
@@ -883,7 +883,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParamMin(param: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param)
     }
 
     /**
@@ -895,7 +895,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParamMax(param: Long, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param, value)
     }
 
     /**
@@ -907,7 +907,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParamMax(param: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param)
     }
 
     /**
@@ -918,7 +918,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParamTexture(param: Long, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, handle, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, segment, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -929,7 +929,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParamTexture(param: Long): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, handle, param))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param))
     }
 
     /**
@@ -943,7 +943,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -957,7 +957,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -967,7 +967,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setUseScale3d(usingScale3d: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseScale3dBind, handle, usingScale3d)
+        ObjectCalls.ptrcallWithBoolArg(setUseScale3dBind, segment, usingScale3d)
     }
 
     /**
@@ -977,7 +977,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun isUsingScale3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingScale3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingScale3dBind, segment)
     }
 
     /**
@@ -988,7 +988,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setScale3dMin(scale3dMin: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setScale3dMinBind, handle, scale3dMin)
+        ObjectCalls.ptrcallWithVector3Arg(setScale3dMinBind, segment, scale3dMin)
     }
 
     /**
@@ -999,7 +999,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getScale3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMinBind, segment)
     }
 
     /**
@@ -1010,7 +1010,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setScale3dMax(scale3dMax: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setScale3dMaxBind, handle, scale3dMax)
+        ObjectCalls.ptrcallWithVector3Arg(setScale3dMaxBind, segment, scale3dMax)
     }
 
     /**
@@ -1021,7 +1021,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getScale3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMaxBind, segment)
     }
 
     /**
@@ -1031,7 +1031,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setUseRotation3d(usingRotation3d: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseRotation3dBind, handle, usingRotation3d)
+        ObjectCalls.ptrcallWithBoolArg(setUseRotation3dBind, segment, usingRotation3d)
     }
 
     /**
@@ -1041,7 +1041,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun isUsingRotation3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotation3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotation3dBind, segment)
     }
 
     /**
@@ -1051,7 +1051,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setRotation3dMin(rotation3dMin: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotation3dMinBind, handle, rotation3dMin)
+        ObjectCalls.ptrcallWithVector3Arg(setRotation3dMinBind, segment, rotation3dMin)
     }
 
     /**
@@ -1061,7 +1061,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getRotation3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMinBind, segment)
     }
 
     /**
@@ -1071,7 +1071,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setRotation3dMax(rotation3dMax: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotation3dMaxBind, handle, rotation3dMax)
+        ObjectCalls.ptrcallWithVector3Arg(setRotation3dMaxBind, segment, rotation3dMax)
     }
 
     /**
@@ -1081,7 +1081,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getRotation3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMaxBind, segment)
     }
 
     /**
@@ -1095,7 +1095,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setColorRamp(ramp: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1109,7 +1109,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getColorRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     /**
@@ -1123,7 +1123,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setAlphaCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAlphaCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAlphaCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1137,7 +1137,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getAlphaCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAlphaCurveBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAlphaCurveBind, segment))
     }
 
     /**
@@ -1151,7 +1151,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEmissionCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1165,7 +1165,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionCurveBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionCurveBind, segment))
     }
 
     /**
@@ -1179,7 +1179,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setColorInitialRamp(ramp: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, handle, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1193,7 +1193,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getColorInitialRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
     }
 
     /**
@@ -1203,7 +1203,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setVelocityLimitCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setVelocityLimitCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setVelocityLimitCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1213,7 +1213,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getVelocityLimitCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, segment))
     }
 
     /**
@@ -1223,7 +1223,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setParticleFlag(particleFlag: Long, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, handle, particleFlag, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag, enable)
     }
 
     /**
@@ -1233,7 +1233,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getParticleFlag(particleFlag: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, handle, particleFlag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag)
     }
 
     /**
@@ -1243,7 +1243,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setVelocityPivot(pivot: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setVelocityPivotBind, handle, pivot)
+        ObjectCalls.ptrcallWithVector3Arg(setVelocityPivotBind, segment, pivot)
     }
 
     /**
@@ -1253,7 +1253,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getVelocityPivot(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityPivotBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityPivotBind, segment)
     }
 
     /**
@@ -1263,7 +1263,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionShape(shape: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape)
     }
 
     /**
@@ -1273,7 +1273,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionShape(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment)
     }
 
     /**
@@ -1283,7 +1283,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionSphereRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, segment, radius)
     }
 
     /**
@@ -1293,7 +1293,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionSphereRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, segment)
     }
 
     /**
@@ -1305,7 +1305,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionBoxExtents(extents: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, handle, extents)
+        ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, segment, extents)
     }
 
     /**
@@ -1317,7 +1317,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionBoxExtents(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, segment)
     }
 
     /**
@@ -1330,7 +1330,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionPointTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionPointTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEmissionPointTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1343,7 +1343,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionPointTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionPointTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionPointTextureBind, segment))
     }
 
     /**
@@ -1356,7 +1356,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionNormalTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionNormalTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEmissionNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1369,7 +1369,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionNormalTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionNormalTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionNormalTextureBind, segment))
     }
 
     /**
@@ -1384,7 +1384,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionColorTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionColorTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEmissionColorTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1399,7 +1399,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionColorTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionColorTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionColorTextureBind, segment))
     }
 
     /**
@@ -1410,7 +1410,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionPointCount(pointCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setEmissionPointCountBind, handle, pointCount)
+        ObjectCalls.ptrcallWithIntArg(setEmissionPointCountBind, segment, pointCount)
     }
 
     /**
@@ -1421,7 +1421,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEmissionPointCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getEmissionPointCountBind, segment)
     }
 
     /**
@@ -1431,7 +1431,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionRingAxis(axis: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, handle, axis)
+        ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, segment, axis)
     }
 
     /**
@@ -1441,7 +1441,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionRingAxis(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, segment)
     }
 
     /**
@@ -1451,7 +1451,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionRingHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, segment, height)
     }
 
     /**
@@ -1461,7 +1461,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionRingHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, segment)
     }
 
     /**
@@ -1471,7 +1471,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionRingRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, segment, radius)
     }
 
     /**
@@ -1481,7 +1481,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionRingRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, segment)
     }
 
     /**
@@ -1491,7 +1491,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionRingInnerRadius(innerRadius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, handle, innerRadius)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, segment, innerRadius)
     }
 
     /**
@@ -1501,7 +1501,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionRingInnerRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, segment)
     }
 
     /**
@@ -1515,7 +1515,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionRingConeAngle(coneAngle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, handle, coneAngle)
+        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, segment, coneAngle)
     }
 
     /**
@@ -1529,7 +1529,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionRingConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, segment)
     }
 
     /**
@@ -1539,7 +1539,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionShapeOffset(emissionShapeOffset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeOffsetBind, handle, emissionShapeOffset)
+        ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeOffsetBind, segment, emissionShapeOffset)
     }
 
     /**
@@ -1549,7 +1549,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionShapeOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeOffsetBind, segment)
     }
 
     /**
@@ -1559,7 +1559,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setEmissionShapeScale(emissionShapeScale: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeScaleBind, handle, emissionShapeScale)
+        ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeScaleBind, segment, emissionShapeScale)
     }
 
     /**
@@ -1569,7 +1569,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getEmissionShapeScale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeScaleBind, segment)
     }
 
     /**
@@ -1585,7 +1585,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getTurbulenceEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getTurbulenceEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getTurbulenceEnabledBind, segment)
     }
 
     /**
@@ -1601,7 +1601,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setTurbulenceEnabled(turbulenceEnabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setTurbulenceEnabledBind, handle, turbulenceEnabled)
+        ObjectCalls.ptrcallWithBoolArg(setTurbulenceEnabledBind, segment, turbulenceEnabled)
     }
 
     /**
@@ -1612,7 +1612,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getTurbulenceNoiseStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseStrengthBind, segment)
     }
 
     /**
@@ -1623,7 +1623,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setTurbulenceNoiseStrength(turbulenceNoiseStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseStrengthBind, handle, turbulenceNoiseStrength)
+        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseStrengthBind, segment, turbulenceNoiseStrength)
     }
 
     /**
@@ -1635,7 +1635,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getTurbulenceNoiseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseScaleBind, segment)
     }
 
     /**
@@ -1647,7 +1647,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setTurbulenceNoiseScale(turbulenceNoiseScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseScaleBind, handle, turbulenceNoiseScale)
+        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseScaleBind, segment, turbulenceNoiseScale)
     }
 
     /**
@@ -1658,7 +1658,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getTurbulenceNoiseSpeedRandom(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseSpeedRandomBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseSpeedRandomBind, segment)
     }
 
     /**
@@ -1669,7 +1669,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setTurbulenceNoiseSpeedRandom(turbulenceNoiseSpeedRandom: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseSpeedRandomBind, handle, turbulenceNoiseSpeedRandom)
+        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseSpeedRandomBind, segment, turbulenceNoiseSpeedRandom)
     }
 
     /**
@@ -1680,7 +1680,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getTurbulenceNoiseSpeed(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTurbulenceNoiseSpeedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getTurbulenceNoiseSpeedBind, segment)
     }
 
     /**
@@ -1691,7 +1691,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setTurbulenceNoiseSpeed(turbulenceNoiseSpeed: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setTurbulenceNoiseSpeedBind, handle, turbulenceNoiseSpeed)
+        ObjectCalls.ptrcallWithVector3Arg(setTurbulenceNoiseSpeedBind, segment, turbulenceNoiseSpeed)
     }
 
     /**
@@ -1701,7 +1701,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getGravity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, segment)
     }
 
     /**
@@ -1711,7 +1711,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setGravity(accelVec: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setGravityBind, handle, accelVec)
+        ObjectCalls.ptrcallWithVector3Arg(setGravityBind, segment, accelVec)
     }
 
     /**
@@ -1723,7 +1723,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setLifetimeRandomness(randomness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, handle, randomness)
+        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, segment, randomness)
     }
 
     /**
@@ -1735,7 +1735,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getLifetimeRandomness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, segment)
     }
 
     /**
@@ -1746,7 +1746,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSubEmitterMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, segment)
     }
 
     /**
@@ -1757,7 +1757,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSubEmitterMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, segment, mode)
     }
 
     /**
@@ -1771,7 +1771,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSubEmitterFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSubEmitterFrequencyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSubEmitterFrequencyBind, segment)
     }
 
     /**
@@ -1785,7 +1785,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSubEmitterFrequency(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSubEmitterFrequencyBind, handle, hz)
+        ObjectCalls.ptrcallWithDoubleArg(setSubEmitterFrequencyBind, segment, hz)
     }
 
     /**
@@ -1799,7 +1799,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSubEmitterAmountAtEnd(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtEndBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtEndBind, segment)
     }
 
     /**
@@ -1813,7 +1813,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSubEmitterAmountAtEnd(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtEndBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtEndBind, segment, amount)
     }
 
     /**
@@ -1828,7 +1828,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSubEmitterAmountAtCollision(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtCollisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtCollisionBind, segment)
     }
 
     /**
@@ -1843,7 +1843,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSubEmitterAmountAtCollision(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtCollisionBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtCollisionBind, segment, amount)
     }
 
     /**
@@ -1857,7 +1857,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSubEmitterAmountAtStart(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtStartBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtStartBind, segment)
     }
 
     /**
@@ -1871,7 +1871,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSubEmitterAmountAtStart(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtStartBind, handle, amount)
+        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtStartBind, segment, amount)
     }
 
     /**
@@ -1881,7 +1881,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getSubEmitterKeepVelocity(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSubEmitterKeepVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSubEmitterKeepVelocityBind, segment)
     }
 
     /**
@@ -1891,7 +1891,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setSubEmitterKeepVelocity(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSubEmitterKeepVelocityBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSubEmitterKeepVelocityBind, segment, enable)
     }
 
     /**
@@ -1902,7 +1902,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setAttractorInteractionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAttractorInteractionEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAttractorInteractionEnabledBind, segment, enabled)
     }
 
     /**
@@ -1913,7 +1913,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun isAttractorInteractionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAttractorInteractionEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAttractorInteractionEnabledBind, segment)
     }
 
     /**
@@ -1928,7 +1928,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setCollisionMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, segment, mode)
     }
 
     /**
@@ -1943,7 +1943,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getCollisionMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, segment)
     }
 
     /**
@@ -1954,7 +1954,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setCollisionUseScale(radius: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollisionUseScaleBind, handle, radius)
+        ObjectCalls.ptrcallWithBoolArg(setCollisionUseScaleBind, segment, radius)
     }
 
     /**
@@ -1965,7 +1965,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun isCollisionUsingScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollisionUsingScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCollisionUsingScaleBind, segment)
     }
 
     /**
@@ -1976,7 +1976,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setCollisionFriction(friction: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionFrictionBind, handle, friction)
+        ObjectCalls.ptrcallWithDoubleArg(setCollisionFrictionBind, segment, friction)
     }
 
     /**
@@ -1987,7 +1987,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getCollisionFriction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionFrictionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionFrictionBind, segment)
     }
 
     /**
@@ -1998,7 +1998,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setCollisionBounce(bounce: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionBounceBind, handle, bounce)
+        ObjectCalls.ptrcallWithDoubleArg(setCollisionBounceBind, segment, bounce)
     }
 
     /**
@@ -2009,7 +2009,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getCollisionBounce(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionBounceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionBounceBind, segment)
     }
 
     /**
@@ -2019,7 +2019,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setUsingRotationVelocity3d(useRotationVelocity3d: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUsingRotationVelocity3dBind, handle, useRotationVelocity3d)
+        ObjectCalls.ptrcallWithBoolArg(setUsingRotationVelocity3dBind, segment, useRotationVelocity3d)
     }
 
     /**
@@ -2029,7 +2029,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun isUsingRotationVelocity3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotationVelocity3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotationVelocity3dBind, segment)
     }
 
     /**
@@ -2040,7 +2040,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setRotationVelocity3dMax(rotationVelocity3dMax: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMaxBind, handle, rotationVelocity3dMax)
+        ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMaxBind, segment, rotationVelocity3dMax)
     }
 
     /**
@@ -2051,7 +2051,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getRotationVelocity3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMaxBind, segment)
     }
 
     /**
@@ -2062,7 +2062,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setRotationVelocity3dMin(rotationVelocity3dMin: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMinBind, handle, rotationVelocity3dMin)
+        ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMinBind, segment, rotationVelocity3dMin)
     }
 
     /**
@@ -2073,7 +2073,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getRotationVelocity3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMinBind, segment)
     }
 
     /**
@@ -2083,7 +2083,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun setRotationVelocity3dCurve(rotationVelocity3dCurve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setRotationVelocity3dCurveBind, handle, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setRotationVelocity3dCurveBind, segment, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -2093,7 +2093,7 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
      */
     fun getRotationVelocity3dCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, segment))
     }
 
     object Signals {
@@ -2146,11 +2146,11 @@ class ParticleProcessMaterial(handle: MemorySegment) : Material(handle) {
         const val COLLISION_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ParticleProcessMaterial? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ParticleProcessMaterial? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ParticleProcessMaterial? =
-            if (handle.address() == 0L) null else ParticleProcessMaterial(handle)
+            if (handle.address() == 0L) null else ParticleProcessMaterial(GodotHandle(handle))
 
         @JvmStatic
         fun fromResource(value: Resource): ParticleProcessMaterial? =

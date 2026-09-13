@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFDocumentExtension
  */
-open class GLTFDocumentExtension(handle: MemorySegment) : Resource(handle) {
+open class GLTFDocumentExtension(handle: GodotHandle) : Resource(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFDocumentExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFDocumentExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFDocumentExtension? =
-            if (handle.address() == 0L) null else GLTFDocumentExtension(handle)
+            if (handle.address() == 0L) null else GLTFDocumentExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

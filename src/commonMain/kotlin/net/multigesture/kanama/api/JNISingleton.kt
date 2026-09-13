@@ -10,23 +10,23 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JNISingleton
  */
-class JNISingleton(handle: MemorySegment) : GodotObject(handle) {
+class JNISingleton(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns `true` if the given `method` name exists in the JNISingleton's Java methods.
      *
      * Generated from Godot docs: JNISingleton.has_java_method
      */
     fun hasJavaMethod(method: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, handle, method)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, segment, method)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JNISingleton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JNISingleton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JNISingleton? =
-            if (handle.address() == 0L) null else JNISingleton(handle)
+            if (handle.address() == 0L) null else JNISingleton(GodotHandle(handle))
 
         private const val HAS_JAVA_METHOD_HASH = 2619796661L
         private val hasJavaMethodBind by lazy {

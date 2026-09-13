@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: VoxelGI
  */
-class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
+class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
     var subdiv: Long
         @JvmName("subdivProperty")
         get() = getSubdiv()
@@ -43,7 +43,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_probe_data
      */
     fun setProbeData(data: VoxelGIData?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProbeDataBind, handle, listOf(data?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProbeDataBind, segment, listOf(data?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -52,7 +52,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_probe_data
      */
     fun getProbeData(): VoxelGIData? {
-        return VoxelGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProbeDataBind, handle))
+        return VoxelGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProbeDataBind, segment))
     }
 
     /**
@@ -62,7 +62,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_subdiv
      */
     fun setSubdiv(subdiv: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSubdivBind, handle, subdiv)
+        ObjectCalls.ptrcallWithLongArg(setSubdivBind, segment, subdiv)
     }
 
     /**
@@ -72,7 +72,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_subdiv
      */
     fun getSubdiv(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubdivBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSubdivBind, segment)
     }
 
     /**
@@ -83,7 +83,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     /**
@@ -94,7 +94,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     /**
@@ -106,7 +106,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_camera_attributes
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, handle, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -118,7 +118,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, handle))
+        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     /**
@@ -137,7 +137,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.bake
      */
     fun bake(fromNode: Node, createVisualDebug: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(bakeBind, handle, fromNode.handle, createVisualDebug)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(bakeBind, segment, fromNode.segment, createVisualDebug)
     }
 
     /**
@@ -146,7 +146,7 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.debug_bake
      */
     fun debugBake() {
-        ObjectCalls.ptrcallNoArgs(debugBakeBind, handle)
+        ObjectCalls.ptrcallNoArgs(debugBakeBind, segment)
     }
 
     companion object {
@@ -157,11 +157,11 @@ class VoxelGI(handle: MemorySegment) : VisualInstance3D(handle) {
         const val SUBDIV_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VoxelGI? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VoxelGI? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VoxelGI? =
-            if (handle.address() == 0L) null else VoxelGI(handle)
+            if (handle.address() == 0L) null else VoxelGI(GodotHandle(handle))
 
         private const val SET_PROBE_DATA_HASH = 1637849675L
         private val setProbeDataBind by lazy {

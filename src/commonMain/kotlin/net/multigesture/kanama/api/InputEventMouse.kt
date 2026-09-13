@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: InputEventMouse
  */
-open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(handle) {
+open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle) {
     var buttonMask: Long
         @JvmName("buttonMaskProperty")
         get() = getButtonMask()
@@ -39,7 +39,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      */
     fun setButtonMask(buttonMask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, handle, buttonMask)
+        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, buttonMask)
     }
 
     /**
@@ -50,7 +50,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      */
     fun getButtonMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment)
     }
 
     /**
@@ -63,7 +63,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
     }
 
     /**
@@ -76,7 +76,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
     }
 
     /**
@@ -89,7 +89,7 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      */
     fun setGlobalPosition(globalPosition: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, handle, globalPosition)
+        ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, segment, globalPosition)
     }
 
     /**
@@ -102,16 +102,16 @@ open class InputEventMouse(handle: MemorySegment) : InputEventWithModifiers(hand
      */
     fun getGlobalPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventMouse? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventMouse? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventMouse? =
-            if (handle.address() == 0L) null else InputEventMouse(handle)
+            if (handle.address() == 0L) null else InputEventMouse(GodotHandle(handle))
 
         private const val SET_BUTTON_MASK_HASH = 3950145251L
         private val setButtonMaskBind by lazy {

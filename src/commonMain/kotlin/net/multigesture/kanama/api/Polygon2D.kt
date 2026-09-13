@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Polygon2D
  */
-class Polygon2D(handle: MemorySegment) : Node2D(handle) {
+class Polygon2D(handle: GodotHandle) : Node2D(handle) {
     var color: Color
         @JvmName("colorProperty")
         get() = getColor()
@@ -111,7 +111,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_polygon
      */
     fun setPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
     }
 
     /**
@@ -120,7 +120,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_uv
      */
     fun setUv(uv: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setUvBind, handle, uv)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(setUvBind, segment, uv)
     }
 
     /**
@@ -140,7 +140,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_uv
      */
     fun getUv(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getUvBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getUvBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
     }
 
     /**
@@ -160,7 +160,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_polygons
      */
     fun setPolygons(polygons: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setPolygonsBind, handle, polygons)
+        ObjectCalls.ptrcallWithArrayArg(setPolygonsBind, segment, polygons)
     }
 
     /**
@@ -184,7 +184,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_polygons
      */
     fun getPolygons(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getPolygonsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getPolygonsBind, segment)
     }
 
     /**
@@ -194,7 +194,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_vertex_colors
      */
     fun setVertexColors(vertexColors: List<Color>) {
-        ObjectCalls.ptrcallWithPackedColorListArg(setVertexColorsBind, handle, vertexColors)
+        ObjectCalls.ptrcallWithPackedColorListArg(setVertexColorsBind, segment, vertexColors)
     }
 
     /**
@@ -204,7 +204,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_vertex_colors
      */
     fun getVertexColors(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getVertexColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getVertexColorsBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -222,7 +222,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -232,7 +232,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_texture_offset
      */
     fun setTextureOffset(textureOffset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTextureOffsetBind, handle, textureOffset)
+        ObjectCalls.ptrcallWithVector2Arg(setTextureOffsetBind, segment, textureOffset)
     }
 
     /**
@@ -242,7 +242,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_texture_offset
      */
     fun getTextureOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureOffsetBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_texture_rotation
      */
     fun setTextureRotation(textureRotation: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTextureRotationBind, handle, textureRotation)
+        ObjectCalls.ptrcallWithDoubleArg(setTextureRotationBind, segment, textureRotation)
     }
 
     /**
@@ -260,7 +260,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_texture_rotation
      */
     fun getTextureRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureRotationBind, segment)
     }
 
     /**
@@ -270,7 +270,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_texture_scale
      */
     fun setTextureScale(textureScale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTextureScaleBind, handle, textureScale)
+        ObjectCalls.ptrcallWithVector2Arg(setTextureScaleBind, segment, textureScale)
     }
 
     /**
@@ -280,7 +280,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_texture_scale
      */
     fun getTextureScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureScaleBind, segment)
     }
 
     /**
@@ -290,7 +290,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_invert_enabled
      */
     fun setInvertEnabled(invert: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInvertEnabledBind, handle, invert)
+        ObjectCalls.ptrcallWithBoolArg(setInvertEnabledBind, segment, invert)
     }
 
     /**
@@ -300,7 +300,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_invert_enabled
      */
     fun getInvertEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getInvertEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getInvertEnabledBind, segment)
     }
 
     /**
@@ -309,7 +309,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_antialiased
      */
     fun setAntialiased(antialiased: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAntialiasedBind, handle, antialiased)
+        ObjectCalls.ptrcallWithBoolArg(setAntialiasedBind, segment, antialiased)
     }
 
     /**
@@ -318,7 +318,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_antialiased
      */
     fun getAntialiased(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, segment)
     }
 
     /**
@@ -328,7 +328,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_invert_border
      */
     fun setInvertBorder(invertBorder: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInvertBorderBind, handle, invertBorder)
+        ObjectCalls.ptrcallWithDoubleArg(setInvertBorderBind, segment, invertBorder)
     }
 
     /**
@@ -338,7 +338,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_invert_border
      */
     fun getInvertBorder(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInvertBorderBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInvertBorderBind, segment)
     }
 
     /**
@@ -347,7 +347,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -356,7 +356,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -365,7 +365,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.add_bone
      */
     fun addBone(path: NodePath, weights: List<Float>) {
-        ObjectCalls.ptrcallWithNodePathAndPackedFloat32ListArgs(addBoneBind, handle, path, weights)
+        ObjectCalls.ptrcallWithNodePathAndPackedFloat32ListArgs(addBoneBind, segment, path, weights)
     }
 
     /**
@@ -374,7 +374,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_bone_count
      */
     fun getBoneCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, segment)
     }
 
     /**
@@ -383,7 +383,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_bone_path
      */
     fun getBonePath(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getBonePathBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getBonePathBind, segment, index)
     }
 
     /**
@@ -392,7 +392,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_bone_weights
      */
     fun getBoneWeights(index: Int): List<Float> {
-        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getBoneWeightsBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getBoneWeightsBind, segment, index)
     }
 
     /**
@@ -401,7 +401,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.erase_bone
      */
     fun eraseBone(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(eraseBoneBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(eraseBoneBind, segment, index)
     }
 
     /**
@@ -410,7 +410,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.clear_bones
      */
     fun clearBones() {
-        ObjectCalls.ptrcallNoArgs(clearBonesBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBonesBind, segment)
     }
 
     /**
@@ -419,7 +419,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_bone_path
      */
     fun setBonePath(index: Int, path: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setBonePathBind, handle, index, path)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setBonePathBind, segment, index, path)
     }
 
     /**
@@ -428,7 +428,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_bone_weights
      */
     fun setBoneWeights(index: Int, weights: List<Float>) {
-        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setBoneWeightsBind, handle, index, weights)
+        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setBoneWeightsBind, segment, index, weights)
     }
 
     /**
@@ -438,7 +438,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_skeleton
      */
     fun setSkeleton(skeleton: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSkeletonBind, handle, skeleton)
+        ObjectCalls.ptrcallWithNodePathArg(setSkeletonBind, segment, skeleton)
     }
 
     /**
@@ -448,7 +448,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_skeleton
      */
     fun getSkeleton(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonBind, segment)
     }
 
     /**
@@ -457,7 +457,7 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.set_internal_vertex_count
      */
     fun setInternalVertexCount(internalVertexCount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setInternalVertexCountBind, handle, internalVertexCount)
+        ObjectCalls.ptrcallWithIntArg(setInternalVertexCountBind, segment, internalVertexCount)
     }
 
     /**
@@ -466,16 +466,16 @@ class Polygon2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Polygon2D.get_internal_vertex_count
      */
     fun getInternalVertexCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getInternalVertexCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getInternalVertexCountBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Polygon2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Polygon2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Polygon2D? =
-            if (handle.address() == 0L) null else Polygon2D(handle)
+            if (handle.address() == 0L) null else Polygon2D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L
         private val setPolygonBind by lazy {

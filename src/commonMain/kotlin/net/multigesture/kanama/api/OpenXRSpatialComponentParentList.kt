@@ -9,19 +9,19 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: OpenXRSpatialComponentParentList
  */
-class OpenXRSpatialComponentParentList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getParent(index: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetRID(getParentBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetRID(getParentBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentParentList? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentParentList? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentParentList? =
-            if (handle.address() == 0L) null else OpenXRSpatialComponentParentList(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialComponentParentList(GodotHandle(handle))
 
         private const val GET_PARENT_HASH = 495598643L
         private val getParentBind by lazy {

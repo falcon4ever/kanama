@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorExportPlatformPC
  */
-open class EditorExportPlatformPC(handle: MemorySegment) : EditorExportPlatform(handle) {
+open class EditorExportPlatformPC(handle: GodotHandle) : EditorExportPlatform(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorExportPlatformPC? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorExportPlatformPC? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorExportPlatformPC? =
-            if (handle.address() == 0L) null else EditorExportPlatformPC(handle)
+            if (handle.address() == 0L) null else EditorExportPlatformPC(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

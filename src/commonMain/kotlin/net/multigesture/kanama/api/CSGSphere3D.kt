@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: CSGSphere3D
  */
-class CSGSphere3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
+class CSGSphere3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -41,52 +41,52 @@ class CSGSphere3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     fun setRadialSegments(radialSegments: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, radialSegments)
+        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, segment, radialSegments)
     }
 
     fun getRadialSegments(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, segment)
     }
 
     fun setRings(rings: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
+        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
     }
 
     fun getRings(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, handle, smoothFaces)
+        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, segment, smoothFaces)
     }
 
     fun getSmoothFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGSphere3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGSphere3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGSphere3D? =
-            if (handle.address() == 0L) null else CSGSphere3D(handle)
+            if (handle.address() == 0L) null else CSGSphere3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

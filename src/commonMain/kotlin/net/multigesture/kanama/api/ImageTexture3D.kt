@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ImageTexture3D
  */
-class ImageTexture3D(handle: MemorySegment) : Texture3D(handle) {
+class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
     /**
      * Creates the `ImageTexture3D` with specified `format`, `width`, `height`, and `depth`. If
      * `use_mipmaps` is `true`, generates mipmaps for the `ImageTexture3D`.
@@ -19,7 +19,7 @@ class ImageTexture3D(handle: MemorySegment) : Texture3D(handle) {
      */
     fun create(format: Long, width: Int, height: Int, depth: Int, useMipmaps: Boolean, data: List<Image>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(createBind, handle, format, width, height, depth, useMipmaps, data)
+        return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(createBind, segment, format, width, height, depth, useMipmaps, data)
     }
 
     /**
@@ -31,16 +31,16 @@ class ImageTexture3D(handle: MemorySegment) : Texture3D(handle) {
      */
     fun update(data: List<Image>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(updateBind, handle, data)
+        ObjectCalls.ptrcallWithObjectListArg(updateBind, segment, data)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ImageTexture3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ImageTexture3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ImageTexture3D? =
-            if (handle.address() == 0L) null else ImageTexture3D(handle)
+            if (handle.address() == 0L) null else ImageTexture3D(GodotHandle(handle))
 
         private const val CREATE_HASH = 1130379827L
         private val createBind by lazy {

@@ -97,7 +97,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun registerMessageCapture(name: String, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithStringNameAndCallableArgs(registerMessageCaptureBind, singleton, name, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithStringNameAndCallableArgs(registerMessageCaptureBind, singleton, name, callable.target.segment, callable.method)
     }
 
     /**
@@ -161,7 +161,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun scriptDebug(language: ScriptLanguage, canContinue: Boolean = true, isErrorBreakpoint: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndTwoBoolArgs(scriptDebugBind, singleton, language.handle, canContinue, isErrorBreakpoint)
+        ObjectCalls.ptrcallWithObjectAndTwoBoolArgs(scriptDebugBind, singleton, language.segment, canContinue, isErrorBreakpoint)
     }
 
     /**
@@ -255,8 +255,8 @@ object EngineDebugger {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): EngineDebugger? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): EngineDebugger? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): EngineDebugger? =
         if (handle.address() == 0L) null else this

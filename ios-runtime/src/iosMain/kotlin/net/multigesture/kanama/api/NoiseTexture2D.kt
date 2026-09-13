@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: NoiseTexture2D
  */
-class NoiseTexture2D(handle: MemorySegment) : Texture2D(handle) {
+class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
     var generateMipmaps: Boolean
         @JvmName("generateMipmapsProperty")
         get() = isGeneratingMipmaps()
@@ -72,121 +72,121 @@ class NoiseTexture2D(handle: MemorySegment) : Texture2D(handle) {
 
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
     }
 
     fun setHeight(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithIntArg(setHeightBind, segment, height)
     }
 
     fun setGenerateMipmaps(invert: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, invert)
+        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, segment, invert)
     }
 
     fun isGeneratingMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGeneratingMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isGeneratingMipmapsBind, segment)
     }
 
     fun setNoise(noise: Noise?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, handle, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNoise(): Noise? {
         checkOpen()
-        return Noise.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, handle))
+        return Noise.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, segment))
     }
 
     fun setColorRamp(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getColorRamp(): Gradient? {
         checkOpen()
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     fun setSeamless(seamless: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, handle, seamless)
+        ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, segment, seamless)
     }
 
     fun getSeamless(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, segment)
     }
 
     fun setInvert(invert: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setInvertBind, handle, invert)
+        ObjectCalls.ptrcallWithBoolArg(setInvertBind, segment, invert)
     }
 
     fun getInvert(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, segment)
     }
 
     fun setIn3dSpace(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIn3dSpaceBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setIn3dSpaceBind, segment, enable)
     }
 
     fun isIn3dSpace(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isIn3dSpaceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isIn3dSpaceBind, segment)
     }
 
     fun setAsNormalMap(asNormalMap: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAsNormalMapBind, handle, asNormalMap)
+        ObjectCalls.ptrcallWithBoolArg(setAsNormalMapBind, segment, asNormalMap)
     }
 
     fun isNormalMap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNormalMapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNormalMapBind, segment)
     }
 
     fun setNormalize(normalize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, handle, normalize)
+        ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, segment, normalize)
     }
 
     fun isNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, segment)
     }
 
     fun setSeamlessBlendSkirt(seamlessBlendSkirt: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, handle, seamlessBlendSkirt)
+        ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, segment, seamlessBlendSkirt)
     }
 
     fun getSeamlessBlendSkirt(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, segment)
     }
 
     fun setBumpStrength(bumpStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBumpStrengthBind, handle, bumpStrength)
+        ObjectCalls.ptrcallWithDoubleArg(setBumpStrengthBind, segment, bumpStrength)
     }
 
     fun getBumpStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBumpStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBumpStrengthBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NoiseTexture2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NoiseTexture2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NoiseTexture2D? =
-            if (handle.address() == 0L) null else NoiseTexture2D(handle)
+            if (handle.address() == 0L) null else NoiseTexture2D(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L
         private val setWidthBind by lazy {

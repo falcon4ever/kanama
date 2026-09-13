@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeInput
  */
-class VisualShaderNodeInput(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
     var inputName: String
         @JvmName("inputNameProperty")
         get() = getInputName()
@@ -18,17 +18,17 @@ class VisualShaderNodeInput(handle: MemorySegment) : VisualShaderNode(handle) {
 
     fun setInputName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setInputNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setInputNameBind, segment, name)
     }
 
     fun getInputName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInputNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getInputNameBind, segment)
     }
 
     fun getInputRealName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInputRealNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getInputRealNameBind, segment)
     }
 
     object Signals {
@@ -37,11 +37,11 @@ class VisualShaderNodeInput(handle: MemorySegment) : VisualShaderNode(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeInput? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeInput? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeInput? =
-            if (handle.address() == 0L) null else VisualShaderNodeInput(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeInput(GodotHandle(handle))
 
         private const val SET_INPUT_NAME_HASH = 83702148L
         private val setInputNameBind by lazy {

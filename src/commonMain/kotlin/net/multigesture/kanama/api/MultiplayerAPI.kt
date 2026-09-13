@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MultiplayerAPI
  */
-open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
+open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
     var multiplayerPeer: MultiplayerPeer?
         @JvmName("multiplayerPeerProperty")
         get() = getMultiplayerPeer()
@@ -25,7 +25,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasMultiplayerPeer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMultiplayerPeerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasMultiplayerPeerBind, segment)
     }
 
     /**
@@ -40,7 +40,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMultiplayerPeer(): MultiplayerPeer? {
         checkOpen()
-        return MultiplayerPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerPeerBind, handle))
+        return MultiplayerPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerPeerBind, segment))
     }
 
     /**
@@ -55,7 +55,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setMultiplayerPeer(peer: MultiplayerPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMultiplayerPeerBind, handle, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMultiplayerPeerBind, segment, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -65,7 +65,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getUniqueId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, segment)
     }
 
     /**
@@ -76,7 +76,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, segment)
     }
 
     /**
@@ -88,7 +88,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRemoteSenderId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRemoteSenderIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRemoteSenderIdBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun poll(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun rpc(peer: Int, objectValue: GodotObject, method: String, arguments: List<Any?> = emptyList()): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(rpcBind, handle, peer, objectValue.handle, method, arguments)
+        return ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(rpcBind, segment, peer, objectValue.segment, method, arguments)
     }
 
     /**
@@ -131,7 +131,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun objectConfigurationAdd(objectValue: GodotObject, configuration: Any?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationAddBind, handle, objectValue.handle, configuration)
+        return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationAddBind, segment, objectValue.segment, configuration)
     }
 
     /**
@@ -146,7 +146,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun objectConfigurationRemove(objectValue: GodotObject, configuration: Any?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationRemoveBind, handle, objectValue.handle, configuration)
+        return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationRemoveBind, segment, objectValue.segment, configuration)
     }
 
     /**
@@ -156,7 +156,7 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPeers(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPeersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPeersBind, segment)
     }
 
     object Signals {
@@ -202,11 +202,11 @@ open class MultiplayerAPI(handle: MemorySegment) : RefCounted(handle) {
         const val RPC_MODE_AUTHORITY: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MultiplayerAPI? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MultiplayerAPI? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MultiplayerAPI? =
-            if (handle.address() == 0L) null else MultiplayerAPI(handle)
+            if (handle.address() == 0L) null else MultiplayerAPI(GodotHandle(handle))
 
         private const val HAS_MULTIPLAYER_PEER_HASH = 2240911060L
         private val hasMultiplayerPeerBind by lazy {

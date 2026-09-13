@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: SpriteBase3D
  */
-open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
+open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     var centered: Boolean
         @JvmName("centeredProperty")
         get() = isCentered()
@@ -141,7 +141,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_centered
      */
     fun setCentered(centered: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, handle, centered)
+        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, segment, centered)
     }
 
     /**
@@ -150,7 +150,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.is_centered
      */
     fun isCentered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, segment)
     }
 
     /**
@@ -160,7 +160,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
     }
 
     /**
@@ -170,7 +170,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
     }
 
     /**
@@ -179,7 +179,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_flip_h
      */
     fun setFlipH(flipH: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, handle, flipH)
+        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, flipH)
     }
 
     /**
@@ -188,7 +188,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_flip_v
      */
     fun setFlipV(flipV: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, handle, flipV)
+        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, flipV)
     }
 
     /**
@@ -206,7 +206,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
     }
 
     /**
@@ -222,7 +222,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, handle, modulate)
+        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
     }
 
     /**
@@ -238,7 +238,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_render_priority
      */
     fun setRenderPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, handle, priority)
+        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, segment, priority)
     }
 
     /**
@@ -264,7 +264,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_render_priority
      */
     fun getRenderPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, segment)
     }
 
     /**
@@ -273,7 +273,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_pixel_size
      */
     fun setPixelSize(pixelSize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, handle, pixelSize)
+        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, segment, pixelSize)
     }
 
     /**
@@ -282,7 +282,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_pixel_size
      */
     fun getPixelSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, segment)
     }
 
     /**
@@ -291,7 +291,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_axis
      */
     fun setAxis(axis: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAxisBind, handle, axis)
+        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis)
     }
 
     /**
@@ -300,7 +300,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_axis
      */
     fun getAxis(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment)
     }
 
     /**
@@ -310,7 +310,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_draw_flag
      */
     fun setDrawFlag(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, handle, flag, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag, enabled)
     }
 
     /**
@@ -320,7 +320,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_draw_flag
      */
     fun getDrawFlag(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, handle, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag)
     }
 
     /**
@@ -329,7 +329,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_cut_mode
      */
     fun setAlphaCutMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode)
     }
 
     /**
@@ -338,7 +338,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_cut_mode
      */
     fun getAlphaCutMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment)
     }
 
     /**
@@ -347,7 +347,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_scissor_threshold
      */
     fun setAlphaScissorThreshold(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, segment, threshold)
     }
 
     /**
@@ -356,7 +356,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_scissor_threshold
      */
     fun getAlphaScissorThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, segment)
     }
 
     /**
@@ -365,7 +365,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_hash_scale
      */
     fun setAlphaHashScale(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, handle, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, segment, threshold)
     }
 
     /**
@@ -374,7 +374,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_hash_scale
      */
     fun getAlphaHashScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, segment)
     }
 
     /**
@@ -383,7 +383,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_antialiasing
      */
     fun setAlphaAntialiasing(alphaAa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, handle, alphaAa)
+        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa)
     }
 
     /**
@@ -392,7 +392,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_antialiasing
      */
     fun getAlphaAntialiasing(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment)
     }
 
     /**
@@ -401,7 +401,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_antialiasing_edge
      */
     fun setAlphaAntialiasingEdge(edge: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, handle, edge)
+        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, segment, edge)
     }
 
     /**
@@ -410,7 +410,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_antialiasing_edge
      */
     fun getAlphaAntialiasingEdge(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, segment)
     }
 
     /**
@@ -423,7 +423,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_billboard_mode
      */
     fun setBillboardMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode)
     }
 
     /**
@@ -436,7 +436,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_billboard_mode
      */
     fun getBillboardMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment)
     }
 
     /**
@@ -447,7 +447,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_texture_filter
      */
     fun setTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
     }
 
     /**
@@ -458,7 +458,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_texture_filter
      */
     fun getTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
     }
 
     /**
@@ -467,7 +467,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_item_rect
      */
     fun getItemRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getItemRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getItemRectBind, segment)
     }
 
     /**
@@ -477,7 +477,7 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.generate_triangle_mesh
      */
     fun generateTriangleMesh(): TriangleMesh? {
-        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, handle))
+        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
     companion object {
@@ -493,11 +493,11 @@ open class SpriteBase3D(handle: MemorySegment) : GeometryInstance3D(handle) {
         const val ALPHA_CUT_HASH: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpriteBase3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpriteBase3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpriteBase3D? =
-            if (handle.address() == 0L) null else SpriteBase3D(handle)
+            if (handle.address() == 0L) null else SpriteBase3D(GodotHandle(handle))
 
         private const val SET_CENTERED_HASH = 2586408642L
         private val setCenteredBind by lazy {

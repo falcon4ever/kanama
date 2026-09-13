@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: FBXState
  */
-class FBXState(handle: MemorySegment) : GLTFState(handle) {
+class FBXState(handle: GodotHandle) : GLTFState(handle) {
     var allowGeometryHelperNodes: Boolean
         @JvmName("allowGeometryHelperNodesProperty")
         get() = getAllowGeometryHelperNodes()
@@ -18,21 +18,21 @@ class FBXState(handle: MemorySegment) : GLTFState(handle) {
 
     fun getAllowGeometryHelperNodes(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowGeometryHelperNodesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowGeometryHelperNodesBind, segment)
     }
 
     fun setAllowGeometryHelperNodes(allow: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowGeometryHelperNodesBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowGeometryHelperNodesBind, segment, allow)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FBXState? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FBXState? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FBXState? =
-            if (handle.address() == 0L) null else FBXState(handle)
+            if (handle.address() == 0L) null else FBXState(GodotHandle(handle))
 
         private const val GET_ALLOW_GEOMETRY_HELPER_NODES_HASH = 2240911060L
         private val getAllowGeometryHelperNodesBind by lazy {

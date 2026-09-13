@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeExpression
  */
-open class VisualShaderNodeExpression(handle: MemorySegment) : VisualShaderNodeGroupBase(handle) {
+open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGroupBase(handle) {
     var expression: String
         @JvmName("expressionProperty")
         get() = getExpression()
@@ -18,21 +18,21 @@ open class VisualShaderNodeExpression(handle: MemorySegment) : VisualShaderNodeG
 
     fun setExpression(expression: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setExpressionBind, handle, expression)
+        ObjectCalls.ptrcallWithStringArg(setExpressionBind, segment, expression)
     }
 
     fun getExpression(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getExpressionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getExpressionBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeExpression? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeExpression? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeExpression? =
-            if (handle.address() == 0L) null else VisualShaderNodeExpression(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeExpression(GodotHandle(handle))
 
         private const val SET_EXPRESSION_HASH = 83702148L
         private val setExpressionBind by lazy {

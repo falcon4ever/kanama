@@ -313,8 +313,8 @@ object XRServer {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): XRServer? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): XRServer? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): XRServer? =
         if (handle.address() == 0L) null else this

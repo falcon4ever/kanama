@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRCompositionLayerEquirect
  */
-class OpenXRCompositionLayerEquirect(handle: MemorySegment) : OpenXRCompositionLayer(handle) {
+class OpenXRCompositionLayerEquirect(handle: GodotHandle) : OpenXRCompositionLayer(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -41,52 +41,52 @@ class OpenXRCompositionLayerEquirect(handle: MemorySegment) : OpenXRCompositionL
         set(value) = setFallbackSegments(value)
 
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     fun setCentralHorizontalAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCentralHorizontalAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setCentralHorizontalAngleBind, segment, angle)
     }
 
     fun getCentralHorizontalAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCentralHorizontalAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCentralHorizontalAngleBind, segment)
     }
 
     fun setUpperVerticalAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setUpperVerticalAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setUpperVerticalAngleBind, segment, angle)
     }
 
     fun getUpperVerticalAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUpperVerticalAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getUpperVerticalAngleBind, segment)
     }
 
     fun setLowerVerticalAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLowerVerticalAngleBind, handle, angle)
+        ObjectCalls.ptrcallWithDoubleArg(setLowerVerticalAngleBind, segment, angle)
     }
 
     fun getLowerVerticalAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLowerVerticalAngleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLowerVerticalAngleBind, segment)
     }
 
     fun setFallbackSegments(segments: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setFallbackSegmentsBind, handle, segments)
+        ObjectCalls.ptrcallWithUInt32Arg(setFallbackSegmentsBind, segment, segments)
     }
 
     fun getFallbackSegments(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getFallbackSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getFallbackSegmentsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayerEquirect? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRCompositionLayerEquirect? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRCompositionLayerEquirect? =
-            if (handle.address() == 0L) null else OpenXRCompositionLayerEquirect(handle)
+            if (handle.address() == 0L) null else OpenXRCompositionLayerEquirect(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

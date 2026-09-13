@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SphereMesh
  */
-class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -49,7 +49,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -59,7 +59,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -69,7 +69,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
     }
 
     /**
@@ -79,7 +79,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
     /**
@@ -89,7 +89,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRadialSegments(radialSegments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, handle, radialSegments)
+        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, segment, radialSegments)
     }
 
     /**
@@ -99,7 +99,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRadialSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, segment)
     }
 
     /**
@@ -109,7 +109,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRings(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, handle, rings)
+        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
     }
 
     /**
@@ -119,7 +119,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
     }
 
     /**
@@ -130,7 +130,7 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setIsHemisphere(isHemisphere: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsHemisphereBind, handle, isHemisphere)
+        ObjectCalls.ptrcallWithBoolArg(setIsHemisphereBind, segment, isHemisphere)
     }
 
     /**
@@ -141,16 +141,16 @@ class SphereMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getIsHemisphere(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsHemisphereBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsHemisphereBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SphereMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SphereMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SphereMesh? =
-            if (handle.address() == 0L) null else SphereMesh(handle)
+            if (handle.address() == 0L) null else SphereMesh(GodotHandle(handle))
 
         @JvmStatic
         fun fromResource(value: Resource): SphereMesh? =

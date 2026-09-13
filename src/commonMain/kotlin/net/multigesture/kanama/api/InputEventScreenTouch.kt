@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: InputEventScreenTouch
  */
-class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle) {
+class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) {
     var index: Int
         @JvmName("indexProperty")
         get() = getIndex()
@@ -38,7 +38,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun setIndex(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setIndexBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(setIndexBind, segment, index)
     }
 
     /**
@@ -48,7 +48,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun getIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
     }
 
     /**
@@ -68,7 +68,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
     }
 
     /**
@@ -78,7 +78,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, handle, pressed)
+        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
     }
 
     /**
@@ -88,7 +88,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun setCanceled(canceled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCanceledBind, handle, canceled)
+        ObjectCalls.ptrcallWithBoolArg(setCanceledBind, segment, canceled)
     }
 
     /**
@@ -98,7 +98,7 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun setDoubleTap(doubleTap: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDoubleTapBind, handle, doubleTap)
+        ObjectCalls.ptrcallWithBoolArg(setDoubleTapBind, segment, doubleTap)
     }
 
     /**
@@ -108,16 +108,16 @@ class InputEventScreenTouch(handle: MemorySegment) : InputEventFromWindow(handle
      */
     fun isDoubleTap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDoubleTapBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDoubleTapBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventScreenTouch? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventScreenTouch? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventScreenTouch? =
-            if (handle.address() == 0L) null else InputEventScreenTouch(handle)
+            if (handle.address() == 0L) null else InputEventScreenTouch(GodotHandle(handle))
 
         private const val SET_INDEX_HASH = 1286410249L
         private val setIndexBind by lazy {

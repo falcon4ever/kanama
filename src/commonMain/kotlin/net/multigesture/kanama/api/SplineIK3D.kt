@@ -11,14 +11,14 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: SplineIK3D
  */
-class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
+class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
     /**
      * Sets the node path of the `Path3D` which is describing the path.
      *
      * Generated from Godot docs: SplineIK3D.set_path_3d
      */
     fun setPath3d(index: Int, path3d: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setPath3dBind, handle, index, path3d)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(setPath3dBind, segment, index, path3d)
     }
 
     /**
@@ -27,7 +27,7 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.get_path_3d
      */
     fun getPath3d(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPath3dBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPath3dBind, segment, index)
     }
 
     /**
@@ -36,7 +36,7 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.set_tilt_enabled
      */
     fun setTiltEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTiltEnabledBind, handle, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setTiltEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -45,7 +45,7 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.is_tilt_enabled
      */
     fun isTiltEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTiltEnabledBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isTiltEnabledBind, segment, index)
     }
 
     /**
@@ -58,7 +58,7 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.set_tilt_fade_in
      */
     fun setTiltFadeIn(index: Int, size: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeInBind, handle, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeInBind, segment, index, size)
     }
 
     /**
@@ -68,7 +68,7 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.get_tilt_fade_in
      */
     fun getTiltFadeIn(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeInBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeInBind, segment, index)
     }
 
     /**
@@ -81,7 +81,7 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.set_tilt_fade_out
      */
     fun setTiltFadeOut(index: Int, size: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeOutBind, handle, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeOutBind, segment, index, size)
     }
 
     /**
@@ -91,16 +91,16 @@ class SplineIK3D(handle: MemorySegment) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.get_tilt_fade_out
      */
     fun getTiltFadeOut(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeOutBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeOutBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SplineIK3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SplineIK3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SplineIK3D? =
-            if (handle.address() == 0L) null else SplineIK3D(handle)
+            if (handle.address() == 0L) null else SplineIK3D(GodotHandle(handle))
 
         private const val SET_PATH_3D_HASH = 2761262315L
         private val setPath3dBind by lazy {

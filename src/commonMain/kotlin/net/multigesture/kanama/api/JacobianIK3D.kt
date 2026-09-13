@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: JacobianIK3D
  */
-class JacobianIK3D(handle: MemorySegment) : IterateIK3D(handle) {
+class JacobianIK3D(handle: GodotHandle) : IterateIK3D(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): JacobianIK3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): JacobianIK3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): JacobianIK3D? =
-            if (handle.address() == 0L) null else JacobianIK3D(handle)
+            if (handle.address() == 0L) null else JacobianIK3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

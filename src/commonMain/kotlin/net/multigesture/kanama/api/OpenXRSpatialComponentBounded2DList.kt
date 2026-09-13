@@ -10,24 +10,24 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: OpenXRSpatialComponentBounded2DList
  */
-class OpenXRSpatialComponentBounded2DList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+class OpenXRSpatialComponentBounded2DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getCenterPose(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getCenterPoseBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getCenterPoseBind, segment, index)
     }
 
     fun getSize(index: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(getSizeBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetVector2(getSizeBind, segment, index)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentBounded2DList? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentBounded2DList? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentBounded2DList? =
-            if (handle.address() == 0L) null else OpenXRSpatialComponentBounded2DList(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialComponentBounded2DList(GodotHandle(handle))
 
         private const val GET_CENTER_POSE_HASH = 1965739696L
         private val getCenterPoseBind by lazy {

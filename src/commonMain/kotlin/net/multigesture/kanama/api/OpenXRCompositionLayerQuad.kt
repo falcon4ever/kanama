@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2
 /**
  * Generated from Godot docs: OpenXRCompositionLayerQuad
  */
-class OpenXRCompositionLayerQuad(handle: MemorySegment) : OpenXRCompositionLayer(handle) {
+class OpenXRCompositionLayerQuad(handle: GodotHandle) : OpenXRCompositionLayer(handle) {
     var quadSize: Vector2
         @JvmName("quadSizeProperty")
         get() = getQuadSize()
@@ -18,20 +18,20 @@ class OpenXRCompositionLayerQuad(handle: MemorySegment) : OpenXRCompositionLayer
         set(value) = setQuadSize(value)
 
     fun setQuadSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setQuadSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector2Arg(setQuadSizeBind, segment, size)
     }
 
     fun getQuadSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getQuadSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getQuadSizeBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRCompositionLayerQuad? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRCompositionLayerQuad? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRCompositionLayerQuad? =
-            if (handle.address() == 0L) null else OpenXRCompositionLayerQuad(handle)
+            if (handle.address() == 0L) null else OpenXRCompositionLayerQuad(GodotHandle(handle))
 
         private const val SET_QUAD_SIZE_HASH = 743155724L
         private val setQuadSizeBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: CodeHighlighter
  */
-class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
+class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     var numberColor: Color
         @JvmName("numberColorProperty")
         get() = getNumberColor()
@@ -62,7 +62,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun addKeywordColor(keyword: String, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndColorArg(addKeywordColorBind, handle, keyword, color)
+        ObjectCalls.ptrcallWithStringAndColorArg(addKeywordColorBind, segment, keyword, color)
     }
 
     /**
@@ -72,7 +72,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun removeKeywordColor(keyword: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeKeywordColorBind, handle, keyword)
+        ObjectCalls.ptrcallWithStringArg(removeKeywordColorBind, segment, keyword)
     }
 
     /**
@@ -82,7 +82,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun hasKeywordColor(keyword: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasKeywordColorBind, handle, keyword)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasKeywordColorBind, segment, keyword)
     }
 
     /**
@@ -92,7 +92,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getKeywordColor(keyword: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetColor(getKeywordColorBind, handle, keyword)
+        return ObjectCalls.ptrcallWithStringArgRetColor(getKeywordColorBind, segment, keyword)
     }
 
     /**
@@ -103,7 +103,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun setKeywordColors(keywords: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setKeywordColorsBind, handle, keywords)
+        ObjectCalls.ptrcallWithDictionaryArg(setKeywordColorsBind, segment, keywords)
     }
 
     /**
@@ -113,7 +113,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun clearKeywordColors() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearKeywordColorsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearKeywordColorsBind, segment)
     }
 
     /**
@@ -124,7 +124,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getKeywordColors(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getKeywordColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getKeywordColorsBind, segment)
     }
 
     /**
@@ -135,7 +135,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun addMemberKeywordColor(memberKeyword: String, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndColorArg(addMemberKeywordColorBind, handle, memberKeyword, color)
+        ObjectCalls.ptrcallWithStringAndColorArg(addMemberKeywordColorBind, segment, memberKeyword, color)
     }
 
     /**
@@ -145,7 +145,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun removeMemberKeywordColor(memberKeyword: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeMemberKeywordColorBind, handle, memberKeyword)
+        ObjectCalls.ptrcallWithStringArg(removeMemberKeywordColorBind, segment, memberKeyword)
     }
 
     /**
@@ -155,7 +155,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun hasMemberKeywordColor(memberKeyword: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasMemberKeywordColorBind, handle, memberKeyword)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasMemberKeywordColorBind, segment, memberKeyword)
     }
 
     /**
@@ -165,7 +165,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getMemberKeywordColor(memberKeyword: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetColor(getMemberKeywordColorBind, handle, memberKeyword)
+        return ObjectCalls.ptrcallWithStringArgRetColor(getMemberKeywordColorBind, segment, memberKeyword)
     }
 
     /**
@@ -176,7 +176,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun setMemberKeywordColors(memberKeyword: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setMemberKeywordColorsBind, handle, memberKeyword)
+        ObjectCalls.ptrcallWithDictionaryArg(setMemberKeywordColorsBind, segment, memberKeyword)
     }
 
     /**
@@ -186,7 +186,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun clearMemberKeywordColors() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearMemberKeywordColorsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearMemberKeywordColorsBind, segment)
     }
 
     /**
@@ -197,7 +197,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getMemberKeywordColors(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getMemberKeywordColorsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getMemberKeywordColorsBind, segment)
     }
 
     /**
@@ -209,7 +209,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun addColorRegion(startKey: String, endKey: String, color: Color, lineOnly: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringColorBoolArgs(addColorRegionBind, handle, startKey, endKey, color, lineOnly)
+        ObjectCalls.ptrcallWithTwoStringColorBoolArgs(addColorRegionBind, segment, startKey, endKey, color, lineOnly)
     }
 
     /**
@@ -219,7 +219,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun removeColorRegion(startKey: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeColorRegionBind, handle, startKey)
+        ObjectCalls.ptrcallWithStringArg(removeColorRegionBind, segment, startKey)
     }
 
     /**
@@ -229,7 +229,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun hasColorRegion(startKey: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasColorRegionBind, handle, startKey)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasColorRegionBind, segment, startKey)
     }
 
     /**
@@ -240,7 +240,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun setColorRegions(colorRegions: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setColorRegionsBind, handle, colorRegions)
+        ObjectCalls.ptrcallWithDictionaryArg(setColorRegionsBind, segment, colorRegions)
     }
 
     /**
@@ -250,7 +250,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun clearColorRegions() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearColorRegionsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearColorRegionsBind, segment)
     }
 
     /**
@@ -261,7 +261,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getColorRegions(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getColorRegionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getColorRegionsBind, segment)
     }
 
     /**
@@ -271,7 +271,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun setFunctionColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setFunctionColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setFunctionColorBind, segment, color)
     }
 
     /**
@@ -281,7 +281,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getFunctionColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getFunctionColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getFunctionColorBind, segment)
     }
 
     /**
@@ -291,7 +291,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun setNumberColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setNumberColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setNumberColorBind, segment, color)
     }
 
     /**
@@ -301,7 +301,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getNumberColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getNumberColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getNumberColorBind, segment)
     }
 
     /**
@@ -311,7 +311,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun setSymbolColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSymbolColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setSymbolColorBind, segment, color)
     }
 
     /**
@@ -321,7 +321,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getSymbolColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSymbolColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getSymbolColorBind, segment)
     }
 
     /**
@@ -332,7 +332,7 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun setMemberVariableColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setMemberVariableColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setMemberVariableColorBind, segment, color)
     }
 
     /**
@@ -343,16 +343,16 @@ class CodeHighlighter(handle: MemorySegment) : SyntaxHighlighter(handle) {
      */
     fun getMemberVariableColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getMemberVariableColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getMemberVariableColorBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CodeHighlighter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CodeHighlighter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CodeHighlighter? =
-            if (handle.address() == 0L) null else CodeHighlighter(handle)
+            if (handle.address() == 0L) null else CodeHighlighter(GodotHandle(handle))
 
         private const val ADD_KEYWORD_COLOR_HASH = 1636512886L
         private val addKeywordColorBind by lazy {

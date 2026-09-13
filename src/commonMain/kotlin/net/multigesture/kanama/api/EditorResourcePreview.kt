@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorResourcePreview
  */
-class EditorResourcePreview(handle: MemorySegment) : Node(handle) {
+class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
     /**
      * Queue a resource file located at `path` for preview. Once the preview is ready, the `receiver`'s
      * `receiver_func` will be called. The `receiver_func` must take the following four arguments:
@@ -22,7 +22,7 @@ class EditorResourcePreview(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.queue_resource_preview
      */
     fun queueResourcePreview(path: String, receiver: GodotObject, receiverFunc: String, userdata: Any?) {
-        ObjectCalls.ptrcallWithStringObjectStringNameVariantArgs(queueResourcePreviewBind, handle, path, receiver.handle, receiverFunc, userdata)
+        ObjectCalls.ptrcallWithStringObjectStringNameVariantArgs(queueResourcePreviewBind, segment, path, receiver.segment, receiverFunc, userdata)
     }
 
     /**
@@ -36,7 +36,7 @@ class EditorResourcePreview(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.queue_edited_resource_preview
      */
     fun queueEditedResourcePreview(resource: Resource?, receiver: GodotObject, receiverFunc: String, userdata: Any?) {
-        ObjectCalls.ptrcallWithTwoObjectStringNameVariantArgs(queueEditedResourcePreviewBind, handle, resource?.requireOpenHandle() ?: MemorySegment.NULL, receiver.handle, receiverFunc, userdata)
+        ObjectCalls.ptrcallWithTwoObjectStringNameVariantArgs(queueEditedResourcePreviewBind, segment, resource?.requireOpenHandle() ?: MemorySegment.NULL, receiver.segment, receiverFunc, userdata)
     }
 
     /**
@@ -45,7 +45,7 @@ class EditorResourcePreview(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.add_preview_generator
      */
     fun addPreviewGenerator(generator: EditorResourcePreviewGenerator?) {
-        ObjectCalls.ptrcallWithObjectArgs(addPreviewGeneratorBind, handle, listOf(generator?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addPreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -54,7 +54,7 @@ class EditorResourcePreview(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.remove_preview_generator
      */
     fun removePreviewGenerator(generator: EditorResourcePreviewGenerator?) {
-        ObjectCalls.ptrcallWithObjectArgs(removePreviewGeneratorBind, handle, listOf(generator?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removePreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -64,7 +64,7 @@ class EditorResourcePreview(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.check_for_invalidation
      */
     fun checkForInvalidation(path: String) {
-        ObjectCalls.ptrcallWithStringArg(checkForInvalidationBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(checkForInvalidationBind, segment, path)
     }
 
     object Signals {
@@ -73,11 +73,11 @@ class EditorResourcePreview(handle: MemorySegment) : Node(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorResourcePreview? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorResourcePreview? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorResourcePreview? =
-            if (handle.address() == 0L) null else EditorResourcePreview(handle)
+            if (handle.address() == 0L) null else EditorResourcePreview(GodotHandle(handle))
 
         private const val QUEUE_RESOURCE_PREVIEW_HASH = 233177534L
         private val queueResourcePreviewBind by lazy {

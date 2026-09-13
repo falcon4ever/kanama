@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: InputEvent
  */
-open class InputEvent(handle: MemorySegment) : Resource(handle) {
+open class InputEvent(handle: GodotHandle) : Resource(handle) {
     var device: Int
         @JvmName("deviceProperty")
         get() = getDevice()
@@ -28,7 +28,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun setDevice(device: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDeviceBind, handle, device)
+        ObjectCalls.ptrcallWithIntArg(setDeviceBind, segment, device)
     }
 
     /**
@@ -39,7 +39,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun getDevice(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDeviceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDeviceBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isAction(action: String, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionBind, handle, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionBind, segment, action, exactMatch)
     }
 
     /**
@@ -68,7 +68,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isActionPressed(action: String, allowEcho: Boolean = false, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(isActionPressedBind, handle, action, allowEcho, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(isActionPressedBind, segment, action, allowEcho, exactMatch)
     }
 
     /**
@@ -81,7 +81,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isActionReleased(action: String, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionReleasedBind, handle, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionReleasedBind, segment, action, exactMatch)
     }
 
     /**
@@ -94,7 +94,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun getActionStrength(action: String, exactMatch: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(getActionStrengthBind, handle, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(getActionStrengthBind, segment, action, exactMatch)
     }
 
     /**
@@ -104,7 +104,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isCanceled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCanceledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCanceledBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, segment)
     }
 
     /**
@@ -129,7 +129,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isReleased(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isReleasedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isReleasedBind, segment)
     }
 
     /**
@@ -145,7 +145,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isEcho(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEchoBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEchoBind, segment)
     }
 
     /**
@@ -155,7 +155,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun asText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(asTextBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isMatch(event: InputEvent?, exactMatch: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(isMatchBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(isMatchBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL, exactMatch)
     }
 
     /**
@@ -183,7 +183,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun isActionType(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isActionTypeBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun accumulate(withEvent: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(accumulateBind, handle, withEvent?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(accumulateBind, segment, withEvent?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -209,8 +209,8 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
      */
     fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0f, 0f)): InputEvent? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, handle, xform, localOfs)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, segment, xform, localOfs)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -223,11 +223,11 @@ open class InputEvent(handle: MemorySegment) : Resource(handle) {
         const val DEVICE_ID_MOUSE: Long = 32L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEvent? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEvent? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEvent? =
-            if (handle.address() == 0L) null else InputEvent(handle)
+            if (handle.address() == 0L) null else InputEvent(GodotHandle(handle))
 
         private const val SET_DEVICE_HASH = 1286410249L
         private val setDeviceBind by lazy {

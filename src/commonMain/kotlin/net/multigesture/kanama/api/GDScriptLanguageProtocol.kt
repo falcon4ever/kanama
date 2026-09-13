@@ -59,8 +59,8 @@ object GDScriptLanguageProtocol {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): GDScriptLanguageProtocol? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): GDScriptLanguageProtocol? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): GDScriptLanguageProtocol? =
         if (handle.address() == 0L) null else this

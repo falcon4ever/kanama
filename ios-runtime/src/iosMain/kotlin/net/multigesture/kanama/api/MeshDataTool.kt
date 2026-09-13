@@ -12,208 +12,208 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: MeshDataTool
  */
-class MeshDataTool(handle: MemorySegment) : RefCounted(handle) {
+class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun createFromSurface(mesh: ArrayMesh?, surface: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
     fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, handle, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
+        return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
     }
 
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     fun getVertexCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVertexCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getVertexCountBind, segment)
     }
 
     fun getEdgeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEdgeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getEdgeCountBind, segment)
     }
 
     fun getFaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFaceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFaceCountBind, segment)
     }
 
     fun setVertex(idx: Int, vertex: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, handle, idx, vertex)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, segment, idx, vertex)
     }
 
     fun getVertex(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexBind, segment, idx)
     }
 
     fun setVertexNormal(idx: Int, normal: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexNormalBind, handle, idx, normal)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexNormalBind, segment, idx, normal)
     }
 
     fun getVertexNormal(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexNormalBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getVertexNormalBind, segment, idx)
     }
 
     fun setVertexTangent(idx: Int, tangent: Plane) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPlaneArg(setVertexTangentBind, handle, idx, tangent)
+        ObjectCalls.ptrcallWithIntAndPlaneArg(setVertexTangentBind, segment, idx, tangent)
     }
 
     fun getVertexTangent(idx: Int): Plane {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPlane(getVertexTangentBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPlane(getVertexTangentBind, segment, idx)
     }
 
     fun setVertexUv(idx: Int, uv: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUvBind, handle, idx, uv)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUvBind, segment, idx, uv)
     }
 
     fun getVertexUv(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUvBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUvBind, segment, idx)
     }
 
     fun setVertexUv2(idx: Int, uv2: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUv2Bind, handle, idx, uv2)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(setVertexUv2Bind, segment, idx, uv2)
     }
 
     fun getVertexUv2(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUv2Bind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getVertexUv2Bind, segment, idx)
     }
 
     fun setVertexColor(idx: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setVertexColorBind, handle, idx, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(setVertexColorBind, segment, idx, color)
     }
 
     fun getVertexColor(idx: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getVertexColorBind, segment, idx)
     }
 
     fun setVertexBones(idx: Int, bones: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPackedInt32ListArgs(setVertexBonesBind, handle, idx, bones)
+        ObjectCalls.ptrcallWithIntAndPackedInt32ListArgs(setVertexBonesBind, segment, idx, bones)
     }
 
     fun getVertexBones(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexBonesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexBonesBind, segment, idx)
     }
 
     fun setVertexWeights(idx: Int, weights: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setVertexWeightsBind, handle, idx, weights)
+        ObjectCalls.ptrcallWithIntAndPackedFloat32ListArgs(setVertexWeightsBind, segment, idx, weights)
     }
 
     fun getVertexWeights(idx: Int): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getVertexWeightsBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedFloat32List(getVertexWeightsBind, segment, idx)
     }
 
     fun setVertexMeta(idx: Int, meta: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVariantArg(setVertexMetaBind, handle, idx, meta)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setVertexMetaBind, segment, idx, meta)
     }
 
     fun getVertexMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getVertexMetaBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getVertexMetaBind, segment, idx)
     }
 
     fun getVertexEdges(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexEdgesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexEdgesBind, segment, idx)
     }
 
     fun getVertexFaces(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexFacesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getVertexFacesBind, segment, idx)
     }
 
     fun getEdgeVertex(idx: Int, vertex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getEdgeVertexBind, handle, idx, vertex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getEdgeVertexBind, segment, idx, vertex)
     }
 
     fun getEdgeFaces(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getEdgeFacesBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getEdgeFacesBind, segment, idx)
     }
 
     fun setEdgeMeta(idx: Int, meta: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVariantArg(setEdgeMetaBind, handle, idx, meta)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setEdgeMetaBind, segment, idx, meta)
     }
 
     fun getEdgeMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getEdgeMetaBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getEdgeMetaBind, segment, idx)
     }
 
     fun getFaceVertex(idx: Int, vertex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceVertexBind, handle, idx, vertex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceVertexBind, segment, idx, vertex)
     }
 
     fun getFaceEdge(idx: Int, edge: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceEdgeBind, handle, idx, edge)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getFaceEdgeBind, segment, idx, edge)
     }
 
     fun setFaceMeta(idx: Int, meta: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVariantArg(setFaceMetaBind, handle, idx, meta)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setFaceMetaBind, segment, idx, meta)
     }
 
     fun getFaceMeta(idx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getFaceMetaBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getFaceMetaBind, segment, idx)
     }
 
     fun getFaceNormal(idx: Int): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getFaceNormalBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(getFaceNormalBind, segment, idx)
     }
 
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshDataTool? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshDataTool? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MeshDataTool? =
-            if (handle.address() == 0L) null else MeshDataTool(handle)
+            if (handle.address() == 0L) null else MeshDataTool(GodotHandle(handle))
 
         // Instantiate a MeshDataTool (RefCounted; used to read mesh vertex/face data).
         fun create(): MeshDataTool =
-            MeshDataTool(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool")))
+            MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {

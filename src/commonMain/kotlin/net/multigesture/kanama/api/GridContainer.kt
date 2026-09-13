@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: GridContainer
  */
-class GridContainer(handle: MemorySegment) : Container(handle) {
+class GridContainer(handle: GodotHandle) : Container(handle) {
     var columns: Int
         @JvmName("columnsProperty")
         get() = getColumns()
@@ -25,7 +25,7 @@ class GridContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GridContainer.set_columns
      */
     fun setColumns(columns: Int) {
-        ObjectCalls.ptrcallWithIntArg(setColumnsBind, handle, columns)
+        ObjectCalls.ptrcallWithIntArg(setColumnsBind, segment, columns)
     }
 
     /**
@@ -35,16 +35,16 @@ class GridContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: GridContainer.get_columns
      */
     fun getColumns(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GridContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GridContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GridContainer? =
-            if (handle.address() == 0L) null else GridContainer(handle)
+            if (handle.address() == 0L) null else GridContainer(GodotHandle(handle))
 
         private const val SET_COLUMNS_HASH = 1286410249L
         private val setColumnsBind by lazy {

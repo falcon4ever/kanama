@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: VisualInstance3D
  */
-open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
+open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
     var layers: Long
         @JvmName("layersProperty")
         get() = getLayerMask()
@@ -40,7 +40,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_base
      */
     fun setBase(base: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setBaseBind, handle, base)
+        ObjectCalls.ptrcallWithRIDArg(setBaseBind, segment, base)
     }
 
     /**
@@ -50,7 +50,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_base
      */
     fun getBase(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getBaseBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getBaseBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_instance
      */
     fun getInstance(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getInstanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getInstanceBind, segment)
     }
 
     /**
@@ -80,7 +80,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_layer_mask
      */
     fun setLayerMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setLayerMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setLayerMaskBind, segment, mask)
     }
 
     /**
@@ -99,7 +99,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_layer_mask
      */
     fun getLayerMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getLayerMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getLayerMaskBind, segment)
     }
 
     /**
@@ -109,7 +109,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_layer_mask_value
      */
     fun setLayerMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setLayerMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setLayerMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -119,7 +119,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_layer_mask_value
      */
     fun getLayerMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getLayerMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getLayerMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -133,7 +133,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_sorting_offset
      */
     fun setSortingOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSortingOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setSortingOffsetBind, segment, offset)
     }
 
     /**
@@ -147,7 +147,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_sorting_offset
      */
     fun getSortingOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSortingOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSortingOffsetBind, segment)
     }
 
     /**
@@ -159,7 +159,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_sorting_use_aabb_center
      */
     fun setSortingUseAabbCenter(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSortingUseAabbCenterBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSortingUseAabbCenterBind, segment, enabled)
     }
 
     /**
@@ -171,7 +171,7 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.is_sorting_use_aabb_center
      */
     fun isSortingUseAabbCenter(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSortingUseAabbCenterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSortingUseAabbCenterBind, segment)
     }
 
     /**
@@ -180,16 +180,16 @@ open class VisualInstance3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_aabb
      */
     fun getAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualInstance3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualInstance3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualInstance3D? =
-            if (handle.address() == 0L) null else VisualInstance3D(handle)
+            if (handle.address() == 0L) null else VisualInstance3D(GodotHandle(handle))
 
         private const val SET_BASE_HASH = 2722037293L
         private val setBaseBind by lazy {

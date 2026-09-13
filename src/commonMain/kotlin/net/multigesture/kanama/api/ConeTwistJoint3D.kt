@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ConeTwistJoint3D
  */
-class ConeTwistJoint3D(handle: MemorySegment) : Joint3D(handle) {
+class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
     var swingSpan: Double
         @JvmName("swingSpanProperty")
         get() = getParam(0L)
@@ -50,7 +50,7 @@ class ConeTwistJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: ConeTwistJoint3D.set_param
      */
     fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, handle, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
     }
 
     /**
@@ -60,7 +60,7 @@ class ConeTwistJoint3D(handle: MemorySegment) : Joint3D(handle) {
      * Generated from Godot docs: ConeTwistJoint3D.get_param
      */
     fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, handle, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
     }
 
     companion object {
@@ -72,11 +72,11 @@ class ConeTwistJoint3D(handle: MemorySegment) : Joint3D(handle) {
         const val PARAM_MAX: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConeTwistJoint3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConeTwistJoint3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConeTwistJoint3D? =
-            if (handle.address() == 0L) null else ConeTwistJoint3D(handle)
+            if (handle.address() == 0L) null else ConeTwistJoint3D(GodotHandle(handle))
 
         private const val SET_PARAM_HASH = 1062470226L
         private val setParamBind by lazy {

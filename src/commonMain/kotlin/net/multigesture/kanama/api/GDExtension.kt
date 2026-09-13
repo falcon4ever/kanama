@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: GDExtension
  */
-class GDExtension(handle: MemorySegment) : Resource(handle) {
+class GDExtension(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns `true` if this extension's library has been opened.
      *
@@ -18,7 +18,7 @@ class GDExtension(handle: MemorySegment) : Resource(handle) {
      */
     fun isLibraryOpen(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLibraryOpenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLibraryOpenBind, segment)
     }
 
     /**
@@ -29,7 +29,7 @@ class GDExtension(handle: MemorySegment) : Resource(handle) {
      */
     fun getMinimumLibraryInitializationLevel(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, segment)
     }
 
     companion object {
@@ -39,11 +39,11 @@ class GDExtension(handle: MemorySegment) : Resource(handle) {
         const val INITIALIZATION_LEVEL_EDITOR: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GDExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GDExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GDExtension? =
-            if (handle.address() == 0L) null else GDExtension(handle)
+            if (handle.address() == 0L) null else GDExtension(GodotHandle(handle))
 
         private const val IS_LIBRARY_OPEN_HASH = 36873697L
         private val isLibraryOpenBind by lazy {

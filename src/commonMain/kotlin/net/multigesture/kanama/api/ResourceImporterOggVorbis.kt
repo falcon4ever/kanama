@@ -8,7 +8,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ResourceImporterOggVorbis
  */
-class ResourceImporterOggVorbis(handle: MemorySegment) : ResourceImporter(handle) {
+class ResourceImporterOggVorbis(handle: GodotHandle) : ResourceImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
@@ -21,11 +21,11 @@ class ResourceImporterOggVorbis(handle: MemorySegment) : ResourceImporter(handle
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceImporterOggVorbis? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceImporterOggVorbis? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceImporterOggVorbis? =
-            if (handle.address() == 0L) null else ResourceImporterOggVorbis(handle)
+            if (handle.address() == 0L) null else ResourceImporterOggVorbis(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 354904730L
         private val loadFromBufferBind by lazy {

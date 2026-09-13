@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRStructureBase
  */
-open class OpenXRStructureBase(handle: MemorySegment) : RefCounted(handle) {
+open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
     var next: OpenXRStructureBase?
         @JvmName("nextProperty")
         get() = getNext()
@@ -18,18 +18,18 @@ open class OpenXRStructureBase(handle: MemorySegment) : RefCounted(handle) {
 
     fun getStructureType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructureTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getStructureTypeBind, segment)
     }
 
     fun setNext(entity: OpenXRStructureBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNextBind, handle, listOf(entity?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNextBind, segment, listOf(entity?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNext(): OpenXRStructureBase? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -38,11 +38,11 @@ open class OpenXRStructureBase(handle: MemorySegment) : RefCounted(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRStructureBase? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRStructureBase? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRStructureBase? =
-            if (handle.address() == 0L) null else OpenXRStructureBase(handle)
+            if (handle.address() == 0L) null else OpenXRStructureBase(GodotHandle(handle))
 
         private const val GET_STRUCTURE_TYPE_HASH = 2455072627L
         private val getStructureTypeBind by lazy {

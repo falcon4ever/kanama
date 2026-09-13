@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: OpenXRSpatialEntityTracker
  */
-open class OpenXRSpatialEntityTracker(handle: MemorySegment) : XRPositionalTracker(handle) {
+open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     var entity: RID
         @JvmName("entityProperty")
         get() = getEntity()
@@ -25,47 +25,47 @@ open class OpenXRSpatialEntityTracker(handle: MemorySegment) : XRPositionalTrack
 
     fun setSpatialContext(spatialContext: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setSpatialContextBind, handle, spatialContext)
+        ObjectCalls.ptrcallWithRIDArg(setSpatialContextBind, segment, spatialContext)
     }
 
     fun getSpatialContext(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getSpatialContextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getSpatialContextBind, segment)
     }
 
     fun setEntity(entity: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setEntityBind, handle, entity)
+        ObjectCalls.ptrcallWithRIDArg(setEntityBind, segment, entity)
     }
 
     fun getEntity(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getEntityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getEntityBind, segment)
     }
 
     fun setSpatialTrackingState(spatialTrackingState: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSpatialTrackingStateBind, handle, spatialTrackingState)
+        ObjectCalls.ptrcallWithLongArg(setSpatialTrackingStateBind, segment, spatialTrackingState)
     }
 
     fun getSpatialTrackingState(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSpatialTrackingStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSpatialTrackingStateBind, segment)
     }
 
     fun getNext(): OpenXRStructureBase? {
         checkOpen()
-        return OpenXRStructureBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNextBind, handle))
+        return OpenXRStructureBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNextBind, segment))
     }
 
     fun addNext(next: OpenXRStructureBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addNextBind, handle, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addNextBind, segment, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeNext(next: OpenXRStructureBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeNextBind, handle, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeNextBind, segment, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     object Signals {
@@ -79,11 +79,11 @@ open class OpenXRSpatialEntityTracker(handle: MemorySegment) : XRPositionalTrack
         const val ENTITY_TRACKING_STATE_TRACKING: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialEntityTracker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialEntityTracker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialEntityTracker? =
-            if (handle.address() == 0L) null else OpenXRSpatialEntityTracker(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialEntityTracker(GodotHandle(handle))
 
         private const val SET_SPATIAL_CONTEXT_HASH = 2722037293L
         private val setSpatialContextBind by lazy {

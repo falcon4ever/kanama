@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: Curve
  */
-class Curve(handle: MemorySegment) : Resource(handle) {
+class Curve(handle: GodotHandle) : Resource(handle) {
     var minDomain: Double
         @JvmName("minDomainProperty")
         get() = getMinDomain()
@@ -56,7 +56,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
     }
 
     /**
@@ -66,7 +66,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPointCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setPointCountBind, segment, count)
     }
 
     /**
@@ -78,7 +78,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Long = 0L, rightMode: Long = 0L): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, handle, position, leftTangent, rightTangent, leftMode, rightMode)
+        return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, segment, position, leftTangent, rightTangent, leftMode, rightMode)
     }
 
     /**
@@ -88,7 +88,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun removePoint(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePointBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, index)
     }
 
     /**
@@ -98,7 +98,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun clearPoints() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPointsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearPointsBind, segment)
     }
 
     /**
@@ -108,7 +108,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointPosition(index: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, segment, index)
     }
 
     /**
@@ -118,7 +118,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointValue(index: Int, y: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointValueBind, handle, index, y)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointValueBind, segment, index, y)
     }
 
     /**
@@ -128,7 +128,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointOffset(index: Int, offset: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(setPointOffsetBind, handle, index, offset)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(setPointOffsetBind, segment, index, offset)
     }
 
     /**
@@ -138,7 +138,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun sample(offset: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBind, handle, offset)
+        return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBind, segment, offset)
     }
 
     /**
@@ -149,7 +149,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun sampleBaked(offset: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBakedBind, handle, offset)
+        return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBakedBind, segment, offset)
     }
 
     /**
@@ -159,7 +159,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointLeftTangent(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointLeftTangentBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointLeftTangentBind, segment, index)
     }
 
     /**
@@ -169,7 +169,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointRightTangent(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointRightTangentBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointRightTangentBind, segment, index)
     }
 
     /**
@@ -179,7 +179,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointLeftMode(index: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, segment, index)
     }
 
     /**
@@ -189,7 +189,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getPointRightMode(index: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, segment, index)
     }
 
     /**
@@ -199,7 +199,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointLeftTangent(index: Int, tangent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointLeftTangentBind, handle, index, tangent)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointLeftTangentBind, segment, index, tangent)
     }
 
     /**
@@ -209,7 +209,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointRightTangent(index: Int, tangent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointRightTangentBind, handle, index, tangent)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointRightTangentBind, segment, index, tangent)
     }
 
     /**
@@ -219,7 +219,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointLeftMode(index: Int, mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, handle, index, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, segment, index, mode)
     }
 
     /**
@@ -229,7 +229,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setPointRightMode(index: Int, mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, handle, index, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, segment, index, mode)
     }
 
     /**
@@ -240,7 +240,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getMinValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinValueBind, segment)
     }
 
     /**
@@ -251,7 +251,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setMinValue(min: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinValueBind, handle, min)
+        ObjectCalls.ptrcallWithDoubleArg(setMinValueBind, segment, min)
     }
 
     /**
@@ -262,7 +262,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getMaxValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxValueBind, segment)
     }
 
     /**
@@ -273,7 +273,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setMaxValue(max: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxValueBind, handle, max)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxValueBind, segment, max)
     }
 
     /**
@@ -283,7 +283,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getValueRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getValueRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getValueRangeBind, segment)
     }
 
     /**
@@ -293,7 +293,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getMinDomain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinDomainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMinDomainBind, segment)
     }
 
     /**
@@ -303,7 +303,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setMinDomain(min: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinDomainBind, handle, min)
+        ObjectCalls.ptrcallWithDoubleArg(setMinDomainBind, segment, min)
     }
 
     /**
@@ -313,7 +313,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getMaxDomain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDomainBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDomainBind, segment)
     }
 
     /**
@@ -323,7 +323,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setMaxDomain(max: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxDomainBind, handle, max)
+        ObjectCalls.ptrcallWithDoubleArg(setMaxDomainBind, segment, max)
     }
 
     /**
@@ -333,7 +333,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getDomainRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainRangeBind, segment)
     }
 
     /**
@@ -344,7 +344,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun cleanDupes() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(cleanDupesBind, handle)
+        ObjectCalls.ptrcallNoArgs(cleanDupesBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun bake() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(bakeBind, handle)
+        ObjectCalls.ptrcallNoArgs(bakeBind, segment)
     }
 
     /**
@@ -364,7 +364,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun getBakeResolution(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBakeResolutionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBakeResolutionBind, segment)
     }
 
     /**
@@ -374,7 +374,7 @@ class Curve(handle: MemorySegment) : Resource(handle) {
      */
     fun setBakeResolution(resolution: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBakeResolutionBind, handle, resolution)
+        ObjectCalls.ptrcallWithIntArg(setBakeResolutionBind, segment, resolution)
     }
 
     object Signals {
@@ -388,11 +388,11 @@ class Curve(handle: MemorySegment) : Resource(handle) {
         const val TANGENT_MODE_COUNT: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Curve? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Curve? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Curve? =
-            if (handle.address() == 0L) null else Curve(handle)
+            if (handle.address() == 0L) null else Curve(GodotHandle(handle))
 
         private const val GET_POINT_COUNT_HASH = 3905245786L
         private val getPointCountBind by lazy {

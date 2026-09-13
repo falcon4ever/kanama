@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EditorExportPreset
  */
-class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
+class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns `true` if the preset has the property named `property`.
      *
@@ -18,7 +18,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun has(property: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasBind, handle, property)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasBind, segment, property)
     }
 
     /**
@@ -28,7 +28,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFilesToExport(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesToExportBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesToExportBind, segment)
     }
 
     /**
@@ -40,7 +40,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCustomizedFiles(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getCustomizedFilesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getCustomizedFilesBind, segment)
     }
 
     /**
@@ -50,7 +50,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCustomizedFilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCustomizedFilesCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCustomizedFilesCountBind, segment)
     }
 
     /**
@@ -60,7 +60,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasExportFile(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasExportFileBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasExportFileBind, segment, path)
     }
 
     /**
@@ -70,7 +70,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFileExportMode(path: String, default: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, handle, path, default)
+        return ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, segment, path, default)
     }
 
     /**
@@ -81,7 +81,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getProjectSetting(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getProjectSettingBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getProjectSettingBind, segment, name)
     }
 
     /**
@@ -91,7 +91,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPresetName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPresetNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPresetNameBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isRunnable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunnableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isRunnableBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun areAdvancedOptionsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(areAdvancedOptionsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areAdvancedOptionsEnabledBind, segment)
     }
 
     /**
@@ -121,7 +121,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isDedicatedServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDedicatedServerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDedicatedServerBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getExportFilter(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, segment)
     }
 
     /**
@@ -141,7 +141,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIncludeFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIncludeFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getIncludeFilterBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getExcludeFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getExcludeFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getExcludeFilterBind, segment)
     }
 
     /**
@@ -162,7 +162,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getCustomFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCustomFeaturesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getCustomFeaturesBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPatches(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPatchesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPatchesBind, segment)
     }
 
     /**
@@ -182,7 +182,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getExportPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getExportPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getExportPathBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEncryptionInFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionInFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionInFilterBind, segment)
     }
 
     /**
@@ -202,7 +202,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEncryptionExFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionExFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionExFilterBind, segment)
     }
 
     /**
@@ -212,7 +212,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEncryptPck(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEncryptPckBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEncryptPckBind, segment)
     }
 
     /**
@@ -222,7 +222,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEncryptDirectory(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEncryptDirectoryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEncryptDirectoryBind, segment)
     }
 
     /**
@@ -232,7 +232,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEncryptionKey(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionKeyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionKeyBind, segment)
     }
 
     /**
@@ -243,7 +243,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getScriptExportMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, segment)
     }
 
     /**
@@ -253,7 +253,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOrEnv(name: String, envVar: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, handle, name, envVar)
+        return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, segment, name, envVar)
     }
 
     /**
@@ -266,7 +266,7 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getVersion(name: String, windowsVersion: Boolean): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, handle, name, windowsVersion)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, segment, name, windowsVersion)
     }
 
     companion object {
@@ -284,11 +284,11 @@ class EditorExportPreset(handle: MemorySegment) : RefCounted(handle) {
         const val MODE_SCRIPT_BINARY_TOKENS_COMPRESSED: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EditorExportPreset? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EditorExportPreset? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EditorExportPreset? =
-            if (handle.address() == 0L) null else EditorExportPreset(handle)
+            if (handle.address() == 0L) null else EditorExportPreset(GodotHandle(handle))
 
         private const val HAS_HASH = 2619796661L
         private val hasBind by lazy {

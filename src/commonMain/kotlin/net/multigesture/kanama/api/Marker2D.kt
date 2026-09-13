@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Marker2D
  */
-class Marker2D(handle: MemorySegment) : Node2D(handle) {
+class Marker2D(handle: GodotHandle) : Node2D(handle) {
     var gizmoExtents: Double
         @JvmName("gizmoExtentsProperty")
         get() = getGizmoExtents()
@@ -24,7 +24,7 @@ class Marker2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Marker2D.set_gizmo_extents
      */
     fun setGizmoExtents(extents: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGizmoExtentsBind, handle, extents)
+        ObjectCalls.ptrcallWithDoubleArg(setGizmoExtentsBind, segment, extents)
     }
 
     /**
@@ -33,16 +33,16 @@ class Marker2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: Marker2D.get_gizmo_extents
      */
     fun getGizmoExtents(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGizmoExtentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getGizmoExtentsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Marker2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Marker2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Marker2D? =
-            if (handle.address() == 0L) null else Marker2D(handle)
+            if (handle.address() == 0L) null else Marker2D(GodotHandle(handle))
 
         private const val SET_GIZMO_EXTENTS_HASH = 373806689L
         private val setGizmoExtentsBind by lazy {

@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ResourcePreloader
  */
-class ResourcePreloader(handle: MemorySegment) : Node(handle) {
+class ResourcePreloader(handle: GodotHandle) : Node(handle) {
     /**
      * Adds a resource to the preloader with the given `name`. If a resource with the given `name`
      * already exists, the new resource will be renamed to "`name` N" where N is an incrementing number
@@ -19,7 +19,7 @@ class ResourcePreloader(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.add_resource
      */
     fun addResource(name: String, resource: Resource?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addResourceBind, handle, name, resource?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addResourceBind, segment, name, resource?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -28,7 +28,7 @@ class ResourcePreloader(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.remove_resource
      */
     fun removeResource(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeResourceBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeResourceBind, segment, name)
     }
 
     /**
@@ -37,7 +37,7 @@ class ResourcePreloader(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.rename_resource
      */
     fun renameResource(name: String, newname: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameResourceBind, handle, name, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(renameResourceBind, segment, name, newname)
     }
 
     /**
@@ -46,7 +46,7 @@ class ResourcePreloader(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.has_resource
      */
     fun hasResource(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasResourceBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasResourceBind, segment, name)
     }
 
     /**
@@ -55,7 +55,7 @@ class ResourcePreloader(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.get_resource
      */
     fun getResource(name: String): Resource? {
-        return Resource.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getResourceBind, handle, name))
+        return Resource.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getResourceBind, segment, name))
     }
 
     /**
@@ -64,16 +64,16 @@ class ResourcePreloader(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.get_resource_list
      */
     fun getResourceList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResourceListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResourceListBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourcePreloader? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourcePreloader? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourcePreloader? =
-            if (handle.address() == 0L) null else ResourcePreloader(handle)
+            if (handle.address() == 0L) null else ResourcePreloader(GodotHandle(handle))
 
         private const val ADD_RESOURCE_HASH = 1168801743L
         private val addResourceBind by lazy {

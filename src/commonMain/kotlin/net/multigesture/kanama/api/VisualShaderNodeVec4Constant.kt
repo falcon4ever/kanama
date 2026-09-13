@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Quaternion
 /**
  * Generated from Godot docs: VisualShaderNodeVec4Constant
  */
-class VisualShaderNodeVec4Constant(handle: MemorySegment) : VisualShaderNodeConstant(handle) {
+class VisualShaderNodeVec4Constant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
     var constant: Quaternion
         @JvmName("constantProperty")
         get() = getConstant()
@@ -19,21 +19,21 @@ class VisualShaderNodeVec4Constant(handle: MemorySegment) : VisualShaderNodeCons
 
     fun setConstant(constant: Quaternion) {
         checkOpen()
-        ObjectCalls.ptrcallWithQuaternionArg(setConstantBind, handle, constant)
+        ObjectCalls.ptrcallWithQuaternionArg(setConstantBind, segment, constant)
     }
 
     fun getConstant(): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getConstantBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(getConstantBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeVec4Constant? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeVec4Constant? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeVec4Constant? =
-            if (handle.address() == 0L) null else VisualShaderNodeVec4Constant(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeVec4Constant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 1727505552L
         private val setConstantBind by lazy {

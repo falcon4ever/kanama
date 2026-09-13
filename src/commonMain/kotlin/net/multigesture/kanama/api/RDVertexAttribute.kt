@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: RDVertexAttribute
  */
-class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
+class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     var binding: Long
         @JvmName("bindingProperty")
         get() = getBinding()
@@ -58,7 +58,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBinding(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setBindingBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setBindingBind, segment, pMember)
     }
 
     /**
@@ -71,7 +71,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getBinding(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBindingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getBindingBind, segment)
     }
 
     /**
@@ -81,7 +81,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setLocation(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setLocationBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setLocationBind, segment, pMember)
     }
 
     /**
@@ -91,7 +91,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLocation(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getLocationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getLocationBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setOffset(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setOffsetBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setOffsetBind, segment, pMember)
     }
 
     /**
@@ -113,7 +113,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getOffsetBind, segment)
     }
 
     /**
@@ -123,7 +123,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFormat(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember)
     }
 
     /**
@@ -133,7 +133,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFormat(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setStride(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setStrideBind, handle, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(setStrideBind, segment, pMember)
     }
 
     /**
@@ -153,7 +153,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getStrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getStrideBind, segment)
     }
 
     /**
@@ -163,7 +163,7 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFrequency(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrequencyBind, handle, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrequencyBind, segment, pMember)
     }
 
     /**
@@ -173,16 +173,16 @@ class RDVertexAttribute(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrequency(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RDVertexAttribute? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RDVertexAttribute? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RDVertexAttribute? =
-            if (handle.address() == 0L) null else RDVertexAttribute(handle)
+            if (handle.address() == 0L) null else RDVertexAttribute(GodotHandle(handle))
 
         private const val SET_BINDING_HASH = 1286410249L
         private val setBindingBind by lazy {

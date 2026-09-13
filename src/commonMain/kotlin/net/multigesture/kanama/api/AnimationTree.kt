@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: AnimationTree
  */
-class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
+class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
     var treeRoot: AnimationRootNode?
         @JvmName("treeRootProperty")
         get() = getTreeRoot()
@@ -37,7 +37,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_tree_root
      */
     fun setTreeRoot(animationNode: AnimationRootNode?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTreeRootBind, handle, listOf(animationNode?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTreeRootBind, segment, listOf(animationNode?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -46,7 +46,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_tree_root
      */
     fun getTreeRoot(): AnimationRootNode? {
-        return AnimationRootNode.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeRootBind, handle))
+        return AnimationRootNode.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeRootBind, segment))
     }
 
     /**
@@ -56,7 +56,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_advance_expression_base_node
      */
     fun setAdvanceExpressionBaseNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setAdvanceExpressionBaseNodeBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setAdvanceExpressionBaseNodeBind, segment, path)
     }
 
     /**
@@ -66,7 +66,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_advance_expression_base_node
      */
     fun getAdvanceExpressionBaseNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getAdvanceExpressionBaseNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getAdvanceExpressionBaseNodeBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_animation_player
      */
     fun setAnimationPlayer(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setAnimationPlayerBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setAnimationPlayerBind, segment, path)
     }
 
     /**
@@ -84,7 +84,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_animation_player
      */
     fun getAnimationPlayer(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPlayerBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPlayerBind, segment)
     }
 
     /**
@@ -93,7 +93,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_process_callback
      */
     fun setProcessCallback(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode)
     }
 
     /**
@@ -102,7 +102,7 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_process_callback
      */
     fun getProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment)
     }
 
     object Signals {
@@ -115,11 +115,11 @@ class AnimationTree(handle: MemorySegment) : AnimationMixer(handle) {
         const val ANIMATION_PROCESS_MANUAL: Long = 2L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationTree? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationTree? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationTree? =
-            if (handle.address() == 0L) null else AnimationTree(handle)
+            if (handle.address() == 0L) null else AnimationTree(GodotHandle(handle))
 
         private const val SET_TREE_ROOT_HASH = 2581683800L
         private val setTreeRootBind by lazy {

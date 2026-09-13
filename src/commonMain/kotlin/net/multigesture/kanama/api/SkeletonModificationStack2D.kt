@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SkeletonModificationStack2D
  */
-class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
+class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
     var enabled: Boolean
         @JvmName("enabledProperty")
         get() = getEnabled()
@@ -38,7 +38,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setup() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(setupBind, handle)
+        ObjectCalls.ptrcallNoArgs(setupBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun execute(delta: Double, executionMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleAndIntArgs(executeBind, handle, delta, executionMode)
+        ObjectCalls.ptrcallWithDoubleAndIntArgs(executeBind, segment, delta, executionMode)
     }
 
     /**
@@ -61,7 +61,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun enableAllModifications(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(enableAllModificationsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(enableAllModificationsBind, segment, enabled)
     }
 
     /**
@@ -71,7 +71,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getModification(modIdx: Int): SkeletonModification2D? {
         checkOpen()
-        return SkeletonModification2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, handle, modIdx))
+        return SkeletonModification2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, segment, modIdx))
     }
 
     /**
@@ -81,7 +81,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun addModification(modification: SkeletonModification2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addModificationBind, handle, listOf(modification?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addModificationBind, segment, listOf(modification?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -91,7 +91,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun deleteModification(modIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(deleteModificationBind, handle, modIdx)
+        ObjectCalls.ptrcallWithIntArg(deleteModificationBind, segment, modIdx)
     }
 
     /**
@@ -101,7 +101,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setModification(modIdx: Int, modification: SkeletonModification2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, handle, modIdx, modification?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, segment, modIdx, modification?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -111,7 +111,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setModificationCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setModificationCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setModificationCountBind, segment, count)
     }
 
     /**
@@ -121,7 +121,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getModificationCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getModificationCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getModificationCountBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getIsSetup(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, segment)
     }
 
     /**
@@ -142,7 +142,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
     }
 
     /**
@@ -153,7 +153,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, segment)
     }
 
     /**
@@ -165,7 +165,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun setStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, segment, strength)
     }
 
     /**
@@ -177,7 +177,7 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, segment)
     }
 
     /**
@@ -187,16 +187,16 @@ class SkeletonModificationStack2D(handle: MemorySegment) : Resource(handle) {
      */
     fun getSkeleton(): Skeleton2D? {
         checkOpen()
-        return Skeleton2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, handle))
+        return Skeleton2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModificationStack2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModificationStack2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModificationStack2D? =
-            if (handle.address() == 0L) null else SkeletonModificationStack2D(handle)
+            if (handle.address() == 0L) null else SkeletonModificationStack2D(GodotHandle(handle))
 
         private const val SETUP_HASH = 3218959716L
         private val setupBind by lazy {

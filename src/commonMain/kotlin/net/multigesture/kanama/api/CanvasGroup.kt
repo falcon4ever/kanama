@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: CanvasGroup
  */
-class CanvasGroup(handle: MemorySegment) : Node2D(handle) {
+class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
     var fitMargin: Double
         @JvmName("fitMarginProperty")
         get() = getFitMargin()
@@ -40,7 +40,7 @@ class CanvasGroup(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.set_fit_margin
      */
     fun setFitMargin(fitMargin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFitMarginBind, handle, fitMargin)
+        ObjectCalls.ptrcallWithDoubleArg(setFitMarginBind, segment, fitMargin)
     }
 
     /**
@@ -53,7 +53,7 @@ class CanvasGroup(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.get_fit_margin
      */
     fun getFitMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFitMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFitMarginBind, segment)
     }
 
     /**
@@ -67,7 +67,7 @@ class CanvasGroup(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.set_clear_margin
      */
     fun setClearMargin(clearMargin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setClearMarginBind, handle, clearMargin)
+        ObjectCalls.ptrcallWithDoubleArg(setClearMarginBind, segment, clearMargin)
     }
 
     /**
@@ -81,7 +81,7 @@ class CanvasGroup(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.get_clear_margin
      */
     fun getClearMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClearMarginBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getClearMarginBind, segment)
     }
 
     /**
@@ -92,7 +92,7 @@ class CanvasGroup(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.set_use_mipmaps
      */
     fun setUseMipmaps(useMipmaps: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, handle, useMipmaps)
+        ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, segment, useMipmaps)
     }
 
     /**
@@ -103,16 +103,16 @@ class CanvasGroup(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.is_using_mipmaps
      */
     fun isUsingMipmaps(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingMipmapsBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CanvasGroup? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CanvasGroup? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CanvasGroup? =
-            if (handle.address() == 0L) null else CanvasGroup(handle)
+            if (handle.address() == 0L) null else CanvasGroup(GodotHandle(handle))
 
         private const val SET_FIT_MARGIN_HASH = 373806689L
         private val setFitMarginBind by lazy {

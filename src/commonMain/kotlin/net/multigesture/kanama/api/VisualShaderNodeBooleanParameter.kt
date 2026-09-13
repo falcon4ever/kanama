@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeBooleanParameter
  */
-class VisualShaderNodeBooleanParameter(handle: MemorySegment) : VisualShaderNodeParameter(handle) {
+class VisualShaderNodeBooleanParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
     var defaultValueEnabled: Boolean
         @JvmName("defaultValueEnabledProperty")
         get() = isDefaultValueEnabled()
@@ -24,31 +24,31 @@ class VisualShaderNodeBooleanParameter(handle: MemorySegment) : VisualShaderNode
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueBind, handle, value)
+        ObjectCalls.ptrcallWithBoolArg(setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDefaultValueBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDefaultValueBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeBooleanParameter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeBooleanParameter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeBooleanParameter? =
-            if (handle.address() == 0L) null else VisualShaderNodeBooleanParameter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeBooleanParameter(GodotHandle(handle))
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
         private val setDefaultValueEnabledBind by lazy {

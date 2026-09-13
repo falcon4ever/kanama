@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AnimationNodeTransition
  */
-class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle) {
+class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     var xfadeTime: Double
         @JvmName("xfadeTimeProperty")
         get() = getXfadeTime()
@@ -37,7 +37,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun setInputCount(inputCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInputCountBind, handle, inputCount)
+        ObjectCalls.ptrcallWithIntArg(setInputCountBind, segment, inputCount)
     }
 
     /**
@@ -49,7 +49,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun setInputAsAutoAdvance(input: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputAsAutoAdvanceBind, handle, input, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputAsAutoAdvanceBind, segment, input, enable)
     }
 
     /**
@@ -59,7 +59,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun isInputSetAsAutoAdvance(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputSetAsAutoAdvanceBind, handle, input)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isInputSetAsAutoAdvanceBind, segment, input)
     }
 
     /**
@@ -70,7 +70,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun setInputBreakLoopAtEnd(input: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputBreakLoopAtEndBind, handle, input, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputBreakLoopAtEndBind, segment, input, enable)
     }
 
     /**
@@ -80,7 +80,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun isInputLoopBrokenAtEnd(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputLoopBrokenAtEndBind, handle, input)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isInputLoopBrokenAtEndBind, segment, input)
     }
 
     /**
@@ -90,7 +90,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun setInputReset(input: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputResetBind, handle, input, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputResetBind, segment, input, enable)
     }
 
     /**
@@ -100,7 +100,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun isInputReset(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputResetBind, handle, input)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isInputResetBind, segment, input)
     }
 
     /**
@@ -114,7 +114,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun setXfadeTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, handle, time)
+        ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, segment, time)
     }
 
     /**
@@ -128,7 +128,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun getXfadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, segment)
     }
 
     /**
@@ -139,7 +139,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun setXfadeCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -150,7 +150,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
     }
 
     /**
@@ -161,7 +161,7 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun setAllowTransitionToSelf(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, segment, enable)
     }
 
     /**
@@ -172,16 +172,16 @@ class AnimationNodeTransition(handle: MemorySegment) : AnimationNodeSync(handle)
      */
     fun isAllowTransitionToSelf(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeTransition? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeTransition? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeTransition? =
-            if (handle.address() == 0L) null else AnimationNodeTransition(handle)
+            if (handle.address() == 0L) null else AnimationNodeTransition(GodotHandle(handle))
 
         private const val SET_INPUT_COUNT_HASH = 1286410249L
         private val setInputCountBind by lazy {

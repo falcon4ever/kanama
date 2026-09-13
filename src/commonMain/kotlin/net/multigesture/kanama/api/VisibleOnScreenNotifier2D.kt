@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Rect2
  *
  * Generated from Godot docs: VisibleOnScreenNotifier2D
  */
-open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
+open class VisibleOnScreenNotifier2D(handle: GodotHandle) : Node2D(handle) {
     var rect: Rect2
         @JvmName("rectProperty")
         get() = getRect()
@@ -31,7 +31,7 @@ open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: VisibleOnScreenNotifier2D.set_rect
      */
     fun setRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRectBind, handle, rect)
+        ObjectCalls.ptrcallWithRect2Arg(setRectBind, segment, rect)
     }
 
     /**
@@ -40,7 +40,7 @@ open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: VisibleOnScreenNotifier2D.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: VisibleOnScreenNotifier2D.set_show_rect
      */
     fun setShowRect(showRect: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowRectBind, handle, showRect)
+        ObjectCalls.ptrcallWithBoolArg(setShowRectBind, segment, showRect)
     }
 
     /**
@@ -62,7 +62,7 @@ open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: VisibleOnScreenNotifier2D.is_showing_rect
      */
     fun isShowingRect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isShowingRectBind, segment)
     }
 
     /**
@@ -73,7 +73,7 @@ open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: VisibleOnScreenNotifier2D.is_on_screen
      */
     fun isOnScreen(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, segment)
     }
 
     object Signals {
@@ -83,11 +83,11 @@ open class VisibleOnScreenNotifier2D(handle: MemorySegment) : Node2D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisibleOnScreenNotifier2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisibleOnScreenNotifier2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisibleOnScreenNotifier2D? =
-            if (handle.address() == 0L) null else VisibleOnScreenNotifier2D(handle)
+            if (handle.address() == 0L) null else VisibleOnScreenNotifier2D(GodotHandle(handle))
 
         private const val SET_RECT_HASH = 2046264180L
         private val setRectBind by lazy {

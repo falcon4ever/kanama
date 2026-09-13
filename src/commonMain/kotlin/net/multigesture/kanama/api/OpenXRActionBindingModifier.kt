@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRActionBindingModifier
  */
-open class OpenXRActionBindingModifier(handle: MemorySegment) : OpenXRBindingModifier(handle) {
+open class OpenXRActionBindingModifier(handle: GodotHandle) : OpenXRBindingModifier(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRActionBindingModifier? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRActionBindingModifier? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRActionBindingModifier? =
-            if (handle.address() == 0L) null else OpenXRActionBindingModifier(handle)
+            if (handle.address() == 0L) null else OpenXRActionBindingModifier(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

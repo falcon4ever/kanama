@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ScriptBacktrace
  */
-class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
+class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns the name of the script language that this backtrace was captured from.
      *
@@ -18,7 +18,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLanguageName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageNameBind, segment)
     }
 
     /**
@@ -28,7 +28,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
     }
 
     /**
@@ -38,7 +38,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrameCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFrameCountBind, segment)
     }
 
     /**
@@ -48,7 +48,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrameFunction(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFunctionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFunctionBind, segment, index)
     }
 
     /**
@@ -58,7 +58,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrameFile(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFileBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFileBind, segment, index)
     }
 
     /**
@@ -68,7 +68,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFrameLine(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getFrameLineBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getFrameLineBind, segment, index)
     }
 
     /**
@@ -80,7 +80,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getGlobalVariableCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGlobalVariableCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getGlobalVariableCountBind, segment)
     }
 
     /**
@@ -90,7 +90,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getGlobalVariableName(variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getGlobalVariableNameBind, handle, variableIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(getGlobalVariableNameBind, segment, variableIndex)
     }
 
     /**
@@ -103,7 +103,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getGlobalVariableValue(variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getGlobalVariableValueBind, handle, variableIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getGlobalVariableValueBind, segment, variableIndex)
     }
 
     /**
@@ -115,7 +115,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLocalVariableCount(frameIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLocalVariableCountBind, handle, frameIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getLocalVariableCountBind, segment, frameIndex)
     }
 
     /**
@@ -126,7 +126,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLocalVariableName(frameIndex: Int, variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLocalVariableNameBind, handle, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLocalVariableNameBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -140,7 +140,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLocalVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLocalVariableValueBind, handle, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLocalVariableValueBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -152,7 +152,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMemberVariableCount(frameIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getMemberVariableCountBind, handle, frameIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getMemberVariableCountBind, segment, frameIndex)
     }
 
     /**
@@ -163,7 +163,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMemberVariableName(frameIndex: Int, variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getMemberVariableNameBind, handle, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getMemberVariableNameBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -177,7 +177,7 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getMemberVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getMemberVariableValueBind, handle, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getMemberVariableValueBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -190,16 +190,16 @@ class ScriptBacktrace(handle: MemorySegment) : RefCounted(handle) {
      */
     fun format(indentAll: Int = 0, indentFrames: Int = 4): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(formatBind, handle, indentAll, indentFrames)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(formatBind, segment, indentAll, indentFrames)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ScriptBacktrace? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ScriptBacktrace? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ScriptBacktrace? =
-            if (handle.address() == 0L) null else ScriptBacktrace(handle)
+            if (handle.address() == 0L) null else ScriptBacktrace(GodotHandle(handle))
 
         private const val GET_LANGUAGE_NAME_HASH = 201670096L
         private val getLanguageNameBind by lazy {

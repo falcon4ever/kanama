@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: AudioStreamOggVorbis
  */
-class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
     var packetSequence: OggPacketSequence?
         @JvmName("packetSequenceProperty")
         get() = getPacketSequence()
@@ -54,72 +54,72 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
 
     fun setPacketSequence(packetSequence: OggPacketSequence?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setPacketSequenceBind, handle, listOf(packetSequence?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPacketSequenceBind, segment, listOf(packetSequence?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getPacketSequence(): OggPacketSequence? {
         checkOpen()
-        return OggPacketSequence.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPacketSequenceBind, handle))
+        return OggPacketSequence.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPacketSequenceBind, segment))
     }
 
     fun setLoop(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, enable)
     }
 
     fun hasLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
     }
 
     fun setLoopOffset(seconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLoopOffsetBind, handle, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(setLoopOffsetBind, segment, seconds)
     }
 
     fun getLoopOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLoopOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLoopOffsetBind, segment)
     }
 
     fun setBpm(bpm: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBpmBind, handle, bpm)
+        ObjectCalls.ptrcallWithDoubleArg(setBpmBind, segment, bpm)
     }
 
     fun getBpm(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, segment)
     }
 
     fun setBeatCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBeatCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setBeatCountBind, segment, count)
     }
 
     fun getBeatCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBeatCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBeatCountBind, segment)
     }
 
     fun setBarBeats(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBarBeatsBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setBarBeatsBind, segment, count)
     }
 
     fun getBarBeats(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBarBeatsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBarBeatsBind, segment)
     }
 
     fun setTags(tags: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, handle, tags)
+        ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, segment, tags)
     }
 
     fun getTags(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, segment)
     }
 
     companion object {
@@ -132,11 +132,11 @@ class AudioStreamOggVorbis(handle: MemorySegment) : AudioStream(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamOggVorbis? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamOggVorbis? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamOggVorbis? =
-            if (handle.address() == 0L) null else AudioStreamOggVorbis(handle)
+            if (handle.address() == 0L) null else AudioStreamOggVorbis(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 354904730L
         private val loadFromBufferBind by lazy {

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeBillboard
  */
-class VisualShaderNodeBillboard(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) {
     var billboardType: Long
         @JvmName("billboardTypeProperty")
         get() = getBillboardType()
@@ -24,22 +24,22 @@ class VisualShaderNodeBillboard(handle: MemorySegment) : VisualShaderNode(handle
 
     fun setBillboardType(billboardType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBillboardTypeBind, handle, billboardType)
+        ObjectCalls.ptrcallWithLongArg(setBillboardTypeBind, segment, billboardType)
     }
 
     fun getBillboardType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardTypeBind, segment)
     }
 
     fun setKeepScaleEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setKeepScaleEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setKeepScaleEnabledBind, segment, enabled)
     }
 
     fun isKeepScaleEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isKeepScaleEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isKeepScaleEnabledBind, segment)
     }
 
     companion object {
@@ -50,11 +50,11 @@ class VisualShaderNodeBillboard(handle: MemorySegment) : VisualShaderNode(handle
         const val BILLBOARD_TYPE_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeBillboard? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeBillboard? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeBillboard? =
-            if (handle.address() == 0L) null else VisualShaderNodeBillboard(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeBillboard(GodotHandle(handle))
 
         private const val SET_BILLBOARD_TYPE_HASH = 1227463289L
         private val setBillboardTypeBind by lazy {

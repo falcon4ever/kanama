@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: GrooveJoint2D
  */
-class GrooveJoint2D(handle: MemorySegment) : Joint2D(handle) {
+class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
     var length: Double
         @JvmName("lengthProperty")
         get() = getLength()
@@ -31,7 +31,7 @@ class GrooveJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.set_length
      */
     fun setLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, handle, length)
+        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, length)
     }
 
     /**
@@ -41,7 +41,7 @@ class GrooveJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.get_length
      */
     fun getLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
     }
 
     /**
@@ -51,7 +51,7 @@ class GrooveJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.set_initial_offset
      */
     fun setInitialOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInitialOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithDoubleArg(setInitialOffsetBind, segment, offset)
     }
 
     /**
@@ -61,16 +61,16 @@ class GrooveJoint2D(handle: MemorySegment) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.get_initial_offset
      */
     fun getInitialOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInitialOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getInitialOffsetBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GrooveJoint2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GrooveJoint2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GrooveJoint2D? =
-            if (handle.address() == 0L) null else GrooveJoint2D(handle)
+            if (handle.address() == 0L) null else GrooveJoint2D(GodotHandle(handle))
 
         private const val SET_LENGTH_HASH = 373806689L
         private val setLengthBind by lazy {

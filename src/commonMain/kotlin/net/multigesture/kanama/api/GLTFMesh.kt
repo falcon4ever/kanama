@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFMesh
  */
-class GLTFMesh(handle: MemorySegment) : Resource(handle) {
+class GLTFMesh(handle: GodotHandle) : Resource(handle) {
     var originalName: String
         @JvmName("originalNameProperty")
         get() = getOriginalName()
@@ -36,61 +36,61 @@ class GLTFMesh(handle: MemorySegment) : Resource(handle) {
 
     fun getOriginalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, segment)
     }
 
     fun setOriginalName(originalName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, handle, originalName)
+        ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, segment, originalName)
     }
 
     fun getMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setMesh(mesh: ImporterMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getBlendWeights(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendWeightsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendWeightsBind, segment)
     }
 
     fun setBlendWeights(blendWeights: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendWeightsBind, handle, blendWeights)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendWeightsBind, segment, blendWeights)
     }
 
     fun getInstanceMaterials(): List<Material> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getInstanceMaterialsBind, handle, Material::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getInstanceMaterialsBind, segment, Material::wrap)
     }
 
     fun setInstanceMaterials(instanceMaterials: List<Material>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedMaterialListArg(setInstanceMaterialsBind, handle, instanceMaterials)
+        ObjectCalls.ptrcallWithTypedMaterialListArg(setInstanceMaterialsBind, segment, instanceMaterials)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, handle, extensionName)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, segment, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, handle, extensionName, additionalData)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFMesh? =
-            if (handle.address() == 0L) null else GLTFMesh(handle)
+            if (handle.address() == 0L) null else GLTFMesh(GodotHandle(handle))
 
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L
         private val getOriginalNameBind by lazy {

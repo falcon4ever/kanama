@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: VideoStreamPlayer
  */
-class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
+class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
     var audioTrack: Int
         @JvmName("audioTrackProperty")
         get() = getAudioTrack()
@@ -90,7 +90,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_stream
      */
     fun setStream(stream: VideoStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, handle, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -99,7 +99,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream
      */
     fun getStream(): VideoStream? {
-        return VideoStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, handle))
+        return VideoStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
     }
 
     /**
@@ -109,7 +109,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.play
      */
     fun play() {
-        ObjectCalls.ptrcallNoArgs(playBind, handle)
+        ObjectCalls.ptrcallNoArgs(playBind, segment)
     }
 
     /**
@@ -119,7 +119,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     /**
@@ -129,7 +129,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_paused
      */
     fun setPaused(paused: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPausedBind, handle, paused)
+        ObjectCalls.ptrcallWithBoolArg(setPausedBind, segment, paused)
     }
 
     /**
@@ -147,7 +147,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.is_paused
      */
     fun isPaused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, segment)
     }
 
     /**
@@ -156,7 +156,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_loop
      */
     fun setLoop(loop: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, handle, loop)
+        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
     }
 
     /**
@@ -165,7 +165,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.has_loop
      */
     fun hasLoop(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
     }
 
     /**
@@ -174,7 +174,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_volume
      */
     fun setVolume(volume: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeBind, handle, volume)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeBind, segment, volume)
     }
 
     /**
@@ -183,7 +183,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_volume
      */
     fun getVolume(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeBind, segment)
     }
 
     /**
@@ -192,7 +192,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_volume_db
      */
     fun setVolumeDb(db: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, handle, db)
+        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, segment, db)
     }
 
     /**
@@ -201,7 +201,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_volume_db
      */
     fun getVolumeDb(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, segment)
     }
 
     /**
@@ -212,7 +212,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_speed_scale
      */
     fun setSpeedScale(speedScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, handle, speedScale)
+        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speedScale)
     }
 
     /**
@@ -223,7 +223,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
     }
 
     /**
@@ -232,7 +232,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_audio_track
      */
     fun setAudioTrack(track: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAudioTrackBind, handle, track)
+        ObjectCalls.ptrcallWithIntArg(setAudioTrackBind, segment, track)
     }
 
     /**
@@ -241,7 +241,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_audio_track
      */
     fun getAudioTrack(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAudioTrackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getAudioTrackBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream_name
      */
     fun getStreamName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getStreamNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getStreamNameBind, segment)
     }
 
     /**
@@ -259,7 +259,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream_length
      */
     fun getStreamLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStreamLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStreamLengthBind, segment)
     }
 
     /**
@@ -268,7 +268,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_stream_position
      */
     fun setStreamPosition(position: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStreamPositionBind, handle, position)
+        ObjectCalls.ptrcallWithDoubleArg(setStreamPositionBind, segment, position)
     }
 
     /**
@@ -277,7 +277,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream_position
      */
     fun getStreamPosition(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStreamPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getStreamPositionBind, segment)
     }
 
     /**
@@ -286,7 +286,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_autoplay
      */
     fun setAutoplay(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, segment, enabled)
     }
 
     /**
@@ -295,7 +295,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.has_autoplay
      */
     fun hasAutoplay(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoplayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoplayBind, segment)
     }
 
     /**
@@ -305,7 +305,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_expand
      */
     fun setExpand(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpandBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setExpandBind, segment, enable)
     }
 
     /**
@@ -315,7 +315,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.has_expand
      */
     fun hasExpand(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasExpandBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasExpandBind, segment)
     }
 
     /**
@@ -324,7 +324,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_buffering_msec
      */
     fun setBufferingMsec(msec: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBufferingMsecBind, handle, msec)
+        ObjectCalls.ptrcallWithIntArg(setBufferingMsecBind, segment, msec)
     }
 
     /**
@@ -333,7 +333,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_buffering_msec
      */
     fun getBufferingMsec(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferingMsecBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBufferingMsecBind, segment)
     }
 
     /**
@@ -342,7 +342,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_bus
      */
     fun setBus(bus: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setBusBind, handle, bus)
+        ObjectCalls.ptrcallWithStringNameArg(setBusBind, segment, bus)
     }
 
     /**
@@ -351,7 +351,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_bus
      */
     fun getBus(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, segment)
     }
 
     /**
@@ -360,7 +360,7 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_video_texture
      */
     fun getVideoTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVideoTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVideoTextureBind, segment))
     }
 
     object Signals {
@@ -369,11 +369,11 @@ class VideoStreamPlayer(handle: MemorySegment) : Control(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VideoStreamPlayer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VideoStreamPlayer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VideoStreamPlayer? =
-            if (handle.address() == 0L) null else VideoStreamPlayer(handle)
+            if (handle.address() == 0L) null else VideoStreamPlayer(GodotHandle(handle))
 
         private const val SET_STREAM_HASH = 2317102564L
         private val setStreamBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: ColorPicker
  */
-class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
+class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
     var color: Color
         @JvmName("colorProperty")
         get() = getPickColor()
@@ -91,7 +91,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_pick_color
      */
     fun setPickColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setPickColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setPickColorBind, segment, color)
     }
 
     /**
@@ -100,7 +100,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_pick_color
      */
     fun getPickColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getPickColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getPickColorBind, segment)
     }
 
     /**
@@ -110,7 +110,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_deferred_mode
      */
     fun setDeferredMode(mode: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeferredModeBind, handle, mode)
+        ObjectCalls.ptrcallWithBoolArg(setDeferredModeBind, segment, mode)
     }
 
     /**
@@ -120,7 +120,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_deferred_mode
      */
     fun isDeferredMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeferredModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDeferredModeBind, segment)
     }
 
     /**
@@ -129,7 +129,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_color_mode
      */
     fun setColorMode(colorMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setColorModeBind, handle, colorMode)
+        ObjectCalls.ptrcallWithLongArg(setColorModeBind, segment, colorMode)
     }
 
     /**
@@ -138,7 +138,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_color_mode
      */
     fun getColorMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getColorModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getColorModeBind, segment)
     }
 
     /**
@@ -147,7 +147,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_edit_alpha
      */
     fun setEditAlpha(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditAlphaBind, handle, show)
+        ObjectCalls.ptrcallWithBoolArg(setEditAlphaBind, segment, show)
     }
 
     /**
@@ -156,7 +156,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_editing_alpha
      */
     fun isEditingAlpha(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingAlphaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditingAlphaBind, segment)
     }
 
     /**
@@ -167,7 +167,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_edit_intensity
      */
     fun setEditIntensity(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditIntensityBind, handle, show)
+        ObjectCalls.ptrcallWithBoolArg(setEditIntensityBind, segment, show)
     }
 
     /**
@@ -178,7 +178,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_editing_intensity
      */
     fun isEditingIntensity(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, segment)
     }
 
     /**
@@ -188,7 +188,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_can_add_swatches
      */
     fun setCanAddSwatches(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCanAddSwatchesBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setCanAddSwatchesBind, segment, enabled)
     }
 
     /**
@@ -198,7 +198,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_swatches_enabled
      */
     fun areSwatchesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areSwatchesEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areSwatchesEnabledBind, segment)
     }
 
     /**
@@ -207,7 +207,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_presets_visible
      */
     fun setPresetsVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPresetsVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setPresetsVisibleBind, segment, visible)
     }
 
     /**
@@ -216,7 +216,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_presets_visible
      */
     fun arePresetsVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(arePresetsVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(arePresetsVisibleBind, segment)
     }
 
     /**
@@ -225,7 +225,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_modes_visible
      */
     fun setModesVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setModesVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setModesVisibleBind, segment, visible)
     }
 
     /**
@@ -234,7 +234,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_modes_visible
      */
     fun areModesVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areModesVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areModesVisibleBind, segment)
     }
 
     /**
@@ -243,7 +243,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_sampler_visible
      */
     fun setSamplerVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSamplerVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setSamplerVisibleBind, segment, visible)
     }
 
     /**
@@ -252,7 +252,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_sampler_visible
      */
     fun isSamplerVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSamplerVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSamplerVisibleBind, segment)
     }
 
     /**
@@ -261,7 +261,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_sliders_visible
      */
     fun setSlidersVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSlidersVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setSlidersVisibleBind, segment, visible)
     }
 
     /**
@@ -270,7 +270,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_sliders_visible
      */
     fun areSlidersVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areSlidersVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(areSlidersVisibleBind, segment)
     }
 
     /**
@@ -279,7 +279,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_hex_visible
      */
     fun setHexVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHexVisibleBind, handle, visible)
+        ObjectCalls.ptrcallWithBoolArg(setHexVisibleBind, segment, visible)
     }
 
     /**
@@ -288,7 +288,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_hex_visible
      */
     fun isHexVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHexVisibleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHexVisibleBind, segment)
     }
 
     /**
@@ -298,7 +298,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.add_preset
      */
     fun addPreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(addPresetBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(addPresetBind, segment, color)
     }
 
     /**
@@ -307,7 +307,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.erase_preset
      */
     fun erasePreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(erasePresetBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(erasePresetBind, segment, color)
     }
 
     /**
@@ -316,7 +316,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_presets
      */
     fun getPresets(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPresetsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPresetsBind, segment)
     }
 
     /**
@@ -328,7 +328,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.add_recent_preset
      */
     fun addRecentPreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(addRecentPresetBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(addRecentPresetBind, segment, color)
     }
 
     /**
@@ -337,7 +337,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.erase_recent_preset
      */
     fun eraseRecentPreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(eraseRecentPresetBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(eraseRecentPresetBind, segment, color)
     }
 
     /**
@@ -346,7 +346,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_recent_presets
      */
     fun getRecentPresets(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getRecentPresetsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getRecentPresetsBind, segment)
     }
 
     /**
@@ -355,7 +355,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_picker_shape
      */
     fun setPickerShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPickerShapeBind, handle, shape)
+        ObjectCalls.ptrcallWithLongArg(setPickerShapeBind, segment, shape)
     }
 
     /**
@@ -364,7 +364,7 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_picker_shape
      */
     fun getPickerShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPickerShapeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getPickerShapeBind, segment)
     }
 
     object Signals {
@@ -388,11 +388,11 @@ class ColorPicker(handle: MemorySegment) : VBoxContainer(handle) {
         const val SHAPE_OK_HL_RECTANGLE: Long = 6L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ColorPicker? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ColorPicker? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ColorPicker? =
-            if (handle.address() == 0L) null else ColorPicker(handle)
+            if (handle.address() == 0L) null else ColorPicker(GodotHandle(handle))
 
         private const val SET_PICK_COLOR_HASH = 2920490490L
         private val setPickColorBind by lazy {

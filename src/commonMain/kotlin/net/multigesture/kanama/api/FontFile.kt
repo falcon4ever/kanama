@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: FontFile
  */
-class FontFile(handle: MemorySegment) : Font(handle) {
+class FontFile(handle: GodotHandle) : Font(handle) {
     var data: ByteArray
         @JvmName("dataProperty")
         get() = getData()
@@ -127,7 +127,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun loadBitmapFont(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, segment, path)
     }
 
     /**
@@ -140,7 +140,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun loadDynamicFont(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, segment, path)
     }
 
     /**
@@ -150,7 +150,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setData(data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, handle, data)
+        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, segment, data)
     }
 
     /**
@@ -160,7 +160,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment)
     }
 
     /**
@@ -170,7 +170,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFontName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFontNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setFontNameBind, segment, name)
     }
 
     /**
@@ -180,7 +180,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFontStyleName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFontStyleNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setFontStyleNameBind, segment, name)
     }
 
     /**
@@ -190,7 +190,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFontStyle(style: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFontStyleBind, handle, style)
+        ObjectCalls.ptrcallWithLongArg(setFontStyleBind, segment, style)
     }
 
     /**
@@ -201,7 +201,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFontWeight(weight: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontWeightBind, handle, weight)
+        ObjectCalls.ptrcallWithIntArg(setFontWeightBind, segment, weight)
     }
 
     /**
@@ -211,7 +211,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFontStretch(stretch: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontStretchBind, handle, stretch)
+        ObjectCalls.ptrcallWithIntArg(setFontStretchBind, segment, stretch)
     }
 
     /**
@@ -221,7 +221,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setAntialiasing(antialiasing: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, handle, antialiasing)
+        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing)
     }
 
     /**
@@ -231,7 +231,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getAntialiasing(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment)
     }
 
     /**
@@ -242,7 +242,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, handle, disableEmbeddedBitmaps)
+        ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
     }
 
     /**
@@ -253,7 +253,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, segment)
     }
 
     /**
@@ -263,7 +263,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, handle, generateMipmaps)
+        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, segment, generateMipmaps)
     }
 
     /**
@@ -273,7 +273,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGenerateMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, segment)
     }
 
     /**
@@ -294,7 +294,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, handle, msdf)
+        ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, segment, msdf)
     }
 
     /**
@@ -315,7 +315,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun isMultichannelSignedDistanceField(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, segment)
     }
 
     /**
@@ -328,7 +328,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, handle, msdfPixelRange)
+        ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, segment, msdfPixelRange)
     }
 
     /**
@@ -341,7 +341,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getMsdfPixelRange(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, segment)
     }
 
     /**
@@ -353,7 +353,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setMsdfSize(msdfSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, handle, msdfSize)
+        ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, segment, msdfSize)
     }
 
     /**
@@ -365,7 +365,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getMsdfSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, segment)
     }
 
     /**
@@ -375,7 +375,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFixedSize(fixedSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFixedSizeBind, handle, fixedSize)
+        ObjectCalls.ptrcallWithIntArg(setFixedSizeBind, segment, fixedSize)
     }
 
     /**
@@ -385,7 +385,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getFixedSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFixedSizeBind, segment)
     }
 
     /**
@@ -395,7 +395,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFixedSizeScaleMode(fixedSizeScaleMode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, handle, fixedSizeScaleMode)
+        ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, segment, fixedSizeScaleMode)
     }
 
     /**
@@ -405,7 +405,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getFixedSizeScaleMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, segment)
     }
 
     /**
@@ -415,7 +415,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, handle, allowSystemFallback)
+        ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, segment, allowSystemFallback)
     }
 
     /**
@@ -425,7 +425,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun isAllowSystemFallback(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, segment)
     }
 
     /**
@@ -436,7 +436,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setForceAutohinter(forceAutohinter: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, handle, forceAutohinter)
+        ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, segment, forceAutohinter)
     }
 
     /**
@@ -447,7 +447,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun isForceAutohinter(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, segment)
     }
 
     /**
@@ -458,7 +458,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setModulateColorGlyphs(modulate: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, handle, modulate)
+        ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, segment, modulate)
     }
 
     /**
@@ -469,7 +469,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun isModulateColorGlyphs(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, segment)
     }
 
     /**
@@ -479,7 +479,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setHinting(hinting: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintingBind, handle, hinting)
+        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting)
     }
 
     /**
@@ -489,7 +489,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getHinting(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment)
     }
 
     /**
@@ -502,7 +502,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setSubpixelPositioning(subpixelPositioning: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, handle, subpixelPositioning)
+        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning)
     }
 
     /**
@@ -515,7 +515,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getSubpixelPositioning(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment)
     }
 
     /**
@@ -527,7 +527,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, handle, keepRoundingRemainders)
+        ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
     }
 
     /**
@@ -539,7 +539,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getKeepRoundingRemainders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, segment)
     }
 
     /**
@@ -551,7 +551,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setOversampling(oversampling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, handle, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, segment, oversampling)
     }
 
     /**
@@ -563,7 +563,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
     }
 
     /**
@@ -573,7 +573,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getCacheCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCacheCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getCacheCountBind, segment)
     }
 
     /**
@@ -583,7 +583,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun clearCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearCacheBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearCacheBind, segment)
     }
 
     /**
@@ -593,7 +593,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun removeCache(cacheIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeCacheBind, handle, cacheIndex)
+        ObjectCalls.ptrcallWithIntArg(removeCacheBind, segment, cacheIndex)
     }
 
     /**
@@ -604,7 +604,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getSizeCacheList(cacheIndex: Int): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2iList(getSizeCacheListBind, handle, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector2iList(getSizeCacheListBind, segment, cacheIndex)
     }
 
     /**
@@ -614,7 +614,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun clearSizeCache(cacheIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(clearSizeCacheBind, handle, cacheIndex)
+        ObjectCalls.ptrcallWithIntArg(clearSizeCacheBind, segment, cacheIndex)
     }
 
     /**
@@ -624,7 +624,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun removeSizeCache(cacheIndex: Int, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(removeSizeCacheBind, handle, cacheIndex, size)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(removeSizeCacheBind, segment, cacheIndex, size)
     }
 
     /**
@@ -635,7 +635,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setVariationCoordinates(cacheIndex: Int, variationCoordinates: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDictionaryArg(setVariationCoordinatesBind, handle, cacheIndex, variationCoordinates)
+        ObjectCalls.ptrcallWithIntAndDictionaryArg(setVariationCoordinatesBind, segment, cacheIndex, variationCoordinates)
     }
 
     /**
@@ -646,7 +646,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getVariationCoordinates(cacheIndex: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getVariationCoordinatesBind, handle, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(getVariationCoordinatesBind, segment, cacheIndex)
     }
 
     /**
@@ -657,7 +657,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setEmbolden(cacheIndex: Int, strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setEmboldenBind, handle, cacheIndex, strength)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setEmboldenBind, segment, cacheIndex, strength)
     }
 
     /**
@@ -668,7 +668,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getEmbolden(cacheIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getEmboldenBind, handle, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getEmboldenBind, segment, cacheIndex)
     }
 
     /**
@@ -679,7 +679,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setTransform(cacheIndex: Int, transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform2DArg(setTransformBind, handle, cacheIndex, transform)
+        ObjectCalls.ptrcallWithIntAndTransform2DArg(setTransformBind, segment, cacheIndex, transform)
     }
 
     /**
@@ -690,7 +690,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getTransform(cacheIndex: Int): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getTransformBind, handle, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getTransformBind, segment, cacheIndex)
     }
 
     /**
@@ -700,7 +700,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setExtraSpacing(cacheIndex: Int, spacing: Long, value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, handle, cacheIndex, spacing, value)
+        ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, segment, cacheIndex, spacing, value)
     }
 
     /**
@@ -710,7 +710,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getExtraSpacing(cacheIndex: Int, spacing: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, handle, cacheIndex, spacing)
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, segment, cacheIndex, spacing)
     }
 
     /**
@@ -720,7 +720,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setExtraBaselineOffset(cacheIndex: Int, baselineOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setExtraBaselineOffsetBind, handle, cacheIndex, baselineOffset)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setExtraBaselineOffsetBind, segment, cacheIndex, baselineOffset)
     }
 
     /**
@@ -730,7 +730,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getExtraBaselineOffset(cacheIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getExtraBaselineOffsetBind, handle, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getExtraBaselineOffsetBind, segment, cacheIndex)
     }
 
     /**
@@ -740,7 +740,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setFaceIndex(cacheIndex: Int, faceIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setFaceIndexBind, handle, cacheIndex, faceIndex)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setFaceIndexBind, segment, cacheIndex, faceIndex)
     }
 
     /**
@@ -750,7 +750,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getFaceIndex(cacheIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getFaceIndexBind, handle, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getFaceIndexBind, segment, cacheIndex)
     }
 
     /**
@@ -760,7 +760,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setCacheAscent(cacheIndex: Int, size: Int, ascent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheAscentBind, handle, cacheIndex, size, ascent)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheAscentBind, segment, cacheIndex, size, ascent)
     }
 
     /**
@@ -770,7 +770,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getCacheAscent(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheAscentBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheAscentBind, segment, cacheIndex, size)
     }
 
     /**
@@ -780,7 +780,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setCacheDescent(cacheIndex: Int, size: Int, descent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheDescentBind, handle, cacheIndex, size, descent)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheDescentBind, segment, cacheIndex, size, descent)
     }
 
     /**
@@ -790,7 +790,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getCacheDescent(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheDescentBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheDescentBind, segment, cacheIndex, size)
     }
 
     /**
@@ -800,7 +800,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setCacheUnderlinePosition(cacheIndex: Int, size: Int, underlinePosition: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlinePositionBind, handle, cacheIndex, size, underlinePosition)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlinePositionBind, segment, cacheIndex, size, underlinePosition)
     }
 
     /**
@@ -810,7 +810,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getCacheUnderlinePosition(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlinePositionBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlinePositionBind, segment, cacheIndex, size)
     }
 
     /**
@@ -820,7 +820,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setCacheUnderlineThickness(cacheIndex: Int, size: Int, underlineThickness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlineThicknessBind, handle, cacheIndex, size, underlineThickness)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlineThicknessBind, segment, cacheIndex, size, underlineThickness)
     }
 
     /**
@@ -830,7 +830,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getCacheUnderlineThickness(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlineThicknessBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlineThicknessBind, segment, cacheIndex, size)
     }
 
     /**
@@ -840,7 +840,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setCacheScale(cacheIndex: Int, size: Int, scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheScaleBind, handle, cacheIndex, size, scale)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheScaleBind, segment, cacheIndex, size, scale)
     }
 
     /**
@@ -850,7 +850,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getCacheScale(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheScaleBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheScaleBind, segment, cacheIndex, size)
     }
 
     /**
@@ -860,7 +860,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getTextureCount(cacheIndex: Int, size: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(getTextureCountBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(getTextureCountBind, segment, cacheIndex, size)
     }
 
     /**
@@ -871,7 +871,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun clearTextures(cacheIndex: Int, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(clearTexturesBind, handle, cacheIndex, size)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(clearTexturesBind, segment, cacheIndex, size)
     }
 
     /**
@@ -882,7 +882,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun removeTexture(cacheIndex: Int, size: Vector2i, textureIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeTextureBind, handle, cacheIndex, size, textureIndex)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeTextureBind, segment, cacheIndex, size, textureIndex)
     }
 
     /**
@@ -892,7 +892,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int, image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, handle, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, segment, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -902,7 +902,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, handle, cacheIndex, size, textureIndex))
+        return Image.wrap(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, segment, cacheIndex, size, textureIndex))
     }
 
     /**
@@ -912,7 +912,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int, offset: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(setTextureOffsetsBind, handle, cacheIndex, size, textureIndex, offset)
+        ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(setTextureOffsetsBind, segment, cacheIndex, size, textureIndex, offset)
     }
 
     /**
@@ -922,7 +922,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(getTextureOffsetsBind, handle, cacheIndex, size, textureIndex)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(getTextureOffsetsBind, segment, cacheIndex, size, textureIndex)
     }
 
     /**
@@ -932,7 +932,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGlyphList(cacheIndex: Int, size: Vector2i): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(getGlyphListBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(getGlyphListBind, segment, cacheIndex, size)
     }
 
     /**
@@ -943,7 +943,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun clearGlyphs(cacheIndex: Int, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(clearGlyphsBind, handle, cacheIndex, size)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(clearGlyphsBind, segment, cacheIndex, size)
     }
 
     /**
@@ -954,7 +954,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun removeGlyph(cacheIndex: Int, size: Vector2i, glyph: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeGlyphBind, handle, cacheIndex, size, glyph)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeGlyphBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -965,7 +965,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int, advance: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntAndVector2Arg(setGlyphAdvanceBind, handle, cacheIndex, size, glyph, advance)
+        ObjectCalls.ptrcallWithThreeIntAndVector2Arg(setGlyphAdvanceBind, segment, cacheIndex, size, glyph, advance)
     }
 
     /**
@@ -976,7 +976,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(getGlyphAdvanceBind, handle, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(getGlyphAdvanceBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -986,7 +986,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int, offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphOffsetBind, handle, cacheIndex, size, glyph, offset)
+        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphOffsetBind, segment, cacheIndex, size, glyph, offset)
     }
 
     /**
@@ -996,7 +996,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphOffsetBind, handle, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphOffsetBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1006,7 +1006,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int, glSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphSizeBind, handle, cacheIndex, size, glyph, glSize)
+        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphSizeBind, segment, cacheIndex, size, glyph, glSize)
     }
 
     /**
@@ -1016,7 +1016,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphSizeBind, handle, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphSizeBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1026,7 +1026,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int, uvRect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntRect2Args(setGlyphUvRectBind, handle, cacheIndex, size, glyph, uvRect)
+        ObjectCalls.ptrcallWithIntVector2iIntRect2Args(setGlyphUvRectBind, segment, cacheIndex, size, glyph, uvRect)
     }
 
     /**
@@ -1036,7 +1036,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(getGlyphUvRectBind, handle, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(getGlyphUvRectBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1046,7 +1046,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int, textureIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(setGlyphTextureIdxBind, handle, cacheIndex, size, glyph, textureIdx)
+        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(setGlyphTextureIdxBind, segment, cacheIndex, size, glyph, textureIdx)
     }
 
     /**
@@ -1056,7 +1056,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(getGlyphTextureIdxBind, handle, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(getGlyphTextureIdxBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1066,7 +1066,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getKerningList(cacheIndex: Int, size: Int): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(getKerningListBind, handle, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(getKerningListBind, segment, cacheIndex, size)
     }
 
     /**
@@ -1076,7 +1076,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun clearKerningMap(cacheIndex: Int, size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(clearKerningMapBind, handle, cacheIndex, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(clearKerningMapBind, segment, cacheIndex, size)
     }
 
     /**
@@ -1086,7 +1086,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun removeKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndVector2iArg(removeKerningBind, handle, cacheIndex, size, glyphPair)
+        ObjectCalls.ptrcallWithTwoIntAndVector2iArg(removeKerningBind, segment, cacheIndex, size, glyphPair)
     }
 
     /**
@@ -1096,7 +1096,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i, kerning: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(setKerningBind, handle, cacheIndex, size, glyphPair, kerning)
+        ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(setKerningBind, segment, cacheIndex, size, glyphPair, kerning)
     }
 
     /**
@@ -1106,7 +1106,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(getKerningBind, handle, cacheIndex, size, glyphPair)
+        return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(getKerningBind, segment, cacheIndex, size, glyphPair)
     }
 
     /**
@@ -1116,7 +1116,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun renderRange(cacheIndex: Int, size: Vector2i, start: Int, end: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(renderRangeBind, handle, cacheIndex, size, start, end)
+        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(renderRangeBind, segment, cacheIndex, size, start, end)
     }
 
     /**
@@ -1126,7 +1126,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun renderGlyph(cacheIndex: Int, size: Vector2i, index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(renderGlyphBind, handle, cacheIndex, size, index)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(renderGlyphBind, segment, cacheIndex, size, index)
     }
 
     /**
@@ -1136,7 +1136,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setLanguageSupportOverride(language: String, supported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndBoolArg(setLanguageSupportOverrideBind, handle, language, supported)
+        ObjectCalls.ptrcallWithStringAndBoolArg(setLanguageSupportOverrideBind, segment, language, supported)
     }
 
     /**
@@ -1146,7 +1146,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getLanguageSupportOverride(language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(getLanguageSupportOverrideBind, handle, language)
+        return ObjectCalls.ptrcallWithStringArgRetBool(getLanguageSupportOverrideBind, segment, language)
     }
 
     /**
@@ -1156,7 +1156,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun removeLanguageSupportOverride(language: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeLanguageSupportOverrideBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(removeLanguageSupportOverrideBind, segment, language)
     }
 
     /**
@@ -1166,7 +1166,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getLanguageSupportOverrides(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLanguageSupportOverridesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLanguageSupportOverridesBind, segment)
     }
 
     /**
@@ -1176,7 +1176,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setScriptSupportOverride(script: String, supported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndBoolArg(setScriptSupportOverrideBind, handle, script, supported)
+        ObjectCalls.ptrcallWithStringAndBoolArg(setScriptSupportOverrideBind, segment, script, supported)
     }
 
     /**
@@ -1186,7 +1186,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getScriptSupportOverride(script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(getScriptSupportOverrideBind, handle, script)
+        return ObjectCalls.ptrcallWithStringArgRetBool(getScriptSupportOverrideBind, segment, script)
     }
 
     /**
@@ -1196,7 +1196,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun removeScriptSupportOverride(script: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeScriptSupportOverrideBind, handle, script)
+        ObjectCalls.ptrcallWithStringArg(removeScriptSupportOverrideBind, segment, script)
     }
 
     /**
@@ -1206,7 +1206,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getScriptSupportOverrides(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getScriptSupportOverridesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getScriptSupportOverridesBind, segment)
     }
 
     /**
@@ -1216,7 +1216,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun setOpentypeFeatureOverrides(overrides: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeatureOverridesBind, handle, overrides)
+        ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeatureOverridesBind, segment, overrides)
     }
 
     /**
@@ -1226,7 +1226,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getOpentypeFeatureOverrides(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeatureOverridesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeatureOverridesBind, segment)
     }
 
     /**
@@ -1236,7 +1236,7 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getGlyphIndex(size: Int, char: Int, variationSelector: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntArgsRetInt(getGlyphIndexBind, handle, size, char, variationSelector)
+        return ObjectCalls.ptrcallWithThreeIntArgsRetInt(getGlyphIndexBind, segment, size, char, variationSelector)
     }
 
     /**
@@ -1247,16 +1247,16 @@ class FontFile(handle: MemorySegment) : Font(handle) {
      */
     fun getCharFromGlyphIndex(size: Int, glyphIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getCharFromGlyphIndexBind, handle, size, glyphIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getCharFromGlyphIndexBind, segment, size, glyphIndex)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FontFile? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FontFile? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FontFile? =
-            if (handle.address() == 0L) null else FontFile(handle)
+            if (handle.address() == 0L) null else FontFile(GodotHandle(handle))
 
         private const val LOAD_BITMAP_FONT_HASH = 166001499L
         private val loadBitmapFontBind by lazy {

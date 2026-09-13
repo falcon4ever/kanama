@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: NoiseTexture3D
  */
-class NoiseTexture3D(handle: MemorySegment) : Texture3D(handle) {
+class NoiseTexture3D(handle: GodotHandle) : Texture3D(handle) {
     var noise: Noise?
         @JvmName("noiseProperty")
         get() = getNoise()
@@ -48,86 +48,86 @@ class NoiseTexture3D(handle: MemorySegment) : Texture3D(handle) {
 
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
     }
 
     fun setHeight(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightBind, handle, height)
+        ObjectCalls.ptrcallWithIntArg(setHeightBind, segment, height)
     }
 
     fun setDepth(depth: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDepthBind, handle, depth)
+        ObjectCalls.ptrcallWithIntArg(setDepthBind, segment, depth)
     }
 
     fun setNoise(noise: Noise?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, handle, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getNoise(): Noise? {
         checkOpen()
-        return Noise.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, handle))
+        return Noise.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, segment))
     }
 
     fun setColorRamp(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, handle, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getColorRamp(): Gradient? {
         checkOpen()
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, handle))
+        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     fun setSeamless(seamless: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, handle, seamless)
+        ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, segment, seamless)
     }
 
     fun getSeamless(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, segment)
     }
 
     fun setInvert(invert: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setInvertBind, handle, invert)
+        ObjectCalls.ptrcallWithBoolArg(setInvertBind, segment, invert)
     }
 
     fun getInvert(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, segment)
     }
 
     fun setNormalize(normalize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, handle, normalize)
+        ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, segment, normalize)
     }
 
     fun isNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, segment)
     }
 
     fun setSeamlessBlendSkirt(seamlessBlendSkirt: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, handle, seamlessBlendSkirt)
+        ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, segment, seamlessBlendSkirt)
     }
 
     fun getSeamlessBlendSkirt(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NoiseTexture3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NoiseTexture3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NoiseTexture3D? =
-            if (handle.address() == 0L) null else NoiseTexture3D(handle)
+            if (handle.address() == 0L) null else NoiseTexture3D(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L
         private val setWidthBind by lazy {

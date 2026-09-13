@@ -14,12 +14,12 @@ import net.multigesture.kanama.types.Transform3D
 
 fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
     checkOpen()
-    return ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(transformFromPoseBind, handle, pose)
+    return ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(transformFromPoseBind, segment, pose)
 }
 
 fun OpenXRAPIExtension.setCustomPlaySpace(space: MemorySegment) {
     checkOpen()
-    ObjectCalls.ptrcallWithConstVoidPtrArg(setCustomPlaySpaceBind, handle, space)
+    ObjectCalls.ptrcallWithConstVoidPtrArg(setCustomPlaySpaceBind, segment, space)
 }
 
 private const val TRANSFORM_FROM_POSE_HASH = 2963875352L

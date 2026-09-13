@@ -573,7 +573,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetMonitorCallback(area: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetMonitorCallbackBind, singleton, area, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
     }
 
     /**
@@ -592,7 +592,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetAreaMonitorCallback(area: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetAreaMonitorCallbackBind, singleton, area, callback.target.handle, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetAreaMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
     }
 
     /**
@@ -1210,7 +1210,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetStateSyncCallback(body: RID, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(bodySetStateSyncCallbackBind, singleton, body, callable.target.handle, callable.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(bodySetStateSyncCallbackBind, singleton, body, callable.target.segment, callable.method)
     }
 
     /**
@@ -1228,7 +1228,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetForceIntegrationCallback(body: RID, callable: GodotCallable, userdata: Any? = null) {
-        ObjectCalls.ptrcallWithRIDCallableVariantArgs(bodySetForceIntegrationCallbackBind, singleton, body, callable.target.handle, callable.method, userdata)
+        ObjectCalls.ptrcallWithRIDCallableVariantArgs(bodySetForceIntegrationCallbackBind, singleton, body, callable.target.segment, callable.method, userdata)
     }
 
     /**
@@ -1457,8 +1457,8 @@ object PhysicsServer2D {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): PhysicsServer2D? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): PhysicsServer2D? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): PhysicsServer2D? =
         if (handle.address() == 0L) null else this

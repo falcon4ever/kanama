@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: SkeletonModification2DLookAt
  */
-class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification2D(handle) {
+class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D(handle) {
     var boneIndex: Int
         @JvmName("boneIndexProperty")
         get() = getBoneIndex()
@@ -38,7 +38,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setBone2dNode(bone2dNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setBone2dNodeBind, handle, bone2dNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setBone2dNodeBind, segment, bone2dNodepath)
     }
 
     /**
@@ -48,7 +48,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodeBind, segment)
     }
 
     /**
@@ -58,7 +58,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setBoneIndex(boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBoneIndexBind, handle, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(setBoneIndexBind, segment, boneIdx)
     }
 
     /**
@@ -68,7 +68,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getBoneIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIndexBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, handle, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -90,7 +90,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setAdditionalRotation(rotation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAdditionalRotationBind, handle, rotation)
+        ObjectCalls.ptrcallWithDoubleArg(setAdditionalRotationBind, segment, rotation)
     }
 
     /**
@@ -112,7 +112,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getAdditionalRotation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAdditionalRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAdditionalRotationBind, segment)
     }
 
     /**
@@ -123,7 +123,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setEnableConstraint(enableConstraint: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableConstraintBind, handle, enableConstraint)
+        ObjectCalls.ptrcallWithBoolArg(setEnableConstraintBind, segment, enableConstraint)
     }
 
     /**
@@ -133,7 +133,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getEnableConstraint(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableConstraintBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableConstraintBind, segment)
     }
 
     /**
@@ -143,7 +143,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setConstraintAngleMin(angleMin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMinBind, handle, angleMin)
+        ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMinBind, segment, angleMin)
     }
 
     /**
@@ -153,7 +153,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getConstraintAngleMin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMinBind, segment)
     }
 
     /**
@@ -163,7 +163,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setConstraintAngleMax(angleMax: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMaxBind, handle, angleMax)
+        ObjectCalls.ptrcallWithDoubleArg(setConstraintAngleMaxBind, segment, angleMax)
     }
 
     /**
@@ -173,7 +173,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getConstraintAngleMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getConstraintAngleMaxBind, segment)
     }
 
     /**
@@ -186,7 +186,7 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun setConstraintAngleInvert(invert: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setConstraintAngleInvertBind, handle, invert)
+        ObjectCalls.ptrcallWithBoolArg(setConstraintAngleInvertBind, segment, invert)
     }
 
     /**
@@ -196,16 +196,16 @@ class SkeletonModification2DLookAt(handle: MemorySegment) : SkeletonModification
      */
     fun getConstraintAngleInvert(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getConstraintAngleInvertBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getConstraintAngleInvertBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SkeletonModification2DLookAt? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SkeletonModification2DLookAt? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SkeletonModification2DLookAt? =
-            if (handle.address() == 0L) null else SkeletonModification2DLookAt(handle)
+            if (handle.address() == 0L) null else SkeletonModification2DLookAt(GodotHandle(handle))
 
         private const val SET_BONE2D_NODE_HASH = 1348162250L
         private val setBone2dNodeBind by lazy {

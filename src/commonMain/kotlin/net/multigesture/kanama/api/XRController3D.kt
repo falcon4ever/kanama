@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: XRController3D
  */
-class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
+class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
     /**
      * Returns `true` if the button with the given `name` is pressed. Note: The current `XRInterface`
      * defines the `name` for each input. In the case of OpenXR, these are the names of actions in the
@@ -20,7 +20,7 @@ class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.is_button_pressed
      */
     fun isButtonPressed(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isButtonPressedBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(isButtonPressedBind, segment, name)
     }
 
     /**
@@ -32,7 +32,7 @@ class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_input
      */
     fun getInput(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, segment, name)
     }
 
     /**
@@ -43,7 +43,7 @@ class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_float
      */
     fun getFloat(name: String): Double {
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getFloatBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getFloatBind, segment, name)
     }
 
     /**
@@ -54,7 +54,7 @@ class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_vector2
      */
     fun getVector2(name: String): Vector2 {
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getVector2Bind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getVector2Bind, segment, name)
     }
 
     /**
@@ -63,7 +63,7 @@ class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_tracker_hand
      */
     fun getTrackerHand(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment)
     }
 
     object Signals {
@@ -76,11 +76,11 @@ class XRController3D(handle: MemorySegment) : XRNode3D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): XRController3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): XRController3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): XRController3D? =
-            if (handle.address() == 0L) null else XRController3D(handle)
+            if (handle.address() == 0L) null else XRController3D(GodotHandle(handle))
 
         private const val IS_BUTTON_PRESSED_HASH = 2619796661L
         private val isButtonPressedBind by lazy {

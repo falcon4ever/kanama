@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AESContext
  */
-class AESContext(handle: MemorySegment) : RefCounted(handle) {
+class AESContext(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Start the AES context in the given `mode`. A `key` of either 16 or 32 bytes must always be
      * provided, while an `iv` (initialization vector) of exactly 16 bytes, is only needed when `mode`
@@ -20,7 +20,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun start(mode: Long, key: ByteArray, iv: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, handle, mode, key, iv)
+        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, segment, mode, key, iv)
     }
 
     /**
@@ -32,7 +32,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun update(src: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(updateBind, handle, src)
+        return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(updateBind, segment, src)
     }
 
     /**
@@ -44,7 +44,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getIvState(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getIvStateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(getIvStateBind, segment)
     }
 
     /**
@@ -54,7 +54,7 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
      */
     fun finish() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(finishBind, handle)
+        ObjectCalls.ptrcallNoArgs(finishBind, segment)
     }
 
     companion object {
@@ -65,11 +65,11 @@ class AESContext(handle: MemorySegment) : RefCounted(handle) {
         const val MODE_MAX: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AESContext? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AESContext? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AESContext? =
-            if (handle.address() == 0L) null else AESContext(handle)
+            if (handle.address() == 0L) null else AESContext(GodotHandle(handle))
 
         private const val START_HASH = 3122411423L
         private val startBind by lazy {

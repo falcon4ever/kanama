@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: MeshInstance3D
  */
-open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
+open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     var mesh: Mesh?
         @JvmName("meshProperty")
         get() = getMesh()
@@ -37,7 +37,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -46,7 +46,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_mesh
      */
     fun getMesh(): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -58,7 +58,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_skeleton_path
      */
     fun setSkeletonPath(skeletonPath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSkeletonPathBind, handle, skeletonPath)
+        ObjectCalls.ptrcallWithNodePathArg(setSkeletonPathBind, segment, skeletonPath)
     }
 
     /**
@@ -70,7 +70,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skeleton_path
      */
     fun getSkeletonPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonPathBind, segment)
     }
 
     /**
@@ -79,7 +79,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_skin
      */
     fun setSkin(skin: Skin?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, handle, listOf(skin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -88,7 +88,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skin
      */
     fun getSkin(): Skin? {
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, handle))
+        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
     }
 
     /**
@@ -99,7 +99,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skin_reference
      */
     fun getSkinReference(): SkinReference? {
-        return SkinReference.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinReferenceBind, handle))
+        return SkinReference.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinReferenceBind, segment))
     }
 
     /**
@@ -109,7 +109,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_surface_override_material_count
      */
     fun getSurfaceOverrideMaterialCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceOverrideMaterialCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceOverrideMaterialCountBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_surface_override_material
      */
     fun setSurfaceOverrideMaterial(surface: Int, material: Material?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceOverrideMaterialBind, handle, surface, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceOverrideMaterialBind, segment, surface, material?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -135,7 +135,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_surface_override_material
      */
     fun getSurfaceOverrideMaterial(surface: Int): Material? {
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceOverrideMaterialBind, handle, surface))
+        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceOverrideMaterialBind, segment, surface))
     }
 
     /**
@@ -148,7 +148,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_active_material
      */
     fun getActiveMaterial(surface: Int): Material? {
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getActiveMaterialBind, handle, surface))
+        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getActiveMaterialBind, segment, surface))
     }
 
     /**
@@ -158,7 +158,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_trimesh_collision
      */
     fun createTrimeshCollision() {
-        ObjectCalls.ptrcallNoArgs(createTrimeshCollisionBind, handle)
+        ObjectCalls.ptrcallNoArgs(createTrimeshCollisionBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_convex_collision
      */
     fun createConvexCollision(clean: Boolean = true, simplify: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoBoolArgs(createConvexCollisionBind, handle, clean, simplify)
+        ObjectCalls.ptrcallWithTwoBoolArgs(createConvexCollisionBind, segment, clean, simplify)
     }
 
     /**
@@ -182,7 +182,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_multiple_convex_collisions
      */
     fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings?) {
-        ObjectCalls.ptrcallWithObjectArgs(createMultipleConvexCollisionsBind, handle, listOf(settings?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(createMultipleConvexCollisionsBind, segment, listOf(settings?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -191,7 +191,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_blend_shape_count
      */
     fun getBlendShapeCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, segment)
     }
 
     /**
@@ -201,7 +201,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.find_blend_shape_by_name
      */
     fun findBlendShapeByName(name: String): Int {
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendShapeByNameBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendShapeByNameBind, segment, name)
     }
 
     /**
@@ -211,7 +211,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_blend_shape_value
      */
     fun getBlendShapeValue(blendShapeIdx: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getBlendShapeValueBind, handle, blendShapeIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(getBlendShapeValueBind, segment, blendShapeIdx)
     }
 
     /**
@@ -221,7 +221,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_blend_shape_value
      */
     fun setBlendShapeValue(blendShapeIdx: Int, value: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setBlendShapeValueBind, handle, blendShapeIdx, value)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(setBlendShapeValueBind, segment, blendShapeIdx, value)
     }
 
     /**
@@ -231,7 +231,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_debug_tangents
      */
     fun createDebugTangents() {
-        ObjectCalls.ptrcallNoArgs(createDebugTangentsBind, handle)
+        ObjectCalls.ptrcallNoArgs(createDebugTangentsBind, segment)
     }
 
     /**
@@ -244,7 +244,7 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_blend_shape_mix
      */
     fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentBlendShapeMixBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -257,16 +257,16 @@ open class MeshInstance3D(handle: MemorySegment) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_skeleton_pose
      */
     fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentSkeletonPoseBind, handle, existing?.requireOpenHandle() ?: MemorySegment.NULL))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshInstance3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshInstance3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MeshInstance3D? =
-            if (handle.address() == 0L) null else MeshInstance3D(handle)
+            if (handle.address() == 0L) null else MeshInstance3D(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {

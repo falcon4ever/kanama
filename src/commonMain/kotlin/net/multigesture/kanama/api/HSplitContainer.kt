@@ -11,16 +11,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: HSplitContainer
  */
-class HSplitContainer(handle: MemorySegment) : SplitContainer(handle) {
+class HSplitContainer(handle: GodotHandle) : SplitContainer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): HSplitContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): HSplitContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): HSplitContainer? =
-            if (handle.address() == 0L) null else HSplitContainer(handle)
+            if (handle.address() == 0L) null else HSplitContainer(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

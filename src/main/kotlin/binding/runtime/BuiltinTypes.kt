@@ -826,7 +826,10 @@ object BuiltinTypes {
           args = emptyList(),
           rReturn = methodRet,
         )
-        return GodotCallable(GodotObject(GodotHandle(objectHandle)), GodotStrings.readStringName(methodRet))
+        return GodotCallable(
+          GodotObject(GodotHandle(objectHandle)),
+          GodotStrings.readStringName(methodRet),
+        )
       } finally {
         destroyTyped(VariantType.STRING_NAME, methodRet)
       }

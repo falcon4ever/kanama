@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  *
  * Generated from Godot docs: NavigationMesh
  */
-class NavigationMesh(handle: MemorySegment) : Resource(handle) {
+class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     var vertices: List<Vector3>
         @JvmName("verticesProperty")
         get() = getVertices()
@@ -171,7 +171,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setSamplePartitionType(samplePartitionType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, handle, samplePartitionType)
+        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType)
     }
 
     /**
@@ -181,7 +181,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSamplePartitionType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment)
     }
 
     /**
@@ -191,7 +191,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setParsedGeometryType(geometryType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, handle, geometryType)
+        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType)
     }
 
     /**
@@ -201,7 +201,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getParsedGeometryType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment)
     }
 
     /**
@@ -212,7 +212,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setCollisionMask(mask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -223,7 +223,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
     }
 
     /**
@@ -234,7 +234,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, handle, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -245,7 +245,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, handle, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -255,7 +255,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setSourceGeometryMode(mask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, handle, mask)
+        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, mask)
     }
 
     /**
@@ -265,7 +265,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceGeometryMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment)
     }
 
     /**
@@ -276,7 +276,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setSourceGroupName(mask: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setSourceGroupNameBind, handle, mask)
+        ObjectCalls.ptrcallWithStringNameArg(setSourceGroupNameBind, segment, mask)
     }
 
     /**
@@ -287,7 +287,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getSourceGroupName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGroupNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGroupNameBind, segment)
     }
 
     /**
@@ -298,7 +298,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setCellSize(cellSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, handle, cellSize)
+        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, segment, cellSize)
     }
 
     /**
@@ -309,7 +309,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, segment)
     }
 
     /**
@@ -320,7 +320,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setCellHeight(cellHeight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellHeightBind, handle, cellHeight)
+        ObjectCalls.ptrcallWithDoubleArg(setCellHeightBind, segment, cellHeight)
     }
 
     /**
@@ -331,7 +331,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getCellHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCellHeightBind, segment)
     }
 
     /**
@@ -345,7 +345,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setBorderSize(borderSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, handle, borderSize)
+        ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, segment, borderSize)
     }
 
     /**
@@ -359,7 +359,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getBorderSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, segment)
     }
 
     /**
@@ -371,7 +371,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setAgentHeight(agentHeight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentHeightBind, handle, agentHeight)
+        ObjectCalls.ptrcallWithDoubleArg(setAgentHeightBind, segment, agentHeight)
     }
 
     /**
@@ -383,7 +383,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getAgentHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentHeightBind, segment)
     }
 
     /**
@@ -398,7 +398,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setAgentRadius(agentRadius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, handle, agentRadius)
+        ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, segment, agentRadius)
     }
 
     /**
@@ -413,7 +413,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getAgentRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, segment)
     }
 
     /**
@@ -424,7 +424,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setAgentMaxClimb(agentMaxClimb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentMaxClimbBind, handle, agentMaxClimb)
+        ObjectCalls.ptrcallWithDoubleArg(setAgentMaxClimbBind, segment, agentMaxClimb)
     }
 
     /**
@@ -435,7 +435,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getAgentMaxClimb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxClimbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxClimbBind, segment)
     }
 
     /**
@@ -445,7 +445,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setAgentMaxSlope(agentMaxSlope: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentMaxSlopeBind, handle, agentMaxSlope)
+        ObjectCalls.ptrcallWithDoubleArg(setAgentMaxSlopeBind, segment, agentMaxSlope)
     }
 
     /**
@@ -455,7 +455,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getAgentMaxSlope(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxSlopeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxSlopeBind, segment)
     }
 
     /**
@@ -467,7 +467,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setRegionMinSize(regionMinSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRegionMinSizeBind, handle, regionMinSize)
+        ObjectCalls.ptrcallWithDoubleArg(setRegionMinSizeBind, segment, regionMinSize)
     }
 
     /**
@@ -479,7 +479,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getRegionMinSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMinSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMinSizeBind, segment)
     }
 
     /**
@@ -491,7 +491,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setRegionMergeSize(regionMergeSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRegionMergeSizeBind, handle, regionMergeSize)
+        ObjectCalls.ptrcallWithDoubleArg(setRegionMergeSizeBind, segment, regionMergeSize)
     }
 
     /**
@@ -503,7 +503,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getRegionMergeSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMergeSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMergeSizeBind, segment)
     }
 
     /**
@@ -515,7 +515,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setEdgeMaxLength(edgeMaxLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxLengthBind, handle, edgeMaxLength)
+        ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxLengthBind, segment, edgeMaxLength)
     }
 
     /**
@@ -527,7 +527,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getEdgeMaxLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxLengthBind, segment)
     }
 
     /**
@@ -538,7 +538,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setEdgeMaxError(edgeMaxError: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxErrorBind, handle, edgeMaxError)
+        ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxErrorBind, segment, edgeMaxError)
     }
 
     /**
@@ -549,7 +549,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getEdgeMaxError(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxErrorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxErrorBind, segment)
     }
 
     /**
@@ -560,7 +560,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setVerticesPerPolygon(verticesPerPolygon: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVerticesPerPolygonBind, handle, verticesPerPolygon)
+        ObjectCalls.ptrcallWithDoubleArg(setVerticesPerPolygonBind, segment, verticesPerPolygon)
     }
 
     /**
@@ -571,7 +571,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getVerticesPerPolygon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVerticesPerPolygonBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVerticesPerPolygonBind, segment)
     }
 
     /**
@@ -581,7 +581,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setDetailSampleDistance(detailSampleDist: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDetailSampleDistanceBind, handle, detailSampleDist)
+        ObjectCalls.ptrcallWithDoubleArg(setDetailSampleDistanceBind, segment, detailSampleDist)
     }
 
     /**
@@ -591,7 +591,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getDetailSampleDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleDistanceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleDistanceBind, segment)
     }
 
     /**
@@ -601,7 +601,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setDetailSampleMaxError(detailSampleMaxError: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDetailSampleMaxErrorBind, handle, detailSampleMaxError)
+        ObjectCalls.ptrcallWithDoubleArg(setDetailSampleMaxErrorBind, segment, detailSampleMaxError)
     }
 
     /**
@@ -611,7 +611,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getDetailSampleMaxError(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleMaxErrorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleMaxErrorBind, segment)
     }
 
     /**
@@ -622,7 +622,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setFilterLowHangingObstacles(filterLowHangingObstacles: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterLowHangingObstaclesBind, handle, filterLowHangingObstacles)
+        ObjectCalls.ptrcallWithBoolArg(setFilterLowHangingObstaclesBind, segment, filterLowHangingObstacles)
     }
 
     /**
@@ -633,7 +633,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getFilterLowHangingObstacles(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFilterLowHangingObstaclesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFilterLowHangingObstaclesBind, segment)
     }
 
     /**
@@ -643,7 +643,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setFilterLedgeSpans(filterLedgeSpans: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterLedgeSpansBind, handle, filterLedgeSpans)
+        ObjectCalls.ptrcallWithBoolArg(setFilterLedgeSpansBind, segment, filterLedgeSpans)
     }
 
     /**
@@ -653,7 +653,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getFilterLedgeSpans(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFilterLedgeSpansBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFilterLedgeSpansBind, segment)
     }
 
     /**
@@ -664,7 +664,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setFilterWalkableLowHeightSpans(filterWalkableLowHeightSpans: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterWalkableLowHeightSpansBind, handle, filterWalkableLowHeightSpans)
+        ObjectCalls.ptrcallWithBoolArg(setFilterWalkableLowHeightSpansBind, segment, filterWalkableLowHeightSpans)
     }
 
     /**
@@ -675,7 +675,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getFilterWalkableLowHeightSpans(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFilterWalkableLowHeightSpansBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getFilterWalkableLowHeightSpansBind, segment)
     }
 
     /**
@@ -686,7 +686,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setFilterBakingAabb(bakingAabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setFilterBakingAabbBind, handle, bakingAabb)
+        ObjectCalls.ptrcallWithAABBArg(setFilterBakingAabbBind, segment, bakingAabb)
     }
 
     /**
@@ -697,7 +697,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getFilterBakingAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getFilterBakingAabbBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetAABB(getFilterBakingAabbBind, segment)
     }
 
     /**
@@ -707,7 +707,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setFilterBakingAabbOffset(bakingAabbOffset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setFilterBakingAabbOffsetBind, handle, bakingAabbOffset)
+        ObjectCalls.ptrcallWithVector3Arg(setFilterBakingAabbOffsetBind, segment, bakingAabbOffset)
     }
 
     /**
@@ -717,7 +717,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getFilterBakingAabbOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getFilterBakingAabbOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getFilterBakingAabbOffsetBind, segment)
     }
 
     /**
@@ -727,7 +727,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun setVertices(vertices: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, handle, vertices)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, segment, vertices)
     }
 
     /**
@@ -737,7 +737,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getVertices(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, segment)
     }
 
     /**
@@ -747,7 +747,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun addPolygon(polygon: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, handle, polygon)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, segment, polygon)
     }
 
     /**
@@ -757,7 +757,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getPolygonCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, segment)
     }
 
     /**
@@ -767,7 +767,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun getPolygon(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, handle, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, segment, idx)
     }
 
     /**
@@ -777,7 +777,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun clearPolygons() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPolygonsBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearPolygonsBind, segment)
     }
 
     /**
@@ -788,7 +788,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun createFromMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -798,7 +798,7 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     companion object {
@@ -816,11 +816,11 @@ class NavigationMesh(handle: MemorySegment) : Resource(handle) {
         const val SOURCE_GEOMETRY_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): NavigationMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): NavigationMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): NavigationMesh? =
-            if (handle.address() == 0L) null else NavigationMesh(handle)
+            if (handle.address() == 0L) null else NavigationMesh(GodotHandle(handle))
 
         private const val SET_SAMPLE_PARTITION_TYPE_HASH = 2472437533L
         private val setSamplePartitionTypeBind by lazy {

@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: TextLine
  */
-class TextLine(handle: MemorySegment) : RefCounted(handle) {
+class TextLine(handle: GodotHandle) : RefCounted(handle) {
     var direction: Long
         @JvmName("directionProperty")
         get() = getDirection()
@@ -77,7 +77,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -87,8 +87,8 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun duplicate(): TextLine? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, handle)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, segment)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -102,7 +102,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setDirection(direction: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setDirectionBind, segment, direction)
     }
 
     /**
@@ -112,7 +112,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getDirection(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, segment)
     }
 
     /**
@@ -122,7 +122,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getInferredDirection(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, segment)
     }
 
     /**
@@ -132,7 +132,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setOrientation(orientation: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, handle, orientation)
+        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation)
     }
 
     /**
@@ -142,7 +142,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getOrientation(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPreserveInvalid(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, segment, enabled)
     }
 
     /**
@@ -162,7 +162,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPreserveInvalid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, segment)
     }
 
     /**
@@ -172,7 +172,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setPreserveControl(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, segment, enabled)
     }
 
     /**
@@ -182,7 +182,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getPreserveControl(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, segment)
     }
 
     /**
@@ -193,7 +193,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setBidiOverride(override: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, handle, override)
+        ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, segment, override)
     }
 
     /**
@@ -203,7 +203,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, handle, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
+        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, segment, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
     }
 
     /**
@@ -214,7 +214,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, handle, key, size, inlineAlign, length, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, segment, key, size, inlineAlign, length, baseline)
     }
 
     /**
@@ -224,7 +224,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, handle, key, size, inlineAlign, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, segment, key, size, inlineAlign, baseline)
     }
 
     /**
@@ -234,7 +234,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hasObject(key: Any?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, handle, key)
+        return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, segment, key)
     }
 
     /**
@@ -244,7 +244,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setWidth(width: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, handle, width)
+        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
     }
 
     /**
@@ -254,7 +254,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
     }
 
     /**
@@ -264,7 +264,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setHorizontalAlignment(alignment: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -274,7 +274,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getHorizontalAlignment(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
     }
 
     /**
@@ -284,7 +284,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun tabAlign(tabStops: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, handle, tabStops)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, segment, tabStops)
     }
 
     /**
@@ -294,7 +294,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setFlags(flags: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, handle, flags)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags)
     }
 
     /**
@@ -304,7 +304,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
     }
 
     /**
@@ -314,7 +314,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
     }
 
     /**
@@ -324,7 +324,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getTextOverrunBehavior(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
     }
 
     /**
@@ -334,7 +334,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setEllipsisChar(char: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, handle, char)
+        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, segment, char)
     }
 
     /**
@@ -344,7 +344,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getEllipsisChar(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, segment)
     }
 
     /**
@@ -354,7 +354,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getObjects(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getObjectsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetArray(getObjectsBind, segment)
     }
 
     /**
@@ -364,7 +364,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getObjectRect(key: Any?): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetRect2(getObjectRectBind, handle, key)
+        return ObjectCalls.ptrcallWithVariantArgRetRect2(getObjectRectBind, segment, key)
     }
 
     /**
@@ -374,7 +374,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
     }
 
     /**
@@ -384,7 +384,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -395,7 +395,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLineAscent(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineAscentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineAscentBind, segment)
     }
 
     /**
@@ -406,7 +406,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLineDescent(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineDescentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineDescentBind, segment)
     }
 
     /**
@@ -416,7 +416,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLineWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, segment)
     }
 
     /**
@@ -426,7 +426,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLineUnderlinePosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlinePositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlinePositionBind, segment)
     }
 
     /**
@@ -436,7 +436,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getLineUnderlineThickness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlineThicknessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlineThicknessBind, segment)
     }
 
     /**
@@ -448,7 +448,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun draw(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawBind, handle, canvas, pos, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawBind, segment, canvas, pos, color, oversampling)
     }
 
     /**
@@ -460,7 +460,7 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawOutlineBind, handle, canvas, pos, outlineSize, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawOutlineBind, segment, canvas, pos, outlineSize, color, oversampling)
     }
 
     /**
@@ -471,16 +471,16 @@ class TextLine(handle: MemorySegment) : RefCounted(handle) {
      */
     fun hitTest(coords: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetInt(hitTestBind, handle, coords)
+        return ObjectCalls.ptrcallWithDoubleArgRetInt(hitTestBind, segment, coords)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextLine? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextLine? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextLine? =
-            if (handle.address() == 0L) null else TextLine(handle)
+            if (handle.address() == 0L) null else TextLine(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {

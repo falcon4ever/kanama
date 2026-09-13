@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioStreamGenerator
  */
-class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
+class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     var mixRateMode: Long
         @JvmName("mixRateModeProperty")
         get() = getMixRateMode()
@@ -47,7 +47,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setMixRate(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMixRateBind, handle, hz)
+        ObjectCalls.ptrcallWithDoubleArg(setMixRateBind, segment, hz)
     }
 
     /**
@@ -67,7 +67,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getMixRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMixRateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMixRateBind, segment)
     }
 
     /**
@@ -78,7 +78,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setMixRateMode(mode: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMixRateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setMixRateModeBind, segment, mode)
     }
 
     /**
@@ -89,7 +89,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getMixRateMode(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMixRateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMixRateModeBind, segment)
     }
 
     /**
@@ -101,7 +101,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      */
     fun setBufferLength(seconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, handle, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, segment, seconds)
     }
 
     /**
@@ -113,7 +113,7 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
     }
 
     companion object {
@@ -123,11 +123,11 @@ class AudioStreamGenerator(handle: MemorySegment) : AudioStream(handle) {
         const val MIX_RATE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioStreamGenerator? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioStreamGenerator? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioStreamGenerator? =
-            if (handle.address() == 0L) null else AudioStreamGenerator(handle)
+            if (handle.address() == 0L) null else AudioStreamGenerator(GodotHandle(handle))
 
         private const val SET_MIX_RATE_HASH = 373806689L
         private val setMixRateBind by lazy {

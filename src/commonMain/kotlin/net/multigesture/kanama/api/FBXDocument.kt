@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: FBXDocument
  */
-class FBXDocument(handle: MemorySegment) : GLTFDocument(handle) {
+class FBXDocument(handle: GodotHandle) : GLTFDocument(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FBXDocument? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FBXDocument? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FBXDocument? =
-            if (handle.address() == 0L) null else FBXDocument(handle)
+            if (handle.address() == 0L) null else FBXDocument(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -8,15 +8,15 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: RefCounted
  */
-open class RefCounted(handle: MemorySegment) : GodotObject(handle), AutoCloseable {
+open class RefCounted(handle: GodotHandle) : GodotObject(handle), AutoCloseable {
     internal fun unreference(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, segment)
     }
 
     fun getReferenceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, segment)
     }
 
     // ── Kanama iOS RefCounted ownership (generator custom-section; task 31 mirror) ─────
@@ -35,9 +35,9 @@ open class RefCounted(handle: MemorySegment) : GodotObject(handle), AutoCloseabl
         check(!closed) { "RefCounted handle is closed" }
     }
 
-    override fun requireOpenHandle(): MemorySegment {
+    internal override fun requireOpenHandle(): MemorySegment {
         checkOpen()
-        return handle
+        return segment
     }
 
     override fun close() {
@@ -45,17 +45,17 @@ open class RefCounted(handle: MemorySegment) : GodotObject(handle), AutoCloseabl
         wrapperReferenceReleased = true
         if (unreference()) {
             closed = true
-            ObjectCalls.destroyObject(handle)
+            ObjectCalls.destroyObject(segment)
         }
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RefCounted? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RefCounted? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RefCounted? =
-            if (handle.address() == 0L) null else RefCounted(handle)
+            if (handle.address() == 0L) null else RefCounted(GodotHandle(handle))
 
         // Releases the +1 return-slot reference carried by `handle` without minting a
         // wrapper — the generated self-return-collapse pattern calls this before

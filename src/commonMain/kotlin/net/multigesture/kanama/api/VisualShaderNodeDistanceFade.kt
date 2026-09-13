@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeDistanceFade
  */
-class VisualShaderNodeDistanceFade(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeDistanceFade(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeDistanceFade? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeDistanceFade? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeDistanceFade? =
-            if (handle.address() == 0L) null else VisualShaderNodeDistanceFade(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeDistanceFade(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

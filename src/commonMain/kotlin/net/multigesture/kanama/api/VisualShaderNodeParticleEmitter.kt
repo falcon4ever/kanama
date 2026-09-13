@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeParticleEmitter
  */
-open class VisualShaderNodeParticleEmitter(handle: MemorySegment) : VisualShaderNode(handle) {
+open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNode(handle) {
     var mode2d: Boolean
         @JvmName("mode2dProperty")
         get() = isMode2d()
@@ -18,21 +18,21 @@ open class VisualShaderNodeParticleEmitter(handle: MemorySegment) : VisualShader
 
     fun setMode2d(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMode2dBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setMode2dBind, segment, enabled)
     }
 
     fun isMode2d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMode2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isMode2dBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeParticleEmitter? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleEmitter? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleEmitter? =
-            if (handle.address() == 0L) null else VisualShaderNodeParticleEmitter(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeParticleEmitter(GodotHandle(handle))
 
         private const val SET_MODE_2D_HASH = 2586408642L
         private val setMode2dBind by lazy {

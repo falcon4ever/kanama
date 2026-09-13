@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: FoldableContainer
  */
-class FoldableContainer(handle: MemorySegment) : Container(handle) {
+class FoldableContainer(handle: GodotHandle) : Container(handle) {
     var folded: Boolean
         @JvmName("foldedProperty")
         get() = isFolded()
@@ -66,7 +66,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.fold
      */
     fun fold() {
-        ObjectCalls.ptrcallNoArgs(foldBind, handle)
+        ObjectCalls.ptrcallNoArgs(foldBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.expand
      */
     fun expand() {
-        ObjectCalls.ptrcallNoArgs(expandBind, handle)
+        ObjectCalls.ptrcallNoArgs(expandBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_folded
      */
     fun setFolded(folded: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFoldedBind, handle, folded)
+        ObjectCalls.ptrcallWithBoolArg(setFoldedBind, segment, folded)
     }
 
     /**
@@ -93,7 +93,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.is_folded
      */
     fun isFolded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFoldedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isFoldedBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_foldable_group
      */
     fun setFoldableGroup(buttonGroup: FoldableGroup?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFoldableGroupBind, handle, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFoldableGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -113,7 +113,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_foldable_group
      */
     fun getFoldableGroup(): FoldableGroup? {
-        return FoldableGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFoldableGroupBind, handle))
+        return FoldableGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFoldableGroupBind, segment))
     }
 
     /**
@@ -122,7 +122,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title
      */
     fun setTitle(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, text)
     }
 
     /**
@@ -131,7 +131,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
     }
 
     /**
@@ -140,7 +140,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_alignment
      */
     fun setTitleAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitleAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setTitleAlignmentBind, segment, alignment)
     }
 
     /**
@@ -149,7 +149,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_alignment
      */
     fun getTitleAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitleAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTitleAlignmentBind, segment)
     }
 
     /**
@@ -159,7 +159,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -169,7 +169,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
     }
 
     /**
@@ -178,7 +178,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_text_direction
      */
     fun setTitleTextDirection(textDirection: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitleTextDirectionBind, handle, textDirection)
+        ObjectCalls.ptrcallWithLongArg(setTitleTextDirectionBind, segment, textDirection)
     }
 
     /**
@@ -187,7 +187,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_text_direction
      */
     fun getTitleTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextDirectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextDirectionBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_text_overrun_behavior
      */
     fun setTitleTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitleTextOverrunBehaviorBind, handle, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTitleTextOverrunBehaviorBind, segment, overrunBehavior)
     }
 
     /**
@@ -205,7 +205,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_text_overrun_behavior
      */
     fun getTitleTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextOverrunBehaviorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextOverrunBehaviorBind, segment)
     }
 
     /**
@@ -214,7 +214,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_position
      */
     fun setTitlePosition(titlePosition: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitlePositionBind, handle, titlePosition)
+        ObjectCalls.ptrcallWithLongArg(setTitlePositionBind, segment, titlePosition)
     }
 
     /**
@@ -223,7 +223,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_position
      */
     fun getTitlePosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitlePositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getTitlePositionBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.add_title_bar_control
      */
     fun addTitleBarControl(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(addTitleBarControlBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(addTitleBarControlBind, segment, listOf(control.segment))
     }
 
     /**
@@ -245,7 +245,7 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.remove_title_bar_control
      */
     fun removeTitleBarControl(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(removeTitleBarControlBind, handle, listOf(control.handle))
+        ObjectCalls.ptrcallWithObjectArgs(removeTitleBarControlBind, segment, listOf(control.segment))
     }
 
     object Signals {
@@ -257,11 +257,11 @@ class FoldableContainer(handle: MemorySegment) : Container(handle) {
         const val POSITION_BOTTOM: Long = 1L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): FoldableContainer? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): FoldableContainer? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): FoldableContainer? =
-            if (handle.address() == 0L) null else FoldableContainer(handle)
+            if (handle.address() == 0L) null else FoldableContainer(GodotHandle(handle))
 
         private const val FOLD_HASH = 3218959716L
         private val foldBind by lazy {

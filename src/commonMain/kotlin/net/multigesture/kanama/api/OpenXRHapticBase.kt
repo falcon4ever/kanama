@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRHapticBase
  */
-open class OpenXRHapticBase(handle: MemorySegment) : Resource(handle) {
+open class OpenXRHapticBase(handle: GodotHandle) : Resource(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRHapticBase? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRHapticBase? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRHapticBase? =
-            if (handle.address() == 0L) null else OpenXRHapticBase(handle)
+            if (handle.address() == 0L) null else OpenXRHapticBase(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag
  */
-class OpenXRSpatialCapabilityConfigurationAprilTag(handle: MemorySegment) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
+class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
     var aprilDict: Long
         @JvmName("aprilDictProperty")
         get() = getAprilDict()
@@ -18,17 +18,17 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: MemorySegment) : Open
 
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
     }
 
     fun setAprilDict(aprilDict: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAprilDictBind, handle, aprilDict)
+        ObjectCalls.ptrcallWithLongArg(setAprilDictBind, segment, aprilDict)
     }
 
     fun getAprilDict(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAprilDictBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAprilDictBind, segment)
     }
 
     companion object {
@@ -38,11 +38,11 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: MemorySegment) : Open
         const val APRIL_TAG_DICT_36H11: Long = 4L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAprilTag? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
-            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAprilTag(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
         private val getEnabledComponentsBind by lazy {

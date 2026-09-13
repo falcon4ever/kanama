@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TextServerExtension
  */
-open class TextServerExtension(handle: MemorySegment) : TextServer(handle) {
+open class TextServerExtension(handle: GodotHandle) : TextServer(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TextServerExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TextServerExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TextServerExtension? =
-            if (handle.address() == 0L) null else TextServerExtension(handle)
+            if (handle.address() == 0L) null else TextServerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

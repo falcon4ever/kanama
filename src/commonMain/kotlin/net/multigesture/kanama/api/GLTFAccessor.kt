@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: GLTFAccessor
  */
-class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
+class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     var bufferView: Int
         @JvmName("bufferViewProperty")
         get() = getBufferView()
@@ -102,157 +102,157 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
     }
 
     fun getBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferViewBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getBufferViewBind, segment)
     }
 
     fun setBufferView(bufferView: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBufferViewBind, handle, bufferView)
+        ObjectCalls.ptrcallWithIntArg(setBufferViewBind, segment, bufferView)
     }
 
     fun getByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, segment)
     }
 
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, handle, byteOffset)
+        ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, segment, byteOffset)
     }
 
     fun getComponentType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, segment)
     }
 
     fun setComponentType(componentType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setComponentTypeBind, handle, componentType)
+        ObjectCalls.ptrcallWithLongArg(setComponentTypeBind, segment, componentType)
     }
 
     fun getNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNormalizedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getNormalizedBind, segment)
     }
 
     fun setNormalized(normalized: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizedBind, handle, normalized)
+        ObjectCalls.ptrcallWithBoolArg(setNormalizedBind, segment, normalized)
     }
 
     fun getCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getCountBind, segment)
     }
 
     fun setCount(count: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCountBind, handle, count)
+        ObjectCalls.ptrcallWithLongArg(setCountBind, segment, count)
     }
 
     fun getAccessorType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment)
     }
 
     fun setAccessorType(accessorType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAccessorTypeBind, handle, accessorType)
+        ObjectCalls.ptrcallWithLongArg(setAccessorTypeBind, segment, accessorType)
     }
 
     fun getType(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getTypeBind, segment)
     }
 
     fun setType(type: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setTypeBind, handle, type)
+        ObjectCalls.ptrcallWithIntArg(setTypeBind, segment, type)
     }
 
     fun getMin(): List<Double> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMinBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMinBind, segment)
     }
 
     fun setMin(min: List<Double>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMinBind, handle, min)
+        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMinBind, segment, min)
     }
 
     fun getMax(): List<Double> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMaxBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMaxBind, segment)
     }
 
     fun setMax(max: List<Double>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMaxBind, handle, max)
+        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMaxBind, segment, max)
     }
 
     fun getSparseCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSparseCountBind, segment)
     }
 
     fun setSparseCount(sparseCount: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseCountBind, handle, sparseCount)
+        ObjectCalls.ptrcallWithLongArg(setSparseCountBind, segment, sparseCount)
     }
 
     fun getSparseIndicesBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSparseIndicesBufferViewBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSparseIndicesBufferViewBind, segment)
     }
 
     fun setSparseIndicesBufferView(sparseIndicesBufferView: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSparseIndicesBufferViewBind, handle, sparseIndicesBufferView)
+        ObjectCalls.ptrcallWithIntArg(setSparseIndicesBufferViewBind, segment, sparseIndicesBufferView)
     }
 
     fun getSparseIndicesByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesByteOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesByteOffsetBind, segment)
     }
 
     fun setSparseIndicesByteOffset(sparseIndicesByteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseIndicesByteOffsetBind, handle, sparseIndicesByteOffset)
+        ObjectCalls.ptrcallWithLongArg(setSparseIndicesByteOffsetBind, segment, sparseIndicesByteOffset)
     }
 
     fun getSparseIndicesComponentType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesComponentTypeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesComponentTypeBind, segment)
     }
 
     fun setSparseIndicesComponentType(sparseIndicesComponentType: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseIndicesComponentTypeBind, handle, sparseIndicesComponentType)
+        ObjectCalls.ptrcallWithLongArg(setSparseIndicesComponentTypeBind, segment, sparseIndicesComponentType)
     }
 
     fun getSparseValuesBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSparseValuesBufferViewBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSparseValuesBufferViewBind, segment)
     }
 
     fun setSparseValuesBufferView(sparseValuesBufferView: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSparseValuesBufferViewBind, handle, sparseValuesBufferView)
+        ObjectCalls.ptrcallWithIntArg(setSparseValuesBufferViewBind, segment, sparseValuesBufferView)
     }
 
     fun getSparseValuesByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseValuesByteOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSparseValuesByteOffsetBind, segment)
     }
 
     fun setSparseValuesByteOffset(sparseValuesByteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseValuesByteOffsetBind, handle, sparseValuesByteOffset)
+        ObjectCalls.ptrcallWithLongArg(setSparseValuesByteOffsetBind, segment, sparseValuesByteOffset)
     }
 
     companion object {
@@ -281,11 +281,11 @@ class GLTFAccessor(handle: MemorySegment) : Resource(handle) {
         const val COMPONENT_TYPE_UNSIGNED_LONG: Long = 5135L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): GLTFAccessor? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): GLTFAccessor? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GLTFAccessor? =
-            if (handle.address() == 0L) null else GLTFAccessor(handle)
+            if (handle.address() == 0L) null else GLTFAccessor(GodotHandle(handle))
 
         private const val FROM_DICTIONARY_HASH = 3495091019L
         private val fromDictionaryBind by lazy {

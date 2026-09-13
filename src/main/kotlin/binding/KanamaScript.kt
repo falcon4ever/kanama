@@ -8,6 +8,7 @@ import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodType
 import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
@@ -715,7 +716,7 @@ class KanamaScript(
       var success = false
       try {
         withProgrammaticCreate(baseHandle.address()) {
-          net.multigesture.kanama.api.GodotObject(GodotHandle(baseHandle)).setScript(resolved.script)
+          GodotObject(GodotHandle(baseHandle)).setScript(resolved.script)
         }
         val instance =
           ScriptBridge.kotlinObjectForOwner(baseHandle)

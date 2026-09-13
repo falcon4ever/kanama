@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: TubeTrailMesh
  */
-class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var radius: Double
         @JvmName("radiusProperty")
         get() = getRadius()
@@ -68,7 +68,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
     }
 
     /**
@@ -79,7 +79,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
     }
 
     /**
@@ -90,7 +90,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setRadialSteps(radialSteps: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRadialStepsBind, handle, radialSteps)
+        ObjectCalls.ptrcallWithIntArg(setRadialStepsBind, segment, radialSteps)
     }
 
     /**
@@ -101,7 +101,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getRadialSteps(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialStepsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getRadialStepsBind, segment)
     }
 
     /**
@@ -111,7 +111,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSections(sections: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionsBind, handle, sections)
+        ObjectCalls.ptrcallWithIntArg(setSectionsBind, segment, sections)
     }
 
     /**
@@ -121,7 +121,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSectionLength(sectionLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, handle, sectionLength)
+        ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, segment, sectionLength)
     }
 
     /**
@@ -141,7 +141,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSectionLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setSectionRings(sectionRings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionRingsBind, handle, sectionRings)
+        ObjectCalls.ptrcallWithIntArg(setSectionRingsBind, segment, sectionRings)
     }
 
     /**
@@ -163,7 +163,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getSectionRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionRingsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSectionRingsBind, segment)
     }
 
     /**
@@ -174,7 +174,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setCapTop(capTop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCapTopBind, handle, capTop)
+        ObjectCalls.ptrcallWithBoolArg(setCapTopBind, segment, capTop)
     }
 
     /**
@@ -185,7 +185,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun isCapTop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, segment)
     }
 
     /**
@@ -196,7 +196,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setCapBottom(capBottom: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, handle, capBottom)
+        ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, segment, capBottom)
     }
 
     /**
@@ -207,7 +207,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun isCapBottom(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, segment)
     }
 
     /**
@@ -219,7 +219,7 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -231,16 +231,16 @@ class TubeTrailMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
+        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): TubeTrailMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): TubeTrailMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): TubeTrailMesh? =
-            if (handle.address() == 0L) null else TubeTrailMesh(handle)
+            if (handle.address() == 0L) null else TubeTrailMesh(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

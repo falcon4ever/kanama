@@ -8,26 +8,26 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: OpenXRFutureExtension
  */
-class OpenXRFutureExtension(handle: MemorySegment) : OpenXRExtensionWrapper(handle) {
+class OpenXRFutureExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     fun isActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
     }
 
     fun registerFuture(future: Long, onSuccess: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(registerFutureBind, handle, future, onSuccess.target.handle, onSuccess.method))
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(registerFutureBind, segment, future, onSuccess.target.segment, onSuccess.method))
     }
 
     fun cancelFuture(future: Long) {
-        ObjectCalls.ptrcallWithLongArg(cancelFutureBind, handle, future)
+        ObjectCalls.ptrcallWithLongArg(cancelFutureBind, segment, future)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRFutureExtension? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRFutureExtension? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRFutureExtension? =
-            if (handle.address() == 0L) null else OpenXRFutureExtension(handle)
+            if (handle.address() == 0L) null else OpenXRFutureExtension(GodotHandle(handle))
 
         private const val IS_ACTIVE_HASH = 36873697L
         private val isActiveBind by lazy {

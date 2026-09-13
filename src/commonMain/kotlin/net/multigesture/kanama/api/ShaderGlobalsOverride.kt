@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: ShaderGlobalsOverride
  */
-class ShaderGlobalsOverride(handle: MemorySegment) : Node(handle) {
+class ShaderGlobalsOverride(handle: GodotHandle) : Node(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ShaderGlobalsOverride? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ShaderGlobalsOverride? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ShaderGlobalsOverride? =
-            if (handle.address() == 0L) null else ShaderGlobalsOverride(handle)
+            if (handle.address() == 0L) null else ShaderGlobalsOverride(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

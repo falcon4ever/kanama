@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.NodePath
  *
  * Generated from Godot docs: RemoteTransform2D
  */
-class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
+class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
     var remotePath: NodePath
         @JvmName("remotePathProperty")
         get() = getRemoteNode()
@@ -49,7 +49,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_remote_node
      */
     fun setRemoteNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRemoteNodeBind, handle, path)
+        ObjectCalls.ptrcallWithNodePathArg(setRemoteNodeBind, segment, path)
     }
 
     /**
@@ -58,7 +58,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_remote_node
      */
     fun getRemoteNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRemoteNodeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(getRemoteNodeBind, segment)
     }
 
     /**
@@ -68,7 +68,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.force_update_cache
      */
     fun forceUpdateCache() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateCacheBind, handle)
+        ObjectCalls.ptrcallNoArgs(forceUpdateCacheBind, segment)
     }
 
     /**
@@ -77,7 +77,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_use_global_coordinates
      */
     fun setUseGlobalCoordinates(useGlobalCoordinates: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseGlobalCoordinatesBind, handle, useGlobalCoordinates)
+        ObjectCalls.ptrcallWithBoolArg(setUseGlobalCoordinatesBind, segment, useGlobalCoordinates)
     }
 
     /**
@@ -86,7 +86,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_use_global_coordinates
      */
     fun getUseGlobalCoordinates(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseGlobalCoordinatesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUseGlobalCoordinatesBind, segment)
     }
 
     /**
@@ -95,7 +95,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_update_position
      */
     fun setUpdatePosition(updateRemotePosition: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdatePositionBind, handle, updateRemotePosition)
+        ObjectCalls.ptrcallWithBoolArg(setUpdatePositionBind, segment, updateRemotePosition)
     }
 
     /**
@@ -104,7 +104,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_update_position
      */
     fun getUpdatePosition(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdatePositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUpdatePositionBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_update_rotation
      */
     fun setUpdateRotation(updateRemoteRotation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdateRotationBind, handle, updateRemoteRotation)
+        ObjectCalls.ptrcallWithBoolArg(setUpdateRotationBind, segment, updateRemoteRotation)
     }
 
     /**
@@ -122,7 +122,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_update_rotation
      */
     fun getUpdateRotation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateRotationBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateRotationBind, segment)
     }
 
     /**
@@ -131,7 +131,7 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_update_scale
      */
     fun setUpdateScale(updateRemoteScale: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdateScaleBind, handle, updateRemoteScale)
+        ObjectCalls.ptrcallWithBoolArg(setUpdateScaleBind, segment, updateRemoteScale)
     }
 
     /**
@@ -140,16 +140,16 @@ class RemoteTransform2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_update_scale
      */
     fun getUpdateScale(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateScaleBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RemoteTransform2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RemoteTransform2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RemoteTransform2D? =
-            if (handle.address() == 0L) null else RemoteTransform2D(handle)
+            if (handle.address() == 0L) null else RemoteTransform2D(GodotHandle(handle))
 
         private const val SET_REMOTE_NODE_HASH = 1348162250L
         private val setRemoteNodeBind by lazy {

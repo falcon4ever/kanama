@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: SpinBox
  */
-class SpinBox(handle: MemorySegment) : Range(handle) {
+class SpinBox(handle: GodotHandle) : Range(handle) {
     var alignment: Long
         @JvmName("alignmentProperty")
         get() = getHorizontalAlignment()
@@ -66,7 +66,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
     }
 
     /**
@@ -75,7 +75,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
     }
 
     /**
@@ -84,7 +84,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_suffix
      */
     fun setSuffix(suffix: String) {
-        ObjectCalls.ptrcallWithStringArg(setSuffixBind, handle, suffix)
+        ObjectCalls.ptrcallWithStringArg(setSuffixBind, segment, suffix)
     }
 
     /**
@@ -93,7 +93,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_suffix
      */
     fun getSuffix(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, segment)
     }
 
     /**
@@ -102,7 +102,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_prefix
      */
     fun setPrefix(prefix: String) {
-        ObjectCalls.ptrcallWithStringArg(setPrefixBind, handle, prefix)
+        ObjectCalls.ptrcallWithStringArg(setPrefixBind, segment, prefix)
     }
 
     /**
@@ -111,7 +111,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_prefix
      */
     fun getPrefix(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPrefixBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPrefixBind, segment)
     }
 
     /**
@@ -120,7 +120,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_editable
      */
     fun setEditable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enabled)
     }
 
     /**
@@ -130,7 +130,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_custom_arrow_step
      */
     fun setCustomArrowStep(arrowStep: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCustomArrowStepBind, handle, arrowStep)
+        ObjectCalls.ptrcallWithDoubleArg(setCustomArrowStepBind, segment, arrowStep)
     }
 
     /**
@@ -140,7 +140,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_custom_arrow_step
      */
     fun getCustomArrowStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomArrowStepBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomArrowStepBind, segment)
     }
 
     /**
@@ -151,7 +151,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_custom_arrow_round
      */
     fun setCustomArrowRound(round: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCustomArrowRoundBind, handle, round)
+        ObjectCalls.ptrcallWithBoolArg(setCustomArrowRoundBind, segment, round)
     }
 
     /**
@@ -162,7 +162,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.is_custom_arrow_rounding
      */
     fun isCustomArrowRounding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCustomArrowRoundingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isCustomArrowRoundingBind, segment)
     }
 
     /**
@@ -171,7 +171,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.is_editable
      */
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     }
 
     /**
@@ -184,7 +184,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_update_on_text_changed
      */
     fun setUpdateOnTextChanged(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdateOnTextChangedBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setUpdateOnTextChangedBind, segment, enabled)
     }
 
     /**
@@ -197,7 +197,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_update_on_text_changed
      */
     fun getUpdateOnTextChanged(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateOnTextChangedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateOnTextChangedBind, segment)
     }
 
     /**
@@ -207,7 +207,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_select_all_on_focus
      */
     fun setSelectAllOnFocus(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, segment, enabled)
     }
 
     /**
@@ -217,7 +217,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.is_select_all_on_focus
      */
     fun isSelectAllOnFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, segment)
     }
 
     /**
@@ -228,7 +228,7 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.apply
      */
     fun apply() {
-        ObjectCalls.ptrcallNoArgs(applyBind, handle)
+        ObjectCalls.ptrcallNoArgs(applyBind, segment)
     }
 
     /**
@@ -240,16 +240,16 @@ class SpinBox(handle: MemorySegment) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_line_edit
      */
     fun getLineEdit(): LineEdit? {
-        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, handle))
+        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): SpinBox? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): SpinBox? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): SpinBox? =
-            if (handle.address() == 0L) null else SpinBox(handle)
+            if (handle.address() == 0L) null else SpinBox(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
         private val setHorizontalAlignmentBind by lazy {

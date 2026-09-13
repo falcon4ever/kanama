@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ResourceImporterMP3
  */
-class ResourceImporterMP3(handle: MemorySegment) : ResourceImporter(handle) {
+class ResourceImporterMP3(handle: GodotHandle) : ResourceImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ResourceImporterMP3? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ResourceImporterMP3? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ResourceImporterMP3? =
-            if (handle.address() == 0L) null else ResourceImporterMP3(handle)
+            if (handle.address() == 0L) null else ResourceImporterMP3(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

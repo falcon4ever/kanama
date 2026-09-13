@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: AnimationNodeBlendTree
  */
-class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) {
+class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
     var graphOffset: Vector2
         @JvmName("graphOffsetProperty")
         get() = getGraphOffset()
@@ -27,7 +27,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, handle, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
+        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
     }
 
     /**
@@ -37,8 +37,8 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getNode(name: String): AnimationNode? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, handle, name)
-        if (ret.address() == handle.address()) {
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, segment, name)
+        if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
@@ -52,7 +52,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun removeNode(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, handle, name)
+        ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, segment, name)
     }
 
     /**
@@ -62,7 +62,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun renameNode(name: String, newName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, handle, name, newName)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, segment, name, newName)
     }
 
     /**
@@ -72,7 +72,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun hasNode(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, segment, name)
     }
 
     /**
@@ -83,7 +83,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun connectNode(inputNode: String, inputIndex: Int, outputNode: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameIntAndStringNameArgs(connectNodeBind, handle, inputNode, inputIndex, outputNode)
+        ObjectCalls.ptrcallWithStringNameIntAndStringNameArgs(connectNodeBind, segment, inputNode, inputIndex, outputNode)
     }
 
     /**
@@ -93,7 +93,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun disconnectNode(inputNode: String, inputIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndIntArg(disconnectNodeBind, handle, inputNode, inputIndex)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(disconnectNodeBind, segment, inputNode, inputIndex)
     }
 
     /**
@@ -103,7 +103,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getNodeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, segment)
     }
 
     /**
@@ -113,7 +113,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setNodePosition(name: String, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, handle, name, position)
+        ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, segment, name, position)
     }
 
     /**
@@ -123,7 +123,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getNodePosition(name: String): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, handle, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, segment, name)
     }
 
     /**
@@ -133,7 +133,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, handle, offset)
+        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, segment, offset)
     }
 
     /**
@@ -143,7 +143,7 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
      */
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, segment)
     }
 
     object Signals {
@@ -159,11 +159,11 @@ class AnimationNodeBlendTree(handle: MemorySegment) : AnimationRootNode(handle) 
         const val CONNECTION_ERROR_CONNECTION_EXISTS: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AnimationNodeBlendTree? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AnimationNodeBlendTree? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AnimationNodeBlendTree? =
-            if (handle.address() == 0L) null else AnimationNodeBlendTree(handle)
+            if (handle.address() == 0L) null else AnimationNodeBlendTree(GodotHandle(handle))
 
         private const val ADD_NODE_HASH = 1980270704L
         private val addNodeBind by lazy {

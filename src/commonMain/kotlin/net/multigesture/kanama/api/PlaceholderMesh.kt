@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.AABB
  *
  * Generated from Godot docs: PlaceholderMesh
  */
-class PlaceholderMesh(handle: MemorySegment) : Mesh(handle) {
+class PlaceholderMesh(handle: GodotHandle) : Mesh(handle) {
     /**
      * The smallest `AABB` enclosing this mesh in local space.
      *
@@ -19,16 +19,16 @@ class PlaceholderMesh(handle: MemorySegment) : Mesh(handle) {
      */
     fun setAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setAabbBind, handle, aabb)
+        ObjectCalls.ptrcallWithAABBArg(setAabbBind, segment, aabb)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PlaceholderMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PlaceholderMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PlaceholderMesh? =
-            if (handle.address() == 0L) null else PlaceholderMesh(handle)
+            if (handle.address() == 0L) null else PlaceholderMesh(GodotHandle(handle))
 
         private const val SET_AABB_HASH = 259215842L
         private val setAabbBind by lazy {

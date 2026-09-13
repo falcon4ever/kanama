@@ -8,103 +8,103 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: ConfigFile
  */
-class ConfigFile(handle: MemorySegment) : RefCounted(handle) {
+class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     fun setValue(section: String, key: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setValueBind, handle, section, key, value)
+        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setValueBind, segment, section, key, value)
     }
 
     fun getValue(section: String, key: String, default: Any? = null): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getValueBind, handle, section, key, default)
+        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getValueBind, segment, section, key, default)
     }
 
     fun hasSection(section: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, handle, section)
+        return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, segment, section)
     }
 
     fun hasSectionKey(section: String, key: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(hasSectionKeyBind, handle, section, key)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(hasSectionKeyBind, segment, section, key)
     }
 
     fun getSections(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, segment)
     }
 
     fun getSectionKeys(section: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getSectionKeysBind, handle, section)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getSectionKeysBind, segment, section)
     }
 
     fun eraseSection(section: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(eraseSectionBind, handle, section)
+        ObjectCalls.ptrcallWithStringArg(eraseSectionBind, segment, section)
     }
 
     fun eraseSectionKey(section: String, key: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, handle, section, key)
+        ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, segment, section, key)
     }
 
     fun load(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
     }
 
     fun parse(data: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, handle, data)
+        return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data)
     }
 
     fun save(path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path)
     }
 
     fun encodeToText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, segment)
     }
 
     fun loadEncrypted(path: String, key: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, handle, path, key)
+        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key)
     }
 
     fun loadEncryptedPass(path: String, password: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, handle, path, password)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password)
     }
 
     fun saveEncrypted(path: String, key: ByteArray): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, handle, path, key)
+        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key)
     }
 
     fun saveEncryptedPass(path: String, password: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, handle, path, password)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password)
     }
 
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ConfigFile? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ConfigFile? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ConfigFile? =
-            if (handle.address() == 0L) null else ConfigFile(handle)
+            if (handle.address() == 0L) null else ConfigFile(GodotHandle(handle))
 
         // Instantiate a ConfigFile (RefCounted key/value store).
         fun create(): ConfigFile =
-            ConfigFile(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile")))
+            ConfigFile(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))))
 
         private const val SET_VALUE_HASH = 2504492430L
         private val setValueBind by lazy {

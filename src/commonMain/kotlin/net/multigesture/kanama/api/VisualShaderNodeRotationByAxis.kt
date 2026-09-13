@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeRotationByAxis
  */
-class VisualShaderNodeRotationByAxis(handle: MemorySegment) : VisualShaderNode(handle) {
+class VisualShaderNodeRotationByAxis(handle: GodotHandle) : VisualShaderNode(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeRotationByAxis? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeRotationByAxis? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeRotationByAxis? =
-            if (handle.address() == 0L) null else VisualShaderNodeRotationByAxis(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeRotationByAxis(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

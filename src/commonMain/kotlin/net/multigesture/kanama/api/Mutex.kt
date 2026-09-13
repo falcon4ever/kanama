@@ -10,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Mutex
  */
-class Mutex(handle: MemorySegment) : RefCounted(handle) {
+class Mutex(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Locks this `Mutex`, blocks until it is unlocked by the current owner. Note: This function
      * returns without blocking if the thread already has ownership of the mutex.
@@ -19,7 +19,7 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
      */
     fun lock() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(lockBind, handle)
+        ObjectCalls.ptrcallNoArgs(lockBind, segment)
     }
 
     /**
@@ -30,7 +30,7 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
      */
     fun tryLock(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(tryLockBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(tryLockBind, segment)
     }
 
     /**
@@ -44,16 +44,16 @@ class Mutex(handle: MemorySegment) : RefCounted(handle) {
      */
     fun unlock() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(unlockBind, handle)
+        ObjectCalls.ptrcallNoArgs(unlockBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Mutex? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Mutex? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Mutex? =
-            if (handle.address() == 0L) null else Mutex(handle)
+            if (handle.address() == 0L) null else Mutex(GodotHandle(handle))
 
         private const val LOCK_HASH = 3218959716L
         private val lockBind by lazy {

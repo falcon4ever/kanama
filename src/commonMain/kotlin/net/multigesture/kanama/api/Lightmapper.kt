@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Lightmapper
  */
-open class Lightmapper(handle: MemorySegment) : RefCounted(handle) {
+open class Lightmapper(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Lightmapper? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Lightmapper? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Lightmapper? =
-            if (handle.address() == 0L) null else Lightmapper(handle)
+            if (handle.address() == 0L) null else Lightmapper(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: Path3D
  */
-class Path3D(handle: MemorySegment) : Node3D(handle) {
+class Path3D(handle: GodotHandle) : Node3D(handle) {
     var curve: Curve3D?
         @JvmName("curveProperty")
         get() = getCurve()
@@ -31,7 +31,7 @@ class Path3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Path3D.set_curve
      */
     fun setCurve(curve: Curve3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, handle, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -40,7 +40,7 @@ class Path3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Path3D.get_curve
      */
     fun getCurve(): Curve3D? {
-        return Curve3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, handle))
+        return Curve3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**
@@ -50,7 +50,7 @@ class Path3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Path3D.set_debug_custom_color
      */
     fun setDebugCustomColor(debugCustomColor: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugCustomColorBind, handle, debugCustomColor)
+        ObjectCalls.ptrcallWithColorArg(setDebugCustomColorBind, segment, debugCustomColor)
     }
 
     /**
@@ -60,7 +60,7 @@ class Path3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: Path3D.get_debug_custom_color
      */
     fun getDebugCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugCustomColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDebugCustomColorBind, segment)
     }
 
     object Signals {
@@ -70,11 +70,11 @@ class Path3D(handle: MemorySegment) : Node3D(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Path3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Path3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Path3D? =
-            if (handle.address() == 0L) null else Path3D(handle)
+            if (handle.address() == 0L) null else Path3D(GodotHandle(handle))
 
         private const val SET_CURVE_HASH = 408955118L
         private val setCurveBind by lazy {

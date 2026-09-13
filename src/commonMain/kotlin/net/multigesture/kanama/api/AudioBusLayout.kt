@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: AudioBusLayout
  */
-class AudioBusLayout(handle: MemorySegment) : Resource(handle) {
+class AudioBusLayout(handle: GodotHandle) : Resource(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): AudioBusLayout? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): AudioBusLayout? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): AudioBusLayout? =
-            if (handle.address() == 0L) null else AudioBusLayout(handle)
+            if (handle.address() == 0L) null else AudioBusLayout(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

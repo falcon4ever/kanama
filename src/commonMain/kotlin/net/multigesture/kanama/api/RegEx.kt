@@ -8,50 +8,50 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: RegEx
  */
-class RegEx(handle: MemorySegment) : RefCounted(handle) {
+class RegEx(handle: GodotHandle) : RefCounted(handle) {
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     fun compile(pattern: String, showError: Boolean = true): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(compileBind, handle, pattern, showError)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(compileBind, segment, pattern, showError)
     }
 
     fun search(subject: String, offset: Int = 0, end: Int = -1): RegExMatch? {
         checkOpen()
-        return RegExMatch.wrap(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(searchBind, handle, subject, offset, end))
+        return RegExMatch.wrap(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(searchBind, segment, subject, offset, end))
     }
 
     fun searchAll(subject: String, offset: Int = 0, end: Int = -1): List<RegExMatch> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(searchAllBind, handle, subject, offset, end, RegExMatch::fromHandle)
+        return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(searchAllBind, segment, subject, offset, end, RegExMatch::wrap)
     }
 
     fun sub(subject: String, replacement: String, all: Boolean = false, offset: Int = 0, end: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(subBind, handle, subject, replacement, all, offset, end)
+        return ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(subBind, segment, subject, replacement, all, offset, end)
     }
 
     fun isValid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isValidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isValidBind, segment)
     }
 
     fun getPattern(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPatternBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPatternBind, segment)
     }
 
     fun getGroupCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getGroupCountBind, segment)
     }
 
     fun getNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getNamesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getNamesBind, segment)
     }
 
     companion object {
@@ -60,11 +60,11 @@ class RegEx(handle: MemorySegment) : RefCounted(handle) {
         }
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): RegEx? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): RegEx? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): RegEx? =
-            if (handle.address() == 0L) null else RegEx(handle)
+            if (handle.address() == 0L) null else RegEx(GodotHandle(handle))
 
         private const val CREATE_FROM_STRING_HASH = 4249111514L
         private val createFromStringBind by lazy {

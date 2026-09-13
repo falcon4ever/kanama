@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: LightOccluder2D
  */
-class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
+class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
     var occluder: OccluderPolygon2D?
         @JvmName("occluderProperty")
         get() = getOccluderPolygon()
@@ -36,7 +36,7 @@ class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.set_occluder_polygon
      */
     fun setOccluderPolygon(polygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOccluderPolygonBind, handle, listOf(polygon?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOccluderPolygonBind, segment, listOf(polygon?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -45,7 +45,7 @@ class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.get_occluder_polygon
      */
     fun getOccluderPolygon(): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOccluderPolygonBind, handle))
+        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOccluderPolygonBind, segment))
     }
 
     /**
@@ -55,7 +55,7 @@ class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.set_occluder_light_mask
      */
     fun setOccluderLightMask(mask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOccluderLightMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithIntArg(setOccluderLightMaskBind, segment, mask)
     }
 
     /**
@@ -65,7 +65,7 @@ class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.get_occluder_light_mask
      */
     fun getOccluderLightMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOccluderLightMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getOccluderLightMaskBind, segment)
     }
 
     /**
@@ -75,7 +75,7 @@ class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.set_as_sdf_collision
      */
     fun setAsSdfCollision(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsSdfCollisionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsSdfCollisionBind, segment, enable)
     }
 
     /**
@@ -85,16 +85,16 @@ class LightOccluder2D(handle: MemorySegment) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.is_set_as_sdf_collision
      */
     fun isSetAsSdfCollision(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsSdfCollisionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsSdfCollisionBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): LightOccluder2D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): LightOccluder2D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): LightOccluder2D? =
-            if (handle.address() == 0L) null else LightOccluder2D(handle)
+            if (handle.address() == 0L) null else LightOccluder2D(GodotHandle(handle))
 
         private const val SET_OCCLUDER_POLYGON_HASH = 3258315893L
         private val setOccluderPolygonBind by lazy {

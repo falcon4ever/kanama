@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Texture2DArrayRD
  */
-class Texture2DArrayRD(handle: MemorySegment) : TextureLayeredRD(handle) {
+class Texture2DArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Texture2DArrayRD? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Texture2DArrayRD? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Texture2DArrayRD? =
-            if (handle.address() == 0L) null else Texture2DArrayRD(handle)
+            if (handle.address() == 0L) null else Texture2DArrayRD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

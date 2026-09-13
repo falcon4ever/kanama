@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: CSGMesh3D
  */
-class CSGMesh3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
+class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     var mesh: Mesh?
         @JvmName("meshProperty")
         get() = getMesh()
@@ -23,28 +23,28 @@ class CSGMesh3D(handle: MemorySegment) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, handle, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMesh(): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, handle))
+        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, handle, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, handle))
+        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CSGMesh3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CSGMesh3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CSGMesh3D? =
-            if (handle.address() == 0L) null else CSGMesh3D(handle)
+            if (handle.address() == 0L) null else CSGMesh3D(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L
         private val setMeshBind by lazy {

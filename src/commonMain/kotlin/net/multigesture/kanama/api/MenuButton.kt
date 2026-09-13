@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: MenuButton
  */
-class MenuButton(handle: MemorySegment) : Button(handle) {
+class MenuButton(handle: GodotHandle) : Button(handle) {
     var switchOnHover: Boolean
         @JvmName("switchOnHoverProperty")
         get() = isSwitchOnHover()
@@ -32,7 +32,7 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: MenuButton.get_popup
      */
     fun getPopup(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
     }
 
     /**
@@ -42,7 +42,7 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: MenuButton.show_popup
      */
     fun showPopup() {
-        ObjectCalls.ptrcallNoArgs(showPopupBind, handle)
+        ObjectCalls.ptrcallNoArgs(showPopupBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: MenuButton.set_switch_on_hover
      */
     fun setSwitchOnHover(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSwitchOnHoverBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setSwitchOnHoverBind, segment, enable)
     }
 
     /**
@@ -62,7 +62,7 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: MenuButton.is_switch_on_hover
      */
     fun isSwitchOnHover(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSwitchOnHoverBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSwitchOnHoverBind, segment)
     }
 
     /**
@@ -71,7 +71,7 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: MenuButton.set_disable_shortcuts
      */
     fun setDisableShortcuts(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, handle, disabled)
+        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, segment, disabled)
     }
 
     /**
@@ -80,7 +80,7 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: MenuButton.set_item_count
      */
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
     }
 
     /**
@@ -89,7 +89,7 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: MenuButton.get_item_count
      */
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
     object Signals {
@@ -98,11 +98,11 @@ class MenuButton(handle: MemorySegment) : Button(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MenuButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MenuButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MenuButton? =
-            if (handle.address() == 0L) null else MenuButton(handle)
+            if (handle.address() == 0L) null else MenuButton(GodotHandle(handle))
 
         private const val GET_POPUP_HASH = 229722558L
         private val getPopupBind by lazy {

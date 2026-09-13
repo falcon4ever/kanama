@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  *
  * Generated from Godot docs: InputEventScreenDrag
  */
-class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle) {
+class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
     var index: Int
         @JvmName("indexProperty")
         get() = getIndex()
@@ -74,7 +74,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setIndex(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setIndexBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(setIndexBind, segment, index)
     }
 
     /**
@@ -84,7 +84,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setTilt(tilt: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setTiltBind, handle, tilt)
+        ObjectCalls.ptrcallWithVector2Arg(setTiltBind, segment, tilt)
     }
 
     /**
@@ -108,7 +108,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getTilt(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, segment)
     }
 
     /**
@@ -118,7 +118,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setPressure(pressure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, handle, pressure)
+        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, segment, pressure)
     }
 
     /**
@@ -128,7 +128,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setPenInverted(penInverted: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, handle, penInverted)
+        ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, segment, penInverted)
     }
 
     /**
@@ -148,7 +148,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getPenInverted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, segment)
     }
 
     /**
@@ -158,7 +158,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
     }
 
     /**
@@ -168,7 +168,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
     }
 
     /**
@@ -182,7 +182,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, handle, relative)
+        ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, segment, relative)
     }
 
     /**
@@ -196,7 +196,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, segment)
     }
 
     /**
@@ -209,7 +209,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setScreenRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, handle, relative)
+        ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, segment, relative)
     }
 
     /**
@@ -222,7 +222,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getScreenRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, segment)
     }
 
     /**
@@ -235,7 +235,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
     }
 
     /**
@@ -248,7 +248,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
     }
 
     /**
@@ -260,7 +260,7 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun setScreenVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, handle, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, segment, velocity)
     }
 
     /**
@@ -272,16 +272,16 @@ class InputEventScreenDrag(handle: MemorySegment) : InputEventFromWindow(handle)
      */
     fun getScreenVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): InputEventScreenDrag? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): InputEventScreenDrag? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): InputEventScreenDrag? =
-            if (handle.address() == 0L) null else InputEventScreenDrag(handle)
+            if (handle.address() == 0L) null else InputEventScreenDrag(GodotHandle(handle))
 
         private const val SET_INDEX_HASH = 1286410249L
         private val setIndexBind by lazy {

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: ColorPickerButton
  */
-class ColorPickerButton(handle: MemorySegment) : Button(handle) {
+class ColorPickerButton(handle: GodotHandle) : Button(handle) {
     var color: Color
         @JvmName("colorProperty")
         get() = getPickColor()
@@ -37,7 +37,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.set_pick_color
      */
     fun setPickColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setPickColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setPickColorBind, segment, color)
     }
 
     /**
@@ -46,7 +46,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.get_pick_color
      */
     fun getPickColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getPickColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getPickColorBind, segment)
     }
 
     /**
@@ -57,7 +57,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.get_picker
      */
     fun getPicker(): ColorPicker? {
-        return ColorPicker.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPickerBind, handle))
+        return ColorPicker.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPickerBind, segment))
     }
 
     /**
@@ -69,7 +69,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.get_popup
      */
     fun getPopup(): PopupPanel? {
-        return PopupPanel.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, handle))
+        return PopupPanel.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
     }
 
     /**
@@ -78,7 +78,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.set_edit_alpha
      */
     fun setEditAlpha(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditAlphaBind, handle, show)
+        ObjectCalls.ptrcallWithBoolArg(setEditAlphaBind, segment, show)
     }
 
     /**
@@ -87,7 +87,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.is_editing_alpha
      */
     fun isEditingAlpha(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingAlphaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditingAlphaBind, segment)
     }
 
     /**
@@ -96,7 +96,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.set_edit_intensity
      */
     fun setEditIntensity(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditIntensityBind, handle, show)
+        ObjectCalls.ptrcallWithBoolArg(setEditIntensityBind, segment, show)
     }
 
     /**
@@ -105,7 +105,7 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.is_editing_intensity
      */
     fun isEditingIntensity(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, segment)
     }
 
     object Signals {
@@ -116,11 +116,11 @@ class ColorPickerButton(handle: MemorySegment) : Button(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): ColorPickerButton? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): ColorPickerButton? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): ColorPickerButton? =
-            if (handle.address() == 0L) null else ColorPickerButton(handle)
+            if (handle.address() == 0L) null else ColorPickerButton(GodotHandle(handle))
 
         private const val SET_PICK_COLOR_HASH = 2920490490L
         private val setPickColorBind by lazy {

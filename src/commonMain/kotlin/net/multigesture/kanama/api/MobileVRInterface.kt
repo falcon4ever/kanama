@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Rect2
 /**
  * Generated from Godot docs: MobileVRInterface
  */
-class MobileVRInterface(handle: MemorySegment) : XRInterface(handle) {
+class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     var eyeHeight: Double
         @JvmName("eyeHeightProperty")
         get() = getEyeHeight()
@@ -73,111 +73,111 @@ class MobileVRInterface(handle: MemorySegment) : XRInterface(handle) {
 
     fun setEyeHeight(eyeHeight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEyeHeightBind, handle, eyeHeight)
+        ObjectCalls.ptrcallWithDoubleArg(setEyeHeightBind, segment, eyeHeight)
     }
 
     fun getEyeHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEyeHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getEyeHeightBind, segment)
     }
 
     fun setIod(iod: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setIodBind, handle, iod)
+        ObjectCalls.ptrcallWithDoubleArg(setIodBind, segment, iod)
     }
 
     fun getIod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getIodBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getIodBind, segment)
     }
 
     fun setDisplayWidth(displayWidth: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDisplayWidthBind, handle, displayWidth)
+        ObjectCalls.ptrcallWithDoubleArg(setDisplayWidthBind, segment, displayWidth)
     }
 
     fun getDisplayWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayWidthBind, segment)
     }
 
     fun setDisplayToLens(displayToLens: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDisplayToLensBind, handle, displayToLens)
+        ObjectCalls.ptrcallWithDoubleArg(setDisplayToLensBind, segment, displayToLens)
     }
 
     fun getDisplayToLens(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayToLensBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayToLensBind, segment)
     }
 
     fun setOffsetRect(offsetRect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setOffsetRectBind, handle, offsetRect)
+        ObjectCalls.ptrcallWithRect2Arg(setOffsetRectBind, segment, offsetRect)
     }
 
     fun getOffsetRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getOffsetRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getOffsetRectBind, segment)
     }
 
     fun setOversample(oversample: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOversampleBind, handle, oversample)
+        ObjectCalls.ptrcallWithDoubleArg(setOversampleBind, segment, oversample)
     }
 
     fun getOversample(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversampleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOversampleBind, segment)
     }
 
     fun setK1(k: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setK1Bind, handle, k)
+        ObjectCalls.ptrcallWithDoubleArg(setK1Bind, segment, k)
     }
 
     fun getK1(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getK1Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getK1Bind, segment)
     }
 
     fun setK2(k: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setK2Bind, handle, k)
+        ObjectCalls.ptrcallWithDoubleArg(setK2Bind, segment, k)
     }
 
     fun getK2(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getK2Bind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getK2Bind, segment)
     }
 
     fun getVrsMinRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, segment)
     }
 
     fun setVrsMinRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, handle, radius)
+        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, segment, radius)
     }
 
     fun getVrsStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, segment)
     }
 
     fun setVrsStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, handle, strength)
+        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, segment, strength)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MobileVRInterface? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MobileVRInterface? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): MobileVRInterface? =
-            if (handle.address() == 0L) null else MobileVRInterface(handle)
+            if (handle.address() == 0L) null else MobileVRInterface(GodotHandle(handle))
 
         private const val SET_EYE_HEIGHT_HASH = 373806689L
         private val setEyeHeightBind by lazy {

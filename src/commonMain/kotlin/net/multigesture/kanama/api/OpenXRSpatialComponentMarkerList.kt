@@ -9,20 +9,20 @@ import net.multigesture.kanama.types.RID
 /**
  * Generated from Godot docs: OpenXRSpatialComponentMarkerList
  */
-class OpenXRSpatialComponentMarkerList(handle: MemorySegment) : OpenXRSpatialComponentData(handle) {
+class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getMarkerType(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getMarkerTypeBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getMarkerTypeBind, segment, index)
     }
 
     fun getMarkerId(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetUInt32(getMarkerIdBind, handle, index)
+        return ObjectCalls.ptrcallWithLongArgRetUInt32(getMarkerIdBind, segment, index)
     }
 
     fun getMarkerData(snapshot: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(getMarkerDataBind, handle, snapshot, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(getMarkerDataBind, segment, snapshot, index)
     }
 
     companion object {
@@ -34,11 +34,11 @@ class OpenXRSpatialComponentMarkerList(handle: MemorySegment) : OpenXRSpatialCom
         const val MARKER_TYPE_MAX: Long = 5L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): OpenXRSpatialComponentMarkerList? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentMarkerList? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentMarkerList? =
-            if (handle.address() == 0L) null else OpenXRSpatialComponentMarkerList(handle)
+            if (handle.address() == 0L) null else OpenXRSpatialComponentMarkerList(GodotHandle(handle))
 
         private const val GET_MARKER_TYPE_HASH = 2627847866L
         private val getMarkerTypeBind by lazy {

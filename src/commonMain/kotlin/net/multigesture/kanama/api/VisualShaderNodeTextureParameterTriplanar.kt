@@ -8,16 +8,16 @@ import net.multigesture.kanama.binding.runtime.*
 /**
  * Generated from Godot docs: VisualShaderNodeTextureParameterTriplanar
  */
-class VisualShaderNodeTextureParameterTriplanar(handle: MemorySegment) : VisualShaderNodeTextureParameter(handle) {
+class VisualShaderNodeTextureParameterTriplanar(handle: GodotHandle) : VisualShaderNodeTextureParameter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): VisualShaderNodeTextureParameterTriplanar? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeTextureParameterTriplanar? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): VisualShaderNodeTextureParameterTriplanar? =
-            if (handle.address() == 0L) null else VisualShaderNodeTextureParameterTriplanar(handle)
+            if (handle.address() == 0L) null else VisualShaderNodeTextureParameterTriplanar(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

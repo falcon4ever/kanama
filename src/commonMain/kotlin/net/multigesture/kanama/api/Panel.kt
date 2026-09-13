@@ -10,16 +10,16 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: Panel
  */
-class Panel(handle: MemorySegment) : Control(handle) {
+class Panel(handle: GodotHandle) : Control(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Panel? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Panel? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Panel? =
-            if (handle.address() == 0L) null else Panel(handle)
+            if (handle.address() == 0L) null else Panel(GodotHandle(handle))
 
         // No MethodBinds emitted yet.
     }

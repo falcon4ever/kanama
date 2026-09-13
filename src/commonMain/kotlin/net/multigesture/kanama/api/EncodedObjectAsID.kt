@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  *
  * Generated from Godot docs: EncodedObjectAsID
  */
-class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
+class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
     var objectId: Long
         @JvmName("objectIdProperty")
         get() = getObjectId()
@@ -26,7 +26,7 @@ class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
      */
     fun setObjectId(id: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setObjectIdBind, handle, id)
+        ObjectCalls.ptrcallWithLongArg(setObjectIdBind, segment, id)
     }
 
     /**
@@ -37,16 +37,16 @@ class EncodedObjectAsID(handle: MemorySegment) : RefCounted(handle) {
      */
     fun getObjectId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getObjectIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getObjectIdBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): EncodedObjectAsID? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): EncodedObjectAsID? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): EncodedObjectAsID? =
-            if (handle.address() == 0L) null else EncodedObjectAsID(handle)
+            if (handle.address() == 0L) null else EncodedObjectAsID(GodotHandle(handle))
 
         private const val SET_OBJECT_ID_HASH = 1286410249L
         private val setObjectIdBind by lazy {

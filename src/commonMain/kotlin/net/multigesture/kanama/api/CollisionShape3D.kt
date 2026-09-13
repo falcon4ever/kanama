@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: CollisionShape3D
  */
-class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
+class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
     var shape: Shape3D?
         @JvmName("shapeProperty")
         get() = getShape()
@@ -43,7 +43,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.resource_changed
      */
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, handle, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -52,7 +52,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_shape
      */
     fun setShape(shape: Shape3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, handle, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -61,7 +61,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.get_shape
      */
     fun getShape(): Shape3D? {
-        return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, handle))
+        return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**
@@ -71,7 +71,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_disabled
      */
     fun setDisabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, enable)
     }
 
     /**
@@ -81,7 +81,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
     }
 
     /**
@@ -91,7 +91,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.make_convex_from_siblings
      */
     fun makeConvexFromSiblings() {
-        ObjectCalls.ptrcallNoArgs(makeConvexFromSiblingsBind, handle)
+        ObjectCalls.ptrcallNoArgs(makeConvexFromSiblingsBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_debug_color
      */
     fun setDebugColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, handle, color)
+        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, segment, color)
     }
 
     /**
@@ -115,7 +115,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.get_debug_color
      */
     fun getDebugColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, segment)
     }
 
     /**
@@ -125,7 +125,7 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_enable_debug_fill
      */
     fun setEnableDebugFill(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, segment, enable)
     }
 
     /**
@@ -135,16 +135,16 @@ class CollisionShape3D(handle: MemorySegment) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.get_enable_debug_fill
      */
     fun getEnableDebugFill(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): CollisionShape3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): CollisionShape3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): CollisionShape3D? =
-            if (handle.address() == 0L) null else CollisionShape3D(handle)
+            if (handle.address() == 0L) null else CollisionShape3D(GodotHandle(handle))
 
         private const val RESOURCE_CHANGED_HASH = 968641751L
         private val resourceChangedBind by lazy {

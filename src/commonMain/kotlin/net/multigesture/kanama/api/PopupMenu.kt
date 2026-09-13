@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: PopupMenu
  */
-class PopupMenu(handle: MemorySegment) : Popup(handle) {
+class PopupMenu(handle: GodotHandle) : Popup(handle) {
     var hideOnItemSelection: Boolean
         @JvmName("hideOnItemSelectionProperty")
         get() = isHideOnItemSelection()
@@ -107,7 +107,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.activate_item_by_event
      */
     fun activateItemByEvent(event: InputEvent?, forGlobalOnly: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(activateItemByEventBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, forGlobalOnly)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(activateItemByEventBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL, forGlobalOnly)
     }
 
     /**
@@ -118,7 +118,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_prefer_native_menu
      */
     fun setPreferNativeMenu(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPreferNativeMenuBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setPreferNativeMenuBind, segment, enabled)
     }
 
     /**
@@ -129,7 +129,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_prefer_native_menu
      */
     fun isPreferNativeMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPreferNativeMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isPreferNativeMenuBind, segment)
     }
 
     /**
@@ -138,7 +138,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_native_menu
      */
     fun isNativeMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNativeMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isNativeMenuBind, segment)
     }
 
     /**
@@ -152,7 +152,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_item
      */
     fun addItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, handle, label, id, accel)
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, segment, label, id, accel)
     }
 
     /**
@@ -165,7 +165,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_item
      */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
     }
 
     /**
@@ -180,7 +180,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_check_item
      */
     fun addCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, handle, label, id, accel)
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, segment, label, id, accel)
     }
 
     /**
@@ -195,7 +195,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_check_item
      */
     fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
     }
 
     /**
@@ -210,7 +210,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_radio_check_item
      */
     fun addRadioCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, handle, label, id, accel)
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, segment, label, id, accel)
     }
 
     /**
@@ -219,7 +219,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_item
      */
     fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
     }
 
     /**
@@ -234,7 +234,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_multistate_item
      */
     fun addMultistateItem(label: String, maxStates: Int, defaultState: Int = 0, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, handle, label, maxStates, defaultState, id, accel)
+        ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, segment, label, maxStates, defaultState, id, accel)
     }
 
     /**
@@ -245,7 +245,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_shortcut
      */
     fun addShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(addShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
+        ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(addShortcutBind, segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
     }
 
     /**
@@ -257,7 +257,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_shortcut
      */
     fun addIconShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(addIconShortcutBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
+        ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(addIconShortcutBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
     }
 
     /**
@@ -270,7 +270,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_check_shortcut
      */
     fun addCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntBoolArgs(addCheckShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectIntBoolArgs(addCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
     /**
@@ -283,7 +283,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_check_shortcut
      */
     fun addIconCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconCheckShortcutBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconCheckShortcutBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
     /**
@@ -296,7 +296,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_radio_check_shortcut
      */
     fun addRadioCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntBoolArgs(addRadioCheckShortcutBind, handle, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectIntBoolArgs(addRadioCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
     /**
@@ -305,7 +305,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_shortcut
      */
     fun addIconRadioCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconRadioCheckShortcutBind, handle, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconRadioCheckShortcutBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
     }
 
     /**
@@ -318,7 +318,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_submenu_item
      */
     fun addSubmenuItem(label: String, submenu: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithTwoStringAndIntArgs(addSubmenuItemBind, handle, label, submenu, id)
+        ObjectCalls.ptrcallWithTwoStringAndIntArgs(addSubmenuItemBind, segment, label, submenu, id)
     }
 
     /**
@@ -332,7 +332,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_submenu_node_item
      */
     fun addSubmenuNodeItem(label: String, submenu: PopupMenu, id: Int = -1) {
-        ObjectCalls.ptrcallWithStringObjectIntArgs(addSubmenuNodeItemBind, handle, label, submenu.handle, id)
+        ObjectCalls.ptrcallWithStringObjectIntArgs(addSubmenuNodeItemBind, segment, label, submenu.segment, id)
     }
 
     /**
@@ -341,7 +341,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_text
      */
     fun setItemText(index: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, handle, index, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, segment, index, text)
     }
 
     /**
@@ -350,7 +350,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_text_direction
      */
     fun setItemTextDirection(index: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, handle, index, direction)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, index, direction)
     }
 
     /**
@@ -361,7 +361,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_language
      */
     fun setItemLanguage(index: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, handle, index, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, segment, index, language)
     }
 
     /**
@@ -372,7 +372,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_auto_translate_mode
      */
     fun setItemAutoTranslateMode(index: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, handle, index, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, index, mode)
     }
 
     /**
@@ -381,7 +381,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_icon
      */
     fun setItemIcon(index: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, handle, index, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, index, icon?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -392,7 +392,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_icon_max_width
      */
     fun setItemIconMaxWidth(index: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIconMaxWidthBind, handle, index, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemIconMaxWidthBind, segment, index, width)
     }
 
     /**
@@ -401,7 +401,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_icon_modulate
      */
     fun setItemIconModulate(index: Int, modulate: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, handle, index, modulate)
+        ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, segment, index, modulate)
     }
 
     /**
@@ -410,7 +410,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_checked
      */
     fun setItemChecked(index: Int, checked: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemCheckedBind, handle, index, checked)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemCheckedBind, segment, index, checked)
     }
 
     /**
@@ -420,7 +420,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_id
      */
     fun setItemId(index: Int, id: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, handle, index, id)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, segment, index, id)
     }
 
     /**
@@ -432,7 +432,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_accelerator
      */
     fun setItemAccelerator(index: Int, accel: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, handle, index, accel)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, segment, index, accel)
     }
 
     /**
@@ -442,7 +442,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_metadata
      */
     fun setItemMetadata(index: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, handle, index, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, segment, index, metadata)
     }
 
     /**
@@ -452,7 +452,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_disabled
      */
     fun setItemDisabled(index: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, handle, index, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, segment, index, disabled)
     }
 
     /**
@@ -462,7 +462,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_submenu
      */
     fun setItemSubmenu(index: Int, submenu: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemSubmenuBind, handle, index, submenu)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemSubmenuBind, segment, index, submenu)
     }
 
     /**
@@ -474,7 +474,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_submenu_node
      */
     fun setItemSubmenuNode(index: Int, submenu: PopupMenu) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemSubmenuNodeBind, handle, index, submenu.handle)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemSubmenuNodeBind, segment, index, submenu.segment)
     }
 
     /**
@@ -484,7 +484,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_as_separator
      */
     fun setItemAsSeparator(index: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsSeparatorBind, handle, index, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsSeparatorBind, segment, index, enable)
     }
 
     /**
@@ -495,7 +495,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_as_checkable
      */
     fun setItemAsCheckable(index: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsCheckableBind, handle, index, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsCheckableBind, segment, index, enable)
     }
 
     /**
@@ -505,7 +505,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_as_radio_checkable
      */
     fun setItemAsRadioCheckable(index: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsRadioCheckableBind, handle, index, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsRadioCheckableBind, segment, index, enable)
     }
 
     /**
@@ -514,7 +514,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_tooltip
      */
     fun setItemTooltip(index: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, handle, index, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, index, tooltip)
     }
 
     /**
@@ -523,7 +523,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_shortcut
      */
     fun setItemShortcut(index: Int, shortcut: Shortcut?, global: Boolean = false) {
-        ObjectCalls.ptrcallWithIntObjectBoolArgs(setItemShortcutBind, handle, index, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, global)
+        ObjectCalls.ptrcallWithIntObjectBoolArgs(setItemShortcutBind, segment, index, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, global)
     }
 
     /**
@@ -532,7 +532,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_indent
      */
     fun setItemIndent(index: Int, indent: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIndentBind, handle, index, indent)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemIndentBind, segment, index, indent)
     }
 
     /**
@@ -541,7 +541,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_multistate
      */
     fun setItemMultistate(index: Int, state: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateBind, handle, index, state)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateBind, segment, index, state)
     }
 
     /**
@@ -550,7 +550,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_multistate_max
      */
     fun setItemMultistateMax(index: Int, maxStates: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateMaxBind, handle, index, maxStates)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateMaxBind, segment, index, maxStates)
     }
 
     /**
@@ -559,7 +559,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_shortcut_disabled
      */
     fun setItemShortcutDisabled(index: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemShortcutDisabledBind, handle, index, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemShortcutDisabledBind, segment, index, disabled)
     }
 
     /**
@@ -571,7 +571,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_index
      */
     fun setItemIndex(index: Int, targetIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIndexBind, handle, index, targetIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(setItemIndexBind, segment, index, targetIndex)
     }
 
     /**
@@ -580,7 +580,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.toggle_item_checked
      */
     fun toggleItemChecked(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(toggleItemCheckedBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(toggleItemCheckedBind, segment, index)
     }
 
     /**
@@ -589,7 +589,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.toggle_item_multistate
      */
     fun toggleItemMultistate(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(toggleItemMultistateBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(toggleItemMultistateBind, segment, index)
     }
 
     /**
@@ -598,7 +598,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_text
      */
     fun getItemText(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, segment, index)
     }
 
     /**
@@ -607,7 +607,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_text_direction
      */
     fun getItemTextDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, index)
     }
 
     /**
@@ -616,7 +616,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_language
      */
     fun getItemLanguage(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, segment, index)
     }
 
     /**
@@ -625,7 +625,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_auto_translate_mode
      */
     fun getItemAutoTranslateMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, index)
     }
 
     /**
@@ -634,7 +634,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_icon
      */
     fun getItemIcon(index: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, handle, index))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, index))
     }
 
     /**
@@ -643,7 +643,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_icon_max_width
      */
     fun getItemIconMaxWidth(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIconMaxWidthBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIconMaxWidthBind, segment, index)
     }
 
     /**
@@ -652,7 +652,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_icon_modulate
      */
     fun getItemIconModulate(index: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, segment, index)
     }
 
     /**
@@ -661,7 +661,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_checked
      */
     fun isItemChecked(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckedBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckedBind, segment, index)
     }
 
     /**
@@ -670,7 +670,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_id
      */
     fun getItemId(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, segment, index)
     }
 
     /**
@@ -680,7 +680,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_index
      */
     fun getItemIndex(id: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, segment, id)
     }
 
     /**
@@ -693,7 +693,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_accelerator
      */
     fun getItemAccelerator(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, segment, index)
     }
 
     /**
@@ -703,7 +703,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_metadata
      */
     fun getItemMetadata(index: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, segment, index)
     }
 
     /**
@@ -714,7 +714,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_disabled
      */
     fun isItemDisabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, segment, index)
     }
 
     /**
@@ -724,7 +724,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_submenu
      */
     fun getItemSubmenu(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemSubmenuBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemSubmenuBind, segment, index)
     }
 
     /**
@@ -734,7 +734,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_submenu_node
      */
     fun getItemSubmenuNode(index: Int): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemSubmenuNodeBind, handle, index))
+        return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemSubmenuNodeBind, segment, index))
     }
 
     /**
@@ -744,7 +744,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_separator
      */
     fun isItemSeparator(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, segment, index)
     }
 
     /**
@@ -755,7 +755,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_checkable
      */
     fun isItemCheckable(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckableBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckableBind, segment, index)
     }
 
     /**
@@ -765,7 +765,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_radio_checkable
      */
     fun isItemRadioCheckable(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemRadioCheckableBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemRadioCheckableBind, segment, index)
     }
 
     /**
@@ -774,7 +774,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_shortcut_disabled
      */
     fun isItemShortcutDisabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemShortcutDisabledBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(isItemShortcutDisabledBind, segment, index)
     }
 
     /**
@@ -783,7 +783,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_tooltip
      */
     fun getItemTooltip(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, index)
     }
 
     /**
@@ -792,7 +792,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_shortcut
      */
     fun getItemShortcut(index: Int): Shortcut? {
-        return Shortcut.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemShortcutBind, handle, index))
+        return Shortcut.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemShortcutBind, segment, index))
     }
 
     /**
@@ -801,7 +801,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_indent
      */
     fun getItemIndent(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndentBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndentBind, segment, index)
     }
 
     /**
@@ -810,7 +810,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_multistate_max
      */
     fun getItemMultistateMax(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateMaxBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateMaxBind, segment, index)
     }
 
     /**
@@ -819,7 +819,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_multistate
      */
     fun getItemMultistate(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateBind, handle, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateBind, segment, index)
     }
 
     /**
@@ -829,7 +829,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_focused_item
      */
     fun setFocusedItem(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFocusedItemBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(setFocusedItemBind, segment, index)
     }
 
     /**
@@ -838,7 +838,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_focused_item
      */
     fun getFocusedItem(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFocusedItemBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getFocusedItemBind, segment)
     }
 
     /**
@@ -847,7 +847,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_count
      */
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
     }
 
     /**
@@ -856,7 +856,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_count
      */
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
     /**
@@ -865,7 +865,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.scroll_to_item
      */
     fun scrollToItem(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(scrollToItemBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(scrollToItemBind, segment, index)
     }
 
     /**
@@ -875,7 +875,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.remove_item
      */
     fun removeItem(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, index)
+        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, index)
     }
 
     /**
@@ -886,7 +886,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_separator
      */
     fun addSeparator(label: String = "", id: Int = -1) {
-        ObjectCalls.ptrcallWithStringAndIntArg(addSeparatorBind, handle, label, id)
+        ObjectCalls.ptrcallWithStringAndIntArg(addSeparatorBind, segment, label, id)
     }
 
     /**
@@ -896,7 +896,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.clear
      */
     fun clear(freeSubmenus: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(clearBind, handle, freeSubmenus)
+        ObjectCalls.ptrcallWithBoolArg(clearBind, segment, freeSubmenus)
     }
 
     /**
@@ -905,7 +905,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_hide_on_item_selection
      */
     fun setHideOnItemSelection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnItemSelectionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHideOnItemSelectionBind, segment, enable)
     }
 
     /**
@@ -914,7 +914,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_hide_on_item_selection
      */
     fun isHideOnItemSelection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnItemSelectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnItemSelectionBind, segment)
     }
 
     /**
@@ -923,7 +923,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_hide_on_checkable_item_selection
      */
     fun setHideOnCheckableItemSelection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnCheckableItemSelectionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHideOnCheckableItemSelectionBind, segment, enable)
     }
 
     /**
@@ -932,7 +932,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_hide_on_checkable_item_selection
      */
     fun isHideOnCheckableItemSelection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnCheckableItemSelectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnCheckableItemSelectionBind, segment)
     }
 
     /**
@@ -941,7 +941,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_hide_on_state_item_selection
      */
     fun setHideOnStateItemSelection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnStateItemSelectionBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHideOnStateItemSelectionBind, segment, enable)
     }
 
     /**
@@ -950,7 +950,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_hide_on_state_item_selection
      */
     fun isHideOnStateItemSelection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnStateItemSelectionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnStateItemSelectionBind, segment)
     }
 
     /**
@@ -967,7 +967,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_submenu_popup_delay
      */
     fun setSubmenuPopupDelay(seconds: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSubmenuPopupDelayBind, handle, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(setSubmenuPopupDelayBind, segment, seconds)
     }
 
     /**
@@ -984,7 +984,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_submenu_popup_delay
      */
     fun getSubmenuPopupDelay(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSubmenuPopupDelayBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getSubmenuPopupDelayBind, segment)
     }
 
     /**
@@ -993,7 +993,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_allow_search
      */
     fun setAllowSearch(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, handle, allow)
+        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, segment, allow)
     }
 
     /**
@@ -1002,7 +1002,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_allow_search
      */
     fun getAllowSearch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, segment)
     }
 
     /**
@@ -1011,7 +1011,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_system_menu
      */
     fun isSystemMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSystemMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSystemMenuBind, segment)
     }
 
     /**
@@ -1021,7 +1021,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_system_menu
      */
     fun setSystemMenu(systemMenuId: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, handle, systemMenuId)
+        ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, segment, systemMenuId)
     }
 
     /**
@@ -1031,7 +1031,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_system_menu
      */
     fun getSystemMenu(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, segment)
     }
 
     /**
@@ -1042,7 +1042,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_enabled
      */
     fun setSearchBarEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, segment, enabled)
     }
 
     /**
@@ -1053,7 +1053,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_search_bar_enabled
      */
     fun isSearchBarEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, segment)
     }
 
     /**
@@ -1063,7 +1063,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_min_item_count
      */
     fun setSearchBarMinItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, handle, count)
+        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, segment, count)
     }
 
     /**
@@ -1073,7 +1073,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_search_bar_min_item_count
      */
     fun getSearchBarMinItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, segment)
     }
 
     /**
@@ -1085,7 +1085,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_fuzzy_search_enabled
      */
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, segment, enabled)
     }
 
     /**
@@ -1097,7 +1097,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_search_bar_fuzzy_search_enabled
      */
     fun isSearchBarFuzzySearchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, segment)
     }
 
     /**
@@ -1108,7 +1108,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_fuzzy_search_max_misses
      */
     fun setSearchBarFuzzySearchMaxMisses(maxMisses: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, handle, maxMisses)
+        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, segment, maxMisses)
     }
 
     /**
@@ -1119,7 +1119,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_search_bar_fuzzy_search_max_misses
      */
     fun getSearchBarFuzzySearchMaxMisses(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, segment)
     }
 
     /**
@@ -1128,7 +1128,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_shrink_height
      */
     fun setShrinkHeight(shrink: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShrinkHeightBind, handle, shrink)
+        ObjectCalls.ptrcallWithBoolArg(setShrinkHeightBind, segment, shrink)
     }
 
     /**
@@ -1137,7 +1137,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_shrink_height
      */
     fun getShrinkHeight(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShrinkHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getShrinkHeightBind, segment)
     }
 
     /**
@@ -1146,7 +1146,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_shrink_width
      */
     fun setShrinkWidth(shrink: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShrinkWidthBind, handle, shrink)
+        ObjectCalls.ptrcallWithBoolArg(setShrinkWidthBind, segment, shrink)
     }
 
     /**
@@ -1155,7 +1155,7 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_shrink_width
      */
     fun getShrinkWidth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShrinkWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getShrinkWidthBind, segment)
     }
 
     object Signals {
@@ -1167,11 +1167,11 @@ class PopupMenu(handle: MemorySegment) : Popup(handle) {
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PopupMenu? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PopupMenu? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PopupMenu? =
-            if (handle.address() == 0L) null else PopupMenu(handle)
+            if (handle.address() == 0L) null else PopupMenu(GodotHandle(handle))
 
         private const val ACTIVATE_ITEM_BY_EVENT_HASH = 3716412023L
         private val activateItemByEventBind by lazy {
