@@ -2,12 +2,9 @@
 
 package net.multigesture.kanama.types
 
-import java.lang.foreign.Arena
-import java.lang.foreign.MemorySegment
-import java.lang.foreign.ValueLayout.JAVA_DOUBLE
+import kotlin.math.abs
 import kotlin.math.sqrt
-import net.multigesture.kanama.binding.runtime.BuiltinTypes
-import net.multigesture.kanama.binding.runtime.VariantType
+import net.multigesture.kanama.binding.runtime.BuiltinCalls
 
 private const val LERP_HASH = 1682608829L
 private const val LIMIT_LENGTH_HASH = 514930144L
@@ -19,6 +16,11 @@ private const val SIGNED_ANGLE_TO_HASH = 2781412522L
 /**
  * A 3D vector using floating-point coordinates. Kanama value types are immutable snapshots; assign
  * a new value back to the Godot property after changing components.
+ *
+ * One body for every backend (task 104 step 2): methods whose result depends on Godot's own
+ * edge-case handling (epsilons, normalization) are computed by the engine through
+ * [net.multigesture.kanama.binding.runtime.BuiltinCalls]; exact arithmetic is plain Kotlin. At
+ * ptrcall a Vector3 is 3 `real_t` in x, y, z order.
  *
  * Generated from Godot docs: Vector3
  */
@@ -164,6 +166,28 @@ data class Vector3(
   }
 
   /**
+   * Returns `true` if the vector is normalized, i.e. its length is approximately equal to 1.
+   *
+   * Generated from Godot docs: Vector3.is_normalized
+   */
+  fun isNormalized(): Boolean {
+    // Godot `Vector3::is_normalized`: Math::is_equal_approx(length_squared(), 1, UNIT_EPSILON),
+    // whose exact-equality short-circuit is what makes an infinite component behave.
+    val lengthSquared = lengthSquared()
+    return lengthSquared == 1.0 || abs(lengthSquared - 1.0) < UNIT_EPSILON
+  }
+
+  /**
+   * Returns the axis of the vector's highest value (`0` = x, `1` = y, `2` = z). If all components
+   * are equal, this method returns the x axis.
+   *
+   * Generated from Godot docs: Vector3.max_axis_index
+   */
+  fun maxAxisIndex(): Int =
+    // Godot `Vector3::max_axis_index`, ties going to the earlier axis.
+    if (x < y) (if (y < z) AXIS_Z else AXIS_Y) else (if (x < z) AXIS_Z else AXIS_X)
+
+  /**
    * Returns the dot product of this vector and `with`. This can be used to compare the angle
    * between two vectors. For example, this can be used to determine whether an enemy is facing the
    * player. The dot product will be `0` for a right angle (90 degrees), greater than 0 for angles
@@ -211,8 +235,7 @@ data class Vector3(
    *
    * Generated from Godot docs: Vector3.lerp
    */
-  fun lerp(to: Vector3, weight: Double): Vector3 =
-    callVector3FloatRetVector3("lerp", LERP_HASH, to, weight)
+  fun lerp(to: Vector3, weight: Double): Vector3 = callVector3RealRetVector3(lerpBind, to, weight)
 
   /**
    * Returns the vector with a maximum length by limiting its length to `length`. If the vector is
@@ -221,7 +244,14 @@ data class Vector3(
    * Generated from Godot docs: Vector3.limit_length
    */
   fun limitLength(maxLength: Double): Vector3 =
-    callFloatRetVector3("limit_length", LIMIT_LENGTH_HASH, maxLength)
+    fromGodotRealArray(
+      BuiltinCalls.call(
+        limitLengthBind,
+        toGodotRealArray(),
+        3,
+        listOf(BuiltinCalls.BArg.Real(maxLength)),
+      )
+    )
 
   /**
    * Returns the vector "bounced off" from a plane defined by the given normal `n`. Note: `bounce`
@@ -229,7 +259,15 @@ data class Vector3(
    *
    * Generated from Godot docs: Vector3.bounce
    */
-  fun bounce(normal: Vector3): Vector3 = callVector3RetVector3("bounce", BOUNCE_HASH, normal)
+  fun bounce(normal: Vector3): Vector3 =
+    fromGodotRealArray(
+      BuiltinCalls.call(
+        bounceBind,
+        toGodotRealArray(),
+        3,
+        listOf(BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, normal.toGodotRealArray())),
+      )
+    )
 
   fun withX(value: Number): Vector3 = Vector3(value, y, z)
 
@@ -244,7 +282,7 @@ data class Vector3(
    * Generated from Godot docs: Vector3.rotated
    */
   fun rotated(axis: Vector3, angle: Double): Vector3 =
-    callVector3FloatRetVector3("rotated", ROTATED_HASH, axis, angle)
+    callVector3RealRetVector3(rotatedBind, axis, angle)
 
   /**
    * Returns a new vector moved toward `to` by the fixed `delta` amount. Will not go past the final
@@ -253,7 +291,7 @@ data class Vector3(
    * Generated from Godot docs: Vector3.move_toward
    */
   fun moveToward(to: Vector3, delta: Double): Vector3 =
-    callVector3FloatRetVector3("move_toward", MOVE_TOWARD_HASH, to, delta)
+    callVector3RealRetVector3(moveTowardBind, to, delta)
 
   /**
    * Returns the signed angle to the given vector, in radians. The sign of the angle is positive in
@@ -263,107 +301,72 @@ data class Vector3(
    * Generated from Godot docs: Vector3.signed_angle_to
    */
   fun signedAngleTo(to: Vector3, axis: Vector3): Double =
-    callVector3Vector3RetDouble("signed_angle_to", SIGNED_ANGLE_TO_HASH, to, axis)
+    BuiltinCalls.callScalar(
+      signedAngleToBind,
+      toGodotRealArray(),
+      listOf(
+        BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, to.toGodotRealArray()),
+        BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, axis.toGodotRealArray()),
+      ),
+    )
 
-  private fun callVector3RetVector3(method: String, hash: Long, value: Vector3): Vector3 {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val valueArg = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      value.writeTo(valueArg)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR3,
-        method = method,
-        hash = hash,
-        base = base,
-        args = listOf(valueArg),
-        rReturn = ret,
+  // The (Vector3, float) -> Vector3 shape that lerp / rotated / move_toward share.
+  private fun callVector3RealRetVector3(methodPtr: Long, vector: Vector3, value: Double): Vector3 =
+    fromGodotRealArray(
+      BuiltinCalls.call(
+        methodPtr,
+        toGodotRealArray(),
+        3,
+        listOf(
+          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector.toGodotRealArray()),
+          BuiltinCalls.BArg.Real(value),
+        ),
       )
-      return readFrom(ret)
-    }
-  }
+    )
 
-  private fun callFloatRetVector3(method: String, hash: Long, value: Double): Vector3 {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val valueArg = arena.allocate(JAVA_DOUBLE)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      valueArg.set(JAVA_DOUBLE, 0, value)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR3,
-        method = method,
-        hash = hash,
-        base = base,
-        args = listOf(valueArg),
-        rReturn = ret,
-      )
-      return readFrom(ret)
+  private fun toGodotRealArray(): GodotRealArray =
+    GodotRealArray(3).also {
+      it[0] = GodotReal.toC(x)
+      it[1] = GodotReal.toC(y)
+      it[2] = GodotReal.toC(z)
     }
-  }
-
-  private fun callVector3FloatRetVector3(
-    method: String,
-    hash: Long,
-    vector: Vector3,
-    value: Double,
-  ): Vector3 {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val vectorArg = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val valueArg = arena.allocate(JAVA_DOUBLE)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      vector.writeTo(vectorArg)
-      valueArg.set(JAVA_DOUBLE, 0, value)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR3,
-        method = method,
-        hash = hash,
-        base = base,
-        args = listOf(vectorArg, valueArg),
-        rReturn = ret,
-      )
-      return readFrom(ret)
-    }
-  }
-
-  private fun callVector3Vector3RetDouble(
-    method: String,
-    hash: Long,
-    first: Vector3,
-    second: Vector3,
-  ): Double {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val firstArg = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val secondArg = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val ret = arena.allocate(JAVA_DOUBLE)
-      writeTo(base)
-      first.writeTo(firstArg)
-      second.writeTo(secondArg)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR3,
-        method = method,
-        hash = hash,
-        base = base,
-        args = listOf(firstArg, secondArg),
-        rReturn = ret,
-      )
-      return ret.get(JAVA_DOUBLE, 0)
-    }
-  }
-
-  private fun writeTo(dest: MemorySegment) {
-    GodotReal.writeIndex(dest, 0, x)
-    GodotReal.writeIndex(dest, 1, y)
-    GodotReal.writeIndex(dest, 2, z)
-  }
 
   companion object {
-    private fun readFrom(src: MemorySegment): Vector3 =
-      Vector3(GodotReal.readIndex(src, 0), GodotReal.readIndex(src, 1), GodotReal.readIndex(src, 2))
+    /** Godot `UNIT_EPSILON` (`core/math/math_defs.h`), the tolerance of `is_normalized`. */
+    private const val UNIT_EPSILON = 0.00001
+
+    // Godot's Vector3::Axis values, the return of `max_axis_index`. Kept private: neither
+    // platform exposed them before, and the shared body's public surface is exactly the
+    // union of the two it replaces.
+    private const val AXIS_X = 0
+    private const val AXIS_Y = 1
+    private const val AXIS_Z = 2
+
+    private val lerpBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "lerp", LERP_HASH)
+    }
+    private val limitLengthBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "limit_length", LIMIT_LENGTH_HASH)
+    }
+    private val bounceBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "bounce", BOUNCE_HASH)
+    }
+    private val rotatedBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "rotated", ROTATED_HASH)
+    }
+    private val moveTowardBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "move_toward", MOVE_TOWARD_HASH)
+    }
+    private val signedAngleToBind by lazy {
+      BuiltinCalls.getBuiltinMethod(
+        BuiltinCalls.VT_VECTOR3,
+        "signed_angle_to",
+        SIGNED_ANGLE_TO_HASH,
+      )
+    }
+
+    private fun fromGodotRealArray(c: GodotRealArray): Vector3 =
+      Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]), GodotReal.fromC(c[2]))
 
     /**
      * Zero vector, a vector with all components set to `0`.

@@ -60,5 +60,8 @@ data class Projection(
         Vector4(0f, 0f, 1f, 0f),
         Vector4(0f, 0f, 0f, 1f),
       )
+
+    /** A `Projection` with every component zero. */
+    val ZERO = Projection(Vector4.ZERO, Vector4.ZERO, Vector4.ZERO, Vector4.ZERO)
   }
 }

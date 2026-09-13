@@ -1,16 +1,20 @@
 package net.multigesture.kanama.types
 
-import java.lang.foreign.Arena
-import java.lang.foreign.ValueLayout.JAVA_DOUBLE
 import kotlin.math.sqrt
-import net.multigesture.kanama.binding.runtime.BuiltinTypes
-import net.multigesture.kanama.binding.runtime.VariantType
+import net.multigesture.kanama.binding.runtime.BuiltinCalls
 
 private const val SLERP_HASH = 1773590316L
+private const val INVERSE_HASH = 4274879941L
+private const val FROM_EULER_HASH = 4053467903L
 
 /**
  * A unit quaternion used for representing 3D rotations. Kanama value types are immutable snapshots;
  * assign a new value back to the Godot property after changing components.
+ *
+ * One body for every backend (task 104 step 2): `inverse`, `slerp` and `from_euler` are computed by
+ * the engine through [net.multigesture.kanama.binding.runtime.BuiltinCalls] (their shortest-arc and
+ * non-unit handling is the engine's), the rest is exact arithmetic in Kotlin. At ptrcall a
+ * Quaternion is 4 `real_t` in x, y, z, w order.
  *
  * Generated from Godot docs: Quaternion
  */
@@ -132,12 +136,8 @@ data class Quaternion(
    *
    * Generated from Godot docs: Quaternion.inverse
    */
-  fun inverse(): Quaternion {
-    val ls = lengthSquared()
-    if (ls == 0.0) return IDENTITY
-    val inv = 1.0 / ls
-    return Quaternion(-x * inv, -y * inv, -z * inv, w * inv)
-  }
+  fun inverse(): Quaternion =
+    fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(inverseBind, toGodotRealArray()))
 
   /**
    * Returns the dot product between this quaternion and `with`. This is equivalent to `(quat.x *
@@ -154,38 +154,26 @@ data class Quaternion(
    *
    * Generated from Godot docs: Quaternion.slerp
    */
-  fun slerp(to: Quaternion, weight: Double): Quaternion {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      val toArg = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      val weightArg = arena.allocate(JAVA_DOUBLE)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      to.writeTo(toArg)
-      weightArg.set(JAVA_DOUBLE, 0, weight)
-      BuiltinTypes.call(
-        type = VariantType.QUATERNION,
-        method = "slerp",
-        hash = SLERP_HASH,
-        base = base,
-        args = listOf(toArg, weightArg),
-        rReturn = ret,
+  fun slerp(to: Quaternion, weight: Double): Quaternion =
+    fromGodotRealArray(
+      BuiltinCalls.call(
+        slerpBind,
+        toGodotRealArray(),
+        4,
+        listOf(
+          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_QUATERNION, to.toGodotRealArray()),
+          BuiltinCalls.BArg.Real(weight),
+        ),
       )
-      return Quaternion(
-        GodotReal.readIndex(ret, 0),
-        GodotReal.readIndex(ret, 1),
-        GodotReal.readIndex(ret, 2),
-        GodotReal.readIndex(ret, 3),
-      )
-    }
-  }
+    )
 
-  private fun writeTo(dest: java.lang.foreign.MemorySegment) {
-    GodotReal.writeIndex(dest, 0, x)
-    GodotReal.writeIndex(dest, 1, y)
-    GodotReal.writeIndex(dest, 2, z)
-    GodotReal.writeIndex(dest, 3, w)
-  }
+  private fun toGodotRealArray(): GodotRealArray =
+    GodotRealArray(4).also {
+      it[0] = GodotReal.toC(x)
+      it[1] = GodotReal.toC(y)
+      it[2] = GodotReal.toC(z)
+      it[3] = GodotReal.toC(w)
+    }
 
   companion object {
     /**
@@ -197,5 +185,49 @@ data class Quaternion(
      * Generated from Godot docs: Quaternion.IDENTITY
      */
     val IDENTITY = Quaternion(0f, 0f, 0f, 1f)
+
+    private val inverseBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_QUATERNION, "inverse", INVERSE_HASH)
+    }
+    private val slerpBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_QUATERNION, "slerp", SLERP_HASH)
+    }
+    private val fromEulerBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_QUATERNION, "from_euler", FROM_EULER_HASH)
+    }
+
+    /**
+     * Constructs a new `Quaternion` from the given `Vector3` of Euler angles, in radians. This
+     * method always uses the YXZ convention (`EULER_ORDER_YXZ`).
+     *
+     * Generated from Godot docs: Quaternion.from_euler
+     */
+    fun fromEuler(euler: Vector3): Quaternion =
+      // `Quaternion.from_euler` is a *static* builtin, so the call passes an empty base.
+      fromGodotRealArray(
+        BuiltinCalls.call(
+          fromEulerBind,
+          GodotRealArray(0),
+          4,
+          listOf(
+            BuiltinCalls.BArg.Floats(
+              BuiltinCalls.PT_VECTOR3,
+              GodotRealArray(3).also {
+                it[0] = GodotReal.toC(euler.x)
+                it[1] = GodotReal.toC(euler.y)
+                it[2] = GodotReal.toC(euler.z)
+              },
+            )
+          ),
+        )
+      )
+
+    private fun fromGodotRealArray(c: GodotRealArray): Quaternion =
+      Quaternion(
+        GodotReal.fromC(c[0]),
+        GodotReal.fromC(c[1]),
+        GodotReal.fromC(c[2]),
+        GodotReal.fromC(c[3]),
+      )
   }
 }

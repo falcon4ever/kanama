@@ -2,13 +2,9 @@
 
 package net.multigesture.kanama.types
 
-import java.lang.foreign.Arena
-import java.lang.foreign.MemorySegment
-import java.lang.foreign.ValueLayout.JAVA_DOUBLE
 import kotlin.math.atan2
 import kotlin.math.sqrt
-import net.multigesture.kanama.binding.runtime.BuiltinTypes
-import net.multigesture.kanama.binding.runtime.VariantType
+import net.multigesture.kanama.binding.runtime.BuiltinCalls
 
 private const val LERP_HASH = 4250033116L
 private const val LIMIT_LENGTH_HASH = 2544004089L
@@ -18,6 +14,11 @@ private const val CLAMP_HASH = 318031021L
 /**
  * A 2D vector using floating-point coordinates. Kanama value types are immutable snapshots; assign
  * a new value back to the Godot property after changing components.
+ *
+ * One body for every backend (task 104 step 2): methods whose result depends on Godot's own
+ * edge-case handling are computed by the engine through
+ * [net.multigesture.kanama.binding.runtime.BuiltinCalls]; exact arithmetic is plain Kotlin. At
+ * ptrcall a Vector2 is 2 `real_t` in x, y order.
  *
  * Generated from Godot docs: Vector2
  */
@@ -178,26 +179,18 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.lerp
    */
-  fun lerp(to: Vector2, weight: Double): Vector2 {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val toArg = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val weightArg = arena.allocate(JAVA_DOUBLE)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      to.writeTo(toArg)
-      weightArg.set(JAVA_DOUBLE, 0, weight)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR2,
-        method = "lerp",
-        hash = LERP_HASH,
-        base = base,
-        args = listOf(toArg, weightArg),
-        rReturn = ret,
+  fun lerp(to: Vector2, weight: Double): Vector2 =
+    fromGodotRealArray(
+      BuiltinCalls.call(
+        lerpBind,
+        toGodotRealArray(),
+        2,
+        listOf(
+          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR2, to.toGodotRealArray()),
+          BuiltinCalls.BArg.Real(weight),
+        ),
       )
-      return readFrom(ret)
-    }
-  }
+    )
 
   /**
    * Returns the vector with a maximum length by limiting its length to `length`. If the vector is
@@ -205,24 +198,15 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.limit_length
    */
-  fun limitLength(maxLength: Double): Vector2 {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val lengthArg = arena.allocate(JAVA_DOUBLE)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      lengthArg.set(JAVA_DOUBLE, 0, maxLength)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR2,
-        method = "limit_length",
-        hash = LIMIT_LENGTH_HASH,
-        base = base,
-        args = listOf(lengthArg),
-        rReturn = ret,
+  fun limitLength(maxLength: Double): Vector2 =
+    fromGodotRealArray(
+      BuiltinCalls.call(
+        limitLengthBind,
+        toGodotRealArray(),
+        2,
+        listOf(BuiltinCalls.BArg.Real(maxLength)),
       )
-      return readFrom(ret)
-    }
-  }
+    )
 
   /**
    * Returns the result of rotating this vector by `angle` (in radians). See also
@@ -230,24 +214,10 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.rotated
    */
-  fun rotated(angle: Double): Vector2 {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val angleArg = arena.allocate(JAVA_DOUBLE)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      angleArg.set(JAVA_DOUBLE, 0, angle)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR2,
-        method = "rotated",
-        hash = ROTATED_HASH,
-        base = base,
-        args = listOf(angleArg),
-        rReturn = ret,
-      )
-      return readFrom(ret)
-    }
-  }
+  fun rotated(angle: Double): Vector2 =
+    fromGodotRealArray(
+      BuiltinCalls.call(rotatedBind, toGodotRealArray(), 2, listOf(BuiltinCalls.BArg.Real(angle)))
+    )
 
   /**
    * Returns a new vector with all components clamped between the components of `min` and `max`, by
@@ -255,39 +225,45 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.clamp
    */
-  fun clamp(min: Vector2, max: Vector2): Vector2 {
-    Arena.ofConfined().use { arena ->
-      val base = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val minArg = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val maxArg = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      writeTo(base)
-      min.writeTo(minArg)
-      max.writeTo(maxArg)
-      BuiltinTypes.call(
-        type = VariantType.VECTOR2,
-        method = "clamp",
-        hash = CLAMP_HASH,
-        base = base,
-        args = listOf(minArg, maxArg),
-        rReturn = ret,
+  fun clamp(min: Vector2, max: Vector2): Vector2 =
+    fromGodotRealArray(
+      BuiltinCalls.call(
+        clampBind,
+        toGodotRealArray(),
+        2,
+        listOf(
+          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR2, min.toGodotRealArray()),
+          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR2, max.toGodotRealArray()),
+        ),
       )
-      return readFrom(ret)
-    }
-  }
+    )
 
   fun withX(value: Number): Vector2 = Vector2(value, y)
 
   fun withY(value: Number): Vector2 = Vector2(x, value)
 
-  private fun writeTo(dest: MemorySegment) {
-    GodotReal.writeIndex(dest, 0, x)
-    GodotReal.writeIndex(dest, 1, y)
-  }
+  private fun toGodotRealArray(): GodotRealArray =
+    GodotRealArray(2).also {
+      it[0] = GodotReal.toC(x)
+      it[1] = GodotReal.toC(y)
+    }
 
   companion object {
-    private fun readFrom(src: MemorySegment): Vector2 =
-      Vector2(GodotReal.readIndex(src, 0), GodotReal.readIndex(src, 1))
+    private val lerpBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "lerp", LERP_HASH)
+    }
+    private val limitLengthBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "limit_length", LIMIT_LENGTH_HASH)
+    }
+    private val rotatedBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "rotated", ROTATED_HASH)
+    }
+    private val clampBind by lazy {
+      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "clamp", CLAMP_HASH)
+    }
+
+    private fun fromGodotRealArray(c: GodotRealArray): Vector2 =
+      Vector2(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]))
 
     /**
      * Zero vector, a vector with all components set to `0`.
