@@ -480,7 +480,7 @@ object Engine {
     fun registerSingleton(name: String, objectArg: MemorySegment) {
         // Godot 4.7 warns that RefCounted singletons leak/double-free (the singleton table holds no
         // reference). Reject them here before Godot sees the instance; use an Object-derived singleton.
-        if (objectArg.address() != 0L && GodotObject(objectArg).isClass("RefCounted")) {
+        if (objectArg.address() != 0L && GodotObject(GodotHandle(objectArg)).isClass("RefCounted")) {
             error("Engine.registerSingleton does not accept RefCounted instances; use an Object-derived singleton")
         }
         ObjectCalls.ptrcallWithStringNameAndObjectArg(registerSingletonBind, singleton, name, objectArg)
@@ -517,7 +517,7 @@ object Engine {
      */
     @JvmStatic
     fun registerScriptLanguage(language: ScriptLanguage): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(registerScriptLanguageBind, singleton, language.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(registerScriptLanguageBind, singleton, language.segment)
     }
 
     /**
@@ -528,7 +528,7 @@ object Engine {
      */
     @JvmStatic
     fun unregisterScriptLanguage(language: ScriptLanguage): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(unregisterScriptLanguageBind, singleton, language.handle)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(unregisterScriptLanguageBind, singleton, language.segment)
     }
 
     /**
@@ -571,7 +571,7 @@ object Engine {
      */
     @JvmStatic
     fun captureScriptBacktraces(includeVariables: Boolean = false): List<ScriptBacktrace> {
-        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(captureScriptBacktracesBind, singleton, includeVariables, ScriptBacktrace::fromHandle)
+        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(captureScriptBacktracesBind, singleton, includeVariables, ScriptBacktrace::wrap)
     }
 
     /**
@@ -671,8 +671,8 @@ object Engine {
     }
 
     @JvmStatic
-    fun fromHandle(handle: MemorySegment): Engine? =
-        wrap(handle)
+    fun fromHandle(handle: GodotHandle): Engine? =
+        wrap(handle.segment)
 
     internal fun wrap(handle: MemorySegment): Engine? =
         if (handle.address() == 0L) null else this

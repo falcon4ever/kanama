@@ -10,7 +10,7 @@ import java.lang.foreign.MemorySegment
  */
 object SceneTree {
     val root: Window
-        get() = Window(getRoot())
+        get() = Window(GodotHandle(getRoot()))
 
     private const val BOOL_NOARGS_HASH = 36873697L
     private const val SET_BOOL_HASH = 2586408642L
@@ -543,7 +543,7 @@ object SceneTree {
      */
     @JvmStatic
     fun callGroup(groupName: String, methodName: String, vararg args: Any?) {
-        GodotObject(sceneTreeObject()).call("call_group", groupName, methodName, *args)
+        GodotObject(GodotHandle(sceneTreeObject())).call("call_group", groupName, methodName, *args)
     }
 
     /**
@@ -570,7 +570,7 @@ object SceneTree {
      */
     @JvmStatic
     fun callGroupFlags(flags: Long, groupName: String, methodName: String, vararg args: Any?) {
-        GodotObject(sceneTreeObject()).call("call_group_flags", flags, groupName, methodName, *args)
+        GodotObject(GodotHandle(sceneTreeObject())).call("call_group_flags", flags, groupName, methodName, *args)
     }
 
     /**

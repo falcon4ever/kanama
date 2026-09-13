@@ -9,7 +9,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Button
  */
-open class Button(handle: MemorySegment) : BaseButton(handle) {
+open class Button(handle: GodotHandle) : BaseButton(handle) {
 
     var text: String
         @JvmName("textProperty")
@@ -95,7 +95,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
     }
 
     /**
@@ -104,7 +104,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text
      */
     fun getText(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getTextBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
 
     /**
      * Sets the clipping behavior when the text exceeds the node's bounding rectangle.
@@ -112,7 +112,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, handle, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
     }
 
     /**
@@ -121,7 +121,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
 
     /**
      * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
@@ -130,7 +130,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, handle, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
     }
 
     /**
@@ -140,7 +140,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_autowrap_mode
      */
     fun getAutowrapMode(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
 
     /**
      * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
@@ -149,7 +149,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, handle, autowrapTrimFlags)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
     }
 
     /**
@@ -159,7 +159,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
 
     /**
      * Base text writing direction.
@@ -167,7 +167,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text_direction
      */
     fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, handle, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
     }
 
     /**
@@ -176,7 +176,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text_direction
      */
     fun getTextDirection(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
 
     /**
      * Language code used for line-breaking and text shaping algorithms. If left empty, the current
@@ -185,7 +185,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, handle, language)
+        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
     }
 
     /**
@@ -195,7 +195,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_language
      */
     fun getLanguage(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, handle)
+        ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
 
     /**
      * Button's icon, if text is present the icon will be placed before the text. To edit margin and
@@ -207,7 +207,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
     fun setButtonIcon(texture: Texture2D?) {
         ObjectCalls.ptrcallWithObjectArgs(
             setButtonIconBind,
-            handle,
+            segment,
             listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL),
         )
     }
@@ -220,7 +220,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_button_icon
      */
     fun getButtonIcon(): Texture2D? =
-        Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonIconBind, handle))
+        Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonIconBind, segment))
 
     /**
      * Flat buttons don't display decoration.
@@ -228,7 +228,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_flat
      */
     fun setFlat(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, enabled)
     }
 
     /**
@@ -237,7 +237,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.is_flat
      */
     fun isFlat(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
 
     /**
      * If `true`, text that is too large to fit the button is clipped horizontally. If `false`, the
@@ -247,7 +247,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_clip_text
      */
     fun setClipText(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipTextBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setClipTextBind, segment, enabled)
     }
 
     /**
@@ -258,7 +258,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_clip_text
      */
     fun getClipText(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(getClipTextBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(getClipTextBind, segment)
 
     /**
      * Text alignment policy for the button's text.
@@ -266,7 +266,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text_alignment
      */
     fun setTextAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextAlignmentBind, handle, alignment)
+        ObjectCalls.ptrcallWithLongArg(setTextAlignmentBind, segment, alignment)
     }
 
     /**
@@ -275,7 +275,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text_alignment
      */
     fun getTextAlignment(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getTextAlignmentBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getTextAlignmentBind, segment)
 
     /**
      * Specifies if the icon should be aligned horizontally to the left, right, or center of a button.
@@ -285,7 +285,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_icon_alignment
      */
     fun setIconAlignment(iconAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconAlignmentBind, handle, iconAlignment)
+        ObjectCalls.ptrcallWithLongArg(setIconAlignmentBind, segment, iconAlignment)
     }
 
     /**
@@ -296,7 +296,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_icon_alignment
      */
     fun getIconAlignment(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getIconAlignmentBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getIconAlignmentBind, segment)
 
     /**
      * Specifies if the icon should be aligned vertically to the top, bottom, or center of a button.
@@ -306,7 +306,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_vertical_icon_alignment
      */
     fun setVerticalIconAlignment(verticalIconAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalIconAlignmentBind, handle, verticalIconAlignment)
+        ObjectCalls.ptrcallWithLongArg(setVerticalIconAlignmentBind, segment, verticalIconAlignment)
     }
 
     /**
@@ -317,7 +317,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_vertical_icon_alignment
      */
     fun getVerticalIconAlignment(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getVerticalIconAlignmentBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(getVerticalIconAlignmentBind, segment)
 
     /**
      * When enabled, the button's icon will expand/shrink to fit the button's size while keeping its
@@ -326,7 +326,7 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_expand_icon
      */
     fun setExpandIcon(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpandIconBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setExpandIconBind, segment, enabled)
     }
 
     /**
@@ -336,15 +336,15 @@ open class Button(handle: MemorySegment) : BaseButton(handle) {
      * Generated from Godot docs: Button.is_expand_icon
      */
     fun isExpandIcon(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isExpandIconBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isExpandIconBind, segment)
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Button? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Button? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Button? =
-            if (handle.address() == 0L) null else Button(handle)
+            if (handle.address() == 0L) null else Button(GodotHandle(handle))
 
         private const val STRING_VOID_HASH = 83702148L
         private const val NOARGS_STRING_HASH = 201670096L

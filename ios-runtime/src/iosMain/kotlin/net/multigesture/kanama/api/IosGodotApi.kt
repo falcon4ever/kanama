@@ -367,7 +367,7 @@ class GodotSignal internal constructor(
         // Pass the receiver (target) so the Callable is bound to its ObjectID and Godot auto-disconnects
         // it when the receiver is freed. Previously target was ignored, leaving an object-less Callable
         // that survived the receiver's free and fired into freed memory on later emissions.
-        val result = IosGodot.objectConnectCallable(owner.handle.address(), name, target.handle.address(), callbackId, flags)
+        val result = IosGodot.objectConnectCallable(owner.segment.address(), name, target.segment.address(), callbackId, flags)
         if (result != 0L) {
             // connect failed; Godot freed the callable (which released the entry),
             // but release defensively in case it never reached the trampoline path.
@@ -416,19 +416,19 @@ class SignalConnection internal constructor(
             return
         }
         closed = true
-        IosGodot.objectDisconnectCallable(owner.handle.address(), signalName, callbackId)
+        IosGodot.objectDisconnectCallable(owner.segment.address(), signalName, callbackId)
     }
 }
 
-open class StaticBody3D(handle: MemorySegment) : Node3D(handle) {
+open class StaticBody3D(handle: GodotHandle) : Node3D(handle) {
     // CollisionObject3D layer/mask (uint32 ptrcall cells), matching the desktop property shape.
     var collisionLayer: Long
-        get() = ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, handle)
-        set(value) = ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, handle, value)
+        get() = ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
+        set(value) = ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, value)
 
     var collisionMask: Long
-        get() = ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, handle)
-        set(value) = ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, handle, value)
+        get() = ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        set(value) = ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, value)
 
     companion object {
         private val setCollisionLayerBind by lazy {
@@ -446,19 +446,19 @@ open class StaticBody3D(handle: MemorySegment) : Node3D(handle) {
     }
 }
 
-class SceneTree(handle: MemorySegment) : Node(handle) {
+class SceneTree(handle: GodotHandle) : Node(handle) {
     fun quit(exitCode: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(quitBind, handle, exitCode)
+        ObjectCalls.ptrcallWithIntArg(quitBind, segment, exitCode)
     }
 
     // Desktop SceneTree.quit takes a Long exit code; the overload keeps shared game code portable.
     fun quit(exitCode: Long) = quit(exitCode.toInt())
 
     fun changeSceneToFile(path: String): Long =
-        ObjectCalls.ptrcallWithStringArgRetLong(changeSceneToFileBind, handle, path)
+        ObjectCalls.ptrcallWithStringArgRetLong(changeSceneToFileBind, segment, path)
 
     fun reloadCurrentScene(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(reloadCurrentSceneBind, handle)
+        ObjectCalls.ptrcallNoArgsRetLong(reloadCurrentSceneBind, segment)
 
     // SceneTree.call_group(group, method, ...args) via the Variant call path (it is a varargs
     // method, which the audited ptrcall set can't express — matches desktop SceneTree.callGroup).
@@ -482,29 +482,29 @@ class SceneTree(handle: MemorySegment) : Node(handle) {
         ignoreTimeScale: Boolean = false,
     ): SceneTreeTimer? = SceneTreeTimer.wrap(
         ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(
-            createTimerBind, handle, timeSec, processAlways, processInPhysics, ignoreTimeScale,
+            createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale,
         ),
     )
 
     // SceneTree.root — the root Window (Viewport). Always present in a running tree.
     val root: Window
-        get() = Window(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, handle))
+        get() = Window(GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment)))
 
     fun setPaused(paused: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPausedBind, handle, paused)
+        ObjectCalls.ptrcallWithBoolArg(setPausedBind, segment, paused)
     }
 
     fun unloadCurrentScene() {
-        ObjectCalls.ptrcallNoArgs(unloadCurrentSceneBind, handle)
+        ObjectCalls.ptrcallNoArgs(unloadCurrentSceneBind, segment)
     }
 
     fun isPaused(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, segment)
 
     override fun createTween(): Tween? =
-        ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, handle)
+        ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)
             .takeIf { it.address() != 0L }
-            ?.let { Tween(it) }
+            ?.let { Tween(GodotHandle(it)) }
 
     // SceneTree.get_nodes_in_group(group) -> Array[Node]. The (StringName)->typed-object-array ptrcall
     // shape isn't wired, so this goes through the Variant call path; OBJECT elements surface as raw
@@ -515,8 +515,8 @@ class SceneTree(handle: MemorySegment) : Node(handle) {
             when (element) {
                 is Node -> element
                 is GodotObject -> Node(element.handle)
-                is MemorySegment -> Node(element)
-                is Long -> Node(MemorySegment.ofAddress(element))
+                is MemorySegment -> Node(GodotHandle(element))
+                is Long -> Node(GodotHandle(MemorySegment.ofAddress(element)))
                 else -> null
             }
         } ?: emptyList()
@@ -524,7 +524,7 @@ class SceneTree(handle: MemorySegment) : Node(handle) {
     // The root Window handle (an Object); wrap with Window(...) or Node(...) at the call site,
     // matching desktop SceneTree.getRoot(): MemorySegment.
     fun getRoot(): MemorySegment =
-        ObjectCalls.ptrcallNoArgsRetObject(getRootBind, handle)
+        ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment)
 
     companion object {
         private val quitBind by lazy { ObjectCalls.getMethodBind("SceneTree", "quit", 1995695955L) }
@@ -552,7 +552,7 @@ class SceneTree(handle: MemorySegment) : Node(handle) {
         // Static-call forms: demos written against desktop/Android (where SceneTree is reachable
         // statically) call `SceneTree.quit()` / `SceneTree.unloadCurrentScene()`. Resolve the active
         // tree via Engine.get_main_loop() and delegate to the instance method.
-        private fun active(): SceneTree = SceneTree(Engine.getMainLoop())
+        private fun active(): SceneTree = SceneTree(GodotHandle(Engine.getMainLoop()))
 
         fun quit(exitCode: Int = 0) = active().quit(exitCode)
 
@@ -560,7 +560,7 @@ class SceneTree(handle: MemorySegment) : Node(handle) {
     }
 }
 
-class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
+class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
     fun setStreamFromPath(path: String) {
         ResourceLoader.loadAudioStream(path)?.use { stream ->
             setStream(stream)
@@ -570,63 +570,63 @@ class AudioStreamPlayer(handle: MemorySegment) : Node(handle) {
     // AudioStreamPlayer.set_stream(stream) — null clears the assigned stream. Mirrors the
     // generated 2D/3D variants; routed through the existing cinterop glue (0 == null).
     fun setStream(stream: AudioStream?) {
-        IosGodot.audioStreamPlayerSetStream(handle.address(), stream?.handle?.address() ?: 0L)
+        IosGodot.audioStreamPlayerSetStream(segment.address(), stream?.segment?.address() ?: 0L)
     }
 
     fun setPitchScale(value: Double) {
-        IosGodot.audioStreamPlayerSetPitchScale(handle.address(), value)
+        IosGodot.audioStreamPlayerSetPitchScale(segment.address(), value)
     }
 
     fun setVolumeDb(value: Double) {
-        IosGodot.audioStreamPlayerSetVolumeDb(handle.address(), value)
+        IosGodot.audioStreamPlayerSetVolumeDb(segment.address(), value)
     }
 
     fun setBus(value: String) {
-        IosGodot.audioStreamPlayerSetBus(handle.address(), value)
+        IosGodot.audioStreamPlayerSetBus(segment.address(), value)
     }
 
     fun setStreamPaused(value: Boolean) {
-        IosGodot.audioStreamPlayerSetStreamPaused(handle.address(), value)
+        IosGodot.audioStreamPlayerSetStreamPaused(segment.address(), value)
     }
 
     fun play() {
-        IosGodot.audioStreamPlayerPlay(handle.address(), 0.0)
+        IosGodot.audioStreamPlayerPlay(segment.address(), 0.0)
     }
 
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, handle)
+        ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
 
     companion object {
         private val stopBind by lazy { ObjectCalls.getMethodBind("AudioStreamPlayer", "stop", 3218959716L) }
 
         fun create(): AudioStreamPlayer =
-            AudioStreamPlayer(MemorySegment.ofAddress(IosGodot.constructObject("AudioStreamPlayer")))
+            AudioStreamPlayer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("AudioStreamPlayer"))))
     }
 }
 
 // KANAMA-IOS-HANDWRITTEN: [runtime] Tweener/PropertyTweener/Tween use the Variant tween_property path
 // (final-value is a Variant), not generatable via the audited ptrcall set. Bespoke by design.
-open class Tweener(handle: MemorySegment) : RefCounted(handle) {
+open class Tweener(handle: GodotHandle) : RefCounted(handle) {
     fun setTrans(value: Long): Tweener {
-        releaseIosFluentSelf(handle, IosGodot.tweenerSetTrans(handle.address(), value))
+        releaseIosFluentSelf(segment, IosGodot.tweenerSetTrans(segment.address(), value))
         return this
     }
 
     fun setEase(value: Long): Tweener {
-        releaseIosFluentSelf(handle, IosGodot.tweenerSetEase(handle.address(), value))
+        releaseIosFluentSelf(segment, IosGodot.tweenerSetEase(segment.address(), value))
         return this
     }
 }
 
-class PropertyTweener(handle: MemorySegment) : Tweener(handle) {
+class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
     // PropertyTweener.from(value) — sets the tween's starting value. The demos only use a Color
     // (modulate) start; routed through the C shim (Variant arg). Returns this for chaining.
     fun from(value: Color): PropertyTweener {
         releaseIosFluentSelf(
-            handle,
+            segment,
             IosGodot.propertyTweenerFromColor(
-                handle.address(),
+                segment.address(),
                 value.r.toDouble(), value.g.toDouble(), value.b.toDouble(), value.a.toDouble(),
             ),
         )
@@ -634,13 +634,13 @@ class PropertyTweener(handle: MemorySegment) : Tweener(handle) {
     }
 }
 
-class CallbackTweener(handle: MemorySegment) : Tweener(handle)
+class CallbackTweener(handle: GodotHandle) : Tweener(handle)
 
-class Tween(handle: MemorySegment) : RefCounted(handle) {
+class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setParallel(parallel: Boolean): Tween {
         releaseIosFluentSelf(
-            handle,
-            IosGodot.tweenSetParallel(handle.address(), if (parallel) 1 else 0),
+            segment,
+            IosGodot.tweenSetParallel(segment.address(), if (parallel) 1 else 0),
         )
         return this
     }
@@ -648,8 +648,8 @@ class Tween(handle: MemorySegment) : RefCounted(handle) {
     // Tween.bind_node(node) — ptrcall (object arg, returns self). Mirrors desktop Tween.bindNode.
     fun bindNode(node: Node): Tween {
         releaseIosFluentSelf(
-            handle,
-            ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, handle, node.handle).address(),
+            segment,
+            ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment).address(),
         )
         return this
     }
@@ -658,37 +658,37 @@ class Tween(handle: MemorySegment) : RefCounted(handle) {
     // from Tweener.setEase, which configures an individual tweener).
     fun setEase(ease: Long): Tween {
         releaseIosFluentSelf(
-            handle,
-            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, handle, ease).address(),
+            segment,
+            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease).address(),
         )
         return this
     }
 
     // Tween.tween_callback(Callable(target, method)). Routed through the C shim (Callable arg).
     fun tweenCallback(target: GodotObject, method: String): CallbackTweener? =
-        IosGodot.tweenTweenCallback(handle.address(), target.handle.address(), method)
+        IosGodot.tweenTweenCallback(segment.address(), target.segment.address(), method)
             .takeIf { it != 0L }
-            ?.let { CallbackTweener(MemorySegment.ofAddress(it)) }
+            ?.let { CallbackTweener(GodotHandle(MemorySegment.ofAddress(it))) }
 
     // Tween.tween_method(Callable(target, method), from, to, duration) — animates [from]->[to] over
     // [duration], calling target.method(value) each frame. Callable arg → routed through the C shim.
     fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): Tweener? =
-        IosGodot.tweenTweenMethod(handle.address(), target.handle.address(), method, from, to, duration)
+        IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
             .takeIf { it != 0L }
-            ?.let { Tweener(MemorySegment.ofAddress(it)) }
+            ?.let { Tweener(GodotHandle(MemorySegment.ofAddress(it))) }
 
     fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener? {
-        val addr = handle.address()
-        val targetAddr = target.handle.address()
+        val addr = segment.address()
+        val targetAddr = target.segment.address()
         return when (finalValue) {
             is Vector2 -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, finalValue.x.toDouble(), finalValue.y.toDouble(), duration)
             is Color -> IosGodot.tweenTweenPropertyColor(addr, targetAddr, property, finalValue.r.toDouble(), finalValue.g.toDouble(), finalValue.b.toDouble(), finalValue.a.toDouble(), duration)
             else -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, 0.0, 0.0, duration)
-        }.takeIf { it != 0L }?.let { PropertyTweener(MemorySegment.ofAddress(it)) }
+        }.takeIf { it != 0L }?.let { PropertyTweener(GodotHandle(MemorySegment.ofAddress(it))) }
     }
 
     fun kill() {
-        IosGodot.tweenKill(handle.address())
+        IosGodot.tweenKill(segment.address())
     }
 
     object Signals {
@@ -716,16 +716,16 @@ private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long) {
     RefCounted.releaseHandle(MemorySegment.ofAddress(returned))
 }
 
-class InputEventMouseButton(handle: MemorySegment) : GodotObject(handle) {
+class InputEventMouseButton(handle: GodotHandle) : GodotObject(handle) {
     fun getButtonIndex(): Long =
-        if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(handle.address())
+        if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(segment.address())
         else MOUSE_BUTTON_LEFT
 
     fun isPressed(): Boolean =
-        IosGodot.inputEventIsPressed(handle.address())
+        IosGodot.inputEventIsPressed(segment.address())
 
     fun isReleased(): Boolean =
-        IosGodot.inputEventIsReleased(handle.address())
+        IosGodot.inputEventIsReleased(segment.address())
 
     companion object {
         const val MOUSE_BUTTON_LEFT = 1L
@@ -820,27 +820,27 @@ object Mathf {
 object ResourceLoader {
     fun load(path: String): Resource? =
         IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let {
-            Resource(MemorySegment.ofAddress(it))
+            Resource(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
     fun loadTexture2D(path: String): Texture2D? =
         IosGodot.resourceLoaderLoad(path, "Texture2D").takeIf { it != 0L }?.let {
-            Texture2D(MemorySegment.ofAddress(it))
+            Texture2D(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
     fun loadAudioStream(path: String): AudioStream? =
         IosGodot.resourceLoaderLoad(path, "AudioStream").takeIf { it != 0L }?.let {
-            AudioStream(MemorySegment.ofAddress(it))
+            AudioStream(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
     fun loadPackedScene(path: String): PackedScene? =
         IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let {
-            PackedScene(MemorySegment.ofAddress(it))
+            PackedScene(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
     fun loadLightmapGIData(path: String): LightmapGIData? =
         IosGodot.resourceLoaderLoad(path, "LightmapGIData").takeIf { it != 0L }?.let {
-            LightmapGIData(MemorySegment.ofAddress(it))
+            LightmapGIData(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
     const val THREAD_LOAD_INVALID_RESOURCE = 0L
@@ -877,10 +877,10 @@ object ResourceLoader {
     // correctly). The generic Variant-call path returned a handle whose PackedScene.instantiate()
     // silently yielded null on device.
     fun loadThreadedGet(path: String): Resource? =
-        IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let { Resource(MemorySegment.ofAddress(it)) }
+        IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let { Resource(GodotHandle(MemorySegment.ofAddress(it))) }
 
     fun loadThreadedGetPackedScene(path: String): PackedScene? =
-        IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let { PackedScene(MemorySegment.ofAddress(it)) }
+        IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let { PackedScene(GodotHandle(MemorySegment.ofAddress(it))) }
 
     private val singleton by lazy { ObjectCalls.getSingleton("ResourceLoader") }
     private val loadThreadedRequestBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_request", 3614384323L) }
@@ -971,7 +971,7 @@ object GD {
 }
 
 inline fun <reified T> GodotObject.kotlinScriptInstance(): T? =
-    net.multigesture.kanama.ios.iosScriptInstanceForOwner(handle.address()) as? T
+    net.multigesture.kanama.ios.iosScriptInstanceForOwner(handle.segment.address()) as? T
 
 inline fun <reified T> Node.kotlinScriptInstance(): T? =
     GodotObject(handle).kotlinScriptInstance<T>()

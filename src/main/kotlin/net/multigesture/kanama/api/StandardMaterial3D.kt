@@ -8,17 +8,17 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: StandardMaterial3D
  */
-class StandardMaterial3D internal constructor(handle: MemorySegment) : BaseMaterial3D(handle) {
+class StandardMaterial3D internal constructor(handle: GodotHandle) : BaseMaterial3D(handle) {
     companion object {
         @JvmStatic
         fun create(): StandardMaterial3D =
-            StandardMaterial3D(ObjectCalls.constructObject("StandardMaterial3D"))
+            StandardMaterial3D(GodotHandle(ObjectCalls.constructObject("StandardMaterial3D")))
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): StandardMaterial3D? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): StandardMaterial3D? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): StandardMaterial3D? =
-            if (handle.address() == 0L) null else StandardMaterial3D(handle)
+            if (handle.address() == 0L) null else StandardMaterial3D(GodotHandle(handle))
     }
 }

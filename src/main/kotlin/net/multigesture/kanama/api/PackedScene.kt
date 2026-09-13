@@ -9,7 +9,7 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: PackedScene
  */
 class PackedScene internal constructor(
-    handle: MemorySegment,
+    handle: GodotHandle,
 ) : Resource(handle) {
 
     /**
@@ -20,7 +20,7 @@ class PackedScene internal constructor(
      */
     fun pack(node: Node): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgsRetLong(packBind, handle, listOf(node.handle))
+        return ObjectCalls.ptrcallWithObjectArgsRetLong(packBind, segment, listOf(node.segment))
     }
 
     /**
@@ -31,8 +31,8 @@ class PackedScene internal constructor(
      */
     fun instantiate(editState: Long = GEN_EDIT_STATE_DISABLED): Node? {
         checkOpen()
-        val node = ObjectCalls.ptrcallWithLongArgRetObject(instantiateBind, handle, editState)
-        return if (node.address() == 0L) null else Node(node)
+        val node = ObjectCalls.ptrcallWithLongArgRetObject(instantiateBind, segment, editState)
+        return if (node.address() == 0L) null else Node(GodotHandle(node))
     }
 
     /**
@@ -42,7 +42,7 @@ class PackedScene internal constructor(
      */
     fun canInstantiate(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, segment)
     }
 
     /**
@@ -52,7 +52,7 @@ class PackedScene internal constructor(
      */
     fun getState(): SceneState? {
         checkOpen()
-        return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, handle))
+        return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, segment))
     }
 
     companion object {
@@ -84,13 +84,13 @@ class PackedScene internal constructor(
 
         @JvmStatic
         fun create(): PackedScene =
-            PackedScene(ObjectCalls.constructObject("PackedScene"))
+            PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): PackedScene? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): PackedScene? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): PackedScene? =
-            if (handle.address() == 0L) null else PackedScene(handle)
+            if (handle.address() == 0L) null else PackedScene(GodotHandle(handle))
     }
 }

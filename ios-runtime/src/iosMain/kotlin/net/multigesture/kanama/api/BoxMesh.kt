@@ -9,7 +9,7 @@ import net.multigesture.kanama.types.Vector3
 /**
  * Generated from Godot docs: BoxMesh
  */
-class BoxMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
+class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     var size: Vector3
         @JvmName("sizeProperty")
         get() = getSize()
@@ -36,55 +36,55 @@ class BoxMesh(handle: MemorySegment) : PrimitiveMesh(handle) {
 
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, handle, size)
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
     }
 
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
     }
 
     fun setSubdivideWidth(subdivide: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, handle, subdivide)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, segment, subdivide)
     }
 
     fun getSubdivideWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, segment)
     }
 
     fun setSubdivideHeight(divisions: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, handle, divisions)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, segment, divisions)
     }
 
     fun getSubdivideHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, segment)
     }
 
     fun setSubdivideDepth(divisions: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, handle, divisions)
+        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, segment, divisions)
     }
 
     fun getSubdivideDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, segment)
     }
 
     companion object {
         // KANAMA-IOS-SUGAR: [glue] desktop-parity constructor sugar (the desktop wrapper's
         // MemorySegment constructor is internal, so shared game code uses create()).
         fun create(): BoxMesh =
-            BoxMesh(ObjectCalls.constructObject("BoxMesh"))
+            BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh")))
 
-        fun fromHandle(handle: MemorySegment): BoxMesh? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): BoxMesh? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): BoxMesh? =
-            if (handle.address() == 0L) null else BoxMesh(handle)
+            if (handle.address() == 0L) null else BoxMesh(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L
         private val setSizeBind by lazy {

@@ -9,7 +9,7 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: MeshLibrary
  */
-class MeshLibrary(handle: MemorySegment) : Resource(handle) {
+class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     /**
      * Creates a new item in the library with the given ID. You can get an unused ID from
      * `get_last_unused_item_id`.
@@ -18,7 +18,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun createItem(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(createItemBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(createItemBind, segment, id)
     }
 
     /**
@@ -29,7 +29,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemName(id: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, handle, id, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, segment, id, name)
     }
 
     /**
@@ -39,7 +39,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemMesh(id: Int, mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, handle, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -49,7 +49,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemMeshTransform(id: Int, meshTransform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, handle, id, meshTransform)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, segment, id, meshTransform)
     }
 
     /**
@@ -59,7 +59,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemMeshCastShadow(id: Int, shadowCastingSetting: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, handle, id, shadowCastingSetting)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, segment, id, shadowCastingSetting)
     }
 
     /**
@@ -69,7 +69,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, handle, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -79,7 +79,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemNavigationMeshTransform(id: Int, navigationMesh: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, handle, id, navigationMesh)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, segment, id, navigationMesh)
     }
 
     /**
@@ -89,7 +89,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemNavigationLayers(id: Int, navigationLayers: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, handle, id, navigationLayers)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, segment, id, navigationLayers)
     }
 
     /**
@@ -101,7 +101,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemShapes(id: Int, shapes: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, handle, id, shapes)
+        ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, segment, id, shapes)
     }
 
     /**
@@ -111,7 +111,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun setItemPreview(id: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, handle, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -121,7 +121,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemName(id: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, segment, id)
     }
 
     /**
@@ -131,7 +131,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemMesh(id: Int): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, handle, id))
+        return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, segment, id))
     }
 
     /**
@@ -141,7 +141,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, segment, id)
     }
 
     /**
@@ -151,7 +151,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemMeshCastShadow(id: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, segment, id)
     }
 
     /**
@@ -161,7 +161,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, handle, id))
+        return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, segment, id))
     }
 
     /**
@@ -171,7 +171,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemNavigationMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, segment, id)
     }
 
     /**
@@ -181,7 +181,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemNavigationLayers(id: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, segment, id)
     }
 
     /**
@@ -192,7 +192,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemShapes(id: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, handle, id)
+        return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, segment, id)
     }
 
     /**
@@ -205,7 +205,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemPreview(id: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, handle, id))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, segment, id))
     }
 
     /**
@@ -215,7 +215,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun removeItem(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, handle, id)
+        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, id)
     }
 
     /**
@@ -225,7 +225,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun findItemByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, handle, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, segment, name)
     }
 
     /**
@@ -235,7 +235,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, handle)
+        ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
     /**
@@ -245,7 +245,7 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getItemList(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, segment)
     }
 
     /**
@@ -255,20 +255,20 @@ class MeshLibrary(handle: MemorySegment) : Resource(handle) {
      */
     fun getLastUnusedItemId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, segment)
     }
 
     companion object {
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): MeshLibrary? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): MeshLibrary? =
+            wrap(handle.segment)
 
         @JvmStatic
         fun create(): MeshLibrary =
-            MeshLibrary(ObjectCalls.constructObject("MeshLibrary"))
+            MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary")))
 
         internal fun wrap(handle: MemorySegment): MeshLibrary? =
-            if (handle.address() == 0L) null else MeshLibrary(handle)
+            if (handle.address() == 0L) null else MeshLibrary(GodotHandle(handle))
 
         private const val CREATE_ITEM_HASH = 1286410249L
         private val createItemBind by lazy {

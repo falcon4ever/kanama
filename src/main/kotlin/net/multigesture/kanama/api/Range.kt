@@ -9,7 +9,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Range
  */
-open class Range(handle: MemorySegment) : Control(handle) {
+open class Range(handle: GodotHandle) : Control(handle) {
     var value: Double
         @JvmName("valueProperty")
         get() = getValue()
@@ -65,7 +65,7 @@ open class Range(handle: MemorySegment) : Control(handle) {
         set(value) = setAllowLesser(value)
 
     fun valueChanged(newValue: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(valueChangedBind, handle, newValue)
+        ObjectCalls.ptrcallWithDoubleArg(valueChangedBind, segment, newValue)
     }
 
     /**
@@ -74,19 +74,19 @@ open class Range(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: Range.get_value
      */
-    fun getValue(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getValueBind, handle)
+    fun getValue(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getValueBind, segment)
     /**
      * Minimum value. Range is clamped if `value` is less than `min_value`.
      *
      * Generated from Godot docs: Range.get_min
      */
-    fun getMin(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, handle)
+    fun getMin(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, segment)
     /**
      * Maximum value. Range is clamped if `value` is greater than `max_value`.
      *
      * Generated from Godot docs: Range.get_max
      */
-    fun getMax(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, handle)
+    fun getMax(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, segment)
     /**
      * If greater than `0.0`, `value` will always be rounded to a multiple of this property's value
      * above `min_value`. For example, if `min_value` is `0.1` and step is `0.2`, then `value` is
@@ -95,20 +95,20 @@ open class Range(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: Range.get_step
      */
-    fun getStep(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, handle)
+    fun getStep(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
     /**
      * Page size. Used mainly for `ScrollBar`. A `ScrollBar`'s grabber length is the `ScrollBar`'s size
      * multiplied by `page` over the difference between `min_value` and `max_value`.
      *
      * Generated from Godot docs: Range.get_page
      */
-    fun getPage(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getPageBind, handle)
+    fun getPage(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getPageBind, segment)
     /**
      * The value mapped between 0 and 1.
      *
      * Generated from Godot docs: Range.get_as_ratio
      */
-    fun getAsRatio(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getAsRatioBind, handle)
+    fun getAsRatio(): Double = ObjectCalls.ptrcallNoArgsRetDouble(getAsRatioBind, segment)
 
     /**
      * Range's current value. Changing this property (even via code) will trigger `value_changed`
@@ -116,26 +116,26 @@ open class Range(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: Range.set_value
      */
-    fun setValue(value: Double) { ObjectCalls.ptrcallWithDoubleArg(setValueBind, handle, value) }
+    fun setValue(value: Double) { ObjectCalls.ptrcallWithDoubleArg(setValueBind, segment, value) }
     /**
      * Sets the `Range`'s current value to the specified `value`, without emitting the `value_changed`
      * signal.
      *
      * Generated from Godot docs: Range.set_value_no_signal
      */
-    fun setValueNoSignal(value: Double) { ObjectCalls.ptrcallWithDoubleArg(setValueNoSignalBind, handle, value) }
+    fun setValueNoSignal(value: Double) { ObjectCalls.ptrcallWithDoubleArg(setValueNoSignalBind, segment, value) }
     /**
      * Minimum value. Range is clamped if `value` is less than `min_value`.
      *
      * Generated from Godot docs: Range.set_min
      */
-    fun setMin(minimum: Double) { ObjectCalls.ptrcallWithDoubleArg(setMinBind, handle, minimum) }
+    fun setMin(minimum: Double) { ObjectCalls.ptrcallWithDoubleArg(setMinBind, segment, minimum) }
     /**
      * Maximum value. Range is clamped if `value` is greater than `max_value`.
      *
      * Generated from Godot docs: Range.set_max
      */
-    fun setMax(maximum: Double) { ObjectCalls.ptrcallWithDoubleArg(setMaxBind, handle, maximum) }
+    fun setMax(maximum: Double) { ObjectCalls.ptrcallWithDoubleArg(setMaxBind, segment, maximum) }
     /**
      * If greater than `0.0`, `value` will always be rounded to a multiple of this property's value
      * above `min_value`. For example, if `min_value` is `0.1` and step is `0.2`, then `value` is
@@ -144,71 +144,71 @@ open class Range(handle: MemorySegment) : Control(handle) {
      *
      * Generated from Godot docs: Range.set_step
      */
-    fun setStep(step: Double) { ObjectCalls.ptrcallWithDoubleArg(setStepBind, handle, step) }
+    fun setStep(step: Double) { ObjectCalls.ptrcallWithDoubleArg(setStepBind, segment, step) }
     /**
      * Page size. Used mainly for `ScrollBar`. A `ScrollBar`'s grabber length is the `ScrollBar`'s size
      * multiplied by `page` over the difference between `min_value` and `max_value`.
      *
      * Generated from Godot docs: Range.set_page
      */
-    fun setPage(pageSize: Double) { ObjectCalls.ptrcallWithDoubleArg(setPageBind, handle, pageSize) }
+    fun setPage(pageSize: Double) { ObjectCalls.ptrcallWithDoubleArg(setPageBind, segment, pageSize) }
     /**
      * The value mapped between 0 and 1.
      *
      * Generated from Godot docs: Range.set_as_ratio
      */
-    fun setAsRatio(value: Double) { ObjectCalls.ptrcallWithDoubleArg(setAsRatioBind, handle, value) }
+    fun setAsRatio(value: Double) { ObjectCalls.ptrcallWithDoubleArg(setAsRatioBind, segment, value) }
 
     /**
      * If `true`, `value` will always be rounded to the nearest integer.
      *
      * Generated from Godot docs: Range.set_use_rounded_values
      */
-    fun setUseRoundedValues(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setUseRoundedValuesBind, handle, enabled) }
+    fun setUseRoundedValues(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setUseRoundedValuesBind, segment, enabled) }
     /**
      * If `true`, `value` will always be rounded to the nearest integer.
      *
      * Generated from Godot docs: Range.is_using_rounded_values
      */
-    fun isUsingRoundedValues(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isUsingRoundedValuesBind, handle)
+    fun isUsingRoundedValues(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isUsingRoundedValuesBind, segment)
     /**
      * If `true`, and `min_value` is greater or equal to `0`, `value` will be represented exponentially
      * rather than linearly.
      *
      * Generated from Godot docs: Range.set_exp_ratio
      */
-    fun setExpRatio(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setExpRatioBind, handle, enabled) }
+    fun setExpRatio(enabled: Boolean) { ObjectCalls.ptrcallWithBoolArg(setExpRatioBind, segment, enabled) }
     /**
      * If `true`, and `min_value` is greater or equal to `0`, `value` will be represented exponentially
      * rather than linearly.
      *
      * Generated from Godot docs: Range.is_ratio_exp
      */
-    fun isRatioExp(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isRatioExpBind, handle)
+    fun isRatioExp(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isRatioExpBind, segment)
     /**
      * If `true`, `value` may be greater than `max_value`.
      *
      * Generated from Godot docs: Range.set_allow_greater
      */
-    fun setAllowGreater(allow: Boolean) { ObjectCalls.ptrcallWithBoolArg(setAllowGreaterBind, handle, allow) }
+    fun setAllowGreater(allow: Boolean) { ObjectCalls.ptrcallWithBoolArg(setAllowGreaterBind, segment, allow) }
     /**
      * If `true`, `value` may be greater than `max_value`.
      *
      * Generated from Godot docs: Range.is_greater_allowed
      */
-    fun isGreaterAllowed(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isGreaterAllowedBind, handle)
+    fun isGreaterAllowed(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isGreaterAllowedBind, segment)
     /**
      * If `true`, `value` may be less than `min_value`.
      *
      * Generated from Godot docs: Range.set_allow_lesser
      */
-    fun setAllowLesser(allow: Boolean) { ObjectCalls.ptrcallWithBoolArg(setAllowLesserBind, handle, allow) }
+    fun setAllowLesser(allow: Boolean) { ObjectCalls.ptrcallWithBoolArg(setAllowLesserBind, segment, allow) }
     /**
      * If `true`, `value` may be less than `min_value`.
      *
      * Generated from Godot docs: Range.is_lesser_allowed
      */
-    fun isLesserAllowed(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isLesserAllowedBind, handle)
+    fun isLesserAllowed(): Boolean = ObjectCalls.ptrcallNoArgsRetBool(isLesserAllowedBind, segment)
 
     /**
      * Binds two `Range`s together along with any ranges previously grouped with either of them. When
@@ -218,7 +218,7 @@ open class Range(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Range.share
      */
     fun share(with: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(shareBind, handle, listOf(with.handle))
+        ObjectCalls.ptrcallWithObjectArgs(shareBind, segment, listOf(with.segment))
     }
 
     /**
@@ -227,7 +227,7 @@ open class Range(handle: MemorySegment) : Control(handle) {
      * Generated from Godot docs: Range.unshare
      */
     fun unshare() {
-        ObjectCalls.ptrcallNoArgs(unshareBind, handle)
+        ObjectCalls.ptrcallNoArgs(unshareBind, segment)
     }
 
     object Signals {

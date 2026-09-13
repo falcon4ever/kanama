@@ -13,7 +13,7 @@ object ProjectSettings {
 
     /** ProjectSettings.get_setting(name) coerced to Double (e.g. physics/3d/default_gravity). */
     fun getSettingDouble(name: String): Double =
-        when (val value = GodotObject(singleton).call("get_setting", name)) {
+        when (val value = GodotObject(GodotHandle(singleton)).call("get_setting", name)) {
             is Double -> value
             is Float -> value.toDouble()
             is Long -> value.toDouble()

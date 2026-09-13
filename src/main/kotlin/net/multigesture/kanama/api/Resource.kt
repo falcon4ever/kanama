@@ -10,7 +10,7 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: Resource
  */
 open class Resource internal constructor(
-    handle: MemorySegment,
+    handle: GodotHandle,
 ) : RefCounted(handle) {
 
     /**
@@ -24,7 +24,7 @@ open class Resource internal constructor(
      */
     fun setPath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(setPathBind, segment, path)
     }
 
     /**
@@ -35,7 +35,7 @@ open class Resource internal constructor(
      */
     fun takeOverPath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(takeOverPathBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(takeOverPathBind, segment, path)
     }
 
     /**
@@ -49,7 +49,7 @@ open class Resource internal constructor(
      */
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, segment)
     }
 
     /**
@@ -61,7 +61,7 @@ open class Resource internal constructor(
      */
     fun setPathCache(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPathCacheBind, handle, path)
+        ObjectCalls.ptrcallWithStringArg(setPathCacheBind, segment, path)
     }
 
     /**
@@ -76,7 +76,7 @@ open class Resource internal constructor(
      */
     fun setName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setNameBind, handle, name)
+        ObjectCalls.ptrcallWithStringArg(setNameBind, segment, name)
     }
 
     /**
@@ -91,7 +91,7 @@ open class Resource internal constructor(
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
     }
 
     /**
@@ -103,7 +103,7 @@ open class Resource internal constructor(
      */
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
     }
 
     /**
@@ -116,7 +116,7 @@ open class Resource internal constructor(
      */
     fun setLocalToScene(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLocalToSceneBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setLocalToSceneBind, segment, enable)
     }
 
     /**
@@ -133,7 +133,7 @@ open class Resource internal constructor(
      */
     fun getSceneUniqueId(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, segment)
     }
 
     /**
@@ -150,7 +150,7 @@ open class Resource internal constructor(
      */
     fun setSceneUniqueId(id: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, handle, id)
+        ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, segment, id)
     }
 
     /**
@@ -164,7 +164,7 @@ open class Resource internal constructor(
      */
     fun setIdForPath(path: String, id: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, handle, path, id)
+        ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, segment, path, id)
     }
 
     /**
@@ -178,7 +178,7 @@ open class Resource internal constructor(
      */
     fun getIdForPath(path: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, handle, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, segment, path)
     }
 
     /**
@@ -188,7 +188,7 @@ open class Resource internal constructor(
      */
     fun isBuiltIn(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, segment)
     }
 
     /**
@@ -201,7 +201,7 @@ open class Resource internal constructor(
      */
     fun isLocalToScene(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalToSceneBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isLocalToSceneBind, segment)
     }
 
     /**
@@ -213,7 +213,7 @@ open class Resource internal constructor(
      */
     fun getLocalScene(): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalSceneBind, handle))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalSceneBind, segment))
     }
 
     /**
@@ -225,7 +225,7 @@ open class Resource internal constructor(
      */
     fun setupLocalToScene() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(setupLocalToSceneBind, handle)
+        ObjectCalls.ptrcallNoArgs(setupLocalToSceneBind, segment)
     }
 
     /**
@@ -237,7 +237,7 @@ open class Resource internal constructor(
      */
     fun resetState() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetStateBind, handle)
+        ObjectCalls.ptrcallNoArgs(resetStateBind, segment)
     }
 
     /**
@@ -250,7 +250,7 @@ open class Resource internal constructor(
      */
     fun emitChanged() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(emitChangedBind, handle)
+        ObjectCalls.ptrcallNoArgs(emitChangedBind, segment)
     }
 
     /**
@@ -274,7 +274,7 @@ open class Resource internal constructor(
      */
     fun duplicate(subresources: Boolean = false): Resource? {
         checkOpen()
-        return wrap(ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, handle, subresources))
+        return wrap(ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, segment, subresources))
     }
 
     /**
@@ -285,7 +285,7 @@ open class Resource internal constructor(
      */
     fun duplicateDeep(mode: Long = DEEP_DUPLICATE_INTERNAL): Resource? {
         checkOpen()
-        return wrap(ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, handle, mode))
+        return wrap(ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, mode))
     }
 
     /**
@@ -420,7 +420,7 @@ open class Resource internal constructor(
         }
 
         internal fun wrap(handle: MemorySegment): Resource? =
-            if (handle.address() == 0L) null else Resource(handle)
+            if (handle.address() == 0L) null else Resource(GodotHandle(handle))
 
         /**
          * Wraps an existing Godot `Resource` handle without taking ownership.
@@ -429,7 +429,7 @@ open class Resource internal constructor(
          * `KanamaScript<Resource>` and need a public self factory.
          */
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Resource =
+        fun fromHandle(handle: GodotHandle): Resource =
             Resource(handle)
 
         @JvmStatic
@@ -438,6 +438,6 @@ open class Resource internal constructor(
 
         @JvmStatic
         fun create(): Resource =
-            Resource(ObjectCalls.constructObject("Resource"))
+            Resource(GodotHandle(ObjectCalls.constructObject("Resource")))
     }
 }

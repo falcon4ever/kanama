@@ -725,7 +725,7 @@ class KanamaScript(
                 "The script may have failed to attach."
             )
         success = true
-        return instance to net.multigesture.kanama.api.Resource.fromHandle(baseHandle)
+        return instance to net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(baseHandle))
       } finally {
         // The loaded script wrapper is our transient +1 — the base resource holds its own
         // reference via setScript, so release ours (the borrowed fallback stays untouched).
@@ -765,7 +765,10 @@ class KanamaScript(
         }
       }
       return registeredScriptObjectFor(template)?.let {
-        ResolvedScript(net.multigesture.kanama.api.Resource.fromHandle(it), owned = false)
+        ResolvedScript(
+          net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(it)),
+          owned = false,
+        )
       }
     }
 

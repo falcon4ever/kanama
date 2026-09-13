@@ -1359,7 +1359,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Node> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Node)
+      BuiltinTypes.readArrayObjects(ret, Node::wrap)
     }
 
   fun ptrcallNoArgsRetTypedNode2DList(
@@ -1367,7 +1367,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Node2D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Node2D)
+      BuiltinTypes.readArrayObjects(ret, Node2D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedNode3DList(
@@ -1375,7 +1375,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Node3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Node3D)
+      BuiltinTypes.readArrayObjects(ret, Node3D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedMaterialList(
@@ -1391,7 +1391,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Area2D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Area2D)
+      BuiltinTypes.readArrayObjects(ret, Area2D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedArea3DList(
@@ -1399,7 +1399,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<Area3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::Area3D)
+      BuiltinTypes.readArrayObjects(ret, Area3D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedBaseButtonList(
@@ -1407,7 +1407,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<BaseButton> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::BaseButton)
+      BuiltinTypes.readArrayObjects(ret, BaseButton::wrap)
     }
 
   fun ptrcallNoArgsRetTypedPhysicsBody3DList(
@@ -1415,7 +1415,7 @@ object ObjectCalls {
     instance: MemorySegment,
   ): List<PhysicsBody3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, ::PhysicsBody3D)
+      BuiltinTypes.readArrayObjects(ret, PhysicsBody3D::wrap)
     }
 
   fun ptrcallNoArgsRetVector2iList(
@@ -1794,7 +1794,7 @@ object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, arg2)
         args.setAtIndex(ADDRESS, 3, arg3)
         return callArrayReturn(methodBind, instance, args) { ret ->
-          BuiltinTypes.readArrayObjects(ret, ::Node)
+          BuiltinTypes.readArrayObjects(ret, Node::wrap)
         }
       } finally {
         GodotStrings.destroyString(arg0)

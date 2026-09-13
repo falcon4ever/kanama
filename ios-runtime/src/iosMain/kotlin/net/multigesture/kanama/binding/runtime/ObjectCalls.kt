@@ -2535,7 +2535,7 @@ object ObjectCalls {
 
   // ---- typed-object-array (Array[Object]) returns -> List<T> ----
   // GENERIC over the element wrapper via a `fromHandle: (MemorySegment) -> T?` factory passed by
-  // the api-layer caller (e.g. Node::fromHandle). Keeping the wrapper type out of the helper
+  // the api-layer caller (e.g. Node::wrap). Keeping the wrapper type out of the helper
   // signature avoids inverting the binding.runtime -> api dependency: the generated wrapper owns
   // its concrete List<Node> return type, the runtime only maps raw handles. The C entry drives a
   // ptrcall whose return is a Godot Array (8-byte opaque), reads each element's object handle via

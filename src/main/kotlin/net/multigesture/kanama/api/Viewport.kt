@@ -13,7 +13,7 @@ import kotlin.jvm.JvmName
  *
  * Generated from Godot docs: Viewport
  */
-open class Viewport(handle: MemorySegment) : Node(handle) {
+open class Viewport(handle: GodotHandle) : Node(handle) {
     var disable3d: Boolean
         @JvmName("disable3dProperty")
         get() = is3dDisabled()
@@ -296,7 +296,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_world_2d
      */
     fun setWorld2d(world2d: World2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, handle, listOf(world2d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -305,7 +305,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_world_2d
      */
     fun getWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, handle))
+        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
     }
 
     /**
@@ -315,7 +315,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.find_world_2d
      */
     fun findWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, handle))
+        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, segment))
     }
 
     /**
@@ -325,7 +325,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_canvas_transform
      */
     fun setCanvasTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setCanvasTransformBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(setCanvasTransformBind, segment, xform)
     }
 
     /**
@@ -335,7 +335,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_canvas_transform
      */
     fun getCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, segment)
     }
 
     /**
@@ -344,7 +344,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_global_canvas_transform
      */
     fun setGlobalCanvasTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setGlobalCanvasTransformBind, handle, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(setGlobalCanvasTransformBind, segment, xform)
     }
 
     /**
@@ -353,7 +353,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_global_canvas_transform
      */
     fun getGlobalCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalCanvasTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalCanvasTransformBind, segment)
     }
 
     /**
@@ -371,7 +371,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_stretch_transform
      */
     fun getStretchTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getStretchTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getStretchTransformBind, segment)
     }
 
     /**
@@ -380,7 +380,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_final_transform
      */
     fun getFinalTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, segment)
     }
 
     /**
@@ -390,7 +390,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_screen_transform
      */
     fun getScreenTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, segment)
     }
 
     /**
@@ -399,7 +399,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_visible_rect
      */
     fun getVisibleRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getVisibleRectBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRect2(getVisibleRectBind, segment)
     }
 
     /**
@@ -411,7 +411,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_transparent_background
      */
     fun setTransparentBackground(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransparentBackgroundBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setTransparentBackgroundBind, segment, enable)
     }
 
     /**
@@ -423,7 +423,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.has_transparent_background
      */
     fun hasTransparentBackground(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasTransparentBackgroundBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(hasTransparentBackgroundBind, segment)
     }
 
     /**
@@ -439,7 +439,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_hdr_2d
      */
     fun setUseHdr2d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseHdr2dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseHdr2dBind, segment, enable)
     }
 
     /**
@@ -455,7 +455,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_hdr_2d
      */
     fun isUsingHdr2d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdr2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdr2dBind, segment)
     }
 
     /**
@@ -469,7 +469,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_msaa_2d
      */
     fun setMsaa2d(msaa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, handle, msaa)
+        ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, segment, msaa)
     }
 
     /**
@@ -483,7 +483,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_msaa_2d
      */
     fun getMsaa2d(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, segment)
     }
 
     /**
@@ -498,7 +498,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_msaa_3d
      */
     fun setMsaa3d(msaa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, handle, msaa)
+        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa)
     }
 
     /**
@@ -513,7 +513,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_msaa_3d
      */
     fun getMsaa3d(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
     }
 
     /**
@@ -527,7 +527,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_screen_space_aa
      */
     fun setScreenSpaceAa(screenSpaceAa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, handle, screenSpaceAa)
+        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa)
     }
 
     /**
@@ -541,7 +541,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_screen_space_aa
      */
     fun getScreenSpaceAa(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
     }
 
     /**
@@ -555,7 +555,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_taa
      */
     fun setUseTaa(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseTaaBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseTaaBind, segment, enable)
     }
 
     /**
@@ -569,7 +569,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_taa
      */
     fun isUsingTaa(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTaaBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTaaBind, segment)
     }
 
     /**
@@ -587,7 +587,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_debanding
      */
     fun setUseDebanding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, enable)
     }
 
     /**
@@ -605,7 +605,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_debanding
      */
     fun isUsingDebanding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDebandingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDebandingBind, segment)
     }
 
     /**
@@ -624,7 +624,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_occlusion_culling
      */
     fun setUseOcclusionCulling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOcclusionCullingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseOcclusionCullingBind, segment, enable)
     }
 
     /**
@@ -643,7 +643,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_occlusion_culling
      */
     fun isUsingOcclusionCulling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOcclusionCullingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOcclusionCullingBind, segment)
     }
 
     /**
@@ -652,7 +652,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_debug_draw
      */
     fun setDebugDraw(debugDraw: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, handle, debugDraw)
+        ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, segment, debugDraw)
     }
 
     /**
@@ -661,7 +661,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_debug_draw
      */
     fun getDebugDraw(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, segment)
     }
 
     /**
@@ -672,7 +672,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_oversampling
      */
     fun setUseOversampling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOversamplingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseOversamplingBind, segment, enable)
     }
 
     /**
@@ -683,7 +683,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_oversampling
      */
     fun isUsingOversampling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOversamplingBind, segment)
     }
 
     /**
@@ -693,7 +693,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_oversampling_override
      */
     fun setOversamplingOverride(oversampling: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOversamplingOverrideBind, handle, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(setOversamplingOverrideBind, segment, oversampling)
     }
 
     /**
@@ -703,7 +703,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_oversampling_override
      */
     fun getOversamplingOverride(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingOverrideBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingOverrideBind, segment)
     }
 
     /**
@@ -712,7 +712,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_oversampling
      */
     fun getOversampling(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
     }
 
     /**
@@ -721,7 +721,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_render_info
      */
     fun getRenderInfo(type: Long, info: Long): Int {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, handle, type, info)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, segment, type, info)
     }
 
     /**
@@ -733,7 +733,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_texture
      */
     fun getTexture(): ViewportTexture? {
-        return ViewportTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, handle))
+        return ViewportTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -744,7 +744,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_physics_object_picking
      */
     fun setPhysicsObjectPicking(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingBind, segment, enable)
     }
 
     /**
@@ -755,7 +755,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_physics_object_picking
      */
     fun getPhysicsObjectPicking(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingBind, segment)
     }
 
     /**
@@ -769,7 +769,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_physics_object_picking_sort
      */
     fun setPhysicsObjectPickingSort(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingSortBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingSortBind, segment, enable)
     }
 
     /**
@@ -783,7 +783,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_physics_object_picking_sort
      */
     fun getPhysicsObjectPickingSort(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingSortBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingSortBind, segment)
     }
 
     /**
@@ -795,7 +795,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_physics_object_picking_first_only
      */
     fun setPhysicsObjectPickingFirstOnly(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingFirstOnlyBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingFirstOnlyBind, segment, enable)
     }
 
     /**
@@ -807,7 +807,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_physics_object_picking_first_only
      */
     fun getPhysicsObjectPickingFirstOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingFirstOnlyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingFirstOnlyBind, segment)
     }
 
     /**
@@ -816,7 +816,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_viewport_rid
      */
     fun getViewportRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getViewportRidBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetRID(getViewportRidBind, segment)
     }
 
     /**
@@ -826,7 +826,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.push_text_input
      */
     fun pushTextInput(text: String) {
-        ObjectCalls.ptrcallWithStringArg(pushTextInputBind, handle, text)
+        ObjectCalls.ptrcallWithStringArg(pushTextInputBind, segment, text)
     }
 
     /**
@@ -847,7 +847,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.push_input
      */
     fun pushInput(event: InputEvent?, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
     }
 
     /**
@@ -866,7 +866,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.push_unhandled_input
      */
     fun pushUnhandledInput(event: InputEvent?, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, handle, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
     }
 
     /**
@@ -880,7 +880,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.notify_mouse_entered
      */
     fun notifyMouseEntered() {
-        ObjectCalls.ptrcallNoArgs(notifyMouseEnteredBind, handle)
+        ObjectCalls.ptrcallNoArgs(notifyMouseEnteredBind, segment)
     }
 
     /**
@@ -894,7 +894,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.notify_mouse_exited
      */
     fun notifyMouseExited() {
-        ObjectCalls.ptrcallNoArgs(notifyMouseExitedBind, handle)
+        ObjectCalls.ptrcallNoArgs(notifyMouseExitedBind, segment)
     }
 
     /**
@@ -903,7 +903,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_mouse_position
      */
     fun getMousePosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMousePositionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVector2(getMousePositionBind, segment)
     }
 
     /**
@@ -914,7 +914,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.warp_mouse
      */
     fun warpMouse(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, handle, position)
+        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, segment, position)
     }
 
     /**
@@ -926,7 +926,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.update_mouse_cursor_state
      */
     fun updateMouseCursorState() {
-        ObjectCalls.ptrcallNoArgs(updateMouseCursorStateBind, handle)
+        ObjectCalls.ptrcallNoArgs(updateMouseCursorStateBind, segment)
     }
 
     /**
@@ -936,7 +936,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_cancel_drag
      */
     fun guiCancelDrag() {
-        ObjectCalls.ptrcallNoArgs(guiCancelDragBind, handle)
+        ObjectCalls.ptrcallNoArgs(guiCancelDragBind, segment)
     }
 
     /**
@@ -945,7 +945,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_drag_data
      */
     fun guiGetDragData(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(guiGetDragDataBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(guiGetDragDataBind, segment)
     }
 
     /**
@@ -954,7 +954,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_drag_description
      */
     fun guiGetDragDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(guiGetDragDescriptionBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetString(guiGetDragDescriptionBind, segment)
     }
 
     /**
@@ -963,7 +963,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_set_drag_description
      */
     fun guiSetDragDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(guiSetDragDescriptionBind, handle, description)
+        ObjectCalls.ptrcallWithStringArg(guiSetDragDescriptionBind, segment, description)
     }
 
     /**
@@ -974,7 +974,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_is_dragging
      */
     fun guiIsDragging(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDraggingBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDraggingBind, segment)
     }
 
     /**
@@ -983,7 +983,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_is_drag_successful
      */
     fun guiIsDragSuccessful(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDragSuccessfulBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDragSuccessfulBind, segment)
     }
 
     /**
@@ -993,7 +993,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_release_focus
      */
     fun guiReleaseFocus() {
-        ObjectCalls.ptrcallNoArgs(guiReleaseFocusBind, handle)
+        ObjectCalls.ptrcallNoArgs(guiReleaseFocusBind, segment)
     }
 
     /**
@@ -1003,7 +1003,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_focus_owner
      */
     fun guiGetFocusOwner(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetFocusOwnerBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetFocusOwnerBind, segment))
     }
 
     /**
@@ -1015,7 +1015,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_hovered_control
      */
     fun guiGetHoveredControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetHoveredControlBind, handle))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetHoveredControlBind, segment))
     }
 
     /**
@@ -1024,7 +1024,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_disable_input
      */
     fun setDisableInput(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableInputBind, handle, disable)
+        ObjectCalls.ptrcallWithBoolArg(setDisableInputBind, segment, disable)
     }
 
     /**
@@ -1033,7 +1033,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_input_disabled
      */
     fun isInputDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInputDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInputDisabledBind, segment)
     }
 
     /**
@@ -1045,7 +1045,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_size
      */
     fun setPositionalShadowAtlasSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPositionalShadowAtlasSizeBind, handle, size)
+        ObjectCalls.ptrcallWithIntArg(setPositionalShadowAtlasSizeBind, segment, size)
     }
 
     /**
@@ -1057,7 +1057,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_size
      */
     fun getPositionalShadowAtlasSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPositionalShadowAtlasSizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getPositionalShadowAtlasSizeBind, segment)
     }
 
     /**
@@ -1068,7 +1068,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_16_bits
      */
     fun setPositionalShadowAtlas16Bits(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPositionalShadowAtlas16BitsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setPositionalShadowAtlas16BitsBind, segment, enable)
     }
 
     /**
@@ -1079,7 +1079,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_16_bits
      */
     fun getPositionalShadowAtlas16Bits(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPositionalShadowAtlas16BitsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(getPositionalShadowAtlas16BitsBind, segment)
     }
 
     /**
@@ -1088,7 +1088,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_snap_controls_to_pixels
      */
     fun setSnapControlsToPixels(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnapControlsToPixelsBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSnapControlsToPixelsBind, segment, enabled)
     }
 
     /**
@@ -1097,7 +1097,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_snap_controls_to_pixels_enabled
      */
     fun isSnapControlsToPixelsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnapControlsToPixelsEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSnapControlsToPixelsEnabledBind, segment)
     }
 
     /**
@@ -1108,7 +1108,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_snap_2d_transforms_to_pixel
      */
     fun setSnap2dTransformsToPixel(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnap2dTransformsToPixelBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSnap2dTransformsToPixelBind, segment, enabled)
     }
 
     /**
@@ -1119,7 +1119,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_snap_2d_transforms_to_pixel_enabled
      */
     fun isSnap2dTransformsToPixelEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dTransformsToPixelEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dTransformsToPixelEnabledBind, segment)
     }
 
     /**
@@ -1130,7 +1130,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_snap_2d_vertices_to_pixel
      */
     fun setSnap2dVerticesToPixel(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnap2dVerticesToPixelBind, handle, enabled)
+        ObjectCalls.ptrcallWithBoolArg(setSnap2dVerticesToPixelBind, segment, enabled)
     }
 
     /**
@@ -1141,7 +1141,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_snap_2d_vertices_to_pixel_enabled
      */
     fun isSnap2dVerticesToPixelEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dVerticesToPixelEnabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dVerticesToPixelEnabledBind, segment)
     }
 
     /**
@@ -1150,7 +1150,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_quadrant_subdiv
      */
     fun setPositionalShadowAtlasQuadrantSubdiv(quadrant: Int, subdiv: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, handle, quadrant, subdiv)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant, subdiv)
     }
 
     /**
@@ -1159,7 +1159,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_quadrant_subdiv
      */
     fun getPositionalShadowAtlasQuadrantSubdiv(quadrant: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, handle, quadrant)
+        return ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant)
     }
 
     /**
@@ -1169,7 +1169,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_input_as_handled
      */
     fun setInputAsHandled() {
-        ObjectCalls.ptrcallNoArgs(setInputAsHandledBind, handle)
+        ObjectCalls.ptrcallNoArgs(setInputAsHandledBind, segment)
     }
 
     /**
@@ -1183,7 +1183,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_input_handled
      */
     fun isInputHandled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInputHandledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isInputHandledBind, segment)
     }
 
     /**
@@ -1195,7 +1195,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_handle_input_locally
      */
     fun setHandleInputLocally(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHandleInputLocallyBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setHandleInputLocallyBind, segment, enable)
     }
 
     /**
@@ -1207,7 +1207,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_handling_input_locally
      */
     fun isHandlingInputLocally(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHandlingInputLocallyBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isHandlingInputLocallyBind, segment)
     }
 
     /**
@@ -1216,7 +1216,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_default_canvas_item_texture_filter
      */
     fun setDefaultCanvasItemTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, segment, mode)
     }
 
     /**
@@ -1225,7 +1225,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_default_canvas_item_texture_filter
      */
     fun getDefaultCanvasItemTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, segment)
     }
 
     /**
@@ -1236,7 +1236,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_embedding_subwindows
      */
     fun setEmbeddingSubwindows(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmbeddingSubwindowsBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setEmbeddingSubwindowsBind, segment, enable)
     }
 
     /**
@@ -1247,7 +1247,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_embedding_subwindows
      */
     fun isEmbeddingSubwindows(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddingSubwindowsBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddingSubwindowsBind, segment)
     }
 
     /**
@@ -1257,7 +1257,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_embedded_subwindows
      */
     fun getEmbeddedSubwindows(): List<Window> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getEmbeddedSubwindowsBind, handle, Window::fromHandle)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getEmbeddedSubwindowsBind, segment, Window::wrap)
     }
 
     /**
@@ -1266,7 +1266,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_drag_threshold
      */
     fun setDragThreshold(threshold: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragThresholdBind, handle, threshold)
+        ObjectCalls.ptrcallWithIntArg(setDragThresholdBind, segment, threshold)
     }
 
     /**
@@ -1275,7 +1275,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_drag_threshold
      */
     fun getDragThreshold(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetInt(getDragThresholdBind, segment)
     }
 
     /**
@@ -1286,7 +1286,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_canvas_cull_mask
      */
     fun setCanvasCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCanvasCullMaskBind, handle, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(setCanvasCullMaskBind, segment, mask)
     }
 
     /**
@@ -1297,7 +1297,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_canvas_cull_mask
      */
     fun getCanvasCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCanvasCullMaskBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(getCanvasCullMaskBind, segment)
     }
 
     /**
@@ -1307,7 +1307,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_canvas_cull_mask_bit
      */
     fun setCanvasCullMaskBit(layer: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setCanvasCullMaskBitBind, handle, layer, enable)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setCanvasCullMaskBitBind, segment, layer, enable)
     }
 
     /**
@@ -1316,7 +1316,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_canvas_cull_mask_bit
      */
     fun getCanvasCullMaskBit(layer: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getCanvasCullMaskBitBind, handle, layer)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getCanvasCullMaskBitBind, segment, layer)
     }
 
     /**
@@ -1325,7 +1325,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_default_canvas_item_texture_repeat
      */
     fun setDefaultCanvasItemTextureRepeat(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, segment, mode)
     }
 
     /**
@@ -1334,7 +1334,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_default_canvas_item_texture_repeat
      */
     fun getDefaultCanvasItemTextureRepeat(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, segment)
     }
 
     /**
@@ -1350,7 +1350,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_sdf_oversize
      */
     fun setSdfOversize(oversize: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, handle, oversize)
+        ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, segment, oversize)
     }
 
     /**
@@ -1366,7 +1366,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_sdf_oversize
      */
     fun getSdfOversize(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, segment)
     }
 
     /**
@@ -1376,7 +1376,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_sdf_scale
      */
     fun setSdfScale(scale: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, segment, scale)
     }
 
     /**
@@ -1386,7 +1386,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_sdf_scale
      */
     fun getSdfScale(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, segment)
     }
 
     /**
@@ -1407,7 +1407,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_mesh_lod_threshold
      */
     fun setMeshLodThreshold(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, handle, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, segment, pixels)
     }
 
     /**
@@ -1428,7 +1428,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_mesh_lod_threshold
      */
     fun getMeshLodThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, segment)
     }
 
     /**
@@ -1437,7 +1437,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_as_audio_listener_2d
      */
     fun setAsAudioListener2d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener2dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener2dBind, segment, enable)
     }
 
     /**
@@ -1446,7 +1446,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_audio_listener_2d
      */
     fun isAudioListener2d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener2dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener2dBind, segment)
     }
 
     /**
@@ -1456,7 +1456,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_audio_listener_2d
      */
     fun getAudioListener2d(): AudioListener2D? {
-        return AudioListener2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener2dBind, handle))
+        return AudioListener2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener2dBind, segment))
     }
 
     /**
@@ -1469,7 +1469,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_camera_2d
      */
     fun getCamera2d(): Camera2D? {
-        return Camera2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera2dBind, handle))
+        return Camera2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera2dBind, segment))
     }
 
     /**
@@ -1478,7 +1478,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_world_3d
      */
     fun setWorld3d(world3d: World3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, handle, listOf(world3d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1487,7 +1487,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_world_3d
      */
     fun getWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, handle))
+        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
     }
 
     /**
@@ -1497,7 +1497,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.find_world_3d
      */
     fun findWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, handle))
+        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, segment))
     }
 
     /**
@@ -1506,7 +1506,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_own_world_3d
      */
     fun setUseOwnWorld3d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOwnWorld3dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setUseOwnWorld3dBind, segment, enable)
     }
 
     /**
@@ -1515,7 +1515,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_own_world_3d
      */
     fun isUsingOwnWorld3d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOwnWorld3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOwnWorld3dBind, segment)
     }
 
     /**
@@ -1525,7 +1525,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_audio_listener_3d
      */
     fun getAudioListener3d(): AudioListener3D? {
-        return AudioListener3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener3dBind, handle))
+        return AudioListener3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener3dBind, segment))
     }
 
     /**
@@ -1538,7 +1538,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_camera_3d
      */
     fun getCamera3d(): Camera3D? {
-        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera3dBind, handle))
+        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera3dBind, segment))
     }
 
     fun getCamera3D(): Camera3D? =
@@ -1550,7 +1550,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_as_audio_listener_3d
      */
     fun setAsAudioListener3d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener3dBind, handle, enable)
+        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener3dBind, segment, enable)
     }
 
     /**
@@ -1559,7 +1559,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_audio_listener_3d
      */
     fun isAudioListener3d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener3dBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener3dBind, segment)
     }
 
     /**
@@ -1568,7 +1568,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_disable_3d
      */
     fun setDisable3d(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisable3dBind, handle, disable)
+        ObjectCalls.ptrcallWithBoolArg(setDisable3dBind, segment, disable)
     }
 
     /**
@@ -1577,7 +1577,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_3d_disabled
      */
     fun is3dDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(is3dDisabledBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(is3dDisabledBind, segment)
     }
 
     /**
@@ -1587,7 +1587,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_xr
      */
     fun setUseXr(use: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseXrBind, handle, use)
+        ObjectCalls.ptrcallWithBoolArg(setUseXrBind, segment, use)
     }
 
     /**
@@ -1597,7 +1597,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_xr
      */
     fun isUsingXr(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingXrBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetBool(isUsingXrBind, segment)
     }
 
     /**
@@ -1611,7 +1611,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_scaling_3d_mode
      */
     fun setScaling3dMode(scaling3dMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, handle, scaling3dMode)
+        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode)
     }
 
     /**
@@ -1625,7 +1625,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_scaling_3d_mode
      */
     fun getScaling3dMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
     }
 
     /**
@@ -1644,7 +1644,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_scaling_3d_scale
      */
     fun setScaling3dScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setScaling3dScaleBind, handle, scale)
+        ObjectCalls.ptrcallWithDoubleArg(setScaling3dScaleBind, segment, scale)
     }
 
     /**
@@ -1663,7 +1663,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_scaling_3d_scale
      */
     fun getScaling3dScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScaling3dScaleBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getScaling3dScaleBind, segment)
     }
 
     /**
@@ -1675,7 +1675,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_fsr_sharpness
      */
     fun setFsrSharpness(fsrSharpness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, handle, fsrSharpness)
+        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, segment, fsrSharpness)
     }
 
     /**
@@ -1687,7 +1687,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_fsr_sharpness
      */
     fun getFsrSharpness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
     }
 
     /**
@@ -1708,7 +1708,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_texture_mipmap_bias
      */
     fun setTextureMipmapBias(textureMipmapBias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, handle, textureMipmapBias)
+        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, segment, textureMipmapBias)
     }
 
     /**
@@ -1729,7 +1729,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_texture_mipmap_bias
      */
     fun getTextureMipmapBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, segment)
     }
 
     /**
@@ -1752,7 +1752,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_anisotropic_filtering_level
      */
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, handle, anisotropicFilteringLevel)
+        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel)
     }
 
     /**
@@ -1775,7 +1775,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_anisotropic_filtering_level
      */
     fun getAnisotropicFilteringLevel(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment)
     }
 
     /**
@@ -1785,7 +1785,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_vrs_mode
      */
     fun setVrsMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVrsModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVrsModeBind, segment, mode)
     }
 
     /**
@@ -1795,7 +1795,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_vrs_mode
      */
     fun getVrsMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, segment)
     }
 
     /**
@@ -1807,7 +1807,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_vrs_update_mode
      */
     fun setVrsUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, handle, mode)
+        ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, segment, mode)
     }
 
     /**
@@ -1819,7 +1819,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_vrs_update_mode
      */
     fun getVrsUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, handle)
+        return ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, segment)
     }
 
     /**
@@ -1830,7 +1830,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.set_vrs_texture
      */
     fun setVrsTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, handle, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1841,7 +1841,7 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
      * Generated from Godot docs: Viewport.get_vrs_texture
      */
     fun getVrsTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, handle))
+        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, segment))
     }
 
     object Signals {
@@ -1942,11 +1942,11 @@ open class Viewport(handle: MemorySegment) : Node(handle) {
         const val VRS_UPDATE_MAX: Long = 3L
 
         @JvmStatic
-        fun fromHandle(handle: MemorySegment): Viewport? =
-            wrap(handle)
+        fun fromHandle(handle: GodotHandle): Viewport? =
+            wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): Viewport? =
-            if (handle.address() == 0L) null else Viewport(handle)
+            if (handle.address() == 0L) null else Viewport(GodotHandle(handle))
 
         private const val SET_WORLD_2D_HASH = 2736080068L
         private val setWorld2dBind by lazy {
