@@ -1,9 +1,9 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.Control
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
@@ -16,7 +16,7 @@ import net.multigesture.kanama.types.Vector2
  * matching return marshalling, including the non-POD `String` path.
  */
 @ScriptClass(attachTo = "Control")
-class VirtualOverrideProbe(godotObject: MemorySegment) :
+class VirtualOverrideProbe(godotObject: GodotHandle) :
   KanamaScript<Control>(godotObject, ::Control) {
 
   @OverrideVirtual fun _get_minimum_size(): Vector2 = Vector2(64.0f, 32.0f)

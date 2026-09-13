@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -10,7 +10,7 @@ import net.multigesture.kanama.types.Vector2
  * GraphEdit's virtual table.
  */
 @ScriptClass(attachTo = "GraphEdit")
-class GraphEditVirtualReturnProbe(val godotObject: MemorySegment) {
+class GraphEditVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // PackedVector2Array return (List<Vector2>).
   @OverrideVirtual

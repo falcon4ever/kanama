@@ -1,15 +1,15 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.RegisterClass
+import net.multigesture.kanama.api.GodotHandle
 
 /**
  * Non-@Tool sister of [HelloKanama]. Locks in editor/runtime gating for
  * project-provided @RegisterClass classes.
  */
 @RegisterClass(parentClassName = "Node")
-class NonToolHelloKanama(val godotObject: MemorySegment) {
+class NonToolHelloKanama(val godotObject: GodotHandle) {
 
   @OnReady
   fun ready() {

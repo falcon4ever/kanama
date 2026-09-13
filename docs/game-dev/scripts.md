@@ -28,7 +28,7 @@ Extend `KanamaScript<T>` to get a typed `self` wrapper for the attached node:
 
 ```kotlin
 @ScriptClass(attachTo = "CharacterBody3D")
-class Player(godotObject: MemorySegment) :
+class Player(godotObject: GodotHandle) :
     KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D) {
 
     @OnPhysicsProcess
@@ -37,6 +37,13 @@ class Player(godotObject: MemorySegment) :
     }
 }
 ```
+
+The constructor parameter is a `GodotHandle` (`net.multigesture.kanama.api.GodotHandle`):
+the opaque identity of the Godot object the script is attached to. Pass it on to
+`KanamaScript`, hand it to another wrapper (`CharacterBody3D(other.handle)`), and
+otherwise leave it alone — it is not a pointer you may inspect, keep, or free. Every
+backend declares its own `GodotHandle` under that one name, so the same script source
+compiles for desktop, Android, iOS and Web.
 
 Inside a `KanamaScript<T>`, use `selfAs` for a secondary view of the same
 Godot object:
@@ -115,7 +122,7 @@ the build instead of silently never being called:
 
 ```kotlin
 @ScriptClass(attachTo = "Mesh")
-class ProceduralMesh(val godotObject: MemorySegment) {
+class ProceduralMesh(val godotObject: GodotHandle) {
     @OverrideVirtual
     fun _get_aabb(): AABB = AABB(Vector3.ZERO, Vector3(2.0f, 2.0f, 2.0f))
 }
@@ -170,7 +177,7 @@ reference other scripts and cause issues with generated registrars:
 package com.mygame.scripts
 
 @ScriptClass(attachTo = "Node")
-class MyScript(godotObject: MemorySegment) :
+class MyScript(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) { ... }
 ```
 

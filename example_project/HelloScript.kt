@@ -300,7 +300,7 @@ class HelloScript(godotObject: GodotHandle) :
     val cachedScriptRefCount = cachedScript?.getReferenceCount() ?: 0L
     cachedScript?.close()
     loadedScript?.close()
-    val pendingSetProbe = Node(ObjectCalls.constructObject("Node"))
+    val pendingSetProbe = Node(GodotHandle(ObjectCalls.constructObject("Node")))
     pendingSetProbe.setScript(defaultProbeScript)
     pendingSetProbe.set("amount", 777L)
     self.addChild(pendingSetProbe)
@@ -311,8 +311,8 @@ class HelloScript(godotObject: GodotHandle) :
     // call("set_owner", null)), and null clears the owner. Also exercises the writable
     // `owner: Node?` property. owner must be an ancestor, so parent owns child.
     run {
-      val ownerParent = Node(ObjectCalls.constructObject("Node"))
-      val ownerChild = Node(ObjectCalls.constructObject("Node"))
+      val ownerParent = Node(GodotHandle(ObjectCalls.constructObject("Node")))
+      val ownerChild = Node(GodotHandle(ObjectCalls.constructObject("Node")))
       self.addChild(ownerParent)
       ownerParent.addChild(ownerChild)
       ownerChild.setOwner(ownerParent)
@@ -505,7 +505,7 @@ class HelloScript(godotObject: GodotHandle) :
     // (exit 134); with it, the scene stays live and close() frees it. A fresh, non-scripted node is
     // packed so save serializes only trivial engine state (never re-enters this script's
     // @ScriptProperty getters). ──────────────────────────────────────────────────────────────────
-    val issue81Node = Node(ObjectCalls.constructObject("Node"))
+    val issue81Node = Node(GodotHandle(ObjectCalls.constructObject("Node")))
     val issue81Scene = PackedScene.create()
     val issue81PackError = issue81Scene.pack(issue81Node)
     val issue81SavePath = "user://kanama_issue81_scene.tscn"
@@ -1284,7 +1284,7 @@ class HelloScript(godotObject: GodotHandle) :
     smokeButton?.releaseFocus()
     val dynamicLabel =
       uiRoot?.let {
-        Label(ObjectCalls.constructObject("Label")).also { label ->
+        Label(GodotHandle(ObjectCalls.constructObject("Label"))).also { label ->
           label.text = "dynamic label"
           label.position = Vector2(12f, 32f)
           it.addChild(label)
@@ -1292,7 +1292,7 @@ class HelloScript(godotObject: GodotHandle) :
       }
     val dynamicButton =
       uiRoot?.let {
-        Button(ObjectCalls.constructObject("Button")).also { button ->
+        Button(GodotHandle(ObjectCalls.constructObject("Button"))).also { button ->
           button.text = "dynamic button"
           button.position = Vector2(12f, 56f)
           button.size = Vector2(96f, 28f)

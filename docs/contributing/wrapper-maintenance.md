@@ -28,7 +28,8 @@ Array/Dictionary/Variant policy, and Callable blocking.
 
 Generated public APIs must keep concrete Godot object types concrete. For
 example, a Godot `Node3D` return should render as `Node3D?`, not
-`GodotObject`, `Object`, or `MemorySegment`. Exact Godot `Object` APIs remain
+`GodotObject`, `Object`, or a raw `MemorySegment`. The one handle type a public
+signature may name is `GodotHandle` (the opaque wrapper/script handle, task 104). Exact Godot `Object` APIs remain
 dynamic because the engine itself does not promise a more specific type.
 Ownership-sensitive namespace-style types use explicit policy before default
 generation. `Callable` stays blocked unless a helper has a bounded ownership
@@ -267,7 +268,9 @@ does not drop them), locked by `check_ios_policies`:
   surgical (per exact arg) so no other method silently gains a default.
 - **Non-null factory.** `NON_NULL_FROM_HANDLE_CLASSES` (currently `{Resource}`) emits
   `fromHandle(handle): Resource` (non-null) so a `@ScriptClass(attachTo = "Resource")` script's
-  `(MemorySegment) -> Resource` selfFactory type-checks. The nullable `wrap` helper stays.
+  `(GodotHandle) -> Resource` selfFactory type-checks. The nullable `wrap` helper stays on
+  `MemorySegment` — it is the `(MemorySegment) -> T?` callback `ObjectCalls` takes, and it is
+  `internal`, so it never appears in a public signature.
 
 The broad pre-existing regen drift (a fresh regen once changed the majority of the committed
 desktop generated files — accumulated generator improvements that were never re-adopted) has been

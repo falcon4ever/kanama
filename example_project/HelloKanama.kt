@@ -1,6 +1,5 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnExitTree
 import net.multigesture.kanama.annotations.OnPhysicsProcess
@@ -12,6 +11,7 @@ import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.RegisterProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.annotations.Tool
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.generated.HelloKanamaSignals
 
 /**
@@ -20,7 +20,7 @@ import net.multigesture.kanama.generated.HelloKanamaSignals
  */
 @RegisterClass(parentClassName = "Node")
 @Tool
-class HelloKanama(val godotObject: MemorySegment) {
+class HelloKanama(val godotObject: GodotHandle) {
 
   private var pingCount: Long = 0
 
@@ -41,7 +41,7 @@ class HelloKanama(val godotObject: MemorySegment) {
   fun isActive(): Boolean {
     val result = counter > 0
     System.err.println(
-      "[kanama:kt] HelloKanama.isActive() -> $result obj=0x${godotObject.address().toString(16)}"
+      "[kanama:kt] HelloKanama.isActive() -> $result obj=0x${godotObject.segment.address().toString(16)}"
     )
     return result
   }
@@ -50,7 +50,7 @@ class HelloKanama(val godotObject: MemorySegment) {
   fun ping(): Long {
     pingCount += 1
     System.err.println(
-      "[kanama:kt] HelloKanama.ping() -> $pingCount obj=0x${godotObject.address().toString(16)}"
+      "[kanama:kt] HelloKanama.ping() -> $pingCount obj=0x${godotObject.segment.address().toString(16)}"
     )
     HelloKanamaSignals.pinged(this, pingCount)
     return pingCount
@@ -67,21 +67,21 @@ class HelloKanama(val godotObject: MemorySegment) {
   @OnReady
   fun ready() {
     System.err.println(
-      "[kanama:kt] HelloKanama._ready() obj=0x${godotObject.address().toString(16)}"
+      "[kanama:kt] HelloKanama._ready() obj=0x${godotObject.segment.address().toString(16)}"
     )
   }
 
   @OnEnterTree
   fun enterTree() {
     System.err.println(
-      "[kanama:kt] HelloKanama._enter_tree() obj=0x${godotObject.address().toString(16)}"
+      "[kanama:kt] HelloKanama._enter_tree() obj=0x${godotObject.segment.address().toString(16)}"
     )
   }
 
   @OnExitTree
   fun exitTree() {
     System.err.println(
-      "[kanama:kt] HelloKanama._exit_tree() obj=0x${godotObject.address().toString(16)}"
+      "[kanama:kt] HelloKanama._exit_tree() obj=0x${godotObject.segment.address().toString(16)}"
     )
   }
 

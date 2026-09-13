@@ -1,15 +1,15 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GD
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 
 @ScriptClass(attachTo = "Node")
-class ProcessDisableSmoke(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+class ProcessDisableSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
 
   @OnReady
   fun ready() {

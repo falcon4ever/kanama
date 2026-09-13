@@ -2972,7 +2972,11 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     sb.appendLine("            FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS),")
     sb.appendLine("        )")
     sb.appendLine("        val obj = classdbConstruct.invoke(cls.parentName) as MemorySegment")
-    sb.appendLine("        val kotlinInstance = ${model.simpleName}(obj)")
+    // `obj` comes back from a MethodHandle as a raw segment; build the handle right here,
+    // at the @RegisterClass constructor call (task 104).
+    sb.appendLine(
+      "        val kotlinInstance = ${model.simpleName}(net.multigesture.kanama.api.GodotHandle(obj))"
+    )
     sb.appendLine("        val handle = ObjectRegistry.register(kotlinInstance)")
     sb.appendLine(
       "        objectSetInstance.invoke(obj, cls.className, MemorySegment.ofAddress(handle))"

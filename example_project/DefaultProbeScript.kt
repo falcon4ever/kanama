@@ -1,14 +1,14 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.types.NodePath
 
 @ScriptClass(attachTo = "Node")
-class DefaultProbeScript(godotObject: MemorySegment) : KanamaScript<Node>(godotObject, ::Node) {
+class DefaultProbeScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
   private val node = self
 
   @ScriptProperty var amount: Long = 250

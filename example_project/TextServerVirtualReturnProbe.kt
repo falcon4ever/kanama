@@ -1,8 +1,8 @@
 package net.multigesture.kanama.example
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
 
 /**
  * Task 29 probe: exercises the PackedByteArray (`ByteArray`) and PackedInt32Array (`IntArray`)
@@ -10,7 +10,7 @@ import net.multigesture.kanama.annotations.ScriptClass
  * full-range bytes and Int.MAX_VALUE catch element-width regressions.
  */
 @ScriptClass(attachTo = "TextServerExtension")
-class TextServerVirtualReturnProbe(val godotObject: MemorySegment) {
+class TextServerVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // PackedByteArray return (ByteArray — 1-byte elements, full signed range).
   @OverrideVirtual fun _get_support_data(): ByteArray = byteArrayOf(0x7F, 0x00, -0x80)
