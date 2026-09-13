@@ -191,9 +191,15 @@ object MainThread {
 }
 
 open class GodotObject(
-    val handle: MemorySegment,
+    val handle: GodotHandle,
 ) {
-    constructor(handle: Long) : this(MemorySegment.ofAddress(handle))
+    constructor(handle: Long) : this(GodotHandle(MemorySegment.ofAddress(handle)))
+
+    /**
+     * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam. Internal: game code
+     * passes [handle] around and never unwraps it.
+     */
+    internal val segment: MemorySegment get() = handle.segment
 
     /**
      * The engine instance id, captured once at construction (0 for a NULL handle). Never
@@ -201,17 +207,18 @@ open class GodotObject(
      * routes through it (task 98, desktop mirror).
      */
     val instanceId: Long =
-        if (handle.address() == 0L) 0L else IosGodot.objectGetInstanceId(handle.address())
+        if (segment.address() == 0L) 0L else IosGodot.objectGetInstanceId(segment.address())
 
     /** Returns true when both wrappers refer to the same Godot object instance. */
-    fun isSameInstance(other: GodotObject): Boolean = handle.address() == other.handle.address()
+    fun isSameInstance(other: GodotObject): Boolean = segment.address() == other.segment.address()
 
     // Argument-position handle check. Non-owning wrappers have nothing to refuse; the generated
-    // RefCounted overrides this with its closed-handle check (task 98 desktop mirror).
-    open fun requireOpenHandle(): MemorySegment = handle
+    // RefCounted overrides this with its closed-handle check (task 98 desktop mirror). Internal:
+    // it hands out the raw engine pointer, which is never part of a wrapper signature (task 104).
+    internal open fun requireOpenHandle(): MemorySegment = segment
 
     fun isClass(className: String): Boolean =
-        className.isNotBlank() && IosGodot.objectIsClass(handle.address(), className)
+        className.isNotBlank() && IosGodot.objectIsClass(segment.address(), className)
 
     // KANAMA-IOS-HANDWRITTEN: [runtime] signal/connect/emitSignal/await use the custom GDExtension
     // Callable + IosCallableRegistry (lambda/bound dispatch); bespoke runtime, not generated.
@@ -222,20 +229,20 @@ open class GodotObject(
     // Variant path (the varargs path ptrcall can't express). Scalar and small fixed-size
     // (Vector2/Vector2i/Vector3/Color) returns decoded to Any?; other types surface null.
     fun call(method: String, vararg args: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callBind, handle, listOf(method, *args))
+        ObjectCalls.callWithVariantArgs(callBind, segment, listOf(method, *args))
 
     // Object.set_deferred(property, value) via the Variant path; applies on the next idle frame.
     fun setDeferred(property: String, value: Any?) {
-        ObjectCalls.callWithVariantArgs(setDeferredBind, handle, listOf(property, value))
+        ObjectCalls.callWithVariantArgs(setDeferredBind, segment, listOf(property, value))
     }
 
     // Object.call_deferred(method, *args) via the Variant path; runs on the next idle frame.
     fun callDeferred(method: String, vararg args: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callDeferredBind, handle, listOf(method, *args))
+        ObjectCalls.callWithVariantArgs(callDeferredBind, segment, listOf(method, *args))
 
     // Object.has_signal(signal) — true if the object declares the named signal.
     fun hasSignal(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasSignalBind, handle, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(hasSignalBind, segment, signal)
 
     // Object.set_script(resource) via the Variant call path. Signature matches desktop
     // GodotObject.setScript(Resource?). NOTE: desktop also calls ScriptBridge.noteSetScript to
@@ -260,7 +267,7 @@ open class GodotObject(
 
     // Object.has_method(name) — ptrcall (StringName arg, bool ret), mirroring desktop GodotObject.
     fun hasMethod(method: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMethodBind, handle, method)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMethodBind, segment, method)
 
     // Object.get_instance_id() via the Variant call path (int64 return). Matches desktop GodotObject.
     fun getInstanceId(): Long =
@@ -268,14 +275,14 @@ open class GodotObject(
 
     // Object.is_queued_for_deletion() — ptrcall (no args, bool ret), mirroring desktop GodotObject.
     fun isQueuedForDeletion(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isQueuedForDeletionBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(isQueuedForDeletionBind, segment)
 
     fun connect(signalName: String, target: GodotObject, method: String, flags: Long = CONNECT_DEFAULT): Long =
-        IosGodot.objectConnect(handle.address(), signalName, target.handle.address(), method, flags)
+        IosGodot.objectConnect(segment.address(), signalName, target.segment.address(), method, flags)
 
     // Object.disconnect(signal, Callable(target, method)) — symmetric to connect().
     fun disconnect(signalName: String, target: GodotObject, method: String) {
-        IosGodot.objectDisconnect(handle.address(), signalName, target.handle.address(), method)
+        IosGodot.objectDisconnect(segment.address(), signalName, target.segment.address(), method)
     }
 
     // Object.connect(signal, Callable(target, method).bindv([boundArgs]), flags). Routes through the
@@ -286,21 +293,21 @@ open class GodotObject(
         method: String,
         boundArgs: List<Any?>,
         flags: Long = CONNECT_DEFAULT,
-    ): Long = ObjectCalls.connectBound(handle, signalName, target.handle, method, boundArgs, flags)
+    ): Long = ObjectCalls.connectBound(segment, signalName, target.segment, method, boundArgs, flags)
 
     // Symmetric teardown — rebuilds the same bound Callable so Object.disconnect matches. Phase 4.1.
     fun disconnectBound(signalName: String, target: GodotObject, method: String, boundArgs: List<Any?>) {
-        ObjectCalls.disconnectBound(handle, signalName, target.handle, method, boundArgs)
+        ObjectCalls.disconnectBound(segment, signalName, target.segment, method, boundArgs)
     }
 
     fun emitSignal(signalName: String, value: Int): Int =
-        IosGodot.objectEmitSignalInt(handle.address(), signalName, value.toLong())
+        IosGodot.objectEmitSignalInt(segment.address(), signalName, value.toLong())
 
     fun emitSignal(signalName: String, value: Long): Int =
-        IosGodot.objectEmitSignalInt(handle.address(), signalName, value)
+        IosGodot.objectEmitSignalInt(segment.address(), signalName, value)
 
     fun emitSignal(signalName: String, value: Vector2i): Int =
-        IosGodot.objectEmitSignalVector2i(handle.address(), signalName, value.x.toLong(), value.y.toLong())
+        IosGodot.objectEmitSignalVector2i(segment.address(), signalName, value.x.toLong(), value.y.toLong())
 
     fun emitSignal(signalName: String, vararg args: Any?) {
         when {
@@ -331,10 +338,10 @@ open class GodotObject(
         private val hasMethodBind by lazy { ObjectCalls.getMethodBind("Object", "has_method", 2619796661L) }
         private val isQueuedForDeletionBind by lazy { ObjectCalls.getMethodBind("Object", "is_queued_for_deletion", 36873697L) }
 
-        fun fromHandle(handle: MemorySegment): GodotObject? = wrap(handle)
+        fun fromHandle(handle: GodotHandle): GodotObject? = wrap(handle.segment)
 
         internal fun wrap(handle: MemorySegment): GodotObject? =
-            if (handle.address() == 0L) null else GodotObject(handle)
+            if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
     }
 }
 

@@ -1558,7 +1558,7 @@ object ObjectCalls {
     instance: MemorySegment,
     boolArg: Boolean,
   ): List<Node> =
-    ptrcallWithBoolArgRetTypedObjectList(methodBind, instance, boolArg, Node::fromHandle)
+    ptrcallWithBoolArgRetTypedObjectList(methodBind, instance, boolArg, Node::wrap)
 
   fun ptrcallWithStringAndBoolArgRetObjectList(
     methodBind: MemorySegment,
@@ -1648,7 +1648,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithStringTwoIntArgsRetObjectList(methodBind, instance, text, first, second).mapNotNull {
-      wrapper(it.handle)
+      wrapper(it.segment)
     }
 
   fun ptrcallWithThreeIntTwoBoolArgsRetObjectList(
@@ -1706,7 +1706,7 @@ object ObjectCalls {
         firstBool,
         secondBool,
       )
-      .mapNotNull { wrapper(it.handle) }
+      .mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithThreeIntBoolDoubleBoolArgsRetObjectList(
     methodBind: MemorySegment,
@@ -1769,7 +1769,7 @@ object ObjectCalls {
         value,
         secondBool,
       )
-      .mapNotNull { wrapper(it.handle) }
+      .mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithTwoStringAndTwoBoolArgsRetTypedNodeList(
     methodBind: MemorySegment,
@@ -3826,7 +3826,7 @@ object ObjectCalls {
     value: RID,
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
-    ptrcallWithRIDArgRetObjectList(methodBind, instance, value).mapNotNull { wrapper(it.handle) }
+    ptrcallWithRIDArgRetObjectList(methodBind, instance, value).mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithRIDArgRetPackedInt32List(
     methodBind: MemorySegment,
@@ -11085,7 +11085,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithObjectListIntArgsRetObjectList(methodBind, instance, values, size).mapNotNull {
-      wrapper(it.handle)
+      wrapper(it.segment)
     }
 
   fun ptrcallWithStringAndObjectListArgs(
@@ -19758,7 +19758,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithStringNameArgRetObjectList(methodBind, instance, name).mapNotNull {
-      wrapper(it.handle)
+      wrapper(it.segment)
     }
 
   /** Calls [methodBind] with one StringName argument and decodes Array[Node]. */
@@ -37343,7 +37343,7 @@ object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     ptrcallWithRIDRIDListVector2iArgsRetObjectList(methodBind, instance, rid, values, size)
-      .mapNotNull { wrapper(it.handle) }
+      .mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithRIDListObjectListUInt32ArgsRetRID(
     methodBind: MemorySegment,
