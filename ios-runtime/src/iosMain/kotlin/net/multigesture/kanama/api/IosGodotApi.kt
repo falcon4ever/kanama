@@ -488,7 +488,7 @@ class SceneTree(handle: GodotHandle) : Node(handle) {
 
     // SceneTree.root — the root Window (Viewport). Always present in a running tree.
     val root: Window
-        get() = Window(GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment)))
+        get() = Window(getRoot())
 
     fun setPaused(paused: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPausedBind, segment, paused)
@@ -522,9 +522,9 @@ class SceneTree(handle: GodotHandle) : Node(handle) {
         } ?: emptyList()
 
     // The root Window handle (an Object); wrap with Window(...) or Node(...) at the call site,
-    // matching desktop SceneTree.getRoot(): MemorySegment.
-    fun getRoot(): MemorySegment =
-        ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment)
+    // matching desktop SceneTree.getRoot(): GodotHandle.
+    fun getRoot(): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment))
 
     companion object {
         private val quitBind by lazy { ObjectCalls.getMethodBind("SceneTree", "quit", 1995695955L) }

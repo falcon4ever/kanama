@@ -10,7 +10,7 @@ import java.lang.foreign.MemorySegment
  */
 object SceneTree {
     val root: Window
-        get() = Window(GodotHandle(getRoot()))
+        get() = Window(getRoot())
 
     private const val BOOL_NOARGS_HASH = 36873697L
     private const val SET_BOOL_HASH = 2586408642L
@@ -416,8 +416,8 @@ object SceneTree {
      * Generated from Godot docs: SceneTree.get_root
      */
     @JvmStatic
-    fun getRoot(): MemorySegment =
-        ObjectCalls.ptrcallNoArgsRetObject(getRootBind, sceneTreeObject())
+    fun getRoot(): GodotHandle =
+        GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, sceneTreeObject()))
 
     /**
      * The root node of the currently loaded main scene, usually as a direct child of `root`. See also
