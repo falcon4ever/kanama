@@ -569,13 +569,18 @@ elif [[ "$kanama_script_probe" -eq 1 ]]; then
 EOF
 elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   status_text="Waiting for Kanama iOS project script"
-  scene_header='[gd_scene load_steps=5 format=3]'
+  scene_header='[gd_scene load_steps=6 format=3]'
   script_resource_line='[ext_resource type="Script" path="res://kotlin-src/IosSmokeScript.kt" id="1_probe"]'
   status_script_line='script = ExtResource("1_probe")'
   # @ScriptProperty end-to-end checks: the scene stores a NodePath plus task-39 narrow-scalar,
   # enum, and enum-list values so Godot drives every conversion path at instantiation.
-  status_extra_props=$'view = NodePath("../Background")\nnarrow_float = 1.25\nnarrow_int = 2147483647\nsmoke_mode = 2\nsmoke_modes = [2, 99, null]'
+  # Task 106: an Object-typed (Resource) @ScriptProperty stored in the scene — the shape that
+  # Match3's tile_scene has. The export-time editor must keep it (it re-packs every scene when it
+  # converts text to binary and drops properties the script does not report) and the iOS runtime
+  # must hydrate it before _ready. probe_child.tscn is written below.
+  status_extra_props=$'view = NodePath("../Background")\nnarrow_float = 1.25\nnarrow_int = 2147483647\nsmoke_mode = 2\nsmoke_modes = [2, 99, null]\nprobe_scene = ExtResource("5_pscene")'
   mkdir -p "$project_dir/kotlin-src"
+  printf '%s\n' '[gd_scene format=3]' '' '[node name="ProbeChild" type="Node"]' >"$project_dir/probe_child.tscn"
   cat >"$project_dir/kotlin-src/IosSmokeScript.kt" <<'EOF'
 package net.multigesture.kanama.iossmoke
 
@@ -597,6 +602,7 @@ import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.ClassDB
 import net.multigesture.kanama.api.Mathf
+import net.multigesture.kanama.api.PackedScene
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
@@ -647,6 +653,11 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
     @ScriptProperty
     var smokeStream: AudioStream? = null
 
+    // Task 106: scene-stored Resource-typed property (probe_scene = ExtResource(...) in main.tscn).
+    // Must be non-null when _ready runs, and instantiable. Match3's tile_scene has this shape.
+    @ScriptProperty
+    var probeScene: PackedScene? = null
+
     // Called by scripts/class_name_probe.gd with what GDScript saw in the
     // engine-visible property list; println is the only channel that streams
     // from a device build (Godot print()/printerr() do not).
@@ -690,6 +701,12 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
     @OnReady
     fun ready() {
         println("[kanama][ios][kn] project script value-type property view=${view.path}")
+        val probeChild = probeScene?.instantiate()
+        println(
+            "[kanama][ios][kn] task106 resource property probe_scene " +
+                "delivered=${probeScene != null} instantiated=${probeChild != null}",
+        )
+        probeChild?.queueFree()
         val initialPropertyConversions =
             narrowFloat == 1.25f &&
                 narrowInt == Int.MAX_VALUE &&
@@ -924,7 +941,7 @@ func _ready() -> void:
 	# Kotlin script and let it println — the channel every other probe uses.
 	target.call("report_class_name", stream_class, view_class == "")
 EOF
-  probe_extra_resources=$'[ext_resource type="Script" path="res://kotlin-src/ProcessDisableProbe.kt" id="2_pdp"]\n[ext_resource type="Script" path="res://kotlin-src/ReplicationProbe.kt" id="3_rep"]\n[ext_resource type="Script" path="res://scripts/class_name_probe.gd" id="4_cnp"]'
+  probe_extra_resources=$'[ext_resource type="Script" path="res://kotlin-src/ProcessDisableProbe.kt" id="2_pdp"]\n[ext_resource type="Script" path="res://kotlin-src/ReplicationProbe.kt" id="3_rep"]\n[ext_resource type="Script" path="res://scripts/class_name_probe.gd" id="4_cnp"]\n[ext_resource type="PackedScene" path="res://probe_child.tscn" id="5_pscene"]'
   probe_extra_nodes=$'[node name="ProcessDisableProbe" type="Node" parent="."]\nscript = ExtResource("2_pdp")\n\n[node name="ReplicationProbe" type="MultiplayerSynchronizer" parent="."]\nscript = ExtResource("3_rep")\n\n[node name="ClassNameProbe" type="Node" parent="."]\nscript = ExtResource("4_cnp")'
 elif [[ "$godot_fps_probe" -eq 1 ]]; then
   status_text="Running pure Godot iOS FPS smoke"
@@ -2318,17 +2335,12 @@ if [[ -z "$godot_project_baseline_dir" ]]; then
     install_ios_addon_args+=("-PkanamaIosProjectScriptsDir=$project_dir/kotlin-src")
   fi
 
-  # Guardrail: registering project scripts for iOS (KSP) but NOT for the desktop scripts jar means
-  # the export-time editor doesn't know their @ScriptProperty names, so scene-stored property
-  # values (e.g. view: NodePath) are silently DROPPED from the packed scene and never reach the
-  # iOS runtime. Real dual-target scripts pass both. Warn so this trap isn't re-diagnosed as an
-  # iOS runtime bug (it cost ~3 device cycles once).
-  if printf '%s\n' "${install_ios_addon_args[@]}" | rg -q '^-PkanamaIosProjectScriptsDir=' \
-    && ! printf '%s\n' "${install_ios_addon_args[@]}" | rg -q '^-PkanamaProjectScriptsDir='; then
-    echo "[ios_visual_smoke] WARNING: project scripts registered for iOS but not desktop " \
-      "(-PkanamaProjectScriptsDir unset) — any scene-stored @ScriptProperty values will be " \
-      "dropped at export. Add -PkanamaProjectScriptsDir for dual-target registration." >&2
-  fi
+  # Registering project scripts for iOS (KSP) but NOT for the desktop scripts jar used to mean the
+  # export-time editor didn't know their @ScriptProperty names, so scene-stored property values
+  # (e.g. view: NodePath, Match3's tile_scene) were silently DROPPED from the packed scene and
+  # never reached the iOS runtime (task 106; it cost ~3 device cycles once, then a release
+  # blocker). Since task 106 `:project-scripts` falls back to -PkanamaIosProjectScriptsDir, so one
+  # property registers both targets; the explicit desktop arg above stays as documentation.
 
   DEVELOPER_DIR="$xcode_developer_dir" "$ROOT_DIR/gradlew" "${install_ios_addon_args[@]}"
 fi
@@ -2662,6 +2674,14 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] project script value-type NodePath property delivered"
   else
     echo "[ios_visual_smoke] project script value-type NodePath property missing" >&2
+    exit 1
+  fi
+  # Task 106: the scene-stored PackedScene @ScriptProperty survived the export's text->binary
+  # re-pack and reached the script before _ready (Match3's tile_scene shape).
+  if rg -q 'task106 resource property probe_scene delivered=true instantiated=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] project script Resource-typed (PackedScene) property delivered before _ready"
+  else
+    echo "[ios_visual_smoke] project script Resource-typed (PackedScene) property missing or null at _ready (task 106)" >&2
     exit 1
   fi
   if rg -q 'task39 property initial float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \

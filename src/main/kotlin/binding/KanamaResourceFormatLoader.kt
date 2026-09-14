@@ -285,6 +285,18 @@ object KanamaResourceFormatLoader {
         "[kanama:kt] ResourceFormatLoader._load bound kotlinClass=${script.kotlinClassName} " +
           "global=${script.globalName} factory=${script.factory != null}"
       )
+      if (script.kotlinClassName.isEmpty()) {
+        // Godot's export instantiates and re-packs every scene when it converts text resources
+        // to binary, keeping only the properties the script instance reports. An unbound script
+        // reports none, so every scene-stored @ScriptProperty value of this script is dropped
+        // from the export without any engine error (task 106). Say so where the export log is.
+        System.err.println(
+          "[kanama:kt] WARNING: no Kotlin class bound for $path — kanama-scripts.jar does not " +
+            "contain this script; scene-stored @ScriptProperty values will be DROPPED if the " +
+            "project is exported now. Build the project's scripts jar first " +
+            "(installIosAddon: pass -PkanamaIosProjectScriptsDir / -PkanamaProjectScriptsDir)."
+        )
+      }
     } else {
       System.err.println(
         "[kanama:kt] ResourceFormatLoader._load failed to resolve script backing object"
