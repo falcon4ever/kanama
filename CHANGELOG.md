@@ -7,6 +7,49 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — one shared body per Godot value type (task 104, step 2)
+
+- **The 19 builtin value types are one set of files, not two.** `Vector3`, `Basis`,
+  `Transform3D`, `Quaternion`, `Vector2`, `AABB`, `Plane`, … used to exist twice — once for
+  desktop/Android, once for iOS — with different method sets and different implementations of
+  the same method. They now live once, under
+  `src/commonMain/kotlin/net/multigesture/kanama/types`, compiled by the root JVM module,
+  `:ios-runtime` and the Android plugin alike. **Nothing was removed from either platform:**
+  the shared public surface is the union of the two, so every type gained the members the
+  other platform had.
+
+  What iOS gains: `Vector4i` (desktop-only until now), `Quaternion.dot` / `length` /
+  `lengthSquared` / `normalized` / `times` / `unaryMinus`, `Vector2.distanceTo` /
+  `distanceSquaredTo` / `dot` / `limitLength`, `Vector3.limitLength` (and the `times`/`div`
+  `Double`/`Float` overloads), `Vector4.dot`, `Plane.distanceTo` / `intersectsRay`,
+  `AABB.end` / `hasPoint` / `volume`, `Rect2.area` / `hasPoint`, `Basis.lerp` /
+  `EULER_ORDER_*` / `getEuler(order)`, and `Basis.fromEuler(euler, order)`.
+  What desktop and Android gain: `Basis.transposed`, `Transform3D.affineInverse` / `inverse` /
+  `translated`, `Vector3.isNormalized` / `maxAxisIndex`, `Vector2i` / `Vector3i` `withX`/`withY`/
+  `withZ` and `ONE`, `Projection.ZERO`, and `Plane(x, y, z, d)`.
+
+- **One rule decides who computes a method.** A method that either platform used to route
+  through the engine keeps doing so — those encode Godot's own edge cases (epsilons,
+  orthonormalization, Euler order, shortest-arc slerp) — through a single facade,
+  `net.multigesture.kanama.binding.runtime.BuiltinCalls`, which exists once per backend under
+  one fully-qualified name. Everything else is exact arithmetic in one Kotlin body.
+
+  Two consequences worth knowing. On **iOS**, `Vector3.cross`, `dot`, `isNormalized` and
+  `maxAxisIndex` are now computed in Kotlin instead of by the engine — same results (they are
+  exact formulas; `isNormalized` is Godot's `is_equal_approx(length_squared(), 1, UNIT_EPSILON)`
+  including its exact-equality short-circuit), minus four builtin round-trips per call. On
+  **desktop and Android**, `Quaternion.inverse()` is now the engine's `Quaternion::inverse` —
+  the conjugate, as GDScript and C# return — where the old local body divided by the squared
+  length and returned `IDENTITY` for a zero quaternion. For a unit quaternion, which is what
+  `inverse()` is defined for, the two agree; for a non-unit or zero one, Kanama now matches
+  Godot instead of differing from it. `Basis.getEuler()` on iOS is the engine's decomposition
+  (and takes the `order` argument) rather than a hand-written YXZ one, and
+  `Transform3D.scaledLocal` / `Vector2.lerp` / `Vector2.clamp` on iOS are engine-computed.
+
+- Not a breaking change for game code: no member was removed or renamed, and no signature
+  changed. Scripts that used a member on the platform that had it keep compiling, on every
+  platform now.
+
 ### Breaking — `GodotHandle` replaces `MemorySegment` in every public signature (task 104, step 1)
 
 - **Every attachable script constructor changes type.** The opaque handle a wrapper and a

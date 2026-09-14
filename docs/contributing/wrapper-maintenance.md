@@ -480,19 +480,46 @@ single-line `/** … */` form), so re-running is idempotent.
 
 ## Value-Type Audits
 
-Value-type helpers that mirror Godot builtin methods should call the matching
-Godot builtin unless the local implementation is deliberately proven equivalent.
-Use the audit script when editing `types/*.kt`:
+The 19 builtin value types are ONE hand-written set under
+`src/commonMain/kotlin/net/multigesture/kanama/types` since task 104 step 2 — the
+root JVM module, `:ios-runtime` and the Android copy task all compile those
+files, and neither platform keeps a copy. Only `Real.kt` is per platform
+(generated at build time on desktop, hand-written on iOS, written by the plugin
+build script on Android), exactly like `GodotHandle`.
+
+A shared body reaches the engine only through
+`net.multigesture.kanama.binding.runtime.BuiltinCalls`, which exists once per
+platform under that one fully-qualified name: over Panama/FFM in
+`src/main/kotlin/binding/runtime/BuiltinCalls.kt` (Android gets it through the
+source remap) and over the C shim in `ios-runtime/.../binding/runtime/
+BuiltinCalls.kt`. No compiler can prove the two agree until the root is a
+multiplatform module (task 104 step 3 turns the pair into an `expect object`),
+so `scripts/check_builtin_calls_contract.py` compares their public member sets
+as a local_ci stage. Adding a member to one half without the other fails there,
+not in a platform compile far from the edit.
+
+Which methods are engine-computed is a policy, not a preference: a method whose
+result depends on Godot's own edge-case handling — epsilons, orthonormalization,
+Euler order, shortest-arc slerp — calls the builtin; exact arithmetic (dot,
+cross, component-wise operators, `is_normalized`'s epsilon comparison) is plain
+Kotlin, so it costs no round trip on device. Value-type helpers that mirror
+Godot builtin methods should call the matching builtin unless the local
+implementation is deliberately proven equivalent. Use the audit script when
+editing `types/*.kt`:
 
 ```sh
 python3 scripts/audit_value_type_wrappers.py --api extension_api.json
 ```
 
-The audit is report-only by default, and `--strict` is wired into local CI.
-Reviewed local scalar formulas are allowlisted in the script; any newly added
-Godot-named value helper that does not call the builtin should be treated as
-suspicious until it is either bound to Godot's builtin or deliberately added to
-the reviewed list with focused parity evidence.
+The audit is report-only by default, and `--strict` is wired into local CI. It
+also checks the builtin float ABI in its new shape: Godot's ptr-ABI passes a
+Variant `float` argument as an 8-byte double whatever the engine's `real_t`
+precision, so such an argument must travel as `BuiltinCalls.BArg.Real`, never
+inside a `BArg.Floats` buffer of `real_t` components. Reviewed local scalar
+formulas are allowlisted in the script; any newly added Godot-named value helper
+that does not call the builtin should be treated as suspicious until it is either
+bound to Godot's builtin or deliberately added to the reviewed list with focused
+parity evidence.
 
 For scalar Godot `float` method arguments, the ptrcall helper layout audit is
 the ABI guard (it absorbed the narrower `audit_scalar_float_abi.py`, retired in

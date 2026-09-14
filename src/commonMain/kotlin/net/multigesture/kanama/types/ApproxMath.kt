@@ -12,6 +12,8 @@ import kotlin.math.abs
  * Use these (and the per-type `isEqualApprox`/`isZeroApprox`) for geometry comparisons instead of
  * exact `==`: floating-point results from the engine (transforms, normalized vectors, `looking_at`,
  * …) rarely land on an exact literal.
+ *
+ * One body for every backend (task 104 step 2): `real_t` is the platform's `Real.kt` alias.
  */
 internal val CMP_EPSILON: real_t = GodotReal.fromNumber(0.00001)
 

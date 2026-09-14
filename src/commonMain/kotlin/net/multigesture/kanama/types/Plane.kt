@@ -30,6 +30,14 @@ data class Plane(
 ) {
   constructor(normal: Vector3, d: Number) : this(normal, GodotReal.fromNumber(d))
 
+  /** Builds the plane `ax + by + cz = d` from its scalar-equation coefficients. */
+  constructor(
+    x: Number,
+    y: Number,
+    z: Number,
+    d: Number,
+  ) : this(Vector3(x, y, z), GodotReal.fromNumber(d))
+
   // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. `normal` delegates to
   // Vector3.equals (also fixed); `d` is compared/hashed the same way. See
   // wrapper-coverage-roadmap.md.
@@ -65,6 +73,6 @@ data class Plane(
   }
 
   companion object {
-    val ZERO = Plane(Vector3.ZERO, 0f)
+    val ZERO = Plane(Vector3.ZERO, GodotReal.fromNumber(0.0))
   }
 }

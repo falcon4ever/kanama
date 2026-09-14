@@ -20,6 +20,12 @@ data class Vector2i(
    */
   val y: Int,
 ) {
+  /** Returns a copy with the X component replaced. */
+  fun withX(value: Int): Vector2i = Vector2i(value, y)
+
+  /** Returns a copy with the Y component replaced. */
+  fun withY(value: Int): Vector2i = Vector2i(x, value)
+
   companion object {
     /**
      * Zero vector, a vector with all components set to `0`.
@@ -27,5 +33,11 @@ data class Vector2i(
      * Generated from Godot docs: Vector2i.ZERO
      */
     val ZERO = Vector2i(0, 0)
+    /**
+     * One vector, a vector with all components set to `1`.
+     *
+     * Generated from Godot docs: Vector2i.ONE
+     */
+    val ONE = Vector2i(1, 1)
   }
 }

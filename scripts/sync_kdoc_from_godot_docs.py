@@ -19,7 +19,9 @@ from wrapper_model import DESKTOP_API_DIR, wrapper_source_files
 # The api scope covers the shared wrapper tree plus the desktop per-platform files and their
 # generated companions (task 103); pass --api-dir to sync one directory only.
 DEFAULT_API_DIR = DESKTOP_API_DIR
-DEFAULT_TYPES_DIR = Path("src/main/kotlin/net/multigesture/kanama/types")
+# The value types are one shared set under the commonMain tree since task 104 step 2
+# (the root JVM module, :ios-runtime and the Android copy task all compile it).
+DEFAULT_TYPES_DIR = Path("src/commonMain/kotlin/net/multigesture/kanama/types")
 GENERATED_MARKER = "Generated from Godot docs:"
 
 METHOD_BIND_RE = re.compile(

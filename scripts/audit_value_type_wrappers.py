@@ -5,9 +5,17 @@ This is a guardrail for the bug class found in Quaternion.slerp and
 Transform3D.interpolateWith:
 
 * a Kotlin method has the same semantic name as a Godot builtin method, but
-  reimplements math instead of calling BuiltinTypes.call/construct;
-* a Godot builtin method argument typed as `float` is marshalled with
-  GodotReal storage instead of the builtin-call ABI `JAVA_DOUBLE`.
+  reimplements math instead of calling the engine through the BuiltinCalls
+  facade;
+* a Godot builtin method argument typed as `float` is marshalled as a `real_t`
+  component (`BArg.Floats`) instead of the builtin-call ABI's 8-byte double
+  (`BArg.Real`).
+
+The value types are one shared set under src/commonMain since task 104 step 2,
+and they reach the engine only through
+`net.multigesture.kanama.binding.runtime.BuiltinCalls` — the desktop half over
+Panama, the iOS half over the C shim, kept identical by
+`scripts/check_builtin_calls_contract.py`.
 
 The script is intentionally report-only for now. It exits non-zero only when
 `--strict` is passed.
@@ -24,7 +32,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TYPES_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/types"
+TYPES_DIR = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/types"
 API_PATH = ROOT / "extension_api.json"
 
 # Reviewed local implementations whose Godot C++ definitions are direct scalar
@@ -70,8 +78,16 @@ REVIEWED_LOCAL_MATH = {
     "Vector3.distanceSquaredTo",
     "Vector3.distanceTo",
     "Vector3.dot",
+    # is_normalized and max_axis_index were engine-computed on iOS until task 104
+    # step 2 and are exact arithmetic: is_normalized is Godot's
+    # Math::is_equal_approx(length_squared(), 1, UNIT_EPSILON) including the
+    # exact-equality short-circuit that makes an infinite component behave, and
+    # max_axis_index is its two-comparison ladder with ties going to the earlier
+    # axis. Sharing one body saves a builtin round-trip per call on device.
+    "Vector3.isNormalized",
     "Vector3.length",
     "Vector3.lengthSquared",
+    "Vector3.maxAxisIndex",
     "Vector3.normalized",
     "Vector4.dot",
     "Vector4.length",
@@ -88,14 +104,17 @@ FUN_RE = re.compile(
     re.MULTILINE,
 )
 
-BUILTIN_CALL_RE = re.compile(r"\bBuiltinTypes\.(?:call|construct)\s*\(")
-ARG_ALLOC_RE = re.compile(
-    r"val\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)Arg\s*=\s*arena\.allocate\((?P<layout>[^)\n]+)\)",
+# A call that reaches the engine: the BuiltinCalls facade (every shared value-type
+# body) or the older BuiltinTypes helpers (still used by the desktop runtime).
+BUILTIN_CALL_RE = re.compile(
+    r"\bBuiltinCalls\.(?:call|callNoArgsFloat32|callScalar|callBool|callInt)\s*\("
+    r"|\bBuiltinTypes\.(?:call|construct)\s*\(",
 )
-ARG_WRITE_RE = re.compile(
-    r"(?P<name>[A-Za-z_][A-Za-z0-9_]*)Arg\.set\((?P<layout>JAVA_[A-Z0-9_]+)\s*,"
-    r"|GodotReal\.writeIndex\(\s*(?P<real_name>[A-Za-z_][A-Za-z0-9_]*)Arg\s*,",
-)
+# The two BArg encodings a scalar argument can take. Godot's ptr-ABI passes a
+# Variant FLOAT argument as an 8-byte double (BArg.Real) regardless of real_t
+# precision; BArg.Floats is a buffer of real_t *components* and is wrong for one.
+SCALAR_ARG_RE = re.compile(r"\bBArg\.Real\s*\(")
+COMPONENT_ARG_RE = re.compile(r"\bBArg\.Floats\s*\(")
 
 
 @dataclass(frozen=True)
@@ -218,6 +237,20 @@ def uses_builtin_call(fn: KotlinFunction, helpers: set[str]) -> bool:
     return any(re.search(rf"\b{re.escape(helper)}\s*\(", fn.body) for helper in helpers)
 
 
+def effective_body(fn: KotlinFunction, helper_bodies: dict[str, str]) -> str:
+    """The method's body plus the body of any call-shape helper it delegates to.
+
+    A one-line method like `fun lerp(to, weight) = callVector3RealRetVector3(...)` carries
+    no BArg of its own; the encodings live in the shared private helper. Following one
+    level is what lets the ABI check below see them.
+    """
+    body = fn.body
+    for name, helper in helper_bodies.items():
+        if name != fn.name and re.search(rf"\b{re.escape(name)}\s*\(", fn.body):
+            body += helper
+    return body
+
+
 def builtin_methods(api: dict) -> dict[str, dict[str, dict]]:
     result: dict[str, dict[str, dict]] = {}
     for cls in api.get("builtin_classes", []):
@@ -241,36 +274,22 @@ def method_float_arguments(method: dict) -> set[str]:
     }
 
 
-def audit_float_abi(fn: KotlinFunction, method: dict) -> list[str]:
+def audit_float_abi(fn: KotlinFunction, method: dict, body: str) -> list[str]:
+    """A Godot `float` argument must travel as BArg.Real, never as a real_t component."""
     float_args = method_float_arguments(method)
-    if not float_args or not BUILTIN_CALL_RE.search(fn.body):
+    if not float_args or not BUILTIN_CALL_RE.search(body):
         return []
 
-    allocations = {
-        match.group("name"): match.group("layout")
-        for match in ARG_ALLOC_RE.finditer(fn.body)
-    }
-    writes: dict[str, str] = {}
-    for match in ARG_WRITE_RE.finditer(fn.body):
-        if match.group("real_name"):
-            writes[match.group("real_name")] = "GodotReal"
-        else:
-            writes[match.group("name")] = match.group("layout")
-
-    warnings = []
-    for arg in sorted(float_args):
-        allocation = allocations.get(arg)
-        write = writes.get(arg)
-        if allocation is None and write is None:
-            # Some helpers do allocation in shared routines; skip those until
-            # the audit learns to follow helper calls.
-            continue
-        if allocation != "JAVA_DOUBLE" or write != "JAVA_DOUBLE":
-            warnings.append(
-                f"{fn.path}:{fn.line}: {fn.class_name}.{fn.name} builtin float arg "
-                f"'{arg}' should use JAVA_DOUBLE ABI, saw allocate={allocation}, write={write}",
-            )
-    return warnings
+    scalars = len(SCALAR_ARG_RE.findall(body))
+    if scalars >= len(float_args):
+        return []
+    components = len(COMPONENT_ARG_RE.findall(body))
+    return [
+        f"{fn.path}:{fn.line}: {fn.class_name}.{fn.name} passes "
+        f"{len(float_args)} Godot float arg(s) ({', '.join(sorted(float_args))}) but only "
+        f"{scalars} BArg.Real; a scalar float is an 8-byte double at ptrcall, not a real_t "
+        f"component (saw {components} BArg.Floats)",
+    ]
 
 
 def main() -> int:
@@ -294,6 +313,7 @@ def main() -> int:
             continue
         functions = kotlin_functions(path)
         helpers = builtin_calling_helpers(functions)
+        helper_bodies = {fn.name: fn.body for fn in functions if fn.name in helpers}
         for fn in functions:
             builtin_name = lower_camel_to_snake(fn.name)
             method = methods.get(builtin_name)
@@ -307,9 +327,10 @@ def main() -> int:
                     continue
                 suspicious.append(
                     f"{fn.path}:{fn.line}: {class_name}.{fn.name} matches Godot "
-                    f"{class_name}.{builtin_name} but does not call BuiltinTypes",
+                    f"{class_name}.{builtin_name} but does not call the engine through "
+                    f"BuiltinCalls",
                 )
-            abi_warnings.extend(audit_float_abi(fn, method))
+            abi_warnings.extend(audit_float_abi(fn, method, effective_body(fn, helper_bodies)))
 
     print(f"[value_type_audit] checked {covered} Kotlin methods that map to Godot builtins")
     if reviewed_local:

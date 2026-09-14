@@ -349,6 +349,9 @@ python3 "$ROOT_DIR/scripts/audit_replicated_script_properties.py" "$ROOT_DIR/exa
 stage "value-type builtin parity audit"
 python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 
+stage "BuiltinCalls facade contract (desktop vs iOS)"
+python3 "$ROOT_DIR/scripts/check_builtin_calls_contract.py"
+
 stage "shell script lint (shellcheck)"
 # Hard-required (the unzip/ios_template_preflight precedent): the gate itself
 # prints install instructions and exits 2 when shellcheck is absent.

@@ -45,6 +45,7 @@ object BuiltinCalls {
   // ptrcall/builtin arg tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c.
   // Used as the [BArg.Floats] tag for value-type args (struct types are passthrough C-side).
   const val PT_BOOL = 1
+  const val PT_INT64 = 3
   const val PT_FLOAT64 = 5
   const val PT_VECTOR2 = 6
   const val PT_VECTOR3 = 8
@@ -64,6 +65,9 @@ object BuiltinCalls {
 
     /** A scalar `float`/`double` arg (8-byte double at ptrcall). */
     data class Real(val value: Double) : BArg
+
+    /** An `int` arg (`int64_t` at ptrcall) — Basis' EulerOrder, array indices, … */
+    data class Int64(val value: Long) : BArg
   }
 
   fun getBuiltinMethod(variantType: Int, method: String, hash: Long): Long =
@@ -103,6 +107,12 @@ object BuiltinCalls {
           val b = alloc<DoubleVar>()
           b.value = a.value
           tags[i] = PT_FLOAT64
+          ptrs[i] = b.ptr.reinterpret<CPointed>()
+        }
+        is BArg.Int64 -> {
+          val b = alloc<LongVar>()
+          b.value = a.value
+          tags[i] = PT_INT64
           ptrs[i] = b.ptr.reinterpret<CPointed>()
         }
       }

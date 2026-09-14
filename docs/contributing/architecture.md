@@ -287,6 +287,46 @@ check the ABI shape, not only the display name. `JAVA_FLOAT` in
 `ObjectCalls.kt` should be limited to fixed 32-bit component storage such as
 `Color`, while scalar method `float` helpers should use `JAVA_DOUBLE`.
 
+The same split runs through the value types themselves, and it is the reason
+they can be shared: a value type marshals as a `GodotRealArray` — a flat buffer
+of `real_t` components, aliased once per platform in `Real.kt` — while a scalar
+`float` argument travels as `BuiltinCalls.BArg.Real`, the 8-byte double.
+
+## Value types
+
+The 19 Godot builtin value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`,
+`Quaternion`, `AABB`, `Plane`, `RID`, …) are ONE hand-written set under
+`src/commonMain/kotlin/net/multigesture/kanama/types`, in the same shared tree as
+the generated wrappers: the root JVM module, `:ios-runtime` and the Android copy
+task all compile those files (task 104 step 2). Only `Real.kt` is per platform —
+generated at build time on desktop, hand-written on iOS, written by the plugin
+build script on Android — exactly like `GodotHandle`. The Web backend keeps its
+own `WebValueTypes.kt`; it could adopt the shared bodies later behind a
+pure-Kotlin `BuiltinCalls`.
+
+A value type is a Kotlin `data class` of `real_t` components, immutable, with
+`equals`/`hashCode` following GDScript's `==` (signed zero equal, NaN reflexive,
+signed zero canonicalized in the hash). Methods split by who computes them:
+
+- **Engine-computed**, through the one facade
+  `net.multigesture.kanama.binding.runtime.BuiltinCalls`: everything whose result
+  depends on Godot's own edge-case handling — `Basis.orthonormalized` /
+  `getEuler` / `getScale`, `Transform3D.inverse` / `interpolateWith` /
+  `lookingAt`, `Quaternion.slerp` / `inverse`, `Vector3.rotated` / `moveToward`,
+  `Vector2.clamp`, and their kin. The facade resolves a builtin once
+  (`variant_get_ptr_builtin_method`), then calls it with the base and the
+  arguments as raw value buffers.
+- **Pure Kotlin**, one body, no round trip: exact arithmetic — operators, `dot`,
+  `cross`, `length`, `distanceTo`, `hasPoint`, and the `is_equal_approx` family
+  (which replicates `Math::is_equal_approx` exactly; see `ApproxMath.kt`).
+
+`BuiltinCalls` exists once per backend under one fully-qualified name, over
+Panama/FFM for desktop and Android and over the C shim for iOS, because the root
+is a plain JVM module and the Android remap forbids `expect`/`actual`. Nothing in
+the compiler proves the two halves agree, so
+`scripts/check_builtin_calls_contract.py` compares their public member sets as a
+local CI stage; step 3 of task 104 replaces it with an `expect object`.
+
 ## Object lifetime
 
 Godot is reference-counted on the native side. A Godot object can be freed
