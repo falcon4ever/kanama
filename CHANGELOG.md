@@ -7,6 +7,21 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS: freeing a node after its signal emitter crashed in `Object::~Object` (task 108)
+
+- **Third-person's BeeBot crashed the iPhone in `SceneTree::_flush_delete_queue` →
+  `Object::~Object` → `Object::_disconnect` (`KERN_INVALID_ADDRESS at 0x18`)**, intermittently,
+  with no Kotlin frame. `SignalConnection.close()` recreated the lambda Callable for
+  `Object.disconnect` **without the receiver's ObjectID**. Godot's `_disconnect` takes the receiver
+  from the Callable it is given, so it removed the slot from the emitter but left the entry in the
+  receiver's own connection list dangling. When the receiver was freed after its emitter (a child
+  `Area3D` is destroyed before the `RigidBody3D` parent that connected to it), the destructor
+  followed the stale entry to a freed emitter and dereferenced null. The disconnect path now binds
+  the same receiver as connect (`kanama_ios_godot_object_disconnect_callable` takes
+  `target_object`; `SignalConnection` remembers its receiver). Self-test row
+  `lambda-callable(disconnect then free emitter before receiver)` reproduces the order; it
+  segfaulted the app at extension init before the fix.
+
 ### Fixed — iOS export dropped every scene-stored `@ScriptProperty` value (task 106)
 
 - **Match3 crashed two seconds after launch on the iPhone** (`tile_scene is not assigned` in

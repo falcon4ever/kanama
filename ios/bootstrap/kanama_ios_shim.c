@@ -8772,9 +8772,19 @@ int64_t kanama_ios_godot_object_connect_callable(
 // recreated Callable compares equal to the connected one and disconnect removes it. free_func fires
 // (idempotently — IosCallableRegistry.release is a HashMap.remove) for both the removed original and
 // this temp. Returns 0 on a clean dispatch, -1 otherwise.
+//
+// The temp MUST carry the receiver's ObjectID too (task 108). Object::_disconnect reads
+// `p_callable.get_object()` from the Callable it is GIVEN — not from the stored slot — and only
+// erases the connection from that receiver's `connections` list when it is non-null. A receiver-less
+// temp removed the slot from the emitter but left the receiver's list entry dangling; when the
+// receiver was later freed after its emitter (a child Area3D dies before its RigidBody3D parent),
+// Object::~Object followed the dangling entry, `c.signal.get_object()` returned null for the freed
+// emitter and `->_disconnect()` dereferenced it (KERN_INVALID_ADDRESS at 0x18 in
+// SceneTree::_flush_delete_queue — third-person BeeBot on the iPhone).
 int32_t kanama_ios_godot_object_disconnect_callable(
     int64_t object,
     const char *signal_name,
+    int64_t target_object,
     int64_t callback_id
 ) {
     if (!kanama_ios_resolve_godot_api() || object == 0 || signal_name == NULL ||
@@ -8791,7 +8801,11 @@ int32_t kanama_ios_godot_object_disconnect_callable(
     memset(&info, 0, sizeof(info));
     info.callable_userdata = (void *)(intptr_t)callback_id;
     info.token = g_library;
-    info.object_id = 0;
+    // Same receiver binding as connect: object_id does not take part in Callable identity, but
+    // _disconnect needs it to erase the receiver-side connection entry (see above).
+    info.object_id = (target_object != 0 && g_object_get_instance_id != NULL)
+        ? g_object_get_instance_id((GDExtensionConstObjectPtr)(intptr_t)target_object)
+        : 0;
     info.call_func = kanama_ios_callable_trampoline;
     info.free_func = kanama_ios_callable_free;
     uint8_t callable_value[24];

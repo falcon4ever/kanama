@@ -730,11 +730,16 @@ int64_t kanama_ios_godot_object_connect_callable(
 /*
  * Object.disconnect(signal, <the lambda Callable for callback_id>) — teardown for a lambda
  * connected via object_connect_callable. Recreates the identity-equal custom Callable and
- * disconnects it. Returns 0 on a clean dispatch, -1 otherwise.
+ * disconnects it. target_object must be the receiver passed to object_connect_callable: Godot's
+ * Object::_disconnect takes the receiver from the Callable it is GIVEN (get_object()) to erase the
+ * connection from that receiver's list, so a receiver-less temp left a dangling entry there and
+ * the receiver's later destruction called into the freed emitter (task 108). Returns 0 on a clean
+ * dispatch, -1 otherwise.
  */
 int32_t kanama_ios_godot_object_disconnect_callable(
     int64_t object,
     const char *signal_name,
+    int64_t target_object,
     int64_t callback_id
 );
 
