@@ -133,6 +133,18 @@ project's `.godot/exported/` directory before exporting again — Godot caches
 each converted scene there keyed by the source file's md5 and mtime and reuses
 a stripped conversion until the `.tscn` itself changes.
 
+To verify an export directly, run the parity check from the exported project
+(it needs the Kanama addon loaded, so run it where the export ran):
+
+```sh
+godot --headless --path /absolute/path/to/godot_project \
+  --script /path/to/kanama/scripts/check_exported_scene_properties.gd
+```
+
+It loads every converted scene next to its source `.tscn` and fails, naming the
+node and property, when a script-declared property was dropped. The demos' iOS
+runner and the starter smoke run it after every export.
+
 This installs the iOS descriptor entries:
 
 ```ini

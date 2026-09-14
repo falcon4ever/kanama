@@ -2480,6 +2480,15 @@ EOF
 
 "$godot_bin" --headless --path "$project_dir" --export-debug iOS "$export_dir/$app_name.ipa"
 
+# Task 112: the export instantiates and re-packs every scene when it converts text resources to
+# binary and keeps only the properties the script instance reports; a project whose desktop
+# kanama-scripts.jar does not match its .kt scripts loses every scene-stored @ScriptProperty value
+# silently (task 106). Compare each converted scene with its source before building the app.
+if ! "$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd"; then
+  echo "[ios_visual_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above)" >&2
+  exit 1
+fi
+
 engine_simulator_lib="$export_dir/$app_name.xcframework/ios-arm64_x86_64-simulator/libgodot.a"
 if [[ "$physical_device" -eq 0 && -n "$godot_simulator_lib" ]]; then
   echo "[ios_visual_smoke] patching simulator libgodot.a: $godot_simulator_lib"
