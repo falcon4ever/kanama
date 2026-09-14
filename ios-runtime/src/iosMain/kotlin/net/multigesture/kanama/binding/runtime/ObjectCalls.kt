@@ -5289,7 +5289,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     listOf("kanamaLambda"),
   )
   val lamFiredOnce = lamFires
-  IosGodot.objectDisconnectCallable(lamEmitter.address(), "kanamaLambda", lamId)
+  IosGodot.objectDisconnectCallable(
+    lamEmitter.address(),
+    "kanamaLambda",
+    lamEmitter.address(),
+    lamId,
+  )
   ObjectCalls.callWithVariantArgs(
     ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L),
     lamEmitter,
@@ -5322,7 +5327,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     listOf("kanamaLambdaInt", 4_294_967_001L),
   )
   check("lambda-callable(int argument delivered)", lamIntArg == 4_294_967_001L)
-  IosGodot.objectDisconnectCallable(lamEmitter.address(), "kanamaLambdaInt", lamIntId)
+  IosGodot.objectDisconnectCallable(
+    lamEmitter.address(),
+    "kanamaLambdaInt",
+    lamEmitter.address(),
+    lamIntId,
+  )
 
   // Auto-disconnect on receiver free: a lambda Callable connected with a receiver must be
   // disconnected by Godot when that receiver is freed, so a later emission neither fires it nor
@@ -5354,6 +5364,42 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     listOf("kanamaLambdaFree"),
   )
   check("lambda-callable(auto-disconnect on receiver free)", lamFreeFires == 0)
+
+  // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect
+  // erases the receiver-side connection entry only via the receiver it finds on the Callable it is
+  // given; the old receiver-less temp left that entry dangling, and freeing the receiver after its
+  // emitter made Object::~Object call `_disconnect` on the freed emitter through a null pointer
+  // (third-person BeeBot: the child Area3D dies before the RigidBody3D that connected to it). The
+  // row passes when the receiver's free completes and returns here.
+  var lamOrderFires = 0
+  val lamOrderEmitter = ObjectCalls.constructObject("Node")
+  val lamOrderReceiver = ObjectCalls.constructObject("Node")
+  val lamOrderId = IosCallableRegistry.register { lamOrderFires++ }
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+    lamOrderEmitter,
+    listOf("kanamaLambdaOrder"),
+  )
+  IosGodot.objectConnectCallable(
+    lamOrderEmitter.address(),
+    "kanamaLambdaOrder",
+    lamOrderReceiver.address(),
+    lamOrderId,
+    0L,
+  )
+  val lamOrderDisconnect =
+    IosGodot.objectDisconnectCallable(
+      lamOrderEmitter.address(),
+      "kanamaLambdaOrder",
+      lamOrderReceiver.address(),
+      lamOrderId,
+    )
+  ObjectCalls.destroyObject(lamOrderEmitter) // emitter first: its slot is already gone
+  ObjectCalls.destroyObject(lamOrderReceiver) // receiver second: must find no dangling connection
+  check(
+    "lambda-callable(disconnect then free emitter before receiver)",
+    lamOrderDisconnect == 0 && lamOrderFires == 0,
+  )
 
   // Typed Array[StringName] return (Phase 2.7g). add_to_group("kgrp") then get_groups() == ["kgrp"]
   // — exercises ptrcallNoArgsRetStringNameList (Array size/get + StringName->utf8 blob). Plain
