@@ -7,6 +7,17 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — export integrity check for scene-stored `@ScriptProperty` values (task 112)
+
+- `scripts/check_exported_scene_properties.gd` runs headless in an exported project, loads every
+  scene Godot converted to binary next to its source `.tscn` (via `.godot/exported/*/file_cache`)
+  and fails, naming the node and property, when a script-declared property present in the source is
+  missing from the export — the effect behind task 106, whatever causes it next time. Native
+  (ClassDB) properties are ignored because the re-pack may drop class defaults. The starter smoke
+  (`ios_visual_smoke.sh`) runs it after its export; the demos' iOS runner does too (kanama-demos).
+  Verified on Match3: passes on a correct export, fails with the five dropped Main-node properties
+  when the example project's scripts jar is installed.
+
 ### Fixed — iOS: freeing a node after its signal emitter crashed in `Object::~Object` (task 108)
 
 - **Third-person's BeeBot crashed the iPhone in `SceneTree::_flush_delete_queue` →
