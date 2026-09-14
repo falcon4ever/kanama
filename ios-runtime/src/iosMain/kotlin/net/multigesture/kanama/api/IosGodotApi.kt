@@ -373,7 +373,7 @@ class GodotSignal internal constructor(
             // but release defensively in case it never reached the trampoline path.
             IosCallableRegistry.release(callbackId)
         }
-        return SignalConnection(result, owner, name, callbackId)
+        return SignalConnection(result, owner, name, callbackId, target)
     }
 
     fun connectObject(
@@ -403,20 +403,28 @@ class SignalConnection internal constructor(
     private val owner: GodotObject? = null,
     private val signalName: String = "",
     private val callbackId: Long = 0L,
+    // The receiver the Callable was bound to at connect time; disconnect must present the same
+    // receiver so Godot also erases the receiver-side connection entry (task 108).
+    private val target: GodotObject? = null,
 ) : AutoCloseable {
     private var closed = false
 
     // Disconnect the lambda Callable. The C path recreates the identity-equal custom Callable
-    // (call_func + callback_id) and Object.disconnects it; the connection's free_func then releases
-    // the registry entry. No-op if the connect failed or close() was already called. (A
-    // CONNECT_ONE_SHOT connection auto-disconnects when it fires; calling close() afterwards is a
-    // benign redundant disconnect.) Phase 4.1b.
+    // (call_func + callback_id, bound to the same receiver) and Object.disconnects it; the
+    // connection's free_func then releases the registry entry. No-op if the connect failed or
+    // close() was already called. (A CONNECT_ONE_SHOT connection auto-disconnects when it fires;
+    // calling close() afterwards is a benign redundant disconnect.) Phase 4.1b.
     override fun close() {
         if (closed || error != 0L || owner == null || callbackId == 0L) {
             return
         }
         closed = true
-        IosGodot.objectDisconnectCallable(owner.segment.address(), signalName, callbackId)
+        IosGodot.objectDisconnectCallable(
+            owner.segment.address(),
+            signalName,
+            target?.segment?.address() ?: 0L,
+            callbackId,
+        )
     }
 }
 
@@ -1225,8 +1233,8 @@ internal object IosGodot {
     fun objectConnectCallable(sourceObject: Long, signalName: String, targetObject: Long, callbackId: Long, flags: Long): Long =
         kanama_ios_godot_object_connect_callable(sourceObject, signalName, targetObject, callbackId, flags)
 
-    fun objectDisconnectCallable(sourceObject: Long, signalName: String, callbackId: Long): Int =
-        kanama_ios_godot_object_disconnect_callable(sourceObject, signalName, callbackId)
+    fun objectDisconnectCallable(sourceObject: Long, signalName: String, targetObject: Long, callbackId: Long): Int =
+        kanama_ios_godot_object_disconnect_callable(sourceObject, signalName, targetObject, callbackId)
 
     fun tweenTweenPropertyVector2(tween: Long, target: Long, property: String, x: Double, y: Double, duration: Double): Long =
         kanama_ios_godot_tween_tween_property_vector2(tween, target, property, x, y, duration)
