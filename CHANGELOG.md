@@ -7,6 +7,31 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS export dropped every scene-stored `@ScriptProperty` value (task 106)
+
+- **Match3 crashed two seconds after launch on the iPhone** (`tile_scene is not assigned` in
+  `Main._ready`) because the exported `main.scn` no longer contained the Main node's `tile_scene`,
+  `sparkles_scene`, `textures` and cursor properties, nor the external resources they referenced.
+  Godot's export instantiates and re-packs every scene when it converts text resources to binary
+  and keeps only the properties the script instance reports. `installIosAddon` installed the
+  *example project's* desktop `kanama-scripts.jar` into the target project unless the caller also
+  passed `-PkanamaProjectScriptsDir`, so the export-time editor bound no Kotlin class to the
+  project's `.kt` scripts, they reported no properties, and the values were dropped silently
+  (Godot's error output on iOS goes to the system log, not the device console). Three fixes:
+  - `:project-scripts` now falls back to `kanamaIosProjectScriptsDir(s)` when
+    `kanamaProjectScriptsDir(s)` is unset, so `installIosAddon -PkanamaIosProjectScriptsDir=…`
+    registers a project's scripts for **both** targets (the iOS side already fell back the other
+    way). Passing both stays valid.
+  - The desktop `.kt` loader prints a `WARNING: no Kotlin class bound for <path>` line when the
+    scripts jar lacks a script, naming the consequence (dropped export values) and the fix.
+  - Documented the second trap in `docs/exporting/ios.md`: Godot caches each converted scene under
+    `.godot/exported/` keyed by the source's md5 + mtime, so a stripped conversion is reused by
+    every later export until the `.tscn` changes; delete that directory after fixing the jar.
+  The demos' iOS runner passes both properties, clears `.godot/exported/` before exporting and
+  fails when the export log shows an unbound project script (kanama-demos, same task). The
+  September 13 pass and the September 11/14 failures on the same code differed only in which
+  desktop jar sat in the demo's addon folder when the scene was first converted.
+
 ### Changed — one shared body per Godot value type (task 104, step 2)
 
 - **The 19 builtin value types are one set of files, not two.** `Vector3`, `Basis`,

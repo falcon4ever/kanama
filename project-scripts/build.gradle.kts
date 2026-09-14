@@ -13,9 +13,17 @@ repositories {
     mavenCentral()
 }
 
+// The desktop scripts jar is also what the export-time editor loads to learn a project's
+// @ScriptProperty names: Godot's export instantiates and re-packs every scene when it converts text
+// resources to binary, and properties the script instance does not report are dropped. So when a
+// caller registers a project's kotlin-src for iOS only (`installIosAddon
+// -PkanamaIosProjectScriptsDir=…`), compile the same sources for desktop too instead of shipping the
+// example project's jar into that project (task 106: Match3's tile_scene arrived null on the phone).
 val configuredScriptDirs =
     providers.gradleProperty("kanamaProjectScriptsDirs")
         .orElse(providers.gradleProperty("kanamaProjectScriptsDir"))
+        .orElse(providers.gradleProperty("kanamaIosProjectScriptsDirs"))
+        .orElse(providers.gradleProperty("kanamaIosProjectScriptsDir"))
 val activeScriptDirs = configuredScriptDirs.orElse("__kanama_example_project__")
 
 fun shortHash(value: String): String =
