@@ -135,6 +135,13 @@ val generateKanamaReal by
                 | */
                 |typealias real_t = ${if (isDouble) "Double" else "Float"}
                 |
+                |/**
+                | * A flat buffer of `real_t` components — the marshal form the [net.multigesture
+                | * .kanama.binding.runtime.BuiltinCalls] facade moves value types in and out with.
+                | * One alias per platform so the shared value-type bodies never name Float/Double.
+                | */
+                |typealias GodotRealArray = ${if (isDouble) "DoubleArray" else "FloatArray"}
+                |
                 |object GodotReal {
                 |    const val SIZE_BYTES: Long = ${if (isDouble) "8L" else "4L"}
                 |    const val ALIGN_BYTES: Long = ${if (isDouble) "8L" else "4L"}
@@ -142,6 +149,12 @@ val generateKanamaReal by
                 |    fun fromNumber(value: Number): real_t = value.${if (isDouble) "toDouble()" else "toFloat()"}
                 |    fun fromDouble(value: Double): real_t = ${if (isDouble) "value" else "value.toFloat()"}
                 |    fun fromFloat(value: Float): real_t = ${if (isDouble) "value.toDouble()" else "value"}
+                |
+                |    // The two halves of the BuiltinCalls marshal form: a component in and out of a
+                |    // GodotRealArray cell. Identity in both precisions today; the seam exists so a
+                |    // future real_t/C-ABI width split changes Real.kt only.
+                |    fun toC(value: real_t): ${if (isDouble) "Double" else "Float"} = value
+                |    fun fromC(value: ${if (isDouble) "Double" else "Float"}): real_t = value
                 |
                 |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
                 |

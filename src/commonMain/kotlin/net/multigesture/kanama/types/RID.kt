@@ -1,5 +1,7 @@
 package net.multigesture.kanama.types
 
+import kotlin.jvm.JvmInline
+
 /**
  * A handle for a `Resource`'s unique identifier. Kanama value types are immutable snapshots; assign
  * a new value back to the Godot property after changing components.
