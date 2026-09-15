@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0fixturesub0001"]
+
+[ext_resource type="Script" path="res://inner.gd" id="1_inner"]
+
+[node name="Sub" type="Node"]
+
+[node name="inner" type="Node" parent="."]
+script = ExtResource("1_inner")
