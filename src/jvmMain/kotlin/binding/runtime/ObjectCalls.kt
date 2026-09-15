@@ -30419,7 +30419,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
     pattern: String,
     recursive: Boolean,
-    owned: Boolean = false,
+    owned: Boolean,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)

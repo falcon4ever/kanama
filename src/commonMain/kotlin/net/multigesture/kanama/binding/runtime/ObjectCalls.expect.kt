@@ -42,9 +42,9 @@ import net.multigesture.kanama.types.Vector4
  * `ptrcallWithTypedMaterialListArg` -- their signatures name a hand-shaped per-platform wrapper
  * class (which a common declaration cannot see until task 117) or carry a default argument (which
  * an `expect` member cannot express on the Android lane). The `ptrcallWithIntArgRetVector3`
- * overload taking `value: Long): Vector3` is desktop-only and stays platform-only for the same
- * reason. The `ptrcallWithNodePathArgRetBool` overload taking `path: String): Boolean` is
- * desktop-only and stays platform-only for the same reason.
+ * overload taking `value: Long` is desktop-only and stays platform-only for the same reason. The
+ * `ptrcallWithNodePathArgRetBool` overload taking `path: String` is desktop-only and stays
+ * platform-only for the same reason.
  */
 expect object ObjectCalls {
   fun <T : Any> ptrcallNoArgsRetTypedObjectList(

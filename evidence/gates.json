@@ -234,6 +234,16 @@
       "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh; the smoke now installs the desktop addon and runs the exported-scene parity check before installing (task 116)",
       "result": "PASS",
       "source": "scripts/android_smoke.sh"
+    },
+    {
+      "gate": "android-debug-matrix",
+      "claim": "Android Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "7a43afcfbda51c6f8d5596988f88722f697df447",
+      "date": "2026-09-15",
+      "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh (task 104 step 3 close-out run, one KMP module; log kanama-tasks/evidence/task104/closeout-android-matrix-2026-09-15.log)",
+      "result": "PASS",
+      "source": "scripts/android_smoke.sh"
     }
   ]
 }
