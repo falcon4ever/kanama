@@ -143,10 +143,19 @@ scripts/android_smoke.sh \
   /tmp/kanama-demo.apk
 ```
 
-The smoke script builds scripts, installs the Kanama Android AAR, exports a
-debug APK, installs and launches it with `adb`, checks logcat for Kanama startup
-signals, verifies a captured screenshot is not blank, and force-stops the app
-before exiting.
+The smoke script builds scripts, installs the Kanama Android AAR **and the
+desktop addon** (the export runs in the desktop editor, which needs
+`kanama.jar` plus the project's `kanama-scripts.jar` to load the `.kt` scripts;
+without them the export ships every scene with no script properties, see the
+iOS guide's note on the export cache), installs the Android build template
+(by hand from the export templates when Godot's `--install-android-build-template
+--quit` leaves nothing, as it does on 4.7.2), clears `.godot/exported/`, exports
+a debug APK and fails if the export log shows an unbound `.kt` script, runs
+`scripts/check_exported_scene_properties.gd` on the project, then installs and
+launches the APK with `adb`, checks logcat for Kanama startup signals, verifies a
+captured screenshot is not blank, and force-stops the app before exiting.
+`scripts/android_export_minified.sh` (the R8 release smoke) does the same up to
+the export.
 
 To run the same smoke under a different renderer, set
 `KANAMA_ANDROID_RENDERER` (`mobile`, `gl_compatibility`, or `forward_plus`).

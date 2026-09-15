@@ -7,6 +7,19 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — Android smokes exported without the desktop runtime and never installed the build template (task 116)
+
+- `scripts/android_smoke.sh` and `scripts/android_export_minified.sh` installed the Android AAR but not
+  the desktop addon, so on a fresh checkout the export-time editor printed `No loader found for
+  resource: res://….kt` and Godot's export re-packed every scene with no script properties (the
+  task-106 failure, on the Android path); and their `--install-android-build-template --quit` step
+  installs nothing on 4.7.2 (it only takes effect combined with an export), which the scripts hid
+  with a silent fallback before failing on the missing `build.gradle`. Both scripts now install the
+  desktop addon with the project's scripts registered, install the build template by hand from the
+  export templates when Godot leaves nothing, clear `.godot/exported/`, log the export and fail on an
+  unbound script, and run the exported-scene parity check (task 112) before touching the device.
+  Found on a fresh clone with a Pixel 7; the first nine-demo matrix stopped on demo one.
+
 ### Internal — `ObjectCalls` is one object per platform, with a name-parity gate (task 104, step 3 parcel B)
 
 - **Not a user-facing change.** No wrapper member, signature or runtime type changed; game code
