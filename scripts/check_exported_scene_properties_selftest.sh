@@ -37,7 +37,7 @@ fi
 
 echo "[scene_check_selftest] green run: the override node's non-default value must be kept and checked"
 green="$("$GODOT_BIN" --headless --path "$work" --script "$CHECK" 2>&1 || true)"
-printf '%s\n' "$green" | grep -E '^\[check_exported_scenes\]' | sed 's/^/    /'
+printf '%s\n' "$green" | grep -E '^\[check_exported_scenes\]' | sed 's/^/    /' || true
 if ! printf '%s\n' "$green" | grep -q 'PASS: 2 converted scene(s)'; then
   echo "[scene_check_selftest] FAIL: expected PASS over 2 converted scenes" >&2
   exit 1
@@ -49,10 +49,10 @@ fi
 
 echo "[scene_check_selftest] red run: a source property the export never saw must be reported"
 # Insert beside the existing override (a property line after the [editable] tag would not parse).
-/usr/bin/sed -i '' 's/^amp = 0.0$/amp = 0.0\
-extra = 5/' "$work/main.tscn"
+# perl, not `sed -i`: BSD and GNU sed disagree on the in-place flag and this must run on Linux CI too.
+perl -pi -e 's/^amp = 0\.0$/amp = 0.0\nextra = 5/' "$work/main.tscn"
 red="$("$GODOT_BIN" --headless --path "$work" --script "$CHECK" 2>&1 || true)"
-printf '%s\n' "$red" | grep -E '^\[check_exported_scenes\] FAIL' | sed 's/^/    /'
+printf '%s\n' "$red" | grep -E '^\[check_exported_scenes\] FAIL' | sed 's/^/    /' || true
 if ! printf '%s\n' "$red" | grep -qE "FAIL res://main.tscn: node '[^']*inner' \(Node\) lost script property 'extra'"; then
   echo "[scene_check_selftest] FAIL: the missing override property was not reported" >&2
   exit 1
