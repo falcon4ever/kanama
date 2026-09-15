@@ -11,9 +11,9 @@ import java.lang.foreign.MemorySegment
  * the shared wrapper tree stop naming `java.lang.foreign` (task 104 step 3) — only the JVM forbids
  * declaring a `java.*` package, so the shim itself may keep its name on Native.
  *
- * Parcel C turns this into `expect class RawSegment` + `expect val NULL_SEGMENT` once the root is
- * one multiplatform module; until then each platform declares a plain typealias, exactly as
- * `GodotHandle` did in step 1.
+ * Parcel C of task 104 makes the pair `expect`/`actual` — one declaration in common code, these
+ * typealiases as its per-platform implementation — once the root is a single multiplatform module.
+ * Until then each platform declares a plain typealias, exactly as `GodotHandle` did in step 1.
  */
 typealias RawSegment = MemorySegment
 
