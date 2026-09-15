@@ -11,7 +11,6 @@ import tempfile
 from pathlib import Path
 
 
-from check_objectcalls_parity import strip_comments
 from generate_api_wrapper import (
     DESKTOP_COMPANION_SUFFIX,
     DESKTOP_HANDSHAPED,
@@ -28,6 +27,7 @@ from generate_api_wrapper import (
     generated_companion_paths,
     ios_generated_member_names,
     regenerate_tree,
+    strip_comments,
 )
 from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, SHARED_API_DIR
 

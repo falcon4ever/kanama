@@ -40,86 +40,19 @@ import re
 import sys
 from pathlib import Path
 
+# The generator is the layer below: it owns the Kotlin-source utilities, the ONE scanner that says
+# which helpers the shared sources call, and the `expect` object this gate checks (task 119 findings
+# 12 and 17 -- one function and one list, not two of each). `check_wrapper_generator.py` imports it
+# the same way, so the direction stays cycle-free.
+from generate_api_wrapper import (  # noqa: E402  (after the ROOT/sys.path preamble above)
+    match_closer,
+    referenced_objectcalls_helpers,
+    render_objectcalls_expect,
+    strip_comments,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 
-
-# The Kotlin source utilities these two runtime files need (both ktfmt-formatted, one top-level
-# object each): comment stripping that leaves string literals alone, and brace/paren matching. They
-# came from the step-2 `check_builtin_calls_contract.py`, which task 104 step 3 parcel C' deleted --
-# `expect object BuiltinCalls` is that contract now, checked by the compiler.
-def strip_comments(src: str) -> str:
-    """Remove // and /* */ comments, leaving string literals intact."""
-    out: list[str] = []
-    i, n = 0, len(src)
-    in_string = False
-    while i < n:
-        ch = src[i]
-        if in_string:
-            out.append(ch)
-            if ch == "\\" and i + 1 < n:
-                out.append(src[i + 1])
-                i += 2
-                continue
-            if ch == '"':
-                in_string = False
-            i += 1
-            continue
-        if ch == '"':
-            in_string = True
-            out.append(ch)
-            i += 1
-            continue
-        if src.startswith("//", i):
-            while i < n and src[i] != "\n":
-                i += 1
-            continue
-        if src.startswith("/*", i):
-            depth, i = 1, i + 2
-            while i < n and depth:
-                if src.startswith("/*", i):
-                    depth += 1
-                    i += 2
-                elif src.startswith("*/", i):
-                    depth -= 1
-                    i += 2
-                else:
-                    # Keep newlines so line-start anchoring survives comment removal.
-                    out.append("\n" if src[i] == "\n" else "")
-                    i += 1
-            continue
-        out.append(ch)
-        i += 1
-    return "".join(out)
-
-
-def match_closer(src: str, start: int) -> int:
-    """Index of the closer matching the opener at [start] ('{', '(' or '[')."""
-    pairs = {"{": "}", "(": ")", "[": "]"}
-    opener = src[start]
-    closer = pairs[opener]
-    depth = 0
-    in_string = False
-    i = start
-    while i < len(src):
-        ch = src[i]
-        if in_string:
-            if ch == "\\":
-                i += 2
-                continue
-            if ch == '"':
-                in_string = False
-            i += 1
-            continue
-        if ch == '"':
-            in_string = True
-        elif ch == opener:
-            depth += 1
-        elif ch == closer:
-            depth -= 1
-            if depth == 0:
-                return i
-        i += 1
-    raise ValueError(f"unbalanced '{opener}' at offset {start}")
 
 DESKTOP = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
 IOS = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"
@@ -127,29 +60,6 @@ IOS_SOURCE_ROOT = ROOT / "src/iosMain"
 # The GENERATED common declaration of the seam (scripts/generate_api_wrapper.py --write-tree).
 EXPECT = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt"
 
-# Referenced helpers that CANNOT be `expect` members: their signatures name a hand-shaped
-# per-platform wrapper class (`GodotCallable`, `Material`), which a common declaration cannot see
-# until those classes become expect/actual themselves (task 117). They stay plain members on both
-# platforms, and the shared api tree -- platform-compiled source, not common code -- calls them
-# exactly as before. Keep in sync with PLATFORM_ONLY_SIGNATURE_TYPES in
-# scripts/generate_api_wrapper.py, which computes this set from the same desktop signatures.
-EXPECT_EXCEPTIONS = {
-    # A default argument cannot cross the seam: an `actual` may not restate one, and the Android
-    # lane compiles these sources with no common fragment, so a default declared on the `expect`
-    # would be gone there. `callWithVariantArgs(..., owned: Boolean = false)` therefore keeps its
-    # default as a plain member on both backends. Its parameter names are still gated above.
-    "callWithVariantArgs",
-    "ptrcallNoArgsRetCallable",
-    "ptrcallWithIntArgRetCallable",
-    "ptrcallWithRIDArgRetCallable",
-    "ptrcallWithRIDIntArgsRetCallable",
-    "ptrcallWithStringIntArgsRetCallable",
-    "ptrcallWithTypedMaterialListArg",
-}
-# The sources that call the seam: the generated wrapper tree (compiled per platform) and the
-# common fragment beside it (the value types reach the engine through BuiltinCalls, not
-# ObjectCalls, but scanning both means a future common caller is covered by this gate too).
-SHARED_TREES = (ROOT / "src/sharedApi/kotlin", ROOT / "src/commonMain/kotlin")
 
 # A member function of `object ObjectCalls`. Both files are ktfmt-formatted (`ktfmtCheck` is a
 # local_ci stage), so an object member starts at exactly two spaces; anything deeper is a local
@@ -170,11 +80,6 @@ MEMBER_RE = re.compile(
 # `fun ObjectCalls.<name>(` across lines when the helper name is long (three of the task-100
 # helpers are), so the receiver, dot and name may be separated by whitespace.
 EXTENSION_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s*)?ObjectCalls\s*\.\s*(?P<name>[A-Za-z0-9_]+)\s*\(")
-
-# What the shared sources call through the seam. The opening parenthesis is required: since task
-# 104 step 3 parcel C' the common fragment is scanned too, and its KDoc names the backends' files
-# (`.../binding/runtime/ObjectCalls.kt`), which the bare form read as a helper called `kt`.
-REFERENCE_RE = re.compile(r"\bObjectCalls\.([A-Za-z0-9_]+)\s*\(")
 
 Signature = tuple[str, ...]
 
@@ -272,17 +177,6 @@ def parse_extensions(root: Path) -> dict[str, Path]:
     return extensions
 
 
-def referenced_helpers(trees: tuple[Path, ...]) -> list[str]:
-    """Distinct `ObjectCalls.<name>` the shared sources call, sorted."""
-    names: set[str] = set()
-    for tree in trees:
-        for path in sorted(tree.rglob("*.kt")):
-            # Code only: a KDoc or line comment mentioning `ObjectCalls.foo` is prose, not a call
-            # (task 119 finding 5 — the sibling parsers already strip comments).
-            names.update(REFERENCE_RE.findall(strip_comments(path.read_text(encoding="utf-8"))))
-    return sorted(names)
-
-
 def render(signature: Signature) -> str:
     return f"({', '.join(signature)})"
 
@@ -300,12 +194,16 @@ def check_expect_members(referenced: list[str], desktop: dict[str, list[Signatur
         print(f"[objectcalls_parity] FAIL missing {EXPECT.relative_to(ROOT)}", file=sys.stderr)
         return 1
     declared = set(parse_members(EXPECT))
-    want = {name for name in referenced if name in desktop} - EXPECT_EXCEPTIONS
+    # The exceptions are the generator's own: `render_objectcalls_expect()` returns the helpers it
+    # excluded (a signature naming a hand-shaped platform class, or a default argument), computed
+    # from the desktop signatures it renders from. Reading them here instead of mirroring the list
+    # means the two can never disagree (task 119 finding 17).
+    _, excluded, _ = render_objectcalls_expect()
+    exceptions = set(excluded)
+    want = {name for name in referenced if name in desktop} - exceptions
     missing = sorted(want - declared)
     extra = sorted(declared - want)
-    stale_exceptions = sorted(EXPECT_EXCEPTIONS & declared)
-    unused_exceptions = sorted(EXPECT_EXCEPTIONS - set(referenced))
-    if missing or extra or stale_exceptions or unused_exceptions:
+    if missing or extra:
         print(
             "[objectcalls_parity] FAIL the generated expect object does not match the referenced set",
             file=sys.stderr,
@@ -314,10 +212,6 @@ def check_expect_members(referenced: list[str], desktop: dict[str, list[Signatur
             print(f"    missing-from-expect  {name}", file=sys.stderr)
         for name in extra:
             print(f"    not-referenced       {name}", file=sys.stderr)
-        for name in stale_exceptions:
-            print(f"    exception-declared   {name} (listed as an exception but IS an expect member)", file=sys.stderr)
-        for name in unused_exceptions:
-            print(f"    exception-unused     {name} (listed as an exception but the tree never calls it)", file=sys.stderr)
         print(
             "    re-adopt: python3 scripts/generate_api_wrapper.py --write-tree "
             "(then ./gradlew ktfmtFormat)",
@@ -326,7 +220,7 @@ def check_expect_members(referenced: list[str], desktop: dict[str, list[Signatur
         return 1
     print(
         f"[objectcalls_parity] PASS expect object declares {len(declared)} referenced helper(s); "
-        f"{len(EXPECT_EXCEPTIONS)} documented exception(s) stay platform-only"
+        f"{len(exceptions)} platform-only exception(s): {', '.join(sorted(exceptions))}"
     )
     return 0
 
@@ -339,7 +233,7 @@ def main() -> int:
     desktop = parse_members(DESKTOP)
     ios = parse_members(IOS)
     ios_extensions = parse_extensions(IOS_SOURCE_ROOT)
-    referenced = referenced_helpers(SHARED_TREES)
+    referenced = sorted(referenced_objectcalls_helpers())
 
     missing_desktop: list[str] = []
     missing_ios: list[str] = []

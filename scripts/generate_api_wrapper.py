@@ -3035,6 +3035,87 @@ expect object ObjectCalls {{
 '''
 
 
+# Kotlin source utilities the ObjectCalls scanners need: comment stripping that leaves string
+# literals alone, and brace/paren matching. They live here, in the generator, because the generator
+# is the layer the gates import (check_wrapper_generator.py and check_objectcalls_parity.py both
+# do) -- putting them the other way round would close an import cycle. They came from the step-2
+# `check_builtin_calls_contract.py`, which task 104 step 3 parcel C' deleted: `expect object
+# BuiltinCalls` is that contract now, checked by the compiler.
+def strip_comments(src: str) -> str:
+    """Remove // and /* */ comments, leaving string literals intact."""
+    out: list[str] = []
+    i, n = 0, len(src)
+    in_string = False
+    while i < n:
+        ch = src[i]
+        if in_string:
+            out.append(ch)
+            if ch == "\\" and i + 1 < n:
+                out.append(src[i + 1])
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+            out.append(ch)
+            i += 1
+            continue
+        if src.startswith("//", i):
+            while i < n and src[i] != "\n":
+                i += 1
+            continue
+        if src.startswith("/*", i):
+            depth, i = 1, i + 2
+            while i < n and depth:
+                if src.startswith("/*", i):
+                    depth += 1
+                    i += 2
+                elif src.startswith("*/", i):
+                    depth -= 1
+                    i += 2
+                else:
+                    # Keep newlines so line-start anchoring survives comment removal.
+                    out.append("\n" if src[i] == "\n" else "")
+                    i += 1
+            continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def match_closer(src: str, start: int) -> int:
+    """Index of the closer matching the opener at [start] ('{', '(' or '[')."""
+    pairs = {"{": "}", "(": ")", "[": "]"}
+    opener = src[start]
+    closer = pairs[opener]
+    depth = 0
+    in_string = False
+    i = start
+    while i < len(src):
+        ch = src[i]
+        if in_string:
+            if ch == "\\":
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == opener:
+            depth += 1
+        elif ch == closer:
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    raise ValueError(f"unbalanced '{opener}' at offset {start}")
+
+
 def desktop_objectcalls_declarations() -> list[tuple[str, str]]:
     """(name, signature text) for every member function of the desktop `ObjectCalls`.
 
@@ -3071,17 +3152,31 @@ def desktop_objectcalls_declarations() -> list[tuple[str, str]]:
     return out
 
 
-def referenced_objectcalls_helpers() -> set[str]:
-    """Distinct `ObjectCalls.<name>` the shared api tree and the common fragment call.
+# The sources that call the seam: the generated wrapper tree (compiled per platform) and the common
+# fragment beside it (the value types reach the engine through BuiltinCalls, not ObjectCalls, but
+# scanning both means a future common caller is covered too).
+SHARED_TREES = (SHARED_API_DIR.parents[3], COMMON_SOURCE_ROOT)
 
-    The same measurement `check_objectcalls_parity.py` makes (one grep over both source roots), so
-    the generated `expect` list and the gate's contract cannot drift apart.
+# A call through the seam. The opening parenthesis is required and comments are stripped first: the
+# common fragment's KDoc names the backends' files (`.../binding/runtime/ObjectCalls.kt`), which a
+# bare `ObjectCalls\.(\w+)` reads as a helper called `kt`.
+OBJECTCALLS_REFERENCE_RE = re.compile(r"\bObjectCalls\.(\w+)\s*\(")
+
+
+def referenced_objectcalls_helpers(trees: tuple[Path, ...] = SHARED_TREES) -> set[str]:
+    """Distinct `ObjectCalls.<name>` the shared api tree and the common fragment CALL.
+
+    ONE scanner (task 119 finding 12): `--write-tree` derives the generated `expect object` from
+    it and `scripts/check_objectcalls_parity.py` gates that object against it, so the two cannot
+    disagree about, say, a helper named only in a comment -- which is exactly what they did while
+    each kept its own grep and only one of them stripped comments.
     """
     names: set[str] = set()
-    pattern = re.compile(r"\bObjectCalls\.(\w+)\s*\(")
-    for root in (SHARED_API_DIR.parent.parent.parent.parent, COMMON_SOURCE_ROOT):
+    for root in trees:
         for path in sorted(root.rglob("*.kt")):
-            names.update(pattern.findall(path.read_text(encoding="utf-8")))
+            names.update(
+                OBJECTCALLS_REFERENCE_RE.findall(strip_comments(path.read_text(encoding="utf-8")))
+            )
     return names
 
 
