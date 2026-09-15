@@ -16,6 +16,8 @@ DEVICE_LABEL="${KANAMA_IOS_DEVICE_LABEL:-}"
 START_AT=""
 CLEAN_INSTALLED=1
 GATE_BUNDLE_ID="${KANAMA_IOS_GATE_BUNDLE_ID:-net.multigesture.kanama.devicegate}"
+# Task 111: the demos runner reads this for the launch stage (see its usage); default on.
+export KANAMA_IOS_SMOKE_QUIT="${KANAMA_IOS_SMOKE_QUIT:-1}"
 
 usage() {
   cat <<'EOF'
@@ -35,6 +37,10 @@ Optional environment:
   KANAMA_GODOT_BIN=/Applications/Godot.app/Contents/MacOS/Godot
   KANAMA_IOS_DEVICE_LABEL="iPhone 15 Pro, iOS 26.5"
   KANAMA_IOS_GATE_BUNDLE_ID=net.multigesture.kanama.devicegate
+  KANAMA_IOS_SMOKE_QUIT=1|0   Launch each demo with KANAMA_DEMO_SMOKE_QUIT=1 so its SmokeQuit script
+                              (spawn / damage / free / quit) runs on the phone inside the console window;
+                              the step then also requires the smoke's completion line (task 111).
+                              Default 1; set 0 for a launch-only matrix.
   DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 
 Options:

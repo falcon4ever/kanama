@@ -7,6 +7,21 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — iOS device gate: the demos' smoke scripts run on the phone; crash reports are read (task 111)
+
+- **`System.getenv` on iOS reads the process environment** (`platform.posix.getenv`) instead of
+  returning null. Every demo ships a `SmokeQuit` script (spawn / damage / free / unload / quit) gated
+  on `KANAMA_DEMO_SMOKE_QUIT=1`; on the phone it never ran, so the gate proved "launched", not "ran
+  and tore down" — task 108's crash lived in exactly that gap.
+- `ios_device_gate.sh` sets `KANAMA_IOS_SMOKE_QUIT=1` by default; the demos' runner then launches each
+  app with `devicectl … --environment-variables {"KANAMA_DEMO_SMOKE_QUIT":"1"}`, requires the smoke's
+  completion line (`[kanama:smoke] SmokeQuit complete`) inside the console window, and snapshots the
+  device's crash logs before and after the window — a new `<App>-*.ips` fails the step even when the
+  crash left no signature in the console (kanama-demos, same task). `KANAMA_IOS_SMOKE_QUIT=0` restores
+  the launch-only matrix.
+- Godot's own ERROR output on iOS goes to the unified log (`OsLogLogger`), not the console stream the
+  gate reads; capturing it stays open (task 111, item 3).
+
 ### Added — export integrity check for scene-stored `@ScriptProperty` values (task 112)
 
 - `scripts/check_exported_scene_properties.gd` runs headless in an exported project, loads every

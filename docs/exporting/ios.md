@@ -145,6 +145,13 @@ It loads every converted scene next to its source `.tscn` and fails, naming the
 node and property, when a script-declared property was dropped. The demos' iOS
 runner and the starter smoke run it after every export.
 
+`System.getenv` works on iOS: the value comes from the app's process
+environment, which `xcrun devicectl device process launch --environment-variables
+'{"NAME":"value"}'` can set for a development launch. The device gate uses this to
+run each demo's `SmokeQuit` script on the phone (`KANAMA_DEMO_SMOKE_QUIT=1`). A
+shipped app has no such variables, so a `getenv` check is a debugging switch, not
+a configuration mechanism.
+
 This installs the iOS descriptor entries:
 
 ```ini
