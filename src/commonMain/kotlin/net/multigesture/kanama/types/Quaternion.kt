@@ -1,6 +1,7 @@
 package net.multigesture.kanama.types
 
 import kotlin.math.sqrt
+import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
 
 private const val SLERP_HASH = 1773590316L
@@ -158,10 +159,7 @@ data class Quaternion(
         slerpBind,
         toGodotRealArray(),
         4,
-        listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_QUATERNION, to.toGodotRealArray()),
-          BuiltinCalls.BArg.Real(weight),
-        ),
+        listOf(BArg.Floats(BuiltinCalls.PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight)),
       )
     )
 
@@ -209,7 +207,7 @@ data class Quaternion(
           GodotRealArray(0),
           4,
           listOf(
-            BuiltinCalls.BArg.Floats(
+            BArg.Floats(
               BuiltinCalls.PT_VECTOR3,
               GodotRealArray(3).also {
                 it[0] = GodotReal.toC(euler.x)

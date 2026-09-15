@@ -25,8 +25,11 @@ import net.multigesture.kanama.types.GodotRealArray
 import net.multigesture.kanama.types.GodotRealVar
 
 /**
- * iOS implementation of value-type (builtin) method calls — the analogue of [ObjectCalls] for
- * Godot's builtin Variant types (Transform3D, Basis, Vector*, …). Engine-computed methods like
+ * iOS implementation of value-type (builtin) method calls — the `actual` of the `expect object
+ * BuiltinCalls` in
+ * `src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.expect.kt`, which is
+ * where the contract and its KDoc live, and the analogue of [ObjectCalls] for Godot's builtin
+ * Variant types (Transform3D, Basis, Vector*, …). Engine-computed methods like
  * `Transform3D.inverse()` route through `variant_get_ptr_builtin_method` (resolved once, cached
  * like a MethodBind) + the generic C `kanama_ios_godot_builtin_call`, which calls `method(base,
  * args, ret, argc)` with raw value byte buffers. Mirrors the desktop `BuiltinTypes.call`.
@@ -34,43 +37,25 @@ import net.multigesture.kanama.types.GodotRealVar
  * Marshalling note: value components are `real_t` in iOS builds, laid out in the same column-major
  * order the [ObjectCalls] ptrcall helpers use.
  */
-object BuiltinCalls {
+actual object BuiltinCalls {
   // Godot Variant type ids (Variant::Type) — must match the engine enum.
-  const val VT_VECTOR2 = 5
-  const val VT_VECTOR3 = 9
-  const val VT_QUATERNION = 15
-  const val VT_BASIS = 17
-  const val VT_TRANSFORM3D = 18
+  actual const val VT_VECTOR2 = 5
+  actual const val VT_VECTOR3 = 9
+  actual const val VT_QUATERNION = 15
+  actual const val VT_BASIS = 17
+  actual const val VT_TRANSFORM3D = 18
 
   // ptrcall/builtin arg tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c.
   // Used as the [BArg.Floats] tag for value-type args (struct types are passthrough C-side).
-  const val PT_BOOL = 1
-  const val PT_INT64 = 3
-  const val PT_FLOAT64 = 5
-  const val PT_VECTOR2 = 6
-  const val PT_VECTOR3 = 8
-  const val PT_TRANSFORM3D = 19
-  const val PT_QUATERNION = 20
+  actual const val PT_BOOL = 1
+  actual const val PT_INT64 = 3
+  actual const val PT_FLOAT64 = 5
+  actual const val PT_VECTOR2 = 6
+  actual const val PT_VECTOR3 = 8
+  actual const val PT_TRANSFORM3D = 19
+  actual const val PT_QUATERNION = 20
 
-  /** An argument to a builtin method call (the value-type analogue of a ptrcall arg). */
-  sealed interface BArg {
-    /**
-     * A struct value laid out as `real_t` [values] (Vector3/Basis/Transform3D/…); [tag] is its
-     * PT_*.
-     */
-    data class Floats(val tag: Int, val values: GodotRealArray) : BArg
-
-    /** A `bool` arg (1-byte). */
-    data class Bool(val value: Boolean) : BArg
-
-    /** A scalar `float`/`double` arg (8-byte double at ptrcall). */
-    data class Real(val value: Double) : BArg
-
-    /** An `int` arg (`int64_t` at ptrcall) — Basis' EulerOrder, array indices, … */
-    data class Int64(val value: Long) : BArg
-  }
-
-  fun getBuiltinMethod(variantType: Int, method: String, hash: Long): Long =
+  actual fun getBuiltinMethod(variantType: Int, method: String, hash: Long): Long =
     kanama_ios_godot_get_builtin_method(variantType, method, hash)
 
   // Marshal [base] (real_t components) + [args] (PT-tagged), then invoke the builtin
@@ -131,11 +116,11 @@ object BuiltinCalls {
    * Call a builtin method whose base and return are value types laid out as `real_t` components
    * ([base] in, [retCount] values out), with optional [args].
    */
-  fun call(
+  actual fun call(
     methodPtr: Long,
     base: GodotRealArray,
     retCount: Int,
-    args: List<BArg> = emptyList(),
+    args: List<BArg>,
   ): GodotRealArray = memScoped {
     val ret = allocArray<GodotRealVar>(if (retCount > 0) retCount else 1)
     invokeBuiltin(methodPtr, base, args, ret)
@@ -146,7 +131,7 @@ object BuiltinCalls {
    * No-arg builtin method whose base and return are the same value type laid out as `real_t`
    * components (inverse / transposed / orthonormalized / …).
    */
-  fun callNoArgsFloat32(methodPtr: Long, base: GodotRealArray): GodotRealArray =
+  actual fun callNoArgsFloat32(methodPtr: Long, base: GodotRealArray): GodotRealArray =
     call(methodPtr, base, base.size, emptyList())
 
   /**
@@ -156,7 +141,7 @@ object BuiltinCalls {
    * return as a double (matches desktop `BuiltinTypes`, which allocates a JAVA_DOUBLE ret). An
    * `int`/`bool` scalar return would need its own decode width.
    */
-  fun callScalar(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Double =
+  actual fun callScalar(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Double =
     memScoped {
       val ret = alloc<DoubleVar>()
       invokeBuiltin(methodPtr, base, args, ret.ptr)
@@ -167,7 +152,7 @@ object BuiltinCalls {
    * Builtin method returning a `bool` (is_normalized / is_finite / …). Godot's ptr-ABI encodes a
    * bool return as a single `uint8_t` (`PtrToArg<bool>` = uint8), so decode one byte (≠ 0 → true).
    */
-  fun callBool(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Boolean =
+  actual fun callBool(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Boolean =
     memScoped {
       val ret = alloc<ByteVar>()
       invokeBuiltin(methodPtr, base, args, ret.ptr)
@@ -178,10 +163,9 @@ object BuiltinCalls {
    * Builtin method returning an `int` (max_axis_index / … ). Godot's ptr-ABI encodes an int return
    * as `int64_t` (`PtrToArg<int64_t>` is direct 8-byte), so decode a Long.
    */
-  fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Long =
-    memScoped {
-      val ret = alloc<LongVar>()
-      invokeBuiltin(methodPtr, base, args, ret.ptr)
-      ret.value
-    }
+  actual fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Long = memScoped {
+    val ret = alloc<LongVar>()
+    invokeBuiltin(methodPtr, base, args, ret.ptr)
+    ret.value
+  }
 }

@@ -16,60 +16,36 @@ import net.multigesture.kanama.types.GodotRealArray
 import net.multigesture.kanama.types.GodotRealSegment
 
 /**
- * Desktop/Android implementation of value-type (builtin) method calls — the one facade the shared
- * value-type bodies under `src/commonMain/kotlin/net/multigesture/kanama/types/` call, so that
- * `Transform3D.inverse()` and friends have ONE body for every backend (task 104 step 2).
- *
- * The public surface of this object is the contract: the iOS object at
- * `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.kt` declares
- * exactly the same members over its C shim. The compiler cannot prove that until the root becomes a
- * multiplatform module and this pair turns into an `expect object` (step 3), so
- * `scripts/check_builtin_calls_contract.py` proves it in the meantime.
+ * Desktop/Android implementation of value-type (builtin) method calls — the `actual` of the `expect
+ * object BuiltinCalls` in
+ * `src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.expect.kt`, which is
+ * where the contract and its KDoc live. The compiler holds this object and the iOS one at
+ * `src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.kt` to the same member
+ * set and the same parameter names (task 104 step 3 parcel C'; it replaced the step-2 Python gate).
  *
  * Here the implementation is the FFM one: `variant_get_ptr_builtin_method` resolves the method once
  * (cached like a MethodBind, keyed by the pointer the resolution returned), and the builtin ptrcall
  * `method(base, args, ret, argc)` runs over Arena-allocated `real_t` buffers. Method pointers
  * travel as `Long` on both platforms, so a shared body never names a platform pointer type.
  */
-object BuiltinCalls {
+actual object BuiltinCalls {
   // Godot Variant type ids (Variant::Type) — must match the engine enum, and the [VariantType]
   // entries of the same name.
-  const val VT_VECTOR2 = 5
-  const val VT_VECTOR3 = 9
-  const val VT_QUATERNION = 15
-  const val VT_BASIS = 17
-  const val VT_TRANSFORM3D = 18
+  actual const val VT_VECTOR2 = 5
+  actual const val VT_VECTOR3 = 9
+  actual const val VT_QUATERNION = 15
+  actual const val VT_BASIS = 17
+  actual const val VT_TRANSFORM3D = 18
 
   // Builtin arg tags. The desktop ptr-ABI is positional and untyped — the callee knows the layout —
   // so these are carried for the shared call sites and the iOS shim, which dispatches on them.
-  const val PT_BOOL = 1
-  const val PT_INT64 = 3
-  const val PT_FLOAT64 = 5
-  const val PT_VECTOR2 = 6
-  const val PT_VECTOR3 = 8
-  const val PT_TRANSFORM3D = 19
-  const val PT_QUATERNION = 20
-
-  /** An argument to a builtin method call (the value-type analogue of a ptrcall arg). */
-  sealed interface BArg {
-    /**
-     * A struct value laid out as `real_t` [values] (Vector3/Basis/Transform3D/…); [tag] is its
-     * PT_*.
-     */
-    data class Floats(val tag: Int, val values: GodotRealArray) : BArg
-
-    /** A `bool` arg (1-byte). */
-    data class Bool(val value: Boolean) : BArg
-
-    /**
-     * A scalar `float`/`double` arg. Godot's ptr-ABI encodes a Variant FLOAT argument as an 8-byte
-     * `double` regardless of the engine's real_t precision, so this is never a real_t.
-     */
-    data class Real(val value: Double) : BArg
-
-    /** An `int` arg (`int64_t` at ptrcall) — Basis' EulerOrder, array indices, … */
-    data class Int64(val value: Long) : BArg
-  }
+  actual const val PT_BOOL = 1
+  actual const val PT_INT64 = 3
+  actual const val PT_FLOAT64 = 5
+  actual const val PT_VECTOR2 = 6
+  actual const val PT_VECTOR3 = 8
+  actual const val PT_TRANSFORM3D = 19
+  actual const val PT_QUATERNION = 20
 
   private val builtinMethodDescriptor: FunctionDescriptor =
     FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, JAVA_INT)
@@ -92,7 +68,7 @@ object BuiltinCalls {
    * pointer. Cache the result in a `by lazy` on the value type — resolution costs a StringName and
    * an engine lookup.
    */
-  fun getBuiltinMethod(variantType: Int, method: String, hash: Long): Long {
+  actual fun getBuiltinMethod(variantType: Int, method: String, hash: Long): Long {
     val fn =
       getPtrBuiltinMethod.invoke(variantType, GodotStrings.makeStringName(method), hash)
         as MemorySegment
@@ -171,11 +147,11 @@ object BuiltinCalls {
    * Call a builtin method whose base and return are value types laid out as `real_t` components
    * ([base] in, [retCount] values out), with optional [args].
    */
-  fun call(
+  actual fun call(
     methodPtr: Long,
     base: GodotRealArray,
     retCount: Int,
-    args: List<BArg> = emptyList(),
+    args: List<BArg>,
   ): GodotRealArray =
     Arena.ofConfined().use { arena ->
       val size = if (retCount > 0) retCount else 1
@@ -188,7 +164,7 @@ object BuiltinCalls {
    * No-arg builtin method whose base and return are the same value type laid out as `real_t`
    * components (inverse / transposed / orthonormalized / …).
    */
-  fun callNoArgsFloat32(methodPtr: Long, base: GodotRealArray): GodotRealArray =
+  actual fun callNoArgsFloat32(methodPtr: Long, base: GodotRealArray): GodotRealArray =
     call(methodPtr, base, base.size, emptyList())
 
   /**
@@ -196,7 +172,7 @@ object BuiltinCalls {
    * ptr-ABI encodes a `float`-typed (Variant FLOAT) return as an 8-byte `double` regardless of the
    * engine's real_t precision — NOT a real_t, unlike value-type *components*.
    */
-  fun callScalar(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Double =
+  actual fun callScalar(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Double =
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(JAVA_DOUBLE)
       invokeBuiltin(arena, methodPtr, base, args, ret)
@@ -207,7 +183,7 @@ object BuiltinCalls {
    * Builtin method returning a `bool` (is_normalized / is_finite / …). Godot's ptr-ABI encodes a
    * bool return as a single `uint8_t` (`PtrToArg<bool>` = uint8), so decode one byte (≠ 0 → true).
    */
-  fun callBool(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Boolean =
+  actual fun callBool(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Boolean =
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(JAVA_BYTE)
       invokeBuiltin(arena, methodPtr, base, args, ret)
@@ -218,7 +194,7 @@ object BuiltinCalls {
    * Builtin method returning an `int` (max_axis_index / …). Godot's ptr-ABI encodes an int return
    * as `int64_t` (`PtrToArg<int64_t>` is direct 8-byte), so decode a Long.
    */
-  fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Long =
+  actual fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Long =
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(JAVA_LONG)
       invokeBuiltin(arena, methodPtr, base, args, ret)

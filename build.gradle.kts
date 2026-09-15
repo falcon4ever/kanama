@@ -226,6 +226,12 @@ val generateKanamaRealSegment by
 configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
   jvmToolchain(25)
 
+  // The seams this module is built on -- `expect interface RawSegment`, `expect object
+  // BuiltinCalls`, `expect object ObjectCalls` -- are `expect`/`actual` CLASSIFIERS, which the
+  // compiler still labels Beta (KT-61573). The flag acknowledges that once instead of printing the
+  // notice for every `actual` declaration in the two backends.
+  compilerOptions { freeCompilerArgs.add("-Xexpect-actual-classes") }
+
   jvm()
   iosArm64()
   iosSimulatorArm64()
@@ -247,16 +253,12 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
 
   sourceSets {
     val commonMain by getting {
-      // The REAL common fragment (task 104 step 3 parcel C'): the generated real_t, the value
-      // types, GodotHandle and the expect seams. Everything here type-checks with no platform
+      // The REAL common fragment (task 104 step 3 parcel C'): src/commonMain/kotlin holds the
+      // value types, GodotHandle and the expect seams (RawSegment / NULL_SEGMENT, BuiltinCalls,
+      // ObjectCalls), plus the generated real_t. Everything here type-checks with no platform
       // declaration in sight — K2 resolves a common source file against common code only, even
-      // inside a platform compilation.
-      //
-      // src/commonMain/kotlin also carries the value types and GodotHandle in this commit; they
-      // reference BuiltinCalls, which is still a per-platform object until commit 3 makes it an
-      // `expect object`. Until then the directory is a srcDir of the two platform fragments below
-      // instead of the common one, which is exactly the task-103 arrangement.
-      kotlin.setSrcDirs(emptyList<String>())
+      // inside a platform compilation — which is what makes the compiler the proof that both
+      // backends implement every declaration in it.
       kotlin.srcDir(generateKanamaReal)
       dependencies {
         implementation(kotlin("stdlib"))
@@ -269,7 +271,6 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
       // It is not common code — its classes extend the per-platform hand-shaped wrappers
       // (GodotObject, Node, …), which a common source file may not name (task 117).
       kotlin.srcDir("src/sharedApi/kotlin")
-      kotlin.srcDir("src/commonMain/kotlin")
       kotlin.srcDir(generateKanamaRealSegment)
       dependencies { implementation(project(":annotations")) }
     }
@@ -286,7 +287,6 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     val iosMain by creating {
       dependsOn(commonMain)
       kotlin.srcDir("src/sharedApi/kotlin")
-      kotlin.srcDir("src/commonMain/kotlin")
     }
     val iosArm64Main by getting {
       dependsOn(iosMain)

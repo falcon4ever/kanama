@@ -1,5 +1,6 @@
 package net.multigesture.kanama.types
 
+import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
 
 private const val LOOKING_AT_HASH = 90889270L
@@ -97,10 +98,7 @@ data class Transform3D(
         interpolateWithBind,
         toGodotRealArray(),
         12,
-        listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_TRANSFORM3D, to.toGodotRealArray()),
-          BuiltinCalls.BArg.Real(weight),
-        ),
+        listOf(BArg.Floats(BuiltinCalls.PT_TRANSFORM3D, to.toGodotRealArray()), BArg.Real(weight)),
       )
     )
 
@@ -127,9 +125,9 @@ data class Transform3D(
         toGodotRealArray(),
         12,
         listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(target)),
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(up)),
-          BuiltinCalls.BArg.Bool(useModelFront),
+          BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(target)),
+          BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(up)),
+          BArg.Bool(useModelFront),
         ),
       )
     )
@@ -165,7 +163,7 @@ data class Transform3D(
         methodPtr,
         toGodotRealArray(),
         12,
-        listOf(BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(vector))),
+        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(vector))),
       )
     )
 

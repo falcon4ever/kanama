@@ -1,5 +1,6 @@
 package net.multigesture.kanama.types
 
+import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
 
 private const val GET_EULER_HASH = 1394941017L
@@ -152,7 +153,7 @@ data class Basis(
         scaledBind,
         toGodotRealArray(),
         9,
-        listOf(BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(scale))),
+        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(scale))),
       )
     )
 
@@ -181,9 +182,7 @@ data class Basis(
    * Generated from Godot docs: Basis.get_euler
    */
   fun getEuler(order: Long = EULER_ORDER_YXZ): Vector3 =
-    vector3From(
-      BuiltinCalls.call(getEulerBind, toGodotRealArray(), 3, listOf(BuiltinCalls.BArg.Int64(order)))
-    )
+    vector3From(BuiltinCalls.call(getEulerBind, toGodotRealArray(), 3, listOf(BArg.Int64(order))))
 
   // Column-major real_t values, matching the ObjectCalls Basis ptrcall layout.
   private fun toGodotRealArray(): GodotRealArray =
@@ -269,10 +268,7 @@ data class Basis(
           fromEulerBind,
           GodotRealArray(0),
           9,
-          listOf(
-            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(euler)),
-            BuiltinCalls.BArg.Int64(order),
-          ),
+          listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(euler)), BArg.Int64(order)),
         )
       )
 
@@ -299,9 +295,9 @@ data class Basis(
           GodotRealArray(0),
           9,
           listOf(
-            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(target)),
-            BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(up)),
-            BuiltinCalls.BArg.Bool(useModelFront),
+            BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(target)),
+            BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(up)),
+            BArg.Bool(useModelFront),
           ),
         )
       )

@@ -40,12 +40,86 @@ import re
 import sys
 from pathlib import Path
 
-# The Kotlin source utilities are the ones the sibling BuiltinCalls gate already proved on these
-# same two runtime files (ktfmt-formatted, one top-level object): comment stripping that leaves
-# string literals alone, and brace/paren matching.
-from check_builtin_calls_contract import match_closer, strip_comments
-
 ROOT = Path(__file__).resolve().parents[1]
+
+
+# The Kotlin source utilities these two runtime files need (both ktfmt-formatted, one top-level
+# object each): comment stripping that leaves string literals alone, and brace/paren matching. They
+# came from the step-2 `check_builtin_calls_contract.py`, which task 104 step 3 parcel C' deleted --
+# `expect object BuiltinCalls` is that contract now, checked by the compiler.
+def strip_comments(src: str) -> str:
+    """Remove // and /* */ comments, leaving string literals intact."""
+    out: list[str] = []
+    i, n = 0, len(src)
+    in_string = False
+    while i < n:
+        ch = src[i]
+        if in_string:
+            out.append(ch)
+            if ch == "\\" and i + 1 < n:
+                out.append(src[i + 1])
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+            out.append(ch)
+            i += 1
+            continue
+        if src.startswith("//", i):
+            while i < n and src[i] != "\n":
+                i += 1
+            continue
+        if src.startswith("/*", i):
+            depth, i = 1, i + 2
+            while i < n and depth:
+                if src.startswith("/*", i):
+                    depth += 1
+                    i += 2
+                elif src.startswith("*/", i):
+                    depth -= 1
+                    i += 2
+                else:
+                    # Keep newlines so line-start anchoring survives comment removal.
+                    out.append("\n" if src[i] == "\n" else "")
+                    i += 1
+            continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def match_closer(src: str, start: int) -> int:
+    """Index of the closer matching the opener at [start] ('{', '(' or '[')."""
+    pairs = {"{": "}", "(": ")", "[": "]"}
+    opener = src[start]
+    closer = pairs[opener]
+    depth = 0
+    in_string = False
+    i = start
+    while i < len(src):
+        ch = src[i]
+        if in_string:
+            if ch == "\\":
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == opener:
+            depth += 1
+        elif ch == closer:
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    raise ValueError(f"unbalanced '{opener}' at offset {start}")
 
 DESKTOP = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
 IOS = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"

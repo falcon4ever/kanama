@@ -4,6 +4,7 @@ package net.multigesture.kanama.types
 
 import kotlin.math.abs
 import kotlin.math.sqrt
+import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
 
 private const val LERP_HASH = 1682608829L
@@ -243,12 +244,7 @@ data class Vector3(
    */
   fun limitLength(maxLength: Double): Vector3 =
     fromGodotRealArray(
-      BuiltinCalls.call(
-        limitLengthBind,
-        toGodotRealArray(),
-        3,
-        listOf(BuiltinCalls.BArg.Real(maxLength)),
-      )
+      BuiltinCalls.call(limitLengthBind, toGodotRealArray(), 3, listOf(BArg.Real(maxLength)))
     )
 
   /**
@@ -263,7 +259,7 @@ data class Vector3(
         bounceBind,
         toGodotRealArray(),
         3,
-        listOf(BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, normal.toGodotRealArray())),
+        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, normal.toGodotRealArray())),
       )
     )
 
@@ -303,8 +299,8 @@ data class Vector3(
       signedAngleToBind,
       toGodotRealArray(),
       listOf(
-        BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, to.toGodotRealArray()),
-        BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, axis.toGodotRealArray()),
+        BArg.Floats(BuiltinCalls.PT_VECTOR3, to.toGodotRealArray()),
+        BArg.Floats(BuiltinCalls.PT_VECTOR3, axis.toGodotRealArray()),
       ),
     )
 
@@ -315,10 +311,7 @@ data class Vector3(
         methodPtr,
         toGodotRealArray(),
         3,
-        listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector.toGodotRealArray()),
-          BuiltinCalls.BArg.Real(value),
-        ),
+        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, vector.toGodotRealArray()), BArg.Real(value)),
       )
     )
 

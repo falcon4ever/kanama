@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
 import net.multigesture.kanama.ffi.GodotFFI
 
@@ -47,10 +48,7 @@ class BuiltinCallsFacadeTest {
         method,
         realsOf(1.0, 2.0, 3.0),
         3,
-        listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(10.0, 20.0, 30.0)),
-          BuiltinCalls.BArg.Real(0.5),
-        ),
+        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(10.0, 20.0, 30.0)), BArg.Real(0.5)),
       )
 
     assertEquals(3, result.size)
@@ -91,10 +89,7 @@ class BuiltinCallsFacadeTest {
     // (Basis.get_euler's EulerOrder is the shared bodies' only user of it).
     val maxAxis =
       BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "max_axis_index", MAX_AXIS_HASH)
-    assertEquals(
-      FakeGodot.INT_REPLY,
-      BuiltinCalls.callInt(maxAxis, base, listOf(BuiltinCalls.BArg.Int64(7L))),
-    )
+    assertEquals(FakeGodot.INT_REPLY, BuiltinCalls.callInt(maxAxis, base, listOf(BArg.Int64(7L))))
     assertEquals(7L, FakeGodot.lastInt64Arg)
   }
 
@@ -109,9 +104,9 @@ class BuiltinCallsFacadeTest {
         GodotRealArray(0),
         9,
         listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(0.0, 0.0, -4.0)),
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(0.0, 1.0, 0.0)),
-          BuiltinCalls.BArg.Bool(true),
+          BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(0.0, 0.0, -4.0)),
+          BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(0.0, 1.0, 0.0)),
+          BArg.Bool(true),
         ),
       )
 
@@ -247,7 +242,8 @@ private object FakeGodot {
     if (lastBaseWasNull) {
       val out = ret.reinterpret(GodotReal.SIZE_BYTES * 9)
       for (i in 0 until 9) {
-        val value = if (i < 3) GodotRealSegment.readIndex(first, i.toLong()) else GodotReal.fromDouble(0.0)
+        val value =
+          if (i < 3) GodotRealSegment.readIndex(first, i.toLong()) else GodotReal.fromDouble(0.0)
         GodotRealSegment.writeIndex(out, i.toLong(), value)
       }
       return

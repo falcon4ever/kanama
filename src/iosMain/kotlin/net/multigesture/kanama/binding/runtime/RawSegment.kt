@@ -3,23 +3,14 @@ package net.multigesture.kanama.binding.runtime
 import java.lang.foreign.MemorySegment
 
 /**
- * The raw engine pointer: the address a [net.multigesture.kanama.api.GodotHandle] carries, named
- * once per backend under this one fully-qualified name.
+ * iOS: the raw engine pointer is the Kotlin/Native `java.lang.foreign.MemorySegment` shim — an
+ * opaque class over a `Long` address. Only the JVM forbids declaring a `java.*` package, so the
+ * shim keeps the name the desktop sources used before the pointer had a Kanama name.
  *
- * iOS aliases the Kotlin/Native `java.lang.foreign.MemorySegment` shim (a `Long` address behind an
- * opaque class); desktop/Android alias the JDK FFM type. Declaring the pointer here is what lets
- * the shared wrapper tree stop naming `java.lang.foreign` (task 104 step 3) — only the JVM forbids
- * declaring a `java.*` package, so the shim itself may keep its name on Native.
- *
- * Parcel C of task 104 makes the pair `expect`/`actual` — one declaration in common code, these
- * typealiases as its per-platform implementation — once the root is a single multiplatform module.
- * Until then each platform declares a plain typealias, exactly as `GodotHandle` did in step 1.
+ * The `expect` declaration and what it may promise are in
+ * `src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/RawSegment.expect.kt`.
  */
-typealias RawSegment = MemorySegment
+actual typealias RawSegment = MemorySegment
 
-/**
- * The null engine pointer: the receiver of a static engine call and the marshalling of a null
- * object argument. A Java `static final` field cannot actualize an `expect` companion member, so
- * this is a top-level value and stays one in parcel C.
- */
-val NULL_SEGMENT: RawSegment = MemorySegment.NULL
+/** iOS: the shim's address-0 pointer. */
+actual val NULL_SEGMENT: RawSegment = MemorySegment.NULL

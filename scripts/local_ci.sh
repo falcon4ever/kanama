@@ -350,9 +350,6 @@ python3 "$ROOT_DIR/scripts/audit_replicated_script_properties.py" "$ROOT_DIR/exa
 stage "value-type builtin parity audit"
 python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 
-stage "BuiltinCalls facade contract (desktop vs iOS)"
-python3 "$ROOT_DIR/scripts/check_builtin_calls_contract.py"
-
 stage "ObjectCalls member/name parity (desktop vs iOS)"
 python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
 
