@@ -44,7 +44,7 @@ from pathlib import Path
 # which helpers the shared sources call, and the `expect` object this gate checks (task 119 findings
 # 12 and 17 -- one function and one list, not two of each). `check_wrapper_generator.py` imports it
 # the same way, so the direction stays cycle-free.
-from generate_api_wrapper import (  # noqa: E402  (after the ROOT/sys.path preamble above)
+from generate_api_wrapper import (
     match_closer,
     referenced_objectcalls_helpers,
     render_objectcalls_expect,

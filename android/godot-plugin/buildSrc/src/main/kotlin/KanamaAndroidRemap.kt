@@ -77,18 +77,30 @@ object KanamaAndroidRemap {
         ),
     )
 
+    /** Kotlin modifiers and annotations that may sit between the line start and `actual`. */
+    private const val LEADING_MODIFIERS =
+        """(?:@[\w.]+(?:\([^)]*\))?\s+|(?:public|internal|private|protected|open|final|abstract|override|inline|infix|operator|suspend|external|tailrec|companion|data|value|sealed|enum|annotation|inner|const|lateinit)\s+)*"""
+
+    /** The declaration keywords an `expect`/`actual` modifier can precede. */
+    private const val DECLARATION_KEYWORDS = """(class|object|interface|val|var|fun|typealias)"""
+
     /**
      * The `actual` modifier of a `src/jvmMain` declaration, dropped on the way in.
      *
      * The root module is Kotlin Multiplatform (task 104 step 3) and its JVM half carries `actual`
      * on the declarations that implement the common `expect` seams -- `RawSegment`, `NULL_SEGMENT`,
-     * `BuiltinCalls`, `ObjectCalls` and its 1,353 members. Android compiles the SAME sources as a
+     * `BuiltinCalls`, `ObjectCalls` and its 1,352 members. Android compiles the SAME sources as a
      * plain Kotlin library with no common fragment (the `*.expect.kt` files are skipped), so the
-     * modifier has to go. Only a leading modifier is touched, after an optional visibility keyword:
-     * `actual` anywhere else on a line is prose or an identifier.
+     * modifier has to go.
+     *
+     * Any run of annotations and modifiers may precede it -- `@JvmStatic actual fun`,
+     * `override actual fun`, `internal actual val` -- which the earlier "optional visibility
+     * keyword only" spelling copied through unstripped (task 119 finding 20). The match is still
+     * anchored at the line start through that run, so `actual` inside prose (`* the actual class of
+     * the object`, `// actual fun …`) is left alone: those lines begin with `*` or `//`, which the
+     * run does not admit.
      */
-    private val ACTUAL_MODIFIER =
-        Regex("""^(\s*)(public |internal |private |protected )?actual (?=\w)""")
+    private val ACTUAL_MODIFIER = Regex("""^(\s*$LEADING_MODIFIERS)actual\s+""")
 
     val forbiddenSourceFragments = listOf(
         "java.lang.foreign",
@@ -117,10 +129,13 @@ object KanamaAndroidRemap {
      * A declaration keyword, not the bare words: `expect` and `actual` appear in KDoc and in
      * identifiers all over these sources ("the expect declaration", `actualValue`), and the two
      * fragments this replaced (`expect class` / `actual class`) tripped on prose that merely quoted
-     * them (task 104 step 3 parcel A hit exactly that).
+     * them (task 104 step 3 parcel A hit exactly that). Modifiers and annotations between the
+     * keyword and the declaration are allowed for, and the match is not anchored -- the lines
+     * reaching it have had their comments stripped, so anywhere on the line is code (task 119
+     * finding 20).
      */
     val forbiddenDeclarationPattern =
-        Regex("""^\s*(?:public |internal |private |protected )?(expect|actual) (class|object|interface|val|var|fun|typealias|sealed|data|enum|annotation)\b""")
+        Regex("""\b(expect|actual)\s+$LEADING_MODIFIERS$DECLARATION_KEYWORDS\b""")
 
     val forbiddenDemoSourcePatterns = listOf(
         Regex("""\?\.\s*invoke\s*\(""") to
@@ -130,7 +145,7 @@ object KanamaAndroidRemap {
     fun remapLine(line: String): String =
         rules
             .fold(line) { rewritten, rule -> rewritten.replace(rule.needle, rule.replacement) }
-            .let { ACTUAL_MODIFIER.replace(it) { match -> match.groupValues[1] + match.groupValues[2] } }
+            .let { ACTUAL_MODIFIER.replace(it) { match -> match.groupValues[1] } }
 
     /** True for a copied file the remap skips entirely (see [EXPECT_FILE_SUFFIX]). */
     fun isSkippedSourceFile(name: String): Boolean = name.endsWith(EXPECT_FILE_SUFFIX)
