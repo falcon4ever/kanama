@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -38,7 +38,7 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): PackedDataContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PackedDataContainer? =
+        internal fun wrap(handle: RawSegment): PackedDataContainer? =
             if (handle.address() == 0L) null else PackedDataContainer(GodotHandle(handle))
 
         private const val PACK_HASH = 966674026L

@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
@@ -15,7 +16,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: NavigationServer2D
  */
 object NavigationServer2D {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("NavigationServer2D")
     }
 
@@ -339,7 +340,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun queryPath(parameters: NavigationPathQueryParameters2D?, result: NavigationPathQueryResult2D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(queryPathBind, singleton, parameters?.requireOpenHandle() ?: MemorySegment.NULL, result?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(queryPathBind, singleton, parameters?.requireOpenHandle() ?: NULL_SEGMENT, result?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -575,7 +576,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetNavigationPolygon(region: RID, navigationPolygon: NavigationPolygon?) {
-        ObjectCalls.ptrcallWithRIDAndObjectArg(regionSetNavigationPolygonBind, singleton, region, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRIDAndObjectArg(regionSetNavigationPolygonBind, singleton, region, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1395,7 +1396,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun parseSourceGeometryData(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, rootNode: Node, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.segment, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
     }
 
     /**
@@ -1406,7 +1407,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -1418,7 +1419,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun bakeFromSourceGeometryDataAsync(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataAsyncBind, singleton, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataAsyncBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -1428,7 +1429,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun isBakingNavigationPolygon(navigationPolygon: NavigationPolygon?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isBakingNavigationPolygonBind, singleton, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isBakingNavigationPolygonBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1531,7 +1532,7 @@ object NavigationServer2D {
     fun fromHandle(handle: GodotHandle): NavigationServer2D? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): NavigationServer2D? =
+    internal fun wrap(handle: RawSegment): NavigationServer2D? =
         if (handle.address() == 0L) null else this
 
     private const val GET_MAPS_HASH = 3995934104L

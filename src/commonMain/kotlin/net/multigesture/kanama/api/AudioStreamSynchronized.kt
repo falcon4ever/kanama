@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -28,7 +29,7 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
 
     fun setSyncStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSyncStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSyncStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun getSyncStream(streamIndex: Int): AudioStream? {
@@ -58,7 +59,7 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
         fun fromHandle(handle: GodotHandle): AudioStreamSynchronized? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamSynchronized? =
+        internal fun wrap(handle: RawSegment): AudioStreamSynchronized? =
             if (handle.address() == 0L) null else AudioStreamSynchronized(GodotHandle(handle))
 
         private const val SET_STREAM_COUNT_HASH = 1286410249L

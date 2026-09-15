@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Transform2D
@@ -892,7 +893,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int, image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, segment, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, segment, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1255,7 +1256,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
         fun fromHandle(handle: GodotHandle): FontFile? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FontFile? =
+        internal fun wrap(handle: RawSegment): FontFile? =
             if (handle.address() == 0L) null else FontFile(GodotHandle(handle))
 
         private const val LOAD_BITMAP_FONT_HASH = 166001499L

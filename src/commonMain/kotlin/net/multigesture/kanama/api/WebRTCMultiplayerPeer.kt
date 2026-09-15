@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -26,7 +27,7 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
     fun addPeer(peer: WebRTCPeerConnection?, peerId: Int, unreliableLifetime: Int = 1): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, segment, peer?.requireOpenHandle() ?: MemorySegment.NULL, peerId, unreliableLifetime)
+        return ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, segment, peer?.requireOpenHandle() ?: NULL_SEGMENT, peerId, unreliableLifetime)
     }
 
     fun removePeer(peerId: Int) {
@@ -54,7 +55,7 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         fun fromHandle(handle: GodotHandle): WebRTCMultiplayerPeer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): WebRTCMultiplayerPeer? =
+        internal fun wrap(handle: RawSegment): WebRTCMultiplayerPeer? =
             if (handle.address() == 0L) null else WebRTCMultiplayerPeer(GodotHandle(handle))
 
         private const val CREATE_SERVER_HASH = 2865356025L

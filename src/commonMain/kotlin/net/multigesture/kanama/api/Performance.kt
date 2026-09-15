@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: Performance
  */
 object Performance {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("Performance")
     }
 
@@ -170,7 +170,7 @@ object Performance {
     fun fromHandle(handle: GodotHandle): Performance? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): Performance? =
+    internal fun wrap(handle: RawSegment): Performance? =
         if (handle.address() == 0L) null else this
 
     private const val GET_MONITOR_HASH = 1943275655L

@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -13,18 +14,18 @@ class ResourceImporterOggVorbis(handle: GodotHandle) : ResourceImporter(handle) 
 
     companion object {
         fun loadFromBuffer(streamData: ByteArray): AudioStreamOggVorbis? {
-            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData))
+            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
         fun loadFromFile(path: String): AudioStreamOggVorbis? {
-            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, MemorySegment.NULL, path))
+            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterOggVorbis? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ResourceImporterOggVorbis? =
+        internal fun wrap(handle: RawSegment): ResourceImporterOggVorbis? =
             if (handle.address() == 0L) null else ResourceImporterOggVorbis(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 354904730L

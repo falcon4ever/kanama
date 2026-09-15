@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -66,7 +66,7 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): XRFaceModifier3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XRFaceModifier3D? =
+        internal fun wrap(handle: RawSegment): XRFaceModifier3D? =
             if (handle.address() == 0L) null else XRFaceModifier3D(GodotHandle(handle))
 
         private const val SET_FACE_TRACKER_HASH = 3304788590L

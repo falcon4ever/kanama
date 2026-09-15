@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: ResourceUID
  */
 object ResourceUID {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("ResourceUID")
     }
 
@@ -149,7 +149,7 @@ object ResourceUID {
     fun fromHandle(handle: GodotHandle): ResourceUID? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): ResourceUID? =
+    internal fun wrap(handle: RawSegment): ResourceUID? =
         if (handle.address() == 0L) null else this
 
     private const val ID_TO_TEXT_HASH = 844755477L

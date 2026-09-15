@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -23,7 +23,7 @@ class Logger(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): Logger? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Logger? =
+        internal fun wrap(handle: RawSegment): Logger? =
             if (handle.address() == 0L) null else Logger(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

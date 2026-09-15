@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3
@@ -788,7 +789,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createFromMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -819,7 +820,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): NavigationMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): NavigationMesh? =
+        internal fun wrap(handle: RawSegment): NavigationMesh? =
             if (handle.address() == 0L) null else NavigationMesh(GodotHandle(handle))
 
         private const val SET_SAMPLE_PARTITION_TYPE_HASH = 2472437533L

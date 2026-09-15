@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class CompressedTexture2DArray(handle: GodotHandle) : CompressedTextureLayered(h
         fun fromHandle(handle: GodotHandle): CompressedTexture2DArray? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CompressedTexture2DArray? =
+        internal fun wrap(handle: RawSegment): CompressedTexture2DArray? =
             if (handle.address() == 0L) null else CompressedTexture2DArray(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

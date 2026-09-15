@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -54,7 +54,7 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): GDScriptWorkspace? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GDScriptWorkspace? =
+        internal fun wrap(handle: RawSegment): GDScriptWorkspace? =
             if (handle.address() == 0L) null else GDScriptWorkspace(GodotHandle(handle))
 
         private const val APPLY_NEW_SIGNAL_HASH = 3682583557L

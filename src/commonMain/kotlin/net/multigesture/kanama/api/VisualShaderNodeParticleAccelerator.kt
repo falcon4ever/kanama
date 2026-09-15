@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -36,7 +36,7 @@ class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNod
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleAccelerator? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleAccelerator? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleAccelerator? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleAccelerator(GodotHandle(handle))
 
         private const val SET_MODE_HASH = 3457585749L

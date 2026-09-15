@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -55,7 +56,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_sprite_frames
      */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -257,7 +258,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
         fun fromHandle(handle: GodotHandle): AnimatedSprite3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimatedSprite3D? =
+        internal fun wrap(handle: RawSegment): AnimatedSprite3D? =
             if (handle.address() == 0L) null else AnimatedSprite3D(GodotHandle(handle))
 
         private const val SET_SPRITE_FRAMES_HASH = 905781144L

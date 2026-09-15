@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeDeterminant(handle: GodotHandle) : VisualShaderNode(handle
         fun fromHandle(handle: GodotHandle): VisualShaderNodeDeterminant? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeDeterminant? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeDeterminant? =
             if (handle.address() == 0L) null else VisualShaderNodeDeterminant(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

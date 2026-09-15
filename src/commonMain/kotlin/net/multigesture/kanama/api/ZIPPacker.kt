@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -69,7 +69,7 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): ZIPPacker? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ZIPPacker? =
+        internal fun wrap(handle: RawSegment): ZIPPacker? =
             if (handle.address() == 0L) null else ZIPPacker(GodotHandle(handle))
 
         private const val OPEN_HASH = 1936816515L

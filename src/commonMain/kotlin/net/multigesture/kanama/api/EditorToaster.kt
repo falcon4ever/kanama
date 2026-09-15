@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -29,7 +29,7 @@ class EditorToaster(handle: GodotHandle) : HBoxContainer(handle) {
         fun fromHandle(handle: GodotHandle): EditorToaster? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorToaster? =
+        internal fun wrap(handle: RawSegment): EditorToaster? =
             if (handle.address() == 0L) null else EditorToaster(GodotHandle(handle))
 
         private const val PUSH_TOAST_HASH = 1813923476L

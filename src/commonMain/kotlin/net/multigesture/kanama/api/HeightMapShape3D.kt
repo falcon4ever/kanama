@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -125,7 +126,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun updateMapDataFromImage(image: Image?, heightMin: Double, heightMax: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectTwoDoubleArgs(updateMapDataFromImageBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, heightMin, heightMax)
+        ObjectCalls.ptrcallWithObjectTwoDoubleArgs(updateMapDataFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, heightMin, heightMax)
     }
 
     companion object {
@@ -133,7 +134,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
         fun fromHandle(handle: GodotHandle): HeightMapShape3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): HeightMapShape3D? =
+        internal fun wrap(handle: RawSegment): HeightMapShape3D? =
             if (handle.address() == 0L) null else HeightMapShape3D(GodotHandle(handle))
 
         private const val SET_MAP_WIDTH_HASH = 1286410249L

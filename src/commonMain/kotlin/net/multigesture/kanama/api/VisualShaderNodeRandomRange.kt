@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeRandomRange(handle: GodotHandle) : VisualShaderNode(handle
         fun fromHandle(handle: GodotHandle): VisualShaderNodeRandomRange? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeRandomRange? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeRandomRange? =
             if (handle.address() == 0L) null else VisualShaderNodeRandomRange(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

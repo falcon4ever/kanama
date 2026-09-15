@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -179,7 +179,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): CollisionPolygon2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CollisionPolygon2D? =
+        internal fun wrap(handle: RawSegment): CollisionPolygon2D? =
             if (handle.address() == 0L) null else CollisionPolygon2D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -142,7 +143,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun merge(otherGeometry: NavigationMeshSourceGeometryData2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -209,7 +210,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
         fun fromHandle(handle: GodotHandle): NavigationMeshSourceGeometryData2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): NavigationMeshSourceGeometryData2D? =
+        internal fun wrap(handle: RawSegment): NavigationMeshSourceGeometryData2D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData2D(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L

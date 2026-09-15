@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -72,7 +73,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
         set(value) = setVisibilityRangeFadeMode(value)
 
     fun setMesh(mesh: ImporterMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMesh(): ImporterMesh? {
@@ -80,7 +81,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun setSkin(skin: Skin?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getSkin(): Skin? {
@@ -156,7 +157,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): ImporterMeshInstance3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImporterMeshInstance3D? =
+        internal fun wrap(handle: RawSegment): ImporterMeshInstance3D? =
             if (handle.address() == 0L) null else ImporterMeshInstance3D(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 2255166972L

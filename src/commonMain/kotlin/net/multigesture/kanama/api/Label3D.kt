@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -454,7 +455,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_font
      */
     fun setFont(font: Font?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -811,7 +812,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): Label3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Label3D? =
+        internal fun wrap(handle: RawSegment): Label3D? =
             if (handle.address() == 0L) null else Label3D(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L

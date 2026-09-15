@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -48,7 +48,7 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
         fun fromHandle(handle: GodotHandle): PolygonOccluder3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PolygonOccluder3D? =
+        internal fun wrap(handle: RawSegment): PolygonOccluder3D? =
             if (handle.address() == 0L) null else PolygonOccluder3D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L

@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -22,14 +23,14 @@ class MovieWriter(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: MovieWriter.add_writer
          */
         fun addWriter(writer: MovieWriter) {
-            ObjectCalls.ptrcallWithObjectArgs(addWriterBind, MemorySegment.NULL, listOf(writer.segment))
+            ObjectCalls.ptrcallWithObjectArgs(addWriterBind, NULL_SEGMENT, listOf(writer.segment))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MovieWriter? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MovieWriter? =
+        internal fun wrap(handle: RawSegment): MovieWriter? =
             if (handle.address() == 0L) null else MovieWriter(GodotHandle(handle))
 
         private const val ADD_WRITER_HASH = 4023702871L

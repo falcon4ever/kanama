@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -37,7 +38,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setClosestHitShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -57,7 +58,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setAnyHitShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -78,7 +79,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setIntersectionShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -97,7 +98,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RDHitGroup? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDHitGroup? =
+        internal fun wrap(handle: RawSegment): RDHitGroup? =
             if (handle.address() == 0L) null else RDHitGroup(GodotHandle(handle))
 
         private const val SET_CLOSEST_HIT_SHADER_HASH = 2556777288L

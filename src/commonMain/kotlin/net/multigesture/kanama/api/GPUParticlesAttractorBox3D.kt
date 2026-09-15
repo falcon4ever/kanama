@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -42,7 +42,7 @@ class GPUParticlesAttractorBox3D(handle: GodotHandle) : GPUParticlesAttractor3D(
         fun fromHandle(handle: GodotHandle): GPUParticlesAttractorBox3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GPUParticlesAttractorBox3D? =
+        internal fun wrap(handle: RawSegment): GPUParticlesAttractorBox3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractorBox3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

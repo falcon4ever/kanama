@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -1042,7 +1043,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontSetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long, image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2iLongObjectArgs(fontSetTextureImageBind, segment, fontRid, size, textureIndex, image?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRIDVector2iLongObjectArgs(fontSetTextureImageBind, segment, fontRid, size, textureIndex, image?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -2724,7 +2725,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): TextServer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextServer? =
+        internal fun wrap(handle: RawSegment): TextServer? =
             if (handle.address() == 0L) null else TextServer(GodotHandle(handle))
 
         private const val HAS_FEATURE_HASH = 3967367083L

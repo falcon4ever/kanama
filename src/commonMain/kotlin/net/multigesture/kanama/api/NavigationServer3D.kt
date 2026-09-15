@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.RID
@@ -15,7 +16,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: NavigationServer3D
  */
 object NavigationServer3D {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("NavigationServer3D")
     }
 
@@ -403,7 +404,7 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun queryPath(parameters: NavigationPathQueryParameters3D?, result: NavigationPathQueryResult3D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(queryPathBind, singleton, parameters?.requireOpenHandle() ?: MemorySegment.NULL, result?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(queryPathBind, singleton, parameters?.requireOpenHandle() ?: NULL_SEGMENT, result?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -639,7 +640,7 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun regionSetNavigationMesh(region: RID, navigationMesh: NavigationMesh?) {
-        ObjectCalls.ptrcallWithRIDAndObjectArg(regionSetNavigationMeshBind, singleton, region, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRIDAndObjectArg(regionSetNavigationMeshBind, singleton, region, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -649,7 +650,7 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun regionBakeNavigationMesh(navigationMesh: NavigationMesh?, rootNode: Node) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(regionBakeNavigationMeshBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.segment)
+        ObjectCalls.ptrcallWithTwoObjectArgs(regionBakeNavigationMeshBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment)
     }
 
     /**
@@ -1585,7 +1586,7 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun parseSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, rootNode: Node, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.segment, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
     }
 
     /**
@@ -1596,7 +1597,7 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -1608,7 +1609,7 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun bakeFromSourceGeometryDataAsync(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataAsyncBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataAsyncBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -1618,7 +1619,7 @@ object NavigationServer3D {
      */
     @JvmStatic
     fun isBakingNavigationMesh(navigationMesh: NavigationMesh?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isBakingNavigationMeshBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isBakingNavigationMeshBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1721,7 +1722,7 @@ object NavigationServer3D {
     fun fromHandle(handle: GodotHandle): NavigationServer3D? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): NavigationServer3D? =
+    internal fun wrap(handle: RawSegment): NavigationServer3D? =
         if (handle.address() == 0L) null else this
 
     private const val GET_MAPS_HASH = 3995934104L

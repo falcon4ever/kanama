@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -223,7 +223,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         fun fromHandle(handle: GodotHandle): CylinderMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CylinderMesh? =
+        internal fun wrap(handle: RawSegment): CylinderMesh? =
             if (handle.address() == 0L) null else CylinderMesh(GodotHandle(handle))
 
         private const val SET_TOP_RADIUS_HASH = 373806689L

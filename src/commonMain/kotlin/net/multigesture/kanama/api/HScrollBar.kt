@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class HScrollBar(handle: GodotHandle) : ScrollBar(handle) {
         fun fromHandle(handle: GodotHandle): HScrollBar? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): HScrollBar? =
+        internal fun wrap(handle: RawSegment): HScrollBar? =
             if (handle.address() == 0L) null else HScrollBar(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -91,7 +92,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: Thread.set_thread_safety_checks_enabled
          */
         fun setThreadSafetyChecksEnabled(enabled: Boolean) {
-            ObjectCalls.ptrcallWithBoolArg(setThreadSafetyChecksEnabledBind, MemorySegment.NULL, enabled)
+            ObjectCalls.ptrcallWithBoolArg(setThreadSafetyChecksEnabledBind, NULL_SEGMENT, enabled)
         }
 
         /**
@@ -101,7 +102,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: Thread.is_main_thread
          */
         fun isMainThread(): Boolean {
-            return ObjectCalls.ptrcallNoArgsRetBool(isMainThreadBind, MemorySegment.NULL)
+            return ObjectCalls.ptrcallNoArgsRetBool(isMainThreadBind, NULL_SEGMENT)
         }
 
         const val PRIORITY_LOW: Long = 0L
@@ -112,7 +113,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): Thread? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Thread? =
+        internal fun wrap(handle: RawSegment): Thread? =
             if (handle.address() == 0L) null else Thread(GodotHandle(handle))
 
         private const val START_HASH = 1327203254L

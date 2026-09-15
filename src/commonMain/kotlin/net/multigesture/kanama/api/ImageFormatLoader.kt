@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -22,7 +22,7 @@ open class ImageFormatLoader(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): ImageFormatLoader? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImageFormatLoader? =
+        internal fun wrap(handle: RawSegment): ImageFormatLoader? =
             if (handle.address() == 0L) null else ImageFormatLoader(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

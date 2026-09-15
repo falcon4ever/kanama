@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -99,7 +99,7 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRHand? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRHand? =
+        internal fun wrap(handle: RawSegment): OpenXRHand? =
             if (handle.address() == 0L) null else OpenXRHand(GodotHandle(handle))
 
         private const val SET_HAND_HASH = 1849328560L

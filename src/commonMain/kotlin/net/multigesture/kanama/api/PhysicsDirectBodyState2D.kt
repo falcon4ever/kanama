@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
@@ -551,7 +551,7 @@ open class PhysicsDirectBodyState2D(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): PhysicsDirectBodyState2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsDirectBodyState2D? =
+        internal fun wrap(handle: RawSegment): PhysicsDirectBodyState2D? =
             if (handle.address() == 0L) null else PhysicsDirectBodyState2D(GodotHandle(handle))
 
         private const val GET_TOTAL_GRAVITY_HASH = 3341600327L

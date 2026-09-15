@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 // GENERATED desktop/Android companion for AnimationMixer (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND.

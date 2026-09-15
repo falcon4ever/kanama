@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -44,7 +45,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateSelfSignedCertificate(key: CryptoKey?, issuerName: String = "CN=myserver,O=myorganisation,C=IT", notBefore: String = "20140101000000", notAfter: String = "20340101000000"): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrap(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: MemorySegment.NULL, issuerName, notBefore, notAfter))
+        return X509Certificate.wrap(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, issuerName, notBefore, notAfter))
     }
 
     /**
@@ -54,7 +55,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sign(hashType: Long, hash: ByteArray, key: CryptoKey?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(signBind, segment, hashType, hash, key?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(signBind, segment, hashType, hash, key?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -65,7 +66,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun verify(hashType: Long, hash: ByteArray, signature: ByteArray, key: CryptoKey?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(verifyBind, segment, hashType, hash, signature, key?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(verifyBind, segment, hashType, hash, signature, key?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -76,7 +77,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun encrypt(key: CryptoKey?, plaintext: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(encryptBind, segment, key?.requireOpenHandle() ?: MemorySegment.NULL, plaintext)
+        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(encryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, plaintext)
     }
 
     /**
@@ -87,7 +88,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun decrypt(key: CryptoKey?, ciphertext: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(decryptBind, segment, key?.requireOpenHandle() ?: MemorySegment.NULL, ciphertext)
+        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(decryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, ciphertext)
     }
 
     /**
@@ -120,7 +121,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): Crypto? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Crypto? =
+        internal fun wrap(handle: RawSegment): Crypto? =
             if (handle.address() == 0L) null else Crypto(GodotHandle(handle))
 
         private const val GENERATE_RANDOM_BYTES_HASH = 47165747L

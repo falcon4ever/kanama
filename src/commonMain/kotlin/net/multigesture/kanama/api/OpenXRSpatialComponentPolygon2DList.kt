@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
@@ -27,7 +27,7 @@ class OpenXRSpatialComponentPolygon2DList(handle: GodotHandle) : OpenXRSpatialCo
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPolygon2DList? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentPolygon2DList? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentPolygon2DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPolygon2DList(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 1965739696L

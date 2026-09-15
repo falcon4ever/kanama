@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ open class Texture(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Texture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Texture? =
+        internal fun wrap(handle: RawSegment): Texture? =
             if (handle.address() == 0L) null else Texture(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

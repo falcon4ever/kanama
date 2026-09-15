@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeVectorDecompose(handle: GodotHandle) : VisualShaderNodeVec
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorDecompose? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeVectorDecompose? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeVectorDecompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDecompose(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

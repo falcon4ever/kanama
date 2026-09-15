@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class OpenXRExtensionWrapperExtension(handle: GodotHandle) : OpenXRExtensionWrap
         fun fromHandle(handle: GodotHandle): OpenXRExtensionWrapperExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRExtensionWrapperExtension? =
+        internal fun wrap(handle: RawSegment): OpenXRExtensionWrapperExtension? =
             if (handle.address() == 0L) null else OpenXRExtensionWrapperExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

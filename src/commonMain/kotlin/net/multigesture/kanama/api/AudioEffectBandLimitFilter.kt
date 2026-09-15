@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class AudioEffectBandLimitFilter(handle: GodotHandle) : AudioEffectFilter(handle
         fun fromHandle(handle: GodotHandle): AudioEffectBandLimitFilter? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectBandLimitFilter? =
+        internal fun wrap(handle: RawSegment): AudioEffectBandLimitFilter? =
             if (handle.address() == 0L) null else AudioEffectBandLimitFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

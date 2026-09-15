@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -25,7 +25,7 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXR
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPlaneSemanticLabelList? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(handle))
 
         private const val GET_PLANE_SEMANTIC_LABEL_HASH = 1889332427L

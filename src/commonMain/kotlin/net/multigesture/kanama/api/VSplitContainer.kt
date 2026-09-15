@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +19,7 @@ class VSplitContainer(handle: GodotHandle) : SplitContainer(handle) {
         fun fromHandle(handle: GodotHandle): VSplitContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VSplitContainer? =
+        internal fun wrap(handle: RawSegment): VSplitContainer? =
             if (handle.address() == 0L) null else VSplitContainer(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

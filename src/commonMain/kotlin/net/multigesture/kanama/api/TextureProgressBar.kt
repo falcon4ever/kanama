@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -116,7 +117,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_under_texture
      */
     fun setUnderTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setUnderTextureBind, segment, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setUnderTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -137,7 +138,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_progress_texture
      */
     fun setProgressTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProgressTextureBind, segment, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProgressTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -159,7 +160,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_over_texture
      */
     fun setOverTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOverTextureBind, segment, listOf(tex?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOverTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -397,7 +398,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
         fun fromHandle(handle: GodotHandle): TextureProgressBar? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextureProgressBar? =
+        internal fun wrap(handle: RawSegment): TextureProgressBar? =
             if (handle.address() == 0L) null else TextureProgressBar(GodotHandle(handle))
 
         private const val SET_UNDER_TEXTURE_HASH = 4051416890L

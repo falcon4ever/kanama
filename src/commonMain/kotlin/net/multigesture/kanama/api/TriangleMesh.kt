@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -69,7 +69,7 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): TriangleMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TriangleMesh? =
+        internal fun wrap(handle: RawSegment): TriangleMesh? =
             if (handle.address() == 0L) null else TriangleMesh(GodotHandle(handle))
 
         private const val CREATE_FROM_FACES_HASH = 2637816732L

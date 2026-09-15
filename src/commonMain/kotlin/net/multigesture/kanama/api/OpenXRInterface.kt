@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector3
@@ -318,7 +318,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRInterface? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRInterface? =
+        internal fun wrap(handle: RawSegment): OpenXRInterface? =
             if (handle.address() == 0L) null else OpenXRInterface(GodotHandle(handle))
 
         private const val GET_SESSION_STATE_HASH = 896364779L

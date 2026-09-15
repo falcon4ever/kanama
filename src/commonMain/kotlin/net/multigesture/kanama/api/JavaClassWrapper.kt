@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: JavaClassWrapper
  */
 object JavaClassWrapper {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("JavaClassWrapper")
     }
 
@@ -73,7 +73,7 @@ object JavaClassWrapper {
     fun fromHandle(handle: GodotHandle): JavaClassWrapper? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): JavaClassWrapper? =
+    internal fun wrap(handle: RawSegment): JavaClassWrapper? =
         if (handle.address() == 0L) null else this
 
     private const val WRAP_HASH = 1124367868L

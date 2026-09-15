@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class PopupPanel(handle: GodotHandle) : Popup(handle) {
         fun fromHandle(handle: GodotHandle): PopupPanel? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PopupPanel? =
+        internal fun wrap(handle: RawSegment): PopupPanel? =
             if (handle.address() == 0L) null else PopupPanel(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -141,7 +142,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -184,7 +185,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         fun fromHandle(handle: GodotHandle): RibbonTrailMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RibbonTrailMesh? =
+        internal fun wrap(handle: RawSegment): RibbonTrailMesh? =
             if (handle.address() == 0L) null else RibbonTrailMesh(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 373806689L

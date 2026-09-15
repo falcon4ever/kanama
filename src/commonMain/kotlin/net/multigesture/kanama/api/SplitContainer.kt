@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -398,7 +398,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
         fun fromHandle(handle: GodotHandle): SplitContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SplitContainer? =
+        internal fun wrap(handle: RawSegment): SplitContainer? =
             if (handle.address() == 0L) null else SplitContainer(GodotHandle(handle))
 
         private const val SET_SPLIT_OFFSETS_HASH = 3614634198L

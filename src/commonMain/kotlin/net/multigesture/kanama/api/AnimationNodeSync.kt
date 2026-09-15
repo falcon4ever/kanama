@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -45,7 +45,7 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
         fun fromHandle(handle: GodotHandle): AnimationNodeSync? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeSync? =
+        internal fun wrap(handle: RawSegment): AnimationNodeSync? =
             if (handle.address() == 0L) null else AnimationNodeSync(GodotHandle(handle))
 
         private const val SET_USE_SYNC_HASH = 2586408642L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -148,7 +148,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): RemoteTransform2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RemoteTransform2D? =
+        internal fun wrap(handle: RawSegment): RemoteTransform2D? =
             if (handle.address() == 0L) null else RemoteTransform2D(GodotHandle(handle))
 
         private const val SET_REMOTE_NODE_HASH = 1348162250L

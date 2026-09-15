@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -174,7 +175,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setXfadeCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -292,7 +293,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
         fun fromHandle(handle: GodotHandle): AnimationNodeStateMachineTransition? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeStateMachineTransition? =
+        internal fun wrap(handle: RawSegment): AnimationNodeStateMachineTransition? =
             if (handle.address() == 0L) null else AnimationNodeStateMachineTransition(GodotHandle(handle))
 
         private const val SET_SWITCH_MODE_HASH = 2074906633L

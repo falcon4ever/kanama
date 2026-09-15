@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -29,7 +30,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: MemorySegment.NULL, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -42,7 +43,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, segment, stream?.requireOpenHandle() ?: MemorySegment.NULL, commonName, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -91,7 +92,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
         fun fromHandle(handle: GodotHandle): StreamPeerTLS? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): StreamPeerTLS? =
+        internal fun wrap(handle: RawSegment): StreamPeerTLS? =
             if (handle.address() == 0L) null else StreamPeerTLS(GodotHandle(handle))
 
         private const val POLL_HASH = 3218959716L

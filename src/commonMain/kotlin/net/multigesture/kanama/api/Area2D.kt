@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -495,7 +495,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         fun fromHandle(handle: GodotHandle): Area2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Area2D? =
+        internal fun wrap(handle: RawSegment): Area2D? =
             if (handle.address() == 0L) null else Area2D(GodotHandle(handle))
 
         private const val SET_GRAVITY_SPACE_OVERRIDE_MODE_HASH = 2879900038L

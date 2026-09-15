@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -19,7 +20,7 @@ import net.multigesture.kanama.types.Vector3i
  * Generated from Godot docs: DisplayServer
  */
 object DisplayServer {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("DisplayServer")
     }
 
@@ -378,7 +379,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -395,7 +396,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -434,7 +435,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuAddIconRadioCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -851,7 +852,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuSetItemIcon(menuRoot: String, idx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithStringIntAndObjectArgs(globalMenuSetItemIconBind, singleton, menuRoot, idx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringIntAndObjectArgs(globalMenuSetItemIconBind, singleton, menuRoot, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1871,7 +1872,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun windowSetIcon(icon: Image?, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(windowSetIconBind, singleton, icon?.requireOpenHandle() ?: MemorySegment.NULL, windowId)
+        ObjectCalls.ptrcallWithObjectAndIntArg(windowSetIconBind, singleton, icon?.requireOpenHandle() ?: NULL_SEGMENT, windowId)
     }
 
     /**
@@ -3183,7 +3184,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun cursorSetCustomImage(cursor: Resource?, shape: Long = 0L, hotspot: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(cursorSetCustomImageBind, singleton, cursor?.requireOpenHandle() ?: MemorySegment.NULL, shape, hotspot)
+        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(cursorSetCustomImageBind, singleton, cursor?.requireOpenHandle() ?: NULL_SEGMENT, shape, hotspot)
     }
 
     /**
@@ -3452,7 +3453,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun setIcon(image: Image?) {
-        ObjectCalls.ptrcallWithObjectArgs(setIconBind, singleton, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setIconBind, singleton, listOf(image?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -3464,7 +3465,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun createStatusIndicator(icon: Texture2D?, tooltip: String, callback: GodotCallable): Int {
-        return ObjectCalls.ptrcallWithObjectStringCallableArgsRetInt(createStatusIndicatorBind, singleton, icon?.requireOpenHandle() ?: MemorySegment.NULL, tooltip, callback.target.segment, callback.method)
+        return ObjectCalls.ptrcallWithObjectStringCallableArgsRetInt(createStatusIndicatorBind, singleton, icon?.requireOpenHandle() ?: NULL_SEGMENT, tooltip, callback.target.segment, callback.method)
     }
 
     /**
@@ -3475,7 +3476,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun statusIndicatorSetIcon(id: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(statusIndicatorSetIconBind, singleton, id, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(statusIndicatorSetIconBind, singleton, id, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -3679,7 +3680,7 @@ object DisplayServer {
     fun fromHandle(handle: GodotHandle): DisplayServer? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): DisplayServer? =
+    internal fun wrap(handle: RawSegment): DisplayServer? =
         if (handle.address() == 0L) null else this
 
     private const val HAS_FEATURE_HASH = 334065950L

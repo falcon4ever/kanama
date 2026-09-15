@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class WebRTCPeerConnectionExtension(handle: GodotHandle) : WebRTCPeerConnection(
         fun fromHandle(handle: GodotHandle): WebRTCPeerConnectionExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): WebRTCPeerConnectionExtension? =
+        internal fun wrap(handle: RawSegment): WebRTCPeerConnectionExtension? =
             if (handle.address() == 0L) null else WebRTCPeerConnectionExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

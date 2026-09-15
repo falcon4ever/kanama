@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
@@ -413,7 +413,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
         fun fromHandle(handle: GodotHandle): Node2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Node2D? =
+        internal fun wrap(handle: RawSegment): Node2D? =
             if (handle.address() == 0L) null else Node2D(GodotHandle(handle))
 
         private const val SET_POSITION_HASH = 743155724L

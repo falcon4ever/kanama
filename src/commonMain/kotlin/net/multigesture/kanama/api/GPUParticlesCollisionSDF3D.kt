@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -97,7 +98,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_texture
      */
     fun setTexture(texture: Texture3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -190,7 +191,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
         fun fromHandle(handle: GodotHandle): GPUParticlesCollisionSDF3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GPUParticlesCollisionSDF3D? =
+        internal fun wrap(handle: RawSegment): GPUParticlesCollisionSDF3D? =
             if (handle.address() == 0L) null else GPUParticlesCollisionSDF3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

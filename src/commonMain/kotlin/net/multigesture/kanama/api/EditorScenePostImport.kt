@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -26,7 +26,7 @@ class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorScenePostImport? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorScenePostImport? =
+        internal fun wrap(handle: RawSegment): EditorScenePostImport? =
             if (handle.address() == 0L) null else EditorScenePostImport(GodotHandle(handle))
 
         private const val GET_SOURCE_FILE_HASH = 201670096L

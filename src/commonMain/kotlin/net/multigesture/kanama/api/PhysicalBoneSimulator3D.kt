@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -66,7 +66,7 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
         fun fromHandle(handle: GodotHandle): PhysicalBoneSimulator3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicalBoneSimulator3D? =
+        internal fun wrap(handle: RawSegment): PhysicalBoneSimulator3D? =
             if (handle.address() == 0L) null else PhysicalBoneSimulator3D(GodotHandle(handle))
 
         private const val IS_SIMULATING_PHYSICS_HASH = 36873697L

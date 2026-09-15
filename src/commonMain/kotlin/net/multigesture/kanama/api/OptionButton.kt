@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -77,7 +78,7 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: OptionButton.add_icon_item
      */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
+        ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id)
     }
 
     /**
@@ -95,7 +96,7 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: OptionButton.set_item_icon
      */
     fun setItemIcon(idx: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -505,7 +506,7 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
         fun fromHandle(handle: GodotHandle): OptionButton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OptionButton? =
+        internal fun wrap(handle: RawSegment): OptionButton? =
             if (handle.address() == 0L) null else OptionButton(GodotHandle(handle))
 
         private const val ADD_ITEM_HASH = 2697778442L

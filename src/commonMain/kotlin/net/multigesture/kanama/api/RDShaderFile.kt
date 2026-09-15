@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -26,7 +27,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun setBytecode(bytecode: RDShaderSPIRV?, version: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, segment, bytecode?.requireOpenHandle() ?: MemorySegment.NULL, version)
+        ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, segment, bytecode?.requireOpenHandle() ?: NULL_SEGMENT, version)
     }
 
     /**
@@ -78,7 +79,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): RDShaderFile? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDShaderFile? =
+        internal fun wrap(handle: RawSegment): RDShaderFile? =
             if (handle.address() == 0L) null else RDShaderFile(GodotHandle(handle))
 
         private const val SET_BYTECODE_HASH = 1526857008L

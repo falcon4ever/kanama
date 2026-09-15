@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -61,12 +62,12 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
 
     fun dtlsServerSetup(serverOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(dtlsServerSetupBind, segment, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(dtlsServerSetupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun refuseNewConnections(refuse: Boolean) {
@@ -119,7 +120,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): ENetConnection? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ENetConnection? =
+        internal fun wrap(handle: RawSegment): ENetConnection? =
             if (handle.address() == 0L) null else ENetConnection(GodotHandle(handle))
 
         private const val CREATE_HOST_BOUND_HASH = 1515002313L

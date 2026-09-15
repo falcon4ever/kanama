@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -83,7 +83,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCompare? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeCompare? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeCompare? =
             if (handle.address() == 0L) null else VisualShaderNodeCompare(GodotHandle(handle))
 
         private const val SET_COMPARISON_TYPE_HASH = 516558320L

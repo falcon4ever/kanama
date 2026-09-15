@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
@@ -1023,7 +1024,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_theme
      */
     fun setTheme(theme: Theme?) {
-        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1084,7 +1085,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_icon_override
      */
     fun addThemeIconOverride(name: String, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, segment, name, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1096,7 +1097,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_stylebox_override
      */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, segment, name, stylebox?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, segment, name, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1107,7 +1108,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_font_override
      */
     fun addThemeFontOverride(name: String, font: Font?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, segment, name, font?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, segment, name, font?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1667,7 +1668,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
          * Generated from Godot docs: Window.get_focused_window
          */
         fun getFocusedWindow(): Window? {
-            return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFocusedWindowBind, MemorySegment.NULL))
+            return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFocusedWindowBind, NULL_SEGMENT))
         }
 
         const val NOTIFICATION_VISIBILITY_CHANGED: Long = 30L
@@ -1719,7 +1720,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         fun fromHandle(handle: GodotHandle): Window? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Window? =
+        internal fun wrap(handle: RawSegment): Window? =
             if (handle.address() == 0L) null else Window(GodotHandle(handle))
 
         private const val SET_TITLE_HASH = 83702148L

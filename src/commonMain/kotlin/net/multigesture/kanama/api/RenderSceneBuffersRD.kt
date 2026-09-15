@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2i
@@ -42,7 +43,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun createTextureFromFormat(context: String, name: String, format: RDTextureFormat?, view: RDTextureView?, unique: Boolean): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(createTextureFromFormatBind, segment, context, name, format?.requireOpenHandle() ?: MemorySegment.NULL, view?.requireOpenHandle() ?: MemorySegment.NULL, unique)
+        return ObjectCalls.ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(createTextureFromFormatBind, segment, context, name, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, unique)
     }
 
     /**
@@ -54,7 +55,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun createTextureView(context: String, name: String, viewName: String, view: RDTextureView?): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeStringNameObjectArgsRetRID(createTextureViewBind, segment, context, name, viewName, view?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithThreeStringNameObjectArgsRetRID(createTextureViewBind, segment, context, name, viewName, view?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -94,7 +95,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTextureSliceView(context: String, name: String, layer: Long, mipmap: Long, layers: Long, mipmaps: Long, view: RDTextureView?): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(getTextureSliceViewBind, segment, context, name, layer, mipmap, layers, mipmaps, view?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(getTextureSliceViewBind, segment, context, name, layer, mipmap, layers, mipmaps, view?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -302,7 +303,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
         fun fromHandle(handle: GodotHandle): RenderSceneBuffersRD? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RenderSceneBuffersRD? =
+        internal fun wrap(handle: RawSegment): RenderSceneBuffersRD? =
             if (handle.address() == 0L) null else RenderSceneBuffersRD(GodotHandle(handle))
 
         private const val HAS_TEXTURE_HASH = 471820014L

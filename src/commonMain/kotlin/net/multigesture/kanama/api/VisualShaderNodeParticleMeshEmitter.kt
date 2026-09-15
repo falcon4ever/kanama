@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -30,7 +31,7 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
 
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMesh(): Mesh? {
@@ -63,7 +64,7 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleMeshEmitter? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleMeshEmitter? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleMeshEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleMeshEmitter(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L

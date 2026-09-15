@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -177,7 +177,7 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): CSGShape3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CSGShape3D? =
+        internal fun wrap(handle: RawSegment): CSGShape3D? =
             if (handle.address() == 0L) null else CSGShape3D(GodotHandle(handle))
 
         private const val IS_ROOT_SHAPE_HASH = 36873697L

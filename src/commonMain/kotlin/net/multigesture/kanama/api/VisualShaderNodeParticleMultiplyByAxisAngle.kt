@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -31,7 +31,7 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleMultiplyByAxisAngle? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(handle))
 
         private const val SET_DEGREES_MODE_HASH = 2586408642L

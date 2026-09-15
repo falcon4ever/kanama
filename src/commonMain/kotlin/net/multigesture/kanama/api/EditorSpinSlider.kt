@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -237,7 +237,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
         fun fromHandle(handle: GodotHandle): EditorSpinSlider? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorSpinSlider? =
+        internal fun wrap(handle: RawSegment): EditorSpinSlider? =
             if (handle.address() == 0L) null else EditorSpinSlider(GodotHandle(handle))
 
         private const val SET_LABEL_HASH = 83702148L

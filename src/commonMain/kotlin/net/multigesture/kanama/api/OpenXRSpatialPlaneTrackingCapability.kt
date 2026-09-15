@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -15,7 +16,7 @@ class OpenXRSpatialPlaneTrackingCapability(handle: GodotHandle) : OpenXRExtensio
     }
 
     fun startEntityDiscovery(spatialContext: RID, componentData: List<OpenXRSpatialComponentData>, nextSnapshotCreate: OpenXRStructureBase?, nextSnapshotQuery: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL, userCallback.target.segment, userCallback.method))
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(startEntityDiscoveryBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: NULL_SEGMENT, nextSnapshotQuery?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
     }
 
     companion object {
@@ -23,7 +24,7 @@ class OpenXRSpatialPlaneTrackingCapability(handle: GodotHandle) : OpenXRExtensio
         fun fromHandle(handle: GodotHandle): OpenXRSpatialPlaneTrackingCapability? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialPlaneTrackingCapability? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialPlaneTrackingCapability? =
             if (handle.address() == 0L) null else OpenXRSpatialPlaneTrackingCapability(GodotHandle(handle))
 
         private const val IS_SUPPORTED_HASH = 2240911060L

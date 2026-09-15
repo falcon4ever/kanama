@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -159,7 +159,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorFeatureProfile? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorFeatureProfile? =
+        internal fun wrap(handle: RawSegment): EditorFeatureProfile? =
             if (handle.address() == 0L) null else EditorFeatureProfile(GodotHandle(handle))
 
         private const val SET_DISABLE_CLASS_HASH = 2524380260L

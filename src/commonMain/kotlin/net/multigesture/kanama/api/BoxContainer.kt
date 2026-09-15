@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -83,7 +83,7 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
         fun fromHandle(handle: GodotHandle): BoxContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BoxContainer? =
+        internal fun wrap(handle: RawSegment): BoxContainer? =
             if (handle.address() == 0L) null else BoxContainer(GodotHandle(handle))
 
         private const val ADD_SPACER_HASH = 1326660695L

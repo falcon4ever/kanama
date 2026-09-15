@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 // GENERATED desktop/Android companion for GDExtensionManager (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
@@ -21,7 +22,7 @@ fun GDExtensionManager.loadExtensionFromFunction(path: String, initFunc: MemoryS
     return ObjectCalls.ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong(loadExtensionFromFunctionBind, gDExtensionManagerSingleton, path, initFunc)
 }
 
-private val gDExtensionManagerSingleton: MemorySegment by lazy {
+private val gDExtensionManagerSingleton: RawSegment by lazy {
     ObjectCalls.getSingleton("GDExtensionManager")
 }
 

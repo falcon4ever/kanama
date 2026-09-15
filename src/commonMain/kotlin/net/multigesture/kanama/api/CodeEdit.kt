@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -1009,7 +1010,7 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
      * Generated from Godot docs: CodeEdit.add_code_completion_option
      */
     fun addCodeCompletionOption(type: Long, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
-        ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, segment, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: MemorySegment.NULL, value, location)
+        ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, segment, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: NULL_SEGMENT, value, location)
     }
 
     /**
@@ -1290,7 +1291,7 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
         fun fromHandle(handle: GodotHandle): CodeEdit? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CodeEdit? =
+        internal fun wrap(handle: RawSegment): CodeEdit? =
             if (handle.address() == 0L) null else CodeEdit(GodotHandle(handle))
 
         private const val SET_INDENT_SIZE_HASH = 1286410249L

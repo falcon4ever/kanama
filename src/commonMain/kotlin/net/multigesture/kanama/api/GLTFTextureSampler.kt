@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -79,7 +79,7 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GLTFTextureSampler? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFTextureSampler? =
+        internal fun wrap(handle: RawSegment): GLTFTextureSampler? =
             if (handle.address() == 0L) null else GLTFTextureSampler(GodotHandle(handle))
 
         private const val GET_MAG_FILTER_HASH = 3905245786L

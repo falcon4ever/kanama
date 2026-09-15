@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -445,7 +445,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RDSamplerState? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDSamplerState? =
+        internal fun wrap(handle: RawSegment): RDSamplerState? =
             if (handle.address() == 0L) null else RDSamplerState(GodotHandle(handle))
 
         private const val SET_MAG_FILTER_HASH = 1493420382L

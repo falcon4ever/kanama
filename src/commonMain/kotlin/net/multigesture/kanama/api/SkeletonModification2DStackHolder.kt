@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +20,7 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
      */
     fun setHeldModificationStack(heldModificationStack: SkeletonModificationStack2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setHeldModificationStackBind, segment, listOf(heldModificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setHeldModificationStackBind, segment, listOf(heldModificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -37,7 +38,7 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
         fun fromHandle(handle: GodotHandle): SkeletonModification2DStackHolder? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SkeletonModification2DStackHolder? =
+        internal fun wrap(handle: RawSegment): SkeletonModification2DStackHolder? =
             if (handle.address() == 0L) null else SkeletonModification2DStackHolder(GodotHandle(handle))
 
         private const val SET_HELD_MODIFICATION_STACK_HASH = 3907307132L

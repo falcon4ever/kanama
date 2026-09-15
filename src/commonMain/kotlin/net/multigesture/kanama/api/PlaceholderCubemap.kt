@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class PlaceholderCubemap(handle: GodotHandle) : PlaceholderTextureLayered(handle
         fun fromHandle(handle: GodotHandle): PlaceholderCubemap? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PlaceholderCubemap? =
+        internal fun wrap(handle: RawSegment): PlaceholderCubemap? =
             if (handle.address() == 0L) null else PlaceholderCubemap(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

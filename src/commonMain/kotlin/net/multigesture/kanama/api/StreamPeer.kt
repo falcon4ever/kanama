@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -393,7 +393,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): StreamPeer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): StreamPeer? =
+        internal fun wrap(handle: RawSegment): StreamPeer? =
             if (handle.address() == 0L) null else StreamPeer(GodotHandle(handle))
 
         private const val PUT_DATA_HASH = 680677267L

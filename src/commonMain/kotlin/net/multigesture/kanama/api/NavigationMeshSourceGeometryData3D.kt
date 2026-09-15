@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Transform3D
@@ -117,7 +118,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun addMesh(mesh: Mesh?, xform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndTransform3DArg(addMeshBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, xform)
+        ObjectCalls.ptrcallWithObjectAndTransform3DArg(addMeshBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, xform)
     }
 
     /**
@@ -154,7 +155,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun merge(otherGeometry: NavigationMeshSourceGeometryData3D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -223,7 +224,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
         fun fromHandle(handle: GodotHandle): NavigationMeshSourceGeometryData3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): NavigationMeshSourceGeometryData3D? =
+        internal fun wrap(handle: RawSegment): NavigationMeshSourceGeometryData3D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData3D(GodotHandle(handle))
 
         private const val SET_VERTICES_HASH = 2899603908L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -53,7 +53,7 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRRenderModelManager? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRRenderModelManager? =
+        internal fun wrap(handle: RawSegment): OpenXRRenderModelManager? =
             if (handle.address() == 0L) null else OpenXRRenderModelManager(GodotHandle(handle))
 
         private const val GET_TRACKER_HASH = 2456466356L

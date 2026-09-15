@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -125,53 +126,53 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
 
     fun appendFromFile(path: String, state: GLTFState?, flags: Long = 0L, basePath: String = ""): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, segment, path, state?.requireOpenHandle() ?: MemorySegment.NULL, flags, basePath)
+        return ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, segment, path, state?.requireOpenHandle() ?: NULL_SEGMENT, flags, basePath)
     }
 
     fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
+        return ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: NULL_SEGMENT, flags)
     }
 
     fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: MemorySegment.NULL, flags)
+        return ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: NULL_SEGMENT, flags)
     }
 
     fun generateScene(state: GLTFState?, bakeFps: Double = 30.0, trimming: Boolean = false, removeImmutableTracks: Boolean = true): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(generateSceneBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL, bakeFps, trimming, removeImmutableTracks))
+        return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(generateSceneBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, bakeFps, trimming, removeImmutableTracks))
     }
 
     fun generateBuffer(state: GLTFState?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun writeToFilesystem(state: GLTFState?, path: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL, path)
+        return ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, path)
     }
 
     companion object {
         fun importObjectModelProperty(state: GLTFState?, jsonPointer: String): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectStringArgRetObject(importObjectModelPropertyBind, MemorySegment.NULL, state?.requireOpenHandle() ?: MemorySegment.NULL, jsonPointer))
+            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectStringArgRetObject(importObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, jsonPointer))
         }
 
         fun exportObjectModelProperty(state: GLTFState?, nodePath: NodePath, godotNode: Node, gltfNodeIndex: Int): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(exportObjectModelPropertyBind, MemorySegment.NULL, state?.requireOpenHandle() ?: MemorySegment.NULL, nodePath, godotNode.segment, gltfNodeIndex))
+            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(exportObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, nodePath, godotNode.segment, gltfNodeIndex))
         }
 
         fun registerGltfDocumentExtension(extension: GLTFDocumentExtension?, firstPriority: Boolean = false) {
-            ObjectCalls.ptrcallWithObjectAndBoolArg(registerGltfDocumentExtensionBind, MemorySegment.NULL, extension?.requireOpenHandle() ?: MemorySegment.NULL, firstPriority)
+            ObjectCalls.ptrcallWithObjectAndBoolArg(registerGltfDocumentExtensionBind, NULL_SEGMENT, extension?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
         }
 
         fun unregisterGltfDocumentExtension(extension: GLTFDocumentExtension?) {
-            ObjectCalls.ptrcallWithObjectArgs(unregisterGltfDocumentExtensionBind, MemorySegment.NULL, listOf(extension?.requireOpenHandle() ?: MemorySegment.NULL))
+            ObjectCalls.ptrcallWithObjectArgs(unregisterGltfDocumentExtensionBind, NULL_SEGMENT, listOf(extension?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         fun getSupportedGltfExtensions(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedGltfExtensionsBind, MemorySegment.NULL)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedGltfExtensionsBind, NULL_SEGMENT)
         }
 
         const val ROOT_NODE_MODE_SINGLE_ROOT: Long = 0L
@@ -191,7 +192,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GLTFDocument? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFDocument? =
+        internal fun wrap(handle: RawSegment): GLTFDocument? =
             if (handle.address() == 0L) null else GLTFDocument(GodotHandle(handle))
 
         private const val SET_IMAGE_FORMAT_HASH = 83702148L

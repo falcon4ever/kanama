@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -21,14 +22,14 @@ class UniformSetCacheRD(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: UniformSetCacheRD.get_cache
          */
         fun getCache(shader: RID, set: Long, uniforms: List<RDUniform>): RID {
-            return ObjectCalls.ptrcallWithRIDUInt32ObjectListArgsRetRID(getCacheBind, MemorySegment.NULL, shader, set, uniforms)
+            return ObjectCalls.ptrcallWithRIDUInt32ObjectListArgsRetRID(getCacheBind, NULL_SEGMENT, shader, set, uniforms)
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UniformSetCacheRD? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): UniformSetCacheRD? =
+        internal fun wrap(handle: RawSegment): UniformSetCacheRD? =
             if (handle.address() == 0L) null else UniformSetCacheRD(GodotHandle(handle))
 
         private const val GET_CACHE_HASH = 658571723L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -34,7 +34,7 @@ class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
         fun fromHandle(handle: GodotHandle): EditorImportPlugin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorImportPlugin? =
+        internal fun wrap(handle: RawSegment): EditorImportPlugin? =
             if (handle.address() == 0L) null else EditorImportPlugin(GodotHandle(handle))
 
         private const val APPEND_IMPORT_EXTERNAL_RESOURCE_HASH = 320493106L

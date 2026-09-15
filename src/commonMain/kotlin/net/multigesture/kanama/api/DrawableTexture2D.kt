@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
@@ -63,7 +64,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = 0, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(blitRectBind, segment, rect, source?.requireOpenHandle() ?: MemorySegment.NULL, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(blitRectBind, segment, rect, source?.requireOpenHandle() ?: NULL_SEGMENT, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -76,7 +77,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = 0, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(blitRectMultiBind, segment, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(blitRectMultiBind, segment, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -99,7 +100,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): DrawableTexture2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): DrawableTexture2D? =
+        internal fun wrap(handle: RawSegment): DrawableTexture2D? =
             if (handle.address() == 0L) null else DrawableTexture2D(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 2875673594L

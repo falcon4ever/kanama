@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Transform3D
@@ -383,7 +383,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): XRInterface? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XRInterface? =
+        internal fun wrap(handle: RawSegment): XRInterface? =
             if (handle.address() == 0L) null else XRInterface(GodotHandle(handle))
 
         private const val GET_NAME_HASH = 2002593661L

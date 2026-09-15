@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
@@ -276,7 +276,7 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
         fun fromHandle(handle: GodotHandle): TwoBoneIK3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TwoBoneIK3D? =
+        internal fun wrap(handle: RawSegment): TwoBoneIK3D? =
             if (handle.address() == 0L) null else TwoBoneIK3D(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 2761262315L

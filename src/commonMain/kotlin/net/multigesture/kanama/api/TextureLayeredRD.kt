@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -44,7 +44,7 @@ open class TextureLayeredRD(handle: GodotHandle) : TextureLayered(handle) {
         fun fromHandle(handle: GodotHandle): TextureLayeredRD? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextureLayeredRD? =
+        internal fun wrap(handle: RawSegment): TextureLayeredRD? =
             if (handle.address() == 0L) null else TextureLayeredRD(GodotHandle(handle))
 
         private const val SET_TEXTURE_RD_RID_HASH = 2722037293L

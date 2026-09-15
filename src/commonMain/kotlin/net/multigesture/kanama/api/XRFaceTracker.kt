@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -208,7 +208,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
         fun fromHandle(handle: GodotHandle): XRFaceTracker? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XRFaceTracker? =
+        internal fun wrap(handle: RawSegment): XRFaceTracker? =
             if (handle.address() == 0L) null else XRFaceTracker(GodotHandle(handle))
 
         private const val GET_BLEND_SHAPE_HASH = 330010046L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2i
@@ -66,7 +67,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addSource(source: TileSetSource?, atlasSourceIdOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, segment, source?.requireOpenHandle() ?: MemorySegment.NULL, atlasSourceIdOverride)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, segment, source?.requireOpenHandle() ?: NULL_SEGMENT, atlasSourceIdOverride)
     }
 
     /**
@@ -431,7 +432,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setPhysicsLayerPhysicsMaterial(layerIndex: Int, physicsMaterial: PhysicsMaterial?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, segment, layerIndex, physicsMaterial?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, segment, layerIndex, physicsMaterial?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -969,7 +970,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addPattern(pattern: TileMapPattern?, index: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, segment, pattern?.requireOpenHandle() ?: MemorySegment.NULL, index)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, segment, pattern?.requireOpenHandle() ?: NULL_SEGMENT, index)
     }
 
     /**
@@ -1039,7 +1040,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): TileSet? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TileSet? =
+        internal fun wrap(handle: RawSegment): TileSet? =
             if (handle.address() == 0L) null else TileSet(GodotHandle(handle))
 
         private const val GET_NEXT_SOURCE_ID_HASH = 3905245786L

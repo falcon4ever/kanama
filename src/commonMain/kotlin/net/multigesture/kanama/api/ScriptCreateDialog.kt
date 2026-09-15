@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -29,7 +29,7 @@ class ScriptCreateDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         fun fromHandle(handle: GodotHandle): ScriptCreateDialog? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ScriptCreateDialog? =
+        internal fun wrap(handle: RawSegment): ScriptCreateDialog? =
             if (handle.address() == 0L) null else ScriptCreateDialog(GodotHandle(handle))
 
         private const val CONFIG_HASH = 869314288L

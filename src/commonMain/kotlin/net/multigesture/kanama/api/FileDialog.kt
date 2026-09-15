@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -620,7 +621,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_favorite_list
          */
         fun setFavoriteList(favorites: List<String>) {
-            ObjectCalls.ptrcallWithPackedStringListArg(setFavoriteListBind, MemorySegment.NULL, favorites)
+            ObjectCalls.ptrcallWithPackedStringListArg(setFavoriteListBind, NULL_SEGMENT, favorites)
         }
 
         /**
@@ -631,7 +632,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.get_favorite_list
          */
         fun getFavoriteList(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoriteListBind, MemorySegment.NULL)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoriteListBind, NULL_SEGMENT)
         }
 
         /**
@@ -644,7 +645,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_recent_list
          */
         fun setRecentList(recents: List<String>) {
-            ObjectCalls.ptrcallWithPackedStringListArg(setRecentListBind, MemorySegment.NULL, recents)
+            ObjectCalls.ptrcallWithPackedStringListArg(setRecentListBind, NULL_SEGMENT, recents)
         }
 
         /**
@@ -655,7 +656,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.get_recent_list
          */
         fun getRecentList(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentListBind, MemorySegment.NULL)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentListBind, NULL_SEGMENT)
         }
 
         /**
@@ -666,7 +667,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_get_icon_callback
          */
         fun setGetIconCallback(callback: GodotCallable) {
-            ObjectCalls.ptrcallWithCallableArg(setGetIconCallbackBind, MemorySegment.NULL, callback.target.segment, callback.method)
+            ObjectCalls.ptrcallWithCallableArg(setGetIconCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
         }
 
         /**
@@ -679,7 +680,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_get_thumbnail_callback
          */
         fun setGetThumbnailCallback(callback: GodotCallable) {
-            ObjectCalls.ptrcallWithCallableArg(setGetThumbnailCallbackBind, MemorySegment.NULL, callback.target.segment, callback.method)
+            ObjectCalls.ptrcallWithCallableArg(setGetThumbnailCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
         }
 
         const val FILE_MODE_OPEN_FILE: Long = 0L
@@ -706,7 +707,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         fun fromHandle(handle: GodotHandle): FileDialog? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FileDialog? =
+        internal fun wrap(handle: RawSegment): FileDialog? =
             if (handle.address() == 0L) null else FileDialog(GodotHandle(handle))
 
         private const val CLEAR_FILTERS_HASH = 3218959716L

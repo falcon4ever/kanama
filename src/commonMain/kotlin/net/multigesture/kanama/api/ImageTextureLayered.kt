@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -35,7 +36,7 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
      */
     fun updateLayer(image: Image?, layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndIntArg(updateLayerBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, layer)
+        ObjectCalls.ptrcallWithObjectAndIntArg(updateLayerBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
     }
 
     companion object {
@@ -43,7 +44,7 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
         fun fromHandle(handle: GodotHandle): ImageTextureLayered? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImageTextureLayered? =
+        internal fun wrap(handle: RawSegment): ImageTextureLayered? =
             if (handle.address() == 0L) null else ImageTextureLayered(GodotHandle(handle))
 
         private const val CREATE_FROM_IMAGES_HASH = 2785773503L

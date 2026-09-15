@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Transform3D
@@ -22,7 +23,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun addLines(lines: List<Vector3>, material: Material?, billboard: Boolean = false, modulate: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListObjectBoolColorArgs(addLinesBind, segment, lines, material?.requireOpenHandle() ?: MemorySegment.NULL, billboard, modulate)
+        ObjectCalls.ptrcallWithPackedVector3ListObjectBoolColorArgs(addLinesBind, segment, lines, material?.requireOpenHandle() ?: NULL_SEGMENT, billboard, modulate)
     }
 
     /**
@@ -33,7 +34,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun addMesh(mesh: Mesh?, material: Material?, transform: Transform3D, skeleton: SkinReference?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(addMeshBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, material?.requireOpenHandle() ?: MemorySegment.NULL, transform, skeleton?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectTransform3DObjectArgs(addMeshBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, material?.requireOpenHandle() ?: NULL_SEGMENT, transform, skeleton?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -55,7 +56,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun addCollisionTriangles(triangles: TriangleMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addCollisionTrianglesBind, segment, listOf(triangles?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addCollisionTrianglesBind, segment, listOf(triangles?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -65,7 +66,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun addUnscaledBillboard(material: Material?, defaultScale: Double = 1.0, modulate: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectDoubleColorArgs(addUnscaledBillboardBind, segment, material?.requireOpenHandle() ?: MemorySegment.NULL, defaultScale, modulate)
+        ObjectCalls.ptrcallWithObjectDoubleColorArgs(addUnscaledBillboardBind, segment, material?.requireOpenHandle() ?: NULL_SEGMENT, defaultScale, modulate)
     }
 
     /**
@@ -83,7 +84,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun addHandles(handles: List<Vector3>, material: Material?, ids: List<Int>, billboard: Boolean = false, secondary: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(addHandlesBind, segment, handles, material?.requireOpenHandle() ?: MemorySegment.NULL, ids, billboard, secondary)
+        ObjectCalls.ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(addHandlesBind, segment, handles, material?.requireOpenHandle() ?: NULL_SEGMENT, ids, billboard, secondary)
     }
 
     /**
@@ -165,7 +166,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
         fun fromHandle(handle: GodotHandle): EditorNode3DGizmo? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorNode3DGizmo? =
+        internal fun wrap(handle: RawSegment): EditorNode3DGizmo? =
             if (handle.address() == 0L) null else EditorNode3DGizmo(GodotHandle(handle))
 
         private const val ADD_LINES_HASH = 2910971437L

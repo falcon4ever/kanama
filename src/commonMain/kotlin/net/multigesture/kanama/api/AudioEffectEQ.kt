@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -48,7 +48,7 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectEQ? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectEQ? =
+        internal fun wrap(handle: RawSegment): AudioEffectEQ? =
             if (handle.address() == 0L) null else AudioEffectEQ(GodotHandle(handle))
 
         private const val SET_BAND_GAIN_DB_HASH = 1602489585L

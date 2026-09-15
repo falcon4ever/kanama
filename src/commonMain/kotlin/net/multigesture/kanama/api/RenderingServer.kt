@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -25,7 +26,7 @@ import net.multigesture.kanama.types.Vector3i
  * Generated from Godot docs: RenderingServer
  */
 object RenderingServer {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("RenderingServer")
     }
 
@@ -563,7 +564,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dCreate(image: Image?): RID {
-        return ObjectCalls.ptrcallWithObjectArgRetRID(texture2dCreateBind, singleton, image?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetRID(texture2dCreateBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -637,7 +638,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dUpdate(texture: RID, image: Image?, layer: Int) {
-        ObjectCalls.ptrcallWithRIDObjectIntArgs(texture2dUpdateBind, singleton, texture, image?.requireOpenHandle() ?: MemorySegment.NULL, layer)
+        ObjectCalls.ptrcallWithRIDObjectIntArgs(texture2dUpdateBind, singleton, texture, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
     }
 
     /**
@@ -6562,7 +6563,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun setBootImageWithStretch(image: Image?, color: Color, stretchMode: Long, useFilter: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectColorLongBoolArgs(setBootImageWithStretchBind, singleton, image?.requireOpenHandle() ?: MemorySegment.NULL, color, stretchMode, useFilter)
+        ObjectCalls.ptrcallWithObjectColorLongBoolArgs(setBootImageWithStretchBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, stretchMode, useFilter)
     }
 
     /**
@@ -6575,7 +6576,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun setBootImage(image: Image?, color: Color, scale: Boolean, useFilter: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectColorTwoBoolArgs(setBootImageBind, singleton, image?.requireOpenHandle() ?: MemorySegment.NULL, color, scale, useFilter)
+        ObjectCalls.ptrcallWithObjectColorTwoBoolArgs(setBootImageBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, scale, useFilter)
     }
 
     /**
@@ -6746,7 +6747,7 @@ object RenderingServer {
     fun fromHandle(handle: GodotHandle): RenderingServer? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): RenderingServer? =
+    internal fun wrap(handle: RawSegment): RenderingServer? =
         if (handle.address() == 0L) null else this
 
     private const val TEXTURE_2D_CREATE_HASH = 2010018390L

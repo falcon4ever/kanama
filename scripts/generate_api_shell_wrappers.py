@@ -82,7 +82,7 @@ def render_shell(class_name: str, base_name: str) -> str:
         [
             "package net.multigesture.kanama.api",
             "",
-            "import java.lang.foreign.MemorySegment",
+            "import net.multigesture.kanama.binding.runtime.RawSegment",
             "",
             "/**",
             f" * Generated shell wrapper from Godot API metadata: {class_name}.",
@@ -93,7 +93,7 @@ def render_shell(class_name: str, base_name: str) -> str:
             f"        fun fromHandle(handle: GodotHandle): {class_name}? =",
             "            wrap(handle.segment)",
             "",
-            f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
+            f"        internal fun wrap(handle: RawSegment): {class_name}? =",
             f"            if (handle.address() == 0L) null else {class_name}(GodotHandle(handle))",
             "    }",
             "}",

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -37,7 +37,7 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
         fun fromHandle(handle: GodotHandle): ImageFormatLoaderExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImageFormatLoaderExtension? =
+        internal fun wrap(handle: RawSegment): ImageFormatLoaderExtension? =
             if (handle.address() == 0L) null else ImageFormatLoaderExtension(GodotHandle(handle))
 
         private const val ADD_FORMAT_LOADER_HASH = 3218959716L

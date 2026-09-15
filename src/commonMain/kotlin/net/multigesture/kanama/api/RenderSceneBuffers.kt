@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +20,7 @@ open class RenderSceneBuffers(handle: GodotHandle) : RefCounted(handle) {
      */
     fun configure(config: RenderSceneBuffersConfiguration?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(configureBind, segment, listOf(config?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(configureBind, segment, listOf(config?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -27,7 +28,7 @@ open class RenderSceneBuffers(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RenderSceneBuffers? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RenderSceneBuffers? =
+        internal fun wrap(handle: RawSegment): RenderSceneBuffers? =
             if (handle.address() == 0L) null else RenderSceneBuffers(GodotHandle(handle))
 
         private const val CONFIGURE_HASH = 3072623270L

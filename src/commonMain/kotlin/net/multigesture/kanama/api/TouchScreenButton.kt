@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -72,7 +73,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_texture_normal
      */
     fun setTextureNormal(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -90,7 +91,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_texture_pressed
      */
     fun setTexturePressed(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -108,7 +109,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_bitmask
      */
     fun setBitmask(bitmask: BitMap?) {
-        ObjectCalls.ptrcallWithObjectArgs(setBitmaskBind, segment, listOf(bitmask?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setBitmaskBind, segment, listOf(bitmask?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -126,7 +127,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_shape
      */
     fun setShape(shape: Shape2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -256,7 +257,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): TouchScreenButton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TouchScreenButton? =
+        internal fun wrap(handle: RawSegment): TouchScreenButton? =
             if (handle.address() == 0L) null else TouchScreenButton(GodotHandle(handle))
 
         private const val SET_TEXTURE_NORMAL_HASH = 4051416890L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -15,7 +16,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Input
  */
 object Input {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("Input")
     }
 
@@ -1012,7 +1013,7 @@ object Input {
      */
     @JvmStatic
     fun setCustomMouseCursor(image: Resource?, shape: Long = 0L, hotspot: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: MemorySegment.NULL, shape, hotspot)
+        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, shape, hotspot)
     }
 
     /**
@@ -1126,7 +1127,7 @@ object Input {
     fun fromHandle(handle: GodotHandle): Input? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): Input? =
+    internal fun wrap(handle: RawSegment): Input? =
         if (handle.address() == 0L) null else this
 
     private const val IS_ANYTHING_PRESSED_HASH = 36873697L

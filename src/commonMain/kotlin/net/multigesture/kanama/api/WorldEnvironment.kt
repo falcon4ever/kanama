@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -37,7 +38,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_environment
      */
     fun setEnvironment(env: Environment?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -55,7 +56,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_camera_attributes
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -73,7 +74,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_compositor
      */
     fun setCompositor(compositor: Compositor?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -90,7 +91,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): WorldEnvironment? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): WorldEnvironment? =
+        internal fun wrap(handle: RawSegment): WorldEnvironment? =
             if (handle.address() == 0L) null else WorldEnvironment(GodotHandle(handle))
 
         private const val SET_ENVIRONMENT_HASH = 4143518816L

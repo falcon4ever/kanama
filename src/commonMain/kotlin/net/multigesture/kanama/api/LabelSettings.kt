@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -135,7 +136,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -496,7 +497,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): LabelSettings? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): LabelSettings? =
+        internal fun wrap(handle: RawSegment): LabelSettings? =
             if (handle.address() == 0L) null else LabelSettings(GodotHandle(handle))
 
         private const val SET_LINE_SPACING_HASH = 373806689L

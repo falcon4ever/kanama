@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -51,7 +52,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
 
     fun setMesh(mesh: ImporterMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getBlendWeights(): List<Float> {
@@ -89,7 +90,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GLTFMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFMesh? =
+        internal fun wrap(handle: RawSegment): GLTFMesh? =
             if (handle.address() == 0L) null else GLTFMesh(GodotHandle(handle))
 
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L

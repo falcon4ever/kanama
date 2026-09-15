@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -143,7 +144,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun addFrame(anim: String, texture: Texture2D?, duration: Double = 1.0, atPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(addFrameBind, segment, anim, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration, atPosition)
+        ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(addFrameBind, segment, anim, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration, atPosition)
     }
 
     /**
@@ -154,7 +155,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun setFrame(anim: String, idx: Int, texture: Texture2D?, duration: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(setFrameBind, segment, anim, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL, duration)
+        ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(setFrameBind, segment, anim, idx, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration)
     }
 
     /**
@@ -229,7 +230,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): SpriteFrames? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SpriteFrames? =
+        internal fun wrap(handle: RawSegment): SpriteFrames? =
             if (handle.address() == 0L) null else SpriteFrames(GodotHandle(handle))
 
         private const val ADD_ANIMATION_HASH = 3304788590L
