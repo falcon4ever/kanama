@@ -31,7 +31,7 @@ minor releases — the runbook below is identical, only smaller.
 | `src/generated/godot` (Panama bindings) | `scripts/jextract.sh` (jextract 25+) |
 | Virtual-method signature table (`processor/.../virtual-signatures.tsv`) | `scripts/generate_virtual_signature_table.py` |
 | Engine-wide `MethodName`/`PropertyName`/`SignalName` constants | `scripts/generate_name_constants.py` |
-| Generated wrappers, all platform trees (desktop/Android via one tree, iOS island + `ObjectCallsGenerated.kt`) | `scripts/generate_api_wrapper.py` re-adopt |
+| Generated wrappers, all platform trees (desktop/Android via one tree, iOS island + the iOS `ObjectCalls.kt` `GENERATED MEMBERS` region) | `scripts/generate_api_wrapper.py` re-adopt |
 | Wrapper KDoc | `scripts/sync_kdoc_from_godot_docs.py --write` |
 | Coverage + generator reports | `scripts/api_wrapper_coverage.py`, `scripts/api_wrapper_generator_report.py` |
 
@@ -64,7 +64,7 @@ minor releases — the runbook below is identical, only smaller.
    refreshes the API/header inputs (dump + jextract + validation + virtual
    table), classifies the API diff, regenerates name constants, **re-adopts
    every committed generated wrapper on every platform** (desktop
-   `--emit-class`, iOS `--ios-emit-class` plus `ObjectCallsGenerated.kt`),
+   `--emit-class`, iOS `--ios-emit-class` plus the iOS `ObjectCalls.kt` `GENERATED MEMBERS` region),
    re-syncs KDoc, refreshes the coverage/generator reports, and re-runs the
    gates. It stops at the human-judgment boundary below.
 
@@ -85,9 +85,9 @@ minor releases — the runbook below is identical, only smaller.
 4. **Human-judgment steps** (the script prints this list and exits; it never
    performs them):
 
-    - Run `./gradlew ktfmtFormat`. Step 5 re-emits the iOS
-      `ObjectCallsGenerated.kt` unformatted (it is not ktfmt-exempt, unlike the
-      `api/**` wrappers), and `ktfmtCheck` in `local_ci.sh` gates it.
+    - Run `./gradlew ktfmtFormat`. Step 5 re-emits the iOS `ObjectCalls.kt`
+      `GENERATED MEMBERS` region unformatted (that file is not ktfmt-exempt,
+      unlike the `api/**` wrappers), and `ktfmtCheck` in `local_ci.sh` gates it.
     - Run local CI against the new binary:
       `scripts/local_ci.sh /absolute/path/to/new_godot_binary`.
     - Re-run the platform smoke/device gates per the release-gate matrix (§6) in

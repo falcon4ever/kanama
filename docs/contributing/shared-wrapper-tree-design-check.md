@@ -14,7 +14,7 @@ assumptions. Nothing here changes behaviour.
 | | Desktop/Android tree | iOS tree |
 |---|---|---|
 | Files | 1,053 (988 generated, 47 hand-shaped, 18 non-API) | 1,029 (1,013 generated, 8 hand-shaped, 3 collision-class files; 9 more collision classes live in `IosGodotApi.kt`) |
-| Lines | 302,193 | 181,056, plus 26,677 in the generated `ObjectCallsGenerated.kt` |
+| Lines | 302,193 | 181,056, plus 26,677 generated iOS `ObjectCalls` helpers (a separate `ObjectCallsGenerated.kt` then; the `GENERATED MEMBERS` region of the iOS `ObjectCalls.kt` since task 104 step 3b) |
 | Generated on both platforms | 979 classes | |
 | Identical after stripping KDoc and the iOS wildcard import | **0 of 979** | |
 
@@ -86,6 +86,12 @@ unified or `expect`ed (blocker 3); the desktop 40k-line hand-written
 (`getSingleton(name)` vs `getSingleton(className)` today); the iOS generated
 extension helpers become members of the `actual object`. Gains a compiler-checked
 contract declaration.
+**Done by task 104 step 3 parcel B (the keywords excepted):** all 1,359 helpers the shared
+tree calls are members of `object ObjectCalls` on both platforms with the same parameter
+names in the same order, desktop's being canonical — the 1,384 generated iOS helpers now
+land as members in the `GENERATED MEMBERS` region of the iOS `ObjectCalls.kt` instead of as
+extensions in a separate file, and `scripts/check_objectcalls_parity.py` proves it on every
+`local_ci` run (0 deltas).
 
 **(b) One shared source directory compiled by each platform module.** The
 generator emits one file per class into a shared root; the root JVM module and

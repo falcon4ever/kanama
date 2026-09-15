@@ -19,12 +19,13 @@ from generate_api_wrapper import (
     IOS_COMPANION_SUFFIX,
     IOS_HANDSHAPED,
     IOS_HANDWRITTEN_COLLISION_CLASSES,
-    IOS_OBJECTCALLS_GENERATED,
+    IOS_OBJECTCALLS,
     IOS_ONLY_GENERATED,
     IOS_UNSUPPORTED_CLASSES,
     PER_PLATFORM_WRAPPERS,
     TreeResult,
     generated_companion_paths,
+    ios_generated_member_names,
     regenerate_tree,
 )
 from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, SHARED_API_DIR
@@ -298,12 +299,18 @@ def check_fixture(output_dir: Path, class_name: str, expected_skip_report: bool)
 IOS_FIXTURE_CLASS = "Node3D"
 
 
+# The GENERATED MEMBERS region the generator splices into the iOS ObjectCalls.kt, captured on its
+# own for the fixture: the region body only, so it is comparable byte-for-byte (the real file is
+# ktfmt-formatted, being hand-written outside the region). Not a compilable Kotlin file.
+IOS_GENERATED_MEMBERS_FIXTURE = "ObjectCalls.generated-members.kt.txt"
+
+
 def check_ios_fixture(output_dir: Path) -> int:
-    """Lock the iOS emission target: generated ObjectCalls helper bodies, the iOS
-    wrapper (with its extension-import injection), and the conservative skip report."""
+    """Lock the iOS emission target: the generated ObjectCalls MEMBERS region, the iOS
+    wrapper (with its star-import injection), and the conservative skip report."""
     ios_dir = output_dir / "ios"
     ios_dir.mkdir(parents=True, exist_ok=True)
-    objectcalls = ios_dir / "ObjectCallsGenerated.kt"
+    objectcalls = ios_dir / IOS_GENERATED_MEMBERS_FIXTURE
     skip_report = ios_dir / f"{IOS_FIXTURE_CLASS}.ios.skips.txt"
     subprocess.run(
         [
@@ -325,7 +332,7 @@ def check_ios_fixture(output_dir: Path) -> int:
     fixture_ios = FIXTURE_DIR / "ios"
     checks = [
         (f"{IOS_FIXTURE_CLASS}.kt", True),
-        ("ObjectCallsGenerated.kt", False),
+        (IOS_GENERATED_MEMBERS_FIXTURE, False),
         (f"{IOS_FIXTURE_CLASS}.ios.skips.txt", False),
     ]
     for name, sync_kdoc in checks:
@@ -480,19 +487,11 @@ def _rel(path: Path) -> str:
     return str(path.relative_to(ROOT))
 
 
-# ktfmt breaks `fun ObjectCalls.<name>(` across lines when the CallShape name is long (task 100
-# parcel 4 produced a 119-char one), so the receiver, dot and name may be separated by whitespace.
-IOS_HELPER_NAME = re.compile(r"fun (?:<T>\s*)?ObjectCalls\s*\.\s*(\w+)\(")  # `fun <T>` = typed-object-list helpers (parcel 9)
-
-
-def _ios_helper_names(source: str) -> set[str]:
-    return set(IOS_HELPER_NAME.findall(source))
-
-
 def check_single_tree(tree: TreeResult) -> int:
     """The durable convergence gate (task 21, single-tree since task 103): every generated file the
     generator produces -- the shared tree, the per-platform generated classes, the desktop/iOS
-    companions, the iOS ObjectCallsGenerated helpers and the gap index -- must equal a fresh regen
+    companions, the iOS ObjectCalls GENERATED MEMBERS region and the gap index -- must equal a fresh
+    regen
     (behavior-comparable: sync_kdoc_from_godot_docs.py owns the KDoc prose). A hand edit to a
     generated file, an un-adopted generator improvement, a stale companion, or a per-platform copy
     of a shared class all fail here, so the platforms cannot drift: there is one tree to drift."""
@@ -505,10 +504,12 @@ def check_single_tree(tree: TreeResult) -> int:
             missing.append(rel)
             continue
         committed = path.read_text(encoding="utf-8")
-        if rel == _rel(IOS_OBJECTCALLS_GENERATED):
-            # ktfmt reformats this file after every regen (it is outside the api/ exclusion), so
-            # compare the helper set, not the bytes: a helper added or dropped is drift, layout is not.
-            same = _ios_helper_names(committed) == _ios_helper_names(content)
+        if rel == _rel(IOS_OBJECTCALLS):
+            # This file is HAND-WRITTEN outside its GENERATED MEMBERS region and ktfmt reformats the
+            # region after every regen, so compare the region's member set, not the bytes: a helper
+            # added or dropped is drift, layout is not. The member names and their parameter names
+            # are held to desktop's by scripts/check_objectcalls_parity.py, a local_ci stage.
+            same = ios_generated_member_names(committed) == ios_generated_member_names(content)
         elif rel.endswith(".md"):
             same = committed == content
         else:
