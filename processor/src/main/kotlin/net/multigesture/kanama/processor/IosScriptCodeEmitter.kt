@@ -260,7 +260,8 @@ internal class IosScriptCodeEmitter(
         .forEach { method ->
           val exprs = method.args.mapIndexed { i, a -> callArgExpr(i, a) }
           if (exprs.all { it != null }) {
-            val invocation = "script.${method.kotlinName}(${exprs.joinToString(", ")})"
+            val invocation =
+              invocationByArgCount(method, exprs.map { it!! }, "script.${method.kotlinName}")
             builder.appendLine("        ${kotlinString(method.godotName)} -> { $invocation; true }")
           } else {
             warn(
@@ -309,9 +310,9 @@ internal class IosScriptCodeEmitter(
         valueMethods.forEach { method ->
           val exprs = method.args.mapIndexed { i, a -> callArgExpr(i, a) }
           if (exprs.all { it != null }) {
-            builder.appendLine(
-              "        ${kotlinString(method.godotName)} -> script.${method.kotlinName}(${exprs.joinToString(", ")})"
-            )
+            val invocation =
+              invocationByArgCount(method, exprs.map { it!! }, "script.${method.kotlinName}")
+            builder.appendLine("        ${kotlinString(method.godotName)} -> $invocation")
           } else {
             warn(
               "[kanama-ios] ${script.className}.${method.kotlinName} (godot: ${method.godotName}) has an unaudited arg type — not dispatched on iOS"
@@ -753,6 +754,25 @@ internal class IosScriptCodeEmitter(
       TypeMapping.VECTOR2I,
       TypeMapping.VECTOR3,
     )
+
+  /**
+   * The invocation of [callee] for a decoded `args` list. A method whose trailing parameters have
+   * defaults is dispatched by argument COUNT, one branch per admissible count, so a Godot-side
+   * caller that omits them (`obj.spawn()`, `call("spawn")`, a connection with fewer bound args)
+   * gets Kotlin's defaults instead of `args[i]` on a too-short list — which threw
+   * `IndexOutOfBoundsException` inside the bridge and aborted the app (task 114, third-person
+   * `Coin.spawn(coinDelay = 0.5)`). Mirrors the JVM emitter's `emitMethodDispatchCase`. A method
+   * without defaults keeps the single positional call.
+   */
+  private fun invocationByArgCount(method: IosMethod, exprs: List<String>, callee: String): String {
+    val defaultStart = method.args.indexOfFirst { it.hasDefault }
+    if (defaultStart < 0) return "$callee(${exprs.joinToString(", ")})"
+    val branches =
+      (defaultStart until exprs.size).map { count ->
+        "$count -> $callee(${exprs.take(count).joinToString(", ")})"
+      }
+    return "when (args.size) { ${branches.joinToString("; ")}; else -> $callee(${exprs.joinToString(", ")}) }"
+  }
 
   /**
    * Kotlin expression for call arg [i] (`args[i]` is the decoded value), cast/wrapped to its
