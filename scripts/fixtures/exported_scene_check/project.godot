@@ -1,0 +1,12 @@
+; Fixture for scripts/check_exported_scene_properties_selftest.sh (task 119): a main scene that
+; instances sub.tscn and overrides a property on the sub-scene's CHILD node. Pure GDScript so the
+; self-test needs no Kanama runtime.
+config_version=5
+
+[application]
+config/name="ExportedSceneCheckFixture"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7")
+
+[editor]
+export/convert_text_resources_to_binary=true

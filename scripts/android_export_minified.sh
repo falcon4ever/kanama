@@ -163,7 +163,15 @@ if [[ ! -f "$BUILD_GRADLE" ]]; then
   # Task 116: in 4.7.2 that command installs nothing on its own (it only takes effect combined with
   # an export), and the R8 patch below needs the template BEFORE the export. Do what the editor's
   # installer does: android/.build_version, android/build/.gdignore, unzip android_source.zip.
-  godot_version="$("$GODOT_BIN" --version 2>/dev/null | tail -1 | cut -d. -f1-4)"
+  # The templates directory and android/.build_version must equal Godot's VERSION_FULL_CONFIG
+  # ("4.7.2.stable", "4.8.stable", "4.7.2.stable.mono"); `godot --version` cannot be cut into that
+  # reliably (an X.Y.0 release prints no patch, a mono build adds a segment), so read the pin the
+  # repo already owns, as ios_template_preflight.sh does.
+  godot_version="$(sed -n 's/^kanamaGodotVersion=//p' "$ROOT_DIR/gradle.properties" | tr -d '[:space:]')"
+  if [[ -z "$godot_version" ]]; then
+    echo "[android_minified] kanamaGodotVersion missing from $ROOT_DIR/gradle.properties" >&2
+    exit 1
+  fi
   templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
   if [[ -z "$templates_root" ]]; then
     if [[ -d "$HOME/Library/Application Support/Godot/export_templates" ]]; then
@@ -242,12 +250,11 @@ GRADLE
 rm -rf "$DEMO_DIR/.godot/exported" # task 106/116: never reuse a conversion made without the desktop addon
 EXPORT_LOG="${KANAMA_ANDROID_EXPORT_LOG:-${APK_PATH%.apk}.export.log}"
 echo "[android_minified] export release (R8): $APK_PATH (log: $EXPORT_LOG)"
-"$GODOT_BIN" --headless \
+# `if !` keeps errexit from aborting the pipeline before the status is read (pipefail is on).
+if ! "$GODOT_BIN" --headless \
   --path "$DEMO_DIR" \
-  --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG"
-export_status="${PIPESTATUS[0]}"
-if [[ "$export_status" -ne 0 ]]; then
-  echo "[android_minified] Godot export failed (exit $export_status)" >&2
+  --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG"; then
+  echo "[android_minified] Godot export failed (exit ${PIPESTATUS[0]}); log: $EXPORT_LOG" >&2
   exit 1
 fi
 if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG"; then
