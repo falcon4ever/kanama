@@ -144,11 +144,45 @@ ANDROID_HOME="$ANDROID_SDK_DIR" ANDROID_SDK_ROOT="$ANDROID_SDK_DIR" \
   "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAndroidPluginAar \
   -PkanamaAndroidDemoDir="$DEMO_DIR"
 
+# Task 116: the export runs in the DESKTOP editor, which needs the desktop Kanama addon to load the
+# project's .kt scripts; without it every exported scene ships with no script properties (task 106).
+# Installed after the AAR so installAddonJar preserves the Android .gdextension entries.
+echo "[android_minified] install desktop addon (export-time editor)"
+addon_args=("-PkanamaProjectDir=$DEMO_DIR")
+if [[ -d "$DEMO_DIR/kotlin-src" ]]; then
+  addon_args+=("-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src")
+fi
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar "${addon_args[@]}"
+
 # 1) Install/refresh the Godot Android build template (regenerates build.gradle).
 echo "[android_minified] install android build template"
 "$GODOT_BIN" --headless --path "$DEMO_DIR" --install-android-build-template --quit >/dev/null 2>&1 || true
 
 BUILD_GRADLE="$DEMO_DIR/android/build/build.gradle"
+if [[ ! -f "$BUILD_GRADLE" ]]; then
+  # Task 116: in 4.7.2 that command installs nothing on its own (it only takes effect combined with
+  # an export), and the R8 patch below needs the template BEFORE the export. Do what the editor's
+  # installer does: android/.build_version, android/build/.gdignore, unzip android_source.zip.
+  godot_version="$("$GODOT_BIN" --version 2>/dev/null | tail -1 | cut -d. -f1-4)"
+  templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
+  if [[ -z "$templates_root" ]]; then
+    if [[ -d "$HOME/Library/Application Support/Godot/export_templates" ]]; then
+      templates_root="$HOME/Library/Application Support/Godot/export_templates"
+    else
+      templates_root="${XDG_DATA_HOME:-$HOME/.local/share}/godot/export_templates"
+    fi
+  fi
+  android_source="$templates_root/$godot_version/android_source.zip"
+  if [[ ! -f "$android_source" ]]; then
+    echo "[android_minified] android build template not installed and $android_source is missing" >&2
+    exit 1
+  fi
+  echo "[android_minified] installing the android build template by hand from $android_source"
+  mkdir -p "$DEMO_DIR/android/build"
+  : >"$DEMO_DIR/android/build/.gdignore"
+  printf '%s\n' "$godot_version" >"$DEMO_DIR/android/.build_version"
+  unzip -q -o "$android_source" -d "$DEMO_DIR/android/build"
+fi
 if [[ ! -f "$BUILD_GRADLE" ]]; then
   echo "[android_minified] generated build.gradle not found: $BUILD_GRADLE" >&2
   echo "[android_minified] is gradle_build/use_gradle_build=true in the export preset?" >&2
@@ -205,10 +239,25 @@ android {
 GRADLE
 
 # 3) Export the release APK WITHOUT reinstalling the template (keeps the patch).
-echo "[android_minified] export release (R8): $APK_PATH"
+rm -rf "$DEMO_DIR/.godot/exported" # task 106/116: never reuse a conversion made without the desktop addon
+EXPORT_LOG="${KANAMA_ANDROID_EXPORT_LOG:-${APK_PATH%.apk}.export.log}"
+echo "[android_minified] export release (R8): $APK_PATH (log: $EXPORT_LOG)"
 "$GODOT_BIN" --headless \
   --path "$DEMO_DIR" \
-  --export-release Android "$APK_PATH"
+  --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG"
+export_status="${PIPESTATUS[0]}"
+if [[ "$export_status" -ne 0 ]]; then
+  echo "[android_minified] Godot export failed (exit $export_status)" >&2
+  exit 1
+fi
+if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG"; then
+  echo "[android_minified] the export-time editor could not bind the project's .kt scripts; scene-stored @ScriptProperty values would be missing (task 106/116)" >&2
+  exit 1
+fi
+if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd"; then
+  echo "[android_minified] exported scenes lost script properties (task 112 check); refusing to install." >&2
+  exit 1
+fi
 
 if [[ ! -f "$APK_PATH" ]]; then
   echo "[android_minified] export did not produce an APK: $APK_PATH" >&2

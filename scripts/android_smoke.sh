@@ -164,6 +164,19 @@ ANDROID_HOME="$ANDROID_SDK_DIR" ANDROID_SDK_ROOT="$ANDROID_SDK_DIR" \
   "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAndroidPluginAar \
   -PkanamaAndroidDemoDir="$DEMO_DIR"
 
+# Task 116: the export runs in the DESKTOP editor, which needs the desktop Kanama addon
+# (kanama.jar, the project's kanama-scripts.jar, the bootstrap dylib) to load the project's .kt
+# scripts. Without it the editor prints "No loader found for resource: res://….kt" and, because
+# Godot's export re-packs every scene with the properties the script instance reports, ships every
+# scene with NO script properties (task 106). On a fresh clone addons/kanama/ holds only the
+# .gdextension file. Install after the AAR so installAddonJar preserves the Android entries.
+echo "[android_smoke] install desktop addon (export-time editor)"
+addon_args=("-PkanamaProjectDir=$DEMO_DIR")
+if [[ -d "$DEMO_DIR/kotlin-src" ]]; then
+  addon_args+=("-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src")
+fi
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar "${addon_args[@]}"
+
 echo "[android_smoke] install android build template"
 "$GODOT_BIN" --headless \
   --path "$DEMO_DIR" \
@@ -171,6 +184,33 @@ echo "[android_smoke] install android build template"
   --quit >/dev/null 2>&1 || true
 
 BUILD_GRADLE="$DEMO_DIR/android/build/build.gradle"
+if [[ ! -f "$BUILD_GRADLE" ]]; then
+  # Task 116: in 4.7.2 `--install-android-build-template --quit` installs nothing on its own (it
+  # only takes effect combined with an export). Do what the editor's installer does: write
+  # android/.build_version, create android/build/.gdignore, unzip android_source.zip from the
+  # export templates of this exact editor version. The build.gradle patch below needs the
+  # template BEFORE the export, so the combined form is not an option here.
+  godot_version="$("$GODOT_BIN" --version 2>/dev/null | tail -1 | cut -d. -f1-4)"
+  templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
+  if [[ -z "$templates_root" ]]; then
+    if [[ -d "$HOME/Library/Application Support/Godot/export_templates" ]]; then
+      templates_root="$HOME/Library/Application Support/Godot/export_templates"
+    else
+      templates_root="${XDG_DATA_HOME:-$HOME/.local/share}/godot/export_templates"
+    fi
+  fi
+  android_source="$templates_root/$godot_version/android_source.zip"
+  if [[ ! -f "$android_source" ]]; then
+    echo "[android_smoke] android build template not installed and $android_source is missing" >&2
+    echo "[android_smoke] install the $godot_version export templates (the official tpz has android_source.zip)" >&2
+    exit 1
+  fi
+  echo "[android_smoke] installing the android build template by hand from $android_source"
+  mkdir -p "$DEMO_DIR/android/build"
+  : >"$DEMO_DIR/android/build/.gdignore"
+  printf '%s\n' "$godot_version" >"$DEMO_DIR/android/.build_version"
+  unzip -q -o "$android_source" -d "$DEMO_DIR/android/build"
+fi
 if [[ ! -f "$BUILD_GRADLE" ]]; then
   echo "[android_smoke] generated build.gradle not found: $BUILD_GRADLE" >&2
   echo "[android_smoke] is gradle_build/use_gradle_build=true in the export preset?" >&2
@@ -197,10 +237,34 @@ allprojects {
 }
 GRADLE
 
-echo "[android_smoke] export: $APK_PATH"
+# Task 106/116: Godot caches converted scenes under .godot/exported keyed by the .tscn md5 + mtime;
+# a conversion made without the desktop addon (properties stripped) would be reused here.
+rm -rf "$DEMO_DIR/.godot/exported"
+
+EXPORT_LOG="${KANAMA_ANDROID_EXPORT_LOG:-${APK_PATH%.apk}.export.log}"
+echo "[android_smoke] export: $APK_PATH (log: $EXPORT_LOG)"
 "$GODOT_BIN" --headless \
   --path "$DEMO_DIR" \
-  --export-debug Android "$APK_PATH"
+  --export-debug Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG"
+export_status="${PIPESTATUS[0]}"
+if [[ "$export_status" -ne 0 ]]; then
+  echo "[android_smoke] Godot export failed (exit $export_status)" >&2
+  exit 1
+fi
+# The desktop runtime logs every .kt it loads with the class it bound; an empty class or a missing
+# loader means the exported scenes carry none of that script's @ScriptProperty values (task 106).
+if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG"; then
+  echo "[android_smoke] the export-time editor could not bind the project's .kt scripts:" >&2
+  grep -E 'No loader found for resource: res://.*\.kt|_load path=' "$EXPORT_LOG" | head -5 >&2 || true
+  echo "[android_smoke] scene-stored @ScriptProperty values would be missing from this APK; refusing to install it." >&2
+  exit 1
+fi
+# Task 112: every converted scene keeps its script-declared properties.
+SCENE_PARITY_CHECK="$ROOT_DIR/scripts/check_exported_scene_properties.gd"
+if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$SCENE_PARITY_CHECK"; then
+  echo "[android_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above); refusing to install." >&2
+  exit 1
+fi
 
 echo "[android_smoke] install: $PACKAGE_NAME"
 adb_retry start-server >/dev/null
