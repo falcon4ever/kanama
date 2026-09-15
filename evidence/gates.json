@@ -224,6 +224,16 @@
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
       "source": "scripts/ios_device_gate.sh"
+    },
+    {
+      "gate": "android-debug-matrix",
+      "claim": "Android Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "d9593b1e547db2146beca656498323a2102f639c",
+      "date": "2026-09-15",
+      "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh on machine C; the smoke now installs the desktop addon and runs the exported-scene parity check before installing (task 116)",
+      "result": "PASS",
+      "source": "scripts/android_smoke.sh"
     }
   ]
 }

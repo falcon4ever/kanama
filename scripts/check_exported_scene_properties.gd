@@ -75,6 +75,58 @@ func _run() -> int:
 	print("%s PASS: %d converted scene(s), every script property kept" % [TAG, checked])
 	return 0
 
+## Godot's SceneState::pack skips a property whose value equals its default. Mirror that: the default is
+## the sub-scene's own stored value when the node is an instance (recursively), else the script's
+## declared default (Script.get_property_default_value; Kanama scripts implement the hook). A value that
+## equals its default was not lost by the export.
+func _is_default_value(state: SceneState, node_idx: int, prop: String, value: Variant) -> bool:
+	var instance := state.get_node_instance(node_idx)
+	if instance != null:
+		var sub := instance.get_state()
+		if sub.get_node_count() > 0:
+			for k in sub.get_node_property_count(0):
+				if String(sub.get_node_property_name(0, k)) == prop:
+					return _values_equal(sub.get_node_property_value(0, k), value)
+			# Not stored by the sub-scene either: fall through to its root script's default.
+			return _is_default_value(sub, 0, prop, value)
+	var script: Script = null
+	for k in state.get_node_property_count(node_idx):
+		if String(state.get_node_property_name(node_idx, k)) == "script":
+			script = state.get_node_property_value(node_idx, k) as Script
+	if script == null:
+		return false
+	var default_value: Variant = script.get_property_default_value(prop)
+	return _values_equal(default_value, value)
+
+## The node's class, resolved through the instance chain: the state records "" for an instanced
+## node, so ask the sub-scene's root, recursively. "" when nothing in the chain records a type.
+func _node_type(state: SceneState, node_idx: int) -> String:
+	var type := String(state.get_node_type(node_idx))
+	if type != "":
+		return type
+	var instance := state.get_node_instance(node_idx)
+	if instance != null and instance.get_state().get_node_count() > 0:
+		return _node_type(instance.get_state(), 0)
+	return ""
+
+## The script attached to a node in a SceneState: its own `script` property, else (for an instanced
+## sub-scene) the sub-scene root's script, recursively. Null when the node has no script at all.
+func _node_script(state: SceneState, node_idx: int) -> Script:
+	for k in state.get_node_property_count(node_idx):
+		if String(state.get_node_property_name(node_idx, k)) == "script":
+			return state.get_node_property_value(node_idx, k) as Script
+	var instance := state.get_node_instance(node_idx)
+	if instance != null and instance.get_state().get_node_count() > 0:
+		return _node_script(instance.get_state(), 0)
+	return null
+
+func _values_equal(a: Variant, b: Variant) -> bool:
+	if typeof(a) == typeof(b):
+		return a == b
+	if (typeof(a) == TYPE_INT or typeof(a) == TYPE_FLOAT) and (typeof(b) == TYPE_INT or typeof(b) == TYPE_FLOAT):
+		return is_equal_approx(float(a), float(b))
+	return false
+
 ## Returns the number of script properties missing from the export, or -1 when a scene failed to load.
 func _compare(source: String, saved: String) -> int:
 	var src := ResourceLoader.load(source, "PackedScene", ResourceLoader.CACHE_MODE_IGNORE) as PackedScene
@@ -98,13 +150,35 @@ func _compare(source: String, saved: String) -> int:
 		var path := String(ss.get_node_path(i))
 		var type := String(ss.get_node_type(i))
 		var got: Dictionary = exported.get(path, {})
+		# Which properties can be lost the task-106 way? Those the node's TYPE does not own: a
+		# native property (transform, position, …) is the engine's business, everything else stored
+		# on the node came from its script. The type is resolved through the instance chain (an
+		# instanced sub-scene's root, recursively) because the state records "" for instances. Do NOT
+		# gate on the script's own declared-property list: in the failure this check exists for, the
+		# script bound no class at export time and declares nothing, which would hide exactly the
+		# loss we are looking for. The declared list is used only when the type cannot be resolved.
+		var resolved_type := _node_type(ss, i)
+		var script := _node_script(ss, i)
+		var declared := {}
+		if script != null:
+			for info in script.get_script_property_list():
+				declared[String(info["name"])] = true
 		for j in ss.get_node_property_count(i):
 			var prop := String(ss.get_node_property_name(i, j))
-			if prop == "script":
+			if prop == "script" or prop.begins_with("metadata/"):
 				continue
-			if _is_native_property(type, prop):
-				continue
+			if resolved_type != "":
+				if _is_native_property(resolved_type, prop):
+					continue
+			elif not declared.has(prop):
+				continue  # type unknown and the script does not claim it: cannot judge, skip
 			if not got.has(prop):
+				# The re-pack stores only values that differ from the default the node would have
+				# anyway: the script's declared default, or, for an instanced sub-scene, the value the
+				# sub-scene itself stores (task 116: a .tscn that spells out `movement_speed = 250` when
+				# the Kotlin default is 250 is dropped legitimately).
+				if _is_default_value(ss, i, prop, ss.get_node_property_value(i, j)):
+					continue
 				printerr("%s FAIL %s: node '%s' (%s) lost script property '%s' in %s" % [TAG, source, path, type if type != "" else "instance", prop, saved])
 				missing += 1
 	if missing == 0:
