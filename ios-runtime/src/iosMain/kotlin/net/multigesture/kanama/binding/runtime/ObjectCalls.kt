@@ -174,8 +174,8 @@ object ObjectCalls {
 
   // Resolve a Godot engine singleton (Input, Engine, …). Mirrors desktop ObjectCalls;
   // used by the bespoke Input glue (and generated singleton wrappers, longer term).
-  fun getSingleton(className: String): MemorySegment =
-    MemorySegment.ofAddress(kanama_ios_godot_get_singleton(className))
+  fun getSingleton(name: String): MemorySegment =
+    MemorySegment.ofAddress(kanama_ios_godot_get_singleton(name))
 
   // Destroy an engine Object immediately (GDExtension object_destroy). Mirrors desktop
   // ObjectCalls.destroyObject; RefCounted.close()/releaseHandle call it only after
@@ -246,26 +246,26 @@ object ObjectCalls {
   fun ptrcallWithObjectStringLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    a0: MemorySegment,
-    a1: String,
-    a2: Long,
+    objectArg: MemorySegment,
+    text: String,
+    value: Long,
   ): Long {
-    val guardHandle = a0.address() != 0L
-    if (guardHandle) ptrcallNoArgsRetBool(refCountedReferenceBind, a0)
+    val guardHandle = objectArg.address() != 0L
+    if (guardHandle) ptrcallNoArgsRetBool(refCountedReferenceBind, objectArg)
     try {
       return memScoped {
         val ret = alloc<LongVar>()
         val c0 = alloc<LongVar>()
-        c0.value = a0.address()
+        c0.value = objectArg.address()
         val c2 = alloc<LongVar>()
-        c2.value = a2
+        c2.value = value
         val types = allocArray<IntVar>(3)
         types[0] = PT_OBJECT
         types[1] = PT_STRING
         types[2] = PT_INT64
         val ptrs = allocArray<COpaquePointerVar>(3)
         ptrs[0] = c0.ptr.reinterpret<CPointed>()
-        ptrs[1] = a1.cstr.ptr.reinterpret<CPointed>()
+        ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
         ptrs[2] = c2.ptr.reinterpret<CPointed>()
         kanama_ios_godot_ptrcall(
           methodBind.address(),
@@ -279,8 +279,8 @@ object ObjectCalls {
         ret.value
       }
     } finally {
-      if (guardHandle && ptrcallNoArgsRetInt(refCountedGetReferenceCountBind, a0) > 1) {
-        ptrcallNoArgsRetBool(refCountedUnreferenceBind, a0)
+      if (guardHandle && ptrcallNoArgsRetInt(refCountedGetReferenceCountBind, objectArg) > 1) {
+        ptrcallNoArgsRetBool(refCountedUnreferenceBind, objectArg)
       }
     }
   }
@@ -1614,10 +1614,19 @@ object ObjectCalls {
     ByteArray(0)
   }
 
+  fun ptrcallNoArgsRetByteArray(methodBind: MemorySegment, instance: MemorySegment): ByteArray =
+    ptrcallNoArgsRetByteArray(methodBind, instance, -1L)
+
+  // iOS-ONLY overload. The two-argument helper above is the shape the shared wrapper tree calls and
+  // the one desktop declares, so it is the one that matches an `expect` member (task 104 step 3);
+  // this one takes the caller's known byte count so the read-back can size its buffer in one go
+  // instead of growing it (Image.getData passes get_data_size()). An `actual object` may carry
+  // extra members, so it stays — but it cannot be a DEFAULT on the shape above: that would make the
+  // arity differ from desktop's, and an `actual` may not restate defaults either.
   fun ptrcallNoArgsRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    sizeHint: Long = -1L,
+    sizeHint: Long,
   ): ByteArray =
     retByteArray(methodBind, instance, sizeHint) {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(null, null, 0)
@@ -1626,14 +1635,14 @@ object ObjectCalls {
   fun ptrcallWithByteArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    bytes: ByteArray,
+    value: ByteArray,
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0
     val types = allocArray<IntVar>(1)
     types[0] = PT_PACKED_BYTE_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
-    ptrs[0] = packByteDesc(bytes).reinterpret<CPointed>()
+    ptrs[0] = packByteDesc(value).reinterpret<CPointed>()
     kanama_ios_godot_ptrcall(
       methodBind.address(),
       instance.address(),
@@ -2394,13 +2403,13 @@ object ObjectCalls {
     points: List<Vector2>,
     colors: List<Color>,
     uvs: List<Vector2>,
-    objectArg: MemorySegment,
+    texture: MemorySegment,
   ) = memScoped {
     val pointsDesc = packVector2Desc(points)
     val colorsDesc = packColorDesc(colors)
     val uvsDesc = packVector2Desc(uvs)
     val objCell = alloc<LongVar>()
-    objCell.value = objectArg.address()
+    objCell.value = texture.address()
     val types = allocArray<IntVar>(4)
     types[0] = PT_PACKED_VECTOR2_ARRAY
     types[1] = PT_PACKED_COLOR_ARRAY
@@ -2431,13 +2440,13 @@ object ObjectCalls {
     points: List<Vector2>,
     color: Color,
     uvs: List<Vector2>,
-    objectArg: MemorySegment,
+    texture: MemorySegment,
   ) = memScoped {
     val pointsDesc = packVector2Desc(points)
     val colorPtr = colorCell(color)
     val uvsDesc = packVector2Desc(uvs)
     val objCell = alloc<LongVar>()
-    objCell.value = objectArg.address()
+    objCell.value = texture.address()
     val types = allocArray<IntVar>(4)
     types[0] = PT_PACKED_VECTOR2_ARRAY
     types[1] = PT_COLOR
@@ -2571,8 +2580,8 @@ object ObjectCalls {
   fun <T> ptrcallNoArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    fromHandle: (MemorySegment) -> T?,
-  ): List<T> = retTypedObjectList(methodBind, instance, fromHandle) { Triple(null, null, 0) }
+    wrapper: (MemorySegment) -> T?,
+  ): List<T> = retTypedObjectList(methodBind, instance, wrapper) { Triple(null, null, 0) }
 
   fun <T> ptrcallWithBoolArgRetTypedObjectList(
     methodBind: MemorySegment,
@@ -2835,13 +2844,13 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithColorArg(methodBind: MemorySegment, instance: MemorySegment, value: Color) =
+  fun ptrcallWithColorArg(methodBind: MemorySegment, instance: MemorySegment, color: Color) =
     memScoped {
       val cell = allocArray<FloatVar>(4)
-      cell[0] = value.r
-      cell[1] = value.g
-      cell[2] = value.b
-      cell[3] = value.a
+      cell[0] = color.r
+      cell[1] = color.g
+      cell[2] = color.b
+      cell[3] = color.a
       val types = allocArray<IntVar>(1)
       types[0] = PT_COLOR
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -2886,17 +2895,17 @@ object ObjectCalls {
   fun ptrcallWithStringNameAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    a0: String,
-    a1: Boolean,
+    name: String,
+    boolArg: Boolean,
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c1 = alloc<ByteVar>()
-    c1.value = if (a1) 1 else 0
+    c1.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(2)
     types[0] = PT_STRING_NAME
     types[1] = PT_BOOL
     val ptrs = allocArray<COpaquePointerVar>(2)
-    ptrs[0] = a0.cstr.ptr.reinterpret<CPointed>()
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     kanama_ios_godot_ptrcall(
       methodBind.address(),
@@ -2996,11 +3005,11 @@ object ObjectCalls {
 
   // PhysicsRayQueryParameters3D.set_exclude(Array[RID]): pass the RID ids as a flat int64 buffer;
   // the C side builds the Godot Array of RID variants and ptrcalls the setter.
-  fun ptrcallWithRIDListArg(methodBind: MemorySegment, instance: MemorySegment, rids: List<RID>) =
+  fun ptrcallWithRIDListArg(methodBind: MemorySegment, instance: MemorySegment, values: List<RID>) =
     memScoped {
-      val n = rids.size
+      val n = values.size
       val arr = allocArray<LongVar>(if (n > 0) n else 1)
-      for (i in 0 until n) arr[i] = rids[i].value
+      for (i in 0 until n) arr[i] = values[i].value
       kanama_ios_godot_ptrcall_with_rid_array_arg(methodBind.address(), instance.address(), arr, n)
       Unit
     }
