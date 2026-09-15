@@ -90,8 +90,9 @@ files (`GodotObject`, `GD`, `DirAccessHandle`, …) are auto-excluded.
 
 `check_single_tree` in `scripts/check_wrapper_generator.py` regenerates the whole tree
 in-process (a few seconds) and fails if any generated file — a shared class, a
-per-platform generated class, a companion, the iOS `ObjectCallsGenerated.kt` (compared
-by helper set, since ktfmt reformats it), or the gap index — differs from a fresh regen
+per-platform generated class, a companion, the `GENERATED MEMBERS` region of the iOS
+`ObjectCalls.kt` (compared by member set, since ktfmt reformats it), or the gap index —
+differs from a fresh regen
 (behavior-comparable; `sync_kdoc_from_godot_docs.py` owns the prose), if a committed
 companion is no longer produced (its gap closed), or if a shared class also has a copy
 in a platform directory. A hand edit to a generated file, an un-adopted generator

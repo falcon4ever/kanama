@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import re
 import sys
 from contextlib import contextmanager
@@ -634,6 +635,15 @@ IOS_HANDWRITTEN_HELPERS = {
     "ptrcallWithNodePathArgRetArray",
     # hand-written in ObjectCalls.kt to host SceneTree.create_timer (hand-written collision class)
     "ptrcallWithDoubleAndThreeBoolArgsRetObject",
+    # task 104 step 3 parcel B: these four were generated AND hand-written. A member wins over an
+    # extension in Kotlin overload resolution, so the hand-written bodies were always the ones
+    # called and the generated extensions were dead code -- and now that the generated helpers are
+    # members of the same object, emitting them would be a redeclaration. Listing them here keeps
+    # today's behaviour exactly and lets the parity gate compare the hand-written signatures.
+    "ptrcallWithByteArrayArgRetLong",
+    "ptrcallWithPackedColorListArg",
+    "ptrcallWithPackedVector2ListArg",
+    "ptrcallWithRIDListArg",
 }
 PARAMETER_NAME_OVERRIDES = {
     ("Time", "get_datetime_dict_from_unix_time", "unix_time_val"): "unixTime",
@@ -2939,9 +2949,17 @@ def render_draft(
 # helpers it waits on; the gap index (GAP_INDEX_PATH) lists them all so the drift gate can count
 # the gap and a family moves back into the shared file the moment its helper lands on iOS.
 
-IOS_OBJECTCALLS_GENERATED = (
-    ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCallsGenerated.kt"
+# The hand-written iOS `object ObjectCalls` hosts the generated helpers as MEMBERS inside a marked
+# region at the end of its body (task 104 step 3 parcel B; before that they were extension functions
+# in a separate ObjectCallsGenerated.kt, which common code cannot see once the object becomes an
+# `expect object`). The generator rewrites only that region and refuses to run if the markers are
+# missing or duplicated; everything outside them is hand-written.
+IOS_OBJECTCALLS = (
+    ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"
 )
+DESKTOP_OBJECTCALLS = ROOT / "src/main/kotlin/binding/runtime/ObjectCalls.kt"
+IOS_GENERATED_BEGIN = "  // ===== BEGIN GENERATED MEMBERS (scripts/generate_api_wrapper.py — do not edit) ====="
+IOS_GENERATED_END = "  // ===== END GENERATED MEMBERS ====="
 GAP_INDEX_PATH = ROOT / "docs/reference/generated/ios-shape-gap.md"
 IOS_HELPER_IMPORT = "import net.multigesture.kanama.binding.runtime.*\n"
 DESKTOP_COMPANION_SUFFIX = ".jvm.kt"
@@ -2949,10 +2967,14 @@ IOS_COMPANION_SUFFIX = ".ios.kt"
 
 
 def _inject_ios_helper_import(content: str) -> str:
-    """The iOS ObjectCalls helpers are generated extension functions, so a file compiled on iOS must
-    star-import the binding.runtime package. Same-package wrapper names win over the star import, so
-    the line is inert on desktop/Android. It trails the package's by-name imports (RawSegment,
-    NULL_SEGMENT, ObjectCalls) so those stay in sorted order."""
+    """A shared-tree file compiled on iOS star-imports the binding.runtime package. Same-package
+    wrapper names win over the star import, so the line is inert on desktop/Android. It trails the
+    package's by-name imports (RawSegment, NULL_SEGMENT, ObjectCalls) so those stay in sorted order.
+
+    Task 104 step 3 parcel B made the generated iOS helpers MEMBERS of `object ObjectCalls`, so the
+    star import no longer carries them and is vestigial. It is kept here on purpose: dropping it
+    rewrites one import line in every shared-tree file, which belongs with parcel C's move of the
+    tree into `commonMain` (that parcel already rewrites the whole tree), not with this one."""
     lines = content.splitlines(keepends=True)
     prefix = "import net.multigesture.kanama.binding.runtime."
     last = max((i for i, line in enumerate(lines) if line.startswith(prefix)), default=None)
@@ -2960,6 +2982,110 @@ def _inject_ios_helper_import(content: str) -> str:
         return content
     lines.insert(last + 1, IOS_HELPER_IMPORT)
     return "".join(lines)
+
+
+# A member function declaration, name captured. Whitespace-tolerant on purpose: ktfmt may break a
+# long generic parameter list, and the previous, stricter spelling of this regex silently missed
+# three wrapped helpers, which made every regen rewrite the generated file raw (task 104 parcel A).
+IOS_MEMBER_NAME_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s*)?(\w+)\s*\(")
+
+
+def ios_generated_region(source: str) -> str:
+    """The text between the GENERATED MEMBERS markers of an iOS `ObjectCalls.kt`.
+
+    Raises if the markers are missing or duplicated -- the generator must never guess where the
+    hand-written half of the object ends.
+    """
+    begins = source.count(IOS_GENERATED_BEGIN)
+    ends = source.count(IOS_GENERATED_END)
+    if begins != 1 or ends != 1:
+        raise SystemExit(
+            f"[generate_api_wrapper] {_rel(IOS_OBJECTCALLS)}: expected exactly one BEGIN/END "
+            f"GENERATED MEMBERS marker pair, found {begins}/{ends}. Restore the markers at the end "
+            "of the `object ObjectCalls` body; the generator rewrites only what is between them."
+        )
+    start = source.index(IOS_GENERATED_BEGIN) + len(IOS_GENERATED_BEGIN)
+    end = source.index(IOS_GENERATED_END)
+    if end < start:
+        raise SystemExit(
+            f"[generate_api_wrapper] {_rel(IOS_OBJECTCALLS)}: the END GENERATED MEMBERS marker "
+            "precedes the BEGIN marker."
+        )
+    return source[start:end]
+
+
+def ios_generated_member_names(source: str) -> set[str]:
+    """Helper names declared inside the GENERATED MEMBERS region of an iOS `ObjectCalls.kt`.
+
+    The drift gate and `--write-tree`'s skip both compare THIS set rather than the region's bytes:
+    the file is ktfmt-formatted (it is hand-written outside the region), so layout is not drift but
+    a helper appearing or disappearing is.
+    """
+    return set(IOS_MEMBER_NAME_RE.findall(ios_generated_region(source)))
+
+
+def splice_ios_generated_members(source: str, region: str) -> str:
+    """[source] with its GENERATED MEMBERS region replaced by [region]. Idempotent."""
+    ios_generated_region(source)  # validates the markers before touching anything
+    head = source[: source.index(IOS_GENERATED_BEGIN) + len(IOS_GENERATED_BEGIN)]
+    tail = source[source.index(IOS_GENERATED_END) :]
+    return head + "\n" + region.strip("\n") + "\n\n" + tail
+
+
+@functools.cache
+def desktop_objectcalls_signatures() -> dict[str, tuple[str, ...]]:
+    """Desktop helper name -> parameter NAMES, in order, from the hand-written desktop ObjectCalls.
+
+    Desktop's spelling is canonical for task 104 step 3: an `expect` member is actualized only by a
+    member with the same parameter names, and renaming 3 % of a 40k-line hand-written file is the
+    worse trade. Overloads that disagree on names are dropped rather than guessed at; the parity
+    gate (scripts/check_objectcalls_parity.py) reports whatever this cannot resolve.
+    """
+    src = DESKTOP_OBJECTCALLS.read_text(encoding="utf-8")
+    signatures: dict[str, tuple[str, ...]] = {}
+    ambiguous: set[str] = set()
+    for match in re.finditer(r"^  fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", src, re.MULTILINE):
+        name = match.group(1)
+        params = _split_top_level(_read_parens(src, match.end() - 1))
+        signature = tuple(param.split(":", 1)[0].strip().split()[-1] for param in params if param)
+        if name in signatures and signatures[name] != signature:
+            ambiguous.add(name)
+        signatures[name] = signature
+    for name in ambiguous:
+        del signatures[name]
+    return signatures
+
+
+def _read_parens(src: str, open_paren: int) -> str:
+    """The text inside the parenthesis pair whose '(' is at [open_paren]."""
+    depth = 0
+    for i in range(open_paren, len(src)):
+        if src[i] == "(":
+            depth += 1
+        elif src[i] == ")":
+            depth -= 1
+            if depth == 0:
+                return src[open_paren + 1 : i]
+    raise ValueError(f"unbalanced '(' at offset {open_paren}")
+
+
+def _split_top_level(params: str) -> list[str]:
+    """Split a Kotlin parameter list on top-level commas ('->' is not a closing angle bracket)."""
+    out: list[str] = []
+    depth = 0
+    current = ""
+    for i, ch in enumerate(params):
+        if ch in "(<[":
+            depth += 1
+        elif ch in ")]" or (ch == ">" and params[i - 1 : i] != "-"):
+            depth -= 1
+        elif ch == "," and depth == 0:
+            out.append(current.strip())
+            current = ""
+            continue
+        current += ch
+    out.append(current.strip())
+    return [param for param in out if param]
 
 
 def _to_extension(member: str, receiver: str) -> str:
@@ -3234,6 +3360,9 @@ class TreeResult:
     desktop_only: list[str]
     ios_only: list[str]
     gap: dict[str, SharedRender]
+    # Generated iOS helpers that could NOT take the desktop parameter names, with the reason
+    # (task 104 step 3: desktop's spelling is canonical, so this should stay empty).
+    ios_unnamed: list[str]
 
 
 def _rel(path: Path) -> str:
@@ -3340,6 +3469,7 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     files: dict[str, str] = {}
     skips: dict[str, list[str]] = {}
     gap: dict[str, SharedRender] = {}
+    unnamed: set[str] = set()
 
     def wanted(name: str) -> bool:
         return only is None or name in only
@@ -3380,11 +3510,21 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             registry = collect_ios_shapes(
                 [api_classes[name] for name in sorted(ios_universe)], object_types, wrapper_classes, api_classes, api_dir
             )
-            files[_rel(IOS_OBJECTCALLS_GENERATED)] = render_ios_objectcalls(registry)
+            files[_rel(IOS_OBJECTCALLS)] = splice_ios_generated_members(
+                IOS_OBJECTCALLS.read_text(encoding="utf-8"), render_ios_objectcalls(registry, unnamed)
+            )
     finally:
         RENDER_TARGET = previous_target
     files[_rel(GAP_INDEX_PATH)] = render_gap_index(gap, len(shared))
-    return TreeResult(files=files, skips=skips, shared=shared, desktop_only=desktop_only, ios_only=ios_only, gap=gap)
+    return TreeResult(
+        files=files,
+        skips=skips,
+        shared=shared,
+        desktop_only=desktop_only,
+        ios_only=ios_only,
+        gap=gap,
+        ios_unnamed=sorted(unnamed),
+    )
 
 
 def generated_companion_paths() -> list[Path]:
@@ -3397,80 +3537,39 @@ def generated_companion_paths() -> list[Path]:
 
 # --- iOS ObjectCalls helper-body generation (T3.1) -----------------------------
 
-IOS_OBJECTCALLS_HEADER = '''@file:OptIn(ExperimentalForeignApi::class)
-
-package net.multigesture.kanama.binding.runtime
-
-import java.lang.foreign.MemorySegment
-import kotlinx.cinterop.ByteVar
-import kotlinx.cinterop.CPointed
-import kotlinx.cinterop.CPointer
-import kotlinx.cinterop.COpaquePointerVar
-import kotlinx.cinterop.DoubleVar
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.FloatVar
-import kotlinx.cinterop.IntVar
-import kotlinx.cinterop.LongVar
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.allocArray
-import kotlinx.cinterop.cstr
-import kotlinx.cinterop.get
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.reinterpret
-import kotlinx.cinterop.set
-import kotlinx.cinterop.value
-import net.multigesture.kanama.api.GodotCallable
-import net.multigesture.kanama.api.GodotObject
-import net.multigesture.kanama.ios.cinterop.KanamaIosCallableArgDesc
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
-import net.multigesture.kanama.types.AABB
-import net.multigesture.kanama.types.Basis
-import net.multigesture.kanama.types.Color
-import net.multigesture.kanama.types.GodotReal
-import net.multigesture.kanama.types.GodotRealVar
-import net.multigesture.kanama.types.NodePath
-import net.multigesture.kanama.types.Plane
-import net.multigesture.kanama.types.Projection
-import net.multigesture.kanama.types.Quaternion
-import net.multigesture.kanama.types.RID
-import net.multigesture.kanama.types.Rect2
-import net.multigesture.kanama.types.Rect2i
-import net.multigesture.kanama.types.Transform2D
-import net.multigesture.kanama.types.Transform3D
-import net.multigesture.kanama.types.Vector2
-import net.multigesture.kanama.types.Vector2i
-import net.multigesture.kanama.types.Vector3
-import net.multigesture.kanama.types.Vector3i
-import net.multigesture.kanama.types.Vector4
-
-/**
- * GENERATED iOS ObjectCalls helper bodies (scripts/generate_api_wrapper.py --ios-*).
- * DO NOT EDIT BY HAND. Re-run the generator instead.
- *
- * Each helper is an extension on the hand-written `object ObjectCalls`, so the
- * generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls resolve here. Every
- * helper marshals through the single generic C dispatch `kanama_ios_godot_ptrcall`,
- * applying the authoritative ptrcall width table (scalar float->double/8B, scalar
- * int->int64/8B, Vector components->GodotReal, Object->8B handle, StringName built
- * C-side). String / StringName / NodePath returns hand the same arg cells to
- * `ObjectCalls.ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8
- * read-back, no truncation); Variant-scalar returns to `ObjectCalls.ptrcallRetVariantScalar`
- * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
- * `ObjectCalls.ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed); Dictionary /
- * Array returns to `ObjectCalls.ptrcallRetDictionary` / `ptrcallRetArray` /
- * `ptrcallRetDictionaryList` (kanama_ios_godot_ptrcall_ret_container_blob); string-list and
- * typed-Array returns to the `ObjectCalls.ptrcallRetTyped<Kind>List` blob read-backs
- * (kanama_ios_godot_ptrcall_ret_array_blob). Packed*Array ARGS are laid out by the
- * `ObjectCalls.pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc the dispatch builds the Godot
- * array from; Variant / Dictionary / Array ARGS by `packVariantDesc` / `packDictionaryBlob` /
- * `packArrayBlob` (a KanamaIosVariantArgDesc or the task-29 entry blob the dispatch boxes for the
- * call); typed-Array ARGS by the `ObjectCalls.packTyped<Kind>ArrayDesc` helpers into a
- * KanamaIosTypedArrayArgDesc (array_set_typed + tagged elements; Dictionary / Array / packed
- * elements travel as nested blobs the boxer rebuilds). Helpers already hand-written in
- * ObjectCalls.kt are the override set and are NOT regenerated here.
- */
-'''
+IOS_OBJECTCALLS_HEADER = """\
+  /*
+   * GENERATED iOS ObjectCalls helper MEMBERS (scripts/generate_api_wrapper.py --ios-*).
+   * DO NOT EDIT BY HAND -- everything between the BEGIN/END GENERATED MEMBERS markers is
+   * rewritten by the generator; re-run it instead. The hand-written half of the object is
+   * above the BEGIN marker, and `local_ci.sh` proves both halves agree with desktop
+   * (scripts/check_objectcalls_parity.py).
+   *
+   * Each helper is a member of `object ObjectCalls` and carries the DESKTOP file's parameter
+   * names, so the generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls -- including
+   * named arguments -- resolve identically on both platforms and can become one `expect object`
+   * (task 104 step 3). Every helper marshals through the single generic C dispatch
+   * `kanama_ios_godot_ptrcall`, applying the authoritative ptrcall width table (scalar
+   * float->double/8B, scalar int->int64/8B, Vector components->GodotReal, Object->8B handle,
+   * StringName built C-side). String / StringName / NodePath returns hand the same arg cells to
+   * `ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8 read-back, no
+   * truncation); Variant-scalar returns to `ptrcallRetVariantScalar`
+   * (kanama_ios_godot_ptrcall_ret_variant_scalar); Packed*Array returns to the
+   * `ptrcallRet<Kind>` read-backs (kanama_ios_godot_ptrcall_ret_packed); Dictionary / Array
+   * returns to `ptrcallRetDictionary` / `ptrcallRetArray` / `ptrcallRetDictionaryList`
+   * (kanama_ios_godot_ptrcall_ret_container_blob); string-list and typed-Array returns to the
+   * `ptrcallRetTyped<Kind>List` blob read-backs (kanama_ios_godot_ptrcall_ret_array_blob).
+   * Packed*Array ARGS are laid out by the `pack<Kind>Desc` helpers into a KanamaIosPackedArgDesc
+   * the dispatch builds the Godot array from; Variant / Dictionary / Array ARGS by
+   * `packVariantDesc` / `packDictionaryBlob` / `packArrayBlob` (a KanamaIosVariantArgDesc or the
+   * task-29 entry blob the dispatch boxes for the call); typed-Array ARGS by the
+   * `packTyped<Kind>ArrayDesc` helpers into a KanamaIosTypedArrayArgDesc (array_set_typed +
+   * tagged elements; Dictionary / Array / packed elements travel as nested blobs the boxer
+   * rebuilds). All of those, and the ptrcall tag table below, live above the BEGIN marker or in
+   * this region -- never in a second file. Helpers already hand-written in ObjectCalls.kt are the
+   * override set (IOS_HANDWRITTEN_HELPERS) and are NOT regenerated here.
+   */
+"""
 
 # ptrcall type tag name -> numeric value (must match KANAMA_IOS_PT_* in the C shim
 # and the PT_* constants in ios-runtime ObjectCalls.kt).
@@ -3961,13 +4060,51 @@ IOS_ARRAY_BLOB_RETURNS = {
 }
 
 
+# A generated helper's own parameter spelling, before the desktop names are applied: the two engine
+# pointers, then one `a<N>` per logical argument (a Callable argument spends two: `a<N>Object` and
+# `a<N>Method`), then the typed-object-list wrapper. Nothing else may be renamed positionally.
+IOS_GENERATED_PARAM_RE = re.compile(r"methodBind|instance|fromHandle|a\d+(?:Object|Method)?")
+
+
+def _desktop_parameter_rename(function: str, generated: list[str]) -> dict[str, str]:
+    """Generated parameter name -> the desktop ObjectCalls spelling at the same position.
+
+    Empty when desktop does not declare [function], when the arities disagree, or when a generated
+    parameter is not one of the shapes above -- the caller records those and keeps the generated
+    names, so a surprise never silently relabels an argument.
+    """
+    desktop = desktop_objectcalls_signatures().get(function)
+    if desktop is None or len(desktop) != len(generated):
+        return {}
+    if not all(IOS_GENERATED_PARAM_RE.fullmatch(name) for name in generated):
+        return {}
+    return {was: now for was, now in zip(generated, desktop, strict=True) if was != now}
+
+
+def _apply_parameter_rename(rendered: str, rename: dict[str, str]) -> str:
+    """Rewrite the generated parameter names in a rendered helper (signature and body)."""
+    if not rename:
+        return rendered
+    # Longest first so `a0Object` is not eaten by `a0`; \b keeps `types[0]` and `ret.value` out.
+    pattern = re.compile(r"\b(" + "|".join(sorted(rename, key=len, reverse=True)) + r")\b")
+    return pattern.sub(lambda match: rename[match.group(1)], rendered)
+
+
 def render_ios_helper(
     function: str,
     logical_args: tuple[str, ...],
     kotlin_return: str,
     tags_used: set[str],
     return_type: str | None = None,
+    unnamed: set[str] | None = None,
 ) -> str:
+    """One generated helper, as a MEMBER of `object ObjectCalls` at the object's two-space indent.
+
+    Task 104 step 3 parcel B: a member, not the `fun ObjectCalls.x(...)` extension it used to be
+    (common code cannot see a platform-only extension once the object becomes an `expect object`),
+    and its parameters carry the DESKTOP file's names so an `actual` can match the `expect`.
+    Helpers desktop does not declare keep the generated names and are collected in [unnamed].
+    """
     utf8_return = kotlin_return in ("String", "NodePath")
     variant_return = kotlin_return == "Any?"
     # task 100 (parcel 9): the bare "List" token is the typed-object-list return (List<T> via a
@@ -4054,11 +4191,12 @@ def render_ios_helper(
         # ptrcall); the lambda returns the (types, ptrs, argc) triple the C entry consumes.
         params.append("fromHandle: (MemorySegment) -> T?")
         body.append(f"Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>({types_arg}, {ptrs_arg}, {n})")
-        indented_body = "\n".join(f"        {line}" for line in body)
-        return (
-            f"fun <T> ObjectCalls.{function}({', '.join(params)}): List<T> =\n"
-            f"    retTypedObjectList(methodBind, instance, fromHandle) {{\n{indented_body}\n    }}"
+        indented_body = "\n".join(f"          {line}" for line in body)
+        rendered = (
+            f"  fun <T> {function}({', '.join(params)}): List<T> =\n"
+            f"      retTypedObjectList(methodBind, instance, fromHandle) {{\n{indented_body}\n      }}"
         )
+        return _finish_ios_helper(function, params, rendered, unnamed)
     if utf8_return:
         body.append(
             utf8_wrap.format(f"ptrcallRetUtf8(methodBind, instance, {types_arg}, {ptrs_arg}, {n}, {ret_tag})")
@@ -4084,10 +4222,26 @@ def render_ios_helper(
 
     signature_ret = "" if ret_type is None else f": {ret_type}"
     indented_body = "\n".join(f"        {line}" for line in body)
-    return (
-        f"fun ObjectCalls.{function}({', '.join(params)}){signature_ret} =\n"
+    rendered = (
+        f"  fun {function}({', '.join(params)}){signature_ret} =\n"
         f"    memScoped {{\n{indented_body}\n    }}"
     )
+    return _finish_ios_helper(function, params, rendered, unnamed)
+
+
+def _finish_ios_helper(function: str, params: list[str], rendered: str, unnamed: set[str] | None) -> str:
+    """Apply the desktop parameter names to a rendered helper, recording the ones that keep theirs."""
+    generated = [param.split(":", 1)[0].strip() for param in params]
+    desktop = desktop_objectcalls_signatures().get(function)
+    rename = _desktop_parameter_rename(function, generated)
+    if not rename and generated != list(desktop or ()) and unnamed is not None:
+        if desktop is None:
+            unnamed.add(f"{function}: desktop declares no helper of this name")
+        elif len(desktop) != len(generated):
+            unnamed.add(f"{function}: desktop arity {len(desktop)} != generated {len(generated)}")
+        else:
+            unnamed.add(f"{function}: unexpected generated parameter names {generated}")
+    return _apply_parameter_rename(rendered, rename)
 
 
 def collect_ios_shapes(
@@ -4122,23 +4276,29 @@ def collect_ios_shapes(
     return registry
 
 
-def render_ios_objectcalls(registry: dict[str, tuple[tuple[str, ...], str, str]]) -> str:
+def render_ios_objectcalls(
+    registry: dict[str, tuple[tuple[str, ...], str, str]],
+    unnamed: set[str] | None = None,
+) -> str:
+    """The GENERATED MEMBERS region of the iOS `ObjectCalls.kt`: the ptrcall tag table and one
+    member per conservative helper shape, all at the object's two-space indent."""
     tags_used: set[str] = set()
     helpers = [
-        render_ios_helper(function, logical_args, kotlin_return, tags_used, return_type)
+        render_ios_helper(function, logical_args, kotlin_return, tags_used, return_type, unnamed)
         for function, (logical_args, kotlin_return, return_type) in sorted(registry.items())
     ]
+    # The WHOLE tag table, not just `tags_used`: these are the object's only PT_* declarations now
+    # (the hand-written half above the region reads them too), so the region cannot depend on which
+    # shapes a given run happens to emit.
     const_lines = [
-        f"private const val {tag} = {IOS_PT_TAG_VALUES[tag]}"
-        for tag in sorted(tags_used, key=lambda name: IOS_PT_TAG_VALUES[name])
+        f"  private const val {tag} = {value}"
+        for tag, value in sorted(IOS_PT_TAG_VALUES.items(), key=lambda item: item[1])
     ]
-    sections = [IOS_OBJECTCALLS_HEADER.rstrip("\n")]
-    if const_lines:
-        sections.append("\n".join(const_lines))
+    sections = [IOS_OBJECTCALLS_HEADER.strip("\n"), "\n".join(const_lines)]
     if helpers:
         sections.append("\n\n".join(helpers))
     else:
-        sections.append("// No conservative iOS helper shapes emitted.")
+        sections.append("  // No conservative iOS helper shapes emitted.")
     return "\n\n".join(sections) + "\n"
 
 
@@ -4153,6 +4313,13 @@ def tree_main(args: argparse.Namespace) -> int:
         f"ios-only={len(tree.ios_only)} desktop-companions={companions} ({members} members) "
         f"ios-companions={ios_companions} files={len(tree.files)}"
     )
+    if tree.ios_unnamed:
+        print(
+            f"[generate_api_wrapper] {len(tree.ios_unnamed)} generated iOS helper(s) kept their own "
+            "parameter names (desktop has no canonical spelling for them):"
+        )
+        for line in tree.ios_unnamed:
+            print(f"    {line}")
     if args.skip_report:
         args.skip_report.parent.mkdir(parents=True, exist_ok=True)
         lines = [f"{name}: {skip}" for name in sorted(tree.skips) for skip in tree.skips[name]]
@@ -4165,15 +4332,18 @@ def tree_main(args: argparse.Namespace) -> int:
         print(f"{summary} -> {args.regen_tree}")
     if args.write_tree:
         written = 0
-        helper_name = re.compile(r"fun (?:<T> )?ObjectCalls\.(\w+)\(")
         for rel_path, content in tree.files.items():
             target = ROOT / rel_path
             target.parent.mkdir(parents=True, exist_ok=True)
-            if target == IOS_OBJECTCALLS_GENERATED and target.exists() and set(
-                helper_name.findall(target.read_text(encoding="utf-8"))
-            ) == set(helper_name.findall(content)):
-                # ktfmt reformats this file after every regen; leave the formatted copy alone when
-                # the helper set is unchanged (the drift gate compares helper sets for the same reason).
+            if (
+                target == IOS_OBJECTCALLS
+                and target.exists()
+                and ios_generated_member_names(target.read_text(encoding="utf-8"))
+                == ios_generated_member_names(content)
+            ):
+                # ktfmt reformats the GENERATED MEMBERS region after every regen (the file is
+                # hand-written outside it), so leave the formatted copy alone when the member set is
+                # unchanged -- the drift gate compares the same set for the same reason.
                 continue
             if not target.exists() or target.read_text(encoding="utf-8") != content:
                 target.write_text(content, encoding="utf-8")
@@ -4247,7 +4417,8 @@ def main() -> int:
     parser.add_argument(
         "--ios-objectcalls",
         type=Path,
-        help="Write the generated iOS ObjectCalls helper bodies for the --ios-emit-class shape set to this file.",
+        help="Write the GENERATED MEMBERS region for the --ios-emit-class shape set to this file "
+             "(the region body only, not a compilable file; --write-tree splices it into the iOS ObjectCalls.kt).",
     )
     parser.add_argument("--ios-skip-report", type=Path, help="Write iOS unsupported method reasons to this file.")
     parser.add_argument(
@@ -4255,7 +4426,8 @@ def main() -> int:
         type=Path,
         metavar="OUT_DIR",
         help="Render the whole generated wrapper tree (shared tree, per-platform files, companions, "
-             "iOS ObjectCallsGenerated.kt, gap index) under OUT_DIR, mirroring the repository paths.",
+             "the iOS ObjectCalls.kt with its GENERATED MEMBERS region respliced, gap index) under "
+             "OUT_DIR, mirroring the repository paths.",
     )
     parser.add_argument(
         "--write-tree",
@@ -4368,7 +4540,10 @@ def main() -> int:
         if args.ios_objectcalls:
             registry = collect_ios_shapes(ios_classes, object_types, wrapper_classes, api_classes, args.api_dir)
             args.ios_objectcalls.parent.mkdir(parents=True, exist_ok=True)
-            args.ios_objectcalls.write_text(render_ios_objectcalls(registry), encoding="utf-8")
+            unnamed: set[str] = set()
+            args.ios_objectcalls.write_text(render_ios_objectcalls(registry, unnamed), encoding="utf-8")
+            for line in sorted(unnamed):
+                print(f"[generate_api_wrapper] kept generated parameter names: {line}")
 
         if args.ios_skip_report:
             args.ios_skip_report.parent.mkdir(parents=True, exist_ok=True)

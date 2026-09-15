@@ -14,7 +14,7 @@ assumptions. Nothing here changes behaviour.
 | | Desktop/Android tree | iOS tree |
 |---|---|---|
 | Files | 1,053 (988 generated, 47 hand-shaped, 18 non-API) | 1,029 (1,013 generated, 8 hand-shaped, 3 collision-class files; 9 more collision classes live in `IosGodotApi.kt`) |
-| Lines | 302,193 | 181,056, plus 26,677 in the generated `ObjectCallsGenerated.kt` |
+| Lines | 302,193 | 181,056, plus 26,677 generated iOS `ObjectCalls` helpers (a separate `ObjectCallsGenerated.kt` then; the `GENERATED MEMBERS` region of the iOS `ObjectCalls.kt` since task 104 step 3b) |
 | Generated on both platforms | 979 classes | |
 | Identical after stripping KDoc and the iOS wildcard import | **0 of 979** | |
 
