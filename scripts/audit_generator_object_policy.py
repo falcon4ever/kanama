@@ -30,7 +30,7 @@ from wrapper_model import SHARED_API_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
-API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 
 # `Object` itself may map to GodotObject because the Godot API is explicitly
 # dynamic there. The others are not ordinary Object wrappers in Kanama today.

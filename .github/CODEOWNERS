@@ -13,8 +13,8 @@
 *                                                       @falcon4ever
 
 # --- FFM / Panama ABI + memory-ownership surface (marshalling, retain/release) ---
-/src/main/kotlin/binding/                               @falcon4ever
-/src/main/kotlin/net/multigesture/kanama/api/RefCounted.kt  @falcon4ever
+/src/jvmMain/kotlin/binding/                            @falcon4ever
+/src/jvmMain/kotlin/net/multigesture/kanama/api/RefCounted.kt  @falcon4ever
 
 # --- KSP processor: type resolution, code emitters, serialized script model ---
 /processor/                                             @falcon4ever

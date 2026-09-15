@@ -1,0 +1,57 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.Vector3
+
+/**
+ * A box-shaped 3D particle collision shape affecting `GPUParticles3D` nodes.
+ *
+ * Generated from Godot docs: GPUParticlesCollisionBox3D
+ */
+class GPUParticlesCollisionBox3D(handle: GodotHandle) : GPUParticlesCollision3D(handle) {
+    var size: Vector3
+        @JvmName("sizeProperty")
+        get() = getSize()
+        @JvmName("setSizeProperty")
+        set(value) = setSize(value)
+
+    /**
+     * The collision box's size in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionBox3D.set_size
+     */
+    fun setSize(size: Vector3) {
+        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+    }
+
+    /**
+     * The collision box's size in 3D units.
+     *
+     * Generated from Godot docs: GPUParticlesCollisionBox3D.get_size
+     */
+    fun getSize(): Vector3 {
+        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): GPUParticlesCollisionBox3D? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): GPUParticlesCollisionBox3D? =
+            if (handle.address() == 0L) null else GPUParticlesCollisionBox3D(GodotHandle(handle))
+
+        private const val SET_SIZE_HASH = 3460891852L
+        private val setSizeBind by lazy {
+            ObjectCalls.getMethodBind("GPUParticlesCollisionBox3D", "set_size", SET_SIZE_HASH)
+        }
+
+        private const val GET_SIZE_HASH = 3360562783L
+        private val getSizeBind by lazy {
+            ObjectCalls.getMethodBind("GPUParticlesCollisionBox3D", "get_size", GET_SIZE_HASH)
+        }
+    }
+}

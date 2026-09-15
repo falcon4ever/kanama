@@ -15,7 +15,9 @@ The value types are one shared set under src/commonMain since task 104 step 2,
 and they reach the engine only through
 `net.multigesture.kanama.binding.runtime.BuiltinCalls` — the desktop half over
 Panama, the iOS half over the C shim, kept identical by
-`scripts/check_builtin_calls_contract.py`.
+the `expect object BuiltinCalls` in
+`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.expect.kt`, which the
+compiler holds both backends to (task 104 step 3 parcel C').
 
 The script is intentionally report-only for now. It exits non-zero only when
 `--strict` is passed.

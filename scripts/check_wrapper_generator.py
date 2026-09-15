@@ -27,6 +27,7 @@ from generate_api_wrapper import (
     generated_companion_paths,
     ios_generated_member_names,
     regenerate_tree,
+    strip_comments,
 )
 from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, SHARED_API_DIR
 
@@ -576,36 +577,47 @@ def check_single_tree(tree: TreeResult) -> int:
     return rc
 
 
-SHARED_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
+SHARED_SOURCE_ROOTS = (ROOT / "src/commonMain/kotlin", ROOT / "src/sharedApi/kotlin")
 
 
 def check_shared_tree_pointer() -> int:
-    """No file under src/commonMain may name a `java.lang.foreign` type (task 104 step 3).
+    """No file under src/commonMain or src/sharedApi may name a `java.lang.foreign` type
+    (task 104 step 3).
 
-    The shared tree is compiled as-is by the root JVM module, by :ios-runtime and by the Android
-    copy, and it becomes a real KMP `commonMain` in step 3's later parcels — where a JDK package
-    cannot be declared or `expect`ed at all. The raw engine pointer therefore travels under Kanama's
-    own name, `net.multigesture.kanama.binding.runtime.RawSegment`, which each platform aliases. A
-    hand edit or a generator regression that puts the JDK name back fails here, next to the edit,
-    instead of in the iOS compile.
+    Both roots are compiled on every platform: src/commonMain/kotlin is the module's KMP common
+    fragment (the value types, GodotHandle, the expect seams), where a JDK package cannot be
+    declared or `expect`ed at all, and src/sharedApi/kotlin is the generated wrapper tree, compiled
+    per platform by the JVM and iOS targets and copied through the Android remap. The raw engine
+    pointer therefore travels under Kanama's own name,
+    `net.multigesture.kanama.binding.runtime.RawSegment`, which each platform aliases. A hand edit
+    or a generator regression that puts the JDK name back fails here, next to the edit, instead of
+    in the iOS compile.
+
+    Comments are stripped first: the `expect` files' KDoc names the JVM type on purpose when it
+    explains the `actual typealias`, and prose is not what this gate is about (the Android remap
+    audit strips comments for the same reason since task 104 step 3 parcel D).
     """
     offenders = sorted(
         path
-        for path in SHARED_SOURCE_ROOT.rglob("*.kt")
-        if "java.lang.foreign" in path.read_text(encoding="utf-8")
+        for root in SHARED_SOURCE_ROOTS
+        for path in root.rglob("*.kt")
+        if "java.lang.foreign" in strip_comments(path.read_text(encoding="utf-8"))
     )
     if offenders:
+        roots = ", ".join(_rel(root) for root in SHARED_SOURCE_ROOTS)
         print(
-            f"[wrapper_generator] FAIL {len(offenders)} files under {_rel(SHARED_SOURCE_ROOT)} name a "
-            "java.lang.foreign type; the shared tree uses RawSegment / NULL_SEGMENT",
+            f"[wrapper_generator] FAIL {len(offenders)} files under {roots} name a "
+            "java.lang.foreign type; the shared sources use RawSegment / NULL_SEGMENT",
             file=sys.stderr,
         )
         for path in offenders[:40]:
             print(f"    {_rel(path)}", file=sys.stderr)
         return 1
+    scanned = sum(1 for root in SHARED_SOURCE_ROOTS for _ in root.rglob("*.kt"))
+    roots = ", ".join(_rel(root) for root in SHARED_SOURCE_ROOTS)
     print(
-        f"[wrapper_generator] PASS shared tree names no java.lang.foreign type "
-        f"({sum(1 for _ in SHARED_SOURCE_ROOT.rglob('*.kt'))} files under {_rel(SHARED_SOURCE_ROOT)})"
+        f"[wrapper_generator] PASS shared sources name no java.lang.foreign type "
+        f"({scanned} files under {roots})"
     )
     return 0
 

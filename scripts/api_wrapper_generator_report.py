@@ -237,7 +237,7 @@ def render_markdown(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--api", type=Path, default=ROOT / "extension_api.json")
-    parser.add_argument("--api-dir", type=Path, default=ROOT / "src/main/kotlin/net/multigesture/kanama/api")
+    parser.add_argument("--api-dir", type=Path, default=ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "build/wrapper-generator/drafts")
     parser.add_argument("--skip-report", type=Path, default=ROOT / "build/wrapper-generator/skips.txt")
     parser.add_argument("--markdown", type=Path, help="Write a markdown report.")

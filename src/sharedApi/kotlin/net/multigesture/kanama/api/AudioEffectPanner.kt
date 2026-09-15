@@ -1,0 +1,60 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * Adds a panner audio effect to an audio bus. Pans the sound left or right.
+ *
+ * Generated from Godot docs: AudioEffectPanner
+ */
+class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
+    var pan: Double
+        @JvmName("panProperty")
+        get() = getPan()
+        @JvmName("setPanProperty")
+        set(value) = setPan(value)
+
+    /**
+     * Pan position. Negative values pan the sound to the left, positive pan to the right. Value can
+     * range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectPanner.set_pan
+     */
+    fun setPan(cpanume: Double) {
+        checkOpen()
+        ObjectCalls.ptrcallWithDoubleArg(setPanBind, segment, cpanume)
+    }
+
+    /**
+     * Pan position. Negative values pan the sound to the left, positive pan to the right. Value can
+     * range from -1 to 1.
+     *
+     * Generated from Godot docs: AudioEffectPanner.get_pan
+     */
+    fun getPan(): Double {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetDouble(getPanBind, segment)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): AudioEffectPanner? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): AudioEffectPanner? =
+            if (handle.address() == 0L) null else AudioEffectPanner(GodotHandle(handle))
+
+        private const val SET_PAN_HASH = 373806689L
+        private val setPanBind by lazy {
+            ObjectCalls.getMethodBind("AudioEffectPanner", "set_pan", SET_PAN_HASH)
+        }
+
+        private const val GET_PAN_HASH = 1740695150L
+        private val getPanBind by lazy {
+            ObjectCalls.getMethodBind("AudioEffectPanner", "get_pan", GET_PAN_HASH)
+        }
+    }
+}

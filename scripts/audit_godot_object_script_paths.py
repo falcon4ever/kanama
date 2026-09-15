@@ -13,7 +13,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
-GODOT_OBJECT = ROOT / "src/main/kotlin/net/multigesture/kanama/api/GodotObject.kt"
+GODOT_OBJECT = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotObject.kt"
 
 
 def function_body(source: str, name: str) -> str:

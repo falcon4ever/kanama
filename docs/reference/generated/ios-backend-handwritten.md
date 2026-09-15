@@ -22,17 +22,17 @@ _Intentionally bespoke — not generatable from extension_api.json; correct as-i
 
 | Location | Note |
 |---|---|
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/Engine.kt:6` | [glue] Engine singleton. Not retired to the generated wrapper because |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/FileAccess.kt:7` | [glue] FileAccess static facade. The desktop shape is hand-shaped |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:126` | [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json. |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:140` | [platform] MainThread.post is a no-op shim; on iOS main thread dispatch is handled by Godot's frame loop, not a JVM executor. |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:216` | [runtime] signal/connect/emitSignal/await use the custom GDExtension |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:601` | [runtime] Tweener/PropertyTweener/Tween use the Variant tween_property path |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:740` | [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility, |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:808` | [glue] ResourceLoader singleton. Not retired to the generated wrapper: |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:884` | [platform] GD global helpers (rand*, print) — Kotlin/native impls, bespoke. |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:973` | [glue] thin cinterop facade over the C shim helpers used by the bespoke |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/ProjectSettings.kt:6` | [glue] ProjectSettings singleton. Not retired to the generated wrapper: |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/Engine.kt:6` | [glue] Engine singleton. Not retired to the generated wrapper because |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/FileAccess.kt:7` | [glue] FileAccess static facade. The desktop shape is hand-shaped |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:126` | [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:140` | [platform] MainThread.post is a no-op shim; on iOS main thread dispatch is handled by Godot's frame loop, not a JVM executor. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:223` | [runtime] signal/connect/emitSignal/await use the custom GDExtension |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:616` | [runtime] Tweener/PropertyTweener/Tween use the Variant tween_property path |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:755` | [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility, |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:823` | [glue] ResourceLoader singleton. Not retired to the generated wrapper: |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:899` | [platform] GD global helpers (rand*, print) — Kotlin/native impls, bespoke. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:988` | [glue] thin cinterop facade over the C shim helpers used by the bespoke |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ProjectSettings.kt:6` | [glue] ProjectSettings singleton. Not retired to the generated wrapper: |
 
 ## SUGAR
 
@@ -40,13 +40,13 @@ _Hand-added inside a GENERATED wrapper file — regeneration overwrites it; re-a
 
 | Location | Note |
 |---|---|
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/BoxMesh.kt:78` | [glue] desktop-parity constructor sugar (the desktop wrapper's |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/BoxShape3D.kt:30` | [glue] desktop-parity constructor sugar (the desktop wrapper's |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/Image.kt:44` | [runtime] get_data / load_png_from_buffer are PackedByteArray shapes |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/Image.kt:278` | [runtime] create_from_data is STATIC + PackedByteArray — both |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/ImageTexture.kt:28` | [runtime] create_from_image is STATIC — the instance dispatch |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/ParticleProcessMaterial.kt:918` | [glue] downcast a Resource (null if not), mirroring the desktop |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/PlaneMesh.kt:105` | [glue] downcast a Resource (null if not), mirroring the desktop |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/ProceduralSkyMaterial.kt:228` | [glue] downcast a Resource (null if not), mirroring the desktop |
-| `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/StandardMaterial3D.kt:14` | [glue] desktop-parity constructor sugar (the desktop wrapper's |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/BoxMesh.kt:78` | [glue] desktop-parity constructor sugar (the desktop wrapper's |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/BoxShape3D.kt:30` | [glue] desktop-parity constructor sugar (the desktop wrapper's |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/Image.kt:44` | [runtime] get_data / load_png_from_buffer are PackedByteArray shapes |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/Image.kt:278` | [runtime] create_from_data is STATIC + PackedByteArray — both |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ImageTexture.kt:28` | [runtime] create_from_image is STATIC — the instance dispatch |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ParticleProcessMaterial.kt:918` | [glue] downcast a Resource (null if not), mirroring the desktop |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/PlaneMesh.kt:105` | [glue] downcast a Resource (null if not), mirroring the desktop |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ProceduralSkyMaterial.kt:228` | [glue] downcast a Resource (null if not), mirroring the desktop |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/StandardMaterial3D.kt:14` | [glue] desktop-parity constructor sugar (the desktop wrapper's |
 

@@ -71,28 +71,28 @@
   private const val PT_VARIANT = 38
   private const val PT_TYPED_ARRAY_BLOB = 39
 
-  fun ptrcallNoArgsRetBasis(methodBind: MemorySegment, instance: MemorySegment): Basis =
+  actual fun ptrcallNoArgsRetBasis(methodBind: MemorySegment, instance: MemorySegment): Basis =
     memScoped {
         val ret = allocArray<GodotRealVar>(9)
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_BASIS, ret)
         Basis(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])), Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])), Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])))
     }
 
-  fun ptrcallNoArgsRetQuaternion(methodBind: MemorySegment, instance: MemorySegment): Quaternion =
+  actual fun ptrcallNoArgsRetQuaternion(methodBind: MemorySegment, instance: MemorySegment): Quaternion =
     memScoped {
         val ret = allocArray<GodotRealVar>(4)
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_QUATERNION, ret)
         Quaternion(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3]))
     }
 
-  fun ptrcallNoArgsRetTransform3D(methodBind: MemorySegment, instance: MemorySegment): Transform3D =
+  actual fun ptrcallNoArgsRetTransform3D(methodBind: MemorySegment, instance: MemorySegment): Transform3D =
     memScoped {
         val ret = allocArray<GodotRealVar>(12)
         kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_TRANSFORM3D, ret)
         Transform3D(Basis(Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])), Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])), Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8]))), Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])))
     }
 
-  fun ptrcallWithBasisArg(methodBind: MemorySegment, instance: MemorySegment, value: Basis) =
+  actual fun ptrcallWithBasisArg(methodBind: MemorySegment, instance: MemorySegment, value: Basis) =
     memScoped {
         val c0 = allocArray<GodotRealVar>(9); c0[0] = GodotReal.toC(value.x.x); c0[1] = GodotReal.toC(value.y.x); c0[2] = GodotReal.toC(value.z.x); c0[3] = GodotReal.toC(value.x.y); c0[4] = GodotReal.toC(value.y.y); c0[5] = GodotReal.toC(value.z.y); c0[6] = GodotReal.toC(value.x.z); c0[7] = GodotReal.toC(value.y.z); c0[8] = GodotReal.toC(value.z.z)
         val types = allocArray<IntVar>(1); types[0] = PT_BASIS
@@ -101,7 +101,7 @@
         Unit
     }
 
-  fun ptrcallWithNodePathArg(methodBind: MemorySegment, instance: MemorySegment, path: NodePath) =
+  actual fun ptrcallWithNodePathArg(methodBind: MemorySegment, instance: MemorySegment, path: NodePath) =
     memScoped {
         val types = allocArray<IntVar>(1); types[0] = PT_NODE_PATH
         val ptrs = allocArray<COpaquePointerVar>(1); ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
@@ -109,7 +109,7 @@
         Unit
     }
 
-  fun ptrcallWithQuaternionArg(methodBind: MemorySegment, instance: MemorySegment, value: Quaternion) =
+  actual fun ptrcallWithQuaternionArg(methodBind: MemorySegment, instance: MemorySegment, value: Quaternion) =
     memScoped {
         val c0 = allocArray<GodotRealVar>(4); c0[0] = GodotReal.toC(value.x); c0[1] = GodotReal.toC(value.y); c0[2] = GodotReal.toC(value.z); c0[3] = GodotReal.toC(value.w)
         val types = allocArray<IntVar>(1); types[0] = PT_QUATERNION
@@ -130,7 +130,7 @@
         Unit
     }
 
-  fun ptrcallWithTransform3DArg(methodBind: MemorySegment, instance: MemorySegment, value: Transform3D) =
+  actual fun ptrcallWithTransform3DArg(methodBind: MemorySegment, instance: MemorySegment, value: Transform3D) =
     memScoped {
         val c0 = allocArray<GodotRealVar>(12); c0[0] = GodotReal.toC(value.basis.x.x); c0[1] = GodotReal.toC(value.basis.y.x); c0[2] = GodotReal.toC(value.basis.z.x); c0[3] = GodotReal.toC(value.basis.x.y); c0[4] = GodotReal.toC(value.basis.y.y); c0[5] = GodotReal.toC(value.basis.z.y); c0[6] = GodotReal.toC(value.basis.x.z); c0[7] = GodotReal.toC(value.basis.y.z); c0[8] = GodotReal.toC(value.basis.z.z); c0[9] = GodotReal.toC(value.origin.x); c0[10] = GodotReal.toC(value.origin.y); c0[11] = GodotReal.toC(value.origin.z)
         val types = allocArray<IntVar>(1); types[0] = PT_TRANSFORM3D
@@ -160,7 +160,7 @@
         Unit
     }
 
-  fun ptrcallWithVector3ArgRetVector3(methodBind: MemorySegment, instance: MemorySegment, value: Vector3): Vector3 =
+  actual fun ptrcallWithVector3ArgRetVector3(methodBind: MemorySegment, instance: MemorySegment, value: Vector3): Vector3 =
     memScoped {
         val ret = allocArray<GodotRealVar>(3)
         val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(value.x); c0[1] = GodotReal.toC(value.y); c0[2] = GodotReal.toC(value.z)

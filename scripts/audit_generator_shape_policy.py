@@ -22,7 +22,7 @@ from wrapper_model import exact_abi_kind, logical_type, storage_abi_kind, value_
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OBJECT_CALLS = ROOT / "src/main/kotlin/binding/runtime/ObjectCalls.kt"
+OBJECT_CALLS = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
 
 UNSIGNED_POLICY = {
     ("int", "uint8"): ("uint8", "int32", "int32", "Int"),
@@ -356,12 +356,12 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         object_line, object_text = object_result
         if "BuiltinTypes.readArrayObjects" not in object_text and "BuiltinTypes::readArrayObjects" not in object_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
                 f"{object_helper} does not decode through readArrayObjects",
             )
         if "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in object_text and "callArrayReturn(" not in object_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
                 f"{object_helper} does not destroy Array storage",
             )
 
@@ -373,18 +373,18 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         if object_helper in typed_text:
             if ".mapNotNull" not in typed_text or "wrapper(it.segment)" not in typed_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
                     f"{typed_helper} does not map through nullable typed wrappers",
                 )
         else:
             if "BuiltinTypes.readArrayObjects(" not in typed_text or ", wrapper)" not in typed_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
                     f"{typed_helper} does not decode directly through nullable typed wrappers",
                 )
             if "callArrayReturn(" not in typed_text and "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in typed_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
                     f"{typed_helper} does not destroy Array storage",
                 )
     for object_arg_helper in sorted(DYNAMIC_TYPED_OBJECT_ARRAY_ARG_HELPERS):
@@ -395,44 +395,44 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         line, function_text = result
         if "BuiltinTypes.initArrayOfObjects(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{object_arg_helper} does not initialize through initArrayOfObjects",
             )
         if "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{object_arg_helper} does not destroy Array storage",
             )
         if "UInt32" in object_arg_helper and "BuiltinTypes.requireUInt32(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{object_arg_helper} does not range-check UInt32 arguments",
             )
         if "RIDList" in object_arg_helper:
             if "BuiltinTypes.initArrayOfRids(" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{object_arg_helper} does not initialize RID lists through initArrayOfRids",
                 )
             if "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{object_arg_helper} does not destroy RID Array storage",
                 )
         if "PackedInt64List" in object_arg_helper:
             if "BuiltinTypes.allocatePackedArray(" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{object_arg_helper} does not allocate packed storage",
                 )
             if "BuiltinTypes.initPackedInt64Array(" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{object_arg_helper} does not initialize PackedInt64Array storage",
                 )
             if "BuiltinTypes.destroyTyped(VariantType.PACKED_INT64_ARRAY" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{object_arg_helper} does not destroy PackedInt64Array storage",
                 )
     for rid_arg_helper in sorted(DYNAMIC_TYPED_RID_ARRAY_ARG_HELPERS):
@@ -443,33 +443,33 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         line, function_text = result
         if "BuiltinTypes.initArrayOfRids(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{rid_arg_helper} does not initialize RID lists through initArrayOfRids",
             )
         if "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{rid_arg_helper} does not destroy RID Array storage",
             )
         if "UInt32" in rid_arg_helper and "BuiltinTypes.requireUInt32(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{rid_arg_helper} does not range-check UInt32 arguments",
             )
         if "PackedInt64List" in rid_arg_helper:
             if "BuiltinTypes.allocatePackedArray(" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{rid_arg_helper} does not allocate packed storage",
                 )
             if "BuiltinTypes.initPackedInt64Array(" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{rid_arg_helper} does not initialize PackedInt64Array storage",
                 )
             if "BuiltinTypes.destroyTyped(VariantType.PACKED_INT64_ARRAY" not in function_text:
                 errors.append(
-                    f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                     f"{rid_arg_helper} does not destroy PackedInt64Array storage",
                 )
     for dictionary_helper in sorted(DYNAMIC_DICTIONARY_RETURN_HELPERS):
@@ -480,27 +480,27 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         line, function_text = result
         if "BuiltinTypes.initDictionary(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{dictionary_helper} does not initialize Dictionary arguments through initDictionary",
             )
         if "BuiltinTypes.initArrayOfDictionaries(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{dictionary_helper} does not initialize typed Dictionary arrays through initArrayOfDictionaries",
             )
         if "BuiltinTypes.readDictionaryScalars(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{dictionary_helper} does not decode through readDictionaryScalars",
             )
         if "BuiltinTypes.destroyTyped(VariantType.DICTIONARY" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{dictionary_helper} does not destroy Dictionary storage",
             )
         if "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{dictionary_helper} does not destroy typed Dictionary Array storage",
             )
     for raw_pointer_helper in sorted(DYNAMIC_RAW_POINTER_HELPERS):
@@ -511,17 +511,17 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         line, function_text = result
         if "MemorySegment" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{raw_pointer_helper} does not expose raw pointers as MemorySegment",
             )
         if "arena.allocate(ADDRESS)" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{raw_pointer_helper} does not allocate ADDRESS storage for raw pointer arguments",
             )
         if ".set(ADDRESS, 0," not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{raw_pointer_helper} does not write raw pointer arguments through ADDRESS slots",
             )
     for callable_helper in sorted(DYNAMIC_CALLABLE_ARG_HELPERS):
@@ -532,22 +532,22 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         line, function_text = result
         if "BuiltinTypes.allocateCallable(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not allocate Callable storage through BuiltinTypes.allocateCallable",
             )
         if "BuiltinTypes.initCallable(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not initialize Callable storage through BuiltinTypes.initCallable",
             )
         if "BuiltinTypes.destroyTyped(VariantType.CALLABLE" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not destroy Callable storage",
             )
         if "UInt32" in callable_helper and "BuiltinTypes.requireUInt32(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not range-check uint32 arguments",
             )
         expected_callable_count = 3 if "ThreeCallable" in callable_helper else 2 if "TwoCallable" in callable_helper else 1
@@ -555,12 +555,12 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         destroy_count = function_text.count("BuiltinTypes.destroyTyped(VariantType.CALLABLE")
         if init_count < expected_callable_count:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} initializes {init_count} Callable values, expected at least {expected_callable_count}",
             )
         if destroy_count < expected_callable_count:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} destroys {destroy_count} Callable values, expected at least {expected_callable_count}",
             )
     for callable_helper in sorted(DYNAMIC_CALLABLE_RETURN_HELPERS):
@@ -571,22 +571,22 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
         line, function_text = result
         if "GodotCallable?" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not expose nullable GodotCallable return",
             )
         if "BuiltinTypes.allocateCallable(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not allocate Callable return storage",
             )
         if "BuiltinTypes.readCallable(" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not decode through BuiltinTypes.readCallable",
             )
         if "BuiltinTypes.destroyTyped(VariantType.CALLABLE" not in function_text:
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{callable_helper} does not destroy Callable return storage",
             )
     return errors
@@ -670,7 +670,7 @@ def main() -> int:
         checked_functions.add(shape.function)
         for error in audit_shape(function_text, args, ret):
             errors.append(
-                f"src/main/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "
                 f"{shape.function} for {args} -> {ret}: {error}",
             )
 

@@ -1,0 +1,25 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * A horizontal slider that goes from left (min) to right (max).
+ *
+ * Generated from Godot docs: HSlider
+ */
+class HSlider(handle: GodotHandle) : Slider(handle) {
+    // No conservative instance methods emitted yet.
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): HSlider? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): HSlider? =
+            if (handle.address() == 0L) null else HSlider(GodotHandle(handle))
+
+        // No MethodBinds emitted yet.
+    }
+}

@@ -15,7 +15,7 @@ kanama/
 ├── gdextension/            # Pinned gdextension_interface.h input
 ├── android/                # Godot Android plugin (AAR)
 ├── ios/                    # iOS C shim + headers
-├── ios-runtime/            # Kotlin/Native iOS runtime + generated iOS wrappers
+├── src/iosMain/            # Kotlin/Native iOS runtime + generated iOS wrappers
 ├── web-runtime/            # Kotlin/Wasm Web backend, generated wrappers (api/generated/), proxies, JS bridge
 ├── kanama-common-api/      # Web call contract (opcodes, shapes, descriptors) from extension_api.json
 ├── example_project/        # Godot smoke-test project
@@ -104,7 +104,7 @@ Two things are deliberately **not** formatted:
   are byte-compared against `scripts/generate_api_wrapper.py` by the drift gate,
   so formatting them would break `check_wrapper_generator.py`.
 - `*.gradle.kts` build scripts — the ktfmt Gradle-DSL parser mishandles
-  `ios-runtime/build.gradle.kts`.
+  the root `build.gradle.kts` iOS targets.
 
 The knobs live in the `ktfmt { ... }` block in `build.gradle.kts`.
 

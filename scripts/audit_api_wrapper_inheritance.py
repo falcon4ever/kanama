@@ -19,7 +19,7 @@ from wrapper_model import ancestors, load_api_classes
 
 
 ROOT = Path(__file__).resolve().parents[1]
-API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 API_PATH = ROOT / "extension_api.json"
 
 CLASS_RE = re.compile(

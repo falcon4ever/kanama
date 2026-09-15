@@ -28,9 +28,9 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 # One shared set of value types since task 104 step 2 (the root JVM module,
 # :ios-runtime and the Android copy task all compile this tree).
 TYPES_DIR = os.path.join(ROOT, "src/commonMain/kotlin/net/multigesture/kanama/types")
-BUILTIN = os.path.join(ROOT, "src/main/kotlin/binding/runtime/BuiltinTypes.kt")
-OBJCALLS = os.path.join(ROOT, "src/main/kotlin/binding/runtime/ObjectCalls.kt")
-VARIANT_TYPE = os.path.join(ROOT, "src/main/kotlin/binding/runtime/VariantType.kt")
+BUILTIN = os.path.join(ROOT, "src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt")
+OBJCALLS = os.path.join(ROOT, "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt")
+VARIANT_TYPE = os.path.join(ROOT, "src/jvmMain/kotlin/binding/runtime/VariantType.kt")
 
 
 def read(path: str) -> str:

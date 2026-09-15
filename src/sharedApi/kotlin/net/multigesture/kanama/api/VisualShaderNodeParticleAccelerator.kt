@@ -1,0 +1,51 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * Generated from Godot docs: VisualShaderNodeParticleAccelerator
+ */
+class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNode(handle) {
+    var mode: Long
+        @JvmName("modeProperty")
+        get() = getMode()
+        @JvmName("setModeProperty")
+        set(value) = setMode(value)
+
+    fun setMode(mode: Long) {
+        checkOpen()
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
+    }
+
+    fun getMode(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
+    }
+
+    companion object {
+        const val MODE_LINEAR: Long = 0L
+        const val MODE_RADIAL: Long = 1L
+        const val MODE_TANGENTIAL: Long = 2L
+        const val MODE_MAX: Long = 3L
+
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleAccelerator? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleAccelerator? =
+            if (handle.address() == 0L) null else VisualShaderNodeParticleAccelerator(GodotHandle(handle))
+
+        private const val SET_MODE_HASH = 3457585749L
+        private val setModeBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNodeParticleAccelerator", "set_mode", SET_MODE_HASH)
+        }
+
+        private const val GET_MODE_HASH = 2660365633L
+        private val getModeBind by lazy {
+            ObjectCalls.getMethodBind("VisualShaderNodeParticleAccelerator", "get_mode", GET_MODE_HASH)
+        }
+    }
+}
