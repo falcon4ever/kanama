@@ -2,7 +2,7 @@
 """Generate the Kotlin/Wasm Web wrapper tree from the Web call contract (task 96).
 
 Every opcode in `scripts/platform_backend_calls.json` becomes one member on the Godot class that
-owns it, in `web-runtime/src/sharedApi/kotlin/net/multigesture/kanama/api/generated/<Class>.kt`
+owns it, in `web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/<Class>.kt`
 (one class, one file). The member's name, parameters, defaults and return type come from
 `extension_api.json` (the same source the native wrapper generator reads), the call itself goes
 straight to `GodotBackendCalls.invoke<Shape>(InitialGodotCallDescriptors.X, ...)`, so the former
@@ -35,7 +35,7 @@ from platform_backend_contract import INITIAL_BACKEND_CALLS, BackendCallPolicy  
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
-API_DIR = ROOT / "web-runtime/src/sharedApi/kotlin/net/multigesture/kanama/api"
+API_DIR = ROOT / "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api"
 GENERATED_DIR = API_DIR / "generated"
 TAG = "[web_wrappers]"
 
